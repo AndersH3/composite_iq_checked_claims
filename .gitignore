@@ -1,0 +1,24 @@
+# LaTeX intermediates; the final PDF is intentionally versioned.
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+*.nav
+*.snm
+*.vrb
+
+# Local verification and rendering files.
+__pycache__/
+.venv/
+tmp/
+.DS_Store

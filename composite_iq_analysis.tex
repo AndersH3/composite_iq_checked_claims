@@ -1,0 +1,400 @@
+% !TeX program = xelatex
+\documentclass[
+  a4paper,fontsize=11pt,parskip=half,headings=small,
+  numbers=noenddot,bibliography=totoc
+]{scrartcl}
+
+\usepackage[margin=16mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
+\usepackage{fontspec}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
+\setmonofont{Latin Modern Mono}[Scale=MatchLowercase]
+\setmathfont{TeX Gyre Pagella Math}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{scrlayer-scrpage}
+\usepackage[authoryear,round]{natbib}
+\usepackage{xurl}
+\usepackage[
+  unicode,colorlinks=true,linkcolor=blue!50!black,
+  citecolor=blue!50!black,urlcolor=blue!50!black,
+  pdftitle={Combining IQ Scores: Analysis and a Corrected Statistical Treatment},
+  pdfsubject={Composite-score standardization, population calibration, and extreme percentiles},
+  pdfauthor={Prepared with OpenAI Codex},
+  pdfkeywords={IQ, composite scores, covariance, normal distribution, range restriction}
+]{hyperref}
+\usepackage{bookmark}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Corr}{Corr}
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\given}{\,\vert\,}
+\setlength{\emergencystretch}{1.5em}
+\setlist[itemize]{leftmargin=*,itemsep=2pt,topsep=3pt}
+\setkomafont{disposition}{\normalfont\sffamily\bfseries}
+\setkomafont{pageheadfoot}{\normalfont\sffamily\small}
+\clearpairofpagestyles
+\ihead{Combining IQ scores}
+\ohead{Analysis and corrected article}
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+\setlength{\bibsep}{5pt}
+
+\title{Combining IQ Scores}
+\subtitle{Analysis and a corrected statistical treatment}
+\author{}
+\date{30 October 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{plain.scrheadings}
+\vspace{-1.1em}
+
+\begin{abstract}
+The covariance identities reproduced in Ronald K. Hoeflin's article are
+correct. Their application to qualifying IQ scores requires additional
+assumptions about the reference population, the composite's distribution,
+and the meaning of the score. This report distinguishes those assumptions
+from the algebra, corrects the numerical table, and supplies an independently
+written replacement article. All displayed numerical examples have been
+recalculated. A technical appendix illustrates why a standardized composite
+and an estimate of latent ability need not coincide.
+\end{abstract}
+
+\section{Analysis of the original article}\label{sec:analysis}
+
+\citet{hoeflin} reproduces George A. Ferguson's treatment of variances and
+covariances and applies it to combinations of IQ scores. The basic identity
+\begin{equation}
+  \Var(X+Y)=\Var(X)+\Var(Y)+2\operatorname{Cov}(X,Y)
+  \label{eq:variance-sum}
+\end{equation}
+is correct. It determines the variance of a sum without requiring normality.
+The principal weaknesses arise when a standardized sum is assigned an extreme
+population percentile and used as a qualifying score.
+
+\begin{itemize}
+  \item \textbf{Population calibration.} Correlations among the article's
+  27 selected high scorers do not establish the correlations in the population
+  used to standardize the tests. Selection can change the relationships, and
+  the appropriate correction depends on how selection occurred
+  \citep{sackett2000}.
+  \item \textbf{Distributional assumptions.} Mean zero and variance one do
+  not establish a normal distribution. A one-in-a-million upper-tail claim
+  requires additional justification for the tail model.
+  \item \textbf{Numerical correction.} The 100-test entry should be about
+  3.69, rather than 3.71, standard deviations. The more accurate normal
+  quantile also changes some final digits elsewhere; for example, the
+  four-test result rounds to 3.98 rather than 3.97.
+  \item \textbf{Score interpretation.} A standardized composite, a latent
+  ability estimate, and a validated IQ score are distinct quantities.
+  Their equivalence requires evidence about the battery and its intended use
+  \citep[Standard~1.14]{standards2014}.
+  \item \textbf{Threshold precision.} Rounded whole-number scores are useful
+  illustrations, but are not exact qualifying cutoffs. The scale's standard
+  deviation and the classification rule must be specified.
+\end{itemize}
+
+The replacement below preserves the valid calculation while making its
+assumptions explicit. The article is newly written; it is not a transcription
+or a reproduction of the original scans.
+
+\section{Corrected article: a statistical method and its limits}
+\label{sec:replacement}
+
+Several cognitive test scores can be combined into a single score. The
+calculation must account for the tests' correlations: correlated scores
+cannot be treated as independent when calculating the composite's variance.
+The resulting composite also needs an explicit interpretation. Rescaling it
+to an IQ-style scale supplies units; evidence about the battery establishes
+what those units mean.
+
+Before calculating a composite, specify the tests, their weights, the
+administration procedure, and the population against which scores will be
+compared. Composite construction and interpretation require their own
+justification; evidence supporting the individual tests does not
+automatically establish the meaning of their combination
+\citep[Standard~1.14]{standards2014}.
+
+\subsection{Put the component scores on comparable scales}
+
+For test \(i\), convert the observed score \(x_i\) to a standardized score:
+\begin{equation}
+  z_i=\frac{x_i-\mu_i}{\sigma_i},
+  \label{eq:standardize}
+\end{equation}
+where \(\mu_i\) and \(\sigma_i\) are its mean and standard deviation in the
+intended reference population. The norms must support comparison with that
+population. Using different numbers labelled ``IQ'' does not establish
+their comparability.
+
+For example, a score of 160 on a scale with mean 100 and standard deviation
+15 corresponds to \(z=4\). The same numerical score on a scale with standard
+deviation 16 corresponds to \(z=3.75\). These scores should be standardized
+before they are combined.
+
+\subsection{Standardize the weighted composite}
+
+Let \(R\) be the population correlation matrix of the standardized test
+scores, and let \(w\) contain fixed weights. The weighted sum has variance
+\begin{equation}
+  \Var(w^\T Z)=w^\T Rw.
+  \label{eq:weighted-variance}
+\end{equation}
+Consequently, provided this variance is positive, a standardized composite is
+\begin{equation}
+  \boxed{Z_C=\frac{w^\T z}{\sqrt{w^\T Rw}}.}
+  \label{eq:weighted-composite}
+\end{equation}
+With the correct population parameters, this composite has mean zero and
+variance one. This statement requires finite variances, but does not require
+normality. When the parameters are estimated, their uncertainty affects the
+calibration of the composite.
+
+For an equally weighted battery of \(n\geq2\) tests, write \(\bar z\) for the
+average standardized score and \(\bar r\) for the average correlation across
+the distinct pairs of tests:
+\begin{equation}
+  \bar r=\frac{2}{n(n-1)}\sum_{i<j}r_{ij}.
+  \label{eq:average-correlation}
+\end{equation}
+\begin{samepage}
+Then
+\begin{equation}
+  \begin{aligned}
+    \Var(\bar Z)
+    &=\frac{n+2\sum_{i<j}r_{ij}}{n^2}\\
+    &=\frac{1+(n-1)\bar r}{n}
+     =\bar r+\frac{1-\bar r}{n}.
+  \end{aligned}
+  \label{eq:mean-variance}
+\end{equation}
+Therefore,
+\begin{equation}
+  \boxed{Z_C=\frac{\bar z}{\sqrt{\bar r+(1-\bar r)/n}}.}
+  \label{eq:equal-composite}
+\end{equation}
+\end{samepage}
+For a single test, \(Z_C=z_1\); no inter-test correlation is needed.
+
+Identical pairwise correlations are unnecessary for
+\cref{eq:mean-variance}; their average is sufficient for this particular
+equal-weight composite. The full matrix remains relevant to other weighting
+schemes and to understanding the battery.
+
+An IQ-style reporting scale with mean 100 and standard deviation \(s\) can
+be defined by
+\begin{equation}
+  I_C=100+sZ_C.
+  \label{eq:reporting-scale}
+\end{equation}
+When all component scores already use mean 100 and the same standard
+deviation \(s\), the formula becomes
+\begin{equation}
+  I_C=100+\frac{\bar I-100}{\sqrt{\bar r+(1-\bar r)/n}},
+  \label{eq:iq-composite}
+\end{equation}
+where \(\bar I\) is their arithmetic average.
+
+For example, three scores averaging 160, each on an SD-16 scale, produce
+\(\bar z=3.75\). If their population average correlation is 0.60, then
+\begin{equation}
+  Z_C=\frac{3.75}{\sqrt{0.60+0.40/3}}\approx4.3791,
+  \qquad I_C\approx170.06.
+  \label{eq:worked-example}
+\end{equation}
+This is a score on the specified composite. Interpreting it as a measure of
+general intelligence requires evidence about what the composite measures.
+
+\subsection{Separate standardization from percentile estimation}
+
+To assign a percentile, we also need the composite's distribution. Mean zero
+and variance one do not make a distribution normal. Joint multivariate
+normality of the component scores is a sufficient condition for a fixed
+linear composite to be normal. Normal distributions for the individual
+tests alone are insufficient.
+
+If a standard-normal distribution is justified for the composite, its
+percentile is \(100\Phi(Z_C)\), where \(\Phi\) is the standard-normal
+cumulative distribution function. A one-in-a-million upper-tail probability
+corresponds to
+\begin{equation}
+  q=\Phi^{-1}(0.999999)\approx4.7534243088.
+  \label{eq:quantile}
+\end{equation}
+Thus the model-based 99.9999th-percentile threshold is
+\begin{equation}
+  \boxed{\bar z_{\min}=q\sqrt{\bar r+\frac{1-\bar r}{n}}.}
+  \label{eq:threshold}
+\end{equation}
+The quantile can be reproduced in R with
+\texttt{qnorm(1e-6, lower.tail = FALSE)}; the official documentation defines
+the normal quantile function and its upper-tail option \citep{rnormal}.
+
+For \(\bar r=0.60\), the thresholds are shown in \cref{tab:thresholds}.
+
+\begin{table}[htbp]
+\centering
+\caption{Model-based 99.9999th-percentile thresholds, assuming a normal
+composite and average pairwise correlation 0.60.}
+\label{tab:thresholds}
+\begin{tblr}{
+  colspec={X[1,l] X[1.15,r] X[1.4,r]},
+  row{1}={font=\bfseries},
+  rowsep=4pt,
+}
+\toprule
+Number of tests & Required average component \(z\)
+  & Required average component score, mean 100 and SD 16 \\
+\midrule
+1     & 4.7534 & 176.05 \\
+2     & 4.2516 & 168.03 \\
+3     & 4.0706 & 165.13 \\
+4     & 3.9770 & 163.63 \\
+5     & 3.9198 & 162.72 \\
+10    & 3.8027 & 160.84 \\
+100   & 3.6942 & 159.11 \\
+1,000 & 3.6832 & 158.93 \\
+Limit as \(n\) increases & 3.6820 & 158.91 \\
+\bottomrule
+\end{tblr}
+\end{table}
+
+These are thresholds for the \emph{average component score}, under the
+stated model. The target composite score remains approximately 176.05 on
+the SD-16 scale in every row. Values are rounded for display; an operational
+classification rule must specify rounding and use the appropriate
+attainable scores.
+
+For an SD-15 reporting scale, use \(100+15\bar z_{\min}\) instead. In
+particular, the single-test threshold would be approximately 171.30. An IQ
+number without its scale convention is ambiguous.
+
+\subsection{Interpret the limiting threshold and correlation sensitivity}
+
+The limiting average threshold follows from
+\begin{equation}
+  \lim_{n\to\infty}\bar z_{\min}=q\sqrt{\bar r},
+  \label{eq:limit}
+\end{equation}
+if the average correlation remains fixed as tests are added. With
+\(\bar r=0.60\), the limiting average component score on the SD-16 scale is
+approximately 158.91. This is a feature of the assumed sequence of batteries
+and its threshold; it is not a ceiling on possible composite scores. Adding
+tests can also change the average correlation, so the fixed-correlation
+limit should not be treated as a universal rule.
+
+The choice of correlation matters substantially. For three tests, an
+average correlation of 0.90 raises the required average SD-16 component
+score to approximately 173.48, compared with 165.13 at 0.60. A smaller
+assumed correlation gives a larger composite score for the same positive
+average performance. The correlation therefore needs to be estimated for
+the relevant population and administration procedure. A lower correlation
+does not, by itself, establish better measurement; it can also reflect
+different constructs or greater measurement noise.
+
+\subsection{Calibrate the population and the scoring procedure}
+
+Correlations in a selected high-scoring sample need not equal correlations
+in the population used to standardize the tests. Selection can change score
+variances and relationships. The appropriate treatment depends on the
+selection mechanism and the information available about the unrestricted
+population; there is no universal adjustment. \citet{sackett2000} explain
+why range-restriction corrections depend on those details. A small selected
+sample cannot directly establish a one-in-a-million population frequency.
+
+The scoring procedure also matters. A fixed battery, the best few results
+from many attempts, and a rule that keeps adding tests until someone
+qualifies have different score distributions. Each procedure requires
+calibration for the rule actually used. Repeated administrations can
+introduce practice effects, as documented by \citet{hausknecht2007}.
+Repeated or overlapping tests should not be counted as fresh independent
+observations without accounting for their dependence and administration
+history.
+
+Finally, variability across people is different from uncertainty about one
+person. The correlation matrix determines how the composite varies in the
+reference population. It does not, by itself, provide an individual
+confidence interval, separate general ability from shared methods, or
+establish measurement precision at extreme scores. Those questions require
+an appropriate measurement model and supporting data.
+
+A defensible report should identify the battery, norms, weights, estimated
+correlations, and uncertainty. Direct composite norms should be used when
+they adequately support the intended interpretation. If an extreme
+percentile comes from a distributional model beyond the available normative
+evidence, report it as a model-based extrapolation and show how sensitive
+it is to the assumptions. The testing standards require clear descriptions
+of reference populations and norming procedures in Standards~5.8--5.9,
+and justification for score interpretations in Standards~1.1--1.4
+\citep{standards2014}.
+
+\appendix
+\section{Composite scores and latent ability: a mathematical illustration}
+\label{sec:latent}
+
+To see why these quantities differ, suppose, expressly as a hypothetical
+model, that
+\begin{equation}
+  Z_i=\sqrt{\rho}\,G+\sqrt{1-\rho}\,\varepsilon_i,
+  \qquad 0<\rho<1,
+  \label{eq:factor-model}
+\end{equation}
+where \(G\) and all \(\varepsilon_i\) are independent standard-normal
+variables. This model treats all shared variance as one common factor and
+all residuals as mutually independent. Real batteries need not satisfy
+those assumptions.
+
+In this particular model, the equal-weight composite's squared correlation
+with \(G\) is
+\begin{equation}
+  \mathcal R=\Corr(G,Z_C)^2=\frac{n\rho}{1+(n-1)\rho}.
+  \label{eq:factor-reliability}
+\end{equation}
+The conditional distribution of the latent factor has
+\begin{align}
+  \E[G\given Z_1,\ldots,Z_n]&=\sqrt{\mathcal R}\,Z_C,
+  \label{eq:latent-mean}\\
+  \Var(G\given Z_1,\ldots,Z_n)&=\frac{1-\rho}{1+(n-1)\rho}.
+  \label{eq:latent-variance}
+\end{align}
+These identities follow from Gaussian conditioning. In particular,
+\(\operatorname{Cov}(G,\bar Z)=\sqrt{\rho}\) and
+\(\Var(\bar Z)=\rho+(1-\rho)/n\); the residual contrasts contain no
+additional information about \(G\) under this model.
+
+For three tests with \(\rho=0.60\), a composite at \(Z_C=4.7534\) has
+conditional mean \(G\) of approximately 4.30 and conditional standard
+deviation approximately 0.43. On a hypothetical latent scale with mean 100
+and SD 16, these become a mean of approximately 168.79 and a standard
+deviation of 6.82. The composite's reporting-scale value is approximately
+176.05. The two values answer different questions, even in this unusually
+simple model.
+
+The illustration is a mathematical counterexample to treating a
+standardized composite as automatically identical to a latent-ability
+estimate. It is not a proposed correction factor for actual IQ scores,
+and inter-test correlation should not generally be equated with reliability
+or common-factor variance.
+
+\section{Numerical reproduction}
+
+The accompanying script \texttt{scripts/verify\_calculations.py} recalculates
+the normal quantile, checks the table against \texttt{data/thresholds.csv}
+and the numerical entries in this source, and verifies the worked examples.
+It uses the upper-tail probability directly through
+\texttt{scipy.stats.norm.isf(1e-6)}. The mathematical results do not depend
+on the choice of software.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
