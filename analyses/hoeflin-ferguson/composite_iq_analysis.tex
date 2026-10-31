@@ -51,7 +51,7 @@
 \title{Combining IQ Scores}
 \subtitle{Analysis and a corrected statistical treatment}
 \author{}
-\date{30 October 2026}
+\date{31 October 2026}
 
 \begin{document}
 \maketitle
@@ -393,6 +393,102 @@ and the numerical entries in this source, and verifies the worked examples.
 It uses the upper-tail probability directly through
 \texttt{scipy.stats.norm.isf(1e-6)}. The mathematical results do not depend
 on the choice of software.
+
+\section{Final software verification and its limits}
+\label{sec:verification}
+
+The final checks were executed on \texttt{computer10} on 31 October 2026.
+The following results refer to the source and evidence preserved at
+repository commit \texttt{2636a42}. The
+\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-clean-computer10-20261031/REPORT.md}{Deal verification report}
+and the
+\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-spark-computer10-20261031/REPORT.md}{SPARK integration report}
+link the exact commands, tool versions, source hashes, checksums, and raw
+results. Repository-wide Python counts below cover both analyses and
+their shared tooling; they are not counts for this article alone.
+
+\subsection{Deal contracts and Python checks}
+
+The contract-coverage gate found 20 Python files, 142 named functions, and
+416 Deal decorators, with zero coverage gaps. All 19 positive files,
+including tests and the gate itself, passed static lint with zero
+diagnostics, empty output, and exit status 0, both normally and under
+\texttt{python -O}. The deliberately incorrect fixture was checked
+separately: it produced exactly the expected \texttt{DEL012}
+postcondition diagnostic and exit status 1. Its failure is a required
+negative control, not an unresolved production finding.
+
+All 14 earlier production diagnostics were resolved. Bounded quotient
+helpers retain the original division operations, numerical tolerances
+remain unchanged, and the fixes do not disable contracts or suppress
+diagnostics. The runtime, property, and generated-test suite passed
+110 tests with no failures or skips. All 27 recorded command checks had
+their expected outcomes, including numerical scripts, Ada-output
+validators, replay, optimized-Python execution, and evidence audits.
+
+Deal Solver proved the two pure proof-acceptance gate postconditions;
+the deliberately wrong symbolic contract was rejected. This focused
+symbolic result does not prove the complete Python programs. A clean
+linter result is also not a universal proof: input-dependent contracts
+remain runtime checks, and finite tests cannot establish correctness for
+every possible input. The recorded environment used Python 3.13.5,
+Deal 4.24.6, and Deal Solver 0.1.2.
+
+\subsection{SPARK results for the Hoeflin/Ferguson core}
+
+The fresh five-prover portfolio completed all 47 native checks for this
+analysis: 8 flow checks and 39 proof checks, with zero
+unproved and zero justified checks. CVC5, Z3, Alt-Ergo, classic COLIBRI,
+and Yices were requested together. This is a portfolio result; it does
+not mean that each prover independently discharged every obligation.
+Incomplete individual runs remain identified in the earlier evidence.
+The deliberately incorrect inclusion-exclusion control was rejected
+with an unproved functional contract.
+
+The proof project selects only \texttt{hoeflin\_core.ads} and
+\texttt{hoeflin\_core.adb}. Under their stated input preconditions, the
+contracts establish exact integer variance bookkeeping, bounded
+floating-point transforms, and nested event counts with their specified
+increments. The core uses no project assumptions, imported proof axioms,
+or suppressed checks. The
+\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-spark-computer10-20261031/hoeflin/portfolio/gnatprove.out}{native Hoeflin proof report}
+records the totals. The toolchain manifest records the compiler banner
+as GNAT 13.2.0 and the GNATprove banner as \texttt{0.0w}; these distinct
+identifiers should not be conflated.
+
+\subsection{Numerical, simulation, and model boundaries}
+
+The Ada drivers and \texttt{normal\_support} are outside SPARK. Their
+elementary functions, C \texttt{erfc}, and inverse-tail bisection are
+checked numerically against SciPy, not certified by the core proof.
+Likewise, a proof of a floating-point bound does not establish an
+approximation-error bound. The proof-friendly evaluation orders for
+thresholds and composites are algebraically equivalent to the report's
+formulas, but are not claimed to give bit-identical floating-point
+results.
+
+The retained simulation uses 1,000,000 trials for each of eight test-count
+cases, with seed \texttt{20261030} reset across cases. These common random
+numbers make the cases dependent. Independent Python replay reproduced
+the tail counts and checked the means and variances within the recorded
+tolerances, normally and under optimized Python. This establishes
+reproducibility and numerical agreement, not independence of the
+pseudo-random draws. Counts beyond the one-in-a-million cutoff remain
+descriptive; this sample size does not validate that extreme tail.
+
+Neither Deal nor SPARK proves the Gaussian common-factor model, the
+population covariance calibration, an identification of correlation with
+reliability, or the empirical validity of a psychometric interpretation.
+Those assumptions and the distinction between a standardized composite
+and latent ability remain as discussed above.
+
+From a full Git clone, install the pinned development dependencies and
+run \texttt{make check} at the repository root. The Python auditor
+\path{verification/verify_evidence.py} checks the retained hashes, native
+totals, and negative-control result. Historical Python identities are
+resolved through verified Git blobs; changed Ada sources cannot use that
+fallback. An evidence audit verifies record integrity and source identity;
+it does not rerun the provers or independently validate their SMT proofs.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

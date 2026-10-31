@@ -46,7 +46,7 @@
 \title{Multiple-Test Admissions}
 \subtitle{A joint analysis and corrected version of two Grady Towers letters}
 \author{}
-\date{30 October 2026}
+\date{31 October 2026}
 
 \begin{document}
 \maketitle
@@ -482,6 +482,114 @@ rounded display tables. Run \texttt{make check} from this analysis folder;
 \texttt{make pdf} builds the report with XeLaTeX. Numerical consistency
 does not establish the empirical truth of the Gaussian assumptions or
 the chosen correlation.
+
+\section{Final verification results and limits}\label{sec:verification}
+
+The final checks were executed on \texttt{computer10} on 31 October 2026.
+The \href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-clean-computer10-20261031/REPORT.md}{Deal evidence report}
+and the
+\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-spark-computer10-20261031/REPORT.md}{fresh SPARK campaign}
+are pinned to the verified source revision. They retain exact commands,
+tool versions, statuses, source hashes, checksums, and raw logs. The Python
+environment used Python 3.13.5, Deal 4.24.6, and Deal Solver 0.1.2.
+
+\subsection{Deal checks across the repository}
+
+The Python results in \cref{tab:deal-verification} cover both analyses and
+their shared verification tools; they are not separate totals for this
+Towers analysis. Every current Python file, including tests and fixtures,
+contains contracts, and every named function has a real Deal decorator.
+
+\begin{table}[htbp]
+\centering
+\caption{Final repository-wide Python verification results on computer10.}
+\label{tab:deal-verification}
+\begin{tblr}{colspec={X[1,l] X[2.4,l]},row{1}={font=\bfseries},rowsep=3pt}
+\toprule
+Check & Recorded outcome \\
+\midrule
+Contract coverage & 20 files, 142 named functions, 416 Deal decorators; zero gaps \\
+Positive static lint & All 19 positive files: zero diagnostics, empty output, exit 0 \\
+Static negative control & Deliberately wrong fixture: exactly one expected \texttt{DEL012}, exit 1 \\
+Runtime and property tests & 110 passed; zero failures or skips \\
+Recorded commands & All 27 Python command checks reached their expected outcomes \\
+Focused symbolic checks & Two pure proof-acceptance gate postconditions proved \\
+\bottomrule
+\end{tblr}
+\end{table}
+
+Coverage, static lint, the numerical scripts, Ada-output validators,
+independent replays, and evidence audits also passed under
+\texttt{python -O}; CLI entry points explicitly enable Deal contracts.
+All 14 earlier production-linter diagnostics were resolved without
+suppressing findings or weakening the permitted exception families.
+Bounded quotient helpers retain the original division operations, and
+numerical tolerances are unchanged. The incorrect symbolic contract was
+rejected. Repository-root \texttt{make check} and GitHub Actions enforce
+coverage, clean positive lint, the expected negative diagnostic, and tests.
+
+A clean linter result is not a universal proof of Python correctness.
+Runtime contracts and generated/property tests check executions and
+specified input domains. Deal Solver's successful symbolic result concerns
+only the two pure acceptance gates; it does not prove SciPy, the numerical
+validators, file handling, or the subprocess orchestrator. Skipped or
+unsupported checks are not counted as proofs.
+
+\subsection{SPARK core and numerical boundary}
+
+For this analysis, the fresh five-prover portfolio discharged
+\textbf{31 checks: 9 flow checks and 22 proof checks}, with zero unproved
+and zero justified checks. The latter comprise 13 run-time checks and
+9 functional-contract checks. The
+\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-spark-computer10-20261031/towers/portfolio/gnatprove.out}{native Towers report}
+records all 11 subprograms/packages in \texttt{Admission\_Core} analyzed.
+The deliberately incorrect union contract was rejected. CVC5, Z3,
+Alt-Ergo, classic COLIBRI, and Yices were requested together; completion
+of the portfolio does not mean that every independent solver run completed.
+Earlier incomplete independent runs remain recorded as incomplete.
+The recorded compiler reports GNAT 13.2.0 and the matching GNATprove
+binary reports banner \texttt{0.0w}; its identity is retained in the manifest.
+
+Under the core's explicit input bounds and preconditions, these checks
+establish event classification, one-cell count updates, bounded marginal
+and union counts, and exact integer/rational probability algebra,
+including inclusion-exclusion, complements, and conditional numerators
+and denominators. They concern this specified core, rather than every
+mathematical or empirical claim in the report.
+
+The floating-to-core adapter rounds probabilities to units of
+\(10^{-15}\) and checks each reconstruction error against
+\(\delta=0.51\times10^{-15}\). For a conditional probability \(j/p\),
+the resulting ratio change is bounded by
+\(\delta(1+j/p)/(p-\delta)\), when \(p>\delta\). At the smallest nominal
+marginal \(p=1/33{,}000\), this is at most approximately
+\(3.37\times10^{-11}\); actual checked changes are smaller. This accounts
+only for quantization. The driver and \texttt{Normal\_Model} have
+\texttt{SPARK\_Mode => Off}; \texttt{libm}, transcendental functions, inverse-normal
+calculation, Simpson quadrature, floating-point rendering, I/O, and
+random generation remain outside the proof. Comparing 10,000 and 20,000
+Simpson panels is a numerical refinement check, not a proved quadrature
+error bound.
+
+Independent validation compared the Ada calculations with SciPy and
+replayed the retained simulation from seed \texttt{20261030}. One million
+shared correlated pairs supplied the four Towers cases; every
+\emph{neither, A only, B only, both} count matched exactly, both normally
+and under optimized Python. Replay checks implementation consistency;
+it does not prove random independence or the Gaussian model. Wilson
+intervals describe simulation uncertainty under that model, and rare
+event counts do not establish extreme-tail psychometric frequencies.
+
+From a full Git clone, the evidence can be audited with
+\texttt{python verification/verify\_evidence.py}; the pinned campaign
+report gives the command for auditing this fresh run. Audits check
+checksums, native totals, current Ada identities, and verified historical
+Python Git blobs. They do not independently recheck the SMT proofs or
+replace rerunning the provers. None of these software checks establishes
+that \(\rho=0.7\) applies to actual tests, that their norms and tails are
+accurate, or that eligibility probabilities describe real membership
+selection or latent ability. Those remain empirical and modeling
+questions identified in the main analysis.
 
 \clearpage
 \bibliographystyle{plainnat}
