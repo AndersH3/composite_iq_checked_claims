@@ -1,0 +1,104 @@
+{
+  "files": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+      "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+      "sha256": "b61e0f49e55e60f967c5f222919e07126ae522cecb40f8733a08b8e90f1632d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "sha256": "49c2d2cabee068c4c2841f3a06398a9ffd8e9aa7dd5e4fb86c67badf77a04305"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+      "sha256": "1ef78333137a49d1f85c24b3e62b4178e3c20da16491b9285d724afbc2187e0c"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "6a188933f15a75b575b2c95382b92ba5fe3859ec8f369dba7fe4bad40bd3ec34"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+      "sha256": "6e3ef75a0fc1ac4b18125505e9d0477890c44cb2fd00994d6bb4926c869e26fe"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "6c83fb12e14ba360dfece5fa98c9f70f2c18b98d82c25c18650f5772fae4cb2c"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "404c03e629949044ad50526fcaed9ad04c022fff105917054031dd6455e6cffa"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "8a7d0a08fb20765f26446167c3ee05c818aec1b5582ac90d30af582a4707386e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "17ff4d470406e068162fa813f625342d208d0887ca88a1429f4c0c7dc9a5ba48"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "d1776e7f3e07421d991735354395207016fffdd5dd9195d753112603f4e68585"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "fdd06107769e21691a9444d81936629cba47876d27713b40a6534e369ec9d867"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "e0bb1780aa789120be3e54d8543292f44833d6d85caf4d04650e1bdd573fcdee"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "sha256": "1268f3fd4bf5eceb170d344d1a85cb4de3b9b201384324dbb86296e259c2f496"
+    },
+    {
+      "path": "verification/check_contract_coverage.py",
+      "sha256": "e75f888827070a8d7f3e3e169c81c11faf5170d8b63de3ae4bf5c71887c323f0"
+    },
+    {
+      "path": "verification/negative_control/negative.gpr",
+      "sha256": "f131c920b5791e5b011833d9bcaf8d35cabcf794d7882bc303b281916cba09a9"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.adb",
+      "sha256": "26d1a77d839429b703b08b4a5f8c1f35d60b4afa60e6f22ed9942bb7915c732d"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.ads",
+      "sha256": "74ed2015a69d986d69e91bdac1fa6745468fbdb88dc49d63ba49b6c7064f1fce"
+    },
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "0e87a88ded645948d7ca9d71dc5fcf504051c9fd657e2342f3c440f7569cfba1"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "sha256": "520394c35dcd78e39051f07baa5076aa45c2814d07767fd1573f790142b967b2"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "sha256": "cd4fcebb51c03b45ac8fc9371db19de33573bf4626c1ae43281a4d07cb002df3"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "sha256": "5e62440684e5788347eacbc72b5ac4e131979a334c76e8bfa73f23640054267e"
+    }
+  ]
+}

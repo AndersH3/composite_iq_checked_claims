@@ -1,0 +1,4 @@
+tests/fixtures/contract_negative_control.py
+  17:11 DEL012 post contract error (-1)
+    return -1
+           ^

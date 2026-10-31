@@ -1,0 +1,50 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+hoeflin_core.adb:8:39: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_core.adb:10:14: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_core.adb:19:20: info: range check proved (Trivial)
+hoeflin_core.adb:19:25: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 338 steps)
+hoeflin_core.adb:19:25: info: float overflow check proved (altergo: 1 VC in max 0.3 seconds and 4924 steps)
+hoeflin_core.adb:19:25: info: range check proved (altergo: 1 VC in max 1.0 seconds and 20739 steps)
+hoeflin_core.adb:19:33: info: range check proved (Trivial)
+hoeflin_core.adb:29:20: info: range check proved (Trivial)
+hoeflin_core.adb:29:25: info: float overflow check proved (Trivial)
+hoeflin_core.adb:29:25: info: range check proved (Trivial)
+hoeflin_core.adb:29:25: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 338 steps)
+hoeflin_core.adb:29:33: info: range check proved (Trivial)
+hoeflin_core.adb:34:45: info: float overflow check proved (Trivial)
+hoeflin_core.adb:34:45: info: range check proved (Trivial)
+hoeflin_core.adb:34:52: info: float overflow check proved (Trivial)
+hoeflin_core.adb:36:23: info: float overflow check proved (Trivial)
+hoeflin_core.adb:36:23: info: range check proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+hoeflin_core.adb:41:43: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:50: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: range check proved (Trivial)
+hoeflin_core.adb:41:60: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 314 steps)
+hoeflin_core.adb:43:21: info: float overflow check proved (Trivial)
+hoeflin_core.adb:43:21: info: range check proved (CVC5: 1 VC in max 10.2 seconds and 31685 steps)
+hoeflin_core.adb:48:20: info: float overflow check proved (Trivial)
+hoeflin_core.adb:48:20: info: range check proved (Trivial)
+hoeflin_core.adb:48:27: info: float overflow check proved (Trivial)
+hoeflin_core.adb:53:26: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 364 steps)
+hoeflin_core.adb:55:37: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 406 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.adb:58:41: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 442 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.adb:61:39: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 536 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:15:09: info: data dependencies proved
+hoeflin_core.ads:16:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.2 seconds and 177 steps)
+hoeflin_core.ads:22:09: info: data dependencies proved
+hoeflin_core.ads:26:09: info: data dependencies proved
+hoeflin_core.ads:27:14: info: postcondition proved (altergo: 2 VC in max 0.3 seconds and 4638 steps)
+hoeflin_core.ads:31:09: info: data dependencies proved
+hoeflin_core.ads:32:14: info: postcondition proved (CVC5: 1 VC in max 1.5 seconds and 7477 steps)
+hoeflin_core.ads:36:09: info: data dependencies proved
+hoeflin_core.ads:37:14: info: postcondition proved (CVC5: 1 VC in max 2.4 seconds and 24935 steps)
+hoeflin_core.ads:40:09: info: data dependencies proved
+hoeflin_core.ads:53:09: info: data dependencies proved
+hoeflin_core.ads:56:09: info: data dependencies proved
+hoeflin_core.ads:59:14: info: postcondition proved (CVC5: 3 VC in max 0.1 seconds and 573 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:60:47: info: overflow check proved (CVC5: 1 VC in max 0.0 seconds and 4 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:61:51: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 604 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:62:49: info: overflow check proved (CVC5: 2 VC in max 0.1 seconds and 638 steps)
+Summary logged in /tmp/composite-iq-spark-a43zsc8y/hoeflin/portfolio/obj-proof/gnatprove/gnatprove.out

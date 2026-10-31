@@ -1,0 +1,5 @@
+verification/proof_gate.py
+  totals_balanced
+    proved! post-condition
+  successful_checks
+    proved! post-condition

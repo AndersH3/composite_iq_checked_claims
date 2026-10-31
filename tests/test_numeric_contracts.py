@@ -1,0 +1,186 @@
+"""Check domain rejection and independent mathematical properties."""
+import math
+
+import deal
+from hypothesis import given, settings, strategies as st
+import pytest
+from scipy.stats import norm
+
+PROPERTY = settings(max_examples=40, derandomize=True, deadline=None)
+UNIT = st.floats(min_value=0, max_value=1, allow_nan=False, allow_infinity=False)
+
+
+@pytest.mark.parametrize("n,rho", [
+    (0, .6), (-1, .6), (1_000_001, .6), (True, .6), (1.5, .6),
+    (3, -.1), (3, 1.1), (3, math.nan), (3, math.inf), (3, True),
+])
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_variance_rejects_invalid_domain(hoeflin, n, rho):
+    with pytest.raises(deal.PreContractError):
+        hoeflin.variance_factor(n, rho)
+
+
+@pytest.mark.parametrize("quantile", [-1.0, 10.1, math.nan, math.inf, True])
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_threshold_rejects_invalid_quantile(hoeflin, quantile):
+    with pytest.raises(deal.PreContractError):
+        hoeflin.mean_threshold(3, .6, quantile)
+
+
+@PROPERTY
+@given(n=st.integers(1, 1_000_000), rho=UNIT)
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_variance_between_independent_and_identical_limits(hoeflin, n, rho):
+    factor = hoeflin.variance_factor(n, rho)
+    assert 1/n - 2e-15 <= factor <= 1 + 2e-15
+    assert rho - 2e-15 <= factor
+    assert hoeflin.variance_factor(n, 0.0) == pytest.approx(1/n, abs=2e-15)
+    assert hoeflin.variance_factor(n, 1.0) == pytest.approx(1.0, abs=2e-15)
+
+
+@PROPERTY
+@given(n=st.integers(1, 500_000), extra=st.integers(1, 500_000), rho=UNIT)
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_more_tests_reduce_required_mean_at_fixed_correlation(hoeflin, n, extra, rho):
+    assert hoeflin.mean_threshold(n + extra, rho, 4.753424308822899) <= (
+        hoeflin.mean_threshold(n, rho, 4.753424308822899) + 2e-14
+    )
+
+
+@PROPERTY
+@given(rho=UNIT, quantile=st.floats(0, 10, allow_nan=False, allow_infinity=False))
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_one_test_is_unaffected_by_intertest_correlation(hoeflin, rho, quantile):
+    assert hoeflin.variance_factor(1, rho) == pytest.approx(1.0, abs=2e-15)
+    assert hoeflin.mean_threshold(1, rho, quantile) == pytest.approx(quantile, abs=2e-14)
+
+
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr', 'read')
+def test_corrected_hundred_test_threshold_and_stored_table(hoeflin):
+    z = hoeflin.mean_threshold(100, .6, float(norm.isf(1e-6)))
+    assert z == pytest.approx(3.69423953831691, abs=2e-13)
+    assert not math.isclose(z, 3.71, abs_tol=.001)
+    rows = hoeflin.thresholds()
+    hoeflin.verify_csv(rows)
+    hoeflin.verify_source_values(rows)
+    hoeflin.verify_examples()
+
+
+@pytest.mark.parametrize("p_a,p_b,joint", [
+    (.2, .3, -.1), (.2, .3, .4), (.8, .8, .5), (math.nan, .2, 0),
+    (.2, math.inf, 0), (True, .2, 0),
+])
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_union_rejects_impossible_probabilities(towers, p_a, p_b, joint):
+    with pytest.raises(deal.PreContractError):
+        towers.probability_union(p_a, p_b, joint)
+
+
+@pytest.mark.parametrize("joint,marginal", [
+    (0, 0), (.3, .2), (-.1, .2), (math.nan, .2), (.1, math.inf), (False, .2),
+])
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_conditional_rejects_invalid_domain(towers, joint, marginal):
+    with pytest.raises(deal.PreContractError):
+        towers.conditional_probability(joint, marginal)
+
+
+@PROPERTY
+@given(a=st.sets(st.integers(0, 15)), b=st.sets(st.integers(0, 15)))
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_union_matches_independent_finite_set_counting(towers, a, b):
+    # Dyadic probabilities avoid ambiguity at floating Frechet boundaries.
+    value = towers.probability_union(len(a)/16, len(b)/16, len(a & b)/16)
+    assert value == len(a | b)/16
+    if a:
+        assert towers.conditional_probability(len(a & b)/16, len(a)/16) == (
+            len(a & b)/len(a)
+        )
+
+
+@pytest.mark.parametrize("a,b,rho", [
+    (math.nan, 1, .7), (1, math.inf, .7), (9, 1, .7),
+    (1, 1, 1.0), (1, 1, -.951), (True, 1, .7),
+])
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_joint_tail_rejects_invalid_domain(towers, a, b, rho):
+    with pytest.raises(deal.PreContractError):
+        towers.joint_tail(a, b, rho)
+
+
+@PROPERTY
+@given(a=st.floats(0, 4, allow_nan=False, allow_infinity=False),
+       b=st.floats(0, 4, allow_nan=False, allow_infinity=False))
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_independent_gaussian_tail_factorizes(towers, a, b):
+    assert towers.joint_tail(a, b, 0.0) == pytest.approx(norm.sf(a)*norm.sf(b), abs=1e-14)
+
+
+@PROPERTY
+@given(a=st.floats(0, 4, allow_nan=False, allow_infinity=False),
+       b=st.floats(0, 4, allow_nan=False, allow_infinity=False),
+       rho=st.floats(-.5, .8, allow_nan=False, allow_infinity=False))
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_joint_tail_is_symmetric_and_bounded(towers, a, b, rho):
+    result = towers.joint_tail(a, b, rho)
+    assert result == pytest.approx(towers.joint_tail(b, a, rho), abs=1e-14)
+    assert 0 <= result <= min(norm.sf(a), norm.sf(b)) + 1e-14
+
+
+@pytest.mark.parametrize("p_a,p_b,expected", [
+    (.02, .02, .006276274020528095),
+    (.02, .001, .0006585888039150674),
+])
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_admission_reference_overlaps(towers, p_a, p_b, expected):
+    result = towers.joint_tail(float(norm.isf(p_a)), float(norm.isf(p_b)), .7)
+    assert result == pytest.approx(expected, abs=1e-14)
+
+
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr')
+def test_higher_correlation_increases_mixed_overlap(towers):
+    a, b = float(norm.isf(.02)), float(norm.isf(.001))
+    results = [towers.joint_tail(a, b, r) for r in (.3, .5, .7, .9)]
+    assert all(left < right for left, right in zip(results, results[1:]))
+
+
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr', 'read')
+def test_towers_reference_csvs(towers):
+    admissions, grid = towers.admission_rows(), towers.basic_grid()
+    towers.verify_csv(towers.ROOT / "data/admission_probabilities.csv", towers.ADMISSION_FIELDS, admissions)
+    towers.verify_csv(towers.ROOT / "data/followup_grid.csv", towers.GRID_FIELDS, grid)
+    towers.verify_known_results(admissions, grid)
+
+
+@pytest.mark.parametrize("kernel", ["variance", "conditional"])
+@deal.post(lambda result: result is None)
+@deal.has('stdout', 'stderr', 'read', 'write', 'import', 'global', 'random', 'time')
+def test_deal_generated_contract_cases(hoeflin, towers, kernel):
+    # Exercise deal's own generator/introspection as well as direct Hypothesis.
+    if kernel == "variance":
+        function = hoeflin.variance_factor
+        kwargs = {"n": st.integers(1, 1_000_000), "rho": UNIT}
+    else:
+        function = towers.conditional_probability
+        kwargs = {"joint": UNIT, "marginal": st.floats(1e-5, 1, allow_nan=False, allow_infinity=False)}
+    cases = list(deal.cases(function, count=25, kwargs=kwargs, seed=20261031,
+                           settings=settings(max_examples=25, database=None, deadline=None)))
+    assert cases
+    for case in cases:
+        result = case()
+        assert math.isfinite(result) and 0 <= result <= 1

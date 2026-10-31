@@ -1,0 +1,9 @@
+# Runtime contracts and the compatible Deal-generated type-check integration.
+deal[all,lint,integration]==4.24.6
+deal-solver==0.1.2
+typeguard==3.0.2
+astroid==4.3.4
+pytest==8.4.2
+hypothesis==6.170.14
+scipy==1.18.1
+numpy==2.5.4

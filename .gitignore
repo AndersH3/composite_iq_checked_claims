@@ -1,0 +1,5 @@
+.venv/
+.venv-deal/
+.pytest_cache/
+.hypothesis/
+__pycache__/

@@ -45,3 +45,11 @@ python3 verification/replay_hoeflin.py \
 Monte Carlo uncertainty is reported explicitly. Rare counts are descriptive; these sample sizes do not establish a one-in-a-million psychometric frequency.
 
 Audit the retained evidence and its match to the current source with `python3 verification/verify_evidence.py`. This checks checksums, native totals, source identities, and the negative-control result; it does not replace rerunning the provers.
+
+## Python contracts
+
+Every current Python file and every named function, including tests and fixtures, carries Deal contracts. Install `requirements-dev.txt` and run `make check` from the repository root. The coverage gate also runs in GitHub Actions and inspects Git's file inventory, so adding a new Python file or function without contracts fails the check.
+
+The [Deal computer10 report](evidence/deal-computer10-20261031/REPORT.md) separates runtime contracts, generated/property tests, focused symbolic proofs, and raw static-lint diagnostics. CLI entry points explicitly enable Deal even under `python -O`. The pinned Typeguard 3 integration is required by Deal 4.24.6's generated type checks.
+
+The original SPARK evidence remains byte-for-byte unchanged. Its Python tooling hashes refer to commit `6c2afecd4a1e8b66b8d67561b2cfbe9713637421`. The auditor resolves those historical Python versions through verified Git blob IDs; it never substitutes a historical version for changed Ada/SPARK source. A normal full Git clone supplies those objects. For a separate local object database, use `--git-dir PATH`. No uncontracted archival Python copies are kept in the current tree.

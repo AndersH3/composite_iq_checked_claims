@@ -6,6 +6,7 @@ import csv
 import math
 from pathlib import Path
 
+import deal
 import numpy as np
 from scipy.integrate import quad
 from scipy.optimize import brentq
@@ -32,23 +33,78 @@ GRID_FIELDS = (
 )
 
 
-def close(actual, expected, label, *, atol=5e-14, rtol=2e-12):
+@deal.post(lambda result: isinstance(result, bool))
+@deal.has()
+@deal.raises()
+def _finite(value) -> bool:
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
+
+
+@deal.pre(lambda p_a, p_b, joint: all(_finite(p) and 0 <= p <= 1 for p in (p_a, p_b, joint))
+          and max(0, p_a + p_b - 1) <= joint <= min(p_a, p_b))
+@deal.post(lambda result: _finite(result) and -5e-15 <= result <= 1 + 5e-15)
+@deal.ensure(lambda p_a, p_b, joint, result:
+             max(p_a, p_b) - 5e-15 <= result <= min(1, p_a + p_b) + 5e-15)
+@deal.has()
+@deal.raises()
+def probability_union(p_a: float, p_b: float, joint: float) -> float:
+    """Inclusion-exclusion for a feasible pair of event probabilities."""
+    return p_a + p_b - joint
+
+
+@deal.pre(lambda joint, marginal: _finite(joint) and _finite(marginal)
+          and 0 <= joint <= marginal <= 1 and marginal > 0)
+@deal.post(lambda result: _finite(result) and 0 <= result <= 1)
+@deal.has()
+@deal.raises()
+def conditional_probability(joint: float, marginal: float) -> float:
+    """Conditional rate with its explicitly positive marginal denominator."""
+    return joint / marginal
+
+
+@deal.pre(lambda actual, expected, label, *, atol=5e-14, rtol=2e-12:
+          _finite(actual) and _finite(expected) and isinstance(label, str)
+          and _finite(atol) and atol >= 0 and _finite(rtol) and rtol >= 0)
+@deal.post(lambda result: result is None)
+@deal.raises(ValueError)
+@deal.reason(ValueError, lambda actual, expected, label, *, atol=5e-14, rtol=2e-12:
+             not math.isclose(actual, expected, abs_tol=atol, rel_tol=rtol))
+@deal.has()
+def close(actual: float, expected: float, label: str, *, atol: float = 5e-14,
+          rtol: float = 2e-12) -> None:
     if not math.isclose(actual, expected, abs_tol=atol, rel_tol=rtol):
         raise ValueError(f"{label}: got {actual!r}, expected {expected!r}")
 
 
-def joint_tail(a, b, rho=RHO):
+@deal.pre(lambda a, b, rho=RHO: _finite(a) and _finite(b) and _finite(rho)
+          and -8 <= a <= 8 and -8 <= b <= 8 and -.95 <= rho <= .95)
+@deal.post(lambda result: _finite(result) and 0 <= result <= 1 + 5e-14)
+@deal.ensure(lambda a, b, rho=RHO, *, result:
+             max(0, float(norm.sf(a)) + float(norm.sf(b)) - 1) - 5e-14 <= result
+             <= min(float(norm.sf(a)), float(norm.sf(b))) + 5e-14)
+@deal.has("stderr")
+@deal.raises(ValueError)
+def joint_tail(a: float, b: float, rho: float = RHO) -> float:
     """Integrate over X and independently check with Plackett's rho integral."""
     scale = math.sqrt(1 - rho * rho)
     value, error = quad(
         lambda x: norm.pdf(x) * norm.sf((b - rho * x) / scale),
-        a, math.inf, epsabs=1e-14, epsrel=2e-12, limit=200,
+        a, math.inf, epsabs=1e-14, epsrel=2e-14, limit=200,
     )
-    def density_at_cutoffs(r):
+    @deal.pre(lambda r: _finite(r) and -.95 <= r <= .95)
+    @deal.post(lambda result: _finite(result) and result >= 0)
+    @deal.has()
+    @deal.raises()
+    def density_at_cutoffs(r: float) -> float:
         s = 1 - r * r
         return math.exp(-(a*a - 2*r*a*b + b*b) / (2*s)) / (2*math.pi*math.sqrt(s))
     increment, rho_error = quad(
-        density_at_cutoffs, 0, rho, epsabs=1e-14, epsrel=2e-12, limit=200,
+        density_at_cutoffs, 0, rho, epsabs=1e-14, epsrel=2e-14, limit=200,
     )
     alternate = norm.sf(a) * norm.sf(b) + increment
     # Both quadrature error estimates must also satisfy the requested budget.
@@ -58,25 +114,80 @@ def joint_tail(a, b, rho=RHO):
     return float(value)
 
 
-def admission_rows():
+@deal.post(lambda result: isinstance(result, bool))
+@deal.has()
+@deal.raises()
+def _valid_fields_rows(fields, rows) -> bool:
+    if not isinstance(fields, (tuple, list)) or not fields:
+        return False
+    if not all(isinstance(field, str) and field for field in fields):
+        return False
+    if len(set(fields)) != len(fields):
+        return False
+    if not isinstance(rows, (list, tuple)):
+        return False
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != set(fields):
+            return False
+        if not all(isinstance(value, str) or _finite(value) for value in row.values()):
+            return False
+    return True
+
+
+@deal.post(lambda result: isinstance(result, bool))
+@deal.has()
+@deal.raises()
+def _valid_admissions(rows) -> bool:
+    if not _valid_fields_rows(ADMISSION_FIELDS, rows) or len(rows) != len(CASES):
+        return False
+    for row, (label, p_a, p_b) in zip(rows, CASES):
+        if row["case"] != label or row["p_a"] != p_a or row["p_b"] != p_b:
+            return False
+        for field in ("joint", "union", "conditional_b_given_a", "conditional_a_given_b"):
+            if not _finite(row[field]) or not 0 <= row[field] <= 1 + 5e-14:
+                return False
+        if not _finite(row["phi"]) or not -1 - 5e-14 <= row["phi"] <= 1 + 5e-14:
+            return False
+    return True
+
+
+@deal.post(lambda result: isinstance(result, bool))
+@deal.has()
+@deal.raises()
+def _valid_grid(rows) -> bool:
+    return (_valid_fields_rows(GRID_FIELDS, rows) and len(rows) == 3
+            and tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164)
+            and all(_finite(row[field]) and 0 <= row[field] <= 1 for row in rows for field in (
+                "marginal_continuous", "joint_continuous", "conditional_continuous",
+                "grid_joint", "grid_marginal", "grid_conditional")))
+
+
+@deal.post(_valid_admissions)
+@deal.has("stderr")
+@deal.raises(ValueError)
+def admission_rows() -> list[dict]:
     rows = []
     for label, p_a, p_b in CASES:
         a, b = float(norm.isf(p_a)), float(norm.isf(p_b))
         j = joint_tail(a, b)
         close(j, joint_tail(b, a), "joint-tail symmetry", atol=5e-15)
-        union = p_a + p_b - j
+        union = probability_union(p_a, p_b, j)
         if not 0 <= j <= min(p_a, p_b):
             raise ValueError("Joint probability violates an event bound")
         if not max(p_a, p_b) <= union <= min(1, p_a + p_b):
             raise ValueError("Union probability violates an event bound")
         phi = (j - p_a*p_b) / math.sqrt(p_a*(1-p_a)*p_b*(1-p_b))
         rows.append(dict(zip(ADMISSION_FIELDS, (
-            label, RHO, a, b, p_a, p_b, j, union, j/p_a, j/p_b, phi,
+            label, RHO, a, b, p_a, p_b, j, union,
+            conditional_probability(j, p_a), conditional_probability(j, p_b), phi,
         ))))
     return rows
 
 
-def basic_grid():
+@deal.post(_valid_grid)
+@deal.has("stderr")
+@deal.raises(ValueError)
+def basic_grid() -> list[dict]:
     """Reproduce Q..199 STEP .5 point sums in the published BASIC program.
 
     The omitted IQ-scale Jacobian and cell area are common to numerator and
@@ -84,9 +195,9 @@ def basic_grid():
     an exact continuous-tail integration.
     """
     iq = np.arange(1, 199.25, 0.5)
-    z = (iq - 100) / 16
+    z = (iq - 100) * 0.0625
     x, y = z[:, None], z[None, :]
-    density = np.exp(-(x*x - 2*RHO*x*y + y*y) / (2*(1-RHO*RHO)))
+    density = np.exp(np.divide(-(x*x - 2*RHO*x*y + y*y), 2*(1-RHO*RHO)))
     density /= 2*math.pi*math.sqrt(1-RHO*RHO)
     total = float(density.sum())
     if len(iq) != 397 or density.size != 157609:
@@ -100,18 +211,23 @@ def basic_grid():
         passes = iq >= cutoff
         grid_joint = float(density[np.ix_(passes, passes)].sum() / total)
         grid_marginal = float(density[passes, :].sum() / total)
-        a = (cutoff - 100) / 16
+        a = (cutoff - 100) * 0.0625
         p = float(norm.sf(a))
         j = joint_tail(a, a)
         rows.append(dict(zip(GRID_FIELDS, (
-            cutoff, p, j, j/p, grid_joint, grid_marginal,
-            grid_joint/grid_marginal, rounded_p, grid_joint/rounded_p,
+            cutoff, p, j, conditional_probability(j, p), grid_joint, grid_marginal,
+            conditional_probability(grid_joint, grid_marginal), rounded_p,
+            conditional_probability(grid_joint, rounded_p),
             published, grid_joint-published,
         ))))
     return rows
 
 
-def write_csv(path, fields, rows):
+@deal.pre(lambda path, fields, rows: isinstance(path, Path) and _valid_fields_rows(fields, rows))
+@deal.post(lambda result: result is None)
+@deal.has("write")
+@deal.raises(OSError, csv.Error)
+def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
@@ -119,7 +235,11 @@ def write_csv(path, fields, rows):
         writer.writerows(rows)
 
 
-def verify_csv(path, fields, expected):
+@deal.pre(lambda path, fields, expected: isinstance(path, Path) and _valid_fields_rows(fields, expected))
+@deal.post(lambda result: result is None)
+@deal.has("read")
+@deal.raises(OSError, ValueError, csv.Error)
+def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> None:
     with path.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         if tuple(reader.fieldnames or ()) != fields:
@@ -134,10 +254,20 @@ def verify_csv(path, fields, expected):
                 if stored[field] != value:
                     raise ValueError(f"Mismatched row label in {path.name}")
             else:
-                close(float(stored[field]), float(value), f"{path.name}: {field}")
+                try:
+                    number = float(stored[field])
+                except (TypeError, KeyError) as error:
+                    raise ValueError(f"Missing numeric CSV value: {field}") from error
+                if not _finite(number):
+                    raise ValueError(f"Non-finite CSV value: {field}")
+                close(number, float(value), f"{path.name}: {field}")
 
 
-def verify_known_results(admissions, grid):
+@deal.pre(lambda admissions, grid: _valid_admissions(admissions) and _valid_grid(grid))
+@deal.post(lambda result: result is None)
+@deal.has("stderr")
+@deal.raises(ValueError)
+def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
     expected_joint = (
         0.006276274020528095, 0.00015958919471554256,
         0.000002312497921350349, 0.0006585888039150674,
@@ -172,15 +302,18 @@ def verify_known_results(admissions, grid):
     close(and_cutoff, 1.63698581434, "2%-overall AND cutoff", atol=1e-10)
 
 
-def main():
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "stdout", "stderr", "syscall")
+@deal.raises(OSError, ValueError, csv.Error, SystemExit)
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true", help="regenerate CSVs before checking")
     args = parser.parse_args()
     admissions = admission_rows()
     grid = basic_grid()
     files = (
-        (ROOT / "data" / "admission_probabilities.csv", ADMISSION_FIELDS, admissions),
-        (ROOT / "data" / "followup_grid.csv", GRID_FIELDS, grid),
+        (ROOT.joinpath("data", "admission_probabilities.csv"), ADMISSION_FIELDS, admissions),
+        (ROOT.joinpath("data", "followup_grid.csv"), GRID_FIELDS, grid),
     )
     for path, fields, rows in files:
         if args.write:
@@ -195,4 +328,5 @@ def main():
 
 
 if __name__ == "__main__":
+    deal.enable(warn=False)
     main()

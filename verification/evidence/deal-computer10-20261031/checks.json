@@ -1,0 +1,329 @@
+[
+  {
+    "label": "pip-check",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "pip",
+      "check"
+    ],
+    "started_utc": "2026-10-31T15:18:55.488967+00:00",
+    "finished_utc": "2026-10-31T15:18:55.781461+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "coverage",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "verification/check_contract_coverage.py"
+    ],
+    "started_utc": "2026-10-31T15:18:55.781639+00:00",
+    "finished_utc": "2026-10-31T15:18:56.157436+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "a2611481d514864510b6edbb6e68105e9f84fe06eee1fe0821ac8b3448b635dd",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "pytest",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests",
+      "--junitxml=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/deal-computer10-20261031/pytest.xml"
+    ],
+    "started_utc": "2026-10-31T15:18:56.157645+00:00",
+    "finished_utc": "2026-10-31T15:19:03.856236+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "659f7d82a6ff63f66966426952e9069e503f19be8b38488acfefb7359665565a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "hoeflin-numbers",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "analyses/hoeflin-ferguson/scripts/verify_calculations.py"
+    ],
+    "started_utc": "2026-10-31T15:19:03.856464+00:00",
+    "finished_utc": "2026-10-31T15:19:04.677487+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "9c7652a4131e570e0ada50e59c2c962478fc0aed846494e5b6fce13c274a2404",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "hoeflin-numbers-optimized",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-O",
+      "analyses/hoeflin-ferguson/scripts/verify_calculations.py"
+    ],
+    "started_utc": "2026-10-31T15:19:04.677680+00:00",
+    "finished_utc": "2026-10-31T15:19:05.851824+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "9c7652a4131e570e0ada50e59c2c962478fc0aed846494e5b6fce13c274a2404",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "towers-numbers",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py"
+    ],
+    "started_utc": "2026-10-31T15:19:05.852032+00:00",
+    "finished_utc": "2026-10-31T15:19:07.446434+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "5be2cf4c750507c199640e10a593d0035be9b88b2196ac0f83bbada06f7195c1",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "towers-numbers-optimized",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-O",
+      "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py"
+    ],
+    "started_utc": "2026-10-31T15:19:07.446642+00:00",
+    "finished_utc": "2026-10-31T15:19:09.384153+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "5be2cf4c750507c199640e10a593d0035be9b88b2196ac0f83bbada06f7195c1",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "hoeflin-ada-validation",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "--calculations",
+      "verification/evidence/computer10-20261031/runtime/hoeflin/calculations.csv",
+      "--simulation",
+      "verification/evidence/computer10-20261031/runtime/hoeflin/simulation.csv",
+      "--json-output",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/deal-computer10-20261031/hoeflin-validation.json"
+    ],
+    "started_utc": "2026-10-31T15:19:09.384393+00:00",
+    "finished_utc": "2026-10-31T15:19:10.211922+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "towers-ada-validation",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "verification/evidence/computer10-20261031/runtime/towers",
+      "--replay"
+    ],
+    "started_utc": "2026-10-31T15:19:10.212138+00:00",
+    "finished_utc": "2026-10-31T15:19:11.416703+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "hoeflin-independent-replay",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "verification/replay_hoeflin.py",
+      "verification/evidence/computer10-20261031/runtime/hoeflin/simulation.csv",
+      "--json-output",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/deal-computer10-20261031/hoeflin-replay.json"
+    ],
+    "started_utc": "2026-10-31T15:19:11.416943+00:00",
+    "finished_utc": "2026-10-31T15:19:13.086630+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "4baeef46d44da4eb408c21698dba5cee9cabba1c7eb6305c423b1be7301b30e3",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "historical-spark-audit",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "verification/verify_evidence.py",
+      "--git-dir",
+      "/tmp/composite-iq-historical-git"
+    ],
+    "started_utc": "2026-10-31T15:19:13.086865+00:00",
+    "finished_utc": "2026-10-31T15:19:13.241706+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "75fd331bdc865ae9badb650daa64c0782509f53ba2c557135e3e4b49ff0a88e8",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "historical-spark-audit-optimized",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-O",
+      "verification/verify_evidence.py",
+      "--git-dir",
+      "/tmp/composite-iq-historical-git"
+    ],
+    "started_utc": "2026-10-31T15:19:13.241934+00:00",
+    "finished_utc": "2026-10-31T15:19:13.649847+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "75fd331bdc865ae9badb650daa64c0782509f53ba2c557135e3e4b49ff0a88e8",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "pure-gate-symbolic-proof",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "deal",
+      "prove",
+      "--skipped",
+      "--nocolor",
+      "verification/proof_gate.py"
+    ],
+    "started_utc": "2026-10-31T15:19:13.650093+00:00",
+    "finished_utc": "2026-10-31T15:19:13.993006+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "b30eee9868bbc79ef17728b4d69b6461277031711ccc214c462cf87a337f1a1a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "negative-static-control",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "deal",
+      "lint",
+      "--nocolor",
+      "tests/fixtures/contract_negative_control.py"
+    ],
+    "started_utc": "2026-10-31T15:19:13.993249+00:00",
+    "finished_utc": "2026-10-31T15:19:14.754480+00:00",
+    "returncode": 1,
+    "expected_returncode": null,
+    "accepted": true,
+    "stdout_sha256": "f764a15ed86a1fca5cc5b27631690fa7b912b3c6a91fa899a52178315422748c",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "division-probe-runtime",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-c",
+      "import runpy,deal; deal.enable(warn=False); print(runpy.run_path('tests/fixtures/nonzero_division_lint_probe.py')['safe_half']())"
+    ],
+    "started_utc": "2026-10-31T15:19:14.754730+00:00",
+    "finished_utc": "2026-10-31T15:19:14.862752+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "8d5c1b5a87c51f970807fc0c2057b3ab3aaf11638ab667dc5956edc8f5bcf138",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "division-probe-lint",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "deal",
+      "lint",
+      "--nocolor",
+      "tests/fixtures/nonzero_division_lint_probe.py"
+    ],
+    "started_utc": "2026-10-31T15:19:14.863000+00:00",
+    "finished_utc": "2026-10-31T15:19:15.234520+00:00",
+    "returncode": 1,
+    "expected_returncode": null,
+    "accepted": true,
+    "stdout_sha256": "365dc0ce0b7d7cf4a4851e4707529bb5b173bc183c9ab6da02af11c7dce45f23",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-coverage",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "verification/check_contract_coverage.py"
+    ],
+    "started_utc": "2026-10-31T15:21:48.857488+00:00",
+    "finished_utc": "2026-10-31T15:21:49.241510+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "a2611481d514864510b6edbb6e68105e9f84fe06eee1fe0821ac8b3448b635dd",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-pytest",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests",
+      "--junitxml=verification/evidence/deal-computer10-20261031/pytest.xml"
+    ],
+    "started_utc": "2026-10-31T15:21:49.241615+00:00",
+    "finished_utc": "2026-10-31T15:21:57.075918+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "3606eb2e4fc63d9a1cd5567fb3210ba569f2ef8e3ae4293e7a236f940957ca81",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "negative-symbolic-control",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "deal",
+      "prove",
+      "--nocolor",
+      "tests/fixtures/contract_negative_control.py"
+    ],
+    "started_utc": "2026-10-31T15:25:01.252233+00:00",
+    "finished_utc": "2026-10-31T15:25:01.593969+00:00",
+    "returncode": 1,
+    "expected_returncode": null,
+    "accepted": true,
+    "stdout_sha256": "96756612fcfb3845cf10d85a6d1d81c3a16f293f71838d008b65b1de4a777d96",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "contracted-spark-audit",
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "verification/verify_evidence.py",
+      "verification/evidence/deal-spark-computer10-20261031"
+    ],
+    "started_utc": "2026-10-31T15:28:04.615863+00:00",
+    "finished_utc": "2026-10-31T15:28:04.749780+00:00",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "accepted": true,
+    "stdout_sha256": "8a6e581fd4f061ab3ad2990df03edad82232d2a11066d2a12cb6ce8ec9910a0f",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

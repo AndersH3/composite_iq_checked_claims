@@ -5,66 +5,136 @@ import csv
 import math
 from pathlib import Path
 
+import deal
+
 ROOT = Path(__file__).resolve().parent
 
 
+@deal.pre(lambda condition, message: type(condition) is bool and isinstance(message, str))
+@deal.ensure(lambda condition, message, result: condition and result is None)
+@deal.raises(ValueError)
+@deal.has()
+def require(condition, message):
+    """Validation that remains active when Python assertions are optimized away."""
+    if not condition:
+        raise ValueError(message)
+
+
+@deal.pre(lambda path: isinstance(path, Path) and path.is_file())
+@deal.post(lambda result: isinstance(result, list) and all(
+    isinstance(row, dict) and all(isinstance(key, str) and isinstance(value, str)
+                                 for key, value in row.items()) for row in result))
+@deal.raises(OSError, ValueError, csv.Error)
+@deal.has("read")
 def read(path):
     with path.open(newline="") as stream:
-        return list(csv.DictReader(stream))
+        reader = csv.DictReader(stream)
+        names = reader.fieldnames or []
+        require(bool(names) and all(names) and len(set(names)) == len(names),
+                "CSV requires distinct, nonempty column names")
+        rows = list(reader)
+    require(not any(None in row or any(value is None for value in row.values()) for row in rows),
+            "CSV row width does not match its header")
+    return rows
 
 
+@deal.pre(lambda x, y, label, tolerance=1e-10:
+          math.isfinite(x) and math.isfinite(y) and math.isfinite(tolerance)
+          and tolerance > 0 and isinstance(label, str))
+@deal.ensure(lambda x, y, label, tolerance=1e-10, result=None:
+             result is None and abs(x-y) <= tolerance)
+@deal.raises(ValueError)
+@deal.has()
 def close(x, y, label, tolerance=1e-10):
-    if not math.isfinite(x) or abs(x-y) > tolerance:
+    if abs(x-y) > tolerance:
         raise ValueError(f"{label}: {x!r} differs from reference {y!r}")
 
 
+@deal.pre(lambda rows, columns, label: isinstance(rows, list) and isinstance(columns, set)
+          and all(isinstance(row, dict) for row in rows) and isinstance(label, str))
+@deal.ensure(lambda rows, columns, label, result:
+             result is None and all(columns <= row.keys() for row in rows))
+@deal.raises(ValueError)
+@deal.has()
+def require_columns(rows, columns, label):
+    require(all(columns <= row.keys() for row in rows), f"Missing {label} CSV columns")
+    return None
+
+
+@deal.pre(lambda directory, replay=False: isinstance(directory, Path) and directory.is_dir()
+          and type(replay) is bool)
+@deal.post(lambda result: result is None)
+@deal.raises(OSError, ValueError, csv.Error)
+@deal.has("read", "stdout")
 def validate(directory, replay=False):
-    calculated = read(directory / "calculation.csv")
-    expected = read(ROOT.parent / "data/admission_probabilities.csv")
-    assert len(calculated) == len(expected) == 4
+    calculated = read(directory.joinpath("calculation.csv"))
+    expected = read(ROOT.parent.joinpath("data", "admission_probabilities.csv"))
+    fields = {"case", "rho", "cutoff_a_z", "cutoff_b_z", "p_a", "p_b", "joint",
+              "union", "conditional_b_given_a", "conditional_a_given_b", "phi"}
+    require_columns(expected, fields, "reference calculation")
+    require_columns(calculated, fields | {"joint_refinement_delta", "raw_union",
+                    "raw_conditional_b_given_a", "raw_conditional_a_given_b", "complement_a_units"}, "calculation")
+    require(len(calculated) == len(expected) == 4, "Expected four calculation cases")
     for row, reference in zip(calculated, expected):
-        assert row["case"] == reference["case"]
+        require(row["case"] == reference["case"], "Calculation case labels differ")
         for key in reference.keys() - {"case"}:
             close(float(row[key]), float(reference[key]), f"{row['case']}: {key}")
         for key in ("union", "conditional_b_given_a", "conditional_a_given_b"):
             close(float(row["raw_"+key]), float(reference[key]), f"raw {row['case']}: {key}", 1e-12)
-        assert int(row["complement_a_units"]) == 10**15-round(float(row["p_a"])*10**15)
-        assert float(row["joint_refinement_delta"]) < 1e-11
+        require(int(row["complement_a_units"]) == 10**15-round(float(row["p_a"])*10**15),
+                "Incorrect exact probability complement")
+        require(0 <= float(row["joint_refinement_delta"]) < 1e-11,
+                "Quadrature refinement difference must be finite, nonnegative, and below tolerance")
 
-    actual_grid = read(directory / "grid.csv")
-    expected_grid = read(ROOT.parent / "data/followup_grid.csv")
-    assert len(actual_grid) == len(expected_grid) == 3
+    actual_grid = read(directory.joinpath("grid.csv"))
+    expected_grid = read(ROOT.parent.joinpath("data", "followup_grid.csv"))
+    grid_fields = {"cutoff_iq", "marginal_continuous", "joint_continuous", "conditional_continuous",
+                   "grid_joint", "grid_marginal", "grid_conditional"}
+    require_columns(actual_grid, grid_fields, "grid")
+    require_columns(expected_grid, grid_fields, "reference grid")
+    require(len(actual_grid) == len(expected_grid) == 3, "Expected three grid cases")
     for row, reference in zip(actual_grid, expected_grid):
-        for key in row:
+        require(set(row) == grid_fields, "Unexpected grid CSV columns")
+        for key in grid_fields:
             close(float(row[key]), float(reference[key]), f"grid: {key}")
 
-    calibration, = read(directory / "calibration.csv")
+    calibrations = read(directory.joinpath("calibration.csv"))
+    require(len(calibrations) == 1, "Expected one calibration case")
+    require_columns(calibrations, {"cutoff_z", "cutoff_iq_sd16", "actual_union"}, "calibration")
+    calibration = calibrations[0]
     close(float(calibration["cutoff_z"]), 2.2700549290597922, "calibrated OR cutoff")
     close(float(calibration["cutoff_iq_sd16"]), 136.32087886495668, "calibrated IQ cutoff", 2e-9)
     close(float(calibration["actual_union"]), 0.02, "calibrated union probability")
 
-    simulations = read(directory / "simulation.csv")
-    assert len(simulations) == 4
+    simulations = read(directory.joinpath("simulation.csv"))
+    require_columns(simulations, {"case", "trials", "seed", "neither", "a_only", "b_only", "both",
+                    "marginal_a", "marginal_b", "union", "joint_fraction", "conditional_b_given_a",
+                    "conditional_a_given_b", "joint_wilson_lower", "joint_wilson_upper"}, "simulation")
+    require(len(simulations) == 4, "Expected four simulation cases")
+    trial_seed_pairs = {(int(row["trials"]), int(row["seed"])) for row in simulations}
+    require(len(trial_seed_pairs) == 1, "Simulation rows must share the recorded trial count and seed")
     for row, reference in zip(simulations, expected):
-        assert row["case"] == reference["case"]
+        require(row["case"] == reference["case"], "Simulation case labels differ")
         n = int(row["trials"])
+        require(1 <= n <= 100_000_000, "Simulation trial count is outside the Ada domain")
+        require(1 <= int(row["seed"]) <= 2_147_483_646, "Simulation seed is outside the Park-Miller domain")
         c00, c10, c01, c11 = (int(row[key]) for key in ("neither", "a_only", "b_only", "both"))
-        assert min(c00,c10,c01,c11) >= 0
-        assert c00+c10+c01+c11 == n
-        assert int(row["marginal_a"]) == c10+c11
-        assert int(row["marginal_b"]) == c01+c11
-        assert int(row["union"]) == c10+c01+c11
+        require(min(c00,c10,c01,c11) >= 0, "Simulation event counts must be nonnegative")
+        require(c00+c10+c01+c11 == n, "Simulation cells do not sum to the trial count")
+        require(int(row["marginal_a"]) == c10+c11, "Incorrect marginal A count")
+        require(int(row["marginal_b"]) == c01+c11, "Incorrect marginal B count")
+        require(int(row["union"]) == c10+c01+c11, "Incorrect union count")
         close(float(row["joint_fraction"]), c11/n, "Monte Carlo fraction", 2e-15)
         for key, denom in (("conditional_b_given_a", c10+c11), ("conditional_a_given_b", c01+c11)):
             if denom:
                 close(float(row[key]), c11/denom, key, 2e-15)
             else:
-                assert row[key] == "NA"
+                require(row[key] == "NA", "A zero denominator must be reported as NA")
         p = float(reference["joint"])
         if abs(c11/n-p) > 6*math.sqrt(p*(1-p)/n)+10/n:
             raise ValueError("Monte Carlo outcome is unexpectedly far from the Gaussian model")
         lo, hi = float(row["joint_wilson_lower"]), float(row["joint_wilson_upper"])
-        assert 0 <= lo <= hi <= 1
+        require(0 <= lo <= hi <= 1, "Wilson interval must be finite, ordered, and inside [0,1]")
         print(f"{row['case']}: both={c11}/{n}; 95% Wilson [{lo:.10g}, {hi:.10g}]; model={p:.10g}")
     if replay:
         trials = int(simulations[0]["trials"])
@@ -84,12 +154,14 @@ def validate(directory, replay=False):
             for k in range(4):
                 counts[k][2*int(x>a[k])+int(y>b[k])] += 1
         for row, tally in zip(simulations,counts):
-            assert tally == [int(row[k]) for k in ("neither","b_only","a_only","both")]
+            require(tally == [int(row[k]) for k in ("neither","b_only","a_only","both")],
+                    "Independent simulation replay differs from the recorded event cells")
         print(f"Independent Python replay matches all four count cells for {trials} trials.")
     print("Ada numerical outputs agree with independent SciPy reference CSVs within 1e-10 absolute tolerance.")
 
 
 if __name__ == "__main__":
+    deal.enable(warn=False)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", nargs="?", type=Path, default=ROOT/"results")
     parser.add_argument("--replay", action="store_true")

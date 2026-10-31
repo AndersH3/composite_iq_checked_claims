@@ -11,4 +11,17 @@ Build instructions and numerical verification commands are in each analysis fold
 
 Both analyses include [Ada calculations and simulations with SPARK verification on computer10](verification/README.md). The retained evidence separates formal core proofs from numerical validation and Monte Carlo results.
 
+All current Python files, including tests and fixtures, must contain [Deal contracts](https://deal.readthedocs.io/). Every named function is checked for a real Deal decorator by `verification/check_contract_coverage.py`; comments and strings do not count. The GitHub workflow enforces this repository-wide policy.
+
+For Python development and checks:
+
+```sh
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements-dev.txt
+make check
+```
+
+[Computer10 Deal evidence](verification/evidence/deal-computer10-20261031/REPORT.md) records contract coverage, runtime/property tests, optimized-Python checks, symbolic gate proofs, and the static checker's limitations. Runtime checks and property tests are distinct from universal formal verification.
+
 The repository's original material is governed by [LICENSE](LICENSE), subject to third-party rights.

@@ -10,20 +10,55 @@ import json
 import math
 from pathlib import Path
 
+import deal
 from scipy.stats import norm
 
 COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 
 
+@deal.pre(lambda actual, expected, label, atol=5e-11:
+          math.isfinite(actual) and math.isfinite(expected)
+          and math.isfinite(atol) and atol > 0 and isinstance(label, str))
+@deal.ensure(lambda actual, expected, label, atol=5e-11, result=None:
+             result is None and abs(actual - expected) <= atol)
+@deal.raises(ValueError)
+@deal.has()
 def require_close(actual, expected, label, *, atol=5e-11):
-    if not math.isfinite(actual) or abs(actual - expected) > atol:
+    if abs(actual - expected) > atol:
         raise ValueError(f"{label}: {actual!r} differs from {expected!r}")
 
 
+@deal.pre(lambda content: isinstance(content, str))
+@deal.post(lambda result: isinstance(result, list) and all(
+    isinstance(row, dict) and all(isinstance(key, str) and isinstance(value, str)
+                                 for key, value in row.items()) for row in result))
+@deal.raises(ValueError, csv.Error)
+@deal.has()
+def csv_rows(content):
+    """Reject missing, duplicate, or uneven fields instead of accepting zip truncation."""
+    reader = csv.DictReader(io.StringIO(content))
+    names = reader.fieldnames or []
+    if not names or any(not name for name in names) or len(set(names)) != len(names):
+        raise ValueError("CSV requires distinct, nonempty column names")
+    rows = list(reader)
+    if any(None in row or any(value is None for value in row.values()) for row in rows):
+        raise ValueError("CSV row width does not match the header")
+    return rows
+
+
+@deal.pre(lambda path: isinstance(path, Path) and path.is_file())
+@deal.post(lambda result: result["threshold_rows"] == 9 and result["worked_examples"] == 4
+           and math.isfinite(result["max_absolute_numeric_error"])
+           and 0 <= result["max_absolute_numeric_error"] <= result["tolerance"]
+           and result["tolerance"] == 5e-11)
+@deal.raises(OSError, ValueError, csv.Error)
+@deal.has("read")
 def validate_calculations(path):
     content = path.read_text(encoding="utf-8")
     table, example_text = content.split("# examples\n")
-    rows = list(csv.DictReader(io.StringIO(table)))
+    rows = csv_rows(table)
+    if not rows or set(rows[0]) != {"tests", "variance_factor", "mean_z", "mean_score_sd16"}:
+        raise ValueError("Unexpected threshold CSV columns")
     if [r["tests"] for r in rows] != [str(n) for n in COUNTS] + ["infinity"]:
         raise ValueError("Unexpected threshold table row labels")
     q = float(norm.isf(1e-6))
@@ -37,7 +72,12 @@ def validate_calculations(path):
             actual = float(row[field])
             require_close(actual, expected, f"n={n}, {field}")
             max_error = max(max_error, abs(actual - expected))
-    examples = {r[0]: float(r[1]) for r in csv.reader(io.StringIO(example_text))}
+    example_rows = list(csv.reader(io.StringIO(example_text)))
+    if any(len(row) != 2 or not row[0] for row in example_rows):
+        raise ValueError("Worked examples require a label and one numeric value")
+    if len({row[0] for row in example_rows}) != len(example_rows):
+        raise ValueError("Duplicate worked-example labels")
+    examples = {r[0]: float(r[1]) for r in example_rows}
     expected = {
         "upper_tail_quantile": q,
         "three_test_mean160_composite_iq": 100 + 60/math.sqrt(.6 + .4/3),
@@ -53,6 +93,15 @@ def validate_calculations(path):
             "max_absolute_numeric_error": max_error, "tolerance": 5e-11}
 
 
+@deal.pre(lambda successes, total: type(successes) is int and type(total) is int
+          and 1 <= total <= 100_000_000 and 0 <= successes <= total)
+@deal.post(lambda result: len(result) == 2 and all(math.isfinite(x) for x in result)
+           and 0 <= result[0] <= result[1] <= 1)
+@deal.ensure(lambda successes, total, result:
+             result[0] <= successes / total + 1e-15
+             and successes / total - 1e-15 <= result[1])
+@deal.raises()
+@deal.has()
 def wilson(successes, total):
     z = float(norm.isf(.025))
     phat = successes / total
@@ -62,21 +111,37 @@ def wilson(successes, total):
     return [max(0, center-radius), min(1, center+radius)]
 
 
+@deal.pre(lambda path: isinstance(path, Path) and path.is_file())
+@deal.post(lambda result: len(result["cases"]) == len(COUNTS)
+           and [case["tests"] for case in result["cases"]] == list(COUNTS)
+           and all(2 <= case["trials"] <= 100_000_000
+                   and math.isfinite(case["mean"])
+                   and math.isfinite(case["variance"]) and case["variance"] >= 0
+                   and 0 <= case["rare_count_descriptive_only"] <= case["trials"]
+                   for case in result["cases"]))
+@deal.raises(OSError, ValueError, csv.Error)
+@deal.has("read")
 def validate_simulation(path):
     lines = [s for s in path.read_text(encoding="utf-8").splitlines()
              if not s.startswith("#")]
-    rows = list(csv.DictReader(lines))
+    rows = csv_rows("\n".join(lines))
+    fields = {"tests", "trials", "mean_composite_z", "variance_composite_z", "above2",
+              "above3", "above_rare", "rate_above2", "rate_above3", "expected_rate2", "expected_rate3"}
+    if not rows or set(rows[0]) != fields:
+        raise ValueError("Unexpected simulation CSV columns")
     if [int(r["tests"]) for r in rows] != list(COUNTS):
         raise ValueError("Unexpected simulation row labels")
     summaries = []
     for row in rows:
         n, trials = int(row["tests"]), int(row["trials"])
-        if trials < 2:
-            raise ValueError("Simulation needs at least two trials")
+        if not 2 <= trials <= 100_000_000:
+            raise ValueError("Simulation trial count must be in 2..100000000")
         k2, k3, rare = (int(row[k]) for k in ("above2", "above3", "above_rare"))
         if not 0 <= rare <= k3 <= k2 <= trials:
             raise ValueError("Simulation counter nesting failed")
         mean, variance = float(row["mean_composite_z"]), float(row["variance_composite_z"])
+        if not math.isfinite(mean) or not math.isfinite(variance) or variance < 0:
+            raise ValueError("Simulation mean and variance must be finite; variance must be nonnegative")
         # Broad six-standard-error diagnostics at specified moderate tails.
         # They are stochastic diagnostics, not conditions of formal proof.
         if abs(mean) > 6/math.sqrt(trials):
@@ -103,7 +168,11 @@ def validate_simulation(path):
             "limitation": "MC diagnostics do not establish the one-in-a-million tail, libm correctness, model validity, or formal proof."}
 
 
+@deal.post(lambda result: result is None)
+@deal.raises(SystemExit, OSError, ValueError, csv.Error)
+@deal.has("read", "write", "stdout", "stderr")
 def main():
+    deal.enable(warn=False)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--calculations", type=Path, required=True)
     parser.add_argument("--simulation", type=Path)

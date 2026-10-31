@@ -1,0 +1,99 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "negative.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/deal-spark-computer10-20261031/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-a43zsc8y/negative_control/portfolio",
+  "started_utc": "2026-10-31T01:09:13.511276+00:00",
+  "finished_utc": "2026-10-31T01:09:14.978554+00:00",
+  "elapsed_seconds": 1.467285835009534,
+  "returncode": 1,
+  "timed_out": false,
+  "log_sha256": "d4ac9e81787a084b0090916bc3ba88eb5690fd2c3fa52d32b522b4f1cada275c",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 1,
+        "flow": 1,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 1,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 1
+      },
+      "Total": {
+        "total": 2,
+        "flow": 1,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 1
+      }
+    },
+    "analyzed_units": 1,
+    "contains_not_proved": true,
+    "report_sha256": "a341301ef2133ac0cde5582b754ab59c12a657b072d7fa519d6a00c013198d1d"
+  },
+  "sources": [
+    {
+      "path": "verification/negative_control/negative.gpr",
+      "sha256": "f131c920b5791e5b011833d9bcaf8d35cabcf794d7882bc303b281916cba09a9"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.adb",
+      "sha256": "26d1a77d839429b703b08b4a5f8c1f35d60b4afa60e6f22ed9942bb7915c732d"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.ads",
+      "sha256": "74ed2015a69d986d69e91bdac1fa6745468fbdb88dc49d63ba49b6c7064f1fce"
+    }
+  ],
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "complete": false
+}

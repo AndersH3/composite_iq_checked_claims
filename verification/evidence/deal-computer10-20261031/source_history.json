@@ -1,0 +1,41 @@
+{
+  "historical_commit": "6c2afecd4a1e8b66b8d67561b2cfbe9713637421",
+  "files": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "git_blob": "a3a5ae12b82b6b43facd1a299d7eb2cfb58d6e81",
+      "sha256": "1e85f42393acb292408fa16544de434b670cacaa9928d1e7bfbc80daa31fcb8e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "git_blob": "96f772a5fe0b0069c885bb81bbff62352fe33680",
+      "sha256": "7a6bdb098263b7a87026215d6580d759a1dc736078153e4da28a9686d221fa71"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "git_blob": "7556b4f8eec5c60c43afbc48aa9c4e2495c65502",
+      "sha256": "bbcb408f9427d2db0f0535918c92f7288abcf590573860f33e261f299647c34b"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "git_blob": "cd2121f473615434e9f7e3ebe059367a474a3e91",
+      "sha256": "75e28ffb540b5c90f84b0ae68a4a621b3935a580b42f12faace776a091a8906b"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "git_blob": "bab812b840dd006734930a8b12cb29e3894ec945",
+      "sha256": "0e345e59236c8a1111cab6fefa82a37518aa179b24d5aa736c7c203232b56e1b"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "git_blob": "2c196f718b2529aa213ba558e5df37cd8067e11b",
+      "sha256": "f5a5b94e18915effc00b3e9956abb17dd6755e309ea8905fd0bcf6250b9e837d"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "git_blob": "63807b69725dbf6c6ed1a2153dfe8c9a02c24e21",
+      "sha256": "ae5bb31497c722782123b0cd14f4b16d0543b2d90fbb2d1ae1d697aafad131af"
+    }
+  ],
+  "purpose": "References immutable Git-history blobs; no uncontracted historical Python copies are added to the current tree."
+}

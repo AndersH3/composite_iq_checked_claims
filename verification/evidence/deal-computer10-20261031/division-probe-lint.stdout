@@ -1,0 +1,4 @@
+tests/fixtures/nonzero_division_lint_probe.py
+  9:17 DEL021 raises contract error (ZeroDivisionError)
+    return 1.0 / 2.0
+                 ^

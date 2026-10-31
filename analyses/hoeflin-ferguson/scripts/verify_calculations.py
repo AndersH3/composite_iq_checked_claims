@@ -7,6 +7,7 @@ import math
 from pathlib import Path
 import re
 
+import deal
 from scipy.stats import norm
 
 
@@ -19,22 +20,98 @@ COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 FIELDS = ("tests", "mean_z", "mean_score_sd16")
 
 
-def thresholds():
+@deal.post(lambda result: isinstance(result, bool))
+@deal.has()
+@deal.raises()
+def _finite(value) -> bool:
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
+
+
+@deal.pre(lambda n, rho: isinstance(n, int) and not isinstance(n, bool)
+          and 1 <= n <= 1_000_000 and _finite(rho) and 0 <= rho <= 1)
+@deal.post(lambda result: _finite(result) and 0 < result <= 1)
+@deal.ensure(lambda n, rho, result: math.isclose(
+    n * result, 1 + (n - 1) * rho, rel_tol=8e-15, abs_tol=1e-15))
+@deal.has()
+@deal.raises()
+def variance_factor(n: int, rho: float) -> float:
+    """Variance of an equally weighted mean for the nonnegative-correlation model."""
+    return rho + (1 - rho) / n
+
+
+@deal.pre(lambda n, rho, quantile: isinstance(n, int) and not isinstance(n, bool)
+          and 1 <= n <= 1_000_000 and _finite(rho) and 0 <= rho <= 1
+          and _finite(quantile) and 0 <= quantile <= 10)
+@deal.post(lambda result: _finite(result) and result >= 0)
+@deal.ensure(lambda n, rho, quantile, result: result <= quantile)
+@deal.has()
+@deal.raises()
+def mean_threshold(n: int, rho: float, quantile: float) -> float:
+    """Convert a positive composite quantile to a required component mean."""
+    return quantile * math.sqrt(variance_factor(n, rho))
+
+
+@deal.pre(lambda numerator, denominator: _finite(numerator) and abs(numerator) <= 1e100
+          and _finite(denominator) and 1e-100 <= denominator <= 1e100)
+@deal.post(lambda result: _finite(result))
+@deal.has()
+@deal.raises()
+def _positive_ratio(numerator: float, denominator: float) -> float:
+    """A finite scalar quotient on the documented numerical working range."""
+    return numerator / denominator
+
+
+@deal.post(lambda result: isinstance(result, bool))
+@deal.has()
+@deal.raises()
+def _valid_rows(rows) -> bool:
+    if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
+        return False
+    for row, label in zip(rows, [str(n) for n in COUNTS] + ["infinity"]):
+        if not isinstance(row, (list, tuple)) or len(row) != 3 or row[0] != label:
+            return False
+        if not _finite(row[1]) or not _finite(row[2]) or row[1] < 0:
+            return False
+        if not math.isclose(row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12):
+            return False
+    return True
+
+
+@deal.post(_valid_rows)
+@deal.has()
+@deal.raises()
+def thresholds() -> list[tuple[str, float, float]]:
     rows = []
     for n in COUNTS:
-        z = Q * math.sqrt(RHO + (1 - RHO) / n)
+        z = mean_threshold(n, RHO, Q)
         rows.append((str(n), z, 100 + 16 * z))
     z_limit = Q * math.sqrt(RHO)
     rows.append(("infinity", z_limit, 100 + 16 * z_limit))
     return rows
 
 
-def check_close(actual, expected, label):
+@deal.pre(lambda actual, expected, label: _finite(actual) and _finite(expected)
+          and isinstance(label, str))
+@deal.post(lambda result: result is None)
+@deal.raises(ValueError)
+@deal.reason(ValueError, lambda actual, expected, label:
+             not math.isclose(actual, expected, rel_tol=0, abs_tol=1e-9))
+@deal.has()
+def check_close(actual: float, expected: float, label: str) -> None:
     if not math.isclose(actual, expected, rel_tol=0, abs_tol=1e-9):
         raise ValueError(f"{label}: got {actual!r}, expected {expected!r}")
 
 
-def write_csv(rows):
+@deal.pre(_valid_rows)
+@deal.post(lambda result: result is None)
+@deal.has("write")
+@deal.raises(OSError, csv.Error)
+def write_csv(rows: list[tuple[str, float, float]]) -> None:
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream)
@@ -43,7 +120,11 @@ def write_csv(rows):
             writer.writerow((n, f"{z:.12f}", f"{score:.12f}"))
 
 
-def verify_csv(rows):
+@deal.pre(_valid_rows)
+@deal.post(lambda result: result is None)
+@deal.has("read")
+@deal.raises(OSError, ValueError, csv.Error)
+def verify_csv(rows: list[tuple[str, float, float]]) -> None:
     with CSV_PATH.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         if tuple(reader.fieldnames or ()) != FIELDS:
@@ -54,12 +135,23 @@ def verify_csv(rows):
     for record, (n, z, score) in zip(stored, rows):
         if record["tests"] != n:
             raise ValueError(f"Unexpected test count: {record['tests']!r}")
-        check_close(float(record["mean_z"]), z, f"CSV n={n}, mean z")
-        check_close(float(record["mean_score_sd16"]), score,
+        try:
+            stored_z = float(record["mean_z"])
+            stored_score = float(record["mean_score_sd16"])
+        except (TypeError, KeyError) as error:
+            raise ValueError(f"CSV n={n}: missing numeric value") from error
+        if not _finite(stored_z) or not _finite(stored_score):
+            raise ValueError(f"CSV n={n}: non-finite numeric value")
+        check_close(stored_z, z, f"CSV n={n}, mean z")
+        check_close(stored_score, score,
                     f"CSV n={n}, mean SD-16 score")
 
 
-def verify_source_values(rows):
+@deal.pre(_valid_rows)
+@deal.post(lambda result: result is None)
+@deal.has("read", "stdout")
+@deal.raises(OSError, ValueError)
+def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
     if not TEX_PATH.exists():
         print("XeLaTeX source not present; source-value check skipped.")
         return
@@ -76,31 +168,36 @@ def verify_source_values(rows):
             raise ValueError(f"XeLaTeX table row for n={n} does not match the calculation")
 
 
-def verify_examples():
+@deal.post(lambda result: result is None)
+@deal.raises(ValueError)
+def verify_examples() -> None:
     check_close(Q, 4.753424308822899, "upper-tail normal quantile")
     check_close(float(norm.sf(Q)), 1e-6, "quantile's upper-tail probability")
 
     n = 3
-    mean_z = (160 - 100) / 16
-    composite_z = mean_z / math.sqrt(RHO + (1 - RHO) / n)
+    mean_z = (160 - 100) * 0.0625
+    composite_z = _positive_ratio(mean_z, math.sqrt(variance_factor(n, RHO)))
     check_close(100 + 16 * composite_z, 170.06490497453706,
                 "three-test worked composite")
 
     # This factor-model illustration assumes independent Gaussian residuals.
-    reliability = n * RHO / (1 + (n - 1) * RHO)
+    reliability = _positive_ratio(n * RHO, 1 + (n - 1) * RHO)
     latent_mean = math.sqrt(reliability) * Q
-    latent_sd = math.sqrt((1 - RHO) / (1 + (n - 1) * RHO))
+    latent_sd = math.sqrt(_positive_ratio(1 - RHO, 1 + (n - 1) * RHO))
     check_close(100 + 16 * latent_mean, 168.7941450256873,
                 "latent-factor conditional mean on the SD-16 scale")
     check_close(16 * latent_sd, 6.822422923379534,
                 "latent-factor conditional standard deviation")
 
-    higher_rho_z = Q * math.sqrt(0.90 + 0.10 / n)
+    higher_rho_z = mean_threshold(n, 0.90, Q)
     check_close(100 + 16 * higher_rho_z, 173.47590665989093,
                 "three-test correlation sensitivity example")
 
 
-def main():
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "stdout", "stderr", "syscall")
+@deal.raises(OSError, ValueError, csv.Error, SystemExit)
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true",
                         help="regenerate data/thresholds.csv before checking")
@@ -117,4 +214,5 @@ def main():
 
 
 if __name__ == "__main__":
+    deal.enable(warn=False)
     main()

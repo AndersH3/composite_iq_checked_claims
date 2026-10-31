@@ -1,0 +1,35 @@
+name: Python contracts
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Require Deal contracts throughout the repository
+        run: python verification/check_contract_coverage.py
+      - name: Runtime and property tests
+        run: python -m pytest -q tests
+      - name: Symbolically verify the two pure acceptance gates
+        run: |
+          python -m deal prove --skipped --nocolor verification/proof_gate.py | tee proof-gate.log
+          test "$(grep -c 'proved! post-condition' proof-gate.log)" -eq 2
+          if grep -E 'skipped|failed' proof-gate.log; then exit 1; fi
+      - name: Audit retained SPARK evidence against immutable Git history
+        run: python verification/verify_evidence.py

@@ -1,0 +1,48 @@
+{
+  "host": "computer10",
+  "platform": "Linux-6.12.113+deb13-amd64-x86_64-with-glibc2.41",
+  "python": "3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0]",
+  "executable": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+  "contracts_forced_on_in_cli": true,
+  "versions": {
+    "deal": "4.24.6",
+    "deal-solver": "0.1.2",
+    "typeguard": "3.0.2",
+    "astroid": "4.3.4",
+    "pytest": "8.4.2",
+    "hypothesis": "6.170.14",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "z3-solver": "5.3.3.0"
+  },
+  "static_lint": {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-m",
+      "deal",
+      "lint",
+      "--json",
+      "verification/run_computer10.py",
+      "verification/verify_evidence.py",
+      "verification/replay_hoeflin.py",
+      "verification/proof_gate.py",
+      "verification/check_contract_coverage.py",
+      "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "analyses/towers-multiple-test-admissions/ada/validate_results.py"
+    ],
+    "returncode": 14,
+    "diagnostics": 14,
+    "clean": false
+  },
+  "checks_complete": true,
+  "coverage": {
+    "python_files": 16,
+    "named_functions": 119,
+    "deal_contracts": 359,
+    "problems": [],
+    "complete": true
+  },
+  "finished_utc": "2026-10-31T15:28:04.750081+00:00"
+}
