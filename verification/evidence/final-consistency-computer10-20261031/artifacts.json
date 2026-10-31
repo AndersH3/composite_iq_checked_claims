@@ -1,0 +1,37 @@
+{
+  "artifacts": [
+    {
+      "path": "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+      "bytes": 23166,
+      "sha256": "aeac7a1fa7efa215d084a1ab67f91b8197de6c3cc4439e43e4aedf7ce217e52c"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "bytes": 70456,
+      "sha256": "bcc5b9b714dd59285cd90d1209bfcb9f810dc7cee6618eeb200b0406bf1be076",
+      "pages": 8,
+      "a4": true,
+      "unique_pinned_evidence_links": 3
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex",
+      "bytes": 28651,
+      "sha256": "f88eb269ce51fb6676894fe9249d0c28f764965c29ef57e9e7ed8b4c25fcddc2"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "bytes": 87464,
+      "sha256": "5906fddebfde285ef8360c02513a84d5da57751ee7052cd34486fe2d97539c51",
+      "pages": 9,
+      "a4": true,
+      "unique_pinned_evidence_links": 3
+    }
+  ],
+  "layout": "XeLaTeX, KOMA-Script scrartcl, A4, 16 mm margins",
+  "unresolved_references_or_overflow": false,
+  "visual_review": {
+    "pages_reviewed": 17,
+    "render_dpi": 90,
+    "result": "No clipped text, overlapping elements, broken tables, missing glyphs, or unreadable equations; final audit and reference pages inspected at full size."
+  }
+}

@@ -490,6 +490,18 @@ resolved through verified Git blobs; changed Ada sources cannot use that
 fallback. An evidence audit verifies record integrity and source identity;
 it does not rerun the provers or independently validate their SMT proofs.
 
+\subsection{Final consistency audit}
+
+A final audit of revision \texttt{9a244d8} on 31 October 2026 found no
+discrepancies in the corrected numerical results or verification claims.
+Fresh Ada calculation and simulation CSVs matched the retained files byte
+for byte; validation and replay passed normally and under \texttt{python -O}.
+All 110 tests and the audits of all three SPARK campaigns passed.
+The provers were not rerun. The audit record is retained under
+\par\noindent
+\path{verification/evidence/final-consistency-computer10-20261031/}.
+
+\clearpage
 \bibliographystyle{plainnat}
 \bibliography{references}
 

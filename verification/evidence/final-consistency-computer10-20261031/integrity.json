@@ -1,0 +1,76 @@
+{
+  "audited_revision": "9a244d8e629ca669bbc05c77f91b941a9108f99b",
+  "changed_tracked_paths": [
+    "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+    "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+    "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+    "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex"
+  ],
+  "all_other_published_blobs_unchanged": true,
+  "verified_historical_python_identities": 23,
+  "retained_evidence": [
+    {
+      "directory": "verification/evidence/deal-lint-spark-computer10-20261031",
+      "files": 13,
+      "checksums_and_inventory_match": true
+    },
+    {
+      "directory": "verification/evidence/deal-computer10-20261031",
+      "files": 52,
+      "checksums_and_inventory_match": true
+    },
+    {
+      "directory": "verification/evidence/deal-spark-computer10-20261031",
+      "files": 13,
+      "checksums_and_inventory_match": true
+    },
+    {
+      "directory": "verification/evidence/computer10-20261031",
+      "files": 59,
+      "checksums_and_inventory_match": true
+    },
+    {
+      "directory": "verification/evidence/deal-lint-clean-computer10-20261031",
+      "files": 66,
+      "checksums_and_inventory_match": true
+    }
+  ],
+  "fresh_output_comparisons": [
+    {
+      "fresh": "verification/evidence/final-consistency-computer10-20261031/hoeflin/calculations.csv",
+      "retained": "verification/evidence/computer10-20261031/runtime/hoeflin/calculations.csv",
+      "sha256": "d538d547f64c800ebfc14ad63a1c40efc33cfa2aa46f6228117fa96c0dbe3d2e",
+      "byte_identical": true
+    },
+    {
+      "fresh": "verification/evidence/final-consistency-computer10-20261031/hoeflin/simulation.csv",
+      "retained": "verification/evidence/computer10-20261031/runtime/hoeflin/simulation.csv",
+      "sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36",
+      "byte_identical": true
+    },
+    {
+      "fresh": "verification/evidence/final-consistency-computer10-20261031/towers/calculation.csv",
+      "retained": "verification/evidence/computer10-20261031/runtime/towers/calculation.csv",
+      "sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762",
+      "byte_identical": true
+    },
+    {
+      "fresh": "verification/evidence/final-consistency-computer10-20261031/towers/grid.csv",
+      "retained": "verification/evidence/computer10-20261031/runtime/towers/grid.csv",
+      "sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a",
+      "byte_identical": true
+    },
+    {
+      "fresh": "verification/evidence/final-consistency-computer10-20261031/towers/calibration.csv",
+      "retained": "verification/evidence/computer10-20261031/runtime/towers/calibration.csv",
+      "sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400",
+      "byte_identical": true
+    },
+    {
+      "fresh": "verification/evidence/final-consistency-computer10-20261031/towers/simulation.csv",
+      "retained": "verification/evidence/computer10-20261031/runtime/towers/simulation.csv",
+      "sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5",
+      "byte_identical": true
+    }
+  ]
+}

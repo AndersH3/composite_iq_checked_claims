@@ -1,0 +1,10 @@
+[
+  {
+    "name": "hoeflin_calculations",
+    "sha256": "ab23d6646af4ca479b7fa71e4adf69b6f73c4e44f4b65a138c7b085a476fe507"
+  },
+  {
+    "name": "hoeflin_simulation",
+    "sha256": "e042b757ce44f0dc502119b61c675bec28108e7089fa9e567a4c1198b48d2ae4"
+  }
+]

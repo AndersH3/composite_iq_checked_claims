@@ -1,0 +1,169 @@
+{
+  "host": "computer10",
+  "checks": [
+    {
+      "label": "hoeflin-fresh-build",
+      "argv": [
+        "gprbuild",
+        "-P",
+        "hoeflin.gpr",
+        "-p"
+      ],
+      "cwd": "/tmp/composite-iq-final-ada-amlfvkg0/hoeflin",
+      "started_utc": "2026-10-31T20:16:07.855415+00:00",
+      "finished_utc": "2026-10-31T20:16:08.987104+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "hoeflin-calculations",
+      "argv": [
+        "/tmp/composite-iq-final-ada-amlfvkg0/hoeflin/bin/hoeflin_calculations"
+      ],
+      "cwd": "/tmp/composite-iq-final-ada-amlfvkg0/hoeflin",
+      "started_utc": "2026-10-31T20:16:08.987140+00:00",
+      "finished_utc": "2026-10-31T20:16:08.988310+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "hoeflin-simulation",
+      "argv": [
+        "/tmp/composite-iq-final-ada-amlfvkg0/hoeflin/bin/hoeflin_simulation",
+        "1000000",
+        "20261030"
+      ],
+      "cwd": "/tmp/composite-iq-final-ada-amlfvkg0/hoeflin",
+      "started_utc": "2026-10-31T20:16:08.988319+00:00",
+      "finished_utc": "2026-10-31T20:16:09.473111+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "towers-fresh-build",
+      "argv": [
+        "gprbuild",
+        "-P",
+        "towers.gpr",
+        "-p"
+      ],
+      "cwd": "/tmp/composite-iq-final-ada-amlfvkg0/towers",
+      "started_utc": "2026-10-31T20:16:09.489137+00:00",
+      "finished_utc": "2026-10-31T20:16:10.798296+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "towers-demo",
+      "argv": [
+        "/tmp/composite-iq-final-ada-amlfvkg0/towers/bin/towers_demo",
+        "1000000",
+        "20261030",
+        "/tmp/composite-iq-final-audit-20261031/towers"
+      ],
+      "cwd": "/tmp/composite-iq-final-ada-amlfvkg0/towers",
+      "started_utc": "2026-10-31T20:16:10.798333+00:00",
+      "finished_utc": "2026-10-31T20:16:10.889222+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "hoeflin-validation",
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "--calculations",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/calculations.csv",
+        "--simulation",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/simulation.csv",
+        "--json-output",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/validation.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+      "started_utc": "2026-10-31T20:16:10.896974+00:00",
+      "finished_utc": "2026-10-31T20:16:11.767744+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "hoeflin-replay",
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+        "verification/replay_hoeflin.py",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/simulation.csv",
+        "--json-output",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/replay.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+      "started_utc": "2026-10-31T20:16:11.767766+00:00",
+      "finished_utc": "2026-10-31T20:16:13.586272+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "towers-validation",
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "/tmp/composite-iq-final-audit-20261031/towers",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+      "started_utc": "2026-10-31T20:16:13.586294+00:00",
+      "finished_utc": "2026-10-31T20:16:22.077718+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "hoeflin-validation-optimized",
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+        "-O",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "--calculations",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/calculations.csv",
+        "--simulation",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/simulation.csv",
+        "--json-output",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/validation-optimized.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+      "started_utc": "2026-10-31T20:16:22.077795+00:00",
+      "finished_utc": "2026-10-31T20:16:23.300307+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "hoeflin-replay-optimized",
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+        "-O",
+        "verification/replay_hoeflin.py",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/simulation.csv",
+        "--json-output",
+        "/tmp/composite-iq-final-audit-20261031/hoeflin/replay-optimized.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+      "started_utc": "2026-10-31T20:16:23.300329+00:00",
+      "finished_utc": "2026-10-31T20:16:25.455682+00:00",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "label": "towers-validation-optimized",
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+        "-O",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "/tmp/composite-iq-final-audit-20261031/towers",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+      "started_utc": "2026-10-31T20:16:25.455704+00:00",
+      "finished_utc": "2026-10-31T20:16:34.041497+00:00",
+      "returncode": 0,
+      "accepted": true
+    }
+  ],
+  "all_numerical_csvs_byte_identical": true
+}

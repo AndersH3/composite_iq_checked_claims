@@ -1,0 +1,3 @@
+Verified evidence integrity: 78 production checks; zero unproved or justified portfolio checks.
+Current Ada/SPARK sources match; 0 historical Python sources match immutable Git objects.
+The deliberately incorrect union contract was rejected. Individual incomplete solver runs remain recorded as incomplete.
