@@ -5,6 +5,7 @@ import ast
 import json
 from pathlib import Path
 import subprocess
+from subprocess import CalledProcessError
 
 import deal
 
@@ -45,16 +46,17 @@ def audit_file(path: Path) -> dict:
 @deal.raises(OSError, ValueError, subprocess.SubprocessError)
 @deal.has("read", "syscall")
 def python_files(root: Path) -> list:
-    process = subprocess.run(["git", "-C", str(root), "ls-files", "--cached", "--others",
-                              "--exclude-standard", "--", "*.py"], capture_output=True,
-                             text=True, timeout=15)
-    if process.returncode == 0:
-        paths = [root.joinpath(relative) for relative in process.stdout.splitlines()]
-    else:
+    try:
+        output = subprocess.check_output(["git", "-C", str(root), "ls-files", "--cached", "--others",
+                                          "--exclude-standard", "--", "*.py"], stderr=subprocess.PIPE,
+                                         text=True, timeout=15)
+    except CalledProcessError:
         # Support this computer10 workspace, which was authored through the
         # GitHub connector rather than a local checkout. CI uses Git's inventory.
         ignored = {".git", ".venv", ".venv-deal", "venv", "__pycache__", "obj", "obj-proof", "proof_obj", "bin"}
         paths = [p for p in root.rglob("*.py") if not ignored.intersection(p.relative_to(root).parts)]
+    else:
+        paths = [root.joinpath(relative) for relative in output.splitlines()]
     paths = sorted(set(paths))
     if not paths:
         raise ValueError("Empty Python inventory cannot establish coverage")

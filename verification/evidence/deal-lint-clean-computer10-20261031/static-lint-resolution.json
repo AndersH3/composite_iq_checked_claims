@@ -1,0 +1,189 @@
+{
+  "baseline_commit": "5e9e8ec7ea0ca17ec68d44f9c4e56430f3d0297c",
+  "original_diagnostics": 14,
+  "remaining_positive_diagnostics": 0,
+  "entries": [
+    {
+      "original_diagnostic": {
+        "path": "verification/run_computer10.py",
+        "row": 86,
+        "col": 16,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "RuntimeError",
+        "content": "        parts = shlex.split(line)"
+      },
+      "resolution": "equivalent-posix-lexer-setup",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "verification/run_computer10.py",
+        "row": 149,
+        "col": 14,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "CalledProcessError",
+        "content": "    process = subprocess.run([str(path), *args], env=env, capture_output=True,"
+      },
+      "resolution": "bounded-unchecked-process-capture",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "verification/run_computer10.py",
+        "row": 316,
+        "col": 18,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "SameFileError",
+        "content": "        control = campaign(\"negative_control\", ROOT.joinpath('verification/negative_control'), \"negative.gpr\","
+      },
+      "resolution": "explicit-existing-oserror-subclasses",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "verification/run_computer10.py",
+        "row": 335,
+        "col": 25,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "SameFileError",
+        "content": "                result = campaign(name, folder, project, unit, selection, label, work, output,"
+      },
+      "resolution": "explicit-existing-oserror-subclasses",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "verification/verify_evidence.py",
+        "row": 50,
+        "col": 15,
+        "code": "DEL012",
+        "text": "post contract error",
+        "value": "",
+        "content": "        return str(current)"
+      },
+      "resolution": "stronger-input-dependent-source-identity-ensure",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "verification/verify_evidence.py",
+        "row": 61,
+        "col": 18,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "CalledProcessError",
+        "content": "        process = subprocess.run([*command, \"cat-file\", \"blob\", blob], capture_output=True, timeout=15)"
+      },
+      "resolution": "checked-git-output-with-explicit-failure-branch",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "verification/verify_evidence.py",
+        "row": 127,
+        "col": 13,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "JSONDecodeError",
+        "content": "    result = verify(args.directory, args.source_history, args.git_dir)"
+      },
+      "resolution": "explicit-existing-valueerror-subclass",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "verification/check_contract_coverage.py",
+        "row": 48,
+        "col": 14,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "CalledProcessError",
+        "content": "    process = subprocess.run([\"git\", \"-C\", str(root), \"ls-files\", \"--cached\", \"--others\","
+      },
+      "resolution": "checked-git-output-with-noncheckout-fallback",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "row": 85,
+        "col": 52,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "ZeroDivisionError",
+        "content": "        \"latent_conditional_sd_iq\": 16*math.sqrt(.4/2.2),"
+      },
+      "resolution": "bounded-positive-quotient-preserving-original-division",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "row": 84,
+        "col": 63,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "ZeroDivisionError",
+        "content": "        \"latent_conditional_mean_iq\": 100 + 16*q*math.sqrt(1.8/2.2),"
+      },
+      "resolution": "bounded-positive-quotient-preserving-original-division",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "row": 83,
+        "col": 70,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "ZeroDivisionError",
+        "content": "        \"three_test_mean160_composite_iq\": 100 + 60/math.sqrt(.6 + .4/3),"
+      },
+      "resolution": "bounded-positive-quotient-preserving-original-division",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "row": 181,
+        "col": 30,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "ZeroDivisionError",
+        "content": "    report = {\"calculations\": validate_calculations(args.calculations)}"
+      },
+      "resolution": "bounded-positive-quotient-preserving-original-division",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "row": 147,
+        "col": 22,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "ZeroDivisionError",
+        "content": "            u = state/2147483647"
+      },
+      "resolution": "bounded-positive-quotient-preserving-original-division",
+      "current_positive_gate_diagnostics": 0
+    },
+    {
+      "original_diagnostic": {
+        "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "row": 149,
+        "col": 22,
+        "code": "DEL021",
+        "text": "raises contract error",
+        "value": "ZeroDivisionError",
+        "content": "            v = state/2147483647"
+      },
+      "resolution": "bounded-positive-quotient-preserving-original-division",
+      "current_positive_gate_diagnostics": 0
+    }
+  ]
+}

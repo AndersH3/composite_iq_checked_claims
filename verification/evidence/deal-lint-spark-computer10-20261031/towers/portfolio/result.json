@@ -1,0 +1,115 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "towers_proof.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/deal-lint-spark-computer10-20261031/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-dzp4k_0f/towers/portfolio",
+  "started_utc": "2026-10-31T16:27:27.475751+00:00",
+  "finished_utc": "2026-10-31T16:27:31.361812+00:00",
+  "elapsed_seconds": 3.886066250008298,
+  "returncode": 0,
+  "timed_out": false,
+  "log_sha256": "7f4f8a4cc31cea484fafa92946191020645eef48b47cd141dda67adb1619bba8",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 9,
+        "flow": 9,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 13,
+        "flow": 0,
+        "provers": 13,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 9,
+        "flow": 0,
+        "provers": 9,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 31,
+        "flow": 9,
+        "provers": 22,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 1,
+    "contains_not_proved": false,
+    "report_sha256": "286cb1a17fcc40bc46ef181dec079f673e478409442f189e5b66ba47a094e9b7"
+  },
+  "sources": [
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "8a7d0a08fb20765f26446167c3ee05c818aec1b5582ac90d30af582a4707386e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "17ff4d470406e068162fa813f625342d208d0887ca88a1429f4c0c7dc9a5ba48"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "d1776e7f3e07421d991735354395207016fffdd5dd9195d753112603f4e68585"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "fdd06107769e21691a9444d81936629cba47876d27713b40a6534e369ec9d867"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "e0bb1780aa789120be3e54d8543292f44833d6d85caf4d04650e1bdd573fcdee"
+    }
+  ],
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "complete": true
+}

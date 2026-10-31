@@ -22,6 +22,6 @@ python -m pip install -r requirements-dev.txt
 make check
 ```
 
-[Computer10 Deal evidence](verification/evidence/deal-computer10-20261031/REPORT.md) records contract coverage, runtime/property tests, optimized-Python checks, symbolic gate proofs, and the static checker's limitations. Runtime checks and property tests are distinct from universal formal verification.
+[Current computer10 Deal evidence](verification/evidence/deal-lint-clean-computer10-20261031/REPORT.md) records clean static lint for every maintained Python file, 110 passing tests, optimized-Python checks, numerical replay, and symbolic gate proofs. `make check` and GitHub Actions require both clean positive files and the expected failure of the deliberately broken fixture. The [earlier report](verification/evidence/deal-computer10-20261031/REPORT.md) preserves the original diagnostics. Runtime checks and property tests are distinct from universal formal verification.
 
 The repository's original material is governed by [LICENSE](LICENSE), subject to third-party rights.

@@ -1,0 +1,35 @@
+Summary of SPARK analysis
+=========================
+
+---------------------------------------------------------------------------------------------
+SPARK Analysis results        Total       Flow                 Provers   Justified   Unproved
+---------------------------------------------------------------------------------------------
+Data Dependencies                 9          9                       .           .          .
+Flow Dependencies                 .          .                       .           .          .
+Initialization                    .          .                       .           .          .
+Non-Aliasing                      .          .                       .           .          .
+Run-time Checks                  13          .    13 (CVC5 92%, Z3 8%)           .          .
+Assertions                        .          .                       .           .          .
+Functional Contracts              9          .                9 (CVC5)           .          .
+LSP Verification                  .          .                       .           .          .
+Termination                       .          .                       .           .          .
+Concurrency                       .          .                       .           .          .
+---------------------------------------------------------------------------------------------
+Total                            31    9 (29%)                22 (71%)           .          .
+
+
+max steps used for successful proof: 1
+
+Analyzed 1 unit
+in unit admission_core, 11 subprograms and packages out of 11 analyzed
+  Admission_Core at admission_core.ads:1 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Admission_Core.Classify at admission_core.ads:16 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Complement at admission_core.ads:64 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Conditional at admission_core.ads:68 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Fraction at admission_core.ads:50 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Marginal_A at admission_core.ads:36 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Admission_Core.Marginal_B at admission_core.ads:40 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Admission_Core.Observe at admission_core.ads:27 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (10 checks)
+  Admission_Core.Total at admission_core.ads:24 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Admission_Core.Union_Count at admission_core.ads:44 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Admission_Core.Union_Probability at admission_core.ads:56 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)

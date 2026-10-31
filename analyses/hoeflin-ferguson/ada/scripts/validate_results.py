@@ -16,6 +16,17 @@ from scipy.stats import norm
 COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 
 
+@deal.pre(lambda numerator, denominator: type(numerator) in (int, float)
+          and 0 <= numerator <= 2 and type(denominator) in (int, float)
+          and 1 <= denominator <= 1000)
+@deal.post(lambda result: math.isfinite(result) and 0 <= result <= 2)
+@deal.raises()
+@deal.has()
+def _positive_ratio(numerator, denominator):
+    """Divide bounded variance terms by a positive test count or variance sum."""
+    return numerator / denominator
+
+
 @deal.pre(lambda actual, expected, label, atol=5e-11:
           math.isfinite(actual) and math.isfinite(expected)
           and math.isfinite(atol) and atol > 0 and isinstance(label, str))
@@ -65,7 +76,7 @@ def validate_calculations(path):
     max_error = 0.0
     for row in rows:
         n = None if row["tests"] == "infinity" else int(row["tests"])
-        factor = .6 if n is None else .6 + .4/n
+        factor = .6 if n is None else .6 + _positive_ratio(.4, n)
         z = q * math.sqrt(factor)
         for field, expected in (("variance_factor", factor), ("mean_z", z),
                                 ("mean_score_sd16", 100 + 16*z)):
@@ -80,9 +91,9 @@ def validate_calculations(path):
     examples = {r[0]: float(r[1]) for r in example_rows}
     expected = {
         "upper_tail_quantile": q,
-        "three_test_mean160_composite_iq": 100 + 60/math.sqrt(.6 + .4/3),
-        "latent_conditional_mean_iq": 100 + 16*q*math.sqrt(1.8/2.2),
-        "latent_conditional_sd_iq": 16*math.sqrt(.4/2.2),
+        "three_test_mean160_composite_iq": 100 + 60/math.sqrt(.6 + _positive_ratio(.4, 3)),
+        "latent_conditional_mean_iq": 100 + 16*q*math.sqrt(_positive_ratio(1.8, 2.2)),
+        "latent_conditional_sd_iq": 16*math.sqrt(_positive_ratio(.4, 2.2)),
     }
     if set(examples) != set(expected):
         raise ValueError("Unexpected worked-example labels")

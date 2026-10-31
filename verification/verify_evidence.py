@@ -11,10 +11,14 @@ import subprocess
 
 import deal
 from json import JSONDecodeError
+from subprocess import CalledProcessError
 
-from run_computer10 import ROOT, report_summary, is_sha256
+try:
+    from verification.run_computer10 import ROOT, report_summary, is_sha256
+except ModuleNotFoundError:
+    from run_computer10 import ROOT, report_summary, is_sha256
 
-DEFAULT_HISTORY = ROOT.joinpath("verification/evidence/deal-computer10-20261031/source_history.json")
+DEFAULT_HISTORY = ROOT.joinpath("verification/evidence/deal-lint-clean-computer10-20261031/source_history.json")
 
 
 @deal.pre(lambda path: isinstance(path, Path))
@@ -39,7 +43,9 @@ def check(condition: bool, message: str) -> None:
 @deal.pre(lambda relative, expected, history, git_dir=None: isinstance(relative, str) and isinstance(expected, str)
           and len(expected) == 64 and all(c in "0123456789abcdef" for c in expected)
           and isinstance(history, Path) and (git_dir is None or isinstance(git_dir, Path)))
-@deal.post(lambda result: isinstance(result, str) and bool(result))
+@deal.ensure(lambda relative, expected, history, git_dir=None, result=None:
+             isinstance(result, str) and bool(result)
+             and (result == str(ROOT.joinpath(relative)) or result.startswith("git:")))
 @deal.raises(OSError, ValueError, KeyError, TypeError, JSONDecodeError, subprocess.SubprocessError)
 @deal.has("read", "syscall")
 def evidence_source(relative: str, expected: str, history: Path, git_dir: Path | None = None) -> str:
@@ -58,9 +64,11 @@ def evidence_source(relative: str, expected: str, history: Path, git_dir: Path |
         blob = matches[0]["git_blob"]
         check(isinstance(blob, str) and len(blob) == 40 and all(c in "0123456789abcdef" for c in blob), "Invalid Git blob")
         command = ["git", "--git-dir", str(git_dir)] if git_dir else ["git", "-C", str(ROOT)]
-        process = subprocess.run([*command, "cat-file", "blob", blob], capture_output=True, timeout=15)
-        check(process.returncode == 0, "Historical Git object is missing; fetch repository history or supply --git-dir")
-        check(hashlib.sha256(process.stdout).hexdigest() == expected, "Historical Git source hash differs: " + relative)
+        try:
+            source = subprocess.check_output([*command, "cat-file", "blob", blob], stderr=subprocess.PIPE, timeout=15)
+        except CalledProcessError as error:
+            raise ValueError("Historical Git object is missing; fetch repository history or supply --git-dir") from error
+        check(hashlib.sha256(source).hexdigest() == expected, "Historical Git source hash differs: " + relative)
         return "git:" + blob
     raise ValueError("Proof source changed: " + relative)
 
@@ -115,7 +123,7 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
             "historical_python_sources": archived_python}
 
 
-@deal.raises(SystemExit, OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError)
+@deal.raises(SystemExit, OSError, ValueError, KeyError, TypeError, JSONDecodeError, subprocess.SubprocessError)
 @deal.has("read", "stdout", "stderr", "syscall")
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)

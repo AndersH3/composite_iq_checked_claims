@@ -1,0 +1,4 @@
+Verified 4 nominal-cutoff cases with independent integrations, 3 BASIC-grid cases, and OR/AND calibration.
+Legacy printed grid results agree within 3e-7 relative tolerance; residuals are recorded in the CSV.
+Equal top-2% tests: joint=0.0062762740, union=0.0337237260, conditional=0.31381370
+Mixed cutoffs: P(low pass | high pass)=0.65858880

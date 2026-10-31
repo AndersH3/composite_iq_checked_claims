@@ -10,6 +10,16 @@ import deal
 ROOT = Path(__file__).resolve().parent
 
 
+@deal.pre(lambda numerator, denominator: type(numerator) is int and type(denominator) is int
+          and 1 <= numerator < denominator <= 2_147_483_647)
+@deal.post(lambda result: math.isfinite(result) and 0 < result < 1)
+@deal.raises()
+@deal.has()
+def _open_unit_ratio(numerator, denominator):
+    """Map a positive Park--Miller state to an open-unit-interval float."""
+    return numerator / denominator
+
+
 @deal.pre(lambda condition, message: type(condition) is bool and isinstance(message, str))
 @deal.ensure(lambda condition, message, result: condition and result is None)
 @deal.raises(ValueError)
@@ -144,9 +154,9 @@ def validate(directory, replay=False):
         b = [float(row["cutoff_b_z"]) for row in calculated]
         for _ in range(trials):
             state = 48271*state % 2147483647
-            u = state/2147483647
+            u = _open_unit_ratio(state, 2147483647)
             state = 48271*state % 2147483647
-            v = state/2147483647
+            v = _open_unit_ratio(state, 2147483647)
             radius = math.sqrt(-2*math.log(u))
             angle = 2*math.pi*v
             x = radius*math.cos(angle)

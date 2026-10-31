@@ -1,0 +1,16 @@
+usage: run_computer10.py [-h] [--alire-dir ALIRE_DIR] [--run-id RUN_ID]
+                         [--timeout TIMEOUT] [--wall-seconds WALL_SECONDS]
+                         [--portfolio-only] [--provers PROVERS]
+
+Run source-pinned, fresh GNATprove campaigns on computer10. Only SPARK proof
+projects are certified. Ada numerical libraries and simulations have a
+separate numerical-validation boundary documented beside each project.
+
+options:
+  -h, --help            show this help message and exit
+  --alire-dir ALIRE_DIR
+  --run-id RUN_ID
+  --timeout TIMEOUT
+  --wall-seconds WALL_SECONDS
+  --portfolio-only
+  --provers PROVERS

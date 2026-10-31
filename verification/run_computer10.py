@@ -83,7 +83,10 @@ def environment(alire_dir: Path) -> dict:
     env = os.environ.copy()
     exports = {}
     for line in process.stdout.splitlines():
-        parts = shlex.split(line)
+        lexer = shlex.shlex(line, posix=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        parts = list(lexer)
         if len(parts) != 2 or parts[0] != "export" or "=" not in parts[1]:
             raise ValueError("Unexpected Alire export syntax")
         key, value = parts[1].split("=", 1)
@@ -143,13 +146,22 @@ def execute(argv: list, cwd: Path, env: dict, log: Path, wall_seconds: int = 900
 @deal.ensure(lambda path, args, env, result: result["path"] == str(path)
              and result["argv"] == [str(path), *args] and len(result["sha256"]) == 64
              and isinstance(result["returncode"], int) and isinstance(result["output"], str))
-@deal.raises(OSError, ValueError, subprocess.SubprocessError)
+@deal.raises(OSError, ValueError, subprocess.SubprocessError, TimeoutExpired)
 @deal.has("read", "syscall")
 def version_record(path: Path, args: list, env: dict) -> dict:
-    process = subprocess.run([str(path), *args], env=env, capture_output=True,
-                             text=True, timeout=15)
+    with subprocess.Popen([str(path), *args], env=env, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE, text=True) as process:
+        try:
+            stdout, stderr = process.communicate(timeout=15)
+        except TimeoutExpired:
+            process.kill()
+            process.communicate()
+            raise
+        except BaseException:
+            process.kill()
+            raise
     return {"path": str(path), "sha256": digest(Path(path)), "argv": [str(path), *args],
-            "returncode": process.returncode, "output": (process.stdout + process.stderr).strip()}
+            "returncode": process.returncode, "output": (stdout + stderr).strip()}
 
 
 @deal.pre(lambda value: isinstance(value, str))
@@ -263,7 +275,7 @@ def campaign(name: str, folder: Path, project: str, unit: str, aliases: list, la
 
 
 @deal.raises(SystemExit, OSError, ValueError, TypeError, subprocess.SubprocessError,
-             CalledProcessError, TimeoutExpired)
+             CalledProcessError, TimeoutExpired, SameFileError, SpecialFileError)
 @deal.has("io", "syscall", "time")
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
