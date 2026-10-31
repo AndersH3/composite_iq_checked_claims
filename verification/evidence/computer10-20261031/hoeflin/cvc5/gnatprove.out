@@ -1,0 +1,33 @@
+Summary of SPARK analysis
+=========================
+
+---------------------------------------------------------------------------------------------------
+SPARK Analysis results        Total       Flow                       Provers   Justified   Unproved
+---------------------------------------------------------------------------------------------------
+Data Dependencies                 8          8                             .           .          .
+Flow Dependencies                 .          .                             .           .          .
+Initialization                    .          .                             .           .          .
+Non-Aliasing                      .          .                             .           .          .
+Run-time Checks                  34          .    31 (CVC5 55%, Trivial 45%)           .          3
+Assertions                        .          .                             .           .          .
+Functional Contracts              5          .                      3 (CVC5)           .          2
+LSP Verification                  .          .                             .           .          .
+Termination                       .          .                             .           .          .
+Concurrency                       .          .                             .           .          .
+---------------------------------------------------------------------------------------------------
+Total                            47    8 (17%)                      34 (72%)           .    5 (11%)
+
+
+max steps used for successful proof: 31685
+
+Analyzed 1 unit
+in unit hoeflin_core, 9 subprograms and packages out of 9 analyzed
+  Hoeflin_Core at hoeflin_core.ads:2 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Hoeflin_Core.Composite at hoeflin_core.ads:34 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+  Hoeflin_Core.IQ at hoeflin_core.ads:39 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (3 checks)
+  Hoeflin_Core.Latent_Reliability at hoeflin_core.ads:24 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and not proved, 5 checks out of 6 proved
+  Hoeflin_Core.Observe at hoeflin_core.ads:55 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+  Hoeflin_Core.Threshold at hoeflin_core.ads:29 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and not proved, 5 checks out of 6 proved
+  Hoeflin_Core.Valid at hoeflin_core.ads:50 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Hoeflin_Core.Variance_Factor at hoeflin_core.ads:20 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and not proved, 3 checks out of 5 proved
+  Hoeflin_Core.Variance_Numerator at hoeflin_core.ads:13 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and not proved, 2 checks out of 3 proved

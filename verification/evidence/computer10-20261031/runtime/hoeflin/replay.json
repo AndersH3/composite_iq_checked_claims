@@ -1,0 +1,10 @@
+{
+  "cases": 8,
+  "trials_per_case": 1000000,
+  "seed": 20261030,
+  "all_tail_counts_match": true,
+  "mean_and_variance_agree": true,
+  "input_sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36",
+  "replay_source_sha256": "0e345e59236c8a1111cab6fefa82a37518aa179b24d5aa736c7c203232b56e1b",
+  "scope": "Deterministic implementation replay, not a proof of stochastic independence or model validity."
+}

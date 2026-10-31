@@ -1,0 +1,27 @@
+{
+  "platform": "Linux-6.12.113+deb13-amd64-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "why3": {
+    "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/why3",
+    "sha256": "df02d52e8155aeea30f83b7304f1a7944e77407bfc7cd0400e3b520d68997801",
+    "version": "Why3 platform, version 1.5.0+git"
+  },
+  "drivers": [
+    {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/share/why3/drivers/colibri.drv",
+      "sha256": "2d27ae1b8793c8677b0bcee3c9cbd8c05752c6733ab05877dd102c81e329c986"
+    },
+    {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/share/why3/drivers/yices-smt2.drv",
+      "sha256": "e4cb074d6beb3dbd92ddce329ba6959d00729b5d9a2f380a03b8ecb99d84763a"
+    },
+    {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/share/why3/drivers/cvc5_gnatprove.drv",
+      "sha256": "5442ec304e87ef38a89a06690b41c7e6a9334e1ed4b425cf813577d6acda0318"
+    },
+    {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/share/why3/drivers/z3_gnatprove.drv",
+      "sha256": "cca4c37e205e80376c2b55e0b086dede3c3f11ed7b69f51cad0905c7a010b62a"
+    }
+  ]
+}

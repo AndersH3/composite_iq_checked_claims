@@ -1,0 +1,78 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+hoeflin_core.adb:8:39: info: overflow check proved (altergo: 2 VC in max 0.0 seconds and 34 steps)
+
+hoeflin_core.adb:10:14: medium: range check might fail, cannot prove lower bound for Result
+   10 |      return Result;
+      |             ^~~~~~
+  reason for check: returned value must fit in the result type of the function
+hoeflin_core.adb:19:20: info: range check proved (Trivial)
+hoeflin_core.adb:19:25: info: division check proved (altergo: 1 VC in max 0.1 seconds and 1644 steps)
+hoeflin_core.adb:19:25: info: float overflow check proved (altergo: 1 VC in max 0.3 seconds and 4924 steps)
+hoeflin_core.adb:19:25: info: range check proved (altergo: 1 VC in max 1.1 seconds and 20739 steps)
+hoeflin_core.adb:19:33: info: range check proved (Trivial)
+hoeflin_core.adb:29:20: info: range check proved (Trivial)
+hoeflin_core.adb:29:25: info: float overflow check proved (Trivial)
+hoeflin_core.adb:29:25: info: range check proved (Trivial)
+hoeflin_core.adb:29:25: info: division check proved (altergo: 1 VC in max 0.1 seconds and 1589 steps)
+hoeflin_core.adb:29:33: info: range check proved (Trivial)
+hoeflin_core.adb:34:45: info: float overflow check proved (Trivial)
+hoeflin_core.adb:34:45: info: range check proved (Trivial)
+hoeflin_core.adb:34:52: info: float overflow check proved (Trivial)
+hoeflin_core.adb:36:23: info: float overflow check proved (Trivial)
+
+hoeflin_core.adb:36:23: medium: range check might fail
+   36 |      return Quantile - Reduction;
+      |             ~~~~~~~~~^~~~~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: subprogram at hoeflin_core.ads:29 should mention Quantile in a precondition
+   29 |   function Threshold (Quantile : Positive_Z; Scale : Scale_Value)
+      |   ^ here
+hoeflin_core.adb:41:43: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:50: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: range check proved (Trivial)
+hoeflin_core.adb:41:60: info: division check proved (altergo: 1 VC in max 0.1 seconds and 1010 steps)
+hoeflin_core.adb:43:21: info: float overflow check proved (Trivial)
+
+hoeflin_core.adb:43:21: medium: range check might fail
+   43 |      return Mean_Z + Increase;
+      |             ~~~~~~~^~~~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: subprogram at hoeflin_core.ads:34 should mention Mean_Z in a precondition
+   34 |   function Composite (Mean_Z : Positive_Z; Scale : Scale_Value)
+      |   ^ here
+hoeflin_core.adb:48:20: info: float overflow check proved (Trivial)
+hoeflin_core.adb:48:20: info: range check proved (Trivial)
+hoeflin_core.adb:48:27: info: float overflow check proved (Trivial)
+hoeflin_core.adb:53:26: info: range check proved (altergo: 2 VC in max 0.1 seconds and 912 steps)
+hoeflin_core.adb:55:37: info: range check proved (altergo: 2 VC in max 0.2 seconds and 1775 steps)
+hoeflin_core.adb:58:41: info: range check proved (altergo: 2 VC in max 0.2 seconds and 2094 steps)
+hoeflin_core.adb:61:39: info: range check proved (altergo: 2 VC in max 0.2 seconds and 2474 steps)
+hoeflin_core.ads:15:09: info: data dependencies proved
+
+hoeflin_core.ads:18:17: medium: postcondition might fail, cannot prove Variance_Numerator'Result <= 1_000 * Long_Long_Integer (N)
+   18 |       and then Variance_Numerator'Result <= 1_000 * Long_Long_Integer (N);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hoeflin_core.ads:22:09: info: data dependencies proved
+hoeflin_core.ads:26:09: info: data dependencies proved
+hoeflin_core.ads:27:14: info: postcondition proved (altergo: 2 VC in max 0.3 seconds and 4638 steps)
+hoeflin_core.ads:31:09: info: data dependencies proved
+
+hoeflin_core.ads:32:14: medium: postcondition might fail
+   32 |     Post => Threshold'Result <= Quantile;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hoeflin_core.ads:36:09: info: data dependencies proved
+
+hoeflin_core.ads:37:14: medium: postcondition might fail
+   37 |     Post => Composite'Result >= Mean_Z;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+hoeflin_core.ads:40:09: info: data dependencies proved
+hoeflin_core.ads:53:09: info: data dependencies proved
+hoeflin_core.ads:56:09: info: data dependencies proved
+hoeflin_core.ads:59:14: info: postcondition proved (altergo: 5 VC in max 0.5 seconds and 4718 steps)
+hoeflin_core.ads:60:47: info: overflow check proved (altergo: 2 VC in max 0.2 seconds and 2155 steps)
+hoeflin_core.ads:61:51: info: overflow check proved (altergo: 2 VC in max 0.2 seconds and 2389 steps)
+hoeflin_core.ads:62:49: info: overflow check proved (altergo: 2 VC in max 0.2 seconds and 2087 steps)
+Summary logged in /tmp/composite-iq-spark-ij2njyro/hoeflin/altergo/obj-proof/gnatprove/gnatprove.out
+gnatprove: unproved check messages considered as errors

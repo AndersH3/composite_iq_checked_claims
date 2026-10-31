@@ -8,6 +8,8 @@ A statistical analysis and independently written replacement for Ronald K. Hoefl
 - [Original Markdown analysis](analysis.md)
 - [Recalculated thresholds](data/thresholds.csv)
 - [Numerical verification](scripts/verify_calculations.py)
+- [Ada/SPARK calculations and simulations](ada/README.md)
+- [Computer10 prover evidence](../../verification/README.md)
 
 The PDF uses XeLaTeX, KOMA-Script `scrartcl`, A4 paper, 16 mm margins, TeX Gyre Pagella text and mathematics, TeX Gyre Heros sans-serif text, and Latin Modern Mono. The source is the authoritative typeset version; the Markdown file preserves the earlier analysis.
 

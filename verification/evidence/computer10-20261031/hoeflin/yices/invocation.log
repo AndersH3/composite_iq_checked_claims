@@ -1,0 +1,142 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+
+hoeflin_core.adb:8:39: medium: overflow check might fail, cannot prove lower bound for 1_000 * Long_Long_Integer (N) - Loss
+    8 |        1_000 * Long_Long_Integer (N) - Loss;
+      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  reason for check: result of subtraction must fit in a 64-bits machine integer
+  possible fix: subprogram at hoeflin_core.ads:13 should mention N and R in a precondition
+   13 |   function Variance_Numerator
+      |   ^ here
+
+hoeflin_core.adb:10:14: medium: range check might fail, cannot prove lower bound for Result
+   10 |      return Result;
+      |             ^~~~~~
+  reason for check: returned value must fit in the result type of the function
+hoeflin_core.adb:19:20: info: range check proved (Trivial)
+
+hoeflin_core.adb:19:25: medium: divide by zero might fail
+   19 |      return Real (Num) / Real (Den);
+      |             ~~~~~~~~~~~^~~~~~~~~~~
+
+hoeflin_core.adb:19:25: medium: float overflow check might fail
+   19 |      return Real (Num) / Real (Den);
+      |             ~~~~~~~~~~~^~~~~~~~~~~
+  reason for check: result of floating-point division must be bounded
+
+hoeflin_core.adb:19:25: medium: range check might fail
+   19 |      return Real (Num) / Real (Den);
+      |             ~~~~~~~~~~~^~~~~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+hoeflin_core.adb:19:33: info: range check proved (Trivial)
+hoeflin_core.adb:29:20: info: range check proved (Trivial)
+hoeflin_core.adb:29:25: info: float overflow check proved (Trivial)
+hoeflin_core.adb:29:25: info: range check proved (Trivial)
+
+hoeflin_core.adb:29:25: medium: divide by zero might fail
+   29 |      return Real (Num) / Real (Den);
+      |             ~~~~~~~~~~~^~~~~~~~~~~
+hoeflin_core.adb:29:33: info: range check proved (Trivial)
+hoeflin_core.adb:34:45: info: float overflow check proved (Trivial)
+hoeflin_core.adb:34:45: info: range check proved (Trivial)
+hoeflin_core.adb:34:52: info: float overflow check proved (Trivial)
+hoeflin_core.adb:36:23: info: float overflow check proved (Trivial)
+
+hoeflin_core.adb:36:23: medium: range check might fail
+   36 |      return Quantile - Reduction;
+      |             ~~~~~~~~~^~~~~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: subprogram at hoeflin_core.ads:29 should mention Quantile in a precondition
+   29 |   function Threshold (Quantile : Positive_Z; Scale : Scale_Value)
+      |   ^ here
+hoeflin_core.adb:41:43: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:50: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: range check proved (Trivial)
+
+hoeflin_core.adb:41:60: medium: divide by zero might fail
+   41 |      Increase : constant Real := (Mean_Z * (1.0 - Scale)) / Scale;
+      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+  possible fix: add precondition (Scale /= 0) to subprogram at hoeflin_core.ads:34
+   34 |   function Composite (Mean_Z : Positive_Z; Scale : Scale_Value)
+      |            ^ here
+hoeflin_core.adb:43:21: info: float overflow check proved (Trivial)
+
+hoeflin_core.adb:43:21: medium: range check might fail
+   43 |      return Mean_Z + Increase;
+      |             ~~~~~~~^~~~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: subprogram at hoeflin_core.ads:34 should mention Mean_Z in a precondition
+   34 |   function Composite (Mean_Z : Positive_Z; Scale : Scale_Value)
+      |   ^ here
+hoeflin_core.adb:48:20: info: float overflow check proved (Trivial)
+hoeflin_core.adb:48:20: info: range check proved (Trivial)
+hoeflin_core.adb:48:27: info: float overflow check proved (Trivial)
+
+hoeflin_core.adb:53:26: medium: range check might fail, cannot prove lower bound for C.Total + 1
+   53 |      C.Total := C.Total + 1;
+      |                 ~~~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+
+hoeflin_core.adb:55:37: medium: range check might fail, cannot prove lower bound for C.Above_Two + 1
+   55 |         C.Above_Two := C.Above_Two + 1;
+      |                        ~~~~~~~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+
+hoeflin_core.adb:58:41: medium: range check might fail, cannot prove lower bound for C.Above_Three + 1
+   58 |         C.Above_Three := C.Above_Three + 1;
+      |                          ~~~~~~~~~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+
+hoeflin_core.adb:61:39: medium: range check might fail, cannot prove lower bound for C.Above_Rare + 1
+   61 |         C.Above_Rare := C.Above_Rare + 1;
+      |                         ~~~~~~~~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+hoeflin_core.ads:15:09: info: data dependencies proved
+
+hoeflin_core.ads:16:14: medium: postcondition might fail, cannot prove Variance_Numerator'Result = 1_000 + Long_Long_Integer (R) * Long_Long_Integer (N - 1)
+   16>|     Post => Variance_Numerator'Result =
+   17 |       1_000 + Long_Long_Integer (R) * Long_Long_Integer (N - 1)
+hoeflin_core.ads:22:09: info: data dependencies proved
+hoeflin_core.ads:26:09: info: data dependencies proved
+
+hoeflin_core.ads:27:14: medium: postcondition might fail
+   27 |     Post => Latent_Reliability'Result in 0.0 .. 1.0;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hoeflin_core.ads:31:09: info: data dependencies proved
+
+hoeflin_core.ads:32:14: medium: postcondition might fail
+   32 |     Post => Threshold'Result <= Quantile;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hoeflin_core.ads:36:09: info: data dependencies proved
+
+hoeflin_core.ads:37:14: medium: postcondition might fail
+   37 |     Post => Composite'Result >= Mean_Z;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+hoeflin_core.ads:40:09: info: data dependencies proved
+hoeflin_core.ads:53:09: info: data dependencies proved
+hoeflin_core.ads:56:09: info: data dependencies proved
+
+hoeflin_core.ads:59:14: medium: postcondition might fail, cannot prove Valid (C)
+   59 |     Post => Valid (C) and then C.Total = C.Total'Old + 1
+      |             ^~~~~~~~
+
+hoeflin_core.ads:60:47: medium: overflow check might fail, cannot prove lower bound for C.Above_Two'Old + (if Z > 4503599627 then 1 else 0)
+   60 |       and then C.Above_Two = C.Above_Two'Old + (if Z > 2.0 then 1 else 0)
+      |                              ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  reason for check: result of addition must fit in a 32-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+
+hoeflin_core.ads:61:51: medium: overflow check might fail, cannot prove lower bound for C.Above_Three'Old + (if Z > 6755399441 then 1 else 0)
+   61 |       and then C.Above_Three = C.Above_Three'Old + (if Z > 3.0 then 1 else 0)
+      |                                ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  reason for check: result of addition must fit in a 32-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+
+hoeflin_core.ads:62:49: medium: overflow check might fail, cannot prove lower bound for C.Above_Rare'Old + (if Z > Rare_Cutoff then 1 else 0)
+   62 |       and then C.Above_Rare = C.Above_Rare'Old + (if Z > Rare_Cutoff then 1 else 0);
+      |                               ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  reason for check: result of addition must fit in a 32-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+Summary logged in /tmp/composite-iq-spark-ij2njyro/hoeflin/yices/obj-proof/gnatprove/gnatprove.out
+gnatprove: unproved check messages considered as errors

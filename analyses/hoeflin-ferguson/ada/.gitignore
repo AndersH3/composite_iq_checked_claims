@@ -1,0 +1,5 @@
+obj/
+obj-proof/
+bin/
+results/
+__pycache__/

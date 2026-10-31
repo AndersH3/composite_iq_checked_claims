@@ -1,0 +1,9 @@
+Compile
+   [Ada]          towers_demo.adb
+   [Ada]          admission_core.adb
+   [Ada]          normal_model.adb
+Bind
+   [gprbind]      towers_demo.bexch
+   [Ada]          towers_demo.ali
+Link
+   [link]         towers_demo.adb

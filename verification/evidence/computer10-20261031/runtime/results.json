@@ -1,0 +1,129 @@
+{
+  "hoeflin": {
+    "build": {
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+        "-f",
+        "-p",
+        "-P",
+        "hoeflin.gpr"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada",
+      "started_utc": "2026-10-31T00:39:30.084199+00:00",
+      "finished_utc": "2026-10-31T00:39:31.351101+00:00",
+      "elapsed_seconds": 1.266902833012864,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "bb96da1a2ababed44307d2f55b007f75d0d67936362770e97fd8d34e4e9a78d7"
+    },
+    "calculations": {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada/bin/hoeflin_calculations"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada",
+      "started_utc": "2026-10-31T00:39:31.351269+00:00",
+      "finished_utc": "2026-10-31T00:39:31.352946+00:00",
+      "elapsed_seconds": 0.0016858330054674298,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "d538d547f64c800ebfc14ad63a1c40efc33cfa2aa46f6228117fa96c0dbe3d2e"
+    },
+    "simulation": {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada/bin/hoeflin_simulation",
+        "1000000",
+        "20261030"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada",
+      "started_utc": "2026-10-31T00:39:31.353069+00:00",
+      "finished_utc": "2026-10-31T00:39:31.868325+00:00",
+      "elapsed_seconds": 0.5152661729953252,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36"
+    },
+    "validation": {
+      "argv": [
+        "python3",
+        "scripts/validate_results.py",
+        "--calculations",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/computer10-20261031/runtime/hoeflin/calculations.csv",
+        "--simulation",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/computer10-20261031/runtime/hoeflin/simulation.csv",
+        "--json-output",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/computer10-20261031/runtime/hoeflin/validation.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada",
+      "started_utc": "2026-10-31T00:39:31.868496+00:00",
+      "finished_utc": "2026-10-31T00:39:32.587245+00:00",
+      "elapsed_seconds": 0.7187611570116132,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1"
+    },
+    "executables": [
+      {
+        "path": "analyses/hoeflin-ferguson/ada/bin/hoeflin_calculations",
+        "sha256": "5bed97097872e43d9a39b7fcc4d5ed88d043129e36da99561b6ece5e66a4c5dd"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/bin/hoeflin_simulation",
+        "sha256": "bac215fbe2f2a32299cab3d3704877486e725ce44cacc7f799c302f97e9eba2c"
+      }
+    ]
+  },
+  "towers": {
+    "build": {
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+        "-f",
+        "-p",
+        "-P",
+        "towers.gpr"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/towers-multiple-test-admissions/ada",
+      "started_utc": "2026-10-31T00:39:32.597506+00:00",
+      "finished_utc": "2026-10-31T00:39:34.014945+00:00",
+      "elapsed_seconds": 1.4174690679938067,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "3e3e3ff890cddffbd48b170dde68ab50b5eebe5936779db423052b1d3e78728e"
+    },
+    "run": {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/towers-multiple-test-admissions/ada/bin/towers_demo",
+        "1000000",
+        "20261030",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/computer10-20261031/runtime/towers"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/towers-multiple-test-admissions/ada",
+      "started_utc": "2026-10-31T00:39:34.015158+00:00",
+      "finished_utc": "2026-10-31T00:39:34.129411+00:00",
+      "elapsed_seconds": 0.11426304499036632,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "a0cf1bcb7c6c857d316191667d54ea3d2a845e84f83a97b831295988f455e16e"
+    },
+    "validation": {
+      "argv": [
+        "python3",
+        "validate_results.py",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/computer10-20261031/runtime/towers",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/towers-multiple-test-admissions/ada",
+      "started_utc": "2026-10-31T00:39:34.129516+00:00",
+      "finished_utc": "2026-10-31T00:39:35.396662+00:00",
+      "elapsed_seconds": 1.2671567159995902,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13"
+    },
+    "executables": [
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/bin/towers_demo",
+        "sha256": "39ba96614cd4d0457422392c5d63675d3208dd018c337049c4717c712ae0bee9"
+      }
+    ]
+  }
+}

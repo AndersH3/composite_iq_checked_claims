@@ -1,0 +1,128 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+
+admission_core.adb:14:41: medium: range check might fail, cannot prove lower bound for C.N00 + 1
+   14 |         when Neither => C.N00 := C.N00 + 1;
+      |                                  ~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+
+admission_core.adb:15:41: medium: range check might fail, cannot prove lower bound for C.N10 + 1
+   15 |         when A_Only  => C.N10 := C.N10 + 1;
+      |                                  ~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+
+admission_core.adb:16:41: medium: range check might fail, cannot prove lower bound for C.N01 + 1
+   16 |         when B_Only  => C.N01 := C.N01 + 1;
+      |                                  ~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+
+admission_core.adb:17:41: medium: range check might fail, cannot prove lower bound for C.N11 + 1
+   17 |         when Both    => C.N11 := C.N11 + 1;
+      |                                  ~~~~~~^~~
+  reason for check: result of addition must fit in the target type of the assignment
+
+admission_core.adb:22:13: medium: range check might fail, cannot prove lower bound for C.N10 + C.N11
+   22 |     (C.N10 + C.N11);
+      |     ~~~~~~~^~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: add precondition (C.N10 <= Count'Last - C.N11) to subprogram at admission_core.ads:36
+   36 |   function Marginal_A (C : Counts) return Count
+      |            ^ here
+
+admission_core.adb:24:13: medium: range check might fail, cannot prove lower bound for C.N01 + C.N11
+   24 |     (C.N01 + C.N11);
+      |     ~~~~~~~^~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: add precondition (C.N01 <= Count'Last - C.N11) to subprogram at admission_core.ads:40
+   40 |   function Marginal_B (C : Counts) return Count
+      |            ^ here
+
+admission_core.adb:26:21: medium: range check might fail, cannot prove lower bound for C.N10 + C.N01 + C.N11
+   26 |     (C.N10 + C.N01 + C.N11);
+      |     ~~~~~~~~~~~~~~~^~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: add precondition (C.N10 + C.N01 <= Count'Last - C.N11) to subprogram at admission_core.ads:44
+   44 |   function Union_Count (C : Counts) return Count
+      |            ^ here
+
+admission_core.adb:30:45: medium: range check might fail, cannot prove lower bound for P_A + P_B - Joint
+   30 |     return Probability_Units is (P_A + P_B - Joint);
+      |                                 ~~~~~~~~~~~^~~~~~~~
+  reason for check: returned value must fit in the result type of the function
+  possible fix: add precondition (P_A + P_B >= Probability_Units'First + Joint) to subprogram at admission_core.ads:56
+   56 |   function Union_Probability (P_A, P_B, Joint : Probability_Units)
+      |            ^ here
+admission_core.ads:17:11: info: data dependencies proved
+
+admission_core.ads:19:34: medium: postcondition might fail, cannot prove not Pass_A
+   19 |                 when Neither => not Pass_A and not Pass_B,
+      |                                 ^~~~~~~~~~
+admission_core.ads:28:11: info: data dependencies proved
+
+admission_core.ads:30:14: medium: postcondition might fail, cannot prove Total (C) = Total (C'Old) + 1
+   30 |     Post => Total (C) = Total (C'Old) + 1
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+admission_core.ads:30:40: medium: overflow check might fail, cannot prove lower bound for Total (C'Old) + 1
+   30 |     Post => Total (C) = Total (C'Old) + 1
+      |                         ~~~~~~~~~~~~~~^~~
+  reason for check: result of addition must fit in a 64-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+
+admission_core.ads:31:30: medium: overflow check might fail, cannot prove lower bound for C'Old.N00 + (if E = Neither then 1 else 0)
+   31 |       and C.N00 = C'Old.N00 + (if E = Neither then 1 else 0)
+      |                   ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  reason for check: result of addition must fit in a 64-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+
+admission_core.ads:32:30: medium: overflow check might fail, cannot prove lower bound for C'Old.N10 + (if E = A_Only then 1 else 0)
+   32 |       and C.N10 = C'Old.N10 + (if E = A_Only then 1 else 0)
+      |                   ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  reason for check: result of addition must fit in a 64-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+
+admission_core.ads:33:30: medium: overflow check might fail, cannot prove lower bound for C'Old.N01 + (if E = B_Only then 1 else 0)
+   33 |       and C.N01 = C'Old.N01 + (if E = B_Only then 1 else 0)
+      |                   ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  reason for check: result of addition must fit in a 64-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+
+admission_core.ads:34:30: medium: overflow check might fail, cannot prove lower bound for C'Old.N11 + (if E = Both then 1 else 0)
+   34 |       and C.N11 = C'Old.N11 + (if E = Both then 1 else 0);
+      |                   ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  reason for check: result of addition must fit in a 64-bits machine integer
+  possible fix: use pragma Overflow_Mode or switch -gnato13 or unit SPARK.Big_Integers
+admission_core.ads:37:11: info: data dependencies proved
+
+admission_core.ads:38:14: medium: postcondition might fail, cannot prove Marginal_A'Result = C.N10 + C.N11
+   38 |     Post => Marginal_A'Result = C.N10 + C.N11
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+admission_core.ads:41:11: info: data dependencies proved
+
+admission_core.ads:42:14: medium: postcondition might fail, cannot prove Marginal_B'Result = C.N01 + C.N11
+   42 |     Post => Marginal_B'Result = C.N01 + C.N11
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+admission_core.ads:45:11: info: data dependencies proved
+
+admission_core.ads:46:14: medium: postcondition might fail, cannot prove Union_Count'Result = C.N10 + C.N01 + C.N11
+   46 |     Post => Union_Count'Result = C.N10 + C.N01 + C.N11
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+admission_core.ads:51:11: info: data dependencies proved
+
+admission_core.ads:53:14: medium: postcondition might fail, cannot prove Fraction'Result.Numerator = Numerator
+   53 |     Post => Fraction'Result.Numerator = Numerator
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+admission_core.ads:58:11: info: data dependencies proved
+
+admission_core.ads:61:12: medium: postcondition might fail, cannot prove Union_Probability'Result >= P_A
+   61 |       and Union_Probability'Result >= P_A
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+admission_core.ads:65:11: info: data dependencies proved
+admission_core.ads:66:14: info: postcondition proved (Yices: 1 VC in max 0.0 seconds and 1 step)
+admission_core.ads:70:11: info: data dependencies proved
+
+admission_core.ads:72:14: medium: postcondition might fail, cannot prove Conditional'Result.Numerator = Joint
+   72 |     Post => Conditional'Result.Numerator = Joint
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Summary logged in /tmp/composite-iq-spark-ij2njyro/towers/yices/proof_obj/gnatprove/gnatprove.out
+gnatprove: unproved check messages considered as errors

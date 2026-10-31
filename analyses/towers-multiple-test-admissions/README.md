@@ -9,6 +9,8 @@ A joint statistical analysis and independently written corrected treatment of Gr
 - [Nominal-cutoff probabilities](data/admission_probabilities.csv)
 - [Follow-up grid reproduction](data/followup_grid.csv)
 - [Numerical verification](scripts/verify_calculations.py)
+- [Ada/SPARK calculations and simulations](ada/README.md)
+- [Computer10 prover evidence](../../verification/README.md)
 - [Archived-source provenance and hashes](source_manifest.json)
 
 The PDF uses XeLaTeX, KOMA-Script `scrartcl`, A4 paper, 16 mm margins, and TeX Gyre Pagella text and mathematics, with TeX Gyre Heros and Latin Modern Mono. The report's probability calculations are conditional on the stated bivariate-normal model; their numerical verification does not validate that model for actual tests or membership populations.

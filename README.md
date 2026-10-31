@@ -9,4 +9,6 @@ Statistical analyses of claims about combining IQ scores. Each analysis has its 
 
 Build instructions and numerical verification commands are in each analysis folder's README.
 
+Both analyses include [Ada calculations and simulations with SPARK verification on computer10](verification/README.md). The retained evidence separates formal core proofs from numerical validation and Monte Carlo results.
+
 The repository's original material is governed by [LICENSE](LICENSE), subject to third-party rights.

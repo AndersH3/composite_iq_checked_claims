@@ -1,0 +1,115 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "hoeflin_proof.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/computer10-20261031/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-ij2njyro/hoeflin/yices",
+  "started_utc": "2026-10-31T00:43:48.216732+00:00",
+  "finished_utc": "2026-10-31T00:43:50.535739+00:00",
+  "elapsed_seconds": 2.3190093740122393,
+  "returncode": 1,
+  "timed_out": false,
+  "log_sha256": "2bf1143622ea8bf1416a60aaf00d78dc1a9f1758dda7c03a7bc61836a9438bb0",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 8,
+        "flow": 8,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 34,
+        "flow": 0,
+        "provers": 18,
+        "justified": 0,
+        "unproved": 16
+      },
+      "Assertions": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 5,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 5
+      },
+      "Total": {
+        "total": 47,
+        "flow": 8,
+        "provers": 18,
+        "justified": 0,
+        "unproved": 21
+      }
+    },
+    "analyzed_units": 1,
+    "contains_not_proved": true,
+    "report_sha256": "4e49cec38657018d69c34073ec15c564edfce9cd01f3321e29fc3b5fb2ae5032"
+  },
+  "sources": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+      "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+      "sha256": "b61e0f49e55e60f967c5f222919e07126ae522cecb40f8733a08b8e90f1632d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+      "sha256": "1ef78333137a49d1f85c24b3e62b4178e3c20da16491b9285d724afbc2187e0c"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "6a188933f15a75b575b2c95382b92ba5fe3859ec8f369dba7fe4bad40bd3ec34"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+      "sha256": "6e3ef75a0fc1ac4b18125505e9d0477890c44cb2fd00994d6bb4926c869e26fe"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "6c83fb12e14ba360dfece5fa98c9f70f2c18b98d82c25c18650f5772fae4cb2c"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "404c03e629949044ad50526fcaed9ad04c022fff105917054031dd6455e6cffa"
+    }
+  ],
+  "provers_requested": [
+    "Yices"
+  ],
+  "complete": false
+}

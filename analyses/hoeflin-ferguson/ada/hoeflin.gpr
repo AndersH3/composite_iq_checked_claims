@@ -1,0 +1,12 @@
+project Hoeflin is
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Exec_Dir use "bin";
+   for Main use ("hoeflin_calculations.adb", "hoeflin_simulation.adb");
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnat2022", "-gnata", "-gnato", "-O2", "-g", "-msse2", "-mfpmath=sse");
+   end Compiler;
+   package Linker is
+      for Default_Switches ("Ada") use ("-lm");
+   end Linker;
+end Hoeflin;
