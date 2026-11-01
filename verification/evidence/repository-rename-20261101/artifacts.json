@@ -1,0 +1,43 @@
+{
+  "recorded_utc": "2026-11-01T22:31:40.104314+00:00",
+  "repository_id": 1440125453,
+  "old_repository": "AndersH3/composite_iq_checked_claimes",
+  "new_repository": "AndersH3/composite_iq_checked_claims",
+  "base_revision": "035c73fb98ba59681992353837fe15cbf24cd901",
+  "previous_evidence_blobs_unchanged": 578,
+  "proof_sources_unchanged": true,
+  "new_prover_campaign_run": false,
+  "evidence_audit_normal_optimized": "passed:781productionchecks",
+  "artifacts": [
+    {
+      "analysis": "hoeflin",
+      "source": "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "old_source_sha256": "30f80ce1dcb684f34b47ea9509a43ae098cf38c5f1b129cbacee5e821729fa23",
+      "old_pdf_sha256": "5cf33b8a3431b9504d9e85da85a39bb9f1bab971152c45e36cb2c4f7f40acfd8",
+      "new_source_sha256": "c2c92c7884ab0beca04632c15ce03ca82556c620501e36d21df93ad99777fe53",
+      "new_pdf_sha256": "497eb669f55f2ad160adb1f02d2003db40f1df466ee91aab80d4ce75de41d965",
+      "pages": 10,
+      "source_change": "one repository URL spelling replacement",
+      "visible_text_unchanged": true,
+      "all_pages_pixel_identical_at_72_dpi": true,
+      "only_repository_uri_changed": true,
+      "new_repository_uri": "https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/ghost-boundaries-computer10-20261101/REPORT.md"
+    },
+    {
+      "analysis": "towers",
+      "source": "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "old_source_sha256": "f56485a974470f71169a0e071c436ed2312ef501a22fb989159aebc0cdf8d907",
+      "old_pdf_sha256": "d14b02519c4aac5aa71c294f26fa9f9933b2f275eadbff414cd672921495a711",
+      "new_source_sha256": "f91f8606d3e8b65765c24acbd7d01df0be07b11f063aad9d88a1746f3ea6e6bf",
+      "new_pdf_sha256": "28733761868dd967287713ffd6f72e57be10350bc05bc9c733d5f9044a41e62e",
+      "pages": 11,
+      "source_change": "one repository URL spelling replacement",
+      "visible_text_unchanged": true,
+      "all_pages_pixel_identical_at_72_dpi": true,
+      "only_repository_uri_changed": true,
+      "new_repository_uri": "https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/ghost-boundaries-computer10-20261101/REPORT.md"
+    }
+  ]
+}
