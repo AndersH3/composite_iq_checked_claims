@@ -1,0 +1,1206 @@
+{
+  "spark": [
+    {
+      "name": "Hoeflin_Calculations",
+      "sloc": [
+        {
+          "file": "hoeflin_calculations.adb",
+          "line": 4
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 13,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 14,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_calculations"
+  },
+  "proof": [
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 8,
+      "col": 45,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 2,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 28,
+      "col": 80,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 3,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 28,
+      "col": 36,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 4,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 28,
+      "col": 29,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 5,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 29,
+      "col": 56,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 6,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 7,
+      "col": 6,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 7,
+      "check_col": 6,
+      "msg_id": 7,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 10,
+      "col": 20,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.50000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 1011,
+              "time": 9.61000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 10,
+      "check_col": 20,
+      "msg_id": 8,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 17,
+      "col": 8,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-01
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 17,
+      "check_col": 8,
+      "msg_id": 9,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 18,
+      "col": 34,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.10000000000000E-01
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 18,
+      "check_col": 34,
+      "msg_id": 10,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 19,
+      "col": 40,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1396,
+              "time": 1.20000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.10000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 19,
+      "check_col": 40,
+      "msg_id": 11,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1396,
+          "max_time": 1.19999997317791E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 20,
+      "col": 34,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 20,
+      "check_col": 34,
+      "msg_id": 12,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 22,
+      "col": 37,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 1567,
+              "time": 6.80000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 1944,
+              "time": 2.08600000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 22,
+      "check_col": 37,
+      "msg_id": 13,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 28,
+      "col": 29,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 13198,
+              "time": 7.30000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.40000000000000E-01
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 28,
+      "check_col": 29,
+      "msg_id": 14,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 13198,
+          "max_time": 7.30000019073486E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_calculations.adb",
+      "line": 29,
+      "col": 56,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Calculations",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 13721,
+              "time": 7.30000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.60000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 9.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_calculations.adb",
+      "check_line": 29,
+      "check_col": 56,
+      "msg_id": 15,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 13721,
+          "max_time": 7.30000019073486E-01
+        }
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Core.Composite",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 34
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Core.Latent_Reliability",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 24
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Core.Threshold",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 29
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Normal_Support.Square_Root",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Composite",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 34
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.IQ",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 39
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Latent_Reliability",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 24
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Threshold",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 29
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Variance_Factor",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Normal_Support.Rare_Quantile",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 26
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Normal_Support.Square_Root",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Calculation_Row",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 21
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Calculations_Header",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Example",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 28
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Examples_Header",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 27
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Infinite_Row",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 24
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Composite",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 34
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.IQ",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 39
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Latent_Reliability",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 24
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Threshold",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 29
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Variance_Factor",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Normal_Support.Rare_Quantile",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 26
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Normal_Support.Square_Root",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Calculation_Row",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 21
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Calculations_Header",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Example",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 28
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Examples_Header",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 27
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Infinite_Row",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 24
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Calculations",
+          "sloc": [
+            {
+              "file": "hoeflin_calculations.adb",
+              "line": 4
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 7.15110003948212E-01,
+    "gnatwhy3.transformations.eliminate_algebraic": 1.12272001802921E-01,
+    "init_why_sections": 7.45000026654452E-04,
+    "gnatwhy3.transformations.detect_polymorphism": 4.96899988502264E-03,
+    "gnatwhy3.transformations.eliminate_literal": 1.24232999980450E-01,
+    "gnatwhy3.run_vcs": 2.56890002638102E-02,
+    "globals (advanced)": 9.54100023955107E-03,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 4.79720011353493E-02,
+    "flow analysis": 2.28399992920458E-03,
+    "gnatwhy3.transformations.encoding_smt": 4.70510013401508E-02,
+    "gnatwhy3.transformations.simplify_formula": 1.24963000416756E-01,
+    "marking": 1.55999994603917E-04,
+    "translation of standard": 2.57000001147389E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 3.83279994130135E-02,
+    "gnatwhy3.transformations.instantiate_predicate": 3.31609994173050E-02,
+    "properties (advanced)": 8.70000003487803E-05,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 3.03959995508194E-02,
+    "gnatwhy3.register_vcs": 7.75270015001297E-02,
+    "gnatwhy3.transformations.eliminate_epsilon": 1.05896003544331E-01,
+    "globals (basic)": 2.12660003453493E-02,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 5.62811970710754E-01,
+    "gnatwhy3.schedule_vcs": 1.19240004569292E-02,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 6.09999988228083E-05,
+    "gnatwhy3.save_session": 1.33440000936389E-02,
+    "gnatwhy3.transformations.encoding_sort": 1.71060003340244E-02,
+    "gnatwhy3.transformations.eliminate_inductive": 8.32450017333031E-02,
+    "gnatwhy3.transformations.compile_match": 4.76870015263557E-02,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 4.70000013592653E-05,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 1.54912993311882E-01,
+    "gnatwhy3.transformations.eliminate_definition": 7.45300017297268E-03,
+    "gnatwhy3.transformations.eliminate_builtin": 1.48533999919891E-01,
+    "gnatwhy3.transformations.discriminate_if_poly": 1.09000000520609E-04,
+    "gnatwhy3.transformations.introduce_premises": 7.95610025525093E-02,
+    "gnatwhy3.init": 6.52783989906311E-01
+  }
+}

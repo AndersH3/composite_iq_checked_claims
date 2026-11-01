@@ -1,6 +1,9 @@
 project Towers_Proof is
    for Source_Dirs use ("src");
-   for Source_Files use ("admission_core.ads", "admission_core.adb");
+   for Source_Files use ("admission_core.ads", "admission_core.adb",
+                         "normal_model.ads", "normal_model.adb",
+                         "towers_engine.ads", "towers_engine.adb",
+                         "towers_io.ads", "towers_io.adb", "towers_demo.adb");
    for Object_Dir use "proof_obj";
    package Compiler is
       for Default_Switches ("Ada") use

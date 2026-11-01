@@ -1,0 +1,64 @@
+Summary of SPARK analysis
+=========================
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+SPARK Analysis results        Total        Flow                                                               Provers   Justified   Unproved
+--------------------------------------------------------------------------------------------------------------------------------------------
+Data Dependencies                17          17                                                                     .           .          .
+Flow Dependencies                 1           1                                                                     .           .          .
+Initialization                   25          25                                                                     .           .          .
+Non-Aliasing                      .           .                                                                     .           .          .
+Run-time Checks                 137           .    137 (CVC5 33%, Colibri_Classic 3%, Trivial 55%, Z3 7%, altergo 3%)           .          .
+Assertions                       13           .                13 (CVC5 48%, Colibri_Classic 19%, Z3 30%, altergo 4%)           .          .
+Functional Contracts             16           .                16 (CVC5 57%, Colibri_Classic 5%, Z3 24%, altergo 14%)           .          .
+LSP Verification                  .           .                                                                     .           .          .
+Termination                       .           .                                                                     .           .          .
+Concurrency                       .           .                                                                     .           .          .
+--------------------------------------------------------------------------------------------------------------------------------------------
+Total                           209    43 (21%)                                                             166 (79%)           .          .
+
+
+max steps used for successful proof: 59073
+
+Analyzed 5 units
+in unit hoeflin_calculations, 1 subprograms and packages out of 1 analyzed
+  Hoeflin_Calculations at hoeflin_calculations.adb:4 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (14 checks)
+in unit hoeflin_core, 9 subprograms and packages out of 9 analyzed
+  Hoeflin_Core at hoeflin_core.ads:2 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Hoeflin_Core.Composite at hoeflin_core.ads:34 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+  Hoeflin_Core.IQ at hoeflin_core.ads:39 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (3 checks)
+  Hoeflin_Core.Latent_Reliability at hoeflin_core.ads:24 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Hoeflin_Core.Observe at hoeflin_core.ads:55 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+  Hoeflin_Core.Threshold at hoeflin_core.ads:29 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Hoeflin_Core.Valid at hoeflin_core.ads:50 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Hoeflin_Core.Variance_Factor at hoeflin_core.ads:20 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (5 checks)
+  Hoeflin_Core.Variance_Numerator at hoeflin_core.ads:13 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (3 checks)
+in unit hoeflin_simulation, 5 subprograms and packages out of 5 analyzed
+  Hoeflin_Simulation at hoeflin_simulation.adb:5 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (47 checks)
+  Hoeflin_Simulation.Add_To_Sum at hoeflin_simulation.adb:42 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (12 checks)
+  Hoeflin_Simulation.Combine at hoeflin_simulation.adb:19 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (7 checks)
+  Hoeflin_Simulation.Count_Step at hoeflin_simulation.adb:33 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (18 checks)
+  Hoeflin_Simulation.Frequency at hoeflin_simulation.adb:28 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (5 checks)
+in unit normal_support, 7 subprograms and packages out of 12 analyzed
+  Normal_Support at normal_support.ads:3 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Normal_Support.Check_Inverse_Bracket at normal_support.adb:35 skipped; body is SPARK_Mode => Off
+  Normal_Support.Checked_Radius at normal_support.adb:84 skipped; body is SPARK_Mode => Off
+  Normal_Support.Generator at normal_support.ads:28 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Normal_Support.Inverse_Survival at normal_support.ads:18 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (12 checks)
+  Normal_Support.Normal_Pair at normal_support.ads:37 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Normal_Support.Rare_Quantile at normal_support.ads:26 skipped; body is SPARK_Mode => Off
+  Normal_Support.Reset at normal_support.ads:31 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Normal_Support.Square_Root at normal_support.ads:20 skipped; body is SPARK_Mode => Off
+  Normal_Support.State_Value at normal_support.ads:29 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Normal_Support.Survival at normal_support.ads:16 skipped; body is SPARK_Mode => Off
+  Normal_Support.Uniform at normal_support.ads:33 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (5 checks)
+in unit report_io, 0 subprograms and packages out of 9 analyzed
+  Report_IO at report_io.ads:4 skipped; body is SPARK_Mode => Off
+  Report_IO.Calculation_Row at report_io.ads:21 skipped; body is SPARK_Mode => Off
+  Report_IO.Calculations_Header at report_io.ads:20 skipped; body is SPARK_Mode => Off
+  Report_IO.Example at report_io.ads:28 skipped; body is SPARK_Mode => Off
+  Report_IO.Examples_Header at report_io.ads:27 skipped; body is SPARK_Mode => Off
+  Report_IO.Infinite_Row at report_io.ads:24 skipped; body is SPARK_Mode => Off
+  Report_IO.Read_Simulation_Options at report_io.ads:10 skipped; body is SPARK_Mode => Off
+  Report_IO.Simulation_Header at report_io.ads:13 skipped; body is SPARK_Mode => Off
+  Report_IO.Simulation_Row at report_io.ads:15 skipped; body is SPARK_Mode => Off

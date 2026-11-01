@@ -1,0 +1,17 @@
+{
+  "spark": [
+  ],
+  "progress": "PROGRESS_FLOW",
+  "stop_reason": "STOP_REASON_FLOW_MODE",
+  "flow": [
+  ],
+  "assumptions": [
+  ],
+  "timings": {
+    "globals (advanced)": 1.02009996771812E-02,
+    "flow analysis": 1.49999996210681E-05,
+    "marking": 2.20000001718290E-05,
+    "properties (advanced)": 7.00000009601354E-06,
+    "globals (basic)": 3.69610004127026E-02
+  }
+}

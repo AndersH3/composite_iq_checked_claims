@@ -51,7 +51,7 @@
 \title{Combining IQ Scores}
 \subtitle{Analysis and a corrected statistical treatment}
 \author{}
-\date{31 October 2026}
+\date{1 November 2026}
 
 \begin{document}
 \maketitle
@@ -394,112 +394,119 @@ It uses the upper-tail probability directly through
 \texttt{scipy.stats.norm.isf(1e-6)}. The mathematical results do not depend
 on the choice of software.
 
-\section{Final software verification and its limits}
+\section{Expanded software verification and its limits}
 \label{sec:verification}
 
-The final checks were executed on \texttt{computer10} on 31 October 2026.
-The following results refer to the source and evidence preserved at
-repository commit \texttt{2636a42}. The
-\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-clean-computer10-20261031/REPORT.md}{Deal verification report}
-and the
-\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-spark-computer10-20261031/REPORT.md}{SPARK integration report}
-link the exact commands, tool versions, source hashes, checksums, and raw
-results. Repository-wide Python counts below cover both analyses and
-their shared tooling; they are not counts for this article alone.
+The original verification selected only the arithmetic core. That boundary
+was broader than necessary: the calculation and simulation drivers and
+most numerical orchestration can be analyzed in SPARK. The expanded
+implementation makes \texttt{Hoeflin\_Calculations},
+\texttt{Hoeflin\_Simulation}, and the algorithm bodies in
+\texttt{Normal\_Support} SPARK-on, alongside the unchanged
+\texttt{Hoeflin\_Core}. Argument parsing and CSV rendering are isolated in
+\texttt{Report\_IO}, whose SPARK interface explicitly models external state.
+The proof project enumerates all eight source files, including the trusted
+I/O completion, rather than selecting only the core.
 
-\subsection{Deal contracts and Python checks}
+The \href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/main/verification/evidence/spark-expanded-computer10-20261031/REPORT.md}{expanded computer10 evidence report}
+records the current source hashes, exact commands, tool identities, native
+reports, coverage, numerical comparisons, and Python checks. This campaign
+was completed on 1 November 2026; the directory name retains the date on
+which the expansion began. Earlier 47-check and 110-test results remain
+immutable historical snapshots, not counts for the expanded implementation.
 
-The contract-coverage gate found 20 Python files, 142 named functions, and
-416 Deal decorators, with zero coverage gaps. All 19 positive files,
-including tests and the gate itself, passed static lint with zero
-diagnostics, empty output, and exit status 0, both normally and under
-\texttt{python -O}. The deliberately incorrect fixture was checked
-separately: it produced exactly the expected \texttt{DEL012}
-postcondition diagnostic and exit status 1. Its failure is a required
-negative control, not an unresolved production finding.
+\subsection{What is now analyzed}
 
-All 14 earlier production diagnostics were resolved. Bounded quotient
-helpers retain the original division operations, numerical tolerances
-remain unchanged, and the fixes do not disable contracts or suppress
-diagnostics. The runtime, property, and generated-test suite passed
-110 tests with no failures or skips. All 27 recorded command checks had
-their expected outcomes, including numerical scripts, Ada-output
-validators, replay, optimized-Python execution, and evidence audits.
+SPARK now covers the inverse-survival bisection loop, exact 64-bit random
+state recurrence, open-unit conversion, Box--Muller composition, common-factor
+simulation, signed and squared accumulations, event-count updates, and both
+main procedures. Random generation uses procedures with explicit state
+updates instead of side-effecting functions. Proved loop invariants and
+small SPARK helpers bound accumulation; the exact integer-to-floating
+successor lemma is proved, not imported as an axiom. The original arithmetic
+core still establishes exact integer variance bookkeeping, bounded
+floating-point transforms, and nested event counts with specified increments.
 
-Deal Solver proved the two pure proof-acceptance gate postconditions;
-the deliberately wrong symbolic contract was rejected. This focused
-symbolic result does not prove the complete Python programs. A clean
-linter result is also not a universal proof: input-dependent contracts
-remain runtime checks, and finite tests cannot establish correctness for
-every possible input. The recorded environment used Python 3.13.5,
-Deal 4.24.6, and Deal Solver 0.1.2.
+The fresh five-prover portfolio discharged \textbf{209 native checks:
+43 flow checks and 166 prover checks}, with zero unproved and zero justified
+checks. CVC5, Z3, Alt-Ergo, classic COLIBRI, and Yices were requested together.
+This result does not imply that every solver independently completed every
+obligation. The deliberately incorrect inclusion-exclusion control was
+rejected with an unproved functional contract. Fresh source copies and
+object directories prevent reuse of stale proof results. The compiler
+identifies itself as GNAT 13.2.0; the matching GNATprove banner is
+\texttt{0.0w}. Exact executable identities are retained in the manifest.
 
-\subsection{SPARK results for the Hoeflin/Ferguson core}
+Native coverage records 22 \texttt{all}, 14 \texttt{spec}, and zero
+\texttt{no} entities. Here \texttt{all} describes a SPARK specification and
+body, or a declaration requiring no body; it is not itself a proof result.
+The \texttt{spec} entries expose trusted completions. In the earlier source,
+whole off-mode units emitted empty entity arrays, so zero \texttt{no}
+entries must never be interpreted as zero excluded code. The retained
+flow-only baseline has nine \texttt{all} entities and is explicitly not a
+new proof campaign. Native proof totals and coverage statuses are audited
+separately.
 
-The fresh five-prover portfolio completed all 47 native checks for this
-analysis: 8 flow checks and 39 proof checks, with zero
-unproved and zero justified checks. CVC5, Z3, Alt-Ergo, classic COLIBRI,
-and Yices were requested together. This is a portfolio result; it does
-not mean that each prover independently discharged every obligation.
-Incomplete individual runs remain identified in the earlier evidence.
-The deliberately incorrect inclusion-exclusion control was rejected
-with an unproved functional contract.
+\subsection{Trusted numerical and I/O boundaries}
 
-The proof project selects only \texttt{hoeflin\_core.ads} and
-\texttt{hoeflin\_core.adb}. Under their stated input preconditions, the
-contracts establish exact integer variance bookkeeping, bounded
-floating-point transforms, and nested event counts with their specified
-increments. The core uses no project assumptions, imported proof axioms,
-or suppressed checks. The
-\href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/2636a42ef45dc3579eb0dafe10707a0fbec48b10/verification/evidence/deal-lint-spark-computer10-20261031/hoeflin/portfolio/gnatprove.out}{native Hoeflin proof report}
-records the totals. The toolchain manifest records the compiler banner
-as GNAT 13.2.0 and the GNATprove banner as \texttt{0.0w}; these distinct
-identifiers should not be conflated.
+Only five small numerical completions in \texttt{Normal\_Support} remain
+off: \texttt{Square\_Root}, \texttt{Survival},
+\texttt{Check\_Inverse\_Bracket}, \texttt{Rare\_Quantile}, and
+\texttt{Checked\_Radius}. Their bodies check each promised normal-return
+range or relationship and raise on rejection; they do not clamp values.
+The foreign C \texttt{erfc} import and \texttt{Report\_IO}'s parsing,
+formatting, output, and exceptions remain trusted. The installed Ada
+elementary-function specifications are SPARK-compatible, but their limited
+contracts and unproved implementations remain part of the proof boundary.
 
-\subsection{Numerical, simulation, and model boundaries}
+Consequently, a caller proof is conditional on these interfaces: it does
+not prove numerical backend accuracy, that a guard cannot reject, or that
+I/O succeeds. Bisection bounds do not prove survival-function monotonicity,
+inverse convergence, or an approximation-error bound. No project
+\texttt{pragma Assume}, imported proof axiom, or suppressed check is used.
+Zero explicit assumptions or suppressions in native metadata does not
+eliminate trust in off-mode completions or library contracts.
 
-The Ada drivers and \texttt{normal\_support} are outside SPARK. Their
-elementary functions, C \texttt{erfc}, and inverse-tail bisection are
-checked numerically against SciPy, not certified by the core proof.
-Likewise, a proof of a floating-point bound does not establish an
-approximation-error bound. The proof-friendly evaluation orders for
-thresholds and composites are algebraically equivalent to the report's
-formulas, but are not claimed to give bit-identical floating-point
-results.
+\subsection{Numerical regression, Deal, and audit results}
 
-The retained simulation uses 1,000,000 trials for each of eight test-count
-cases, with seed \texttt{20261030} reset across cases. These common random
-numbers make the cases dependent. Independent Python replay reproduced
-the tail counts and checked the means and variances within the recorded
-tolerances, normally and under optimized Python. This establishes
-reproducibility and numerical agreement, not independence of the
-pseudo-random draws. Counts beyond the one-in-a-million cutoff remain
-descriptive; this sample size does not validate that extreme tail.
+Fresh Ada calculation and simulation outputs match both retained CSVs byte
+for byte. The simulation uses 1,000,000 trials for each of eight test-count
+cases with seed \texttt{20261030} reset between cases. Independent SciPy
+validation and Python replay pass normally and under \texttt{python -O};
+tail counts match exactly, and means and variances satisfy the recorded
+tolerances. Minimum valid trial and boundary-seed runs also succeed, while
+invalid trial counts are rejected. Numerical equivalence of the core's
+proof-friendly evaluation orders is checked against the report formulas;
+bit-identical floating results are claimed only for the explicitly compared
+retained CSVs.
 
-Neither Deal nor SPARK proves the Gaussian common-factor model, the
-population covariance calibration, an identification of correlation with
-reliability, or the empirical validity of a psychometric interpretation.
-Those assumptions and the distinction between a standardized composite
-and latent ability remain as discussed above.
+Every current Python file and named function, including tests and evidence
+tools, carries Deal contracts. Repository-wide coverage, clean positive
+static lint, the expected \texttt{DEL012} negative control, runtime/property
+tests, numerical scripts, and explicit historical-source evidence audits
+pass in normal and optimized Python. The final inventory has 22 files, 177 named functions, and 502 Deal
+decorators with zero gaps; all 21 positive files have zero lint diagnostics,
+and 164 tests pass in each execution mode. Deal Solver proves the two
+pure acceptance-gate postconditions and rejects the incorrect symbolic
+control. These focused symbolic results do not prove the full Python
+programs; clean lint and finite tests are also not universal proofs.
+CLI entry points explicitly enable Deal under optimized Python.
 
-From a full Git clone, install the pinned development dependencies and
-run \texttt{make check} at the repository root. The Python auditor
-\path{verification/verify_evidence.py} checks the retained hashes, native
-totals, and negative-control result. Historical Python identities are
-resolved through verified Git blobs; changed Ada sources cannot use that
-fallback. An evidence audit verifies record integrity and source identity;
-it does not rerun the provers or independently validate their SMT proofs.
+The current evidence auditor checks both required projects, required
+SPARK-on algorithm/driver entities, native totals, raw coverage, source
+hashes, checksums, and negative controls. Historical Ada campaigns require
+an explicitly selected matching source tree; there is no automatic Ada
+fallback. Historical Python may be resolved through verified immutable Git
+blobs. An evidence audit checks record integrity and source identity; it
+does not rerun the provers or independently validate SMT proof objects.
 
-\subsection{Final consistency audit}
-
-A final audit of revision \texttt{9a244d8} on 31 October 2026 found no
-discrepancies in the corrected numerical results or verification claims.
-Fresh Ada calculation and simulation CSVs matched the retained files byte
-for byte; validation and replay passed normally and under \texttt{python -O}.
-All 110 tests and the audits of all three SPARK campaigns passed.
-The provers were not rerun. The audit record is retained under
-\par\noindent
-\path{verification/evidence/final-consistency-computer10-20261031/}.
+Common random numbers make the eight simulation cases dependent. Replay
+does not establish independent draws; rare counts at this sample size do
+not validate a one-in-a-million tail. Neither Deal nor SPARK proves the
+Gaussian common-factor model, empirical covariance calibration, an
+identification of correlation with reliability, or a psychometric
+interpretation. The distinction between a standardized composite and
+latent ability remains essential.
 
 \clearpage
 \bibliographystyle{plainnat}

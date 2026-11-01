@@ -1,62 +1,86 @@
-with Ada.Command_Line;
-with Ada.Text_IO;
 with Hoeflin_Core;
 with Normal_Support;
+with Report_IO;
 with Interfaces;
-procedure Hoeflin_Simulation with SPARK_Mode => Off is
+procedure Hoeflin_Simulation with SPARK_Mode is
    use Hoeflin_Core;
-   package FIO is new Ada.Text_IO.Float_IO (Real);
    Counts : constant array (Positive range <>) of Test_Count :=
      (1, 2, 3, 4, 5, 10, 100, 1_000);
-   Trials : Sample_Count := 500_000;
-   Seed : Interfaces.Unsigned_64 := 20_261_030;
-   Q : constant Real := Normal_Support.Inverse_Survival (1.0E-6);
+   Trials : Sample_Count;
+   Seed : Interfaces.Unsigned_64;
+   Q : constant Normal_Support.Rare_Value := Normal_Support.Rare_Quantile;
+   Expected_Two : constant Normal_Support.Probability := Normal_Support.Survival (2.0);
+   Expected_Three : constant Normal_Support.Probability := Normal_Support.Survival (3.0);
    G : Normal_Support.Generator;
-   procedure Number (X : Real) is
-   begin FIO.Put (X, Fore => 1, Aft => 12, Exp => 0); end Number;
-   function Trimmed (N : Natural) return String is
-      S : constant String := Natural'Image (N);
-   begin return S (S'First + 1 .. S'Last); end Trimmed;
-   function Seed_Image return String is
-      S : constant String := Interfaces.Unsigned_64'Image (Seed);
-   begin return S (S'First + 1 .. S'Last); end Seed_Image;
-   Common : constant Real := Normal_Support.Square_Root (0.6);
-   X, Y, Mean_Z, Z, Sum, Sum_Squares, Mean, Variance : Real;
+   Common : constant Normal_Support.Unit_Root := Normal_Support.Square_Root (0.6);
+   X, Y : Normal_Support.Normal_Value;
+   subtype Mean_Score is Real range -18.0 .. 18.0;
+   subtype Sample_Z is Real range -40_000.0 .. 40_000.0;
+   function Combine
+     (Common, Residual : Normal_Support.Unit_Root;
+      X, Y : Normal_Support.Normal_Value; Scale : Scale_Value) return Sample_Z
+     with Global => null
+   is
+      Mean_Z : constant Mean_Score := Common * X + Residual * Y;
+   begin
+      return Mean_Z / Scale;
+   end Combine;
+   function Frequency (Numerator, Denominator : Sample_Count) return Normal_Support.Probability
+   is (Real (Numerator) / Real (Denominator))
+     with Global => null, Pre => Denominator > 0 and then Numerator <= Denominator;
+   --  Conservative per-sample budgets leave room for binary64 rounding:
+   --  |Z| <= 40,000 and Z*Z <= 1.6e9. This ghost lemma is proved, not assumed.
+   procedure Count_Step (I : Sample_Count)
+     with Ghost, Global => null, Pre => I > 0,
+     Post => Real (I) = Real (I - 1) + 1.0
+       and then Real (I) * 65_536.0 >= Real (I - 1) * 65_536.0 + 60_000.0
+       and then Real (I) * 2.0 ** 32 >= Real (I - 1) * 2.0 ** 32 + 2.0 ** 31;
+   procedure Count_Step (I : Sample_Count) is
+   begin
+      pragma Assert (Real (I) = Real (I - 1) + 1.0);
+   end Count_Step;
+   procedure Add_To_Sum (I : Sample_Count; Sample : Sample_Z; Running_Total : in out Real)
+     with Global => null,
+     Pre => I > 0 and then Running_Total in
+       -(Real (I - 1) * 65_536.0) .. Real (I - 1) * 65_536.0,
+     Post => Running_Total in -(Real (I) * 65_536.0) .. Real (I) * 65_536.0;
+   procedure Add_To_Sum (I : Sample_Count; Sample : Sample_Z; Running_Total : in out Real) is
+   begin
+      Count_Step (I);
+      Running_Total := Running_Total + Sample;
+   end Add_To_Sum;
+   Z : Sample_Z;
+   Sum, Sum_Squares, Mean, Variance : Real;
    C : Tail_Counts;
-   Scale, Residual : Real;
+   Scale : Scale_Value;
+   Residual : Normal_Support.Unit_Root;
 begin
-   if Ada.Command_Line.Argument_Count >= 1 then
-      Trials := Sample_Count'Value (Ada.Command_Line.Argument (1));
-   end if;
-   if Ada.Command_Line.Argument_Count >= 2 then
-      Seed := Interfaces.Unsigned_64'Value (Ada.Command_Line.Argument (2));
-   end if;
-   if Trials < 2 then raise Constraint_Error with "trials must be in 2..100000000"; end if;
-   Ada.Text_IO.Put_Line ("# generator=64-bit LCG, transform=Box-Muller, seed=" & Seed_Image);
-   Ada.Text_IO.Put_Line ("# rare-tail counts are descriptive; this run cannot validate a one-in-a-million model");
-   Ada.Text_IO.Put_Line ("tests,trials,mean_composite_z,variance_composite_z,above2,above3,above_rare,rate_above2,rate_above3,expected_rate2,expected_rate3");
+   Report_IO.Read_Simulation_Options (Trials, Seed);
+   Report_IO.Simulation_Header (Seed);
    for N of Counts loop
       Normal_Support.Reset (G, Seed);
       C := (others => 0); Sum := 0.0; Sum_Squares := 0.0;
       Scale := Normal_Support.Square_Root (Variance_Factor (N, 600));
       Residual := Normal_Support.Square_Root (0.4 / Real (N));
       for I in 1 .. Trials loop
+         pragma Loop_Invariant (Valid (C) and then C.Total = I - 1);
+         pragma Loop_Invariant (Sum in -(Real (I - 1) * 65_536.0) .. Real (I - 1) * 65_536.0);
+         pragma Loop_Invariant (Sum in -1.0E14 .. 1.0E14);
+         pragma Loop_Invariant (Sum_Squares in 0.0 .. Real (I - 1) * 2.0 ** 32);
+         pragma Loop_Invariant (Sum_Squares in 0.0 .. 1.0E18);
+         Count_Step (I);
          Normal_Support.Normal_Pair (G, X, Y);
          --  The mean of N independent Gaussian residuals is Gaussian, so
          --  this is the same distribution as explicitly averaging N tests.
-         Mean_Z := Common * X + Residual * Y;
-         Z := Mean_Z / Scale;
+         Z := Combine (Common, Residual, X, Y, Scale);
          Observe (C, Z, Q);
-         Sum := Sum + Z; Sum_Squares := Sum_Squares + Z * Z;
+         Add_To_Sum (I, Z, Sum);
+         Sum_Squares := Sum_Squares + Z * Z;
       end loop;
       Mean := Sum / Real (Trials);
       Variance := (Sum_Squares - Sum * Mean) / Real (Trials - 1);
-      Ada.Text_IO.Put (Trimmed (N) & "," & Trimmed (Trials) & ","); Number (Mean);
-      Ada.Text_IO.Put (","); Number (Variance);
-      Ada.Text_IO.Put ("," & Trimmed (C.Above_Two) & "," & Trimmed (C.Above_Three) & "," & Trimmed (C.Above_Rare) & ",");
-      Number (Real (C.Above_Two) / Real (Trials)); Ada.Text_IO.Put (",");
-      Number (Real (C.Above_Three) / Real (Trials)); Ada.Text_IO.Put (",");
-      Number (Normal_Support.Survival (2.0)); Ada.Text_IO.Put (",");
-      Number (Normal_Support.Survival (3.0)); Ada.Text_IO.New_Line;
+      Report_IO.Simulation_Row
+        (N, Trials, Mean, Variance, C, Frequency (C.Above_Two, Trials),
+         Frequency (C.Above_Three, Trials), Expected_Two, Expected_Three);
    end loop;
 end Hoeflin_Simulation;

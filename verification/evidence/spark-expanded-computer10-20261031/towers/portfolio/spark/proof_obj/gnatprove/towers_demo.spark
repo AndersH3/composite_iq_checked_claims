@@ -1,0 +1,75 @@
+{
+  "spark": [
+    {
+      "name": "Towers_Demo",
+      "sloc": [
+        {
+          "file": "towers_demo.adb",
+          "line": 3
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "towers_demo.adb",
+      "line": 8,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 3
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_demo.adb",
+      "line": 4,
+      "col": 3,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 3
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+  },
+  "proof": [
+  ],
+  "assumptions": [
+  ],
+  "timings": {
+    "init_why_sections": 7.94999999925494E-04,
+    "globals (advanced)": 1.35890003293753E-02,
+    "flow analysis": 1.71900005079806E-03,
+    "marking": 1.19999996968545E-04,
+    "translation of standard": 2.59599997662008E-03,
+    "properties (advanced)": 5.23999973665923E-04,
+    "globals (basic)": 1.50539996102452E-02
+  }
+}

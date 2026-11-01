@@ -1,0 +1,876 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "towers_proof.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/spark-expanded-computer10-20261031/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-jgjwor4k/towers/portfolio",
+  "started_utc": "2026-11-01T15:36:28.104084+00:00",
+  "finished_utc": "2026-11-01T15:48:38.153503+00:00",
+  "elapsed_seconds": 730.0494258939871,
+  "returncode": 0,
+  "timed_out": false,
+  "log_sha256": "8d0e4c590af01f6fa3c23d4bcb346e781d0d8d181c3ee607eadbfee242a8a793",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 30,
+        "flow": 30,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 60,
+        "flow": 60,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 244,
+        "flow": 0,
+        "provers": 244,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 31,
+        "flow": 0,
+        "provers": 31,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 68,
+        "flow": 0,
+        "provers": 68,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 434,
+        "flow": 91,
+        "provers": 343,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 5,
+    "contains_not_proved": false,
+    "report_sha256": "eb42248e3bd599687c646317f3a33a88d64c920e2674a372f9569c30b444c9a2"
+  },
+  "sources": [
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "8a7d0a08fb20765f26446167c3ee05c818aec1b5582ac90d30af582a4707386e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "88e48b821f9ad1582e932e8ed40b93af724f7b43cb70116627dbc7a8fd065910"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "7b89d779e7e1fd02929d0cb1c6b8b29664417091e7fd4051d931b74b51601c84"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "65cddab1b7fe3d2daae7823cd6e2feefacd132780e27187a41e653004f3199e8"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+      "sha256": "ac64a9b7b1c9ff5699e2e93547e2b060c57581cd1db7fdc6b96125cbb9bd898c"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+      "sha256": "71b4827f67aef14533ce57e2d505a63ba8c2255a216d78a8f89a17307ad7d1b3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+      "sha256": "cec785de5e3033cda1b91ef20ce78b40c430732c3561307a9650fc7bc9f409c7"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+      "sha256": "a719c6091c2ebfe748c8da7f6e42b70914f9dcf80d614007b6ce38b5fd0e8122"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "a5ff5699ed25b082c669536b99789bc5d2f120b07d94d8278d66dfc51df77954"
+    }
+  ],
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "coverage": {
+    "source_names": [
+      "admission_core.adb",
+      "admission_core.ads",
+      "normal_model.adb",
+      "normal_model.ads",
+      "towers_demo.adb",
+      "towers_engine.adb",
+      "towers_engine.ads",
+      "towers_io.adb",
+      "towers_io.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 36,
+      "spec": 16,
+      "no": 0
+    },
+    "total_entities": 52,
+    "entities": [
+      {
+        "name": "Admission_Core",
+        "file": "admission_core.ads",
+        "line": 1,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Classify",
+        "file": "admission_core.ads",
+        "line": 16,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Total",
+        "file": "admission_core.ads",
+        "line": 24,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Observe",
+        "file": "admission_core.ads",
+        "line": 27,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Marginal_A",
+        "file": "admission_core.ads",
+        "line": 36,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 36
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Marginal_B",
+        "file": "admission_core.ads",
+        "line": 40,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Union_Count",
+        "file": "admission_core.ads",
+        "line": 44,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Fraction",
+        "file": "admission_core.ads",
+        "line": 50,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 50
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Union_Probability",
+        "file": "admission_core.ads",
+        "line": 56,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 56
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Complement",
+        "file": "admission_core.ads",
+        "line": 64,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Conditional",
+        "file": "admission_core.ads",
+        "line": 68,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 68
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Log",
+        "file": "normal_model.adb",
+        "line": 32,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 32
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Exp",
+        "file": "normal_model.adb",
+        "line": 46,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 46
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Exponent",
+        "file": "normal_model.adb",
+        "line": 60,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 60
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Probability",
+        "file": "normal_model.adb",
+        "line": 74,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 74
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Count_Step",
+        "file": "normal_model.adb",
+        "line": 99,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 99
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Node",
+        "file": "normal_model.adb",
+        "line": 109,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 109
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Joint_Tail.Density",
+        "file": "normal_model.adb",
+        "line": 146,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 146
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Weight",
+        "file": "normal_model.adb",
+        "line": 215,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 215
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Cutoff",
+        "file": "normal_model.adb",
+        "line": 228,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 228
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Cell",
+        "file": "normal_model.adb",
+        "line": 250,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 250
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Check_Grid_State",
+        "file": "normal_model.adb",
+        "line": 271,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 271
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Uniform",
+        "file": "normal_model.adb",
+        "line": 341,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 341
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Scale_Normal",
+        "file": "normal_model.adb",
+        "line": 355,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 355
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model",
+        "file": "normal_model.ads",
+        "line": 1,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Square_Root",
+        "file": "normal_model.ads",
+        "line": 9,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.SF",
+        "file": "normal_model.ads",
+        "line": 18,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Inverse_SF",
+        "file": "normal_model.ads",
+        "line": 21,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Joint_Tail",
+        "file": "normal_model.ads",
+        "line": 23,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Calibrated_OR_Cutoff",
+        "file": "normal_model.ads",
+        "line": 28,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Basic_Grid",
+        "file": "normal_model.ads",
+        "line": 37,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 37
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Generator",
+        "file": "normal_model.ads",
+        "line": 42,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 42
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Reset",
+        "file": "normal_model.ads",
+        "line": 43,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 43
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Normal_Pair",
+        "file": "normal_model.ads",
+        "line": 45,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 45
+          }
+        ]
+      },
+      {
+        "name": "Towers_Demo",
+        "file": "towers_demo.adb",
+        "line": 3,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 3
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Checked_Quantization",
+        "file": "towers_engine.adb",
+        "line": 7,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 7
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Union_Units",
+        "file": "towers_engine.adb",
+        "line": 21,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Conditional_Units",
+        "file": "towers_engine.adb",
+        "line": 34,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Joint",
+        "file": "towers_engine.adb",
+        "line": 46,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 46
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Units",
+        "file": "towers_engine.adb",
+        "line": 58,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 58
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Conditional_Value",
+        "file": "towers_engine.adb",
+        "line": 76,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 76
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Wilson",
+        "file": "towers_engine.adb",
+        "line": 86,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 86
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Calculate",
+        "file": "towers_engine.adb",
+        "line": 110,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 110
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Observe_All",
+        "file": "towers_engine.adb",
+        "line": 147,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 147
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Simulation_Row_For",
+        "file": "towers_engine.adb",
+        "line": 166,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 166
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine",
+        "file": "towers_engine.ads",
+        "line": 3,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 3
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Value",
+        "file": "towers_engine.ads",
+        "line": 41,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Compute",
+        "file": "towers_engine.ads",
+        "line": 44,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO",
+        "file": "towers_io.ads",
+        "line": 2,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 2
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Read_Trials",
+        "file": "towers_io.ads",
+        "line": 9,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Read_Seed",
+        "file": "towers_io.ads",
+        "line": 11,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Write_Report",
+        "file": "towers_io.ads",
+        "line": 13,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 13
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "proof_obj/gnatprove/admission_core.spark",
+        "sha256": "7ce46c1e0b727f085fd7acc98805c2432dff6ceb6500d17dd8db19158f3dc51f",
+        "entity_count": 11,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/normal_model.spark",
+        "sha256": "a57eab0853f141e5015880454f20dec28878c60bf68cc2f6389e291f3e8e25f1",
+        "entity_count": 23,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_demo.spark",
+        "sha256": "933e6633fd802e5ffc3888a38b9ef4e093e8acfea8deed147d93f62136cff12c",
+        "entity_count": 1,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_engine.spark",
+        "sha256": "502f8ebe4a356ef881bc0bc36ba88c764162339e7a16edfea02610d6c56aacdf",
+        "entity_count": 13,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_io.spark",
+        "sha256": "d02bec56fde586a52f2d10d974b7f91c827b3ad61f4d18487df5efe7844c81fa",
+        "entity_count": 4,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "required_full_entities": [
+    "Admission_Core.Observe",
+    "Normal_Model.Basic_Grid",
+    "Normal_Model.Calibrated_OR_Cutoff",
+    "Normal_Model.Inverse_SF",
+    "Normal_Model.Joint_Tail",
+    "Normal_Model.Normal_Pair",
+    "Normal_Model.Reset",
+    "Normal_Model.Uniform",
+    "Towers_Demo",
+    "Towers_Engine.Compute"
+  ],
+  "missing_full_entities": [],
+  "complete": true
+}

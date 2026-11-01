@@ -1,0 +1,431 @@
+{
+  "spark": [
+    {
+      "name": "Hoeflin_Core",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 2
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.Variance_Numerator",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 13
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.Variance_Factor",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 20
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.Latent_Reliability",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 24
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.Threshold",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 29
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.Composite",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 34
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.IQ",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 39
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.Valid",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 50
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Core.Observe",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 55
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_FLOW",
+  "stop_reason": "STOP_REASON_FLOW_MODE",
+  "flow": [
+    {
+      "file": "hoeflin_core.ads",
+      "line": 15,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.Variance_Numerator",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 13
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_core.ads",
+      "line": 26,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.Latent_Reliability",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 24
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_core.ads",
+      "line": 53,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.Valid",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 50
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 2,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_core.ads",
+      "line": 40,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.IQ",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 39
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 3,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_core.ads",
+      "line": 31,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.Threshold",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 29
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 4,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_core.ads",
+      "line": 22,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.Variance_Factor",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 20
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 5,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_core.ads",
+      "line": 56,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.Observe",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 55
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 6,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_core.ads",
+      "line": 36,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Core.Composite",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 34
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 7,
+      "how_proved": "flow"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.Variance_Numerator",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 13
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.Threshold",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 29
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Variance_Numerator",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 13
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.Variance_Factor",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 20
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Variance_Numerator",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 13
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.Latent_Reliability",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 24
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Valid",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 50
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.Observe",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 55
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.IQ",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 39
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.Composite",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 34
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Core.Valid",
+          "sloc": [
+            {
+              "file": "hoeflin_core.ads",
+              "line": 50
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "globals (advanced)": 2.83000001218170E-04,
+    "flow analysis": 1.52629995718598E-02,
+    "marking": 1.30000000353903E-04,
+    "properties (advanced)": 2.49999993684469E-05,
+    "globals (basic)": 3.26999987009913E-04
+  }
+}

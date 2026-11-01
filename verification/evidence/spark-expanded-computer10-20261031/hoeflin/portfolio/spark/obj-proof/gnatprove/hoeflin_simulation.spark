@@ -1,0 +1,5635 @@
+{
+  "spark": [
+    {
+      "name": "Hoeflin_Simulation",
+      "sloc": [
+        {
+          "file": "hoeflin_simulation.adb",
+          "line": 5
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Simulation.Combine",
+      "sloc": [
+        {
+          "file": "hoeflin_simulation.adb",
+          "line": 19
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Simulation.Frequency",
+      "sloc": [
+        {
+          "file": "hoeflin_simulation.adb",
+          "line": 28
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Simulation.Count_Step",
+      "sloc": [
+        {
+          "file": "hoeflin_simulation.adb",
+          "line": 33
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Simulation.Add_To_Sum",
+      "sloc": [
+        {
+          "file": "hoeflin_simulation.adb",
+          "line": 42
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 34,
+      "col": 18,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 30,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Frequency",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 22,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 2,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 16,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 3,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 16,
+      "col": 7,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 4,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 9,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 5,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 10,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 6,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 52,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 7,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 53,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 8,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 53,
+      "col": 9,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 9,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 53,
+      "col": 22,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 10,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 53,
+      "col": 28,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 11,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 54,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 12,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 55,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 13,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 14,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 14,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 56,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 15,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 43,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 16,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_simulation__combine",
+    " 2": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_simulation__frequency",
+    " 3": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_simulation__count_step",
+    " 4": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_simulation",
+    " 5": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_simulation__add_to_sum"
+  },
+  "proof": [
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 64,
+      "col": 59,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 17,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 64,
+      "col": 51,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 18,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 64,
+      "col": 51,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 19,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 78,
+      "col": 41,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 20,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 78,
+      "col": 37,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 21,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 78,
+      "col": 37,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 22,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 69,
+      "col": 63,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 23,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 69,
+      "col": 68,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 24,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 67,
+      "col": 50,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 25,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 67,
+      "col": 55,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 26,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 67,
+      "col": 78,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 27,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 67,
+      "col": 83,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 28,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 80,
+      "col": 27,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 29,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 81,
+      "col": 38,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 30,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 81,
+      "col": 32,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 31,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 81,
+      "col": 61,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 32,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 24,
+      "col": 46,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 33,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 24,
+      "col": 61,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 34,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 24,
+      "col": 50,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 35,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 24,
+      "col": 50,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 36,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 26,
+      "col": 21,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 37,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 26,
+      "col": 21,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 38,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 29,
+      "col": 14,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Frequency",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 39,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 29,
+      "col": 33,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Frequency",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 40,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 40,
+      "col": 28,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 41,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 40,
+      "col": 41,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 42,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 40,
+      "col": 46,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 43,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 35,
+      "col": 20,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 44,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 35,
+      "col": 33,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 45,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 35,
+      "col": 38,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 46,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 36,
+      "col": 23,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 47,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 36,
+      "col": 26,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 48,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 36,
+      "col": 48,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 49,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 36,
+      "col": 53,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 50,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 36,
+      "col": 64,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 51,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 37,
+      "col": 23,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 52,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 37,
+      "col": 26,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 53,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 37,
+      "col": 49,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 54,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 37,
+      "col": 54,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 55,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 37,
+      "col": 66,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 56,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 50,
+      "col": 38,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 57,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 50,
+      "col": 38,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 58,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 46,
+      "col": 39,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 59,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 46,
+      "col": 42,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 60,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 46,
+      "col": 63,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 61,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 46,
+      "col": 66,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 62,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 45,
+      "col": 18,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 63,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 45,
+      "col": 23,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 64,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 45,
+      "col": 46,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 65,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 45,
+      "col": 51,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 66,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 26,
+      "col": 21,
+      "rule": "VC_DIVISION_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Combine",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 10205,
+              "time": 4.30000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 26,
+      "check_col": 21,
+      "msg_id": 67,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 10205,
+          "max_time": 4.30000007152557E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 29,
+      "col": 25,
+      "rule": "VC_DIVISION_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Frequency",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 312,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 29,
+      "check_col": 25,
+      "msg_id": 68,
+      "session_dir": 2,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 312,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 29,
+      "col": 25,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Frequency",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.46000000000000E+00
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 1784,
+              "time": 1.55000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 29,
+      "check_col": 25,
+      "msg_id": 69,
+      "session_dir": 2,
+      "how_proved": "prover",
+      "stats": {
+        "altergo": {
+          "count": 1,
+          "max_steps": 1784,
+          "max_time": 1.55000001192093E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 29,
+      "col": 25,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Frequency",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.26000000000000E+01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Unknown\n(sat)",
+              "steps": 42784,
+              "time": 9.52000000000000E+00
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 6979,
+              "time": 4.81900000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 29,
+      "check_col": 25,
+      "msg_id": 70,
+      "session_dir": 2,
+      "how_proved": "prover",
+      "stats": {
+        "altergo": {
+          "count": 1,
+          "max_steps": 6979,
+          "max_time": 4.81900006532669E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 40,
+      "col": 22,
+      "rule": "VC_ASSERT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.80000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 2552,
+              "time": 2.77400000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 40,
+      "check_col": 22,
+      "msg_id": 71,
+      "session_dir": 3,
+      "how_proved": "prover",
+      "stats": {
+        "altergo": {
+          "count": 1,
+          "max_steps": 2552,
+          "max_time": 2.77399986982346E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 35,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 4476,
+              "time": 2.15000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.08000000000000E+00
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 5054,
+              "time": 3.81000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.81000000000000E+00
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 35,
+      "check_col": 14,
+      "msg_id": 72,
+      "session_dir": 3,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 3,
+          "max_steps": 5054,
+          "max_time": 3.80999994277954E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 8,
+      "col": 6,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 8,
+      "check_col": 6,
+      "msg_id": 73,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 15,
+      "col": 64,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 15,
+      "check_col": 64,
+      "msg_id": 74,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 60,
+      "col": 8,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 60,
+      "check_col": 8,
+      "msg_id": 75,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 63,
+      "col": 61,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 63,
+      "check_col": 61,
+      "msg_id": 76,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 63,
+      "col": 30,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 2323,
+              "time": 1.70000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 63,
+      "check_col": 30,
+      "msg_id": 77,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 2323,
+          "max_time": 1.70000001788139E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 64,
+      "col": 59,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 64,
+      "check_col": 59,
+      "msg_id": 78,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 64,
+      "col": 51,
+      "rule": "VC_DIVISION_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 6975,
+              "time": 5.00000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.90000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 64,
+      "check_col": 51,
+      "msg_id": 79,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 6975,
+          "max_time": 5.00000000000000E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 64,
+      "col": 33,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 24795,
+              "time": 1.98000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.05000000000000E+00
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 64,
+      "check_col": 33,
+      "msg_id": 80,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 24795,
+          "max_time": 1.98000001907349E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 71,
+      "col": 10,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.80000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.90000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 71,
+      "check_col": 10,
+      "msg_id": 81,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 76,
+      "col": 10,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 5356,
+              "time": 4.10000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.60000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 6.70000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.40000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.30000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.50000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.80000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 76,
+      "check_col": 10,
+      "msg_id": 82,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 5356,
+          "max_time": 4.09999996423721E-01
+        },
+        "Z3": {
+          "count": 3,
+          "max_steps": 1,
+          "max_time": 5.00000000000000E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 77,
+      "col": 10,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.30000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 709,
+              "time": 7.83000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.20000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.80000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 77,
+      "check_col": 10,
+      "msg_id": 83,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 70,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 70,
+      "check_col": 33,
+      "msg_id": 84,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 70,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 2689,
+              "time": 8.70000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 9.30000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 70,
+      "check_col": 33,
+      "msg_id": 85,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Colibri_Classic": {
+          "count": 1,
+          "max_steps": 2689,
+          "max_time": 8.70000004768372E-01
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 69,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 2718,
+              "time": 8.80000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 9.10000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 38416,
+              "time": 2.52000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 69,
+      "check_col": 33,
+      "msg_id": 86,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 38416,
+          "max_time": 2.51999998092651E+00
+        },
+        "Colibri_Classic": {
+          "count": 1,
+          "max_steps": 2718,
+          "max_time": 8.79999995231628E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 69,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.10000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 1272,
+              "time": 1.27300000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 69,
+      "check_col": 33,
+      "msg_id": 87,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 68,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 1266,
+              "time": 1.33000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.20000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 1403,
+              "time": 1.50000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 68,
+      "check_col": 33,
+      "msg_id": 88,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 68,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 2642,
+              "time": 8.90000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 9.30000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 2642,
+              "time": 8.90000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.10000000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 68,
+      "check_col": 33,
+      "msg_id": 89,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Colibri_Classic": {
+          "count": 2,
+          "max_steps": 2642,
+          "max_time": 8.89999985694885E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 67,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 1340,
+              "time": 8.00000000000000E-01
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 8.94000000000000E+00
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 3967,
+              "time": 4.24700000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 67,
+      "check_col": 33,
+      "msg_id": 90,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 67,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.60000000000000E-01
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 726,
+              "time": 8.29000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 8.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.70000000000000E-01
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 726,
+              "time": 8.93000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 67,
+      "check_col": 33,
+      "msg_id": 91,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 66,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.50000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 566,
+              "time": 6.88000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 66,
+      "check_col": 33,
+      "msg_id": 92,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        },
+        "Z3": {
+          "count": 3,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 66,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.60000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 724,
+              "time": 8.54000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.70000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 734,
+              "time": 8.08000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 66,
+      "check_col": 33,
+      "msg_id": 93,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        },
+        "Z3": {
+          "count": 3,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 80,
+      "col": 19,
+      "rule": "VC_DIVISION_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 40087,
+              "time": 3.15000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.07000000000000E+00
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 80,
+      "check_col": 19,
+      "msg_id": 94,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 40087,
+          "max_time": 3.15000009536743E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 80,
+      "col": 19,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 56032,
+              "time": 3.89000000000000E+00
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.06000000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 80,
+      "check_col": 19,
+      "msg_id": 95,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Colibri_Classic": {
+          "count": 1,
+          "max_steps": 56032,
+          "max_time": 3.89000010490417E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 80,
+      "col": 19,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 55845,
+              "time": 4.03000000000000E+00
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.21000000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 80,
+      "check_col": 19,
+      "msg_id": 96,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Colibri_Classic": {
+          "count": 1,
+          "max_steps": 55845,
+          "max_time": 4.03000020980835E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 81,
+      "col": 46,
+      "rule": "VC_DIVISION_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 59073,
+              "time": 4.74000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.76000000000000E+00
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 81,
+      "check_col": 46,
+      "msg_id": 97,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 59073,
+          "max_time": 4.73999977111816E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 81,
+      "col": 46,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 56077,
+              "time": 4.03000000000000E+00
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.10000000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 81,
+      "check_col": 46,
+      "msg_id": 98,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Colibri_Classic": {
+          "count": 1,
+          "max_steps": 56077,
+          "max_time": 4.03000020980835E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 81,
+      "col": 46,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 56060,
+              "time": 4.15000000000000E+00
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.23000000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 81,
+      "check_col": 46,
+      "msg_id": 99,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "Colibri_Classic": {
+          "count": 1,
+          "max_steps": 56060,
+          "max_time": 4.15000009536743E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 83,
+      "col": 10,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.70000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 690,
+              "time": 7.91000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.50000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 690,
+              "time": 8.33000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 83,
+      "check_col": 10,
+      "msg_id": 100,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 5.00000007450581E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 83,
+      "col": 40,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.29000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.19000000000000E+00
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1487,
+              "time": 1.60000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.20000000000000E-01
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 686,
+              "time": 8.07000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 83,
+      "check_col": 40,
+      "msg_id": 101,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1487,
+          "max_time": 1.59999996423721E-01
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 2.19000005722046E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 84,
+      "col": 10,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.90000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.77000000000000E+00
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1476,
+              "time": 1.50000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.10000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 8.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 84,
+      "check_col": 10,
+      "msg_id": 102,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1476,
+          "max_time": 1.50000005960464E-01
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.76999998092651E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 82,
+      "col": 16,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 8079,
+              "time": 6.20000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.20000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.03000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Out of\nmemory",
+              "steps": 1,
+              "time": 1.55000000000000E+00
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 24389,
+              "time": 2.29780000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.37000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Out of\nmemory",
+              "steps": 1,
+              "time": 1.57000000000000E+00
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 29112,
+              "time": 2.73420000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.36000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Out of\nmemory",
+              "steps": 1,
+              "time": 1.62000000000000E+00
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 28935,
+              "time": 2.69480000000000E+00
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.20000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 690,
+              "time": 7.63000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 82,
+      "check_col": 16,
+      "msg_id": 103,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 8079,
+          "max_time": 6.20000004768372E-01
+        },
+        "altergo": {
+          "count": 3,
+          "max_steps": 29112,
+          "max_time": 2.73420000076294E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 49,
+      "col": 7,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 233,
+              "time": 2.95000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 49,
+      "check_col": 7,
+      "msg_id": 104,
+      "session_dir": 5,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_simulation.adb",
+      "line": 46,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.10000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.40000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "Colibri_Classic": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Timeout",
+              "steps": 1,
+              "time": 15
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.80000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_simulation.adb",
+      "check_line": 46,
+      "check_col": 14,
+      "msg_id": 105,
+      "session_dir": 5,
+      "how_proved": "prover",
+      "stats": {
+        "Colibri_Classic": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 5.09999990463257E-01
+        }
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Simulation.Add_To_Sum",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 42
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Hoeflin_Simulation.Count_Step",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 33
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Simulation.Count_Step",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 33
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Simulation.Count_Step",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 33
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Simulation.Combine",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 19
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Simulation.Combine",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 19
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Core.Observe",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 55
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Simulation.Add_To_Sum",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 42
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Normal_Support.Reset",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 31
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Normal_Support.Square_Root",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Report_IO.Read_Simulation_Options",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 10
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Observe",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 55
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Valid",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 50
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Variance_Factor",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Simulation.Add_To_Sum",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 42
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Simulation.Combine",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 19
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Simulation.Frequency",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 28
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Normal_Support.Normal_Pair",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 37
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Normal_Support.Rare_Quantile",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 26
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Normal_Support.Reset",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 31
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Normal_Support.Square_Root",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Normal_Support.Survival",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 16
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Read_Simulation_Options",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 10
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Simulation_Header",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 13
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Report_IO.Simulation_Row",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 15
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Observe",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 55
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Valid",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 50
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Variance_Factor",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Simulation.Add_To_Sum",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 42
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Simulation.Combine",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 19
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Simulation.Frequency",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 28
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Normal_Support.Normal_Pair",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 37
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Normal_Support.Rare_Quantile",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 26
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Normal_Support.Reset",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 31
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Normal_Support.Square_Root",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Normal_Support.Survival",
+            "sloc": [
+              {
+                "file": "normal_support.ads",
+                "line": 16
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Read_Simulation_Options",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 10
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Simulation_Header",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 13
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Report_IO.Simulation_Row",
+            "sloc": [
+              {
+                "file": "report_io.ads",
+                "line": 15
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Simulation",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Simulation.Frequency",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 28
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Simulation.Frequency",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 28
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Hoeflin_Simulation.Add_To_Sum",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 42
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Simulation.Count_Step",
+            "sloc": [
+              {
+                "file": "hoeflin_simulation.adb",
+                "line": 33
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Simulation.Add_To_Sum",
+          "sloc": [
+            {
+              "file": "hoeflin_simulation.adb",
+              "line": 42
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 5.43252182006836E+00,
+    "gnatwhy3.transformations.eliminate_algebraic": 7.81867980957031E-01,
+    "init_why_sections": 6.89000007696450E-04,
+    "gnatwhy3.transformations.detect_polymorphism": 8.15280005335808E-02,
+    "gnatwhy3.transformations.eliminate_literal": 9.86017048358917E-01,
+    "gnatwhy3.run_vcs": 3.55810001492500E-02,
+    "globals (advanced)": 9.63899958878756E-03,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 4.13396984338760E-01,
+    "flow analysis": 8.71200021356344E-03,
+    "gnatwhy3.transformations.encoding_smt": 3.09128999710083E-01,
+    "gnatwhy3.transformations.simplify_formula": 1.04240298271179E+00,
+    "marking": 2.66999995801598E-04,
+    "translation of standard": 2.40599992685020E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 1.95271000266075E-01,
+    "gnatwhy3.transformations.instantiate_predicate": 1.67596995830536E-01,
+    "properties (advanced)": 1.55000001541339E-04,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 1.84011012315750E-01,
+    "gnatwhy3.register_vcs": 4.97911006212234E-01,
+    "gnatwhy3.transformations.eliminate_epsilon": 9.32281017303467E-01,
+    "globals (basic)": 9.09500010311604E-03,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 4.33120584487915E+00,
+    "gnatwhy3.schedule_vcs": 3.97399999201298E-02,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 4.27999999374151E-04,
+    "gnatwhy3.save_session": 8.38589966297150E-02,
+    "gnatwhy3.transformations.encoding_sort": 1.12953998148441E-01,
+    "gnatwhy3.transformations.eliminate_inductive": 6.00661993026733E-01,
+    "gnatwhy3.transformations.compile_match": 3.38077992200851E-01,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 3.04999994114041E-04,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 1.13874399662018E+00,
+    "gnatwhy3.transformations.eliminate_definition": 5.76049983501434E-02,
+    "gnatwhy3.transformations.eliminate_builtin": 8.06114971637726E-01,
+    "gnatwhy3.transformations.discriminate_if_poly": 7.44000019039959E-04,
+    "gnatwhy3.transformations.introduce_premises": 3.45398008823395E-01,
+    "gnatwhy3.init": 2.32750487327576E+00
+  }
+}

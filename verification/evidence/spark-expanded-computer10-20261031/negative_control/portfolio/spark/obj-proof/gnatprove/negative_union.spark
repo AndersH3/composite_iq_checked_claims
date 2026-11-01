@@ -1,0 +1,180 @@
+{
+  "spark": [
+    {
+      "name": "Negative_Union",
+      "sloc": [
+        {
+          "file": "negative_union.ads",
+          "line": 2
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Negative_Union.Union_Size",
+      "sloc": [
+        {
+          "file": "negative_union.ads",
+          "line": 4
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "negative_union.ads",
+      "line": 5,
+      "col": 9,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Negative_Union.Union_Size",
+        "sloc": [
+          {
+            "file": "negative_union.ads",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-jgjwor4k/negative_control/portfolio/obj-proof/gnatprove/negative_union__union_size"
+  },
+  "proof": [
+    {
+      "file": "negative_union.ads",
+      "line": 7,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "medium",
+      "entity": {
+        "name": "Negative_Union.Union_Size",
+        "sloc": [
+          {
+            "file": "negative_union.ads",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 4.50000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Unknown\n()",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "negative_union.ads",
+      "check_line": 7,
+      "check_col": 14,
+      "msg_id": 1,
+      "session_dir": 1,
+      "how_proved": "prover"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Negative_Union",
+          "sloc": [
+            {
+              "file": "negative_union.ads",
+              "line": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Negative_Union.Union_Size",
+          "sloc": [
+            {
+              "file": "negative_union.ads",
+              "line": 4
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 4.10800008103251E-03,
+    "gnatwhy3.transformations.eliminate_algebraic": 3.58200003392994E-03,
+    "init_why_sections": 6.98000018019229E-04,
+    "gnatwhy3.transformations.detect_polymorphism": 1.97999994270504E-04,
+    "gnatwhy3.transformations.eliminate_literal": 1.51900004129857E-03,
+    "gnatwhy3.run_vcs": 2.18899990431964E-03,
+    "globals (advanced)": 1.30999993416481E-04,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 1.09000000520609E-04,
+    "flow analysis": 6.82000012602657E-04,
+    "gnatwhy3.transformations.encoding_smt": 3.57900001108646E-03,
+    "gnatwhy3.transformations.simplify_formula": 1.54600001405925E-03,
+    "marking": 3.89999986509793E-05,
+    "translation of standard": 2.77599995024502E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 4.03000012738630E-04,
+    "gnatwhy3.transformations.instantiate_predicate": 3.11999989207834E-04,
+    "properties (advanced)": 9.99999974737875E-06,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 9.30000023799948E-05,
+    "gnatwhy3.register_vcs": 1.56000000424683E-03,
+    "gnatwhy3.transformations.eliminate_epsilon": 3.38999996893108E-03,
+    "globals (basic)": 1.63999997312203E-04,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 3.26199992559850E-03,
+    "gnatwhy3.schedule_vcs": 2.43599992245436E-03,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 3.00000010611257E-06,
+    "gnatwhy3.save_session": 1.24000001233071E-03,
+    "gnatwhy3.transformations.encoding_sort": 1.07200001366436E-03,
+    "gnatwhy3.transformations.eliminate_inductive": 1.92199996672571E-03,
+    "gnatwhy3.transformations.compile_match": 4.26999991759658E-04,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 3.99999998990097E-06,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 9.89999971352518E-05,
+    "gnatwhy3.transformations.eliminate_definition": 2.65000009676442E-04,
+    "gnatwhy3.transformations.eliminate_builtin": 9.89999971352518E-04,
+    "gnatwhy3.transformations.discriminate_if_poly": 4.99999987368938E-06,
+    "gnatwhy3.transformations.introduce_premises": 1.72000000020489E-04,
+    "gnatwhy3.init": 3.60715985298157E-01
+  }
+}

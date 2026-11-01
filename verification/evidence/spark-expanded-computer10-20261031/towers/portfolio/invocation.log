@@ -1,0 +1,437 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+admission_core.adb:14:41: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.adb:15:41: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.adb:16:41: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.adb:17:41: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.adb:22:13: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.adb:24:13: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.adb:26:21: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.adb:30:45: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:17:11: info: data dependencies proved
+admission_core.ads:18:14: info: postcondition proved (CVC5: 8 VC in max 0.0 seconds and 1 step)
+admission_core.ads:28:11: info: data dependencies proved
+admission_core.ads:30:14: info: postcondition proved (CVC5: 5 VC in max 0.0 seconds and 1 step)
+admission_core.ads:30:40: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:31:30: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:32:30: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:33:30: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:34:30: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:37:11: info: data dependencies proved
+admission_core.ads:38:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:41:11: info: data dependencies proved
+admission_core.ads:42:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:45:11: info: data dependencies proved
+admission_core.ads:46:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step)
+admission_core.ads:51:11: info: data dependencies proved
+admission_core.ads:53:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+admission_core.ads:58:11: info: data dependencies proved
+admission_core.ads:60:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step)
+admission_core.ads:65:11: info: data dependencies proved
+admission_core.ads:66:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+admission_core.ads:70:11: info: data dependencies proved
+admission_core.ads:72:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step)
+towers_demo.adb:4:03: info: data dependencies proved
+towers_demo.adb:8:04: info: initialization of "Data" proved
+normal_model.adb:99:52: info: data dependencies proved
+normal_model.adb:100:14: info: postcondition proved (CVC5: 3 VC in max 2.8 seconds and 4857 steps)
+normal_model.adb:100:26: info: range check proved (Trivial)
+normal_model.adb:100:45: info: range check proved (Trivial)
+normal_model.adb:100:50: info: float overflow check proved (Trivial)
+normal_model.adb:101:16: info: float overflow check proved (Trivial)
+normal_model.adb:101:30: info: range check proved (Trivial)
+normal_model.adb:101:40: info: float overflow check proved (Trivial)
+normal_model.adb:101:56: info: range check proved (Trivial)
+normal_model.adb:101:61: info: float overflow check proved (Trivial)
+normal_model.adb:102:16: info: float overflow check proved (Trivial)
+normal_model.adb:102:30: info: range check proved (Trivial)
+normal_model.adb:102:40: info: float overflow check proved (Trivial)
+normal_model.adb:102:56: info: range check proved (Trivial)
+normal_model.adb:102:61: info: float overflow check proved (Trivial)
+normal_model.adb:105:22: info: assertion proved (altergo: 1 VC in max 0.3 seconds and 2524 steps)
+normal_model.adb:105:34: info: range check proved (Trivial)
+normal_model.adb:105:53: info: range check proved (Trivial)
+normal_model.adb:105:58: info: float overflow check proved (Trivial)
+normal_model.adb:124:07: info: initialization of "Mid" proved
+normal_model.adb:127:10: info: raise statement or expression proved unreachable (CVC5: 1 VC in max 0.1 seconds and 1525 steps)
+normal_model.adb:130:33: info: loop invariant initialization proved (CVC5: 4 VC in max 0.0 seconds and 1 step)
+normal_model.adb:130:33: info: loop invariant preservation proved (CVC5: 4 VC in max 0.6 seconds and 5914 steps)
+normal_model.adb:131:33: info: loop invariant initialization proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:131:33: info: loop invariant preservation proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+normal_model.adb:132:21: info: float overflow check proved (CVC5: 1 VC in max 0.2 seconds and 5027 steps)
+normal_model.adb:132:27: info: float overflow check proved (Trivial)
+normal_model.adb:132:27: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:139:18: info: float overflow check proved (CVC5: 1 VC in max 0.4 seconds and 6166 steps)
+normal_model.adb:139:24: info: float overflow check proved (Trivial)
+normal_model.adb:139:24: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:139:24: info: range check proved (CVC5: 1 VC in max 1.5 seconds and 7591 steps)
+normal_model.adb:149:17: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:151:41: info: float overflow check proved (CVC5: 1 VC in max 0.2 seconds and 5432 steps)
+normal_model.adb:151:45: info: float overflow check proved (CVC5: 1 VC in max 0.2 seconds and 4510 steps)
+normal_model.adb:152:10: info: initialization of "Power" proved
+normal_model.adb:152:17: info: initialization of "Numerator" proved
+normal_model.adb:152:28: info: initialization of "Root" proved
+normal_model.adb:152:34: info: initialization of "Result" proved
+normal_model.adb:155:13: info: raise statement or expression proved unreachable (CVC5: 1 VC in max 0.3 seconds and 6151 steps)
+normal_model.adb:157:23: info: float overflow check proved (CVC5: 1 VC in max 1.0 seconds and 23428 steps)
+normal_model.adb:157:27: info: float overflow check proved (CVC5: 1 VC in max 1.2 seconds and 24462 steps)
+normal_model.adb:157:33: info: float overflow check proved (CVC5: 1 VC in max 0.4 seconds and 11117 steps)
+normal_model.adb:157:37: info: float overflow check proved (CVC5: 1 VC in max 0.9 seconds and 15378 steps)
+normal_model.adb:157:41: info: float overflow check proved (CVC5: 1 VC in max 1.3 seconds and 19610 steps)
+normal_model.adb:157:45: info: float overflow check proved (CVC5: 1 VC in max 1.7 seconds and 25552 steps)
+normal_model.adb:157:49: info: float overflow check proved (CVC5: 1 VC in max 0.4 seconds and 10574 steps)
+normal_model.adb:157:54: info: division check proved (CVC5: 1 VC in max 1.1 seconds and 25477 steps)
+normal_model.adb:157:54: info: float overflow check proved (Colibri_Classic: 1 VC in max 0.6 seconds and 1 step)
+normal_model.adb:157:61: info: float overflow check proved (CVC5: 1 VC in max 0.3 seconds and 6698 steps)
+normal_model.adb:159:23: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:160:18: info: precondition proved (CVC5: 2 VC in max 2.3 seconds and 44614 steps)
+normal_model.adb:162:13: info: raise statement or expression proved unreachable (CVC5: 1 VC in max 2.3 seconds and 45125 steps)
+normal_model.adb:164:30: info: division check proved (CVC5: 1 VC in max 2.4 seconds and 48386 steps)
+normal_model.adb:164:30: info: float overflow check proved (CVC5: 1 VC in max 3.3 seconds and 66591 steps)
+normal_model.adb:164:42: info: float overflow check proved (CVC5: 1 VC in max 2.4 seconds and 48371 steps)
+normal_model.adb:166:13: info: raise statement or expression proved unreachable (CVC5: 1 VC in max 3.4 seconds and 66637 steps)
+normal_model.adb:170:07: info: initialization of "H" proved
+normal_model.adb:170:10: info: initialization of "Sum" proved
+normal_model.adb:172:53: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:173:10: info: raise statement or expression proved unreachable (Z3: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:175:16: info: float overflow check proved (Trivial)
+normal_model.adb:175:16: info: division check proved (CVC5: 1 VC in max 0.2 seconds and 2339 steps)
+normal_model.adb:175:30: info: range check proved (Trivial)
+normal_model.adb:176:14: info: precondition proved (CVC5: 4 VC in max 0.0 seconds and 1 step)
+normal_model.adb:176:28: info: float overflow check proved (Z3: 1 VC in max 0.1 seconds and 1 step)
+normal_model.adb:176:30: info: precondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:178:33: info: loop invariant initialization proved (CVC5: 2 VC in max 11.7 seconds and 35641 steps)
+normal_model.adb:178:33: info: loop invariant preservation proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:179:33: info: loop invariant initialization proved (CVC5: 2 VC in max 1.6 seconds and 22127 steps)
+normal_model.adb:179:33: info: loop invariant preservation proved (Colibri_Classic: 1 VC in max 0.6 seconds and 1 step; Z3: 1 VC in max 0.8 seconds and 1 step)
+normal_model.adb:179:51: info: float overflow check proved (Trivial)
+normal_model.adb:179:65: info: range check proved (Trivial)
+normal_model.adb:180:24: info: overflow check proved (CVC5: 2 VC in max 0.2 seconds and 2654 steps)
+normal_model.adb:181:21: info: float overflow check proved (CVC5: 1 VC in max 3.1 seconds and 44442 steps)
+normal_model.adb:181:29: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:182:12: info: float overflow check proved (CVC5: 1 VC in max 2.9 seconds and 42337 steps)
+normal_model.adb:182:14: info: precondition proved (CVC5: 4 VC in max 0.0 seconds and 1 step)
+normal_model.adb:182:49: info: range check proved (Trivial)
+normal_model.adb:182:52: info: float overflow check proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+normal_model.adb:185:49: info: float overflow check proved (Trivial)
+normal_model.adb:185:58: info: float overflow check proved (Trivial)
+normal_model.adb:185:62: info: float overflow check proved (CVC5: 1 VC in max 7.3 seconds and 86592 steps)
+normal_model.adb:185:68: info: float overflow check proved (Trivial)
+normal_model.adb:185:68: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:196:07: info: initialization of "Mid" proved
+normal_model.adb:196:12: info: initialization of "Union_P" proved
+normal_model.adb:199:10: info: raise statement or expression proved unreachable (Z3: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:202:33: info: loop invariant preservation proved (CVC5: 4 VC in max 0.5 seconds and 7427 steps)
+normal_model.adb:202:33: info: loop invariant initialization proved (CVC5: 4 VC in max 0.0 seconds and 1 step)
+normal_model.adb:203:33: info: loop invariant initialization proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:203:33: info: loop invariant preservation proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+normal_model.adb:204:21: info: float overflow check proved (Z3: 1 VC in max 0.2 seconds and 336 steps)
+normal_model.adb:204:27: info: float overflow check proved (Trivial)
+normal_model.adb:204:27: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:205:25: info: float overflow check proved (Trivial)
+normal_model.adb:205:36: info: float overflow check proved (Trivial)
+normal_model.adb:205:38: info: precondition proved (CVC5: 2 VC in max 0.4 seconds and 5898 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:208:18: info: float overflow check proved (CVC5: 1 VC in max 0.4 seconds and 7770 steps)
+normal_model.adb:208:24: info: float overflow check proved (Trivial)
+normal_model.adb:208:24: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:208:24: info: range check proved (CVC5: 1 VC in max 0.7 seconds and 8510 steps)
+normal_model.adb:217:11: info: data dependencies proved
+normal_model.adb:218:41: info: float overflow check proved (Trivial)
+normal_model.adb:218:57: info: range check proved (Trivial)
+normal_model.adb:219:14: info: postcondition proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step; Z3: 1 VC in max 0.2 seconds and 1 step)
+normal_model.adb:219:42: info: float overflow check proved (Trivial)
+normal_model.adb:219:56: info: range check proved (Trivial)
+normal_model.adb:225:38: info: float overflow check proved (CVC5: 1 VC in max 0.4 seconds and 9089 steps)
+normal_model.adb:231:11: info: data dependencies proved
+normal_model.adb:232:39: info: float overflow check proved (Trivial)
+normal_model.adb:232:55: info: range check proved (Trivial)
+normal_model.adb:233:37: info: float overflow check proved (Trivial)
+normal_model.adb:233:53: info: range check proved (Trivial)
+normal_model.adb:234:14: info: postcondition proved (CVC5: 2 VC in max 2.5 seconds and 11222 steps; Z3: 2 VC in max 0.2 seconds and 1 step)
+normal_model.adb:234:40: info: float overflow check proved (Trivial)
+normal_model.adb:234:54: info: range check proved (Trivial)
+normal_model.adb:235:37: info: float overflow check proved (Trivial)
+normal_model.adb:235:51: info: range check proved (Trivial)
+normal_model.adb:243:10: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:245:13: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:253:11: info: data dependencies proved
+normal_model.adb:255:39: info: float overflow check proved (Trivial)
+normal_model.adb:255:55: info: range check proved (Trivial)
+normal_model.adb:256:42: info: float overflow check proved (Trivial)
+normal_model.adb:256:58: info: range check proved (Trivial)
+normal_model.adb:257:14: info: postcondition proved (CVC5: 4 VC in max 0.1 seconds and 1496 steps)
+normal_model.adb:258:39: info: float overflow check proved (Trivial)
+normal_model.adb:258:53: info: range check proved (Trivial)
+normal_model.adb:259:42: info: float overflow check proved (Trivial)
+normal_model.adb:259:56: info: range check proved (Trivial)
+normal_model.adb:266:07: info: precondition proved (CVC5: 2 VC in max 0.1 seconds and 1498 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:267:07: info: precondition proved (Z3: 4 VC in max 0.1 seconds and 1 step)
+normal_model.adb:268:07: info: precondition proved (Z3: 4 VC in max 0.1 seconds and 1 step)
+normal_model.adb:296:07: info: initialization of "X" proved
+normal_model.adb:296:10: info: initialization of "Y" proved
+normal_model.adb:296:13: info: initialization of "D" proved
+normal_model.adb:296:16: info: initialization of "Power" proved
+normal_model.adb:297:07: info: initialization of "ZX" proved
+normal_model.adb:297:11: info: initialization of "ZY" proved
+normal_model.adb:300:37: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:303:33: info: loop invariant initialization proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:303:33: info: loop invariant preservation proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:303:53: info: float overflow check proved (Trivial)
+normal_model.adb:303:69: info: range check proved (Trivial)
+normal_model.adb:304:33: info: loop invariant initialization proved (CVC5: 2 VC in max 0.1 seconds and 2737 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:304:33: info: loop invariant preservation proved (altergo: 4 VC in max 0.5 seconds and 4182 steps)
+normal_model.adb:305:43: info: float overflow check proved (Trivial)
+normal_model.adb:305:59: info: range check proved (Trivial)
+normal_model.adb:306:46: info: float overflow check proved (Trivial)
+normal_model.adb:306:62: info: range check proved (Trivial)
+normal_model.adb:307:19: info: float overflow check proved (Trivial)
+normal_model.adb:307:25: info: float overflow check proved (Trivial)
+normal_model.adb:307:39: info: range check proved (Trivial)
+normal_model.adb:308:19: info: float overflow check proved (Colibri_Classic: 1 VC in max 0.6 seconds and 1 step)
+normal_model.adb:308:28: info: float overflow check proved (Trivial)
+normal_model.adb:308:28: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:308:28: info: range check proved (CVC5: 1 VC in max 3.8 seconds and 17987 steps)
+normal_model.adb:310:36: info: loop invariant initialization proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:310:36: info: loop invariant preservation proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:310:56: info: float overflow check proved (Trivial)
+normal_model.adb:310:78: info: range check proved (Trivial)
+normal_model.adb:311:36: info: loop invariant preservation proved (altergo: 4 VC in max 0.1 seconds and 1229 steps)
+normal_model.adb:311:36: info: loop invariant initialization proved (Z3: 4 VC in max 0.2 seconds and 1 step)
+normal_model.adb:312:46: info: float overflow check proved (Trivial)
+normal_model.adb:312:68: info: range check proved (Trivial)
+normal_model.adb:313:49: info: float overflow check proved (Trivial)
+normal_model.adb:313:71: info: range check proved (Trivial)
+normal_model.adb:315:22: info: float overflow check proved (Trivial)
+normal_model.adb:315:28: info: float overflow check proved (Trivial)
+normal_model.adb:315:42: info: range check proved (Trivial)
+normal_model.adb:316:22: info: float overflow check proved (CVC5: 1 VC in max 8.4 seconds and 41252 steps)
+normal_model.adb:316:31: info: float overflow check proved (Trivial)
+normal_model.adb:316:31: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:316:31: info: range check proved (CVC5: 1 VC in max 1.9 seconds and 20875 steps)
+normal_model.adb:317:27: info: float overflow check proved (Trivial)
+normal_model.adb:317:32: info: float overflow check proved (Trivial)
+normal_model.adb:317:42: info: float overflow check proved (Trivial)
+normal_model.adb:317:47: info: float overflow check proved (Trivial)
+normal_model.adb:317:52: info: float overflow check proved (Trivial)
+normal_model.adb:317:57: info: float overflow check proved (Trivial)
+normal_model.adb:318:15: info: float overflow check proved (Trivial)
+normal_model.adb:318:15: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:320:18: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:320:38: info: division check proved (altergo: 1 VC in max 0.4 seconds and 4012 steps)
+normal_model.adb:320:38: info: float overflow check proved (CVC5: 1 VC in max 4.1 seconds and 75729 steps)
+normal_model.adb:320:50: info: float overflow check proved (CVC5: 1 VC in max 3.0 seconds and 57135 steps)
+normal_model.adb:321:13: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:321:47: info: range check proved (CVC5: 1 VC in max 4.3 seconds and 75776 steps)
+normal_model.adb:322:13: info: precondition proved (altergo: 4 VC in max 0.1 seconds and 1199 steps)
+normal_model.adb:322:45: info: range check proved (CVC5: 1 VC in max 4.1 seconds and 76579 steps)
+normal_model.adb:327:68: info: division check proved (CVC5: 1 VC in max 1.3 seconds and 26615 steps; altergo: 2 VC in max 0.1 seconds and 1122 steps)
+normal_model.adb:327:68: info: float overflow check proved (CVC5: 1 VC in max 3.3 seconds and 46410 steps; altergo: 2 VC in max 1.3 seconds and 12131 steps)
+normal_model.adb:328:74: info: division check proved (CVC5: 1 VC in max 2.7 seconds and 45871 steps; altergo: 2 VC in max 0.1 seconds and 1143 steps)
+normal_model.adb:328:74: info: float overflow check proved (altergo: 3 VC in max 1.3 seconds and 13046 steps)
+normal_model.adb:336:10: info: raise statement or expression proved unreachable (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:338:18: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:341:45: info: initialization of "U" proved
+normal_model.adb:342:11: info: data dependencies proved
+normal_model.adb:343:14: info: postcondition proved (CVC5: 3 VC in max 5.7 seconds and 26218 steps; altergo: 1 VC in max 0.2 seconds and 1846 steps)
+normal_model.adb:344:45: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:345:29: info: range check proved (Trivial)
+normal_model.adb:345:37: info: float overflow check proved (Trivial)
+normal_model.adb:345:37: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:349:37: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:349:37: info: range check proved (CVC5: 2 VC in max 0.1 seconds and 487 steps)
+normal_model.adb:350:25: info: range check proved (Trivial)
+normal_model.adb:350:33: info: float overflow check proved (Trivial)
+normal_model.adb:350:33: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:356:32: info: data dependencies proved
+normal_model.adb:360:21: info: float overflow check proved (Trivial)
+normal_model.adb:360:21: info: range check proved (Trivial)
+normal_model.adb:364:07: info: initialization of "U" proved
+normal_model.adb:364:10: info: initialization of "V" proved
+normal_model.adb:364:13: info: initialization of "Log_U" proved
+normal_model.adb:364:20: info: initialization of "Radius" proved
+normal_model.adb:364:28: info: initialization of "Angle" proved
+normal_model.adb:365:07: info: initialization of "Cosine" proved
+normal_model.adb:365:15: info: initialization of "Sine" proved
+normal_model.adb:369:16: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_model.adb:370:17: info: precondition proved (Z3: 2 VC in max 1.0 seconds and 2569 steps)
+normal_model.adb:370:35: info: float overflow check proved (CVC5: 1 VC in max 1.9 seconds and 39992 steps)
+normal_model.adb:372:10: info: raise statement or expression proved unreachable (Z3: 1 VC in max 1.6 seconds and 6273 steps)
+normal_model.adb:374:25: info: float overflow check proved (CVC5: 1 VC in max 2.1 seconds and 43810 steps)
+normal_model.adb:375:17: info: range check proved (Z3: 1 VC in max 0.3 seconds and 1 step)
+normal_model.adb:376:26: info: range check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+normal_model.adb:377:15: info: range check proved (Z3: 1 VC in max 0.4 seconds and 1 step)
+normal_model.adb:378:26: info: range check proved (CVC5: 1 VC in max 0.2 seconds and 1820 steps)
+normal_model.ads:22:11: info: data dependencies proved
+normal_model.ads:26:11: info: data dependencies proved
+normal_model.ads:26:40: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_model.ads:30:11: info: data dependencies proved
+normal_model.ads:31:14: info: postcondition proved (CVC5: 2 VC in max 0.6 seconds and 8365 steps)
+normal_model.ads:37:49: info: data dependencies proved
+normal_model.ads:38:14: info: postcondition proved (CVC5: 4 VC in max 0.5 seconds and 6606 steps)
+normal_model.ads:43:21: info: initialization of "G" proved
+normal_model.ads:44:11: info: data dependencies proved
+normal_model.ads:45:49: info: initialization of "X" proved
+normal_model.ads:45:52: info: initialization of "Y" proved
+normal_model.ads:46:11: info: data dependencies proved
+towers_io.ads:4:03: info: flow dependencies proved
+towers_engine.adb:59:11: info: data dependencies proved
+towers_engine.adb:60:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:60:36: info: range check proved (Trivial)
+towers_engine.adb:60:45: info: float overflow check proved (Trivial)
+towers_engine.adb:60:45: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:60:66: info: float overflow check proved (Trivial)
+towers_engine.adb:62:62: info: float overflow check proved (Trivial)
+towers_engine.adb:62:62: info: range check proved (CVC5: 2 VC in max 0.2 seconds and 3591 steps)
+towers_engine.adb:68:52: info: range check proved (Trivial)
+towers_engine.adb:68:64: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 331 steps)
+towers_engine.adb:68:64: info: float overflow check proved (altergo: 1 VC in max 0.3 seconds and 3725 steps)
+towers_engine.adb:68:79: info: range check proved (Trivial)
+towers_engine.adb:71:10: info: raise statement or expression proved unreachable (altergo: 1 VC in max 0.4 seconds and 5272 steps)
+towers_engine.adb:73:14: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:77:11: info: data dependencies proved
+towers_engine.adb:83:14: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:83:21: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:87:22: info: initialization of "Lo" proved
+towers_engine.adb:87:26: info: initialization of "Hi" proved
+towers_engine.adb:88:11: info: data dependencies proved
+towers_engine.adb:92:47: info: range check proved (Trivial)
+towers_engine.adb:93:34: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 40 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:93:41: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:94:38: info: float overflow check proved (CVC5: 1 VC in max 1.3 seconds and 19419 steps)
+towers_engine.adb:94:46: info: division check proved (CVC5: 1 VC in max 0.1 seconds and 2188 steps)
+towers_engine.adb:94:46: info: float overflow check proved (CVC5: 1 VC in max 1.2 seconds and 19374 steps)
+towers_engine.adb:95:42: info: float overflow check proved (CVC5: 1 VC in max 2.4 seconds and 38095 steps)
+towers_engine.adb:95:50: info: division check proved (CVC5: 1 VC in max 1.3 seconds and 19973 steps)
+towers_engine.adb:95:50: info: float overflow check proved (CVC5: 1 VC in max 2.5 seconds and 37101 steps)
+towers_engine.adb:95:57: info: float overflow check proved (CVC5: 1 VC in max 9.5 seconds and 39849 steps)
+towers_engine.adb:95:64: info: division check proved (CVC5: 1 VC in max 2.8 seconds and 39090 steps)
+towers_engine.adb:95:64: info: float overflow check proved (CVC5: 1 VC in max 4.8 seconds and 57506 steps)
+towers_engine.adb:96:37: info: precondition proved (CVC5: 1 VC in max 11.2 seconds and 103979 steps; Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+towers_engine.adb:96:52: info: float overflow check proved (CVC5: 1 VC in max 5.1 seconds and 83455 steps)
+towers_engine.adb:96:59: info: float overflow check proved (CVC5: 1 VC in max 4.7 seconds and 79230 steps)
+towers_engine.adb:96:64: info: division check proved (Z3: 1 VC in max 1.7 seconds and 1 step)
+towers_engine.adb:96:64: info: float overflow check proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+towers_engine.adb:96:69: info: float overflow check proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+towers_engine.adb:96:77: info: division check proved (CVC5: 1 VC in max 4.6 seconds and 62273 steps)
+towers_engine.adb:96:77: info: float overflow check proved (CVC5: 1 VC in max 7.3 seconds and 79409 steps)
+towers_engine.adb:96:84: info: float overflow check proved (CVC5: 1 VC in max 10.4 seconds and 71013 steps)
+towers_engine.adb:96:89: info: float overflow check proved (CVC5: 1 VC in max 4.5 seconds and 62659 steps)
+towers_engine.adb:97:07: info: initialization of "Half" proved
+towers_engine.adb:100:10: info: raise statement or expression proved unreachable (Colibri_Classic: 1 VC in max 0.6 seconds and 1 step)
+towers_engine.adb:102:17: info: float overflow check proved (altergo: 1 VC in max 1.3 seconds and 14238 steps)
+towers_engine.adb:102:24: info: division check proved (altergo: 1 VC in max 0.1 seconds and 867 steps)
+towers_engine.adb:102:24: info: float overflow check proved (CVC5: 1 VC in max 8.3 seconds and 125718 steps)
+towers_engine.adb:103:23: info: range check proved (Colibri_Classic: 1 VC in max 0.7 seconds and 1 step)
+towers_engine.adb:103:41: info: float overflow check proved (CVC5: 1 VC in max 9.3 seconds and 126761 steps)
+towers_engine.adb:104:23: info: range check proved (Colibri_Classic: 1 VC in max 0.7 seconds and 1 step)
+towers_engine.adb:104:41: info: float overflow check proved (CVC5: 1 VC in max 9.4 seconds and 127652 steps)
+towers_engine.adb:111:43: info: initialization of "A" proved
+towers_engine.adb:111:46: info: initialization of "B" proved
+towers_engine.adb:112:07: info: initialization of "Row" proved
+towers_engine.adb:112:39: info: data dependencies proved
+towers_engine.adb:117:07: info: initialization of "J" proved
+towers_engine.adb:117:10: info: initialization of "J_Coarse" proved
+towers_engine.adb:117:20: info: initialization of "Denom" proved
+towers_engine.adb:117:27: info: initialization of "U" proved
+towers_engine.adb:117:30: info: initialization of "Phi" proved
+towers_engine.adb:118:07: info: initialization of "PJ" proved
+towers_engine.adb:118:11: info: initialization of "PMA" proved
+towers_engine.adb:118:16: info: initialization of "PMB" proved
+towers_engine.adb:122:22: info: assertion proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:123:22: info: assertion proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:124:12: info: precondition proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:125:12: info: precondition proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:126:12: info: precondition proved (Z3: 3 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:127:19: info: precondition proved (Z3: 3 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:129:63: info: range check proved (Z3: 1 VC in max 0.4 seconds and 1 step)
+towers_engine.adb:131:24: info: range check proved (Trivial)
+towers_engine.adb:131:24: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:131:58: info: float overflow check proved (Trivial)
+towers_engine.adb:131:58: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:132:16: info: precondition proved (CVC5: 2 VC in max 10.4 seconds and 82186 steps)
+towers_engine.adb:132:34: info: float overflow check proved (Trivial)
+towers_engine.adb:132:41: info: float overflow check proved (Trivial)
+towers_engine.adb:132:49: info: float overflow check proved (Trivial)
+towers_engine.adb:132:57: info: float overflow check proved (Trivial)
+towers_engine.adb:132:64: info: float overflow check proved (Trivial)
+towers_engine.adb:134:10: info: raise statement or expression proved unreachable (CVC5: 1 VC in max 14.5 seconds and 82931 steps)
+towers_engine.adb:136:17: info: float overflow check proved (CVC5: 1 VC in max 4.0 seconds and 82792 steps)
+towers_engine.adb:136:24: info: float overflow check proved (Trivial)
+towers_engine.adb:136:33: info: division check proved (CVC5: 1 VC in max 4.0 seconds and 82746 steps)
+towers_engine.adb:136:33: info: float overflow check proved (Colibri_Classic: 1 VC in max 0.6 seconds and 1 step)
+towers_engine.adb:139:42: info: range check proved (altergo: 1 VC in max 0.6 seconds and 6485 steps)
+towers_engine.adb:140:42: info: range check proved (altergo: 1 VC in max 0.6 seconds and 6443 steps)
+towers_engine.adb:141:31: info: float overflow check proved (altergo: 1 VC in max 2.4 seconds and 21135 steps)
+towers_engine.adb:142:28: info: float overflow check proved (Trivial)
+towers_engine.adb:142:36: info: float overflow check proved (CVC5: 1 VC in max 8.0 seconds and 140173 steps)
+towers_engine.adb:143:29: info: division check proved (Z3: 1 VC in max 2.8 seconds and 1 step)
+towers_engine.adb:143:29: info: float overflow check proved (altergo: 1 VC in max 3.7 seconds and 39825 steps)
+towers_engine.adb:143:56: info: division check proved (Z3: 1 VC in max 2.4 seconds and 1 step)
+towers_engine.adb:143:56: info: float overflow check proved (CVC5: 1 VC in max 11.1 seconds and 119456 steps)
+towers_engine.adb:150:11: info: data dependencies proved
+towers_engine.adb:152:14: info: postcondition proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:160:13: info: loop invariant initialization proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:160:13: info: loop invariant preservation proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:162:10: info: precondition proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:167:33: info: data dependencies proved
+towers_engine.adb:169:14: info: postcondition proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:173:07: info: initialization of "Lower" proved
+towers_engine.adb:173:14: info: initialization of "Upper" proved
+towers_engine.adb:174:07: info: initialization of "MA" proved
+towers_engine.adb:174:11: info: initialization of "MB" proved
+towers_engine.adb:176:07: info: precondition proved (CVC5: 1 VC in max 0.1 seconds and 373 steps)
+towers_engine.adb:177:13: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:177:39: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:180:39: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 41 steps)
+towers_engine.adb:181:28: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:181:35: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:183:48: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:183:55: info: precondition proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:184:48: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:184:55: info: precondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:189:07: info: initialization of "A" proved
+towers_engine.adb:189:10: info: initialization of "B" proved
+towers_engine.adb:191:07: info: initialization of "G" proved
+towers_engine.adb:192:07: info: initialization of "PJ" proved
+towers_engine.adb:192:11: info: initialization of "PMA" proved
+towers_engine.adb:192:16: info: initialization of "PMB" proved
+towers_engine.adb:193:07: info: initialization of "Q" proved
+towers_engine.adb:194:07: info: initialization of "Cont_P" proved
+towers_engine.adb:194:15: info: initialization of "Cont_J" proved
+towers_engine.adb:195:07: info: initialization of "Grid_Values" proved
+towers_engine.adb:198:07: info: initialization of "X" proved
+towers_engine.adb:198:10: info: initialization of "E" proved
+towers_engine.adb:199:07: info: initialization of "Y" proved
+towers_engine.adb:199:10: info: initialization of "Correlation_Root" proved
+towers_engine.adb:208:25: info: float overflow check proved (Trivial)
+towers_engine.adb:208:34: info: float overflow check proved (Trivial)
+towers_engine.adb:208:34: info: range check proved (Trivial)
+towers_engine.adb:208:34: info: division check proved (CVC5: 2 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:210:20: info: precondition proved (CVC5: 7 VC in max 1.4 seconds and 20859 steps; Z3: 2 VC in max 0.6 seconds and 1 step)
+towers_engine.adb:219:12: info: precondition proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:220:66: info: precondition proved (Z3: 3 VC in max 0.9 seconds and 1 step)
+towers_engine.adb:222:44: info: range check proved (Trivial)
+towers_engine.adb:222:44: info: precondition proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:222:78: info: float overflow check proved (Trivial)
+towers_engine.adb:222:78: info: division check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:224:35: info: float overflow check proved (Trivial)
+towers_engine.adb:224:42: info: float overflow check proved (Trivial)
+towers_engine.adb:227:07: info: precondition proved (CVC5: 1 VC in max 0.1 seconds and 1600 steps)
+towers_engine.adb:230:13: info: loop invariant initialization proved (CVC5: 1 VC in max 5.3 seconds and 86957 steps)
+towers_engine.adb:230:13: info: loop invariant preservation proved (CVC5: 1 VC in max 1.0 seconds and 15760 steps)
+towers_engine.adb:232:30: info: precondition proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+towers_engine.adb:234:13: info: raise statement or expression proved unreachable (CVC5: 1 VC in max 0.1 seconds and 1958 steps)
+towers_engine.adb:236:19: info: float overflow check proved (Trivial)
+towers_engine.adb:236:23: info: float overflow check proved (CVC5: 1 VC in max 6.2 seconds and 103291 steps)
+towers_engine.adb:236:42: info: float overflow check proved (CVC5: 1 VC in max 4.7 seconds and 93865 steps)
+towers_engine.adb:237:10: info: precondition proved (CVC5: 1 VC in max 1.0 seconds and 15552 steps)
+towers_engine.adb:241:13: info: loop invariant preservation proved (CVC5: 1 VC in max 1.3 seconds and 14899 steps)
+towers_engine.adb:241:13: info: loop invariant initialization proved (CVC5: 1 VC in max 0.9 seconds and 14485 steps)
+towers_engine.adb:243:13: info: loop invariant initialization proved (CVC5: 1 VC in max 0.1 seconds and 85 steps; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+towers_engine.adb:243:13: info: loop invariant preservation proved (CVC5: 1 VC in max 7.1 seconds and 106557 steps; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+towers_engine.adb:245:33: info: precondition proved (Z3: 1 VC in max 1.3 seconds and 1 step)
+towers_engine.ads:42:11: info: data dependencies proved
+towers_engine.ads:44:64: info: initialization of "Data" proved
+towers_engine.ads:45:11: info: data dependencies proved
+towers_engine.ads:46:14: info: postcondition proved (CVC5: 1 VC in max 7.3 seconds and 108236 steps)
+Summary logged in /tmp/composite-iq-spark-jgjwor4k/towers/portfolio/proof_obj/gnatprove/gnatprove.out

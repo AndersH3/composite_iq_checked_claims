@@ -1,0 +1,162 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "negative.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/spark-expanded-computer10-20261031/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-jgjwor4k/negative_control/portfolio",
+  "started_utc": "2026-11-01T15:30:13.389210+00:00",
+  "finished_utc": "2026-11-01T15:30:14.906458+00:00",
+  "elapsed_seconds": 1.5172556199831888,
+  "returncode": 1,
+  "timed_out": false,
+  "log_sha256": "561e786bdc4d9bd2ffc6ec07f657ce6affa7922c4bb5db81262cff4a7634391f",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 1,
+        "flow": 1,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 1,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 1
+      },
+      "Total": {
+        "total": 2,
+        "flow": 1,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 1
+      }
+    },
+    "analyzed_units": 1,
+    "contains_not_proved": true,
+    "report_sha256": "a341301ef2133ac0cde5582b754ab59c12a657b072d7fa519d6a00c013198d1d"
+  },
+  "sources": [
+    {
+      "path": "verification/negative_control/negative.gpr",
+      "sha256": "f131c920b5791e5b011833d9bcaf8d35cabcf794d7882bc303b281916cba09a9"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.adb",
+      "sha256": "26d1a77d839429b703b08b4a5f8c1f35d60b4afa60e6f22ed9942bb7915c732d"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.ads",
+      "sha256": "74ed2015a69d986d69e91bdac1fa6745468fbdb88dc49d63ba49b6c7064f1fce"
+    }
+  ],
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "coverage": {
+    "source_names": [
+      "negative_union.adb",
+      "negative_union.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 2,
+      "spec": 0,
+      "no": 0
+    },
+    "total_entities": 2,
+    "entities": [
+      {
+        "name": "Negative_Union",
+        "file": "negative_union.ads",
+        "line": 2,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "negative_union.ads",
+            "line": 2
+          }
+        ]
+      },
+      {
+        "name": "Negative_Union.Union_Size",
+        "file": "negative_union.ads",
+        "line": 4,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "negative_union.ads",
+            "line": 4
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "obj-proof/gnatprove/negative_union.spark",
+        "sha256": "b4f5c3e030c579cf6eb5b3a5c341dcd0fa4d85b0202be8d2fdc6b41eab804457",
+        "entity_count": 2,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "required_full_entities": [],
+  "missing_full_entities": [],
+  "complete": false
+}

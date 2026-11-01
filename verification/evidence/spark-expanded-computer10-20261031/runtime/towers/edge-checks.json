@@ -1,0 +1,70 @@
+[
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/towers-source/bin/towers_demo",
+      "1",
+      "1",
+      "/tmp/composite-iq-expanded-runtime-final/towers-edge-1-1"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/towers-source",
+    "started_utc": "2026-11-01T15:30:34.207685+00:00",
+    "finished_utc": "2026-11-01T15:30:34.239943+00:00",
+    "elapsed_seconds": 0.03227223898284137,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "47e8e2f64c9619f5e7242c084bd766090f8396a5a87ae69e93bd9441cd840574",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/towers-source/bin/towers_demo",
+      "1",
+      "2147483646",
+      "/tmp/composite-iq-expanded-runtime-final/towers-edge-1-2147483646"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/towers-source",
+    "started_utc": "2026-11-01T15:30:34.240138+00:00",
+    "finished_utc": "2026-11-01T15:30:34.272244+00:00",
+    "elapsed_seconds": 0.03211995796300471,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "f061d14a87783d1e95fbf5efeafc6949851e250ce73cc09e0105ee0b433a0208",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/towers-source/bin/towers_demo",
+      "0",
+      "1",
+      "/tmp/composite-iq-expanded-runtime-final/towers-edge-0-1"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/towers-source",
+    "started_utc": "2026-11-01T15:30:34.272451+00:00",
+    "finished_utc": "2026-11-01T15:30:34.274085+00:00",
+    "elapsed_seconds": 0.0016265580197796226,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "e9e38fb8e08fb52dc58bef05e0b52c0e6cdd958c3f39ded568fe6db07f9605dc",
+    "expected_success": false,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/towers-source/bin/towers_demo",
+      "1",
+      "2147483647",
+      "/tmp/composite-iq-expanded-runtime-final/towers-edge-1-2147483647"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/towers-source",
+    "started_utc": "2026-11-01T15:30:34.274248+00:00",
+    "finished_utc": "2026-11-01T15:30:34.275864+00:00",
+    "elapsed_seconds": 0.0016277399845421314,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "d5f1d3cacec104cda34aea9e788d15b57b72a8f5e37d28abcd5d6f44f747c9f2",
+    "expected_success": false,
+    "accepted": true
+  }
+]

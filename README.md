@@ -9,7 +9,7 @@ Statistical analyses of claims about combining IQ scores. Each analysis has its 
 
 Build instructions and numerical verification commands are in each analysis folder's README.
 
-Both analyses include [Ada calculations and simulations with SPARK verification on computer10](verification/README.md). The retained evidence separates formal core proofs from numerical validation and Monte Carlo results.
+Both analyses include [Ada calculations and simulations with SPARK verification on computer10](verification/README.md). The [expanded campaign](verification/evidence/spark-expanded-computer10-20261031/REPORT.md) covers the algorithm and driver bodies as well as the original arithmetic cores. Small checked numerical interfaces and system I/O remain explicit trusted boundaries. Native `.spark` records distinguish analyzed bodies from specifications whose bodies were not proved; numerical validation and Monte Carlo results remain separate evidence.
 
 All current Python files, including tests and fixtures, must contain [Deal contracts](https://deal.readthedocs.io/). Every named function is checked for a real Deal decorator by `verification/check_contract_coverage.py`; comments and strings do not count. The GitHub workflow enforces this repository-wide policy.
 
@@ -22,6 +22,6 @@ python -m pip install -r requirements-dev.txt
 make check
 ```
 
-[Current computer10 Deal evidence](verification/evidence/deal-lint-clean-computer10-20261031/REPORT.md) records clean static lint for every maintained Python file, 110 passing tests, optimized-Python checks, numerical replay, and symbolic gate proofs. `make check` and GitHub Actions require both clean positive files and the expected failure of the deliberately broken fixture. The [earlier report](verification/evidence/deal-computer10-20261031/REPORT.md) preserves the original diagnostics. Runtime checks and property tests are distinct from universal formal verification.
+`make check` and GitHub Actions require contract coverage, clean positive static lint, the exact expected failure of the deliberately broken fixture, and runtime/property tests. The [expanded campaign report](verification/evidence/spark-expanded-computer10-20261031/REPORT.md) records the checks for the expanded implementation. The [earlier Deal snapshot](verification/evidence/deal-lint-clean-computer10-20261031/REPORT.md) retains its 110-test result and optimized-Python, numerical, and symbolic evidence; those historical counts are not the current test inventory. The [original Deal report](verification/evidence/deal-computer10-20261031/REPORT.md) preserves the resolved diagnostics. Runtime checks and property tests are distinct from universal formal verification.
 
 The repository's original material is governed by [LICENSE](LICENSE), subject to third-party rights.

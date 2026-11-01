@@ -1,0 +1,195 @@
+{
+  "source_names": [
+    "admission_core.adb",
+    "admission_core.ads",
+    "normal_model.adb",
+    "normal_model.ads",
+    "towers_demo.adb"
+  ],
+  "analysis_mode": "flow",
+  "proof_metadata_complete": false,
+  "counts": {
+    "all": 11,
+    "spec": 0,
+    "no": 0
+  },
+  "total_entities": 11,
+  "entities": [
+    {
+      "name": "Admission_Core",
+      "file": "admission_core.ads",
+      "line": 1,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Classify",
+      "file": "admission_core.ads",
+      "line": 16,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Total",
+      "file": "admission_core.ads",
+      "line": 24,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Observe",
+      "file": "admission_core.ads",
+      "line": 27,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Marginal_A",
+      "file": "admission_core.ads",
+      "line": 36,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 36
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Marginal_B",
+      "file": "admission_core.ads",
+      "line": 40,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 40
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Union_Count",
+      "file": "admission_core.ads",
+      "line": 44,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Fraction",
+      "file": "admission_core.ads",
+      "line": 50,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 50
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Union_Probability",
+      "file": "admission_core.ads",
+      "line": 56,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 56
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Complement",
+      "file": "admission_core.ads",
+      "line": 64,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 64
+        }
+      ]
+    },
+    {
+      "name": "Admission_Core.Conditional",
+      "file": "admission_core.ads",
+      "line": 68,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 68
+        }
+      ]
+    }
+  ],
+  "raw_files": [
+    {
+      "path": "obj/gnatprove/admission_core.spark",
+      "sha256": "40886b1844e41b2b23a3705d1ffd047b621eeb0fc4c6977112b4b1330ee8cf9d",
+      "entity_count": 11,
+      "sections_present": [
+        "assumptions",
+        "flow",
+        "progress",
+        "spark",
+        "stop_reason",
+        "timings"
+      ]
+    },
+    {
+      "path": "obj/gnatprove/normal_model.spark",
+      "sha256": "0221fea76f6b32efb5690bef58e6319952797ed81fc469f61794a15f3e4bbe25",
+      "entity_count": 0,
+      "sections_present": [
+        "assumptions",
+        "flow",
+        "progress",
+        "spark",
+        "stop_reason",
+        "timings"
+      ]
+    },
+    {
+      "path": "obj/gnatprove/towers_demo.spark",
+      "sha256": "33948ff9f804a84ec530aafcd188a57b692849546ea3ad6d6d313d415355e32b",
+      "entity_count": 0,
+      "sections_present": [
+        "assumptions",
+        "flow",
+        "progress",
+        "spark",
+        "stop_reason",
+        "timings"
+      ]
+    }
+  ],
+  "pragma_assume": [],
+  "suppressed": [],
+  "no_assumptions_or_suppressions": false
+}

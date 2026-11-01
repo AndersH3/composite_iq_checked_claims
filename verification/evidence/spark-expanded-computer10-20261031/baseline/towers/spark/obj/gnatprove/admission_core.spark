@@ -1,0 +1,515 @@
+{
+  "spark": [
+    {
+      "name": "Admission_Core",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 1
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Classify",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 16
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Total",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 24
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Observe",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 27
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Marginal_A",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 36
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Marginal_B",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 40
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Union_Count",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 44
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Fraction",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 50
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Union_Probability",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 56
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Complement",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 64
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Admission_Core.Conditional",
+      "sloc": [
+        {
+          "file": "admission_core.ads",
+          "line": 68
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_FLOW",
+  "stop_reason": "STOP_REASON_FLOW_MODE",
+  "flow": [
+    {
+      "file": "admission_core.ads",
+      "line": 37,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Marginal_A",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 36
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 28,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Observe",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 27
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 58,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Union_Probability",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 56
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 2,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 65,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Complement",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 64
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 3,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 51,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Fraction",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 50
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 4,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 45,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Union_Count",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 44
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 5,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 70,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Conditional",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 68
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 6,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 41,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Marginal_B",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 40
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 7,
+      "how_proved": "flow"
+    },
+    {
+      "file": "admission_core.ads",
+      "line": 17,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Admission_Core.Classify",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 16
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 8,
+      "how_proved": "flow"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Fraction",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 50
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Admission_Core.Total",
+            "sloc": [
+              {
+                "file": "admission_core.ads",
+                "line": 24
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Marginal_A",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 36
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Admission_Core.Total",
+            "sloc": [
+              {
+                "file": "admission_core.ads",
+                "line": 24
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Marginal_B",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 40
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Admission_Core.Total",
+            "sloc": [
+              {
+                "file": "admission_core.ads",
+                "line": 24
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Union_Count",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 44
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Union_Probability",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 56
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Complement",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 64
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Admission_Core.Total",
+            "sloc": [
+              {
+                "file": "admission_core.ads",
+                "line": 24
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Observe",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 27
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Classify",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Total",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 24
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Admission_Core.Conditional",
+          "sloc": [
+            {
+              "file": "admission_core.ads",
+              "line": 68
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "globals (advanced)": 3.12999996822327E-04,
+    "flow analysis": 2.86320000886917E-02,
+    "marking": 1.40000003739260E-04,
+    "properties (advanced)": 2.90000007225899E-05,
+    "globals (basic)": 2.91000003926456E-04
+  }
+}

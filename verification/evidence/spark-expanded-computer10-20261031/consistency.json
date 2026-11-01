@@ -1,0 +1,10 @@
+{
+  "host": "computer10",
+  "current_proof_and_runtime_sources_match": true,
+  "python_sources_match_final_checks": true,
+  "six_runtime_csvs_byte_identical_to_original": true,
+  "earlier_evidence_blobs_unchanged": 265,
+  "mathematical_text_unchanged_except_document_date": true,
+  "report_counts_match_native_and_python_evidence": true,
+  "pdf_text_and_visual_checks_pass": true
+}

@@ -1,6 +1,12 @@
 project Hoeflin_Proof is
    for Source_Dirs use ("src");
-   for Source_Files use ("hoeflin_core.ads", "hoeflin_core.adb");
+   --  Include the checked boundary completions as well as proved bodies so
+   --  native .spark coverage exposes every spec-only/trusted completion.
+   for Source_Files use
+     ("hoeflin_core.ads", "hoeflin_core.adb",
+      "normal_support.ads", "normal_support.adb",
+      "report_io.ads", "report_io.adb",
+      "hoeflin_simulation.adb", "hoeflin_calculations.adb");
    for Object_Dir use "obj-proof";
    package Compiler is
       for Default_Switches ("Ada") use ("-gnat2022", "-gnata", "-gnato", "-msse2", "-mfpmath=sse");

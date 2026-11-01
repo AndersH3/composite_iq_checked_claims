@@ -1,0 +1,676 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "hoeflin_proof.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/spark-expanded-computer10-20261031/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio",
+  "started_utc": "2026-11-01T15:30:14.929500+00:00",
+  "finished_utc": "2026-11-01T15:36:28.035866+00:00",
+  "elapsed_seconds": 373.10637100902386,
+  "returncode": 0,
+  "timed_out": false,
+  "log_sha256": "6600312146a0e1c7b1383cabe1ab846ea9fef7ae6a89fd1ec566a833bfba7398",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 17,
+        "flow": 17,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 25,
+        "flow": 25,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 137,
+        "flow": 0,
+        "provers": 137,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 13,
+        "flow": 0,
+        "provers": 13,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 16,
+        "flow": 0,
+        "provers": 16,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 209,
+        "flow": 43,
+        "provers": 166,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 5,
+    "contains_not_proved": false,
+    "report_sha256": "619cdb5f3941f63338b0d82b5ab951d0f6faff7952255c43a4bcb3fff9940903"
+  },
+  "sources": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+      "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+      "sha256": "9f0ec3f853a719387b700caa21e14bc7af2345330113854e29c32d5a9e9df2e7"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+      "sha256": "edb6198406499e5605629372f3d61f7830c91617d302c88cd01db750456bf179"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "6a188933f15a75b575b2c95382b92ba5fe3859ec8f369dba7fe4bad40bd3ec34"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+      "sha256": "ea9fc5d0d7ef560faff01ece2087578c828459e08abe060d196ddd06f1a57c2e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "351e09f95e8dcff399933d8b160b3950f3085511cacbc641a7deb0054680d9a4"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "02167914ba3f6561d9e6e7fde89f9117991d13bd28ebbe724e9bac8dc3415947"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+      "sha256": "4a48f1f49e099dbb11ddbb14da8ff1bbfbb080dd9a8506d6b757aae8f09a00f3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+      "sha256": "774b39abac7af3a9ee0d8c7acde556f32654415996aa9021e5faf52ebc5b683e"
+    }
+  ],
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "coverage": {
+    "source_names": [
+      "hoeflin_calculations.adb",
+      "hoeflin_core.adb",
+      "hoeflin_core.ads",
+      "hoeflin_simulation.adb",
+      "normal_support.adb",
+      "normal_support.ads",
+      "report_io.adb",
+      "report_io.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 22,
+      "spec": 14,
+      "no": 0
+    },
+    "total_entities": 36,
+    "entities": [
+      {
+        "name": "Hoeflin_Calculations",
+        "file": "hoeflin_calculations.adb",
+        "line": 4,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core",
+        "file": "hoeflin_core.ads",
+        "line": 2,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 2
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Variance_Numerator",
+        "file": "hoeflin_core.ads",
+        "line": 13,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Variance_Factor",
+        "file": "hoeflin_core.ads",
+        "line": 20,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Latent_Reliability",
+        "file": "hoeflin_core.ads",
+        "line": 24,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Threshold",
+        "file": "hoeflin_core.ads",
+        "line": 29,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 29
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Composite",
+        "file": "hoeflin_core.ads",
+        "line": 34,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.IQ",
+        "file": "hoeflin_core.ads",
+        "line": 39,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 39
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Valid",
+        "file": "hoeflin_core.ads",
+        "line": 50,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 50
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Observe",
+        "file": "hoeflin_core.ads",
+        "line": 55,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 55
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation",
+        "file": "hoeflin_simulation.adb",
+        "line": 5,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 5
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Combine",
+        "file": "hoeflin_simulation.adb",
+        "line": 19,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Frequency",
+        "file": "hoeflin_simulation.adb",
+        "line": 28,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "file": "hoeflin_simulation.adb",
+        "line": 33,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 33
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "file": "hoeflin_simulation.adb",
+        "line": 42,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 42
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Check_Inverse_Bracket",
+        "file": "normal_support.adb",
+        "line": 35,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.adb",
+            "line": 35
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Checked_Radius",
+        "file": "normal_support.adb",
+        "line": 84,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.adb",
+            "line": 84
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support",
+        "file": "normal_support.ads",
+        "line": 3,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 3
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Survival",
+        "file": "normal_support.ads",
+        "line": 16,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Inverse_Survival",
+        "file": "normal_support.ads",
+        "line": 18,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Square_Root",
+        "file": "normal_support.ads",
+        "line": 20,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Rare_Quantile",
+        "file": "normal_support.ads",
+        "line": 26,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Generator",
+        "file": "normal_support.ads",
+        "line": 28,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.State_Value",
+        "file": "normal_support.ads",
+        "line": 29,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 29
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Reset",
+        "file": "normal_support.ads",
+        "line": 31,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 31
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Uniform",
+        "file": "normal_support.ads",
+        "line": 33,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 33
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Normal_Pair",
+        "file": "normal_support.ads",
+        "line": 37,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 37
+          }
+        ]
+      },
+      {
+        "name": "Report_IO",
+        "file": "report_io.ads",
+        "line": 4,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Read_Simulation_Options",
+        "file": "report_io.ads",
+        "line": 10,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 10
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Simulation_Header",
+        "file": "report_io.ads",
+        "line": 13,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Simulation_Row",
+        "file": "report_io.ads",
+        "line": 15,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Calculations_Header",
+        "file": "report_io.ads",
+        "line": 20,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Calculation_Row",
+        "file": "report_io.ads",
+        "line": 21,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Infinite_Row",
+        "file": "report_io.ads",
+        "line": 24,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Examples_Header",
+        "file": "report_io.ads",
+        "line": 27,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Example",
+        "file": "report_io.ads",
+        "line": 28,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 28
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "obj-proof/gnatprove/hoeflin_calculations.spark",
+        "sha256": "355e841759b6207f4d82d365815c726d4dbe9d8b7d8f7be5856be61209805ec3",
+        "entity_count": 1,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/hoeflin_core.spark",
+        "sha256": "848d6010a985f5ed3073c04e34fe1f75a14baeb1cddd81774cdcc46cf58963f0",
+        "entity_count": 9,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/hoeflin_simulation.spark",
+        "sha256": "cd3779b5674c781a6be427064b0023e228806651b0033e74026ce93a5a2a118a",
+        "entity_count": 5,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/normal_support.spark",
+        "sha256": "4eb8e7ff4bdc4870338d04d904f218f2956df87ecf91254b41e0f6db12af4796",
+        "entity_count": 12,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/report_io.spark",
+        "sha256": "cd3f39510a01750d1969ae03b62086a5952b0d51af1215ec262600c393f62248",
+        "entity_count": 9,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "required_full_entities": [
+    "Hoeflin_Calculations",
+    "Hoeflin_Core.Observe",
+    "Hoeflin_Simulation",
+    "Normal_Support.Inverse_Survival",
+    "Normal_Support.Normal_Pair",
+    "Normal_Support.Reset",
+    "Normal_Support.Uniform"
+  ],
+  "missing_full_entities": [],
+  "complete": true
+}

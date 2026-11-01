@@ -1,0 +1,29 @@
+{
+  "recorded_utc": "2026-11-01T15:54:15.068542+00:00",
+  "host": "computer10",
+  "checks": [
+    {
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py"
+      ],
+      "returncode": 0,
+      "source_context": "current",
+      "production_checks": 643,
+      "stdout_sha256": "818401d2840164b1523013f32d2d2b6ea1be2df737174b02436de3c524d9e66c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py"
+      ],
+      "returncode": 0,
+      "source_context": "current",
+      "production_checks": 643,
+      "stdout_sha256": "818401d2840164b1523013f32d2d2b6ea1be2df737174b02436de3c524d9e66c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

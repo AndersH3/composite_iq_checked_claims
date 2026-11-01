@@ -1,0 +1,33 @@
+[
+  {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "/tmp/composite-iq-expanded-runtime-final/towers",
+      "--replay"
+    ],
+    "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+    "started_utc": "2026-11-01T15:30:16.125219+00:00",
+    "finished_utc": "2026-11-01T15:30:25.020240+00:00",
+    "elapsed_seconds": 8.895035873982124,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13"
+  },
+  {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-O",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "/tmp/composite-iq-expanded-runtime-final/towers",
+      "--replay"
+    ],
+    "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+    "started_utc": "2026-11-01T15:30:25.020505+00:00",
+    "finished_utc": "2026-11-01T15:30:34.207330+00:00",
+    "elapsed_seconds": 9.186841124028433,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13"
+  }
+]

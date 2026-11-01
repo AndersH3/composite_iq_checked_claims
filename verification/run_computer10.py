@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Run source-pinned, fresh GNATprove campaigns on computer10.
 
-Only SPARK proof projects are certified. Ada numerical libraries and simulations
-have a separate numerical-validation boundary documented beside each project.
+The proof projects enumerate analyzed units and retain native body/spec coverage.
+Trusted external and I/O completions remain explicit numerical/runtime boundaries.
 """
 
 import argparse
@@ -26,13 +26,24 @@ from shutil import SameFileError, SpecialFileError
 
 try:
     from verification.proof_gate import totals_balanced, successful_checks
+    from verification.spark_coverage import read_coverage
 except ModuleNotFoundError:
     from proof_gate import totals_balanced, successful_checks
+    from spark_coverage import read_coverage
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = {
     "hoeflin": ("analyses/hoeflin-ferguson/ada", "hoeflin_proof.gpr", "hoeflin_core"),
     "towers": ("analyses/towers-multiple-test-admissions/ada", "towers_proof.gpr", "admission_core"),
+}
+REQUIRED_BODIES = {
+    "hoeflin": {"Hoeflin_Calculations", "Hoeflin_Simulation",
+                "Normal_Support.Inverse_Survival", "Normal_Support.Reset",
+                "Normal_Support.Uniform", "Normal_Support.Normal_Pair", "Hoeflin_Core.Observe"},
+    "towers": {"Towers_Demo", "Towers_Engine.Compute", "Normal_Model.Inverse_SF",
+               "Normal_Model.Joint_Tail", "Normal_Model.Calibrated_OR_Cutoff",
+               "Normal_Model.Basic_Grid", "Normal_Model.Reset", "Normal_Model.Uniform",
+               "Normal_Model.Normal_Pair", "Admission_Core.Observe"},
 }
 ALLOWED_EXPORTS = {
     "ALIRE", "GNATPROVE_ALIRE_PREFIX", "GNAT_NATIVE_ALIRE_PREFIX",
@@ -215,7 +226,7 @@ def snapshot(folder: Path, target: Path) -> list:
     target.mkdir(parents=True)
     copied = []
     for path in sorted(folder.rglob("*")):
-        if path.is_file() and (path.suffix in {".ads", ".adb", ".gpr"}) and not any(
+        if path.is_file() and (path.suffix in {".ads", ".adb", ".gpr", ".adc"}) and not any(
             part.startswith(("obj", "bin", ".")) or part in {"proof_obj", "results"}
             for part in path.relative_to(folder).parts):
             relative = path.relative_to(folder)
@@ -264,11 +275,29 @@ def campaign(name: str, folder: Path, project: str, unit: str, aliases: list, la
             result["parse_error"] = str(error)
     result["sources"] = hashes
     result["provers_requested"] = aliases
+    coverage_dir = run_dir.joinpath("spark")
+    coverage_dir.mkdir()
+    for raw in sorted(source.rglob("*.spark")):
+        destination = coverage_dir.joinpath(raw.relative_to(source))
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(raw, destination)
+    try:
+        result["coverage"] = read_coverage(coverage_dir,
+            {Path(entry["path"]).name for entry in hashes if Path(entry["path"]).suffix in {".ads", ".adb"}})
+    except ValueError as error:
+        result["coverage_error"] = str(error)
+    result["required_full_entities"] = sorted(REQUIRED_BODIES.get(name, set()))
+    analyzed_bodies = {row["name"].casefold() for row in result.get("coverage", {}).get("entities", [])
+                       if row["status"] == "all"}
+    result["missing_full_entities"] = [entity for entity in result["required_full_entities"]
+                                       if entity.casefold() not in analyzed_bodies]
     total = result.get("native", {}).get("categories", {}).get("Total", {})
     text = (run_dir.joinpath('gnatprove.out')).read_text(errors="replace") if (run_dir.joinpath('gnatprove.out')).is_file() else ""
     result["complete"] = (successful_checks(result["returncode"], total.get("total", 0),
                            total.get("unproved", 0), total.get("justified", 0))
                            and not result.get("native", {}).get("contains_not_proved", True)
+                           and result.get("coverage", {}).get("no_assumptions_or_suppressions", False)
+                           and not result["missing_full_entities"]
                            and ("in unit " + unit) in text)
     dump(run_dir.joinpath('result.json'), result)
     return result
@@ -321,7 +350,8 @@ def main() -> None:
     for alias in aliases:
         tools[alias] = version_record(paths[alias], ["-version"] if alias == "z3" else ["--version"], env)
     manifest = {"host": socket.gethostname(), "started_utc": utc(), "runner_sha256": digest(Path(__file__)),
-                "toolchain": tools, "provers_requested": aliases, "prover_config_sha256": digest(config), "projects": {}}
+                "toolchain": tools, "provers_requested": aliases, "prover_config_sha256": digest(config),
+                "coverage_schema": "gnat13-sloc-v1", "projects": {}}
     dump(output.joinpath('manifest.json'), manifest)
     with tempfile.TemporaryDirectory(prefix="composite-iq-spark-") as temp:
         work = Path(temp)

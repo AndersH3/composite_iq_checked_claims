@@ -1,0 +1,16 @@
+{
+  "source_revision": "2c32ecdd87690866bfcbf2d99725abba7cdad55e",
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "towers.gpr",
+    "--mode=flow",
+    "--report=statistics",
+    "-U",
+    "--no-subprojects",
+    "-j2",
+    "-f"
+  ],
+  "returncode": 0,
+  "analysis": "flow and coverage only; not a new proof campaign"
+}

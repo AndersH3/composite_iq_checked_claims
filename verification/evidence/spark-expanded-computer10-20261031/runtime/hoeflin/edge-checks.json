@@ -1,0 +1,66 @@
+[
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/hoeflin-source/bin/hoeflin_simulation",
+      "2",
+      "1"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/hoeflin-source",
+    "started_utc": "2026-11-01T15:27:21.194508+00:00",
+    "finished_utc": "2026-11-01T15:27:21.195928+00:00",
+    "elapsed_seconds": 0.0013814099947921932,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/hoeflin-source/bin/hoeflin_simulation",
+      "2",
+      "18446744073709551615"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/hoeflin-source",
+    "started_utc": "2026-11-01T15:27:21.196214+00:00",
+    "finished_utc": "2026-11-01T15:27:21.197544+00:00",
+    "elapsed_seconds": 0.0013359669828787446,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "ee55a141327c7b11136513a87606bb94c0017c855601dbd83466b279c3999e93",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/hoeflin-source/bin/hoeflin_simulation",
+      "0",
+      "1"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/hoeflin-source",
+    "started_utc": "2026-11-01T15:27:21.197706+00:00",
+    "finished_utc": "2026-11-01T15:27:21.200450+00:00",
+    "elapsed_seconds": 0.0027630770346149802,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "e86beb22eed42a02ca82d6fe268dfcbeec5f78b6a24e12e30034ad1012b7ee1c",
+    "expected_success": false,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-expanded-runtime-final/hoeflin-source/bin/hoeflin_simulation",
+      "1",
+      "1"
+    ],
+    "cwd": "/tmp/composite-iq-expanded-runtime-final/hoeflin-source",
+    "started_utc": "2026-11-01T15:27:21.200664+00:00",
+    "finished_utc": "2026-11-01T15:27:21.202810+00:00",
+    "elapsed_seconds": 0.0021579070016741753,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "e86beb22eed42a02ca82d6fe268dfcbeec5f78b6a24e12e30034ad1012b7ee1c",
+    "expected_success": false,
+    "accepted": true
+  }
+]

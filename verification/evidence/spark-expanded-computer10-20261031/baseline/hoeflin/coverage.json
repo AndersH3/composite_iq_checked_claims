@@ -1,0 +1,185 @@
+{
+  "source_names": [
+    "hoeflin_calculations.adb",
+    "hoeflin_core.adb",
+    "hoeflin_core.ads",
+    "hoeflin_simulation.adb",
+    "normal_support.adb",
+    "normal_support.ads"
+  ],
+  "analysis_mode": "flow",
+  "proof_metadata_complete": false,
+  "counts": {
+    "all": 9,
+    "spec": 0,
+    "no": 0
+  },
+  "total_entities": 9,
+  "entities": [
+    {
+      "name": "Hoeflin_Core",
+      "file": "hoeflin_core.ads",
+      "line": 2,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 2
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.Variance_Numerator",
+      "file": "hoeflin_core.ads",
+      "line": 13,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.Variance_Factor",
+      "file": "hoeflin_core.ads",
+      "line": 20,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.Latent_Reliability",
+      "file": "hoeflin_core.ads",
+      "line": 24,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.Threshold",
+      "file": "hoeflin_core.ads",
+      "line": 29,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 29
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.Composite",
+      "file": "hoeflin_core.ads",
+      "line": 34,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 34
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.IQ",
+      "file": "hoeflin_core.ads",
+      "line": 39,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 39
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.Valid",
+      "file": "hoeflin_core.ads",
+      "line": 50,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 50
+        }
+      ]
+    },
+    {
+      "name": "Hoeflin_Core.Observe",
+      "file": "hoeflin_core.ads",
+      "line": 55,
+      "status": "all",
+      "sloc": [
+        {
+          "file": "hoeflin_core.ads",
+          "line": 55
+        }
+      ]
+    }
+  ],
+  "raw_files": [
+    {
+      "path": "obj/gnatprove/hoeflin_calculations.spark",
+      "sha256": "5e00fd1f611f8396236d3b4cc60cea91b897e2510e10d7da5c79abc5a0bed0b5",
+      "entity_count": 0,
+      "sections_present": [
+        "assumptions",
+        "flow",
+        "progress",
+        "spark",
+        "stop_reason",
+        "timings"
+      ]
+    },
+    {
+      "path": "obj/gnatprove/hoeflin_core.spark",
+      "sha256": "48f438d88b40e65ff485edba0320ed4c3c65f43774a7248e46e610298baf5941",
+      "entity_count": 9,
+      "sections_present": [
+        "assumptions",
+        "flow",
+        "progress",
+        "spark",
+        "stop_reason",
+        "timings"
+      ]
+    },
+    {
+      "path": "obj/gnatprove/hoeflin_simulation.spark",
+      "sha256": "83d2dd1bc0f35b6882d553f263f05afacc04fd5e2d328406704342887bed5a4a",
+      "entity_count": 0,
+      "sections_present": [
+        "assumptions",
+        "flow",
+        "progress",
+        "spark",
+        "stop_reason",
+        "timings"
+      ]
+    },
+    {
+      "path": "obj/gnatprove/normal_support.spark",
+      "sha256": "0ee096064cac48055526b756caba2144b1e5eb8565a8369730cff84fa1710865",
+      "entity_count": 0,
+      "sections_present": [
+        "assumptions",
+        "flow",
+        "progress",
+        "spark",
+        "stop_reason",
+        "timings"
+      ]
+    }
+  ],
+  "pragma_assume": [],
+  "suppressed": [],
+  "no_assumptions_or_suppressions": false
+}

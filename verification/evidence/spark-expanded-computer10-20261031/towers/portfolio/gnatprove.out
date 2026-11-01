@@ -1,0 +1,80 @@
+Summary of SPARK analysis
+=========================
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+SPARK Analysis results        Total        Flow                                                               Provers   Justified   Unproved
+--------------------------------------------------------------------------------------------------------------------------------------------
+Data Dependencies                30          30                                                                     .           .          .
+Flow Dependencies                 1           1                                                                     .           .          .
+Initialization                   60          60                                                                     .           .          .
+Non-Aliasing                      .           .                                                                     .           .          .
+Run-time Checks                 244           .    244 (CVC5 45%, Colibri_Classic 3%, Trivial 39%, Z3 6%, altergo 7%)           .          .
+Assertions                       31           .    31 (CVC5 60%, Colibri_Classic 4%, Trivial 3%, Z3 19%, altergo 13%)           .          .
+Functional Contracts             68           .                 68 (CVC5 65%, Colibri_Classic 1%, Z3 31%, altergo 3%)           .          .
+LSP Verification                  .           .                                                                     .           .          .
+Termination                       .           .                                                                     .           .          .
+Concurrency                       .           .                                                                     .           .          .
+--------------------------------------------------------------------------------------------------------------------------------------------
+Total                           434    91 (21%)                                                             343 (79%)           .          .
+
+
+max steps used for successful proof: 140173
+
+Analyzed 5 units
+in unit admission_core, 11 subprograms and packages out of 11 analyzed
+  Admission_Core at admission_core.ads:1 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Admission_Core.Classify at admission_core.ads:16 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Complement at admission_core.ads:64 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Conditional at admission_core.ads:68 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Fraction at admission_core.ads:50 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Admission_Core.Marginal_A at admission_core.ads:36 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Admission_Core.Marginal_B at admission_core.ads:40 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Admission_Core.Observe at admission_core.ads:27 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (10 checks)
+  Admission_Core.Total at admission_core.ads:24 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Admission_Core.Union_Count at admission_core.ads:44 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Admission_Core.Union_Probability at admission_core.ads:56 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+in unit normal_model, 15 subprograms and packages out of 23 analyzed
+  Normal_Model at normal_model.ads:1 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Normal_Model.Add_Grid_Cell at normal_model.adb:250 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (12 checks)
+  Normal_Model.Add_Grid_Cutoff at normal_model.adb:228 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (11 checks)
+  Normal_Model.Add_Grid_Weight at normal_model.adb:215 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Normal_Model.Basic_Grid at normal_model.ads:37 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (56 checks)
+  Normal_Model.Calibrated_OR_Cutoff at normal_model.ads:28 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (16 checks)
+  Normal_Model.Check_Grid_State at normal_model.adb:271 skipped; body is SPARK_Mode => Off
+  Normal_Model.Checked_Exp at normal_model.adb:46 skipped; body is SPARK_Mode => Off
+  Normal_Model.Checked_Exponent at normal_model.adb:60 skipped; body is SPARK_Mode => Off
+  Normal_Model.Checked_Log at normal_model.adb:32 skipped; body is SPARK_Mode => Off
+  Normal_Model.Checked_Node at normal_model.adb:109 skipped; body is SPARK_Mode => Off
+  Normal_Model.Checked_Probability at normal_model.adb:74 skipped; body is SPARK_Mode => Off
+  Normal_Model.Count_Step at normal_model.adb:99 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (18 checks)
+  Normal_Model.Generator at normal_model.ads:42 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Normal_Model.Inverse_SF at normal_model.ads:21 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (12 checks)
+  Normal_Model.Joint_Tail at normal_model.ads:23 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (27 checks)
+  Normal_Model.Joint_Tail.Density at normal_model.adb:146 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (21 checks)
+  Normal_Model.Normal_Pair at normal_model.ads:45 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (9 checks)
+  Normal_Model.Reset at normal_model.ads:43 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Normal_Model.SF at normal_model.ads:18 skipped; body is SPARK_Mode => Off
+  Normal_Model.Scale_Normal at normal_model.adb:355 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Normal_Model.Square_Root at normal_model.ads:9 skipped; body is SPARK_Mode => Off
+  Normal_Model.Uniform at normal_model.adb:341 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (10 checks)
+in unit towers_demo, 1 subprograms and packages out of 1 analyzed
+  Towers_Demo at towers_demo.adb:3 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+in unit towers_engine, 9 subprograms and packages out of 13 analyzed
+  Towers_Engine at towers_engine.ads:3 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Towers_Engine.Calculate at towers_engine.adb:110 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (31 checks)
+  Towers_Engine.Check_Conditional_Units at towers_engine.adb:34 skipped; body is SPARK_Mode => Off
+  Towers_Engine.Check_Joint at towers_engine.adb:46 skipped; body is SPARK_Mode => Off
+  Towers_Engine.Check_Union_Units at towers_engine.adb:21 skipped; body is SPARK_Mode => Off
+  Towers_Engine.Checked_Quantization at towers_engine.adb:7 skipped; body is SPARK_Mode => Off
+  Towers_Engine.Compute at towers_engine.ads:44 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (28 checks)
+  Towers_Engine.Conditional_Value at towers_engine.adb:76 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Towers_Engine.Observe_All at towers_engine.adb:147 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (4 checks)
+  Towers_Engine.Simulation_Row_For at towers_engine.adb:166 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (11 checks)
+  Towers_Engine.Units at towers_engine.adb:58 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (7 checks)
+  Towers_Engine.Value at towers_engine.ads:41 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Towers_Engine.Wilson at towers_engine.adb:86 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (30 checks)
+in unit towers_io, 0 subprograms and packages out of 4 analyzed
+  Towers_IO at towers_io.ads:2 skipped; body is SPARK_Mode => Off
+  Towers_IO.Read_Seed at towers_io.ads:11 skipped; body is SPARK_Mode => Off
+  Towers_IO.Read_Trials at towers_io.ads:9 skipped; body is SPARK_Mode => Off
+  Towers_IO.Write_Report at towers_io.ads:13 skipped; body is SPARK_Mode => Off

@@ -33,5 +33,11 @@ jobs:
           python -m deal prove --skipped --nocolor verification/proof_gate.py | tee proof-gate.log
           test "$(grep -c 'proved! post-condition' proof-gate.log)" -eq 2
           if grep -E 'skipped|failed' proof-gate.log; then exit 1; fi
-      - name: Audit retained SPARK evidence against immutable Git history
+      - name: Audit current expanded SPARK evidence
         run: python verification/verify_evidence.py
+      - name: Audit prior SPARK campaigns against their explicit source revision
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/composite-iq-prior-source" 2c32ecdd87690866bfcbf2d99725abba7cdad55e
+          for campaign in computer10-20261031 deal-spark-computer10-20261031 deal-lint-spark-computer10-20261031; do
+            python verification/verify_evidence.py "verification/evidence/$campaign" --source-root "$RUNNER_TEMP/composite-iq-prior-source"
+          done

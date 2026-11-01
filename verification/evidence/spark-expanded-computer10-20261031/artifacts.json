@@ -1,0 +1,50 @@
+{
+  "artifacts": [
+    {
+      "analysis": "hoeflin",
+      "source": "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+      "source_sha256": "5bdcffbaf5fcc7280c7a708f9a423546087a58ae2498fa71de9893a44b4954bb",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "pdf_sha256": "2c567a3ad0584d9f7605eea4787bdd71f3b9f1b2363ec1ccb93fdc49f12629da",
+      "pages": 8,
+      "engine": "XeLaTeX",
+      "document_class": "scrartcl",
+      "paper": "A4",
+      "margins_mm": 16,
+      "build_exit_status": 0,
+      "visual_review": "all pages rendered; changed verification pages and bibliography inspected; no clipping, overlap or missing glyphs",
+      "math_text_unchanged_except_document_date": true,
+      "native_totals_in_report": {
+        "total": 209,
+        "flow": 43,
+        "provers": 166,
+        "justified": 0,
+        "unproved": 0
+      },
+      "python_tests_each_mode": 164
+    },
+    {
+      "analysis": "towers",
+      "source": "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex",
+      "source_sha256": "658f546f8b4ea814427983045e95ee6ed7db2e2aa5c97484a4b15dddd6ff2486",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "pdf_sha256": "4b15e95e6c78c913973b92d74f40fb09409c3348f6a95e47dc7e26eb9e87ccd5",
+      "pages": 10,
+      "engine": "XeLaTeX",
+      "document_class": "scrartcl",
+      "paper": "A4",
+      "margins_mm": 16,
+      "build_exit_status": 0,
+      "visual_review": "all pages rendered; changed verification pages and bibliography inspected; no clipping, overlap or missing glyphs",
+      "math_text_unchanged_except_document_date": true,
+      "native_totals_in_report": {
+        "total": 434,
+        "flow": 91,
+        "provers": 343,
+        "justified": 0,
+        "unproved": 0
+      },
+      "python_tests_each_mode": 164
+    }
+  ]
+}

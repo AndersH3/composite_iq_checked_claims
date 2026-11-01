@@ -1,0 +1,1821 @@
+{
+  "host": "computer10",
+  "started_utc": "2026-11-01T15:30:13.387272+00:00",
+  "runner_sha256": "886cea6b6afd3b614504c1aa847964a5d3e50e33f798ec0a2a095f7c879d6c41",
+  "toolchain": {
+    "gnatprove": {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+      "sha256": "044719aea06db21478af0b76ea405c448f2717f04b4a835f158f04d3189cb639",
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "0.0w\nWhy3 for gnatprove version 1.5.0+git\n/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/alt-ergo: Alt-Ergo version 2.4.0\n/home/anonymous/.local/share/icar16-classic-colibri/2026.06-v7/colibri-2026.06-v7/colibri: 2026.06/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/cvc5: This is cvc5 version 1.0.5 [git tag 1.0.5 branch HEAD]\ncompiled with GCC version 11.3.0\non Mar 13 2023 16:18:37\n\nCopyright (c) 2009-2022 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open-source and is covered by the BSD license (modified).\n\nTHIS SOFTWARE IS PROVIDED AS-IS, WITHOUT ANY WARRANTIES.\nUSE AT YOUR OWN RISK.\n\ncvc5 incorporates code from ANTLR3 (http://www.antlr.org).\nSee licenses/antlr3-LICENSE for copyright and licensing information.\n\nThis version of cvc5 is linked against the following non-(L)GPL'ed\nthird party libraries.\n\n  CaDiCaL - Simplified Satisfiability Solver\n  See https://github.com/arminbiere/cadical for copyright information.\n\n  Editline Library\n  See https://thrysoee.dk/editline\n  for copyright information.\n\n  SymFPU - The Symbolic Floating Point Unit\n  See https://github.com/martin-cs/symfpu/tree/cvc5 for copyright information.\n\nThis version of cvc5 is linked against the following third party\nlibraries covered by the LGPLv3 license.\nSee licenses/lgpl-3.0.txt for more information.\n\n  GMP - Gnu Multi Precision Arithmetic Library\n  See http://gmplib.org for copyright information.\n\n  LibPoly polynomial library\n  See https://github.com/SRI-CSL/libpoly for copyright and\n  licensing information.\n\ncvc5 is statically linked against these libraries. To recompile\nthis version of cvc5 with different versions of these libraries\nfollow the instructions on https://github.com/cvc5/cvc5/blob/main/INSTALL.md\n\nSee the file COPYING (distributed with the source code, and with\nall binaries) for the full cvc5 copyright, licensing, and (lack of)\nwarranty information.\n\n/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/z3: Z3 version 4.12.2 - 64 bit"
+    },
+    "gnat": {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnat_native_13.2.1_788a01f9/bin/gnat",
+      "sha256": "7b695b2dca80c560ab2611f502d126a992b89688da3a315315b48b84b6c95656",
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gnat_native_13.2.1_788a01f9/bin/gnat",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "GNAT 13.2.0\nCopyright (C) 1996-2023, Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "gprbuild": {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+      "sha256": "92475d9a124acc2f202c05be3848844514faa492dd725724e4aacd880f2d07d2",
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "GPRBUILD 22.0.0 (2021-11-09) (x86_64-pc-linux-gnu)\nCopyright (C) 2004-2021, AdaCore\nThis is free software; see the source for copying conditions.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "cvc5": {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/cvc5",
+      "sha256": "57fa94b740e0827f655a731b97dae84fedf86e65fa897c3a56a01a83d283d15e",
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/cvc5",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "This is cvc5 version 1.0.5 [git tag 1.0.5 branch HEAD]\ncompiled with GCC version 11.3.0\non Mar 13 2023 16:18:37\n\nCopyright (c) 2009-2022 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open-source and is covered by the BSD license (modified).\n\nTHIS SOFTWARE IS PROVIDED AS-IS, WITHOUT ANY WARRANTIES.\nUSE AT YOUR OWN RISK.\n\ncvc5 incorporates code from ANTLR3 (http://www.antlr.org).\nSee licenses/antlr3-LICENSE for copyright and licensing information.\n\nThis version of cvc5 is linked against the following non-(L)GPL'ed\nthird party libraries.\n\n  CaDiCaL - Simplified Satisfiability Solver\n  See https://github.com/arminbiere/cadical for copyright information.\n\n  Editline Library\n  See https://thrysoee.dk/editline\n  for copyright information.\n\n  SymFPU - The Symbolic Floating Point Unit\n  See https://github.com/martin-cs/symfpu/tree/cvc5 for copyright information.\n\nThis version of cvc5 is linked against the following third party\nlibraries covered by the LGPLv3 license.\nSee licenses/lgpl-3.0.txt for more information.\n\n  GMP - Gnu Multi Precision Arithmetic Library\n  See http://gmplib.org for copyright information.\n\n  LibPoly polynomial library\n  See https://github.com/SRI-CSL/libpoly for copyright and\n  licensing information.\n\ncvc5 is statically linked against these libraries. To recompile\nthis version of cvc5 with different versions of these libraries\nfollow the instructions on https://github.com/cvc5/cvc5/blob/main/INSTALL.md\n\nSee the file COPYING (distributed with the source code, and with\nall binaries) for the full cvc5 copyright, licensing, and (lack of)\nwarranty information."
+    },
+    "z3": {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/z3",
+      "sha256": "4f490bb1b8f4d71dea98cbd4a7b56a3fdf261ba8ca30a65f22a359d51e70ebd8",
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/z3",
+        "-version"
+      ],
+      "returncode": 0,
+      "output": "Z3 version 4.12.2 - 64 bit"
+    },
+    "altergo": {
+      "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/alt-ergo",
+      "sha256": "1acfdd0ad0366277a3f60c373277e5dd8cc197226fc28879d7a301869ba4d8e6",
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/alt-ergo",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "Alt-Ergo version 2.4.0"
+    },
+    "Colibri_Classic": {
+      "path": "/home/anonymous/.local/share/icar16-classic-colibri/2026.06-v7/colibri-2026.06-v7/colibri",
+      "sha256": "edda8a32253b755f61ef8803035e40225c507e8c592734a37af5797a85c223c9",
+      "argv": [
+        "/home/anonymous/.local/share/icar16-classic-colibri/2026.06-v7/colibri-2026.06-v7/colibri",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "2026.06"
+    },
+    "Yices": {
+      "path": "/usr/local/bin/yices-smt2",
+      "sha256": "eab7efbff2a6f0cce2fcd2c25cb4a94e0e048c902d8ef9e6fd7d7989aa54c501",
+      "argv": [
+        "/usr/local/bin/yices-smt2",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2025-07-17\nPlatform: x86_64-pc-linux-gnu (release/static)\nRevision: 4f19700f0e272f4a68250080d12a873523bc7ac3"
+    }
+  },
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "prover_config_sha256": "2097d660d64be2ff574554435c33de07e9bdcb6f51b72aa1af16e6583c1a5538",
+  "coverage_schema": "gnat13-sloc-v1",
+  "projects": {
+    "hoeflin": {
+      "portfolio": {
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+          "-P",
+          "hoeflin_proof.gpr",
+          "--mode=all",
+          "--report=statistics",
+          "--checks-as-errors",
+          "--warnings=error",
+          "--level=2",
+          "--steps=0",
+          "--counterexamples=off",
+          "-j2",
+          "-f",
+          "-U",
+          "--no-subprojects",
+          "--timeout=15",
+          "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+          "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/spark-expanded-computer10-20261031/provers.conf"
+        ],
+        "cwd": "/tmp/composite-iq-spark-jgjwor4k/hoeflin/portfolio",
+        "started_utc": "2026-11-01T15:30:14.929500+00:00",
+        "finished_utc": "2026-11-01T15:36:28.035866+00:00",
+        "elapsed_seconds": 373.10637100902386,
+        "returncode": 0,
+        "timed_out": false,
+        "log_sha256": "6600312146a0e1c7b1383cabe1ab846ea9fef7ae6a89fd1ec566a833bfba7398",
+        "native": {
+          "categories": {
+            "Data Dependencies": {
+              "total": 17,
+              "flow": 17,
+              "provers": 0,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Initialization": {
+              "total": 25,
+              "flow": 25,
+              "provers": 0,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Run-time Checks": {
+              "total": 137,
+              "flow": 0,
+              "provers": 137,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Assertions": {
+              "total": 13,
+              "flow": 0,
+              "provers": 13,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Functional Contracts": {
+              "total": 16,
+              "flow": 0,
+              "provers": 16,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Total": {
+              "total": 209,
+              "flow": 43,
+              "provers": 166,
+              "justified": 0,
+              "unproved": 0
+            }
+          },
+          "analyzed_units": 5,
+          "contains_not_proved": false,
+          "report_sha256": "619cdb5f3941f63338b0d82b5ab951d0f6faff7952255c43a4bcb3fff9940903"
+        },
+        "sources": [
+          {
+            "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+            "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+            "sha256": "9f0ec3f853a719387b700caa21e14bc7af2345330113854e29c32d5a9e9df2e7"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+            "sha256": "edb6198406499e5605629372f3d61f7830c91617d302c88cd01db750456bf179"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+            "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+            "sha256": "6a188933f15a75b575b2c95382b92ba5fe3859ec8f369dba7fe4bad40bd3ec34"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+            "sha256": "ea9fc5d0d7ef560faff01ece2087578c828459e08abe060d196ddd06f1a57c2e"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "sha256": "351e09f95e8dcff399933d8b160b3950f3085511cacbc641a7deb0054680d9a4"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+            "sha256": "02167914ba3f6561d9e6e7fde89f9117991d13bd28ebbe724e9bac8dc3415947"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "sha256": "4a48f1f49e099dbb11ddbb14da8ff1bbfbb080dd9a8506d6b757aae8f09a00f3"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+            "sha256": "774b39abac7af3a9ee0d8c7acde556f32654415996aa9021e5faf52ebc5b683e"
+          }
+        ],
+        "provers_requested": [
+          "cvc5",
+          "z3",
+          "altergo",
+          "Colibri_Classic",
+          "Yices"
+        ],
+        "coverage": {
+          "source_names": [
+            "hoeflin_calculations.adb",
+            "hoeflin_core.adb",
+            "hoeflin_core.ads",
+            "hoeflin_simulation.adb",
+            "normal_support.adb",
+            "normal_support.ads",
+            "report_io.adb",
+            "report_io.ads"
+          ],
+          "analysis_mode": "all",
+          "proof_metadata_complete": true,
+          "counts": {
+            "all": 22,
+            "spec": 14,
+            "no": 0
+          },
+          "total_entities": 36,
+          "entities": [
+            {
+              "name": "Hoeflin_Calculations",
+              "file": "hoeflin_calculations.adb",
+              "line": 4,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_calculations.adb",
+                  "line": 4
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core",
+              "file": "hoeflin_core.ads",
+              "line": 2,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 2
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.Variance_Numerator",
+              "file": "hoeflin_core.ads",
+              "line": 13,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 13
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.Variance_Factor",
+              "file": "hoeflin_core.ads",
+              "line": 20,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 20
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.Latent_Reliability",
+              "file": "hoeflin_core.ads",
+              "line": 24,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 24
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.Threshold",
+              "file": "hoeflin_core.ads",
+              "line": 29,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 29
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.Composite",
+              "file": "hoeflin_core.ads",
+              "line": 34,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 34
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.IQ",
+              "file": "hoeflin_core.ads",
+              "line": 39,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 39
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.Valid",
+              "file": "hoeflin_core.ads",
+              "line": 50,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 50
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Core.Observe",
+              "file": "hoeflin_core.ads",
+              "line": 55,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_core.ads",
+                  "line": 55
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Simulation",
+              "file": "hoeflin_simulation.adb",
+              "line": 5,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_simulation.adb",
+                  "line": 5
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Simulation.Combine",
+              "file": "hoeflin_simulation.adb",
+              "line": 19,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_simulation.adb",
+                  "line": 19
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Simulation.Frequency",
+              "file": "hoeflin_simulation.adb",
+              "line": 28,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_simulation.adb",
+                  "line": 28
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Simulation.Count_Step",
+              "file": "hoeflin_simulation.adb",
+              "line": 33,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_simulation.adb",
+                  "line": 33
+                }
+              ]
+            },
+            {
+              "name": "Hoeflin_Simulation.Add_To_Sum",
+              "file": "hoeflin_simulation.adb",
+              "line": 42,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "hoeflin_simulation.adb",
+                  "line": 42
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Check_Inverse_Bracket",
+              "file": "normal_support.adb",
+              "line": 35,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_support.adb",
+                  "line": 35
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Checked_Radius",
+              "file": "normal_support.adb",
+              "line": 84,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_support.adb",
+                  "line": 84
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support",
+              "file": "normal_support.ads",
+              "line": 3,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 3
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Survival",
+              "file": "normal_support.ads",
+              "line": 16,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 16
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Inverse_Survival",
+              "file": "normal_support.ads",
+              "line": 18,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 18
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Square_Root",
+              "file": "normal_support.ads",
+              "line": 20,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 20
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Rare_Quantile",
+              "file": "normal_support.ads",
+              "line": 26,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 26
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Generator",
+              "file": "normal_support.ads",
+              "line": 28,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 28
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.State_Value",
+              "file": "normal_support.ads",
+              "line": 29,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 29
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Reset",
+              "file": "normal_support.ads",
+              "line": 31,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 31
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Uniform",
+              "file": "normal_support.ads",
+              "line": 33,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 33
+                }
+              ]
+            },
+            {
+              "name": "Normal_Support.Normal_Pair",
+              "file": "normal_support.ads",
+              "line": 37,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_support.ads",
+                  "line": 37
+                }
+              ]
+            },
+            {
+              "name": "Report_IO",
+              "file": "report_io.ads",
+              "line": 4,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 4
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Read_Simulation_Options",
+              "file": "report_io.ads",
+              "line": 10,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 10
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Simulation_Header",
+              "file": "report_io.ads",
+              "line": 13,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 13
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Simulation_Row",
+              "file": "report_io.ads",
+              "line": 15,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 15
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Calculations_Header",
+              "file": "report_io.ads",
+              "line": 20,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 20
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Calculation_Row",
+              "file": "report_io.ads",
+              "line": 21,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 21
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Infinite_Row",
+              "file": "report_io.ads",
+              "line": 24,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 24
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Examples_Header",
+              "file": "report_io.ads",
+              "line": 27,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 27
+                }
+              ]
+            },
+            {
+              "name": "Report_IO.Example",
+              "file": "report_io.ads",
+              "line": 28,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "report_io.ads",
+                  "line": 28
+                }
+              ]
+            }
+          ],
+          "raw_files": [
+            {
+              "path": "obj-proof/gnatprove/hoeflin_calculations.spark",
+              "sha256": "355e841759b6207f4d82d365815c726d4dbe9d8b7d8f7be5856be61209805ec3",
+              "entity_count": 1,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "obj-proof/gnatprove/hoeflin_core.spark",
+              "sha256": "848d6010a985f5ed3073c04e34fe1f75a14baeb1cddd81774cdcc46cf58963f0",
+              "entity_count": 9,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "obj-proof/gnatprove/hoeflin_simulation.spark",
+              "sha256": "cd3779b5674c781a6be427064b0023e228806651b0033e74026ce93a5a2a118a",
+              "entity_count": 5,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "obj-proof/gnatprove/normal_support.spark",
+              "sha256": "4eb8e7ff4bdc4870338d04d904f218f2956df87ecf91254b41e0f6db12af4796",
+              "entity_count": 12,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "obj-proof/gnatprove/report_io.spark",
+              "sha256": "cd3f39510a01750d1969ae03b62086a5952b0d51af1215ec262600c393f62248",
+              "entity_count": 9,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            }
+          ],
+          "pragma_assume": [],
+          "suppressed": [],
+          "no_assumptions_or_suppressions": true
+        },
+        "required_full_entities": [
+          "Hoeflin_Calculations",
+          "Hoeflin_Core.Observe",
+          "Hoeflin_Simulation",
+          "Normal_Support.Inverse_Survival",
+          "Normal_Support.Normal_Pair",
+          "Normal_Support.Reset",
+          "Normal_Support.Uniform"
+        ],
+        "missing_full_entities": [],
+        "complete": true
+      }
+    },
+    "towers": {
+      "portfolio": {
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+          "-P",
+          "towers_proof.gpr",
+          "--mode=all",
+          "--report=statistics",
+          "--checks-as-errors",
+          "--warnings=error",
+          "--level=2",
+          "--steps=0",
+          "--counterexamples=off",
+          "-j2",
+          "-f",
+          "-U",
+          "--no-subprojects",
+          "--timeout=15",
+          "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+          "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/spark-expanded-computer10-20261031/provers.conf"
+        ],
+        "cwd": "/tmp/composite-iq-spark-jgjwor4k/towers/portfolio",
+        "started_utc": "2026-11-01T15:36:28.104084+00:00",
+        "finished_utc": "2026-11-01T15:48:38.153503+00:00",
+        "elapsed_seconds": 730.0494258939871,
+        "returncode": 0,
+        "timed_out": false,
+        "log_sha256": "8d0e4c590af01f6fa3c23d4bcb346e781d0d8d181c3ee607eadbfee242a8a793",
+        "native": {
+          "categories": {
+            "Data Dependencies": {
+              "total": 30,
+              "flow": 30,
+              "provers": 0,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Initialization": {
+              "total": 60,
+              "flow": 60,
+              "provers": 0,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Run-time Checks": {
+              "total": 244,
+              "flow": 0,
+              "provers": 244,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Assertions": {
+              "total": 31,
+              "flow": 0,
+              "provers": 31,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Functional Contracts": {
+              "total": 68,
+              "flow": 0,
+              "provers": 68,
+              "justified": 0,
+              "unproved": 0
+            },
+            "Total": {
+              "total": 434,
+              "flow": 91,
+              "provers": 343,
+              "justified": 0,
+              "unproved": 0
+            }
+          },
+          "analyzed_units": 5,
+          "contains_not_proved": false,
+          "report_sha256": "eb42248e3bd599687c646317f3a33a88d64c920e2674a372f9569c30b444c9a2"
+        },
+        "sources": [
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+            "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+            "sha256": "8a7d0a08fb20765f26446167c3ee05c818aec1b5582ac90d30af582a4707386e"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "sha256": "88e48b821f9ad1582e932e8ed40b93af724f7b43cb70116627dbc7a8fd065910"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+            "sha256": "7b89d779e7e1fd02929d0cb1c6b8b29664417091e7fd4051d931b74b51601c84"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+            "sha256": "65cddab1b7fe3d2daae7823cd6e2feefacd132780e27187a41e653004f3199e8"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "sha256": "ac64a9b7b1c9ff5699e2e93547e2b060c57581cd1db7fdc6b96125cbb9bd898c"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+            "sha256": "71b4827f67aef14533ce57e2d505a63ba8c2255a216d78a8f89a17307ad7d1b3"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "sha256": "cec785de5e3033cda1b91ef20ce78b40c430732c3561307a9650fc7bc9f409c7"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+            "sha256": "a719c6091c2ebfe748c8da7f6e42b70914f9dcf80d614007b6ce38b5fd0e8122"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+            "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+            "sha256": "a5ff5699ed25b082c669536b99789bc5d2f120b07d94d8278d66dfc51df77954"
+          }
+        ],
+        "provers_requested": [
+          "cvc5",
+          "z3",
+          "altergo",
+          "Colibri_Classic",
+          "Yices"
+        ],
+        "coverage": {
+          "source_names": [
+            "admission_core.adb",
+            "admission_core.ads",
+            "normal_model.adb",
+            "normal_model.ads",
+            "towers_demo.adb",
+            "towers_engine.adb",
+            "towers_engine.ads",
+            "towers_io.adb",
+            "towers_io.ads"
+          ],
+          "analysis_mode": "all",
+          "proof_metadata_complete": true,
+          "counts": {
+            "all": 36,
+            "spec": 16,
+            "no": 0
+          },
+          "total_entities": 52,
+          "entities": [
+            {
+              "name": "Admission_Core",
+              "file": "admission_core.ads",
+              "line": 1,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 1
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Classify",
+              "file": "admission_core.ads",
+              "line": 16,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 16
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Total",
+              "file": "admission_core.ads",
+              "line": 24,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 24
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Observe",
+              "file": "admission_core.ads",
+              "line": 27,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 27
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Marginal_A",
+              "file": "admission_core.ads",
+              "line": 36,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 36
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Marginal_B",
+              "file": "admission_core.ads",
+              "line": 40,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 40
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Union_Count",
+              "file": "admission_core.ads",
+              "line": 44,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 44
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Fraction",
+              "file": "admission_core.ads",
+              "line": 50,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 50
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Union_Probability",
+              "file": "admission_core.ads",
+              "line": 56,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 56
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Complement",
+              "file": "admission_core.ads",
+              "line": 64,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 64
+                }
+              ]
+            },
+            {
+              "name": "Admission_Core.Conditional",
+              "file": "admission_core.ads",
+              "line": 68,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "admission_core.ads",
+                  "line": 68
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Checked_Log",
+              "file": "normal_model.adb",
+              "line": 32,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 32
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Checked_Exp",
+              "file": "normal_model.adb",
+              "line": 46,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 46
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Checked_Exponent",
+              "file": "normal_model.adb",
+              "line": 60,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 60
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Checked_Probability",
+              "file": "normal_model.adb",
+              "line": 74,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 74
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Count_Step",
+              "file": "normal_model.adb",
+              "line": 99,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 99
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Checked_Node",
+              "file": "normal_model.adb",
+              "line": 109,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 109
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Joint_Tail.Density",
+              "file": "normal_model.adb",
+              "line": 146,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 146
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Add_Grid_Weight",
+              "file": "normal_model.adb",
+              "line": 215,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 215
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Add_Grid_Cutoff",
+              "file": "normal_model.adb",
+              "line": 228,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 228
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Add_Grid_Cell",
+              "file": "normal_model.adb",
+              "line": 250,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 250
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Check_Grid_State",
+              "file": "normal_model.adb",
+              "line": 271,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 271
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Uniform",
+              "file": "normal_model.adb",
+              "line": 341,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 341
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Scale_Normal",
+              "file": "normal_model.adb",
+              "line": 355,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.adb",
+                  "line": 355
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model",
+              "file": "normal_model.ads",
+              "line": 1,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 1
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Square_Root",
+              "file": "normal_model.ads",
+              "line": 9,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 9
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.SF",
+              "file": "normal_model.ads",
+              "line": 18,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 18
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Inverse_SF",
+              "file": "normal_model.ads",
+              "line": 21,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 21
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Joint_Tail",
+              "file": "normal_model.ads",
+              "line": 23,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 23
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Calibrated_OR_Cutoff",
+              "file": "normal_model.ads",
+              "line": 28,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 28
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Basic_Grid",
+              "file": "normal_model.ads",
+              "line": 37,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 37
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Generator",
+              "file": "normal_model.ads",
+              "line": 42,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 42
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Reset",
+              "file": "normal_model.ads",
+              "line": 43,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 43
+                }
+              ]
+            },
+            {
+              "name": "Normal_Model.Normal_Pair",
+              "file": "normal_model.ads",
+              "line": 45,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "normal_model.ads",
+                  "line": 45
+                }
+              ]
+            },
+            {
+              "name": "Towers_Demo",
+              "file": "towers_demo.adb",
+              "line": 3,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_demo.adb",
+                  "line": 3
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Checked_Quantization",
+              "file": "towers_engine.adb",
+              "line": 7,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 7
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Check_Union_Units",
+              "file": "towers_engine.adb",
+              "line": 21,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 21
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Check_Conditional_Units",
+              "file": "towers_engine.adb",
+              "line": 34,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 34
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Check_Joint",
+              "file": "towers_engine.adb",
+              "line": 46,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 46
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Units",
+              "file": "towers_engine.adb",
+              "line": 58,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 58
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Conditional_Value",
+              "file": "towers_engine.adb",
+              "line": 76,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 76
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Wilson",
+              "file": "towers_engine.adb",
+              "line": 86,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 86
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Calculate",
+              "file": "towers_engine.adb",
+              "line": 110,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 110
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Observe_All",
+              "file": "towers_engine.adb",
+              "line": 147,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 147
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Simulation_Row_For",
+              "file": "towers_engine.adb",
+              "line": 166,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.adb",
+                  "line": 166
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine",
+              "file": "towers_engine.ads",
+              "line": 3,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.ads",
+                  "line": 3
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Value",
+              "file": "towers_engine.ads",
+              "line": 41,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.ads",
+                  "line": 41
+                }
+              ]
+            },
+            {
+              "name": "Towers_Engine.Compute",
+              "file": "towers_engine.ads",
+              "line": 44,
+              "status": "all",
+              "sloc": [
+                {
+                  "file": "towers_engine.ads",
+                  "line": 44
+                }
+              ]
+            },
+            {
+              "name": "Towers_IO",
+              "file": "towers_io.ads",
+              "line": 2,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_io.ads",
+                  "line": 2
+                }
+              ]
+            },
+            {
+              "name": "Towers_IO.Read_Trials",
+              "file": "towers_io.ads",
+              "line": 9,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_io.ads",
+                  "line": 9
+                }
+              ]
+            },
+            {
+              "name": "Towers_IO.Read_Seed",
+              "file": "towers_io.ads",
+              "line": 11,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_io.ads",
+                  "line": 11
+                }
+              ]
+            },
+            {
+              "name": "Towers_IO.Write_Report",
+              "file": "towers_io.ads",
+              "line": 13,
+              "status": "spec",
+              "sloc": [
+                {
+                  "file": "towers_io.ads",
+                  "line": 13
+                }
+              ]
+            }
+          ],
+          "raw_files": [
+            {
+              "path": "proof_obj/gnatprove/admission_core.spark",
+              "sha256": "7ce46c1e0b727f085fd7acc98805c2432dff6ceb6500d17dd8db19158f3dc51f",
+              "entity_count": 11,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "proof_obj/gnatprove/normal_model.spark",
+              "sha256": "a57eab0853f141e5015880454f20dec28878c60bf68cc2f6389e291f3e8e25f1",
+              "entity_count": 23,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "proof_obj/gnatprove/towers_demo.spark",
+              "sha256": "933e6633fd802e5ffc3888a38b9ef4e093e8acfea8deed147d93f62136cff12c",
+              "entity_count": 1,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "proof_obj/gnatprove/towers_engine.spark",
+              "sha256": "502f8ebe4a356ef881bc0bc36ba88c764162339e7a16edfea02610d6c56aacdf",
+              "entity_count": 13,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            },
+            {
+              "path": "proof_obj/gnatprove/towers_io.spark",
+              "sha256": "d02bec56fde586a52f2d10d974b7f91c827b3ad61f4d18487df5efe7844c81fa",
+              "entity_count": 4,
+              "sections_present": [
+                "assumptions",
+                "flow",
+                "pragma_assume",
+                "progress",
+                "proof",
+                "session_map",
+                "spark",
+                "stop_reason",
+                "timings"
+              ]
+            }
+          ],
+          "pragma_assume": [],
+          "suppressed": [],
+          "no_assumptions_or_suppressions": true
+        },
+        "required_full_entities": [
+          "Admission_Core.Observe",
+          "Normal_Model.Basic_Grid",
+          "Normal_Model.Calibrated_OR_Cutoff",
+          "Normal_Model.Inverse_SF",
+          "Normal_Model.Joint_Tail",
+          "Normal_Model.Normal_Pair",
+          "Normal_Model.Reset",
+          "Normal_Model.Uniform",
+          "Towers_Demo",
+          "Towers_Engine.Compute"
+        ],
+        "missing_full_entities": [],
+        "complete": true
+      }
+    }
+  },
+  "negative_control": {
+    "expected_failure_rejected": true,
+    "result": {
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+        "-P",
+        "negative.gpr",
+        "--mode=all",
+        "--report=statistics",
+        "--checks-as-errors",
+        "--warnings=error",
+        "--level=2",
+        "--steps=0",
+        "--counterexamples=off",
+        "-j2",
+        "-f",
+        "-U",
+        "--no-subprojects",
+        "--timeout=15",
+        "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+        "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/spark-expanded-computer10-20261031/provers.conf"
+      ],
+      "cwd": "/tmp/composite-iq-spark-jgjwor4k/negative_control/portfolio",
+      "started_utc": "2026-11-01T15:30:13.389210+00:00",
+      "finished_utc": "2026-11-01T15:30:14.906458+00:00",
+      "elapsed_seconds": 1.5172556199831888,
+      "returncode": 1,
+      "timed_out": false,
+      "log_sha256": "561e786bdc4d9bd2ffc6ec07f657ce6affa7922c4bb5db81262cff4a7634391f",
+      "native": {
+        "categories": {
+          "Data Dependencies": {
+            "total": 1,
+            "flow": 1,
+            "provers": 0,
+            "justified": 0,
+            "unproved": 0
+          },
+          "Initialization": {
+            "total": 0,
+            "flow": 0,
+            "provers": 0,
+            "justified": 0,
+            "unproved": 0
+          },
+          "Run-time Checks": {
+            "total": 0,
+            "flow": 0,
+            "provers": 0,
+            "justified": 0,
+            "unproved": 0
+          },
+          "Assertions": {
+            "total": 0,
+            "flow": 0,
+            "provers": 0,
+            "justified": 0,
+            "unproved": 0
+          },
+          "Functional Contracts": {
+            "total": 1,
+            "flow": 0,
+            "provers": 0,
+            "justified": 0,
+            "unproved": 1
+          },
+          "Total": {
+            "total": 2,
+            "flow": 1,
+            "provers": 0,
+            "justified": 0,
+            "unproved": 1
+          }
+        },
+        "analyzed_units": 1,
+        "contains_not_proved": true,
+        "report_sha256": "a341301ef2133ac0cde5582b754ab59c12a657b072d7fa519d6a00c013198d1d"
+      },
+      "sources": [
+        {
+          "path": "verification/negative_control/negative.gpr",
+          "sha256": "f131c920b5791e5b011833d9bcaf8d35cabcf794d7882bc303b281916cba09a9"
+        },
+        {
+          "path": "verification/negative_control/src/negative_union.adb",
+          "sha256": "26d1a77d839429b703b08b4a5f8c1f35d60b4afa60e6f22ed9942bb7915c732d"
+        },
+        {
+          "path": "verification/negative_control/src/negative_union.ads",
+          "sha256": "74ed2015a69d986d69e91bdac1fa6745468fbdb88dc49d63ba49b6c7064f1fce"
+        }
+      ],
+      "provers_requested": [
+        "cvc5",
+        "z3",
+        "altergo",
+        "Colibri_Classic",
+        "Yices"
+      ],
+      "coverage": {
+        "source_names": [
+          "negative_union.adb",
+          "negative_union.ads"
+        ],
+        "analysis_mode": "all",
+        "proof_metadata_complete": true,
+        "counts": {
+          "all": 2,
+          "spec": 0,
+          "no": 0
+        },
+        "total_entities": 2,
+        "entities": [
+          {
+            "name": "Negative_Union",
+            "file": "negative_union.ads",
+            "line": 2,
+            "status": "all",
+            "sloc": [
+              {
+                "file": "negative_union.ads",
+                "line": 2
+              }
+            ]
+          },
+          {
+            "name": "Negative_Union.Union_Size",
+            "file": "negative_union.ads",
+            "line": 4,
+            "status": "all",
+            "sloc": [
+              {
+                "file": "negative_union.ads",
+                "line": 4
+              }
+            ]
+          }
+        ],
+        "raw_files": [
+          {
+            "path": "obj-proof/gnatprove/negative_union.spark",
+            "sha256": "b4f5c3e030c579cf6eb5b3a5c341dcd0fa4d85b0202be8d2fdc6b41eab804457",
+            "entity_count": 2,
+            "sections_present": [
+              "assumptions",
+              "flow",
+              "pragma_assume",
+              "progress",
+              "proof",
+              "session_map",
+              "spark",
+              "stop_reason",
+              "timings"
+            ]
+          }
+        ],
+        "pragma_assume": [],
+        "suppressed": [],
+        "no_assumptions_or_suppressions": true
+      },
+      "required_full_entities": [],
+      "missing_full_entities": [],
+      "complete": false
+    }
+  },
+  "finished_utc": "2026-11-01T15:48:38.262493+00:00",
+  "portfolio_complete": true
+}

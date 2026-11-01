@@ -1,0 +1,17 @@
+{
+  "argv": [
+    ".venv-deal/bin/python",
+    "verification/run_computer10.py",
+    "--portfolio-only",
+    "--run-id",
+    "spark-expanded-computer10-20261031",
+    "--timeout",
+    "15",
+    "--wall-seconds",
+    "1800"
+  ],
+  "host": "computer10",
+  "returncode": 0,
+  "started_utc": "2026-11-01T15:30:13.387272+00:00",
+  "finished_utc": "2026-11-01T15:48:38.262493+00:00"
+}

@@ -14,11 +14,18 @@ from json import JSONDecodeError
 from subprocess import CalledProcessError
 
 try:
-    from verification.run_computer10 import ROOT, report_summary, is_sha256
+    from verification.run_computer10 import ROOT, PROJECTS, REQUIRED_BODIES, report_summary, is_sha256
+    from verification.spark_coverage import read_coverage
 except ModuleNotFoundError:
-    from run_computer10 import ROOT, report_summary, is_sha256
+    from run_computer10 import ROOT, PROJECTS, REQUIRED_BODIES, report_summary, is_sha256
+    from spark_coverage import read_coverage
 
-DEFAULT_HISTORY = ROOT.joinpath("verification/evidence/deal-lint-clean-computer10-20261031/source_history.json")
+DEFAULT_HISTORY = ROOT.joinpath("verification/source_history.json")
+DEFAULT_EVIDENCE = ROOT.joinpath("verification/evidence/spark-expanded-computer10-20261031")
+LEGACY_CAMPAIGNS = {
+    "computer10-20261031", "deal-spark-computer10-20261031",
+    "deal-lint-spark-computer10-20261031",
+}
 
 
 @deal.pre(lambda path: isinstance(path, Path))
@@ -40,21 +47,60 @@ def check(condition: bool, message: str) -> None:
     return None
 
 
-@deal.pre(lambda relative, expected, history, git_dir=None: isinstance(relative, str) and isinstance(expected, str)
+@deal.pre(lambda manifest, campaign_name, explicit_source:
+          isinstance(manifest, dict) and isinstance(campaign_name, str) and bool(campaign_name)
+          and isinstance(explicit_source, bool))
+@deal.ensure(lambda manifest, campaign_name, explicit_source, result:
+             isinstance(result, bool) and result == ("coverage_schema" in manifest))
+@deal.raises(ValueError)
+@deal.has()
+def campaign_policy(manifest: dict, campaign_name: str, explicit_source: bool) -> bool:
+    """Reject incomplete or downgraded coverage campaigns before auditing files.
+
+    Only the three retained pre-coverage campaigns may use the legacy format,
+    and their caller must explicitly select a historical source tree.
+    """
+    coverage = "coverage_schema" in manifest
+    check(coverage or (explicit_source and campaign_name in LEGACY_CAMPAIGNS),
+          "Native SPARK coverage schema is required for current or unrecognized campaigns")
+    if not coverage:
+        return False
+    check(manifest["coverage_schema"] == "gnat13-sloc-v1", "Unknown native coverage schema")
+    projects = manifest.get("projects")
+    check(isinstance(projects, dict) and set(projects) == set(PROJECTS),
+          "Production project inventory differs from the required projects")
+    for name, runs in projects.items():
+        check(isinstance(runs, dict) and "portfolio" in runs,
+              "Required portfolio is missing: " + name)
+        for label, recorded in runs.items():
+            check(isinstance(recorded, dict) and "coverage" in recorded,
+                  "Native SPARK coverage is missing: " + name + "/" + str(label))
+            required = recorded.get("required_full_entities")
+            check(isinstance(required, list) and all(isinstance(entity, str) for entity in required)
+                  and len(required) == len(REQUIRED_BODIES[name])
+                  and set(required) == REQUIRED_BODIES[name],
+                  "Required-body inventory differs from the runner policy: " + name + "/" + str(label))
+    return True
+
+
+@deal.pre(lambda relative, expected, history, git_dir=None, source_root=ROOT: isinstance(relative, str) and isinstance(expected, str)
           and len(expected) == 64 and all(c in "0123456789abcdef" for c in expected)
-          and isinstance(history, Path) and (git_dir is None or isinstance(git_dir, Path)))
-@deal.ensure(lambda relative, expected, history, git_dir=None, result=None:
+          and isinstance(history, Path) and (git_dir is None or isinstance(git_dir, Path))
+          and isinstance(source_root, Path) and source_root.is_dir())
+@deal.ensure(lambda relative, expected, history, git_dir=None, source_root=ROOT, result=None:
              isinstance(result, str) and bool(result)
-             and (result == str(ROOT.joinpath(relative)) or result.startswith("git:")))
+             and (result == str(source_root.joinpath(relative)) or result.startswith("git:")))
 @deal.raises(OSError, ValueError, KeyError, TypeError, JSONDecodeError, subprocess.SubprocessError)
 @deal.has("read", "syscall")
-def evidence_source(relative: str, expected: str, history: Path, git_dir: Path | None = None) -> str:
+def evidence_source(relative: str, expected: str, history: Path, git_dir: Path | None = None,
+                    source_root: Path = ROOT) -> str:
     path = Path(relative)
     check(not path.is_absolute() and ".." not in path.parts, "Unsafe source path")
-    current = ROOT.joinpath(path)
+    current = source_root.joinpath(path)
+    check(current.is_file(), "Proof source is missing: " + relative)
     if sha(current) == expected:
         return str(current)
-    # Ada/SPARK source must still match the working tree. Only historical
+    # Ada/SPARK source must match the explicitly selected source tree. Only historical
     # Python tooling may be resolved to the original immutable Git blob.
     # No uncontracted historical .py copy is kept in the current tree.
     if current.suffix == ".py":
@@ -63,7 +109,7 @@ def evidence_source(relative: str, expected: str, history: Path, git_dir: Path |
         check(len(matches) == 1, "Historical source identity is not recorded: " + relative)
         blob = matches[0]["git_blob"]
         check(isinstance(blob, str) and len(blob) == 40 and all(c in "0123456789abcdef" for c in blob), "Invalid Git blob")
-        command = ["git", "--git-dir", str(git_dir)] if git_dir else ["git", "-C", str(ROOT)]
+        command = ["git", "--git-dir", str(git_dir)] if git_dir else ["git", "-C", str(source_root)]
         try:
             source = subprocess.check_output([*command, "cat-file", "blob", blob], stderr=subprocess.PIPE, timeout=15)
         except CalledProcessError as error:
@@ -73,18 +119,23 @@ def evidence_source(relative: str, expected: str, history: Path, git_dir: Path |
     raise ValueError("Proof source changed: " + relative)
 
 
-@deal.pre(lambda folder, source_history=DEFAULT_HISTORY, git_dir=None: isinstance(folder, Path) and folder.is_dir()
-          and isinstance(source_history, Path) and (git_dir is None or isinstance(git_dir, Path)))
+@deal.pre(lambda folder, source_history=DEFAULT_HISTORY, git_dir=None, source_root=ROOT:
+          isinstance(folder, Path) and folder.is_dir()
+          and isinstance(source_history, Path) and (git_dir is None or isinstance(git_dir, Path))
+          and isinstance(source_root, Path) and source_root.is_dir())
 @deal.post(lambda result: result["production_checks"] > 0 and result["portfolio_complete"] is True
            and result["negative_control_rejected"] is True and isinstance(result["historical_python_sources"], list))
 @deal.raises(OSError, ValueError, KeyError, TypeError, JSONDecodeError, subprocess.SubprocessError)
 @deal.has("read", "syscall")
-def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path | None = None) -> dict:
+def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path | None = None,
+           source_root: Path = ROOT) -> dict:
     folder = folder.resolve()
     manifest = json.loads(folder.joinpath("manifest.json").read_text())
+    check(isinstance(manifest, dict), "Campaign manifest must be an object")
+    coverage_campaign = campaign_policy(manifest, folder.name, source_root.resolve() != ROOT)
     check(manifest["host"].split(".")[0] == "computer10", "Wrong recorded host")
     check(manifest["portfolio_complete"], "Campaign did not finish successfully")
-    evidence_source("verification/run_computer10.py", manifest["runner_sha256"], source_history, git_dir)
+    evidence_source("verification/run_computer10.py", manifest["runner_sha256"], source_history, git_dir, source_root)
     check(sha(folder.joinpath("provers.conf")) == manifest["prover_config_sha256"], "Prover configuration changed")
     totals = 0
     archived_python = []
@@ -94,20 +145,39 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
             check(native == recorded["native"], f"Native report disagrees: {name}/{label}")
             check(sha(folder.joinpath(name, label, "invocation.log")) == recorded["log_sha256"], "Invocation log changed")
             for source in recorded["sources"]:
-                evidence_source(source["path"], source["sha256"], source_history, git_dir)
+                evidence_source(source["path"], source["sha256"], source_history, git_dir, source_root)
+            if "coverage" in recorded:
+                coverage = read_coverage(folder.joinpath(name, label, "spark"),
+                    {Path(entry["path"]).name for entry in recorded["sources"]
+                     if Path(entry["path"]).suffix in {".ads", ".adb"}})
+                check(coverage == recorded["coverage"], "Native SPARK coverage disagrees: " + name + "/" + label)
+                check(coverage["no_assumptions_or_suppressions"], "Assumption or suppression in native SPARK coverage")
+                analyzed = {row["name"].casefold() for row in coverage["entities"] if row["status"] == "all"}
+                missing = [entity for entity in recorded["required_full_entities"] if entity.casefold() not in analyzed]
+                check(missing == recorded["missing_full_entities"], "Required-body coverage record disagrees")
             if label == "portfolio":
                 total = native["categories"]["Total"]
                 check(recorded["complete"] and recorded["returncode"] == 0 and not recorded["timed_out"], "Incomplete portfolio")
                 check(total["unproved"] == total["justified"] == 0, "Unproved or justified portfolio check")
                 check(not native["contains_not_proved"], "Native subprogram proof incomplete")
+                if coverage_campaign:
+                    check(bool(recorded["required_full_entities"]) and not recorded["missing_full_entities"],
+                          "A required numerical or driver body was not analyzed")
                 totals += total["total"]
     control = manifest["negative_control"]
+    if coverage_campaign:
+        recorded_control = control["result"]
+        control_coverage = read_coverage(folder.joinpath("negative_control/portfolio/spark"),
+            {Path(entry["path"]).name for entry in recorded_control["sources"]
+             if Path(entry["path"]).suffix in {".ads", ".adb"}})
+        check(control_coverage == recorded_control.get("coverage"), "Negative-control native coverage disagrees")
+        check(control_coverage["no_assumptions_or_suppressions"], "Assumption or suppression in negative control")
     check(control["expected_failure_rejected"], "Negative control was not rejected")
     bad = report_summary(folder.joinpath("negative_control/portfolio/gnatprove.out"))
     check(bad == control["result"]["native"], "Negative-control report changed")
     check(bad["categories"]["Functional Contracts"]["unproved"] > 0, "Negative control has no failed contract")
     for entry in json.loads(folder.joinpath("source_hashes.json").read_text())["files"]:
-        actual_source = evidence_source(entry["path"], entry["sha256"], source_history, git_dir)
+        actual_source = evidence_source(entry["path"], entry["sha256"], source_history, git_dir, source_root)
         if actual_source.startswith("git:"):
             archived_python.append(entry["path"])
     listed = set()
@@ -120,7 +190,9 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
     actual = {str(p.relative_to(folder)) for p in folder.rglob("*") if p.is_file() and p.name != "SHA256SUMS"}
     check(listed == actual, "Evidence inventory differs from SHA256SUMS")
     return {"production_checks": totals, "portfolio_complete": True, "negative_control_rejected": True,
-            "historical_python_sources": archived_python}
+            "historical_python_sources": archived_python,
+            "source_root": str(source_root.resolve()),
+            "source_context": "current" if source_root.resolve() == ROOT else "explicit"}
 
 
 @deal.raises(SystemExit, OSError, ValueError, KeyError, TypeError, JSONDecodeError, subprocess.SubprocessError)
@@ -128,13 +200,16 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", nargs="?", type=Path,
-                        default=ROOT.joinpath("verification/evidence/computer10-20261031"))
+                        default=DEFAULT_EVIDENCE)
     parser.add_argument("--source-history", type=Path, default=DEFAULT_HISTORY)
     parser.add_argument("--git-dir", type=Path, help="optional local Git object database for historical sources")
+    parser.add_argument("--source-root", type=Path, default=ROOT,
+                        help="explicit source tree for a historical campaign; defaults to the current repository")
     args = parser.parse_args()
-    result = verify(args.directory, args.source_history, args.git_dir)
+    result = verify(args.directory, args.source_history, args.git_dir, args.source_root)
     print(f"Verified evidence integrity: {result['production_checks']} production checks; zero unproved or justified portfolio checks.")
-    print(f"Current Ada/SPARK sources match; {len(result['historical_python_sources'])} historical Python sources match immutable Git objects.")
+    print(f"Selected {result['source_context']} source tree: {result['source_root']}")
+    print(f"Ada/SPARK source identities match; {len(result['historical_python_sources'])} historical Python sources match immutable Git objects.")
     print("The deliberately incorrect union contract was rejected. Individual incomplete solver runs remain recorded as incomplete.")
 
 

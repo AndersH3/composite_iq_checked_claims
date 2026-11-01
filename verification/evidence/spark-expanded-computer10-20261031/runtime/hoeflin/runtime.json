@@ -1,0 +1,92 @@
+{
+  "host": "computer10",
+  "sources": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+      "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+      "sha256": "9f0ec3f853a719387b700caa21e14bc7af2345330113854e29c32d5a9e9df2e7"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+      "sha256": "edb6198406499e5605629372f3d61f7830c91617d302c88cd01db750456bf179"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "6a188933f15a75b575b2c95382b92ba5fe3859ec8f369dba7fe4bad40bd3ec34"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+      "sha256": "ea9fc5d0d7ef560faff01ece2087578c828459e08abe060d196ddd06f1a57c2e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "351e09f95e8dcff399933d8b160b3950f3085511cacbc641a7deb0054680d9a4"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "02167914ba3f6561d9e6e7fde89f9117991d13bd28ebbe724e9bac8dc3415947"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+      "sha256": "4a48f1f49e099dbb11ddbb14da8ff1bbfbb080dd9a8506d6b757aae8f09a00f3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+      "sha256": "774b39abac7af3a9ee0d8c7acde556f32654415996aa9021e5faf52ebc5b683e"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "gprbuild",
+        "-P",
+        "hoeflin.gpr",
+        "-p"
+      ],
+      "cwd": "/tmp/composite-iq-expanded-runtime-final/hoeflin-source",
+      "started_utc": "2026-11-01T15:17:41.321239+00:00",
+      "finished_utc": "2026-11-01T15:17:42.837659+00:00",
+      "elapsed_seconds": 1.5164065650315024,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "874f72e5eed7b881fd6e3c4f0668b15da8f8ca1331bd46b21854e1d948ed838f"
+    },
+    {
+      "argv": [
+        "/tmp/composite-iq-expanded-runtime-final/hoeflin-source/bin/hoeflin_calculations"
+      ],
+      "cwd": "/tmp/composite-iq-expanded-runtime-final/hoeflin-source",
+      "started_utc": "2026-11-01T15:17:42.838045+00:00",
+      "finished_utc": "2026-11-01T15:17:42.841627+00:00",
+      "elapsed_seconds": 0.0035949330194853246,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "d538d547f64c800ebfc14ad63a1c40efc33cfa2aa46f6228117fa96c0dbe3d2e"
+    },
+    {
+      "argv": [
+        "/tmp/composite-iq-expanded-runtime-final/hoeflin-source/bin/hoeflin_simulation",
+        "1000000",
+        "20261030"
+      ],
+      "cwd": "/tmp/composite-iq-expanded-runtime-final/hoeflin-source",
+      "started_utc": "2026-11-01T15:17:42.841814+00:00",
+      "finished_utc": "2026-11-01T15:17:43.638597+00:00",
+      "elapsed_seconds": 0.7968002710258588,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36"
+    }
+  ],
+  "byte_identical_to_original": {
+    "calculations.csv": true,
+    "simulation.csv": true
+  }
+}
