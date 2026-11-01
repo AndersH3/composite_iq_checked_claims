@@ -1,0 +1,17 @@
+{
+  "host": "computer10",
+  "argv": [
+    ".venv-deal/bin/python",
+    "verification/run_computer10.py",
+    "--portfolio-only",
+    "--run-id",
+    "ghost-boundaries-computer10-20261101",
+    "--timeout",
+    "15",
+    "--wall-seconds",
+    "1800"
+  ],
+  "returncode": 0,
+  "started_utc": "2026-11-01T21:36:44.682287+00:00",
+  "finished_utc": "2026-11-01T21:54:57.102145+00:00"
+}

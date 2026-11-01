@@ -1,0 +1,2 @@
+
+raised CONSTRAINT_ERROR : trials must be in 2..100000000

@@ -65,3 +65,30 @@ The refactor retains RNG advancement, uniform conversion, numerical expressions,
 Audit the committed current campaign with `python3 verification/verify_evidence.py` from the repository root. Older campaigns must explicitly select an old source checkout with `--source-root`; the [verification guide](../../../verification/README.md#audit-historical-campaigns-explicitly) gives the commands. Prior evidence is not rewritten, and changed Ada source is never matched through an automatic historical fallback.
 
 The repository's [LICENSE](../../../LICENSE) applies to its original material, subject to third-party rights.
+
+## Ghost models for excluded boundaries
+
+`Hoeflin_Boundary_Models` is a separate package marked `SPARK_Mode, Ghost`, with implemented predicates, projections, a receipt-state transition, and observation procedures. It is included in the proof project alongside every production source. It has no imported bodies, proof axioms, assumptions, or suppressed checks.
+
+| Excluded code | Ghost link in the actual body | Modeled property |
+|---|---|---|
+| `Normal_Support.Square_Root` | `Observe_Sqrt` | The existing checked nonnegative and conditional range bounds |
+| `Survival`, including the C `erfc` import | `Observe_Erfc`, `Observe_Probability` | Actual cached C result, its binary64 half-scaling, and the checked probability range |
+| `Check_Inverse_Bracket` | `Observe_Inverse_Bracket` | Cached endpoint survival values enclose the requested probability |
+| `Rare_Quantile` | `Observe_Rare_Quantile` | The checked range `[3,10]` |
+| `Checked_Radius`, including logarithm and square-root use | `Observe_Log_Radius` | The checked log range `[-38,0]`, open-unit input, and radius range `[0,9]` |
+| Installed `Sin`/`Cos` backend bodies used by `Normal_Pair` | `Observe_Trig` on each cached actual result | The range `[-1,1]` provided by the installed SPARK-compatible elementary-function specifications |
+| All eight public `Report_IO` operations | `Note` / `Transition` | Operation tag, copied typed payload, nominal logical column count, section state, and whether the call follows the model's input/protocol conditions |
+| Private `Number` helper and its `Float_IO.Put` call | `Project_Number`, `Observe_Number` | The value and requested decimal precision, accepting every original argument value in the declared scalar domains |
+| Private `Trimmed` helper and its `'Image`/slice operations | `Observe_Decimal_Image`, `Decimal_Image` | Canonical natural-number decimal text and value reconstruction |
+| Private `Named_Row` helper and label/string emission | `Project_Label`, `Observe_Label` | Label length and counts of commas, line feeds, and carriage returns; arbitrary original labels remain accepted |
+
+The I/O receipt ledger is ghost state local to the excluded I/O body. Its event and row counters use explicit arithmetic modulo `2^64`. `Transition` and the projections are proved as models, while the actual calls from excluded bodies remain an implementation-to-model refinement obligation. The ledger records a call-admissibility Boolean; it does not reject an unusual call order or assert that every actual I/O call satisfies the protocol. Its column count describes the intended logical schema, not a theorem about serialized CSV bytes. Example payloads retain label length, not complete label content. Physical text formatting, escaping, encoding, stream/filesystem behavior, exception paths, and the correctness of the Ada/C libraries remain unproved.
+
+The numeric observation procedures run after the original concrete guards. Their preconditions express the acceptance predicates without replacing the existing ordinary preconditions, postconditions, or body checks. C results and inverse-bracket values are cached at the original evaluation points, preserving external-call order and short-circuit behavior; the observations do not make extra transcendental or C calls. CLI parsing still uses the original Ada `'Value` grammar, including its accepted signs, whitespace, underscores, and based literals. No raw-argument decimal-only restriction was added.
+
+With GNAT13, an ordinary checked contract cannot reference a ghost entity that is erased by `Ghost => Ignore`. Therefore model links are calls to ghost procedures inside the actual bodies, rather than ghost conjuncts added to ordinary contracts. This permits independent `Ghost => Check` and `Ghost => Ignore` builds while retaining all other runtime assertion checks. The campaign records the final build/output comparison; a finite erasure regression supplements rather than replaces GNATprove's non-interference checks on analyzed ghost code. Excluded callers and their external effects remain trusted.
+
+These models do not establish square-root/log/erfc accuracy, inverse convergence, Gaussian distributional correctness, random independence, or empirical psychometric validity. They make the remaining specifications and observational boundaries explicit; successful proof of a model is not proof that an excluded implementation realizes it.
+
+The trigonometric observations execute in the analyzed `Normal_Pair` body. Each result is cached immediately before its original multiplication, in the original cosine/X then sine/Y order, and the observer makes no library call. The client proof establishes that the installed specifications imply the observer's range precondition; it does not verify the backend's accuracy, periodicity, or implementation.

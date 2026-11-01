@@ -1,0 +1,130 @@
+[
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      "2",
+      "1"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.866002+00:00",
+    "finished_utc": "2026-11-01T21:33:31.867625+00:00",
+    "elapsed_seconds": 0.0016253120011242572,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      " +2 ",
+      " +1 "
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.867737+00:00",
+    "finished_utc": "2026-11-01T21:33:31.869304+00:00",
+    "elapsed_seconds": 0.0015703600001870655,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      "0_002",
+      "0_001"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.869412+00:00",
+    "finished_utc": "2026-11-01T21:33:31.870825+00:00",
+    "elapsed_seconds": 0.0014169039968692232,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      "2#10#",
+      "16#1#"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.870931+00:00",
+    "finished_utc": "2026-11-01T21:33:31.872451+00:00",
+    "elapsed_seconds": 0.0015229929995257407,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      "2E0",
+      "1E0"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.872557+00:00",
+    "finished_utc": "2026-11-01T21:33:31.874077+00:00",
+    "elapsed_seconds": 0.0015236479994200636,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      "2",
+      "18446744073709551615"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.874184+00:00",
+    "finished_utc": "2026-11-01T21:33:31.875729+00:00",
+    "elapsed_seconds": 0.0015484790019399952,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "ee55a141327c7b11136513a87606bb94c0017c855601dbd83466b279c3999e93",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      "0",
+      "1"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.875835+00:00",
+    "finished_utc": "2026-11-01T21:33:31.877387+00:00",
+    "elapsed_seconds": 0.0015570559990010224,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "e86beb22eed42a02ca82d6fe268dfcbeec5f78b6a24e12e30034ad1012b7ee1c",
+    "expected_success": false,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source/bin/hoeflin_simulation",
+      "1",
+      "1"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/hoeflin-check-source",
+    "started_utc": "2026-11-01T21:33:31.877501+00:00",
+    "finished_utc": "2026-11-01T21:33:31.878974+00:00",
+    "elapsed_seconds": 0.0014769510016776621,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "e86beb22eed42a02ca82d6fe268dfcbeec5f78b6a24e12e30034ad1012b7ee1c",
+    "expected_success": false,
+    "accepted": true
+  }
+]

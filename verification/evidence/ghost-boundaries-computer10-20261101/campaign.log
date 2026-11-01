@@ -1,0 +1,4 @@
+negative_control REJECTED AS EXPECTED
+ghost_negative_control REJECTED AS EXPECTED
+hoeflin portfolio COMPLETE {'total': 283, 'flow': 77, 'provers': 206, 'justified': 0, 'unproved': 0}
+towers portfolio COMPLETE {'total': 498, 'flow': 123, 'provers': 375, 'justified': 0, 'unproved': 0}

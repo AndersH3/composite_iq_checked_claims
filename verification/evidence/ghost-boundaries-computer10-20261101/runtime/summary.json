@@ -1,0 +1,38 @@
+{
+  "host": "computer10",
+  "records": [
+    {
+      "project": "hoeflin",
+      "policy": "check",
+      "csv_count": 2,
+      "validation_checks": 4,
+      "edge_checks": 8,
+      "all_passed": true
+    },
+    {
+      "project": "hoeflin",
+      "policy": "ignore",
+      "csv_count": 2,
+      "validation_checks": 4,
+      "edge_checks": 8,
+      "all_passed": true
+    },
+    {
+      "project": "towers",
+      "policy": "check",
+      "csv_count": 4,
+      "validation_checks": 2,
+      "edge_checks": 8,
+      "all_passed": true
+    },
+    {
+      "project": "towers",
+      "policy": "ignore",
+      "csv_count": 4,
+      "validation_checks": 2,
+      "edge_checks": 8,
+      "all_passed": true
+    }
+  ],
+  "all_csv_identical_across_policies_and_original": true
+}

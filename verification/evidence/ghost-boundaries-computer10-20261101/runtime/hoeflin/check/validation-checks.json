@@ -1,0 +1,74 @@
+[
+  {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "--calculations",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/calculations.csv",
+      "--simulation",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/simulation.csv",
+      "--json-output",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/validation-normal.json"
+    ],
+    "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+    "started_utc": "2026-11-01T21:33:25.173490+00:00",
+    "finished_utc": "2026-11-01T21:33:26.647187+00:00",
+    "elapsed_seconds": 1.4737064559994906,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1"
+  },
+  {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/replay_hoeflin.py",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/simulation.csv",
+      "--json-output",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/replay-normal.json"
+    ],
+    "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+    "started_utc": "2026-11-01T21:33:26.647325+00:00",
+    "finished_utc": "2026-11-01T21:33:28.319717+00:00",
+    "elapsed_seconds": 1.6724046070012264,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "4baeef46d44da4eb408c21698dba5cee9cabba1c7eb6305c423b1be7301b30e3"
+  },
+  {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-O",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "--calculations",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/calculations.csv",
+      "--simulation",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/simulation.csv",
+      "--json-output",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/validation-optimized.json"
+    ],
+    "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+    "started_utc": "2026-11-01T21:33:28.319943+00:00",
+    "finished_utc": "2026-11-01T21:33:29.742177+00:00",
+    "elapsed_seconds": 1.422245985999325,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1"
+  },
+  {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+      "-O",
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/replay_hoeflin.py",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/simulation.csv",
+      "--json-output",
+      "/tmp/composite-iq-ghost-runtime-final/hoeflin/check/replay-optimized.json"
+    ],
+    "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+    "started_utc": "2026-11-01T21:33:29.742318+00:00",
+    "finished_utc": "2026-11-01T21:33:31.865717+00:00",
+    "elapsed_seconds": 2.123411822998605,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "4baeef46d44da4eb408c21698dba5cee9cabba1c7eb6305c423b1be7301b30e3"
+  }
+]

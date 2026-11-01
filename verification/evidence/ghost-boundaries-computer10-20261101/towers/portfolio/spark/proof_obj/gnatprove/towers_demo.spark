@@ -1,0 +1,923 @@
+{
+  "spark": [
+    {
+      "name": "Towers_Demo",
+      "sloc": [
+        {
+          "file": "towers_demo.adb",
+          "line": 4
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "towers_demo.adb",
+      "line": 9,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_demo.adb",
+      "line": 10,
+      "col": 4,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_demo.adb",
+      "line": 5,
+      "col": 3,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 2,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-f2wrpffh/towers/portfolio/proof_obj/gnatprove/towers_demo"
+  },
+  "proof": [
+    {
+      "file": "towers_demo.adb",
+      "line": 12,
+      "col": 20,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.10000000000000E-01
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.30000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_demo.adb",
+      "check_line": 12,
+      "check_col": 20,
+      "msg_id": 3,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        }
+      }
+    },
+    {
+      "file": "towers_demo.adb",
+      "line": 13,
+      "col": 20,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_demo.adb",
+      "check_line": 13,
+      "check_col": 20,
+      "msg_id": 4,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "towers_demo.adb",
+      "line": 15,
+      "col": 20,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 843,
+              "time": 9.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 2473,
+              "time": 1.60000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 9.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-01
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.30000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 852,
+              "time": 9.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.20000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_demo.adb",
+      "check_line": 15,
+      "check_col": 20,
+      "msg_id": 5,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 4,
+          "max_steps": 2473,
+          "max_time": 1.59999996423721E-01
+        },
+        "Z3": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "towers_demo.adb",
+      "line": 17,
+      "col": 20,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.50000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.10000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_demo.adb",
+      "check_line": 17,
+      "check_col": 20,
+      "msg_id": 6,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "towers_demo.adb",
+      "line": 18,
+      "col": 20,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Demo",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 2833,
+              "time": 2.20000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.30000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-01
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.40000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_demo.adb",
+      "check_line": 18,
+      "check_col": 20,
+      "msg_id": 7,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 2833,
+          "max_time": 2.19999998807907E-01
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Towers_Engine.Compute",
+            "sloc": [
+              {
+                "file": "towers_engine.ads",
+                "line": 44
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 96
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Seed",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 82
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Trials",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 77
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Towers_IO_Models.Request_Report",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 87
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Engine.Compute",
+            "sloc": [
+              {
+                "file": "towers_engine.ads",
+                "line": 44
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO.Read_Seed",
+            "sloc": [
+              {
+                "file": "towers_io.ads",
+                "line": 11
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO.Read_Trials",
+            "sloc": [
+              {
+                "file": "towers_io.ads",
+                "line": 9
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO.Write_Report",
+            "sloc": [
+              {
+                "file": "towers_io.ads",
+                "line": 13
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO_Models.Check_Completed",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 119
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 96
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Seed",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 82
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Trials",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 77
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_IO_Models.Request_Report",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 87
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Engine.Compute",
+            "sloc": [
+              {
+                "file": "towers_engine.ads",
+                "line": 44
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO.Read_Seed",
+            "sloc": [
+              {
+                "file": "towers_io.ads",
+                "line": 11
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO.Read_Trials",
+            "sloc": [
+              {
+                "file": "towers_io.ads",
+                "line": 9
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO.Write_Report",
+            "sloc": [
+              {
+                "file": "towers_io.ads",
+                "line": 13
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO_Models.Check_Completed",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 119
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 96
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Seed",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 82
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO_Models.Observe_Trials",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 77
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_IO_Models.Request_Report",
+            "sloc": [
+              {
+                "file": "towers_io_models.ads",
+                "line": 87
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Demo",
+          "sloc": [
+            {
+              "file": "towers_demo.adb",
+              "line": 4
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 1.15082502365112E+00,
+    "gnatwhy3.transformations.eliminate_algebraic": 1.99633002281189E-01,
+    "init_why_sections": 7.65000004321337E-04,
+    "gnatwhy3.transformations.detect_polymorphism": 4.79400018230081E-03,
+    "gnatwhy3.transformations.eliminate_literal": 1.84062004089355E-01,
+    "gnatwhy3.run_vcs": 1.07100000604987E-03,
+    "globals (advanced)": 1.39560000970960E-02,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 4.92350012063980E-02,
+    "flow analysis": 7.83499982208014E-03,
+    "gnatwhy3.transformations.encoding_smt": 1.49039998650551E-01,
+    "gnatwhy3.transformations.simplify_formula": 1.73637002706528E-01,
+    "marking": 2.09999998332933E-04,
+    "translation of standard": 2.22499994561076E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 5.37870004773140E-02,
+    "gnatwhy3.transformations.instantiate_predicate": 4.24589999020100E-02,
+    "properties (advanced)": 4.78000001749024E-04,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 3.77640016376972E-02,
+    "gnatwhy3.register_vcs": 5.39430007338524E-02,
+    "gnatwhy3.transformations.eliminate_epsilon": 1.40575006604195E-01,
+    "globals (basic)": 6.06000004336238E-03,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 9.35262978076935E-01,
+    "gnatwhy3.schedule_vcs": 1.34999994770624E-04,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 7.00000018696301E-05,
+    "gnatwhy3.save_session": 1.02260001003742E-02,
+    "gnatwhy3.transformations.encoding_sort": 2.71049998700619E-02,
+    "gnatwhy3.transformations.eliminate_inductive": 1.16731002926826E-01,
+    "gnatwhy3.transformations.compile_match": 5.78540004789829E-02,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 6.09999988228083E-05,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 4.14730012416840E-02,
+    "gnatwhy3.transformations.eliminate_definition": 1.92000009119511E-02,
+    "gnatwhy3.transformations.eliminate_builtin": 1.90907001495361E-01,
+    "gnatwhy3.transformations.discriminate_if_poly": 1.38000003062189E-04,
+    "gnatwhy3.transformations.introduce_premises": 8.01220014691353E-02,
+    "gnatwhy3.init": 7.41581022739410E-01
+  }
+}

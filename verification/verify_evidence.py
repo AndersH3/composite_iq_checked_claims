@@ -14,14 +14,16 @@ from json import JSONDecodeError
 from subprocess import CalledProcessError
 
 try:
-    from verification.run_computer10 import ROOT, PROJECTS, REQUIRED_BODIES, report_summary, is_sha256
+    from verification.run_computer10 import ROOT, PROJECTS, BASE_REQUIRED_BODIES, REQUIRED_BODIES, report_summary, is_sha256
     from verification.spark_coverage import read_coverage
+    from verification.ghost_boundaries import GHOST_SCHEMA, ghost_package, pinned_ada_sources, validate_boundaries
 except ModuleNotFoundError:
-    from run_computer10 import ROOT, PROJECTS, REQUIRED_BODIES, report_summary, is_sha256
+    from run_computer10 import ROOT, PROJECTS, BASE_REQUIRED_BODIES, REQUIRED_BODIES, report_summary, is_sha256
     from spark_coverage import read_coverage
+    from ghost_boundaries import GHOST_SCHEMA, ghost_package, pinned_ada_sources, validate_boundaries
 
 DEFAULT_HISTORY = ROOT.joinpath("verification/source_history.json")
-DEFAULT_EVIDENCE = ROOT.joinpath("verification/evidence/spark-expanded-computer10-20261031")
+DEFAULT_EVIDENCE = ROOT.joinpath("verification/evidence/ghost-boundaries-computer10-20261101")
 LEGACY_CAMPAIGNS = {
     "computer10-20261031", "deal-spark-computer10-20261031",
     "deal-lint-spark-computer10-20261031",
@@ -66,6 +68,14 @@ def campaign_policy(manifest: dict, campaign_name: str, explicit_source: bool) -
     if not coverage:
         return False
     check(manifest["coverage_schema"] == "gnat13-sloc-v1", "Unknown native coverage schema")
+    ghost = "ghost_boundary_schema" in manifest
+    check(ghost or (explicit_source and campaign_name == "spark-expanded-computer10-20261031"),
+          "Ghost boundary schema is required for current or unrecognized coverage campaigns")
+    if ghost:
+        check(manifest["ghost_boundary_schema"] == GHOST_SCHEMA, "Unknown ghost boundary schema")
+        check(is_sha256(manifest.get("ghost_registry_sha256")), "Ghost registry hash is invalid")
+        check(isinstance(manifest.get("ghost_negative_control"), dict), "Ghost negative control is missing")
+    required_policy = REQUIRED_BODIES if ghost else BASE_REQUIRED_BODIES
     projects = manifest.get("projects")
     check(isinstance(projects, dict) and set(projects) == set(PROJECTS),
           "Production project inventory differs from the required projects")
@@ -77,9 +87,12 @@ def campaign_policy(manifest: dict, campaign_name: str, explicit_source: bool) -
                   "Native SPARK coverage is missing: " + name + "/" + str(label))
             required = recorded.get("required_full_entities")
             check(isinstance(required, list) and all(isinstance(entity, str) for entity in required)
-                  and len(required) == len(REQUIRED_BODIES[name])
-                  and set(required) == REQUIRED_BODIES[name],
+                  and len(required) == len(required_policy[name])
+                  and set(required) == required_policy[name],
                   "Required-body inventory differs from the runner policy: " + name + "/" + str(label))
+            if ghost:
+                check(isinstance(recorded.get("ghost_boundaries"), dict),
+                      "Ghost boundary result is missing: " + name + "/" + str(label))
     return True
 
 
@@ -135,6 +148,14 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
     coverage_campaign = campaign_policy(manifest, folder.name, source_root.resolve() != ROOT)
     check(manifest["host"].split(".")[0] == "computer10", "Wrong recorded host")
     check(manifest["portfolio_complete"], "Campaign did not finish successfully")
+    registry = None
+    if "ghost_boundary_schema" in manifest:
+        registry_path = folder.joinpath("ghost_boundaries.json")
+        check(registry_path.is_file(), "Ghost registry file is missing")
+        check(sha(registry_path) == manifest["ghost_registry_sha256"], "Ghost registry changed")
+        evidence_source("verification/ghost_boundaries.json", manifest["ghost_registry_sha256"],
+                        source_history, git_dir, source_root)
+        registry = json.loads(registry_path.read_text())
     evidence_source("verification/run_computer10.py", manifest["runner_sha256"], source_history, git_dir, source_root)
     check(sha(folder.joinpath("provers.conf")) == manifest["prover_config_sha256"], "Prover configuration changed")
     totals = 0
@@ -155,6 +176,9 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
                 analyzed = {row["name"].casefold() for row in coverage["entities"] if row["status"] == "all"}
                 missing = [entity for entity in recorded["required_full_entities"] if entity.casefold() not in analyzed]
                 check(missing == recorded["missing_full_entities"], "Required-body coverage record disagrees")
+                if registry is not None:
+                    ghost = validate_boundaries(registry, name, coverage, recorded["sources"], source_root)
+                    check(ghost == recorded["ghost_boundaries"], "Ghost boundary coverage disagrees: " + name + "/" + label)
             if label == "portfolio":
                 total = native["categories"]["Total"]
                 check(recorded["complete"] and recorded["returncode"] == 0 and not recorded["timed_out"], "Incomplete portfolio")
@@ -176,6 +200,30 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
     bad = report_summary(folder.joinpath("negative_control/portfolio/gnatprove.out"))
     check(bad == control["result"]["native"], "Negative-control report changed")
     check(bad["categories"]["Functional Contracts"]["unproved"] > 0, "Negative control has no failed contract")
+    if registry is not None:
+        ghost_control = manifest["ghost_negative_control"]
+        recorded = ghost_control["result"]
+        check(ghost_control["expected_failure_rejected"] and recorded["returncode"] != 0
+              and not recorded["timed_out"], "Ghost negative control was not rejected")
+        ghost_native = report_summary(folder.joinpath("ghost_negative_control/portfolio/gnatprove.out"))
+        check(ghost_native == recorded["native"], "Ghost negative-control report changed")
+        check(ghost_native["categories"]["Functional Contracts"]["unproved"] > 0,
+              "Ghost negative control has no failed contract")
+        check(sha(folder.joinpath("ghost_negative_control/portfolio/invocation.log")) == recorded["log_sha256"],
+              "Ghost negative-control invocation changed")
+        for source in recorded["sources"]:
+            evidence_source(source["path"], source["sha256"], source_history, git_dir, source_root)
+        ghost_sources = pinned_ada_sources(recorded["sources"], source_root)
+        ghost_spec = [text for path, text in ghost_sources.items() if Path(path).name == "negative_ghost_ledger.ads"]
+        check(len(ghost_spec) == 1 and ghost_package(ghost_spec[0]).casefold() == "negative_ghost_ledger",
+              "Ghost negative control lacks its Ghost declaration")
+        ghost_coverage = read_coverage(folder.joinpath("ghost_negative_control/portfolio/spark"),
+            {Path(entry["path"]).name for entry in recorded["sources"]
+             if Path(entry["path"]).suffix in {".ads", ".adb"}})
+        check(ghost_coverage == recorded["coverage"] and ghost_coverage["no_assumptions_or_suppressions"],
+              "Ghost negative-control coverage disagrees")
+        check(any(row["name"].casefold() == "negative_ghost_ledger.record_event" and row["status"] == "all"
+                  for row in ghost_coverage["entities"]), "Ghost negative-control body was not analyzed")
     for entry in json.loads(folder.joinpath("source_hashes.json").read_text())["files"]:
         actual_source = evidence_source(entry["path"], entry["sha256"], source_history, git_dir, source_root)
         if actual_source.startswith("git:"):

@@ -1,0 +1,125 @@
+{
+  "host": "computer10",
+  "policy": "check",
+  "ordinary_assertions": "Check",
+  "policy_text": "pragma Assertion_Policy (Check);\n",
+  "policy_sha256": "7e8c33fa414c4d4fa74dac5ce5222ffc4837d308af4005251356e5807e7558c4",
+  "sources": [
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "8a7d0a08fb20765f26446167c3ee05c818aec1b5582ac90d30af582a4707386e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "e0f22f2e56bee54fad10af11b678763db8c789d14762a5e0b3bdabdf0da4f977"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "7b89d779e7e1fd02929d0cb1c6b8b29664417091e7fd4051d931b74b51601c84"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+      "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+      "sha256": "3e2f283541f99eabfa796a7e3629b8101916e467e5f35cea0fec02c27341890d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "a344ee290a219df50f6b3f502f43eacd4351ddbe352ffe5af0f0d6b879ad8d69"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+      "sha256": "d6f886918dbd1a56f373a6d9f708260e9db5bc907f089505e60e4297807e235a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+      "sha256": "71b4827f67aef14533ce57e2d505a63ba8c2255a216d78a8f89a17307ad7d1b3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+      "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+      "sha256": "a719c6091c2ebfe748c8da7f6e42b70914f9dcf80d614007b6ce38b5fd0e8122"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+      "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+      "sha256": "b12bf1af956b4393ecd1023ae97ec830fd9e340bdc9997d083e538094287c112"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "68970c0902dee2d29c58e6f70bb553cbd2f9741b9bb695bb88baffa1eebcd742"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "gprbuild",
+        "-P",
+        "towers.gpr",
+        "-p",
+        "-cargs",
+        "-gnatec=/tmp/composite-iq-ghost-runtime-final/policies/check.adc"
+      ],
+      "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+      "started_utc": "2026-11-01T21:33:39.523315+00:00",
+      "finished_utc": "2026-11-01T21:33:41.541694+00:00",
+      "elapsed_seconds": 2.0183831350004766,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "144cf01b9509de6552d56a51d8e3e227fb01c94df64ca76ee8639205e1e19ebe"
+    },
+    {
+      "argv": [
+        "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+        "1000000",
+        "20261030",
+        "/tmp/composite-iq-ghost-runtime-final/towers/check"
+      ],
+      "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+      "started_utc": "2026-11-01T21:33:41.541854+00:00",
+      "finished_utc": "2026-11-01T21:33:41.756168+00:00",
+      "elapsed_seconds": 0.21432621299754828,
+      "returncode": 0,
+      "timed_out": false,
+      "log_sha256": "dfc54f39f9b94b9b63de61edb03e12fa314df1309c727da45bbb156b28d43ed6"
+    }
+  ],
+  "comparisons": {
+    "calculation.csv": {
+      "byte_identical": true,
+      "sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762",
+      "baseline_sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762"
+    },
+    "grid.csv": {
+      "byte_identical": true,
+      "sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a",
+      "baseline_sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a"
+    },
+    "calibration.csv": {
+      "byte_identical": true,
+      "sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400",
+      "baseline_sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400"
+    },
+    "simulation.csv": {
+      "byte_identical": true,
+      "sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5",
+      "baseline_sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5"
+    }
+  }
+}

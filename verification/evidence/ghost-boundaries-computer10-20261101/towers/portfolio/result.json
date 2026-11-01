@@ -1,0 +1,2115 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "towers_proof.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/ghost-boundaries-computer10-20261101/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-f2wrpffh/towers/portfolio",
+  "started_utc": "2026-11-01T21:43:01.174263+00:00",
+  "finished_utc": "2026-11-01T21:54:56.912107+00:00",
+  "elapsed_seconds": 715.7378511229981,
+  "returncode": 0,
+  "timed_out": false,
+  "log_sha256": "133f2b31fdf7dd649417acece31f06e35d996a496eeaefdb2c20c5bb534ef5e2",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 60,
+        "flow": 60,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 62,
+        "flow": 62,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 259,
+        "flow": 0,
+        "provers": 259,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 31,
+        "flow": 0,
+        "provers": 31,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 85,
+        "flow": 0,
+        "provers": 85,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 498,
+        "flow": 123,
+        "provers": 375,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 7,
+    "contains_not_proved": false,
+    "report_sha256": "d1712e1600aa341f68bbb2fb752b40d6ffd07cbf3e54ca023c4155b4ffe7399a"
+  },
+  "sources": [
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "8a7d0a08fb20765f26446167c3ee05c818aec1b5582ac90d30af582a4707386e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "e0f22f2e56bee54fad10af11b678763db8c789d14762a5e0b3bdabdf0da4f977"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "7b89d779e7e1fd02929d0cb1c6b8b29664417091e7fd4051d931b74b51601c84"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+      "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+      "sha256": "3e2f283541f99eabfa796a7e3629b8101916e467e5f35cea0fec02c27341890d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "a344ee290a219df50f6b3f502f43eacd4351ddbe352ffe5af0f0d6b879ad8d69"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+      "sha256": "d6f886918dbd1a56f373a6d9f708260e9db5bc907f089505e60e4297807e235a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+      "sha256": "71b4827f67aef14533ce57e2d505a63ba8c2255a216d78a8f89a17307ad7d1b3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+      "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+      "sha256": "a719c6091c2ebfe748c8da7f6e42b70914f9dcf80d614007b6ce38b5fd0e8122"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+      "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+      "sha256": "b12bf1af956b4393ecd1023ae97ec830fd9e340bdc9997d083e538094287c112"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "68970c0902dee2d29c58e6f70bb553cbd2f9741b9bb695bb88baffa1eebcd742"
+    }
+  ],
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "coverage": {
+    "source_names": [
+      "admission_core.adb",
+      "admission_core.ads",
+      "normal_model.adb",
+      "normal_model.ads",
+      "towers_boundary_models.adb",
+      "towers_boundary_models.ads",
+      "towers_demo.adb",
+      "towers_engine.adb",
+      "towers_engine.ads",
+      "towers_io.adb",
+      "towers_io.ads",
+      "towers_io_models.adb",
+      "towers_io_models.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 90,
+      "spec": 16,
+      "no": 0
+    },
+    "total_entities": 106,
+    "entities": [
+      {
+        "name": "Admission_Core",
+        "file": "admission_core.ads",
+        "line": 1,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Classify",
+        "file": "admission_core.ads",
+        "line": 16,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Total",
+        "file": "admission_core.ads",
+        "line": 24,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Observe",
+        "file": "admission_core.ads",
+        "line": 27,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Marginal_A",
+        "file": "admission_core.ads",
+        "line": 36,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 36
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Marginal_B",
+        "file": "admission_core.ads",
+        "line": 40,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Union_Count",
+        "file": "admission_core.ads",
+        "line": 44,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Fraction",
+        "file": "admission_core.ads",
+        "line": 50,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 50
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Union_Probability",
+        "file": "admission_core.ads",
+        "line": 56,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 56
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Complement",
+        "file": "admission_core.ads",
+        "line": 64,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Conditional",
+        "file": "admission_core.ads",
+        "line": 68,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 68
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Log",
+        "file": "normal_model.adb",
+        "line": 34,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Exp",
+        "file": "normal_model.adb",
+        "line": 49,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 49
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Exponent",
+        "file": "normal_model.adb",
+        "line": 64,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Probability",
+        "file": "normal_model.adb",
+        "line": 79,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 79
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Count_Step",
+        "file": "normal_model.adb",
+        "line": 106,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 106
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Node",
+        "file": "normal_model.adb",
+        "line": 116,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 116
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Joint_Tail.Density",
+        "file": "normal_model.adb",
+        "line": 154,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 154
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Weight",
+        "file": "normal_model.adb",
+        "line": 223,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 223
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Cutoff",
+        "file": "normal_model.adb",
+        "line": 236,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 236
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Cell",
+        "file": "normal_model.adb",
+        "line": 258,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 258
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Check_Grid_State",
+        "file": "normal_model.adb",
+        "line": 279,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 279
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Uniform",
+        "file": "normal_model.adb",
+        "line": 356,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 356
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Scale_Normal",
+        "file": "normal_model.adb",
+        "line": 370,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 370
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model",
+        "file": "normal_model.ads",
+        "line": 1,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Square_Root",
+        "file": "normal_model.ads",
+        "line": 9,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.SF",
+        "file": "normal_model.ads",
+        "line": 18,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Inverse_SF",
+        "file": "normal_model.ads",
+        "line": 21,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Joint_Tail",
+        "file": "normal_model.ads",
+        "line": 23,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Calibrated_OR_Cutoff",
+        "file": "normal_model.ads",
+        "line": 28,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Basic_Grid",
+        "file": "normal_model.ads",
+        "line": 37,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 37
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Generator",
+        "file": "normal_model.ads",
+        "line": 42,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 42
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Reset",
+        "file": "normal_model.ads",
+        "line": 43,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 43
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Normal_Pair",
+        "file": "normal_model.ads",
+        "line": 45,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 45
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models",
+        "file": "towers_boundary_models.ads",
+        "line": 4,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 7,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 7
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Survival_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 16,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Log_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 21,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Exp_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 24,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Trigonometric_Value",
+        "file": "towers_boundary_models.ads",
+        "line": 29,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 29
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 32,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 32
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Probability_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 35,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 35
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Node_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 38,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 38
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 41,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 46,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 46
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Union_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 52,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 52
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 58,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 58
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Joint_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 63,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 63
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Project_Conditional",
+        "file": "towers_boundary_models.ads",
+        "line": 69,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 69
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Project_Grid_Cell",
+        "file": "towers_boundary_models.ads",
+        "line": 75,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 75
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Sqrt",
+        "file": "towers_boundary_models.ads",
+        "line": 84,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 84
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Survival",
+        "file": "towers_boundary_models.ads",
+        "line": 86,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 86
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Log",
+        "file": "towers_boundary_models.ads",
+        "line": 88,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 88
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Exp",
+        "file": "towers_boundary_models.ads",
+        "line": 90,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 90
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Trig",
+        "file": "towers_boundary_models.ads",
+        "line": 92,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 92
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Exponent",
+        "file": "towers_boundary_models.ads",
+        "line": 94,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 94
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Probability",
+        "file": "towers_boundary_models.ads",
+        "line": 96,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 96
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Node",
+        "file": "towers_boundary_models.ads",
+        "line": 98,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 98
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Grid_Cell",
+        "file": "towers_boundary_models.ads",
+        "line": 100,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 100
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Quantization",
+        "file": "towers_boundary_models.ads",
+        "line": 105,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 105
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Union",
+        "file": "towers_boundary_models.ads",
+        "line": 108,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 108
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Conditional",
+        "file": "towers_boundary_models.ads",
+        "line": 110,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 110
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Joint",
+        "file": "towers_boundary_models.ads",
+        "line": 112,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 112
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+        "file": "towers_boundary_models.ads",
+        "line": 114,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 114
+          }
+        ]
+      },
+      {
+        "name": "Towers_Demo",
+        "file": "towers_demo.adb",
+        "line": 4,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Checked_Quantization",
+        "file": "towers_engine.adb",
+        "line": 8,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 8
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Union_Units",
+        "file": "towers_engine.adb",
+        "line": 24,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Conditional_Units",
+        "file": "towers_engine.adb",
+        "line": 43,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 43
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Joint",
+        "file": "towers_engine.adb",
+        "line": 59,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 59
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Units",
+        "file": "towers_engine.adb",
+        "line": 73,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Conditional_Value",
+        "file": "towers_engine.adb",
+        "line": 91,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 91
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Wilson",
+        "file": "towers_engine.adb",
+        "line": 101,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 101
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Calculate",
+        "file": "towers_engine.adb",
+        "line": 125,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 125
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Observe_All",
+        "file": "towers_engine.adb",
+        "line": 162,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 162
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Simulation_Row_For",
+        "file": "towers_engine.adb",
+        "line": 181,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 181
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine",
+        "file": "towers_engine.ads",
+        "line": 3,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 3
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Value",
+        "file": "towers_engine.ads",
+        "line": 41,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Compute",
+        "file": "towers_engine.ads",
+        "line": 44,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO",
+        "file": "towers_io.ads",
+        "line": 2,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 2
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Read_Trials",
+        "file": "towers_io.ads",
+        "line": 9,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Read_Seed",
+        "file": "towers_io.ads",
+        "line": 11,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Write_Report",
+        "file": "towers_io.ads",
+        "line": 13,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models",
+        "file": "towers_io_models.ads",
+        "line": 6,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 6
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Decimal_Input",
+        "file": "towers_io_models.ads",
+        "line": 13,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Option_Agrees",
+        "file": "towers_io_models.ads",
+        "line": 18,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Valid_Trials",
+        "file": "towers_io_models.ads",
+        "line": 22,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Valid_Seed",
+        "file": "towers_io_models.ads",
+        "line": 24,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Real_Field",
+        "file": "towers_io_models.ads",
+        "line": 27,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Integer_Field",
+        "file": "towers_io_models.ads",
+        "line": 32,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 32
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Case_Name",
+        "file": "towers_io_models.ads",
+        "line": 38,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 38
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Case_Name_Agrees",
+        "file": "towers_io_models.ads",
+        "line": 44,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Report_Valid",
+        "file": "towers_io_models.ads",
+        "line": 48,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 48
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Field_Count",
+        "file": "towers_io_models.ads",
+        "line": 56,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 56
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Data_Row_Count",
+        "file": "towers_io_models.ads",
+        "line": 62,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 62
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Trials",
+        "file": "towers_io_models.ads",
+        "line": 77,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 77
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Seed",
+        "file": "towers_io_models.ads",
+        "line": 82,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 82
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Request_Report",
+        "file": "towers_io_models.ads",
+        "line": 87,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Normal_Return",
+        "file": "towers_io_models.ads",
+        "line": 96,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 96
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Option",
+        "file": "towers_io_models.ads",
+        "line": 104,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 104
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Trials",
+        "file": "towers_io_models.ads",
+        "line": 107,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 107
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Seed",
+        "file": "towers_io_models.ads",
+        "line": 109,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 109
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Real_Field",
+        "file": "towers_io_models.ads",
+        "line": 111,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 111
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Integer_Field",
+        "file": "towers_io_models.ads",
+        "line": 113,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 113
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Case_Name",
+        "file": "towers_io_models.ads",
+        "line": 115,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 115
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Report",
+        "file": "towers_io_models.ads",
+        "line": 117,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 117
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Completed",
+        "file": "towers_io_models.ads",
+        "line": 119,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 119
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "proof_obj/gnatprove/admission_core.spark",
+        "sha256": "a3f9e43c71956a9b3fca45c8a622b7c4cd7cbe900b71bcaca5f7986f7029d8a7",
+        "entity_count": 11,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/normal_model.spark",
+        "sha256": "3d19b25281583cbcc781aec6593561a6cb595c810df8d0ad9ce65e3b42696a51",
+        "entity_count": 23,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_boundary_models.spark",
+        "sha256": "857d74e7637f487c10d417d079c33b45af8251eddee1ec50df020dd06d831f6b",
+        "entity_count": 30,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_demo.spark",
+        "sha256": "642166a7ccb1ffba86681f7d765abf73ce3e8a1f45d49e44daea59184eb1c533",
+        "entity_count": 1,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_engine.spark",
+        "sha256": "77970c503e5cef3c959bbacd37943e0049723a51b348192333e85972195db086",
+        "entity_count": 13,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_io.spark",
+        "sha256": "79b49405ea8feac2e51267ba1c4c0eae607750f361efebf6b95c21f7991012c6",
+        "entity_count": 4,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_io_models.spark",
+        "sha256": "0047b91fcbd3ff049a028598ce3610557d619dc2d031244b68dc55b7f1246bf9",
+        "entity_count": 24,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "required_full_entities": [
+    "Admission_Core.Observe",
+    "Normal_Model.Basic_Grid",
+    "Normal_Model.Calibrated_OR_Cutoff",
+    "Normal_Model.Inverse_SF",
+    "Normal_Model.Joint_Tail",
+    "Normal_Model.Normal_Pair",
+    "Normal_Model.Reset",
+    "Normal_Model.Uniform",
+    "Towers_Boundary_Models",
+    "Towers_Boundary_Models.Observe_Trig",
+    "Towers_Boundary_Models.Trigonometric_Value",
+    "Towers_Demo",
+    "Towers_Engine.Compute",
+    "Towers_IO_Models"
+  ],
+  "missing_full_entities": [],
+  "ghost_boundaries": {
+    "schema": "spark-ghost-boundaries-v1",
+    "project": "towers",
+    "coverage_complete": true,
+    "implementation_proved": false,
+    "model_adequacy_proved": false,
+    "boundary_count": 17,
+    "native_spec_entities": [
+      "normal_model.check_grid_state",
+      "normal_model.checked_exp",
+      "normal_model.checked_exponent",
+      "normal_model.checked_log",
+      "normal_model.checked_node",
+      "normal_model.checked_probability",
+      "normal_model.sf",
+      "normal_model.square_root",
+      "towers_engine.check_conditional_units",
+      "towers_engine.check_joint",
+      "towers_engine.check_union_units",
+      "towers_engine.checked_quantization",
+      "towers_io",
+      "towers_io.read_seed",
+      "towers_io.read_trials",
+      "towers_io.write_report"
+    ],
+    "foreign_imports": [
+      "normal_model.c_erfc"
+    ],
+    "external_dependencies": {
+      "ada.command_line": "OS argument strings/counts and Ada Value parsing/failure behavior remain unproved; modeled observations cover typed normal-return options and, where recognized, the restricted decimal grammar.",
+      "ada.directories": "Directory creation, permissions, filesystem persistence and failure behavior remain unproved; a Ghost report request or normal return is not a proof of physical files.",
+      "ada.numerics": "The Pi constant and runtime numeric definitions are trusted target representations, not derived exact-real constants or validation of a Gaussian model.",
+      "ada.numerics.long_elementary_functions": "Installed elementary-function specifications are trusted interfaces. Their implementations, analytic accuracy, rounding/error bounds and totality are not proved; Ghost acceptance predicates model checked normal returns.",
+      "ada.strings.fixed": "The standard trimming implementation and exception behavior are unproved; Ghost lexical observations do not verify the trimming backend.",
+      "ada.text_io": "Text_IO and its instantiated numeric formatting generics, buffering, physical stdout/file bytes, persistence and exceptions remain unproved. Ghost models cover nominal fields/layouts and input/output observations only.",
+      "interfaces.c": "C double conversion, foreign ABI, libm implementation, error behavior and platform representation remain trusted; the C erfc boundary is explicitly modeled but not proved."
+    },
+    "global_unproved_obligations": {
+      "numerical-backends": "C erfc, Ada elementary-function implementations, ABI/representation, rounding accuracy and backend totality are unproved. Ghost predicates describe checked normal-return properties, not certified analytic functions or error bounds.",
+      "runtime-and-io": "Ada runtime, argument retrieval/Value attributes, string/image/formatting generics, memory/resource failures, filesystem effects, permissions, buffering, physical bytes, and exception/failure semantics remain unproved. Ghost ledgers record observations/requests and normal returns, not operating-system success or full persistent output traces.",
+      "model-adequacy": "An analyzed Ghost model does not prove that an excluded implementation refines it, that guards never reject, or that the model is a complete specification. Decimal recognition, lexical fields, bounded payload summaries and nominal layouts have stated restricted scopes; coupled calls in Off bodies are execution observations, not static refinement proofs.",
+      "psychometric-validity": "No Ghost model establishes empirical test correlations, population calibration, Gaussian distributions, pseudo-random independence, extreme-tail frequencies, reliability interpretation or psychometric validity. These require separate mathematical/statistical and empirical justification.",
+      "toolchain-and-provers": "Compiler/runtime translation, target floating representation, GNATprove/Why3/SMT solvers, operating system and hardware are trusted verification infrastructure; neither their implementations nor independent proof-object checking are proved by this campaign."
+    },
+    "standard_library_models": [
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Cos",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Trig",
+          "Towers_Boundary_Models.Trigonometric_Value"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "contract_entity": "Normal_Model.Normal_Pair",
+        "source_callee": "Cos",
+        "observed_argument": "Cosine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      },
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Sin",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Trig",
+          "Towers_Boundary_Models.Trigonometric_Value"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "contract_entity": "Normal_Model.Normal_Pair",
+        "source_callee": "Sin",
+        "observed_argument": "Sine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      }
+    ],
+    "private_helpers": [
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "f"
+      ],
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "n"
+      ],
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "name"
+      ],
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "run"
+      ]
+    ],
+    "boundaries": [
+      {
+        "entity": "Normal_Model.Checked_Log",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Log",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Log",
+          "Towers_Boundary_Models.Log_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Log"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Exp",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Exp",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Exp",
+          "Towers_Boundary_Models.Exp_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Exp"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Exponent",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Exponent",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Exponent",
+          "Towers_Boundary_Models.Exponent_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Exponent"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Probability",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Probability",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Probability",
+          "Towers_Boundary_Models.Probability_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Probability"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Node",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Node",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Node",
+          "Towers_Boundary_Models.Node_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Node"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Check_Grid_State",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Check_Grid_State",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Grid_Cell",
+          "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+          "Towers_Boundary_Models.Project_Grid_Cell"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Grid_Cell"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Square_Root",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Square_Root",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Sqrt",
+          "Towers_Boundary_Models.Sqrt_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Sqrt"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.SF",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.SF",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Survival",
+          "Towers_Boundary_Models.Survival_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Survival"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Checked_Quantization",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Checked_Quantization",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Quantization",
+          "Towers_Boundary_Models.Quantization_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Quantization"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Union_Units",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Union_Units",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Union",
+          "Towers_Boundary_Models.Union_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Union"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Conditional_Units",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Conditional_Units",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Conditional",
+          "Towers_Boundary_Models.Conditional_Normal_Return",
+          "Towers_Boundary_Models.Project_Conditional"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Conditional"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Joint",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Joint",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Joint",
+          "Towers_Boundary_Models.Joint_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Joint"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_IO",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Write_Report",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Report",
+          "Towers_IO_Models.Report_Valid",
+          "Towers_IO_Models.Field_Count",
+          "Towers_IO_Models.Data_Row_Count",
+          "Towers_IO_Models.Check_Real_Field",
+          "Towers_IO_Models.Real_Field",
+          "Towers_IO_Models.Check_Integer_Field",
+          "Towers_IO_Models.Integer_Field",
+          "Towers_IO_Models.Check_Case_Name",
+          "Towers_IO_Models.Case_Name_Agrees",
+          "Towers_IO_Models.Case_Name"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Report"
+        ],
+        "excluded_helpers": [
+          {
+            "entity": "Towers_IO.F",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Real_Field"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.N",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Integer_Field"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.Name",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Case_Name"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.Write_Report.Run",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Report"
+            ],
+            "link_kind": "ghost-call"
+          }
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Read_Trials",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Read_Trials",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Trials",
+          "Towers_IO_Models.Valid_Trials",
+          "Towers_IO_Models.Observe_Option",
+          "Towers_IO_Models.Option_Agrees",
+          "Towers_IO_Models.Decimal_Input"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Trials"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Read_Seed",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Read_Seed",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Seed",
+          "Towers_IO_Models.Valid_Seed",
+          "Towers_IO_Models.Observe_Option",
+          "Towers_IO_Models.Option_Agrees",
+          "Towers_IO_Models.Decimal_Input"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Seed"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Write_Report",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Write_Report",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Report",
+          "Towers_IO_Models.Report_Valid",
+          "Towers_IO_Models.Field_Count",
+          "Towers_IO_Models.Data_Row_Count"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Report"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Normal_Model.C_Erfc",
+        "kind": "foreign-import",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.SF",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Survival",
+          "Towers_Boundary_Models.Survival_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Survival"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The wrapper observes actual C-derived values and its checked normal-return acceptance model. This is not a proof of the imported C implementation, ABI, erfc identity, approximation error, rounding behavior or totality."
+        ]
+      }
+    ]
+  },
+  "complete": true
+}

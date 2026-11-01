@@ -1,0 +1,23 @@
+{
+  "host": "computer10",
+  "python": "3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0]",
+  "platform": "Linux-6.12.111+deb13-amd64-x86_64-with-glibc2.41",
+  "executable": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/bin/python",
+  "created_utc": "2026-11-01T21:39:02.546833+00:00",
+  "baseline_commit": "ce0e895e472de86a6760f05a34d654f32ab0820e",
+  "versions": {
+    "deal": "4.24.6",
+    "deal-solver": "0.1.2",
+    "typeguard": "3.0.2",
+    "pytest": "8.4.2",
+    "hypothesis": "6.170.14",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4"
+  },
+  "python_source_inventory_unchanged_through_checks": true,
+  "deal_exception_extractor": {
+    "path": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/exceptions.py",
+    "sha256": "9dc6c3dd60808fe867fe84d64537ed86a83ff3489404801f7b150a9fc14b668e",
+    "unchanged_from_previous_evidence": true
+  }
+}

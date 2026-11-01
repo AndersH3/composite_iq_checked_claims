@@ -1,0 +1,138 @@
+[
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      "1",
+      "1",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-1"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.016864+00:00",
+    "finished_utc": "2026-11-01T21:33:58.049051+00:00",
+    "elapsed_seconds": 0.03219718299806118,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "3755dac40e58d488095406bbbc0e1312117050959f445b5b269e95dd0d91674d",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      " +1 ",
+      " +1 ",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-2"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.049227+00:00",
+    "finished_utc": "2026-11-01T21:33:58.081375+00:00",
+    "elapsed_seconds": 0.032159307000256376,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "c1e1913408f75975aa23590d41f6025287011caf2dc2792640e2abc6df1b3bc8",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      "0_001",
+      "0_001",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-3"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.081550+00:00",
+    "finished_utc": "2026-11-01T21:33:58.113744+00:00",
+    "elapsed_seconds": 0.032205641000473406,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "6296dcc9b078ef2dfed2c2a2607d22a5db0f4ede4dc23a0a11c0216b42b735fc",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      "2#1#",
+      "16#1#",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-4"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.113917+00:00",
+    "finished_utc": "2026-11-01T21:33:58.145988+00:00",
+    "elapsed_seconds": 0.03207928299889318,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "27f443844e7bc43f3ba57fd40eafa3060227fb21ac914bc802e637fbd54e604f",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      "1E0",
+      "1E0",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-5"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.146154+00:00",
+    "finished_utc": "2026-11-01T21:33:58.178240+00:00",
+    "elapsed_seconds": 0.032095999999000924,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "4853b765eee0bde32797a063dc43347f8020326c0c8a9b12414944aa7d96402b",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      "1",
+      "2147483646",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-6"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.178411+00:00",
+    "finished_utc": "2026-11-01T21:33:58.210489+00:00",
+    "elapsed_seconds": 0.03209011500075576,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "4e37ad1183f8d37e5c56af82d9e710e2b6046acc63306084c6d9b2d021c56859",
+    "expected_success": true,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      "0",
+      "1",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-7"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.210659+00:00",
+    "finished_utc": "2026-11-01T21:33:58.212357+00:00",
+    "elapsed_seconds": 0.0016953149970504455,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "f268082d89de72937a7ddfe207d111441491e694d896160ba9e50fcb6ed392d1",
+    "expected_success": false,
+    "accepted": true
+  },
+  {
+    "argv": [
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-source/bin/towers_demo",
+      "1",
+      "2147483647",
+      "/tmp/composite-iq-ghost-runtime-final/towers-check-edge-8"
+    ],
+    "cwd": "/tmp/composite-iq-ghost-runtime-final/towers-check-source",
+    "started_utc": "2026-11-01T21:33:58.212479+00:00",
+    "finished_utc": "2026-11-01T21:33:58.214043+00:00",
+    "elapsed_seconds": 0.0015675489994464442,
+    "returncode": 1,
+    "timed_out": false,
+    "log_sha256": "8b411ce0d2fc454863265bc8e3b23795c866e9d62e337aed7c89229fd5a6105c",
+    "expected_success": false,
+    "accepted": true
+  }
+]

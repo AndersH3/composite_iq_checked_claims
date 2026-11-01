@@ -1,0 +1,162 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "ghost_negative.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=15",
+    "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes/verification/evidence/ghost-boundaries-computer10-20261101/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-f2wrpffh/ghost_negative_control/portfolio",
+  "started_utc": "2026-11-01T21:36:46.156159+00:00",
+  "finished_utc": "2026-11-01T21:36:47.573301+00:00",
+  "elapsed_seconds": 1.4171500289994583,
+  "returncode": 1,
+  "timed_out": false,
+  "log_sha256": "ee2a5cbe64e846774c5c803e3a9c1dd9de75269d61c13efcaeca47eebda944a3",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 1,
+        "flow": 1,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 0,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 1,
+        "flow": 0,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 1
+      },
+      "Total": {
+        "total": 2,
+        "flow": 1,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 1
+      }
+    },
+    "analyzed_units": 1,
+    "contains_not_proved": true,
+    "report_sha256": "fe39ff7ffd61abe9f6a0686755e7e40706520f77342a0e67676b212509fbb4cb"
+  },
+  "sources": [
+    {
+      "path": "verification/ghost_negative_control/ghost_negative.gpr",
+      "sha256": "eb2209cea7da9cd15daada366cea67f9bb8cd9ef74250defe2c2033e9be71b7c"
+    },
+    {
+      "path": "verification/ghost_negative_control/src/negative_ghost_ledger.adb",
+      "sha256": "f248773bac8592dcadd5bfdc7a06c3eb4e257f6efeba931693f5fb635fa4d130"
+    },
+    {
+      "path": "verification/ghost_negative_control/src/negative_ghost_ledger.ads",
+      "sha256": "6df4324faa3aef4b6b274dcb4e81d07591e0659bb4215d725a59514ea5140e80"
+    }
+  ],
+  "provers_requested": [
+    "cvc5",
+    "z3",
+    "altergo",
+    "Colibri_Classic",
+    "Yices"
+  ],
+  "coverage": {
+    "source_names": [
+      "negative_ghost_ledger.adb",
+      "negative_ghost_ledger.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 2,
+      "spec": 0,
+      "no": 0
+    },
+    "total_entities": 2,
+    "entities": [
+      {
+        "name": "Negative_Ghost_Ledger",
+        "file": "negative_ghost_ledger.ads",
+        "line": 3,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "negative_ghost_ledger.ads",
+            "line": 3
+          }
+        ]
+      },
+      {
+        "name": "Negative_Ghost_Ledger.Record_Event",
+        "file": "negative_ghost_ledger.ads",
+        "line": 5,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "negative_ghost_ledger.ads",
+            "line": 5
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "obj-proof/gnatprove/negative_ghost_ledger.spark",
+        "sha256": "40d4bf7600431a113ecaca8e5a80f23a3b3b7993333ffab4828b0377038e28b7",
+        "entity_count": 2,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "required_full_entities": [],
+  "missing_full_entities": [],
+  "complete": false
+}

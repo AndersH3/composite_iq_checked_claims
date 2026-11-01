@@ -21,22 +21,25 @@ import tempfile
 import time
 
 import deal
+from json import JSONDecodeError
 from subprocess import CalledProcessError, TimeoutExpired
 from shutil import SameFileError, SpecialFileError
 
 try:
     from verification.proof_gate import totals_balanced, successful_checks
     from verification.spark_coverage import read_coverage
+    from verification.ghost_boundaries import GHOST_SCHEMA, validate_boundaries
 except ModuleNotFoundError:
     from proof_gate import totals_balanced, successful_checks
     from spark_coverage import read_coverage
+    from ghost_boundaries import GHOST_SCHEMA, validate_boundaries
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = {
     "hoeflin": ("analyses/hoeflin-ferguson/ada", "hoeflin_proof.gpr", "hoeflin_core"),
     "towers": ("analyses/towers-multiple-test-admissions/ada", "towers_proof.gpr", "admission_core"),
 }
-REQUIRED_BODIES = {
+BASE_REQUIRED_BODIES = {
     "hoeflin": {"Hoeflin_Calculations", "Hoeflin_Simulation",
                 "Normal_Support.Inverse_Survival", "Normal_Support.Reset",
                 "Normal_Support.Uniform", "Normal_Support.Normal_Pair", "Hoeflin_Core.Observe"},
@@ -45,6 +48,13 @@ REQUIRED_BODIES = {
                "Normal_Model.Basic_Grid", "Normal_Model.Reset", "Normal_Model.Uniform",
                "Normal_Model.Normal_Pair", "Admission_Core.Observe"},
 }
+GHOST_REQUIRED_BODIES = {
+    "hoeflin": {"Hoeflin_Boundary_Models", "Hoeflin_Boundary_Models.Observe_Trig", "Hoeflin_Boundary_Models.Trig_Acceptable"},
+    "towers": {"Towers_Boundary_Models", "Towers_IO_Models", "Towers_Boundary_Models.Observe_Trig",
+               "Towers_Boundary_Models.Trigonometric_Value"},
+}
+REQUIRED_BODIES = {name: bodies | GHOST_REQUIRED_BODIES[name]
+                   for name, bodies in BASE_REQUIRED_BODIES.items()}
 ALLOWED_EXPORTS = {
     "ALIRE", "GNATPROVE_ALIRE_PREFIX", "GNAT_NATIVE_ALIRE_PREFIX",
     "GPRBUILD_ALIRE_PREFIX", "GPR_PROJECT_PATH", "ICAR16_GNATPROVE_TOOLS_ALIRE_PREFIX", "PATH",
@@ -249,7 +259,7 @@ def snapshot(folder: Path, target: Path) -> list:
                result["native"]["categories"]["Total"]["total"],
                result["native"]["categories"]["Total"]["unproved"],
                result["native"]["categories"]["Total"]["justified"])))
-@deal.raises(OSError, ValueError, TypeError, SameFileError, SpecialFileError,
+@deal.raises(OSError, ValueError, TypeError, JSONDecodeError, SameFileError, SpecialFileError,
              subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
 @deal.has("io", "syscall", "time")
 def campaign(name: str, folder: Path, project: str, unit: str, aliases: list, label: str,
@@ -291,6 +301,12 @@ def campaign(name: str, folder: Path, project: str, unit: str, aliases: list, la
                        if row["status"] == "all"}
     result["missing_full_entities"] = [entity for entity in result["required_full_entities"]
                                        if entity.casefold() not in analyzed_bodies]
+    if name in PROJECTS and "coverage" in result:
+        try:
+            registry = json.loads(output.joinpath("ghost_boundaries.json").read_text())
+            result["ghost_boundaries"] = validate_boundaries(registry, name, result["coverage"], hashes, ROOT)
+        except ValueError as error:
+            result["ghost_boundary_error"] = str(error)
     total = result.get("native", {}).get("categories", {}).get("Total", {})
     text = (run_dir.joinpath('gnatprove.out')).read_text(errors="replace") if (run_dir.joinpath('gnatprove.out')).is_file() else ""
     result["complete"] = (successful_checks(result["returncode"], total.get("total", 0),
@@ -298,12 +314,13 @@ def campaign(name: str, folder: Path, project: str, unit: str, aliases: list, la
                            and not result.get("native", {}).get("contains_not_proved", True)
                            and result.get("coverage", {}).get("no_assumptions_or_suppressions", False)
                            and not result["missing_full_entities"]
+                           and (name not in PROJECTS or result.get("ghost_boundaries", {}).get("coverage_complete", False))
                            and ("in unit " + unit) in text)
     dump(run_dir.joinpath('result.json'), result)
     return result
 
 
-@deal.raises(SystemExit, OSError, ValueError, TypeError, subprocess.SubprocessError,
+@deal.raises(SystemExit, OSError, ValueError, TypeError, JSONDecodeError, subprocess.SubprocessError,
              CalledProcessError, TimeoutExpired, SameFileError, SpecialFileError)
 @deal.has("io", "syscall", "time")
 def main() -> None:
@@ -324,6 +341,8 @@ def main() -> None:
         raise SystemExit("This evidence campaign must actually run on computer10")
     output = ROOT.joinpath('verification/evidence').joinpath(args.run_id)
     output.mkdir(parents=True, exist_ok=False)
+    registry_source = ROOT.joinpath("verification/ghost_boundaries.json")
+    shutil.copyfile(registry_source, output.joinpath("ghost_boundaries.json"))
     env = environment(args.alire_dir)
     prefix = Path(env["GNATPROVE_ALIRE_PREFIX"])
     binaries = prefix.joinpath('libexec/spark/bin')
@@ -352,6 +371,8 @@ def main() -> None:
     manifest = {"host": socket.gethostname(), "started_utc": utc(), "runner_sha256": digest(Path(__file__)),
                 "toolchain": tools, "provers_requested": aliases, "prover_config_sha256": digest(config),
                 "coverage_schema": "gnat13-sloc-v1", "projects": {}}
+    manifest["ghost_boundary_schema"] = GHOST_SCHEMA
+    manifest["ghost_registry_sha256"] = digest(output.joinpath("ghost_boundaries.json"))
     dump(output.joinpath('manifest.json'), manifest)
     with tempfile.TemporaryDirectory(prefix="composite-iq-spark-") as temp:
         work = Path(temp)
@@ -367,6 +388,18 @@ def main() -> None:
         dump(output.joinpath('manifest.json'), manifest)
         print("negative_control", "REJECTED AS EXPECTED" if manifest["negative_control"]["expected_failure_rejected"]
               else "INVALID GATE", flush=True)
+        ghost_control = campaign("ghost_negative_control", ROOT.joinpath('verification/ghost_negative_control'),
+                                 "ghost_negative.gpr", "negative_ghost_ledger", aliases, "portfolio",
+                                 work, output, env, config, args.timeout, args.wall_seconds)
+        ghost_contracts = ghost_control.get("native", {}).get("categories", {}).get("Functional Contracts", {})
+        manifest["ghost_negative_control"] = {
+            "expected_failure_rejected": ghost_control["returncode"] != 0 and not ghost_control["timed_out"]
+                and ghost_contracts.get("unproved", 0) > 0,
+            "result": ghost_control,
+        }
+        dump(output.joinpath('manifest.json'), manifest)
+        print("ghost_negative_control", "REJECTED AS EXPECTED"
+              if manifest["ghost_negative_control"]["expected_failure_rejected"] else "INVALID GATE", flush=True)
         for name, (relative, project, unit) in PROJECTS.items():
             folder = ROOT.joinpath(relative)
             runs = {}
@@ -383,6 +416,7 @@ def main() -> None:
             dump(output.joinpath('manifest.json'), manifest)
     manifest["finished_utc"] = utc()
     manifest["portfolio_complete"] = (manifest["negative_control"]["expected_failure_rejected"]
+                                      and manifest["ghost_negative_control"]["expected_failure_rejected"]
                                       and all(r["portfolio"]["complete"] for r in manifest["projects"].values()))
     dump(output.joinpath('manifest.json'), manifest)
     raise SystemExit(0 if manifest["portfolio_complete"] else 1)

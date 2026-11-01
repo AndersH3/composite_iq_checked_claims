@@ -1,0 +1,9 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+negative_union.ads:5:09: info: data dependencies proved
+
+negative_union.ads:7:14: medium: postcondition might fail
+    7 |     Post => Union_Size'Result = A + B - Joint;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Summary logged in /tmp/composite-iq-spark-f2wrpffh/negative_control/portfolio/obj-proof/gnatprove/gnatprove.out
+gnatprove: unproved check messages considered as errors

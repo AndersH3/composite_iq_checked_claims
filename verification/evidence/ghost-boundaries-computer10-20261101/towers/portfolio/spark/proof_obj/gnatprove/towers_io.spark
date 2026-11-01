@@ -1,0 +1,85 @@
+{
+  "spark": [
+    {
+      "name": "Towers_IO",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 2
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Towers_IO.Read_Trials",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 9
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Towers_IO.Read_Seed",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 11
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Towers_IO.Write_Report",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 13
+        }
+      ],
+      "spark": "spec"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "towers_io.ads",
+      "line": 4,
+      "col": 3,
+      "rule": "DEPENDS_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_IO",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 2
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+  },
+  "proof": [
+  ],
+  "assumptions": [
+  ],
+  "timings": {
+    "init_why_sections": 3.02000000374392E-04,
+    "globals (advanced)": 1.44440000876784E-02,
+    "flow analysis": 3.52000002749264E-04,
+    "marking": 1.13000001874752E-04,
+    "translation of standard": 2.69700004719198E-03,
+    "properties (advanced)": 1.59999999596039E-05,
+    "globals (basic)": 1.98810007423162E-02
+  }
+}

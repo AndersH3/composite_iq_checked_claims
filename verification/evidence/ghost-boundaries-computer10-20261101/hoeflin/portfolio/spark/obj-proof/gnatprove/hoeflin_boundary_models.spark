@@ -1,0 +1,6577 @@
+{
+  "spark": [
+    {
+      "name": "Hoeflin_Boundary_Models",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 3
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Probability_Value",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 8
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 10
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 15
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 18
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 20
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 22
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 25
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 27
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Sqrt",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 30
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Probability",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 32
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Erfc",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 34
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Inverse_Bracket",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 37
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Rare_Quantile",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 40
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Log_Radius",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 42
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Trig",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 45
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Column_Count",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 78
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Options_Payload",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 84
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Calculation_Payload",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 87
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Simulation_Payload",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 92
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Example_Payload",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 100
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Can_Emit",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 103
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Transition",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 118
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Note",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 132
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Numeric_Format",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 136
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 138
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Decimal_Image",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 142
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Decimal_Image",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 145
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Project_Number",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 151
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Number",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 154
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Project_Label",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 161
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Hoeflin_Boundary_Models.Observe_Label",
+      "sloc": [
+        {
+          "file": "hoeflin_boundary_models.ads",
+          "line": 167
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 91,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Calculation_Payload",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 87
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 83,
+      "col": 32,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Column_Count",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 78
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 43,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Log_Radius",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 42
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 2,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 14,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 10
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 3,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 19,
+      "col": 34,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 18
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 4,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 31,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Sqrt",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 30
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 5,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 120,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Transition",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 118
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 6,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 117,
+      "col": 35,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Can_Emit",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 103
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 7,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 26,
+      "col": 34,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 25
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 8,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 38,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Inverse_Bracket",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 37
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 9,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 21,
+      "col": 35,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 20
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 10,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 137,
+      "col": 57,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Numeric_Format",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 136
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 11,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 42,
+      "col": 7,
+      "rule": "UNINITIALIZED",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 12,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 143,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 13,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 33,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Probability",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 32
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 14,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 153,
+      "col": 64,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Number",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 151
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 15,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 46,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Trig",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 45
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 16,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 86,
+      "col": 60,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Options_Payload",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 84
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 17,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 28,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 27
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 18,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 17,
+      "col": 50,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 15
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 19,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 99,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Simulation_Payload",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 92
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 20,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 24,
+      "col": 43,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 22
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 21,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 141,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 138
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 22,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 41,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Rare_Quantile",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 40
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 23,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 9,
+      "col": 33,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Probability_Value",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 8
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 24,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 35,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Erfc",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 34
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 25,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 102,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Example_Payload",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 100
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 26,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 168,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 167
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 27,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 162,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 28,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 146,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 145
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 29,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 133,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Note",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 132
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 30,
+      "how_proved": "flow"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 156,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Number",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 154
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 31,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-f2wrpffh/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_boundary_models__erfc_scaling",
+    " 2": "/tmp/composite-iq-spark-f2wrpffh/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_boundary_models__observe_erfc",
+    " 3": "/tmp/composite-iq-spark-f2wrpffh/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_boundary_models__note",
+    " 4": "/tmp/composite-iq-spark-f2wrpffh/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_boundary_models__decimal_image",
+    " 5": "/tmp/composite-iq-spark-f2wrpffh/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_boundary_models__transition",
+    " 6": "/tmp/composite-iq-spark-f2wrpffh/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_boundary_models__observe_label",
+    " 7": "/tmp/composite-iq-spark-f2wrpffh/hoeflin/portfolio/obj-proof/gnatprove/hoeflin_boundary_models__project_label"
+  },
+  "proof": [
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 4,
+      "col": 18,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 27
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 32,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 4,
+      "col": 18,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 27
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 33,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 29,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 27
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 528,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.30000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 29,
+      "check_col": 14,
+      "msg_id": 34,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 528,
+          "max_time": 3.99999991059303E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 36,
+      "col": 26,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Erfc",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 34
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 584,
+              "time": 6.35000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 36,
+      "check_col": 26,
+      "msg_id": 35,
+      "session_dir": 2,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 0.00000000000000E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 134,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Note",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 132
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 2659,
+              "time": 2.10000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.70000000000000E-01
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.80000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 134,
+      "check_col": 14,
+      "msg_id": 36,
+      "session_dir": 3,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 2659,
+          "max_time": 2.09999993443489E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 45,
+      "col": 45,
+      "rule": "VC_INDEX_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 45,
+      "check_col": 45,
+      "msg_id": 37,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 51,
+      "col": 37,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 51,
+      "check_col": 37,
+      "msg_id": 38,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 52,
+      "col": 35,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 52,
+      "check_col": 35,
+      "msg_id": 39,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 52,
+      "col": 44,
+      "rule": "VC_DIVISION_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.50000000000000E-01
+            },
+            "Yices": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 38,
+              "time": 1.64000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 52,
+      "check_col": 44,
+      "msg_id": 40,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 53,
+      "col": 25,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 53,
+      "check_col": 25,
+      "msg_id": 41,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 5.00000007450581E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 53,
+      "col": 30,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.10000000000000E-01
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 129,
+              "time": 2.55000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 53,
+      "check_col": 30,
+      "msg_id": 42,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 5.00000007450581E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 144,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 142
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "Trivial": {
+              "result": "Valid",
+              "steps": 2,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 144,
+      "check_col": 14,
+      "msg_id": 43,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        },
+        "Trivial": {
+          "count": 1,
+          "max_steps": 2,
+          "max_time": 0.00000000000000E+00
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 21,
+      "col": 25,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Transition",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 118
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 21,
+      "check_col": 25,
+      "msg_id": 44,
+      "session_dir": 5,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 121,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Transition",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 118
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 671,
+              "time": 1.20000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 710,
+              "time": 1.30000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "Trivial": {
+              "result": "Valid",
+              "steps": 2,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 20,
+              "time": 7.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 8.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 619,
+              "time": 1.10000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 9.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 563,
+              "time": 1.00000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 8.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 563,
+              "time": 9.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 563,
+              "time": 1.00000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 564,
+              "time": 1.00000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 563,
+              "time": 1.00000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 563,
+              "time": 1.00000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 6.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 8.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 6.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.90000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.90000000000000E-01
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.10000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 8.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.10000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 9.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 721,
+              "time": 1.20000000000000E-01
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.50000000000000E-01
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 9.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.90000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 121,
+      "check_col": 14,
+      "msg_id": 45,
+      "session_dir": 5,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 13,
+          "max_steps": 721,
+          "max_time": 1.29999995231628E-01
+        },
+        "Trivial": {
+          "count": 1,
+          "max_steps": 2,
+          "max_time": 0.00000000000000E+00
+        },
+        "Z3": {
+          "count": 5,
+          "max_steps": 1,
+          "max_time": 1.89999997615814E-01
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 169,
+      "col": 39,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 167
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 169,
+      "check_col": 39,
+      "msg_id": 46,
+      "session_dir": 6,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 169,
+      "col": 81,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 167
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 169,
+      "check_col": 81,
+      "msg_id": 47,
+      "session_dir": 6,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 170,
+      "col": 48,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 167
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 170,
+      "check_col": 48,
+      "msg_id": 48,
+      "session_dir": 6,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 171,
+      "col": 54,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Observe_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 167
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 171,
+      "check_col": 54,
+      "msg_id": 49,
+      "session_dir": 6,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 62,
+      "col": 41,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 47,
+              "time": 1.31000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 62,
+      "check_col": 41,
+      "msg_id": 50,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 68,
+      "col": 64,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 68,
+      "check_col": 64,
+      "msg_id": 51,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 69,
+      "col": 77,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 69,
+      "check_col": 77,
+      "msg_id": 52,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 70,
+      "col": 89,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 70,
+      "check_col": 89,
+      "msg_id": 53,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 67,
+      "col": 62,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 49,
+              "time": 1.52000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 67,
+      "check_col": 62,
+      "msg_id": 54,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 4,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 67,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 52,
+              "time": 1.51000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 67,
+      "check_col": 33,
+      "msg_id": 55,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 67,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 67,
+      "check_col": 33,
+      "msg_id": 56,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 66,
+      "col": 56,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 49,
+              "time": 1.53000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 49,
+              "time": 1.61000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 66,
+      "check_col": 56,
+      "msg_id": 57,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 4,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 66,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 49,
+              "time": 1.41000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 66,
+      "check_col": 33,
+      "msg_id": 58,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 66,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 66,
+      "check_col": 33,
+      "msg_id": 59,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 65,
+      "col": 52,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 49,
+              "time": 1.63000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 65,
+      "check_col": 52,
+      "msg_id": 60,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 3,
+          "max_steps": 1,
+          "max_time": 2.99999993294477E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 65,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_INIT",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 65,
+      "check_col": 33,
+      "msg_id": 61,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.adb",
+      "line": 65,
+      "col": 33,
+      "rule": "VC_LOOP_INVARIANT_PRESERV",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.adb",
+      "check_line": 65,
+      "check_col": 33,
+      "msg_id": 62,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 163,
+      "col": 50,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 88,
+              "time": 2.18000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 163,
+      "check_col": 50,
+      "msg_id": 63,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 164,
+      "col": 54,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 79,
+              "time": 2.12000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 4.20000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 79,
+              "time": 2.19000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 164,
+      "check_col": 54,
+      "msg_id": 64,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 165,
+      "col": 58,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 165,
+      "check_col": 58,
+      "msg_id": 65,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 166,
+      "col": 64,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 166,
+      "check_col": 64,
+      "msg_id": 66,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "Z3": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    },
+    {
+      "file": "hoeflin_boundary_models.ads",
+      "line": 163,
+      "col": 16,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 6.50000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 844,
+              "time": 9.74000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "hoeflin_boundary_models.ads",
+      "check_line": 163,
+      "check_col": 16,
+      "msg_id": 67,
+      "session_dir": 7,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 3,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        },
+        "Z3": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 1.99999995529652E-02
+        }
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 27
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Erfc",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 34
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 27
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 27
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 27
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Erfc",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 34
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Number",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 154
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Number",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 154
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Simulation_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 92
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 18
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Simulation_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 92
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 18
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 18
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Rare_Quantile",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 40
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 18
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 18
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Rare_Quantile",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 40
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Project_Label",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 161
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Project_Label",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 161
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Project_Label",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 161
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Project_Number",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 151
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Project_Number",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 151
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Probability_Value",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Probability_Value",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 15
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Inverse_Bracket",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 37
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 15
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 15
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Inverse_Bracket",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 37
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Probability",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 32
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Probability",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 32
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Label",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 167
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Label",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 167
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 138
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 138
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Transition",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 118
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Transition",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 118
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Transition",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 118
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Note",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 132
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Column_Count",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 78
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 22
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Transition",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 118
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Note",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 132
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 27
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Column_Count",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 78
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 22
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Transition",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 118
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Transition",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 118
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Transition",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 118
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Note",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 132
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 27
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 27
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 10
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Sqrt",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Valid",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 50
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Can_Emit",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 103
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 10
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 10
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Sqrt",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Core.Valid",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 50
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Probability_Value",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 8
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Core.Valid",
+            "sloc": [
+              {
+                "file": "hoeflin_core.ads",
+                "line": 50
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Can_Emit",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 103
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Example_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 100
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Example_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 100
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Options_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 84
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Options_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 84
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Numeric_Format",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 136
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Numeric_Format",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 136
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Calculation_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 87
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Calculation_Payload",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 87
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Can_Emit",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 103
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Column_Count",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 78
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Can_Emit",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 103
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Column_Count",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 78
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Transition",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 118
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Can_Emit",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 103
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Column_Count",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 78
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Transition",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 118
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Can_Emit",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 103
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Column_Count",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 78
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Can_Emit",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 103
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Column_Count",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 78
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Transition",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 118
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 20
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 20
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 25
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 25
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 22
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Log_Radius",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 42
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 22
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 20
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 22
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Log_Radius",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 42
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 25
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Trig",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 45
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 138
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 138
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Decimal_Image",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 142
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Decimal_Image",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 142
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Decimal_Image",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 145
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 25
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 25
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Trig",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 45
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_POST",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Decimal_Image",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 142
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Decimal_Image",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 142
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Decimal_Image",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 142
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Observe_Decimal_Image",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 145
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 138
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+            "sloc": [
+              {
+                "file": "hoeflin_boundary_models.ads",
+                "line": 138
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Decimal_Image",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 142
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+          "sloc": [
+            {
+              "file": "hoeflin_boundary_models.ads",
+              "line": 10
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 2.57588911056519E+00,
+    "gnatwhy3.transformations.eliminate_algebraic": 4.83667999505997E-01,
+    "init_why_sections": 1.38000003062189E-03,
+    "gnatwhy3.transformations.detect_polymorphism": 4.43070009350777E-02,
+    "gnatwhy3.transformations.eliminate_literal": 4.63713973760605E-01,
+    "gnatwhy3.run_vcs": 4.16380017995834E-02,
+    "globals (advanced)": 1.01999996695668E-03,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 1.63925006985664E-01,
+    "flow analysis": 5.31090013682842E-02,
+    "gnatwhy3.transformations.encoding_smt": 3.10696005821228E-01,
+    "gnatwhy3.transformations.simplify_formula": 5.12996017932892E-01,
+    "marking": 3.44000000040978E-04,
+    "translation of standard": 2.17300001531839E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 9.79629978537560E-02,
+    "gnatwhy3.transformations.instantiate_predicate": 6.53270035982132E-02,
+    "properties (advanced)": 7.10000022081658E-05,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 7.01420009136200E-02,
+    "gnatwhy3.register_vcs": 2.46254995465279E-01,
+    "gnatwhy3.transformations.eliminate_epsilon": 4.08138006925583E-01,
+    "globals (basic)": 4.56100003793836E-03,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 1.97660899162292E+00,
+    "gnatwhy3.schedule_vcs": 5.98120018839836E-02,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 3.33000003593042E-04,
+    "gnatwhy3.save_session": 5.13320006430149E-02,
+    "gnatwhy3.transformations.encoding_sort": 1.03083997964859E-01,
+    "gnatwhy3.transformations.eliminate_inductive": 2.77972996234894E-01,
+    "gnatwhy3.transformations.compile_match": 1.23001992702484E-01,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 3.26000008499250E-04,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 5.97775995731354E-01,
+    "gnatwhy3.transformations.eliminate_definition": 6.27349987626076E-02,
+    "gnatwhy3.transformations.eliminate_builtin": 3.73537003993988E-01,
+    "gnatwhy3.transformations.discriminate_if_poly": 6.51000009384006E-04,
+    "gnatwhy3.transformations.introduce_premises": 3.13400000333786E-01,
+    "gnatwhy3.init": 3.19497299194336E+00
+  }
+}

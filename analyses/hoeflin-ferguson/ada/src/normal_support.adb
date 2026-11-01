@@ -1,5 +1,6 @@
 with Ada.Numerics.Long_Elementary_Functions;
 with Interfaces.C;
+with Hoeflin_Boundary_Models;
 package body Normal_Support with SPARK_Mode is
    package Math renames Ada.Numerics.Long_Elementary_Functions;
    use type Interfaces.Unsigned_64;
@@ -17,29 +18,41 @@ package body Normal_Support with SPARK_Mode is
       then
          raise Constraint_Error with "square-root range contract failed";
       end if;
+      Hoeflin_Boundary_Models.Observe_Sqrt (X, Value);
       return Value;
    end Square_Root;
 
    function Survival (X : Real) return Probability
      with SPARK_Mode => Off
    is
-      Value : constant Long_Float :=
-        0.5 * Real (C_Erfc (Interfaces.C.double (X / Math.Sqrt (2.0))));
+      Raw : constant Real := Real (C_Erfc (Interfaces.C.double (X / Math.Sqrt (2.0))));
+      Value : constant Long_Float := 0.5 * Raw;
    begin
       if not (Value >= 0.0 and then Value <= 1.0) then
          raise Constraint_Error with "erfc probability range failed";
       end if;
+      Hoeflin_Boundary_Models.Observe_Erfc (Raw, Value);
+      Hoeflin_Boundary_Models.Observe_Probability (Value);
       return Value;
    end Survival;
 
    procedure Check_Inverse_Bracket (P : Real; Lo, Hi : Bracket_Value)
      with Global => null;
    procedure Check_Inverse_Bracket (P : Real; Lo, Hi : Bracket_Value)
-     with SPARK_Mode => Off is
+     with SPARK_Mode => Off
+   is
+      Lower_SF : constant Probability := Survival (Lo);
+      Upper_SF : Probability;
    begin
-      if Survival (Lo) < P or else Survival (Hi) > P then
+      if Lower_SF < P then
          raise Constraint_Error with "probability outside the supported inverse bracket";
       end if;
+      Upper_SF := Survival (Hi);
+      if Upper_SF > P then
+         raise Constraint_Error with "probability outside the supported inverse bracket";
+      end if;
+      Hoeflin_Boundary_Models.Observe_Inverse_Bracket
+        (P, Lower_SF, Upper_SF);
    end Check_Inverse_Bracket;
 
    function Inverse_Survival (P : Real) return Bracket_Value is
@@ -62,6 +75,7 @@ package body Normal_Support with SPARK_Mode is
       if not (Value >= 3.0 and then Value <= 10.0) then
          raise Constraint_Error with "normal quantile outside supported rare range";
       end if;
+      Hoeflin_Boundary_Models.Observe_Rare_Quantile (Value);
       return Value;
    end Rare_Quantile;
 
@@ -96,19 +110,24 @@ package body Normal_Support with SPARK_Mode is
       if not (Value >= 0.0 and then Value <= 9.0) then
          raise Constraint_Error with "normal radius range contract failed";
       end if;
+      Hoeflin_Boundary_Models.Observe_Log_Radius (U, Log_U, Value);
       return Value;
    end Checked_Radius;
 
    procedure Normal_Pair (G : in out Generator; X, Y : out Normal_Value) is
       U, V : Open_Unit;
       Radius : Radius_Value;
-      Angle : Real;
+      Angle, Cosine, Sine : Real;
    begin
       Uniform (G, U);
       Uniform (G, V);
       Radius := Checked_Radius (U);
       Angle := 6.283185307179586476925286766559 * V;
-      X := Radius * Math.Cos (Angle);
-      Y := Radius * Math.Sin (Angle);
+      Cosine := Math.Cos (Angle);
+      Hoeflin_Boundary_Models.Observe_Trig (Cosine);
+      X := Radius * Cosine;
+      Sine := Math.Sin (Angle);
+      Hoeflin_Boundary_Models.Observe_Trig (Sine);
+      Y := Radius * Sine;
    end Normal_Pair;
 end Normal_Support;

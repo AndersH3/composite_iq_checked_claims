@@ -1,0 +1,57 @@
+{
+  "artifacts": [
+    {
+      "analysis": "hoeflin",
+      "source": "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+      "source_sha256": "30f80ce1dcb684f34b47ea9509a43ae098cf38c5f1b129cbacee5e821729fa23",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "pdf_sha256": "5cf33b8a3431b9504d9e85da85a39bb9f1bab971152c45e36cb2c4f7f40acfd8",
+      "pages": 10,
+      "engine": "XeLaTeX",
+      "document_class": "scrartcl",
+      "paper": "A4",
+      "margins_mm": 16,
+      "build_exit_status": 0,
+      "visual_review": "all pages rendered; verification/disclosure pages inspected at larger size; no clipping, overlap, missing glyphs or unresolved references",
+      "ai_notice_and_full_disclosure": true,
+      "math_content_unchanged": true,
+      "native_totals_in_report": {
+        "total": 283,
+        "flow": 77,
+        "provers": 206,
+        "justified": 0,
+        "unproved": 0
+      },
+      "python_tests_each_mode": 209
+    },
+    {
+      "analysis": "towers",
+      "source": "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex",
+      "source_sha256": "f56485a974470f71169a0e071c436ed2312ef501a22fb989159aebc0cdf8d907",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "pdf_sha256": "d14b02519c4aac5aa71c294f26fa9f9933b2f275eadbff414cd672921495a711",
+      "pages": 11,
+      "engine": "XeLaTeX",
+      "document_class": "scrartcl",
+      "paper": "A4",
+      "margins_mm": 16,
+      "build_exit_status": 0,
+      "visual_review": "all pages rendered; verification/disclosure pages inspected at larger size; no clipping, overlap, missing glyphs or unresolved references",
+      "ai_notice_and_full_disclosure": true,
+      "math_content_unchanged": true,
+      "native_totals_in_report": {
+        "total": 498,
+        "flow": 123,
+        "provers": 375,
+        "justified": 0,
+        "unproved": 0
+      },
+      "python_tests_each_mode": 209
+    }
+  ],
+  "readme": {
+    "path": "README.md",
+    "sha256": "2e859159df9823161d01f870872a4e62d23b4e6902a9c703f71b7d4b31c69ec5",
+    "upfront_notice_and_full_ai_disclosure": true
+  }
+}

@@ -1,0 +1,5 @@
+tests/fixtures/contract_negative_control.py
+  probability_identity
+    proved! post-condition
+  negative_probability
+    failed post-condition

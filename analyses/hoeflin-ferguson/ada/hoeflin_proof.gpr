@@ -4,6 +4,7 @@ project Hoeflin_Proof is
    --  native .spark coverage exposes every spec-only/trusted completion.
    for Source_Files use
      ("hoeflin_core.ads", "hoeflin_core.adb",
+      "hoeflin_boundary_models.ads", "hoeflin_boundary_models.adb",
       "normal_support.ads", "normal_support.adb",
       "report_io.ads", "report_io.adb",
       "hoeflin_simulation.adb", "hoeflin_calculations.adb");

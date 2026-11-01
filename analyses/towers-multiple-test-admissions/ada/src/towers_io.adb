@@ -1,3 +1,4 @@
+with Towers_IO_Models;
 with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Strings.Fixed;
@@ -12,31 +13,64 @@ package body Towers_IO with SPARK_Mode => Off is
       S : String (1 .. 42);
    begin
       Real_IO.Put (S, X, Aft => 17, Exp => 3);
-      return Ada.Strings.Fixed.Trim (S, Ada.Strings.Both);
+      declare
+         Result : constant String := Ada.Strings.Fixed.Trim (S, Ada.Strings.Both);
+      begin
+         Towers_IO_Models.Check_Real_Field (Result);
+         return Result;
+      end;
    end F;
    function N (X : Long_Long_Integer) return String is
-     (Ada.Strings.Fixed.Trim (X'Image, Ada.Strings.Both));
+      Result : constant String := Ada.Strings.Fixed.Trim (X'Image, Ada.Strings.Both);
+   begin
+      Towers_IO_Models.Check_Integer_Field (Result);
+      return Result;
+   end N;
    function Name (K : Case_Index) return String is
    begin
       case K is
-         when 1 => return "equal_top_2_percent";
-         when 2 => return "equal_top_0_1_percent";
-         when 3 => return "equal_top_1_in_33000";
-         when 4 => return "mixed_top_2_and_0_1_percent";
+         when 1 =>
+            Towers_IO_Models.Check_Case_Name (K, "equal_top_2_percent");
+            return "equal_top_2_percent";
+         when 2 =>
+            Towers_IO_Models.Check_Case_Name (K, "equal_top_0_1_percent");
+            return "equal_top_0_1_percent";
+         when 3 =>
+            Towers_IO_Models.Check_Case_Name (K, "equal_top_1_in_33000");
+            return "equal_top_1_in_33000";
+         when 4 =>
+            Towers_IO_Models.Check_Case_Name (K, "mixed_top_2_and_0_1_percent");
+            return "mixed_top_2_and_0_1_percent";
       end case;
    end Name;
    function Read_Trials return Trial_Count is
    begin
       if Ada.Command_Line.Argument_Count > 0 then
-         return Trial_Count'Value (Ada.Command_Line.Argument (1));
+         declare
+            Text : constant String := Ada.Command_Line.Argument (1);
+            Actual : constant Trial_Count := Trial_Count'Value (Text);
+         begin
+            Towers_IO_Models.Observe_Option (Text, Actual, Admission_Core.Max_Trials);
+            Towers_IO_Models.Check_Trials (Actual);
+            return Actual;
+         end;
       end if;
+      Towers_IO_Models.Check_Trials (1_000_000);
       return 1_000_000;
    end Read_Trials;
    function Read_Seed return Seed_Value is
    begin
       if Ada.Command_Line.Argument_Count > 1 then
-         return Seed_Value'Value (Ada.Command_Line.Argument (2));
+         declare
+            Text : constant String := Ada.Command_Line.Argument (2);
+            Actual : constant Seed_Value := Seed_Value'Value (Text);
+         begin
+            Towers_IO_Models.Observe_Option (Text, Long_Long_Integer (Actual), 2_147_483_646);
+            Towers_IO_Models.Check_Seed (Long_Long_Integer (Actual));
+            return Actual;
+         end;
       end if;
+      Towers_IO_Models.Check_Seed (20_261_030);
       return 20_261_030;
    end Read_Seed;
    procedure Write_Report (Trials : Trial_Count; Seed : Seed_Value; Data : Results) is
@@ -44,6 +78,7 @@ package body Towers_IO with SPARK_Mode => Off is
          Calc, Grid, Sim, Calibration : File_Type;
          C : Counts;
       begin
+         Towers_IO_Models.Check_Report (Trials, Long_Long_Integer (Seed), Data);
          Ada.Directories.Create_Path (Directory);
          Create (Calc, Out_File, Directory & "/calculation.csv");
          Put_Line (Calc, "case,rho,cutoff_a_z,cutoff_b_z,p_a,p_b,joint,union,conditional_b_given_a,conditional_a_given_b,phi,joint_refinement_delta,raw_union,raw_conditional_b_given_a,raw_conditional_a_given_b,complement_a_units");
@@ -99,6 +134,7 @@ package body Towers_IO with SPARK_Mode => Off is
          Put_Line ("Simulation seed=" & Seed'Image & "; trials=" & Trials'Image);
       end Run;
    begin
+      Towers_IO_Models.Check_Report (Trials, Long_Long_Integer (Seed), Data);
       if Ada.Command_Line.Argument_Count > 2 then
          Run (Ada.Command_Line.Argument (3));
       else

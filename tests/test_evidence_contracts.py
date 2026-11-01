@@ -101,8 +101,9 @@ def test_explicit_source_tree_does_not_allow_an_ada_hash_mismatch(tmp_path):
 @deal.raises()
 @deal.has()
 def coverage_manifest() -> dict:
-    return {"coverage_schema": "gnat13-sloc-v1", "projects": {
-        name: {"portfolio": {"coverage": {}, "required_full_entities": sorted(required)}}
+    return {"coverage_schema": "gnat13-sloc-v1", "ghost_boundary_schema": auditor.GHOST_SCHEMA,
+            "ghost_registry_sha256": "1" * 64, "ghost_negative_control": {}, "projects": {
+        name: {"portfolio": {"coverage": {}, "ghost_boundaries": {}, "required_full_entities": sorted(required)}}
         for name, required in auditor.REQUIRED_BODIES.items()}}
 
 
@@ -192,6 +193,46 @@ def test_unknown_coverage_schema_cannot_pass_even_for_legacy_campaign():
     manifest["coverage_schema"] = "unknown"
     with pytest.raises(ValueError, match="Unknown native coverage schema"):
         auditor.campaign_policy(manifest, "computer10-20261031", True)
+    return None
+
+
+@deal.post(lambda result: result is None)
+@deal.has()
+def test_expanded_historical_policy_requires_explicit_context_and_original_bodies():
+    manifest = coverage_manifest()
+    del manifest["ghost_boundary_schema"]
+    for name, required in auditor.BASE_REQUIRED_BODIES.items():
+        manifest["projects"][name]["portfolio"]["required_full_entities"] = sorted(required)
+    assert auditor.campaign_policy(manifest, "spark-expanded-computer10-20261031", True)
+    with pytest.raises(ValueError, match="Ghost boundary schema is required"):
+        auditor.campaign_policy(manifest, "spark-expanded-computer10-20261031", False)
+    with pytest.raises(ValueError, match="Ghost boundary schema is required"):
+        auditor.campaign_policy(manifest, "new-campaign", True)
+    return None
+
+
+@pytest.mark.parametrize("change,message", [
+    ("missing-schema", "Ghost boundary schema is required"),
+    ("unknown-schema", "Unknown ghost boundary schema"),
+    ("missing-hash", "Ghost registry hash is invalid"),
+    ("missing-control", "Ghost negative control is missing"),
+    ("missing-result", "Ghost boundary result is missing")])
+@deal.post(lambda result: result is None)
+@deal.has()
+def test_ghost_campaign_policy_cannot_drop_modeling_evidence(change, message):
+    manifest = coverage_manifest()
+    if change == "missing-schema":
+        del manifest["ghost_boundary_schema"]
+    elif change == "unknown-schema":
+        manifest["ghost_boundary_schema"] = "unknown"
+    elif change == "missing-hash":
+        del manifest["ghost_registry_sha256"]
+    elif change == "missing-control":
+        del manifest["ghost_negative_control"]
+    else:
+        del manifest["projects"]["towers"]["portfolio"]["ghost_boundaries"]
+    with pytest.raises(ValueError, match=message):
+        auditor.campaign_policy(manifest, "ghost-campaign", False)
     return None
 
 

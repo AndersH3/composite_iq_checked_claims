@@ -33,7 +33,7 @@ jobs:
           python -m deal prove --skipped --nocolor verification/proof_gate.py | tee proof-gate.log
           test "$(grep -c 'proved! post-condition' proof-gate.log)" -eq 2
           if grep -E 'skipped|failed' proof-gate.log; then exit 1; fi
-      - name: Audit current expanded SPARK evidence
+      - name: Audit current ghost-boundary SPARK evidence
         run: python verification/verify_evidence.py
       - name: Audit prior SPARK campaigns against their explicit source revision
         run: |
@@ -41,3 +41,5 @@ jobs:
           for campaign in computer10-20261031 deal-spark-computer10-20261031 deal-lint-spark-computer10-20261031; do
             python verification/verify_evidence.py "verification/evidence/$campaign" --source-root "$RUNNER_TEMP/composite-iq-prior-source"
           done
+          git worktree add --detach "$RUNNER_TEMP/composite-iq-expanded-source" ce0e895e472de86a6760f05a34d654f32ab0820e
+          python verification/verify_evidence.py verification/evidence/spark-expanded-computer10-20261031 --source-root "$RUNNER_TEMP/composite-iq-expanded-source"

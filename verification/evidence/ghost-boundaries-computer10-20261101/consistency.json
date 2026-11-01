@@ -1,0 +1,14 @@
+{
+  "host": "computer10",
+  "current_proof_runtime_and_python_sources_match": true,
+  "all_six_csvs_identical_under_both_ghost_policies_and_original": true,
+  "ordinary_assertions_check_under_both_policies": true,
+  "32_cli_domain_grammar_cases_passed": true,
+  "earlier_evidence_blobs_unchanged": 397,
+  "mathematical_content_unchanged": true,
+  "report_native_and_python_counts_match_evidence": true,
+  "ai_disclosure_in_both_reports_and_readme": true,
+  "pdf_text_and_visual_review_passed": true,
+  "excluded_implementation_refinement_proved": false,
+  "model_adequacy_proved": false
+}

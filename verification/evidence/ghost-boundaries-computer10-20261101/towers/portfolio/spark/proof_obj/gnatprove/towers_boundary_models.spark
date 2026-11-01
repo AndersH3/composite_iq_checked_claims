@@ -1,0 +1,2979 @@
+{
+  "spark": [
+    {
+      "name": "Towers_Boundary_Models",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 4
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 7
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Survival_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 16
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Log_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 21
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Exp_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 24
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Trigonometric_Value",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 29
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 32
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Probability_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 35
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Node_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 38
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 41
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 46
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Union_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 52
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 58
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Joint_Normal_Return",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 63
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Project_Conditional",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 69
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Project_Grid_Cell",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 75
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Sqrt",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 84
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Survival",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 86
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Log",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 88
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Exp",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 90
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Trig",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 92
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Exponent",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 94
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Probability",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 96
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Node",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 98
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Grid_Cell",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 100
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Quantization",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 105
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Union",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 108
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Conditional",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 110
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Joint",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 112
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+      "sloc": [
+        {
+          "file": "towers_boundary_models.ads",
+          "line": 114
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 87,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Survival",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 86
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 93,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Trig",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 92
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 99,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Node",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 98
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 2,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 115,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 114
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 3,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 107,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Quantization",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 105
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 4,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 111,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Conditional",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 110
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 5,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 89,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Log",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 88
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 6,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 95,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Exponent",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 94
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 7,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 102,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Grid_Cell",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 100
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 8,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 109,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Union",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 108
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 9,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 85,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Sqrt",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 84
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 10,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 113,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Joint",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 112
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 11,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 91,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Exp",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 90
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 12,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 97,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Probability",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 96
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 13,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 76,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Project_Grid_Cell",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 75
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 14,
+      "how_proved": "flow"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 71,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Project_Conditional",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 69
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 15,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-f2wrpffh/towers/portfolio/proof_obj/gnatprove/towers_boundary_models__quantization_normal_return",
+    " 2": "/tmp/composite-iq-spark-f2wrpffh/towers/portfolio/proof_obj/gnatprove/towers_boundary_models__union_normal_return",
+    " 3": "/tmp/composite-iq-spark-f2wrpffh/towers/portfolio/proof_obj/gnatprove/towers_boundary_models__project_conditional",
+    " 4": "/tmp/composite-iq-spark-f2wrpffh/towers/portfolio/proof_obj/gnatprove/towers_boundary_models__project_grid_cell",
+    " 5": "/tmp/composite-iq-spark-f2wrpffh/towers/portfolio/proof_obj/gnatprove/towers_boundary_models__observe_inverse_bracket"
+  },
+  "proof": [
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 50,
+      "col": 25,
+      "rule": "VC_RANGE_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 46
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 16,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 50,
+      "col": 32,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 46
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 17,
+      "how_proved": "trivial"
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 50,
+      "col": 32,
+      "rule": "VC_DIVISION_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 46
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_boundary_models.ads",
+      "check_line": 50,
+      "check_col": 32,
+      "msg_id": 18,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 0.00000000000000E+00
+        }
+      }
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 50,
+      "col": 53,
+      "rule": "VC_FP_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 46
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.81000000000000E+00
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Unknown\n(sat)",
+              "steps": 17726,
+              "time": 3.58000000000000E+00
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 2146,
+              "time": 1.98500000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_boundary_models.ads",
+      "check_line": 50,
+      "check_col": 53,
+      "msg_id": 19,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "altergo": {
+          "count": 1,
+          "max_steps": 2146,
+          "max_time": 1.98500007390976E-01
+        }
+      }
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 56,
+      "col": 51,
+      "rule": "VC_OVERFLOW_CHECK",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Union_Normal_Return",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 52
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_boundary_models.ads",
+      "check_line": 56,
+      "check_col": 51,
+      "msg_id": 20,
+      "session_dir": 2,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 73,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Project_Conditional",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 69
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_boundary_models.ads",
+      "check_line": 73,
+      "check_col": 14,
+      "msg_id": 21,
+      "session_dir": 3,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 5,
+          "max_steps": 1,
+          "max_time": 9.99999977648258E-03
+        }
+      }
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 78,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Project_Grid_Cell",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 75
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 748,
+              "time": 5.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 6.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.30000000000000E-01
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_boundary_models.ads",
+      "check_line": 78,
+      "check_col": 14,
+      "msg_id": 22,
+      "session_dir": 4,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 5,
+          "max_steps": 748,
+          "max_time": 5.00000007450581E-02
+        }
+      }
+    },
+    {
+      "file": "towers_boundary_models.ads",
+      "line": 117,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 114
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            },
+            "altergo": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        },
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Valid",
+              "steps": 224,
+              "time": 2.75000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_boundary_models.ads",
+      "check_line": 117,
+      "check_col": 14,
+      "msg_id": 23,
+      "session_dir": 5,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 2,
+          "max_steps": 1,
+          "max_time": 0.00000000000000E+00
+        }
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Grid_Cell",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 100
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Trigonometric_Value",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 29
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Trigonometric_Value",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 29
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Trig",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 92
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Grid_Cell",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 100
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 46
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 46
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Towers_Boundary_Models.Project_Grid_Cell",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 75
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Project_Grid_Cell",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 75
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 41
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Project_Grid_Cell",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 75
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Node_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 38
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Node_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 38
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 58
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 58
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Towers_Boundary_Models.Project_Conditional",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 69
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Trigonometric_Value",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 29
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Trigonometric_Value",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 29
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Project_Conditional",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 69
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Project_Conditional",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 69
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Survival_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Exp_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 24
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Exp",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 90
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Node_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 38
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Node",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 98
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Survival_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Exp_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 24
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Exp_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 24
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Exp",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 90
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Node_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 38
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Node_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 38
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Node",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 98
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Probability_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 35
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Probability_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 35
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Log_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 21
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Log",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 88
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Log_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 21
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Log_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 21
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Log",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 88
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Exp_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 24
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Probability_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 35
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Probability",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 96
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Exp_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 24
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Probability_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 35
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Probability_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 35
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Probability",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 96
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Log_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 21
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Log_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 21
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Union_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 52
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Union",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 108
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Union_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 52
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Union_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 52
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Union",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 108
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Joint_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 63
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Joint_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 63
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Survival_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 16
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Survival",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 86
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 46
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Quantization",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 105
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 32
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Exponent",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 94
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Survival_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 16
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Survival_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 16
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Survival",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 86
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 46
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 46
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Quantization",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 105
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Union_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 52
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 32
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 32
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Exponent",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 94
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Union_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 52
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 32
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 32
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 41
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 7
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Sqrt",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 84
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 41
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 7
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 7
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Sqrt",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 84
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Conditional",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 110
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 58
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Conditional",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 110
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Joint_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 63
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Joint",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 112
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Joint_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 63
+              }
+            ]
+          }
+        },
+        {
+          "predicate": "CLAIM_AORTE",
+          "arg": {
+            "name": "Towers_Boundary_Models.Joint_Normal_Return",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 63
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Joint",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 112
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_POST",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 114
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 114
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 114
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+        {
+          "predicate": "CLAIM_EFFECTS",
+          "arg": {
+            "name": "Towers_Boundary_Models.Trigonometric_Value",
+            "sloc": [
+              {
+                "file": "towers_boundary_models.ads",
+                "line": 29
+              }
+            ]
+          }
+        }
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Towers_Boundary_Models.Observe_Trig",
+          "sloc": [
+            {
+              "file": "towers_boundary_models.ads",
+              "line": 92
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 3.22815001010895E-01,
+    "gnatwhy3.transformations.eliminate_algebraic": 7.77620002627373E-02,
+    "init_why_sections": 1.07100000604987E-03,
+    "gnatwhy3.transformations.detect_polymorphism": 1.31900003179908E-03,
+    "gnatwhy3.transformations.eliminate_literal": 5.77040016651154E-02,
+    "gnatwhy3.run_vcs": 1.98500007390976E-02,
+    "globals (advanced)": 6.39999983832240E-04,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 1.48870004341006E-02,
+    "flow analysis": 1.28889996558428E-02,
+    "gnatwhy3.transformations.encoding_smt": 6.09279982745647E-02,
+    "gnatwhy3.transformations.simplify_formula": 5.99409975111485E-02,
+    "marking": 1.84000004082918E-04,
+    "translation of standard": 2.36999988555908E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 1.75090003758669E-02,
+    "gnatwhy3.transformations.instantiate_predicate": 1.18909999728203E-02,
+    "properties (advanced)": 8.90000010258518E-05,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 9.71799995750189E-03,
+    "gnatwhy3.register_vcs": 2.25179996341467E-02,
+    "gnatwhy3.transformations.eliminate_epsilon": 5.16779981553555E-02,
+    "globals (basic)": 5.00000023748726E-04,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 2.82074004411697E-01,
+    "gnatwhy3.schedule_vcs": 1.75839997828007E-02,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 6.29999994998798E-05,
+    "gnatwhy3.save_session": 5.63600007444620E-03,
+    "gnatwhy3.transformations.encoding_sort": 2.26310007274151E-02,
+    "gnatwhy3.transformations.eliminate_inductive": 4.20529991388321E-02,
+    "gnatwhy3.transformations.compile_match": 2.82749999314547E-02,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 6.09999988228083E-05,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 4.49550002813339E-02,
+    "gnatwhy3.transformations.eliminate_definition": 1.33779998868704E-02,
+    "gnatwhy3.transformations.eliminate_builtin": 7.07870051264763E-02,
+    "gnatwhy3.transformations.discriminate_if_poly": 9.10000017029233E-05,
+    "gnatwhy3.transformations.introduce_premises": 4.85420003533363E-02,
+    "gnatwhy3.init": 1.90943300724030E+00
+  }
+}

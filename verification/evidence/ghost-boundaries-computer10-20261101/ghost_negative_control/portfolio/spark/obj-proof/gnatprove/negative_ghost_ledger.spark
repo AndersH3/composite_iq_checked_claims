@@ -1,0 +1,180 @@
+{
+  "spark": [
+    {
+      "name": "Negative_Ghost_Ledger",
+      "sloc": [
+        {
+          "file": "negative_ghost_ledger.ads",
+          "line": 3
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Negative_Ghost_Ledger.Record_Event",
+      "sloc": [
+        {
+          "file": "negative_ghost_ledger.ads",
+          "line": 5
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "negative_ghost_ledger.ads",
+      "line": 6,
+      "col": 11,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Negative_Ghost_Ledger.Record_Event",
+        "sloc": [
+          {
+            "file": "negative_ghost_ledger.ads",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-f2wrpffh/ghost_negative_control/portfolio/obj-proof/gnatprove/negative_ghost_ledger__record_event"
+  },
+  "proof": [
+    {
+      "file": "negative_ghost_ledger.ads",
+      "line": 7,
+      "col": 16,
+      "rule": "VC_POSTCONDITION",
+      "severity": "medium",
+      "entity": {
+        "name": "Negative_Ghost_Ledger.Record_Event",
+        "sloc": [
+          {
+            "file": "negative_ghost_ledger.ads",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 4.20000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Unknown\n()",
+              "steps": 1,
+              "time": 1.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "negative_ghost_ledger.ads",
+      "check_line": 7,
+      "check_col": 16,
+      "msg_id": 1,
+      "session_dir": 1,
+      "how_proved": "prover"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Negative_Ghost_Ledger.Record_Event",
+          "sloc": [
+            {
+              "file": "negative_ghost_ledger.ads",
+              "line": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Negative_Ghost_Ledger",
+          "sloc": [
+            {
+              "file": "negative_ghost_ledger.ads",
+              "line": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 4.45199990645051E-03,
+    "gnatwhy3.transformations.eliminate_algebraic": 3.51299997419119E-03,
+    "init_why_sections": 5.99000020883977E-04,
+    "gnatwhy3.transformations.detect_polymorphism": 5.19999994139653E-05,
+    "gnatwhy3.transformations.eliminate_literal": 1.78699998650700E-03,
+    "gnatwhy3.run_vcs": 1.81299995165318E-03,
+    "globals (advanced)": 1.25000005937181E-04,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 1.01999998150859E-04,
+    "flow analysis": 5.22000016644597E-04,
+    "gnatwhy3.transformations.encoding_smt": 5.05999987944961E-03,
+    "gnatwhy3.transformations.simplify_formula": 2.93399998918176E-03,
+    "marking": 3.19999999192078E-05,
+    "translation of standard": 2.78300000354648E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 4.19999996665865E-04,
+    "gnatwhy3.transformations.instantiate_predicate": 9.20000020414591E-05,
+    "properties (advanced)": 9.00000031833770E-06,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 8.49999996717088E-05,
+    "gnatwhy3.register_vcs": 8.88000009581447E-04,
+    "gnatwhy3.transformations.eliminate_epsilon": 2.12000007741153E-03,
+    "globals (basic)": 1.99000001884997E-04,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 3.29499994404614E-03,
+    "gnatwhy3.schedule_vcs": 1.61000003572553E-03,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 1.99999999495049E-06,
+    "gnatwhy3.save_session": 8.47999996040016E-04,
+    "gnatwhy3.transformations.encoding_sort": 1.59799994435161E-03,
+    "gnatwhy3.transformations.eliminate_inductive": 4.78000001749024E-04,
+    "gnatwhy3.transformations.compile_match": 3.91999987186864E-04,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 3.99999998990097E-06,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 8.90000010258518E-05,
+    "gnatwhy3.transformations.eliminate_definition": 6.00000028498471E-04,
+    "gnatwhy3.transformations.eliminate_builtin": 8.11000005342066E-04,
+    "gnatwhy3.transformations.discriminate_if_poly": 6.00000021222513E-06,
+    "gnatwhy3.transformations.introduce_premises": 1.51999993249774E-04,
+    "gnatwhy3.init": 3.31553012132645E-01
+  }
+}

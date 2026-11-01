@@ -1,3 +1,4 @@
+with Towers_Boundary_Models;
 with Ada.Numerics.Long_Elementary_Functions;
 package body Towers_Engine with SPARK_Mode is
    use Admission_Core;
@@ -15,6 +16,8 @@ package body Towers_Engine with SPARK_Mode is
       if abs (Long_Float (Q) / Long_Float (Scale) - P) > 0.51E-15 then
          raise Constraint_Error with "probability quantization bound exceeded";
       end if;
+      Towers_Boundary_Models.Observe_Quantization
+        (P, Long_Long_Integer (Q), Long_Long_Integer (Q));
       return Q;
    end Checked_Quantization;
 
@@ -25,10 +28,16 @@ package body Towers_Engine with SPARK_Mode is
    procedure Check_Union_Units (A, B, J : in out Probability_Units)
      with SPARK_Mode => Off
    is
+      Old_A : constant Long_Long_Integer := Long_Long_Integer (A) with Ghost;
+      Old_B : constant Long_Long_Integer := Long_Long_Integer (B) with Ghost;
+      Old_J : constant Long_Long_Integer := Long_Long_Integer (J) with Ghost;
    begin
       if J > A or else J > B or else A + B > Scale then
          raise Constraint_Error with "invalid union probability units";
       end if;
+      Towers_Boundary_Models.Observe_Union
+        (Long_Long_Integer (A), Long_Long_Integer (B), Long_Long_Integer (J),
+         Old_A, Old_B, Old_J);
    end Check_Union_Units;
 
    procedure Check_Conditional_Units (J, M : in out Probability_Units)
@@ -37,10 +46,14 @@ package body Towers_Engine with SPARK_Mode is
    procedure Check_Conditional_Units (J, M : in out Probability_Units)
      with SPARK_Mode => Off
    is
+      Old_J : constant Long_Long_Integer := Long_Long_Integer (J) with Ghost;
+      Old_M : constant Long_Long_Integer := Long_Long_Integer (M) with Ghost;
    begin
       if M = 0 or else J > M then
          raise Constraint_Error with "invalid conditional probability units";
       end if;
+      Towers_Boundary_Models.Observe_Conditional
+        (Long_Long_Integer (J), Long_Long_Integer (M), Old_J, Old_M);
    end Check_Conditional_Units;
 
    procedure Check_Joint (J : in out Long_Float; A, B : Probability)
@@ -49,10 +62,12 @@ package body Towers_Engine with SPARK_Mode is
    procedure Check_Joint (J : in out Long_Float; A, B : Probability)
      with SPARK_Mode => Off
    is
+      Old_J : constant Long_Float := J with Ghost;
    begin
       if not (J >= 0.0 and J <= A and J <= B) then
          raise Constraint_Error with "joint tail exceeds its marginal";
       end if;
+      Towers_Boundary_Models.Observe_Joint (J, A, B, Old_J);
    end Check_Joint;
 
    function Units (P : Probability) return Probability_Units
@@ -119,8 +134,8 @@ package body Towers_Engine with SPARK_Mode is
       Lower_Tail : constant Probability := SF (12.0) with Ghost;
       Upper_Tail : constant Probability := SF (-12.0) with Ghost;
    begin
-      pragma Assert (Left > Lower_Tail and Left < Upper_Tail);
-      pragma Assert (Right > Lower_Tail and Right < Upper_Tail);
+      Towers_Boundary_Models.Observe_Inverse_Bracket (Left, Lower_Tail, Upper_Tail);
+      Towers_Boundary_Models.Observe_Inverse_Bracket (Right, Lower_Tail, Upper_Tail);
       A := Inverse_SF (Left);
       B := Inverse_SF (Right);
       J := Joint_Tail (A, B, Rho);

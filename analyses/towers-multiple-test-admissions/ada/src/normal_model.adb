@@ -1,3 +1,4 @@
+with Towers_Boundary_Models;
 with Ada.Numerics.Long_Elementary_Functions;
 with Ada.Numerics;
 with Interfaces.C;
@@ -26,6 +27,7 @@ package body Normal_Model with SPARK_Mode is
       then
          raise Constraint_Error with "sqrt range check failed";
       end if;
+      Towers_Boundary_Models.Observe_Sqrt (X, Result);
       return Result;
    end Square_Root;
 
@@ -40,6 +42,7 @@ package body Normal_Model with SPARK_Mode is
       if not (Result in -23.0 .. 0.0) then
          raise Constraint_Error with "log range check failed";
       end if;
+      Towers_Boundary_Models.Observe_Log (X, Result);
       return Result;
    end Checked_Log;
 
@@ -54,6 +57,7 @@ package body Normal_Model with SPARK_Mode is
       if not (Result in 0.0 .. 1.0001) then
          raise Constraint_Error with "exp range check failed";
       end if;
+      Towers_Boundary_Models.Observe_Exp (X, Result);
       return Result;
    end Checked_Exp;
 
@@ -68,6 +72,7 @@ package body Normal_Model with SPARK_Mode is
       if not (X <= 1.0E-9) then
          raise Constraint_Error with "density exponent outside checked range";
       end if;
+      Towers_Boundary_Models.Observe_Exponent (X, X);
       return X;
    end Checked_Exponent;
 
@@ -80,6 +85,7 @@ package body Normal_Model with SPARK_Mode is
       if not (P in 0.0 .. 1.0) then
          raise Constraint_Error with "numerical probability outside [0,1]";
       end if;
+      Towers_Boundary_Models.Observe_Probability (P, P);
       return P;
    end Checked_Probability;
 
@@ -93,6 +99,7 @@ package body Normal_Model with SPARK_Mode is
       then
          raise Constraint_Error with "normal survival boundary check failed";
       end if;
+      Towers_Boundary_Models.Observe_Survival (Z, Result);
       return Result;
    end SF;
 
@@ -115,6 +122,7 @@ package body Normal_Model with SPARK_Mode is
       if not (X in 0.0 .. 0.96) then
          raise Constraint_Error with "quadrature node outside checked interval";
       end if;
+      Towers_Boundary_Models.Observe_Node (X, X);
       return X;
    end Checked_Node;
 
@@ -277,6 +285,8 @@ package body Normal_Model with SPARK_Mode is
    procedure Check_Grid_State (Total : in out Long_Float; Values : in out Grid_Accumulators)
      with SPARK_Mode => Off
    is
+      Old_Total : constant Long_Float := Total with Ghost;
+      Old_Values : constant Grid_Accumulators := Values with Ghost;
    begin
       if not (Total in 1.0E-100 .. 1.0E6) then
          raise Constraint_Error with "grid normalization total outside checked range";
@@ -287,6 +297,11 @@ package body Normal_Model with SPARK_Mode is
          then
             raise Constraint_Error with "grid numerator outside checked range";
          end if;
+      end loop;
+      for K in Values'Range loop
+         Towers_Boundary_Models.Observe_Grid_Cell
+           (Total, Values (K).Joint, Values (K).Marginal,
+            Old_Total, Old_Values (K).Joint, Old_Values (K).Marginal);
       end loop;
    end Check_Grid_State;
 
@@ -373,8 +388,10 @@ package body Normal_Model with SPARK_Mode is
       end if;
       Angle := 2.0 * Pi * V;
       Cosine := Cos (Angle);
+      Towers_Boundary_Models.Observe_Trig (Cosine);
       X := Scale_Normal (Radius, Cosine);
       Sine := Sin (Angle);
+      Towers_Boundary_Models.Observe_Trig (Sine);
       Y := Scale_Normal (Radius, Sine);
    end Normal_Pair;
 end Normal_Model;

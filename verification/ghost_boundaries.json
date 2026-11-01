@@ -1,0 +1,971 @@
+{
+  "schema": "spark-ghost-boundaries-v1",
+  "projects": {
+    "hoeflin": [
+      {
+        "entity": "Normal_Support.Check_Inverse_Bracket",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Check_Inverse_Bracket",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Inverse_Bracket",
+          "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Inverse_Bracket"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Checked_Radius",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Checked_Radius",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Log_Radius",
+          "Hoeflin_Boundary_Models.Log_Acceptable",
+          "Hoeflin_Boundary_Models.Radius_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Log_Radius"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Survival",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Survival",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Probability",
+          "Hoeflin_Boundary_Models.Probability_Value",
+          "Hoeflin_Boundary_Models.Observe_Erfc",
+          "Hoeflin_Boundary_Models.Erfc_Scaling"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Probability"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Square_Root",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Square_Root",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Sqrt",
+          "Hoeflin_Boundary_Models.Sqrt_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Sqrt"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Rare_Quantile",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Rare_Quantile",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Rare_Quantile",
+          "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Rare_Quantile"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Report_IO",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Read_Simulation_Options",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload",
+          "Hoeflin_Boundary_Models.Observe_Number",
+          "Hoeflin_Boundary_Models.Project_Number",
+          "Hoeflin_Boundary_Models.Observe_Decimal_Image",
+          "Hoeflin_Boundary_Models.Decimal_Image",
+          "Hoeflin_Boundary_Models.Observe_Label",
+          "Hoeflin_Boundary_Models.Project_Label",
+          "Hoeflin_Boundary_Models.Numeric_Format",
+          "Hoeflin_Boundary_Models.Valid_Column_Label"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "excluded_helpers": [
+          {
+            "entity": "Report_IO.Number",
+            "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "contract_refs": [
+              "Hoeflin_Boundary_Models.Observe_Number"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Report_IO.Trimmed",
+            "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "contract_refs": [
+              "Hoeflin_Boundary_Models.Observe_Decimal_Image"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Report_IO.Named_Row",
+            "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "contract_refs": [
+              "Hoeflin_Boundary_Models.Observe_Label"
+            ],
+            "link_kind": "ghost-call"
+          }
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Read_Simulation_Options",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Read_Simulation_Options",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Simulation_Header",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Simulation_Header",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Simulation_Row",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Simulation_Row",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Calculations_Header",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Calculations_Header",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Calculation_Row",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Calculation_Row",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Infinite_Row",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Infinite_Row",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Examples_Header",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Examples_Header",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Example",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Report_IO.Example",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Normal_Support.C_Erfc",
+        "kind": "foreign-import",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Survival",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Erfc",
+          "Hoeflin_Boundary_Models.Erfc_Scaling",
+          "Hoeflin_Boundary_Models.Probability_Value"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Erfc"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The wrapper observes actual C-derived values and its checked normal-return acceptance model. This is not a proof of the imported C implementation, ABI, erfc identity, approximation error, rounding behavior or totality."
+        ]
+      }
+    ],
+    "towers": [
+      {
+        "entity": "Normal_Model.Checked_Log",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Log",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Log",
+          "Towers_Boundary_Models.Log_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Log"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Exp",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Exp",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Exp",
+          "Towers_Boundary_Models.Exp_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Exp"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Exponent",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Exponent",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Exponent",
+          "Towers_Boundary_Models.Exponent_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Exponent"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Probability",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Probability",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Probability",
+          "Towers_Boundary_Models.Probability_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Probability"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Node",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Node",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Node",
+          "Towers_Boundary_Models.Node_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Node"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Check_Grid_State",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Check_Grid_State",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Grid_Cell",
+          "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+          "Towers_Boundary_Models.Project_Grid_Cell"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Grid_Cell"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Square_Root",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Square_Root",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Sqrt",
+          "Towers_Boundary_Models.Sqrt_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Sqrt"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.SF",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.SF",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Survival",
+          "Towers_Boundary_Models.Survival_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Survival"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Checked_Quantization",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Checked_Quantization",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Quantization",
+          "Towers_Boundary_Models.Quantization_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Quantization"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Union_Units",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Union_Units",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Union",
+          "Towers_Boundary_Models.Union_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Union"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Conditional_Units",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Conditional_Units",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Conditional",
+          "Towers_Boundary_Models.Conditional_Normal_Return",
+          "Towers_Boundary_Models.Project_Conditional"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Conditional"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Joint",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Joint",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Joint",
+          "Towers_Boundary_Models.Joint_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Joint"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_IO",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Write_Report",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Report",
+          "Towers_IO_Models.Report_Valid",
+          "Towers_IO_Models.Field_Count",
+          "Towers_IO_Models.Data_Row_Count",
+          "Towers_IO_Models.Check_Real_Field",
+          "Towers_IO_Models.Real_Field",
+          "Towers_IO_Models.Check_Integer_Field",
+          "Towers_IO_Models.Integer_Field",
+          "Towers_IO_Models.Check_Case_Name",
+          "Towers_IO_Models.Case_Name_Agrees",
+          "Towers_IO_Models.Case_Name"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Report"
+        ],
+        "excluded_helpers": [
+          {
+            "entity": "Towers_IO.F",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Real_Field"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.N",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Integer_Field"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.Name",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Case_Name"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.Write_Report.Run",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Report"
+            ],
+            "link_kind": "ghost-call"
+          }
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Read_Trials",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Read_Trials",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Trials",
+          "Towers_IO_Models.Valid_Trials",
+          "Towers_IO_Models.Observe_Option",
+          "Towers_IO_Models.Option_Agrees",
+          "Towers_IO_Models.Decimal_Input"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Trials"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Read_Seed",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Read_Seed",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Seed",
+          "Towers_IO_Models.Valid_Seed",
+          "Towers_IO_Models.Observe_Option",
+          "Towers_IO_Models.Option_Agrees",
+          "Towers_IO_Models.Decimal_Input"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Seed"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Write_Report",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Write_Report",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Report",
+          "Towers_IO_Models.Report_Valid",
+          "Towers_IO_Models.Field_Count",
+          "Towers_IO_Models.Data_Row_Count"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Report"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Normal_Model.C_Erfc",
+        "kind": "foreign-import",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.SF",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Survival",
+          "Towers_Boundary_Models.Survival_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Survival"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The wrapper observes actual C-derived values and its checked normal-return acceptance model. This is not a proof of the imported C implementation, ABI, erfc identity, approximation error, rounding behavior or totality."
+        ]
+      }
+    ]
+  },
+  "external_dependencies": {
+    "hoeflin": {
+      "ada.command_line": "OS argument strings/counts and Ada Value parsing/failure behavior remain unproved; modeled observations cover typed normal-return options and, where recognized, the restricted decimal grammar.",
+      "ada.numerics.long_elementary_functions": "Installed elementary-function specifications are trusted interfaces. Their implementations, analytic accuracy, rounding/error bounds and totality are not proved; Ghost acceptance predicates model checked normal returns.",
+      "ada.text_io": "Text_IO and its instantiated numeric formatting generics, buffering, physical stdout/file bytes, persistence and exceptions remain unproved. Ghost models cover nominal fields/layouts and input/output observations only.",
+      "interfaces": "Machine integer representation and runtime/compiler implementation of interface operations remain trusted; project arithmetic proofs concern Ada semantics, not generated machine-code verification.",
+      "interfaces.c": "C double conversion, foreign ABI, libm implementation, error behavior and platform representation remain trusted; the C erfc boundary is explicitly modeled but not proved."
+    },
+    "towers": {
+      "ada.command_line": "OS argument strings/counts and Ada Value parsing/failure behavior remain unproved; modeled observations cover typed normal-return options and, where recognized, the restricted decimal grammar.",
+      "ada.directories": "Directory creation, permissions, filesystem persistence and failure behavior remain unproved; a Ghost report request or normal return is not a proof of physical files.",
+      "ada.numerics": "The Pi constant and runtime numeric definitions are trusted target representations, not derived exact-real constants or validation of a Gaussian model.",
+      "ada.numerics.long_elementary_functions": "Installed elementary-function specifications are trusted interfaces. Their implementations, analytic accuracy, rounding/error bounds and totality are not proved; Ghost acceptance predicates model checked normal returns.",
+      "ada.strings.fixed": "The standard trimming implementation and exception behavior are unproved; Ghost lexical observations do not verify the trimming backend.",
+      "ada.text_io": "Text_IO and its instantiated numeric formatting generics, buffering, physical stdout/file bytes, persistence and exceptions remain unproved. Ghost models cover nominal fields/layouts and input/output observations only.",
+      "interfaces.c": "C double conversion, foreign ABI, libm implementation, error behavior and platform representation remain trusted; the C erfc boundary is explicitly modeled but not proved."
+    }
+  },
+  "global_unproved_obligations": {
+    "numerical-backends": "C erfc, Ada elementary-function implementations, ABI/representation, rounding accuracy and backend totality are unproved. Ghost predicates describe checked normal-return properties, not certified analytic functions or error bounds.",
+    "runtime-and-io": "Ada runtime, argument retrieval/Value attributes, string/image/formatting generics, memory/resource failures, filesystem effects, permissions, buffering, physical bytes, and exception/failure semantics remain unproved. Ghost ledgers record observations/requests and normal returns, not operating-system success or full persistent output traces.",
+    "model-adequacy": "An analyzed Ghost model does not prove that an excluded implementation refines it, that guards never reject, or that the model is a complete specification. Decimal recognition, lexical fields, bounded payload summaries and nominal layouts have stated restricted scopes; coupled calls in Off bodies are execution observations, not static refinement proofs.",
+    "psychometric-validity": "No Ghost model establishes empirical test correlations, population calibration, Gaussian distributions, pseudo-random independence, extreme-tail frequencies, reliability interpretation or psychometric validity. These require separate mathematical/statistical and empirical justification.",
+    "toolchain-and-provers": "Compiler/runtime translation, target floating representation, GNATprove/Why3/SMT solvers, operating system and hardware are trusted verification infrastructure; neither their implementations nor independent proof-object checking are proved by this campaign."
+  },
+  "standard_library_models": {
+    "hoeflin": [
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Cos",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Trig",
+          "Hoeflin_Boundary_Models.Trig_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "contract_entity": "Normal_Support.Normal_Pair",
+        "source_callee": "Math.Cos",
+        "observed_argument": "Cosine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      },
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Sin",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Trig",
+          "Hoeflin_Boundary_Models.Trig_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "contract_entity": "Normal_Support.Normal_Pair",
+        "source_callee": "Math.Sin",
+        "observed_argument": "Sine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      }
+    ],
+    "towers": [
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Cos",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Trig",
+          "Towers_Boundary_Models.Trigonometric_Value"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "contract_entity": "Normal_Model.Normal_Pair",
+        "source_callee": "Cos",
+        "observed_argument": "Cosine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      },
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Sin",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Trig",
+          "Towers_Boundary_Models.Trigonometric_Value"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "contract_entity": "Normal_Model.Normal_Pair",
+        "source_callee": "Sin",
+        "observed_argument": "Sine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      }
+    ]
+  }
+}

@@ -198,6 +198,36 @@
       "git_blob": "7d7d5196f9ae9e2e9666f3f383929eac5af692a0",
       "sha256": "b9537420707e1b59dab7e96c204535120f7526deee0b4d206aebda87ec7e7765",
       "commit": "2c32ecdd87690866bfcbf2d99725abba7cdad55e"
+    },
+    {
+      "path": "tests/test_evidence_contracts.py",
+      "git_blob": "cde2efaa2cc0da86e29bb0c2015eec9efd927833",
+      "sha256": "31943d86b573b4a8b7dc9c48a608f661ecdbebb971d81bc58c8cc36e300ceb6b",
+      "commit": "ce0e895e472de86a6760f05a34d654f32ab0820e"
+    },
+    {
+      "path": "tests/test_spark_coverage_contracts.py",
+      "git_blob": "e7519d2c06c3179e5fec5333c60f0e79185618a7",
+      "sha256": "660bd969bdc25d5cc74c4003311001a4197fe5cb7a7be56f94b167675dacc100",
+      "commit": "ce0e895e472de86a6760f05a34d654f32ab0820e"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "git_blob": "3af6686b1a58b56ea9172b0801a605e389706652",
+      "sha256": "886cea6b6afd3b614504c1aa847964a5d3e50e33f798ec0a2a095f7c879d6c41",
+      "commit": "ce0e895e472de86a6760f05a34d654f32ab0820e"
+    },
+    {
+      "path": "verification/spark_coverage.py",
+      "git_blob": "ca49cdb70dd61c34323b1be34e8124753c197d46",
+      "sha256": "21621eb8fa7ac7792ebcaf51dd17aa7cccd2a63b29211d84b147af97bb706b21",
+      "commit": "ce0e895e472de86a6760f05a34d654f32ab0820e"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "git_blob": "2c23400e56a1ed3cef79732e2bf4f992123db9e4",
+      "sha256": "c4d040b895ae4b9185350a8cca1948c5ae5a9c2f3242965f5368b00588fddae6",
+      "commit": "ce0e895e472de86a6760f05a34d654f32ab0820e"
     }
   ]
 }

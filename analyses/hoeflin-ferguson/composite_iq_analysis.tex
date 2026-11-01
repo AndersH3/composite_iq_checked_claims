@@ -63,11 +63,17 @@ The covariance identities reproduced in Ronald K. Hoeflin's article are
 correct. Their application to qualifying IQ scores requires additional
 assumptions about the reference population, the composite's distribution,
 and the meaning of the score. This report distinguishes those assumptions
-from the algebra, corrects the numerical table, and supplies an independently
-written replacement article. All displayed numerical examples have been
+from the algebra, corrects the numerical table, and supplies a corrected
+replacement article. All displayed numerical examples have been
 recalculated. A technical appendix illustrates why a standardized composite
 and an estimate of latent ability need not coincide.
 \end{abstract}
+
+\noindent\textbf{AI disclosure.} This report was substantially generated and revised
+with OpenAI Codex and collaborating AI agents, including its analysis,
+replacement text, code and verification workflow. Provenance details, human
+involvement and limitations are disclosed in \cref{sec:ai-disclosure}.
+
 
 \section{Analysis of the original article}\label{sec:analysis}
 
@@ -405,14 +411,13 @@ implementation makes \texttt{Hoeflin\_Calculations},
 \texttt{Normal\_Support} SPARK-on, alongside the unchanged
 \texttt{Hoeflin\_Core}. Argument parsing and CSV rendering are isolated in
 \texttt{Report\_IO}, whose SPARK interface explicitly models external state.
-The proof project enumerates all eight source files, including the trusted
+The proof project enumerates all ten source files, including the trusted
 I/O completion, rather than selecting only the core.
 
-The \href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/main/verification/evidence/spark-expanded-computer10-20261031/REPORT.md}{expanded computer10 evidence report}
+The \href{https://github.com/AndersH3/composite_iq_checked_claimes/blob/main/verification/evidence/ghost-boundaries-computer10-20261101/REPORT.md}{Ghost-boundary computer10 evidence report}
 records the current source hashes, exact commands, tool identities, native
 reports, coverage, numerical comparisons, and Python checks. This campaign
-was completed on 1 November 2026; the directory name retains the date on
-which the expansion began. Earlier 47-check and 110-test results remain
+was completed on 1 November 2026. Earlier 47-check and 110-test results remain
 immutable historical snapshots, not counts for the expanded implementation.
 
 \subsection{What is now analyzed}
@@ -427,8 +432,8 @@ successor lemma is proved, not imported as an axiom. The original arithmetic
 core still establishes exact integer variance bookkeeping, bounded
 floating-point transforms, and nested event counts with specified increments.
 
-The fresh five-prover portfolio discharged \textbf{209 native checks:
-43 flow checks and 166 prover checks}, with zero unproved and zero justified
+The fresh five-prover portfolio discharged \textbf{283 native checks:
+77 flow checks and 206 prover checks}, with zero unproved and zero justified
 checks. CVC5, Z3, Alt-Ergo, classic COLIBRI, and Yices were requested together.
 This result does not imply that every solver independently completed every
 obligation. The deliberately incorrect inclusion-exclusion control was
@@ -437,7 +442,7 @@ object directories prevent reuse of stale proof results. The compiler
 identifies itself as GNAT 13.2.0; the matching GNATprove banner is
 \texttt{0.0w}. Exact executable identities are retained in the manifest.
 
-Native coverage records 22 \texttt{all}, 14 \texttt{spec}, and zero
+Native coverage records 54 \texttt{all}, 14 \texttt{spec}, and zero
 \texttt{no} entities. Here \texttt{all} describes a SPARK specification and
 body, or a declaration requiring no body; it is not itself a proof result.
 The \texttt{spec} entries expose trusted completions. In the earlier source,
@@ -467,6 +472,53 @@ inverse convergence, or an approximation-error bound. No project
 Zero explicit assumptions or suppressions in native metadata does not
 eliminate trust in off-mode completions or library contracts.
 
+\subsection{Ghost models for the remaining interfaces}
+
+\texttt{Hoeflin\_Boundary\_Models} is an implemented SPARK Ghost package.
+It defines acceptance predicates for the five excluded numerical completions,
+a proved scaling model for an accepted C \texttt{erfc} value, and explicit
+observations of the actual sine and cosine results in
+\texttt{Normal\_Pair}. The trigonometric model records the range
+\([-1,1]\) under the installed library specification; it does not establish
+a trigonometric identity, rounding bound, or backend correctness.
+
+Excluded numerical bodies call Ghost observation procedures after their
+ordinary checks. An observation procedure's precondition is checked when
+Ghost is enabled; its analyzed body and model do not prove that a call
+inside an excluded body always meets that precondition. The original
+ordinary contracts and guards are retained. Ghost checking can be disabled
+while ordinary assertions remain enabled, without placing Ghost-dependent
+expressions inside an ordinary postcondition.
+
+The output model records an event, typed payload, nominal column count,
+section, and whether the latest request is admissible. Its counters are
+modular, and it is a bounded receipt summary rather than a complete
+character history. The admissibility flag is observed, not a theorem that
+all external calls obey a protocol. Models also cover canonical decimal
+integer images, requested numeric value and precision, and label length
+and separator counts. The numeric projection does not prove correct
+rounding or actual printed characters. The I/O implementation's refinement
+of these models, physical output, and exception behavior remain unproved.
+
+The source-pinned register maps every native specification-only entity,
+the foreign import, and all three private formatting helpers to actual
+Ghost uses and analyzed model entities. Standard-library dependencies and
+unproved obligations are also inventoried. Separate sine and cosine links
+are checked against their actual cached assignments and observer calls.
+The register is a coverage and provenance audit, not a proof of model
+adequacy. The deliberately wrong Ghost event-counter postcondition must
+be rejected, in addition to the original incorrect union control.
+
+Fresh builds with Ghost enabled and disabled retain ordinary assertion
+checking. Both policies reproduce the original million-trial CSVs byte for
+byte, and the validators and replay pass in normal and optimized Python.
+Representative decimal, signed, whitespace, underscore, based-literal,
+and exponent forms of the existing Ada option grammar are checked under
+both policies. These finite erasure regressions complement SPARK's Ghost
+rules; they do not prove noninterference or totality of excluded bodies.
+The role and erasure rules of Ghost code are described in
+\href{https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html}{AdaCore's specification guide}.
+
 \subsection{Numerical regression, Deal, and audit results}
 
 Fresh Ada calculation and simulation outputs match both retained CSVs byte
@@ -484,9 +536,9 @@ Every current Python file and named function, including tests and evidence
 tools, carries Deal contracts. Repository-wide coverage, clean positive
 static lint, the expected \texttt{DEL012} negative control, runtime/property
 tests, numerical scripts, and explicit historical-source evidence audits
-pass in normal and optimized Python. The final inventory has 22 files, 177 named functions, and 502 Deal
-decorators with zero gaps; all 21 positive files have zero lint diagnostics,
-and 164 tests pass in each execution mode. Deal Solver proves the two
+pass in normal and optimized Python. The final inventory has 24 files, 213 named functions, and 607 Deal
+decorators with zero gaps; all 23 positive files have zero lint diagnostics,
+and 209 tests pass in each execution mode. Deal Solver proves the two
 pure acceptance-gate postconditions and rejects the incorrect symbolic
 control. These focused symbolic results do not prove the full Python
 programs; clean lint and finite tests are also not universal proofs.
@@ -507,6 +559,59 @@ Gaussian common-factor model, empirical covariance calibration, an
 identification of correlation with reliability, or a psychometric
 interpretation. The distinction between a standardized composite and
 latent ability remains essential.
+
+\clearpage
+\section{AI disclosure and provenance}\label{sec:ai-disclosure}
+
+This report was substantially generated and revised using OpenAI Codex
+and collaborating AI sub-agents. The session identifies Codex as based on
+the GPT-6 family. An exact serving checkpoint, per-agent model identifiers,
+and generation settings were not preserved as versioned provenance; no
+more precise model attribution is claimed. This disclosure applies to the
+analysis, corrected replacement text, project-authored software, and earlier revisions,
+as well as the present additions.
+
+AI contributions included interpreting the supplied articles, drafting and
+revising the mathematical exposition and statistical discussion, selecting
+and checking numerical examples, researching references, designing and
+editing the Python/Deal and Ada/SPARK programs, ghost models, tests and
+evidence auditors, orchestrating verification, typesetting and inspecting
+the PDFs, and preparing repository commits. The human requester supplied
+the source articles, specified the objectives, formats and verification
+requirements, requested revisions, and authorized repository publication.
+The recorded audits and parallel reviews were performed by AI agents and
+automated tools. Independent human peer review or professional sign-off
+is not recorded and is not claimed. Repository ownership and Git commit
+attribution do not identify passages as human-authored.
+
+The original authors remain credited as sources. The replacement text is
+an AI-generated analytical reconstruction prepared for this project;
+no endorsement by the original authors, their hosts, or cited organizations
+is claimed. Sources were consulted at different levels, including article
+text, software documentation and bibliographic metadata. Per-reference
+notes identify relevant access limits; full-text review of every cited
+work is not claimed.
+
+Calculations, tests and prover invocations were actually executed on
+\texttt{computer10}; the retained commands, native outputs, source hashes,
+tool versions and checksums provide the verification evidence. These are
+machine-checker results under the documented contracts and assumptions,
+not evidence supplied solely by an AI assertion. Here ``independent''
+validation or replay means a separate implementation, algorithm or library;
+it does not mean independent human authorship. The implementations,
+contracts, tests and their reviews were developed within the same AI
+workflow. Formal proof covers the encoded properties; correctness of the
+specifications, excluded implementation refinement and statistical-model
+adequacy remain distinct obligations. Ghost models do not establish
+correctness of foreign numerical libraries or physical I/O.
+
+No new participant data were collected and no empirical psychometric
+validation study was conducted for this project. Simulations use synthetic
+draws under the stated mathematical model. The repository preserves source
+and evidence history, but not a complete prompt/tool transcript, exact
+per-line authorship, or an AI-contribution percentage. Those details cannot
+be reconstructed reliably and have not been invented. The disclosure is
+current through 1 November 2026.
 
 \clearpage
 \bibliographystyle{plainnat}

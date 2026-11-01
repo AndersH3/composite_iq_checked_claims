@@ -1,0 +1,13 @@
+hoeflin check all CSV byte-identical to original
+hoeflin check normal/optimized validation and replay pass
+hoeflin check 8 CLI/domain/grammar checks pass
+hoeflin ignore all CSV byte-identical to original
+hoeflin ignore normal/optimized validation and replay pass
+hoeflin ignore 8 CLI/domain/grammar checks pass
+towers check all CSV byte-identical to original
+towers check normal/optimized validation and replay pass
+towers check 8 CLI/domain/grammar checks pass
+towers ignore all CSV byte-identical to original
+towers ignore normal/optimized validation and replay pass
+towers ignore 8 CLI/domain/grammar checks pass
+ALL final ghost/runtime checks passed
