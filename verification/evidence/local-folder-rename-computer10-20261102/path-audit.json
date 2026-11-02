@@ -1,0 +1,24 @@
+{
+  "recorded_utc": "2026-11-02T15:54:54.492736+00:00",
+  "host": "computer10",
+  "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+  "old_root_absent": true,
+  "scan_argv": [
+    "rg",
+    "-a",
+    "-l",
+    "-uuu",
+    "--glob",
+    "!verification/evidence/**",
+    "composite_iq_checked_claimes",
+    "."
+  ],
+  "scan_exit_code": 1,
+  "scan_old_name_hits": [],
+  "broken_symlinks": [],
+  "prior_tracked_blobs_unchanged_except_readme": 681,
+  "historical_evidence_blobs_unchanged": 588,
+  "local_archive_files_verified": 3132,
+  "post_cache_runtime_tests_normal": 209,
+  "post_cache_runtime_tests_optimized": 209
+}

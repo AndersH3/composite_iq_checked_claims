@@ -1,0 +1,112 @@
+{
+  "recorded_utc": "2026-11-02T15:54:54.492990+00:00",
+  "client_date": "2026-11-02",
+  "client_timezone": "Europe/Stockholm",
+  "host": "computer10",
+  "base_revision": "059cfed1b8ff15cf4312606e4b05d5bc872da2b0",
+  "old_root": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claimes",
+  "new_root": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+  "old_root_absent": true,
+  "prior_tracked_blobs": 682,
+  "prior_tracked_blobs_unchanged_except_readme": 681,
+  "historical_evidence_blobs_unchanged": 588,
+  "archived_local_files": 3132,
+  "local_archive_root": "/home/anonymous/Documents/ChatGPT/composite_iq_local_path_history/20261102",
+  "local_archive_manifest_sha256": "84c3a2a0c910958e1873f3f3e99c076cf401e52ba0820245d362916d4e04f878",
+  "environment_files_repaired": [
+    ".venv/pyvenv.cfg",
+    ".venv/bin/activate",
+    ".venv/bin/activate.csh",
+    ".venv/bin/activate.fish",
+    ".venv/bin/pip",
+    ".venv/bin/pip3",
+    ".venv/bin/pip3.13",
+    ".venv-deal/pyvenv.cfg",
+    ".venv-deal/bin/activate",
+    ".venv-deal/bin/activate.csh",
+    ".venv-deal/bin/activate.fish",
+    ".venv-deal/bin/dmypy",
+    ".venv-deal/bin/docutils",
+    ".venv-deal/bin/f2py",
+    ".venv-deal/bin/flake8",
+    ".venv-deal/bin/hypothesis",
+    ".venv-deal/bin/idna",
+    ".venv-deal/bin/isort",
+    ".venv-deal/bin/isort-identify-imports",
+    ".venv-deal/bin/mypy",
+    ".venv-deal/bin/mypy_test",
+    ".venv-deal/bin/mypyc",
+    ".venv-deal/bin/normalizer",
+    ".venv-deal/bin/numpy-config",
+    ".venv-deal/bin/pip",
+    ".venv-deal/bin/pip3",
+    ".venv-deal/bin/pip3.13",
+    ".venv-deal/bin/py.test",
+    ".venv-deal/bin/pybabel",
+    ".venv-deal/bin/pycodestyle",
+    ".venv-deal/bin/pyflakes",
+    ".venv-deal/bin/pygmentize",
+    ".venv-deal/bin/pytest",
+    ".venv-deal/bin/rst2html",
+    ".venv-deal/bin/rst2html4",
+    ".venv-deal/bin/rst2html5",
+    ".venv-deal/bin/rst2latex",
+    ".venv-deal/bin/rst2man",
+    ".venv-deal/bin/rst2odt",
+    ".venv-deal/bin/rst2pseudoxml",
+    ".venv-deal/bin/rst2s5",
+    ".venv-deal/bin/rst2xetex",
+    ".venv-deal/bin/rst2xml",
+    ".venv-deal/bin/sphinx-apidoc",
+    ".venv-deal/bin/sphinx-autogen",
+    ".venv-deal/bin/sphinx-build",
+    ".venv-deal/bin/sphinx-quickstart",
+    ".venv-deal/bin/stubgen",
+    ".venv-deal/bin/stubtest"
+  ],
+  "python_checks": {
+    "normal": {
+      "tests_passed": 209,
+      "contract_coverage_complete": true,
+      "positive_static_lint_files": 23,
+      "negative_control": "expected DEL012"
+    },
+    "optimized": {
+      "tests_passed": 209,
+      "contract_coverage_complete": true,
+      "positive_static_lint_files": 23,
+      "negative_control": "expected DEL012",
+      "pytest_warning": "Expected warning: plain assert statements outside rewritten tests are disabled by Python optimization."
+    }
+  },
+  "retained_spark_evidence_audits": {
+    "normal": "passed: 781 production checks",
+    "optimized": "passed: 781 production checks"
+  },
+  "ada_runtime_csvs_byte_identical": 6,
+  "new_prover_campaign_run": false,
+  "pdfs": [
+    {
+      "path": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "sha256": "497eb669f55f2ad160adb1f02d2003db40f1df466ee91aab80d4ce75de41d965",
+      "unchanged": true
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "sha256": "28733761868dd967287713ffd6f72e57be10350bc05bc9c733d5f9044a41e62e",
+      "unchanged": true
+    }
+  ],
+  "archived_old_pytest_cache_files": 189,
+  "environment_bytecode_optimization_levels_refreshed": [
+    0,
+    1,
+    2
+  ],
+  "post_cache_test_reruns": {
+    "normal": 209,
+    "optimized": 209
+  },
+  "active_old_path_binary_and_text_hits": 0,
+  "broken_symlinks": 0
+}

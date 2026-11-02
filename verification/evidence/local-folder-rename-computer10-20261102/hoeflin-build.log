@@ -1,0 +1,21 @@
+make: Entering directory '/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson/ada'
+gprbuild -P hoeflin.gpr -p
+Setup
+   [mkdir]        object directory for project Hoeflin
+   [mkdir]        exec directory for project Hoeflin
+Compile
+   [Ada]          hoeflin_calculations.adb
+   [Ada]          hoeflin_simulation.adb
+   [Ada]          hoeflin_core.adb
+   [Ada]          normal_support.adb
+   [Ada]          report_io.adb
+   [Ada]          hoeflin_boundary_models.adb
+Bind
+   [gprbind]      hoeflin_calculations.bexch
+   [Ada]          hoeflin_calculations.ali
+   [gprbind]      hoeflin_simulation.bexch
+   [Ada]          hoeflin_simulation.ali
+Link
+   [link]         hoeflin_calculations.adb
+   [link]         hoeflin_simulation.adb
+make: Leaving directory '/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson/ada'

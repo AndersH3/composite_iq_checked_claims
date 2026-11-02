@@ -20,11 +20,15 @@ All current Python files, including tests and fixtures, must contain [Deal contr
 For Python development and checks:
 
 ```sh
+git clone https://github.com/AndersH3/composite_iq_checked_claims.git
+cd composite_iq_checked_claims
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements-dev.txt
 make check
 ```
+
+The [local folder relocation record](verification/evidence/local-folder-rename-computer10-20261102/REPORT.md) documents environment repairs and preservation checks on computer10.
 
 `make check` and GitHub Actions require contract coverage, clean positive static lint, the exact expected failure of the deliberately broken fixture, and runtime/property tests. The [Ghost-boundary campaign report](verification/evidence/ghost-boundaries-computer10-20261101/REPORT.md) records the checks for the expanded implementation. The [earlier Deal snapshot](verification/evidence/deal-lint-clean-computer10-20261031/REPORT.md) retains its 110-test result and optimized-Python, numerical, and symbolic evidence; those historical counts are not the current test inventory. The [original Deal report](verification/evidence/deal-computer10-20261031/REPORT.md) preserves the resolved diagnostics. Runtime checks and property tests are distinct from universal formal verification.
 
@@ -38,6 +42,6 @@ The original authors remain credited as sources. The replacement articles are AI
 
 Calculations, tests and prover invocations were actually executed on **computer10**. Versioned evidence retains actual commands, native outputs, tool identities, source hashes and checksums. Formal claims rest on the machine-checker results under the documented specifications and assumptions. “Independent” numerical validation or replay means a separate implementation, algorithm or library; it does not mean independent human authorship. The code, contracts, tests and their reviews were developed within the same AI workflow. Correctness of the specifications, excluded implementation refinement, numerical accuracy and statistical-model adequacy remain separate from proof of the encoded properties. Ghost models do not prove foreign numerical libraries or physical I/O correct.
 
-No new participant data were collected and no empirical psychometric validation study was performed for this project. Simulations use synthetic draws under the stated mathematical model. The repository preserves source and evidence history, but not a complete prompt/tool transcript, exact per-line authorship or an AI-contribution percentage. Those details cannot be reconstructed reliably and have not been invented. This disclosure is current through **1 November 2026**. Each PDF contains an upfront notice and the full disclosure so it remains visible when distributed separately.
+No new participant data were collected and no empirical psychometric validation study was performed for this project. Simulations use synthetic draws under the stated mathematical model. The repository preserves source and evidence history, but not a complete prompt/tool transcript, exact per-line authorship or an AI-contribution percentage. Those details cannot be reconstructed reliably and have not been invented. This disclosure is current through **2 November 2026**. Each PDF contains an upfront notice and the full disclosure so it remains visible when distributed separately.
 
 The repository's original material is governed by [LICENSE](LICENSE), subject to third-party rights.

@@ -1,0 +1,76 @@
+{
+  "host": "computer10",
+  "commands": [
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson/ada/bin/hoeflin_calculations"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-02T15:49:45.333805+00:00",
+      "finished_utc": "2026-11-02T15:49:45.337503+00:00",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson/ada/bin/hoeflin_simulation",
+        "1000000",
+        "20261030"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-02T15:49:45.337515+00:00",
+      "finished_utc": "2026-11-02T15:49:46.001116+00:00",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions/ada/bin/towers_demo",
+        "1000000",
+        "20261030",
+        "/tmp/composite-iq-local-move-checks/towers"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-02T15:49:46.001129+00:00",
+      "finished_utc": "2026-11-02T15:49:46.192268+00:00",
+      "returncode": 0
+    }
+  ],
+  "comparisons": [
+    {
+      "path": "hoeflin/calculations.csv",
+      "sha256": "d538d547f64c800ebfc14ad63a1c40efc33cfa2aa46f6228117fa96c0dbe3d2e",
+      "baseline": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/hoeflin/check/calculations.csv",
+      "byte_identical": true
+    },
+    {
+      "path": "hoeflin/simulation.csv",
+      "sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36",
+      "baseline": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/hoeflin/check/simulation.csv",
+      "byte_identical": true
+    },
+    {
+      "path": "towers/calculation.csv",
+      "sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762",
+      "baseline": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/calculation.csv",
+      "byte_identical": true
+    },
+    {
+      "path": "towers/grid.csv",
+      "sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a",
+      "baseline": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/grid.csv",
+      "byte_identical": true
+    },
+    {
+      "path": "towers/calibration.csv",
+      "sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400",
+      "baseline": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/calibration.csv",
+      "byte_identical": true
+    },
+    {
+      "path": "towers/simulation.csv",
+      "sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5",
+      "baseline": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/simulation.csv",
+      "byte_identical": true
+    }
+  ],
+  "new_prover_campaign_run": false
+}

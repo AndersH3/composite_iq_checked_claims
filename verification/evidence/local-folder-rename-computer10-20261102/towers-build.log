@@ -1,0 +1,19 @@
+make: Entering directory '/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions/ada'
+gprbuild -P towers.gpr -p
+Setup
+   [mkdir]        object directory for project Towers
+   [mkdir]        exec directory for project Towers
+Compile
+   [Ada]          towers_demo.adb
+   [Ada]          towers_engine.adb
+   [Ada]          towers_io.adb
+   [Ada]          towers_io_models.adb
+   [Ada]          towers_boundary_models.adb
+   [Ada]          admission_core.adb
+   [Ada]          normal_model.adb
+Bind
+   [gprbind]      towers_demo.bexch
+   [Ada]          towers_demo.ali
+Link
+   [link]         towers_demo.adb
+make: Leaving directory '/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions/ada'

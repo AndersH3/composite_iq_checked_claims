@@ -1,0 +1,114 @@
+.venv-deal/bin/python verification/check_contract_coverage.py
+{
+  "python_files": 24,
+  "named_functions": 213,
+  "deal_contracts": 607,
+  "problems": [],
+  "complete": true
+}
+.venv-deal/bin/python verification/check_static_lint.py
+{
+  "python_files": 24,
+  "positive_files": 23,
+  "positive": {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+      "-m",
+      "deal",
+      "lint",
+      "--json",
+      "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "tests/conftest.py",
+      "tests/fixtures/nonzero_division_lint_probe.py",
+      "tests/test_contract_coverage.py",
+      "tests/test_evidence_contracts.py",
+      "tests/test_ghost_boundary_contracts.py",
+      "tests/test_numeric_contracts.py",
+      "tests/test_proof_gate_contracts.py",
+      "tests/test_runner_lint_contracts.py",
+      "tests/test_spark_coverage_contracts.py",
+      "tests/test_static_lint_contracts.py",
+      "tests/test_validator_contracts.py",
+      "verification/check_contract_coverage.py",
+      "verification/check_static_lint.py",
+      "verification/ghost_boundaries.py",
+      "verification/proof_gate.py",
+      "verification/replay_hoeflin.py",
+      "verification/run_computer10.py",
+      "verification/spark_coverage.py",
+      "verification/verify_evidence.py"
+    ],
+    "paths": [
+      "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "tests/conftest.py",
+      "tests/fixtures/nonzero_division_lint_probe.py",
+      "tests/test_contract_coverage.py",
+      "tests/test_evidence_contracts.py",
+      "tests/test_ghost_boundary_contracts.py",
+      "tests/test_numeric_contracts.py",
+      "tests/test_proof_gate_contracts.py",
+      "tests/test_runner_lint_contracts.py",
+      "tests/test_spark_coverage_contracts.py",
+      "tests/test_static_lint_contracts.py",
+      "tests/test_validator_contracts.py",
+      "verification/check_contract_coverage.py",
+      "verification/check_static_lint.py",
+      "verification/ghost_boundaries.py",
+      "verification/proof_gate.py",
+      "verification/replay_hoeflin.py",
+      "verification/run_computer10.py",
+      "verification/spark_coverage.py",
+      "verification/verify_evidence.py"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "",
+    "diagnostics": []
+  },
+  "negative_control": {
+    "argv": [
+      "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+      "-m",
+      "deal",
+      "lint",
+      "--json",
+      "tests/fixtures/contract_negative_control.py"
+    ],
+    "paths": [
+      "tests/fixtures/contract_negative_control.py"
+    ],
+    "returncode": 1,
+    "stdout": "{\"path\": \"tests/fixtures/contract_negative_control.py\", \"row\": 17, \"col\": 11, \"code\": \"DEL012\", \"text\": \"post contract error\", \"value\": \"-1\", \"content\": \"    return -1\"}\n",
+    "stderr": "",
+    "diagnostics": [
+      {
+        "path": "tests/fixtures/contract_negative_control.py",
+        "row": 17,
+        "col": 11,
+        "code": "DEL012",
+        "text": "post contract error",
+        "value": "-1",
+        "content": "    return -1"
+      }
+    ]
+  },
+  "complete": true
+}
+.venv-deal/bin/python -m pytest -q tests
+........................................................................ [ 34%]
+........................................................................ [ 68%]
+.................................................................        [100%]
+=============================== warnings summary ===============================
+.venv-deal/lib/python3.13/site-packages/_pytest/config/__init__.py:1291
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/_pytest/config/__init__.py:1291: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)
+  
+    self._warn_about_missing_assertion(mode)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+209 passed, 1 warning in 26.01s
