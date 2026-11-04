@@ -1,0 +1,337 @@
+{
+  "project": "hoeflin",
+  "policy": "ignore",
+  "sources": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+      "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+      "sha256": "329212558bf330309ed012cbe75774ceb97cb4b54b14e77517c7e50f69ce052a"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+      "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+      "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+      "sha256": "deef3784a729fc8a36ef5a8991010e0f288bce00861d68aed39ee71ae871bcd9"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "89a311af8ade4c0c749b828fe36740fc5f227f0ea759bd7e9ad913129793e731"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+      "sha256": "21dac126efd2f323b8a74b397301da2d9e0c2ace63daf6b77b2c730185077f65"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+      "sha256": "890cd53e4dc3a0443fd35e9e89ac49733e1c40d21593257e42f961a6c1c12599"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+      "sha256": "1ffb5535050d3b36150e7f7b19dc2d34b083b44b1e2784e2d2286d39ec50b156"
+    }
+  ],
+  "policy_sha256": "0da255863c39f60408c80c86238350799ebcfaefd5150ba3577da257ba2f5d37",
+  "commands": [
+    {
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+        "-P",
+        "hoeflin.gpr",
+        "-p",
+        "-cargs",
+        "-gnatec=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/policy.adc"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:14.928545+00:00",
+      "finished_utc": "2026-11-04T06:06:16.646214+00:00",
+      "elapsed_seconds": 1.7176724350138102,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "284334e01504109b0a0b93593084a2847545312b5489a49643d407d3a1d17b8b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_calculations"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:16.656451+00:00",
+      "finished_utc": "2026-11-04T06:06:16.658158+00:00",
+      "elapsed_seconds": 0.0017030960007105023,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "d538d547f64c800ebfc14ad63a1c40efc33cfa2aa46f6228117fa96c0dbe3d2e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "1000000",
+        "20261030"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:16.658257+00:00",
+      "finished_utc": "2026-11-04T06:06:17.273401+00:00",
+      "elapsed_seconds": 0.6151518489932641,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "--calculations",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/calculations.csv",
+        "--simulation",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/simulation.csv",
+        "--json-output",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/validation-normal.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:17.273944+00:00",
+      "finished_utc": "2026-11-04T06:06:18.295501+00:00",
+      "elapsed_seconds": 1.0215648760204203,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/replay_hoeflin.py",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/simulation.csv",
+        "--json-output",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/replay-normal.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:18.295648+00:00",
+      "finished_utc": "2026-11-04T06:06:20.166065+00:00",
+      "elapsed_seconds": 1.8704253630130552,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "b00834fc72b8b39871f06f71bb5d93c4d8ee22221954dad4c44989fbbd8a5ac5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "-O",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "--calculations",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/calculations.csv",
+        "--simulation",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/simulation.csv",
+        "--json-output",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/validation-optimized.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:20.166212+00:00",
+      "finished_utc": "2026-11-04T06:06:21.585300+00:00",
+      "elapsed_seconds": 1.419096919009462,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "-O",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/replay_hoeflin.py",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/simulation.csv",
+        "--json-output",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/ignore/replay-optimized.json"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:21.585443+00:00",
+      "finished_utc": "2026-11-04T06:06:23.813117+00:00",
+      "elapsed_seconds": 2.227682649012422,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "b00834fc72b8b39871f06f71bb5d93c4d8ee22221954dad4c44989fbbd8a5ac5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "executables": {
+    "hoeflin_calculations": "cc3078c8a7629c60b9bb342134faad4a6cea9564857f6cb15fbbf02339cb8823",
+    "hoeflin_simulation": "a49ec58414fb3e2117871181cc5f18aebf7e2192aecbbb486494fb4307d74d8f"
+  },
+  "csvs": [
+    {
+      "path": "calculations.csv",
+      "sha256": "d538d547f64c800ebfc14ad63a1c40efc33cfa2aa46f6228117fa96c0dbe3d2e",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/hoeflin/ignore/calculations.csv",
+      "reference_sha256": "d538d547f64c800ebfc14ad63a1c40efc33cfa2aa46f6228117fa96c0dbe3d2e",
+      "byte_identical": true
+    },
+    {
+      "path": "simulation.csv",
+      "sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/hoeflin/ignore/simulation.csv",
+      "reference_sha256": "dba8b3046072a6f46b4c63117df9ac0b33aaa4f486507c493558391395c0ec36",
+      "byte_identical": true
+    }
+  ],
+  "edge_checks": [
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "2",
+        "1"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.813266+00:00",
+      "finished_utc": "2026-11-04T06:06:23.814893+00:00",
+      "elapsed_seconds": 0.0016334940155502409,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        " +2 ",
+        " +1 "
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.815022+00:00",
+      "finished_utc": "2026-11-04T06:06:23.816632+00:00",
+      "elapsed_seconds": 0.0016149169823620468,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "0_002",
+        "0_001"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.816808+00:00",
+      "finished_utc": "2026-11-04T06:06:23.818485+00:00",
+      "elapsed_seconds": 0.0016820070159155875,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "2#10#",
+        "16#1#"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.818598+00:00",
+      "finished_utc": "2026-11-04T06:06:23.820254+00:00",
+      "elapsed_seconds": 0.0016590809973422438,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "2E0",
+        "1E0"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.820362+00:00",
+      "finished_utc": "2026-11-04T06:06:23.821956+00:00",
+      "elapsed_seconds": 0.001598560018464923,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "870d31be5bfa0d6154521d155484cd8051959f123bb0214164b45f50c9492c26",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "2",
+        "18446744073709551615"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.822058+00:00",
+      "finished_utc": "2026-11-04T06:06:23.823642+00:00",
+      "elapsed_seconds": 0.0015886589826550335,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "ee55a141327c7b11136513a87606bb94c0017c855601dbd83466b279c3999e93",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "0",
+        "1"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.823751+00:00",
+      "finished_utc": "2026-11-04T06:06:23.825352+00:00",
+      "elapsed_seconds": 0.0016048839897848666,
+      "returncode": 1,
+      "expected_success": false,
+      "accepted": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e86beb22eed42a02ca82d6fe268dfcbeec5f78b6a24e12e30034ad1012b7ee1c"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source/bin/hoeflin_simulation",
+        "1",
+        "1"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/hoeflin-ignore-source",
+      "started_utc": "2026-11-04T06:06:23.825454+00:00",
+      "finished_utc": "2026-11-04T06:06:23.827082+00:00",
+      "elapsed_seconds": 0.0016344540053978562,
+      "returncode": 1,
+      "expected_success": false,
+      "accepted": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e86beb22eed42a02ca82d6fe268dfcbeec5f78b6a24e12e30034ad1012b7ee1c"
+    }
+  ],
+  "all_passed": true
+}

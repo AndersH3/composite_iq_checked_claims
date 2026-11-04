@@ -10,15 +10,16 @@ import json
 import math
 from pathlib import Path
 
+import sys
+
 import deal
 from scipy.stats import norm
 
 COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 
 
-@deal.pre(lambda numerator, denominator: type(numerator) in (int, float)
-          and 0 <= numerator <= 2 and type(denominator) in (int, float)
-          and 1 <= denominator <= 1000)
+@deal.pre(lambda numerator, denominator: type(numerator) in (int, float))
+@deal.pre(lambda numerator, denominator: 0 <= numerator <= 2 and type(denominator) in (int, float) and (1 <= denominator <= 1000))
 @deal.post(lambda result: math.isfinite(result) and 0 <= result <= 2)
 @deal.raises()
 @deal.has()
@@ -27,9 +28,8 @@ def _positive_ratio(numerator, denominator):
     return numerator / denominator
 
 
-@deal.pre(lambda actual, expected, label, atol=5e-11:
-          math.isfinite(actual) and math.isfinite(expected)
-          and math.isfinite(atol) and atol > 0 and isinstance(label, str))
+@deal.pre(lambda actual, expected, label, atol=5e-11: math.isfinite(actual))
+@deal.pre(lambda actual, expected, label, atol=5e-11: math.isfinite(expected) and math.isfinite(atol) and (atol > 0) and isinstance(label, str))
 @deal.ensure(lambda actual, expected, label, atol=5e-11, result=None:
              result is None and abs(actual - expected) <= atol)
 @deal.raises(ValueError)
@@ -40,9 +40,8 @@ def require_close(actual, expected, label, *, atol=5e-11):
 
 
 @deal.pre(lambda content: isinstance(content, str))
-@deal.post(lambda result: isinstance(result, list) and all(
-    isinstance(row, dict) and all(isinstance(key, str) and isinstance(value, str)
-                                 for key, value in row.items()) for row in result))
+@deal.post(lambda result: all((isinstance(row, dict) and all((isinstance(key, str) and isinstance(value, str) for key, value in row.items())) for row in result)))
+@deal.post(lambda result: isinstance(result, list))
 @deal.raises(ValueError, csv.Error)
 @deal.has()
 def csv_rows(content):
@@ -57,7 +56,8 @@ def csv_rows(content):
     return rows
 
 
-@deal.pre(lambda path: isinstance(path, Path) and path.is_file())
+@deal.pre(lambda path: isinstance(path, Path))
+@deal.pre(lambda path: path.is_file())
 @deal.post(lambda result: result["threshold_rows"] == 9 and result["worked_examples"] == 4
            and math.isfinite(result["max_absolute_numeric_error"])
            and 0 <= result["max_absolute_numeric_error"] <= result["tolerance"]
@@ -122,7 +122,8 @@ def wilson(successes, total):
     return [max(0, center-radius), min(1, center+radius)]
 
 
-@deal.pre(lambda path: isinstance(path, Path) and path.is_file())
+@deal.pre(lambda path: isinstance(path, Path))
+@deal.pre(lambda path: path.is_file())
 @deal.post(lambda result: len(result["cases"]) == len(COUNTS)
            and [case["tests"] for case in result["cases"]] == list(COUNTS)
            and all(2 <= case["trials"] <= 100_000_000
@@ -182,6 +183,8 @@ def validate_simulation(path):
 @deal.post(lambda result: result is None)
 @deal.raises(SystemExit, OSError, ValueError, csv.Error)
 @deal.has("read", "write", "stdout", "stderr")
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
 def main():
     deal.enable(warn=False)
     parser = argparse.ArgumentParser(description=__doc__)

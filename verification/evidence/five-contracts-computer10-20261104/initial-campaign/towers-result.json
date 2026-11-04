@@ -1,0 +1,5895 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "towers_proof.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=30",
+    "--prover=Colibri_Classic,cvc5,z3,altergo,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/provers.conf"
+  ],
+  "cwd": "/tmp/composite-iq-spark-47ugixyk/towers/portfolio",
+  "started_utc": "2026-11-04T06:06:41.164168+00:00",
+  "finished_utc": "2026-11-04T06:16:05.378479+00:00",
+  "elapsed_seconds": 564.2143168510229,
+  "returncode": 0,
+  "timed_out": false,
+  "log_sha256": "3b0fe51ef24dc587a8474402dc2586fc4a14f3d9387b46f8ac10f465435ae196",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 84,
+        "flow": 84,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 61,
+        "flow": 61,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 283,
+        "flow": 0,
+        "provers": 283,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 33,
+        "flow": 0,
+        "provers": 33,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 150,
+        "flow": 0,
+        "provers": 150,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 696,
+        "flow": 230,
+        "provers": 466,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 7,
+    "contains_not_proved": false,
+    "report_sha256": "4d72db70e9c5094005eaec11eb839ddb21a64226fb426b4dd4f8dd72d5ad69cf"
+  },
+  "sources": [
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "077d3af2ce4a9ee400e9823fe36c3fc9d20b9f6410b6758ac14d60347f1a3a71"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "bcb7a876586b87474737452dd20bdc0ea94804ccce8b4044d80713113f1fee12"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "7dc1a6b119fc11004b7b08d047bbe0bbf6ddc8a20bad7106a4bb2ad404f5ce7f"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+      "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+      "sha256": "e2f716ccc14ef9bc2555d04ed22fde2941ef87c4fcf71dd7e2c863f0dd5706ae"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "2e1aafd25fd37016413c34b3a57ca41dcbde7f5b0a60e744bae2af989c9bb67a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+      "sha256": "d0f939b091b31bcda5eee8b77da7d85d880f072ee51722fc050fc938e76ec194"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+      "sha256": "92cd468e1e23d5a41986e73b91de00a697896237c0814ee118ff956f52a520cb"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+      "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+      "sha256": "e33e5050dfae56cac0d50ac341997d3cebffa324cf40e320009c73ac1bbe58e4"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+      "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+      "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "68970c0902dee2d29c58e6f70bb553cbd2f9741b9bb695bb88baffa1eebcd742"
+    }
+  ],
+  "provers_requested": [
+    "Colibri_Classic",
+    "cvc5",
+    "z3",
+    "altergo",
+    "Yices"
+  ],
+  "coverage": {
+    "source_names": [
+      "admission_core.adb",
+      "admission_core.ads",
+      "normal_model.adb",
+      "normal_model.ads",
+      "towers_boundary_models.adb",
+      "towers_boundary_models.ads",
+      "towers_demo.adb",
+      "towers_engine.adb",
+      "towers_engine.ads",
+      "towers_io.adb",
+      "towers_io.ads",
+      "towers_io_models.adb",
+      "towers_io_models.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 89,
+      "spec": 16,
+      "no": 0
+    },
+    "total_entities": 105,
+    "entities": [
+      {
+        "name": "Admission_Core",
+        "file": "admission_core.ads",
+        "line": 1,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Classify",
+        "file": "admission_core.ads",
+        "line": 16,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Total",
+        "file": "admission_core.ads",
+        "line": 26,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Observe",
+        "file": "admission_core.ads",
+        "line": 34,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Marginal_A",
+        "file": "admission_core.ads",
+        "line": 44,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Marginal_B",
+        "file": "admission_core.ads",
+        "line": 50,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 50
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Union_Count",
+        "file": "admission_core.ads",
+        "line": 56,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 56
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Fraction",
+        "file": "admission_core.ads",
+        "line": 64,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Union_Probability",
+        "file": "admission_core.ads",
+        "line": 71,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 71
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Complement",
+        "file": "admission_core.ads",
+        "line": 80,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 80
+          }
+        ]
+      },
+      {
+        "name": "Admission_Core.Conditional",
+        "file": "admission_core.ads",
+        "line": 87,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "admission_core.ads",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Log",
+        "file": "normal_model.adb",
+        "line": 34,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Exp",
+        "file": "normal_model.adb",
+        "line": 52,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 52
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Exponent",
+        "file": "normal_model.adb",
+        "line": 70,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 70
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Probability",
+        "file": "normal_model.adb",
+        "line": 87,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 87
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Count_Step",
+        "file": "normal_model.adb",
+        "line": 118,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 118
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Checked_Node",
+        "file": "normal_model.adb",
+        "line": 131,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 131
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Joint_Tail.Density",
+        "file": "normal_model.adb",
+        "line": 173,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 173
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Weight",
+        "file": "normal_model.adb",
+        "line": 244,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 244
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Cutoff",
+        "file": "normal_model.adb",
+        "line": 258,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 258
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Add_Grid_Cell",
+        "file": "normal_model.adb",
+        "line": 281,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 281
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Check_Grid_State",
+        "file": "normal_model.adb",
+        "line": 302,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 302
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Uniform",
+        "file": "normal_model.adb",
+        "line": 380,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 380
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Scale_Normal",
+        "file": "normal_model.adb",
+        "line": 397,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.adb",
+            "line": 397
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model",
+        "file": "normal_model.ads",
+        "line": 1,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Square_Root",
+        "file": "normal_model.ads",
+        "line": 9,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.SF",
+        "file": "normal_model.ads",
+        "line": 20,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Inverse_SF",
+        "file": "normal_model.ads",
+        "line": 26,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Joint_Tail",
+        "file": "normal_model.ads",
+        "line": 31,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 31
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Calibrated_OR_Cutoff",
+        "file": "normal_model.ads",
+        "line": 40,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Basic_Grid",
+        "file": "normal_model.ads",
+        "line": 51,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 51
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Reset",
+        "file": "normal_model.ads",
+        "line": 63,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 63
+          }
+        ]
+      },
+      {
+        "name": "Normal_Model.Normal_Pair",
+        "file": "normal_model.ads",
+        "line": 68,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_model.ads",
+            "line": 68
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models",
+        "file": "towers_boundary_models.ads",
+        "line": 4,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Sqrt_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 7,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 7
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Survival_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 27,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Log_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 39,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 39
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Exp_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 47,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 47
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Trigonometric_Value",
+        "file": "towers_boundary_models.ads",
+        "line": 57,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 57
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Exponent_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 65,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 65
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Probability_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 73,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Node_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 81,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 81
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 89,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 89
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Quantization_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 100,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 100
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Union_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 113,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 113
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Conditional_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 126,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 126
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Joint_Normal_Return",
+        "file": "towers_boundary_models.ads",
+        "line": 137,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 137
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Project_Conditional",
+        "file": "towers_boundary_models.ads",
+        "line": 149,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 149
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Project_Grid_Cell",
+        "file": "towers_boundary_models.ads",
+        "line": 157,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 157
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Sqrt",
+        "file": "towers_boundary_models.ads",
+        "line": 167,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 167
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Survival",
+        "file": "towers_boundary_models.ads",
+        "line": 173,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 173
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Log",
+        "file": "towers_boundary_models.ads",
+        "line": 179,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 179
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Exp",
+        "file": "towers_boundary_models.ads",
+        "line": 185,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 185
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Trig",
+        "file": "towers_boundary_models.ads",
+        "line": 191,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 191
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Exponent",
+        "file": "towers_boundary_models.ads",
+        "line": 197,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 197
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Probability",
+        "file": "towers_boundary_models.ads",
+        "line": 203,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 203
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Node",
+        "file": "towers_boundary_models.ads",
+        "line": 209,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 209
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Grid_Cell",
+        "file": "towers_boundary_models.ads",
+        "line": 215,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 215
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Quantization",
+        "file": "towers_boundary_models.ads",
+        "line": 222,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 222
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Union",
+        "file": "towers_boundary_models.ads",
+        "line": 229,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 229
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Conditional",
+        "file": "towers_boundary_models.ads",
+        "line": 234,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 234
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Joint",
+        "file": "towers_boundary_models.ads",
+        "line": 239,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 239
+          }
+        ]
+      },
+      {
+        "name": "Towers_Boundary_Models.Observe_Inverse_Bracket",
+        "file": "towers_boundary_models.ads",
+        "line": 245,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_boundary_models.ads",
+            "line": 245
+          }
+        ]
+      },
+      {
+        "name": "Towers_Demo",
+        "file": "towers_demo.adb",
+        "line": 5,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_demo.adb",
+            "line": 5
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Checked_Quantization",
+        "file": "towers_engine.adb",
+        "line": 8,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 8
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Union_Units",
+        "file": "towers_engine.adb",
+        "line": 27,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Conditional_Units",
+        "file": "towers_engine.adb",
+        "line": 47,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 47
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Check_Joint",
+        "file": "towers_engine.adb",
+        "line": 64,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Units",
+        "file": "towers_engine.adb",
+        "line": 79,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 79
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Conditional_Value",
+        "file": "towers_engine.adb",
+        "line": 100,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 100
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Wilson",
+        "file": "towers_engine.adb",
+        "line": 114,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 114
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Calculate",
+        "file": "towers_engine.adb",
+        "line": 142,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 142
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Observe_All",
+        "file": "towers_engine.adb",
+        "line": 182,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 182
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Simulation_Row_For",
+        "file": "towers_engine.adb",
+        "line": 202,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.adb",
+            "line": 202
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine",
+        "file": "towers_engine.ads",
+        "line": 3,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 3
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Value",
+        "file": "towers_engine.ads",
+        "line": 41,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "name": "Towers_Engine.Compute",
+        "file": "towers_engine.ads",
+        "line": 47,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_engine.ads",
+            "line": 47
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO",
+        "file": "towers_io.ads",
+        "line": 4,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Read_Trials",
+        "file": "towers_io.ads",
+        "line": 11,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Read_Seed",
+        "file": "towers_io.ads",
+        "line": 17,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO.Write_Report",
+        "file": "towers_io.ads",
+        "line": 23,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models",
+        "file": "towers_io_models.ads",
+        "line": 7,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 7
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Decimal_Input",
+        "file": "towers_io_models.ads",
+        "line": 14,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 14
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Option_Agrees",
+        "file": "towers_io_models.ads",
+        "line": 21,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 21
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Valid_Trials",
+        "file": "towers_io_models.ads",
+        "line": 31,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 31
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Valid_Seed",
+        "file": "towers_io_models.ads",
+        "line": 38,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 38
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Real_Field",
+        "file": "towers_io_models.ads",
+        "line": 46,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 46
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Integer_Field",
+        "file": "towers_io_models.ads",
+        "line": 60,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 60
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Case_Name",
+        "file": "towers_io_models.ads",
+        "line": 77,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 77
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Case_Name_Agrees",
+        "file": "towers_io_models.ads",
+        "line": 89,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 89
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Report_Valid",
+        "file": "towers_io_models.ads",
+        "line": 98,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 98
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Field_Count",
+        "file": "towers_io_models.ads",
+        "line": 114,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 114
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Data_Row_Count",
+        "file": "towers_io_models.ads",
+        "line": 126,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 126
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Trials",
+        "file": "towers_io_models.ads",
+        "line": 150,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 150
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Seed",
+        "file": "towers_io_models.ads",
+        "line": 157,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 157
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Request_Report",
+        "file": "towers_io_models.ads",
+        "line": 164,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 164
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Normal_Return",
+        "file": "towers_io_models.ads",
+        "line": 174,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 174
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Observe_Option",
+        "file": "towers_io_models.ads",
+        "line": 183,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 183
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Trials",
+        "file": "towers_io_models.ads",
+        "line": 190,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 190
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Seed",
+        "file": "towers_io_models.ads",
+        "line": 196,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 196
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Real_Field",
+        "file": "towers_io_models.ads",
+        "line": 202,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 202
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Integer_Field",
+        "file": "towers_io_models.ads",
+        "line": 208,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 208
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Case_Name",
+        "file": "towers_io_models.ads",
+        "line": 214,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 214
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Report",
+        "file": "towers_io_models.ads",
+        "line": 220,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 220
+          }
+        ]
+      },
+      {
+        "name": "Towers_IO_Models.Check_Completed",
+        "file": "towers_io_models.ads",
+        "line": 225,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "towers_io_models.ads",
+            "line": 225
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "proof_obj/gnatprove/admission_core.spark",
+        "sha256": "7e305f15d26158517ace388309a4f0f2be24f510cbcdf2d17f6ab2860652558e",
+        "entity_count": 11,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/normal_model.spark",
+        "sha256": "a98437c10c7269b98d37baa88670027293ad926aabd89d48e359d4c610c50259",
+        "entity_count": 22,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_boundary_models.spark",
+        "sha256": "76b3420b810c03c941e968c5ac670b4119f5130944bb33dd8363ba2713ee69d8",
+        "entity_count": 30,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_demo.spark",
+        "sha256": "2ac11e1dd8b933ec43335e76e1f39f8d1c31e9d9d0195e93c52e074178f4c0d4",
+        "entity_count": 1,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_engine.spark",
+        "sha256": "cd3b30b0a2d4c92237f1748bed670a19b0151e7f7efc2f402940bbfc1a36b41a",
+        "entity_count": 13,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_io.spark",
+        "sha256": "b82ce7999866ef4d9b4247cedbac6e146094061dd226d3b94334053d420373e9",
+        "entity_count": 4,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "proof_obj/gnatprove/towers_io_models.spark",
+        "sha256": "aa157ef66da5e2ea1b9fd5e3af19f0892b0ee60cdb69605ccbe1804724842cc3",
+        "entity_count": 24,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "required_full_entities": [
+    "Admission_Core.Observe",
+    "Normal_Model.Basic_Grid",
+    "Normal_Model.Calibrated_OR_Cutoff",
+    "Normal_Model.Inverse_SF",
+    "Normal_Model.Joint_Tail",
+    "Normal_Model.Normal_Pair",
+    "Normal_Model.Reset",
+    "Normal_Model.Uniform",
+    "Towers_Boundary_Models",
+    "Towers_Boundary_Models.Observe_Trig",
+    "Towers_Boundary_Models.Trigonometric_Value",
+    "Towers_Demo",
+    "Towers_Engine.Compute",
+    "Towers_IO_Models"
+  ],
+  "missing_full_entities": [],
+  "ghost_boundaries": {
+    "schema": "spark-ghost-boundaries-v1",
+    "project": "towers",
+    "coverage_complete": true,
+    "implementation_proved": false,
+    "model_adequacy_proved": false,
+    "boundary_count": 17,
+    "native_spec_entities": [
+      "normal_model.check_grid_state",
+      "normal_model.checked_exp",
+      "normal_model.checked_exponent",
+      "normal_model.checked_log",
+      "normal_model.checked_node",
+      "normal_model.checked_probability",
+      "normal_model.sf",
+      "normal_model.square_root",
+      "towers_engine.check_conditional_units",
+      "towers_engine.check_joint",
+      "towers_engine.check_union_units",
+      "towers_engine.checked_quantization",
+      "towers_io",
+      "towers_io.read_seed",
+      "towers_io.read_trials",
+      "towers_io.write_report"
+    ],
+    "foreign_imports": [
+      "normal_model.c_erfc"
+    ],
+    "external_dependencies": {
+      "ada.command_line": "OS argument strings/counts and Ada Value parsing/failure behavior remain unproved; modeled observations cover typed normal-return options and, where recognized, the restricted decimal grammar.",
+      "ada.directories": "Directory creation, permissions, filesystem persistence and failure behavior remain unproved; a Ghost report request or normal return is not a proof of physical files.",
+      "ada.numerics": "The Pi constant and runtime numeric definitions are trusted target representations, not derived exact-real constants or validation of a Gaussian model.",
+      "ada.numerics.long_elementary_functions": "Installed elementary-function specifications are trusted interfaces. Their implementations, analytic accuracy, rounding/error bounds and totality are not proved; Ghost acceptance predicates model checked normal returns.",
+      "ada.strings.fixed": "The standard trimming implementation and exception behavior are unproved; Ghost lexical observations do not verify the trimming backend.",
+      "ada.text_io": "Text_IO and its instantiated numeric formatting generics, buffering, physical stdout/file bytes, persistence and exceptions remain unproved. Ghost models cover nominal fields/layouts and input/output observations only.",
+      "interfaces.c": "C double conversion, foreign ABI, libm implementation, error behavior and platform representation remain trusted; the C erfc boundary is explicitly modeled but not proved."
+    },
+    "global_unproved_obligations": {
+      "numerical-backends": "C erfc, Ada elementary-function implementations, ABI/representation, rounding accuracy and backend totality are unproved. Ghost predicates describe checked normal-return properties, not certified analytic functions or error bounds.",
+      "runtime-and-io": "Ada runtime, argument retrieval/Value attributes, string/image/formatting generics, memory/resource failures, filesystem effects, permissions, buffering, physical bytes, and exception/failure semantics remain unproved. Ordinary SPARK request receipts and separately marked Ghost observations record requests and normal-return values, not operating-system success or full persistent output traces.",
+      "model-adequacy": "An analyzed Ghost model does not prove that an excluded implementation refines it, that guards never reject, or that the model is a complete specification. Decimal recognition, lexical fields, bounded payload summaries and nominal layouts have stated restricted scopes; coupled calls in Off bodies are execution observations, not static refinement proofs.",
+      "psychometric-validity": "No Ghost model establishes empirical test correlations, population calibration, Gaussian distributions, pseudo-random independence, extreme-tail frequencies, reliability interpretation or psychometric validity. These require separate mathematical/statistical and empirical justification.",
+      "toolchain-and-provers": "Compiler/runtime translation, target floating representation, GNATprove/Why3/SMT solvers, operating system and hardware are trusted verification infrastructure; neither their implementations nor independent proof-object checking are proved by this campaign."
+    },
+    "standard_library_models": [
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Cos",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Trig",
+          "Towers_Boundary_Models.Trigonometric_Value"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "contract_entity": "Normal_Model.Normal_Pair",
+        "source_callee": "Cos",
+        "observed_argument": "Cosine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      },
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Sin",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Trig",
+          "Towers_Boundary_Models.Trigonometric_Value"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "contract_entity": "Normal_Model.Normal_Pair",
+        "source_callee": "Sin",
+        "observed_argument": "Sine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      }
+    ],
+    "private_helpers": [
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "f"
+      ],
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "n"
+      ],
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "name"
+      ],
+      [
+        "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "run"
+      ]
+    ],
+    "boundaries": [
+      {
+        "entity": "Normal_Model.Checked_Log",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Log",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Log",
+          "Towers_Boundary_Models.Log_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Log"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Exp",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Exp",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Exp",
+          "Towers_Boundary_Models.Exp_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Exp"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Exponent",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Exponent",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Exponent",
+          "Towers_Boundary_Models.Exponent_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Exponent"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Probability",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Probability",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Probability",
+          "Towers_Boundary_Models.Probability_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Probability"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Checked_Node",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Checked_Node",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Node",
+          "Towers_Boundary_Models.Node_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Node"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Check_Grid_State",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Check_Grid_State",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Grid_Cell",
+          "Towers_Boundary_Models.Grid_Cell_Normal_Return",
+          "Towers_Boundary_Models.Project_Grid_Cell"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Grid_Cell"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.Square_Root",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.Square_Root",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Sqrt",
+          "Towers_Boundary_Models.Sqrt_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Sqrt"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Model.SF",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.SF",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Survival",
+          "Towers_Boundary_Models.Survival_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Survival"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Checked_Quantization",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Checked_Quantization",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Quantization",
+          "Towers_Boundary_Models.Quantization_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Quantization"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Union_Units",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Union_Units",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Union",
+          "Towers_Boundary_Models.Union_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Union"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Conditional_Units",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Conditional_Units",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Conditional",
+          "Towers_Boundary_Models.Conditional_Normal_Return",
+          "Towers_Boundary_Models.Project_Conditional"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Conditional"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_Engine.Check_Joint",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_Engine.Check_Joint",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Joint",
+          "Towers_Boundary_Models.Joint_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Joint"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Towers_IO",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Write_Report",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Report",
+          "Towers_IO_Models.Report_Valid",
+          "Towers_IO_Models.Field_Count",
+          "Towers_IO_Models.Data_Row_Count",
+          "Towers_IO_Models.Check_Real_Field",
+          "Towers_IO_Models.Real_Field",
+          "Towers_IO_Models.Check_Integer_Field",
+          "Towers_IO_Models.Integer_Field",
+          "Towers_IO_Models.Check_Case_Name",
+          "Towers_IO_Models.Case_Name_Agrees",
+          "Towers_IO_Models.Case_Name"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Report"
+        ],
+        "excluded_helpers": [
+          {
+            "entity": "Towers_IO.F",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Real_Field"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.N",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Integer_Field"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.Name",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Case_Name"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Towers_IO.Write_Report.Run",
+            "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "contract_refs": [
+              "Towers_IO_Models.Check_Report"
+            ],
+            "link_kind": "ghost-call"
+          }
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Read_Trials",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Read_Trials",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Trials",
+          "Towers_IO_Models.Valid_Trials",
+          "Towers_IO_Models.Observe_Option",
+          "Towers_IO_Models.Option_Agrees",
+          "Towers_IO_Models.Decimal_Input"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Trials"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Read_Seed",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Read_Seed",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Seed",
+          "Towers_IO_Models.Valid_Seed",
+          "Towers_IO_Models.Observe_Option",
+          "Towers_IO_Models.Option_Agrees",
+          "Towers_IO_Models.Decimal_Input"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Seed"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Towers_IO.Write_Report",
+        "kind": "spec-only",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Towers_IO.Write_Report",
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "model_entities": [
+          "Towers_IO_Models.Check_Report",
+          "Towers_IO_Models.Report_Valid",
+          "Towers_IO_Models.Field_Count",
+          "Towers_IO_Models.Data_Row_Count"
+        ],
+        "contract_refs": [
+          "Towers_IO_Models.Check_Report"
+        ],
+        "obligations": [
+          "Ghost observations record typed returned options and requested report data/layout. Decimal agreement is conditional on recognition by the restricted digit grammar; Ada Value accepts other forms whose parsing is not proved by this model.",
+          "Lexical real/integer field predicates and case labels are checked observations, not numeric round-trip, formatting-accuracy or complete CSV proofs. Standard-library formatting, string trimming, directory/file effects, IO success and exception behavior remain unproved."
+        ]
+      },
+      {
+        "entity": "Normal_Model.C_Erfc",
+        "kind": "foreign-import",
+        "source": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "model_file": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Model.SF",
+        "model_entities": [
+          "Towers_Boundary_Models.Observe_Survival",
+          "Towers_Boundary_Models.Survival_Normal_Return"
+        ],
+        "contract_refs": [
+          "Towers_Boundary_Models.Observe_Survival"
+        ],
+        "contract_file": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "obligations": [
+          "The wrapper observes actual C-derived values and its checked normal-return acceptance model. This is not a proof of the imported C implementation, ABI, erfc identity, approximation error, rounding behavior or totality."
+        ]
+      }
+    ]
+  },
+  "contract_floor": {
+    "schema": "explicit-contract-clauses-v1",
+    "minimum_required": 5,
+    "minimum_observed": 2,
+    "functions": 53,
+    "procedures": 46,
+    "contracts": 553,
+    "entities": [
+      {
+        "identity": "admission_core.classify",
+        "name": "Classify",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 16,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Classify'Result => (Pass_A, Pass_B))"
+          }
+        ],
+        "contract_count": 2,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.complement",
+        "name": "Complement",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 80,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Complement'Result + P = Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if P = 0 then Complement'Result = Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if P = Scale then Complement'Result = 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Complement'Result => P)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.conditional",
+        "name": "Conditional",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 87,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Marginal > 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Joint <= Marginal"
+          },
+          {
+            "aspect": "post",
+            "clause": "Conditional'Result.Numerator = Joint"
+          },
+          {
+            "aspect": "post",
+            "clause": "Conditional'Result.Denominator = Marginal"
+          },
+          {
+            "aspect": "post",
+            "clause": "Conditional'Result.Numerator <= Conditional'Result.Denominator"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Conditional'Result => (Joint, Marginal))"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.fraction",
+        "name": "Fraction",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 64,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Denominator > 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Numerator <= Denominator"
+          },
+          {
+            "aspect": "post",
+            "clause": "Fraction'Result.Numerator = Numerator"
+          },
+          {
+            "aspect": "post",
+            "clause": "Fraction'Result.Denominator = Denominator"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Fraction'Result => (Numerator, Denominator))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.marginal_a",
+        "name": "Marginal_A",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 44,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Total (C) <= Max_Trials"
+          },
+          {
+            "aspect": "post",
+            "clause": "Marginal_A'Result = C.N10 + C.N11"
+          },
+          {
+            "aspect": "post",
+            "clause": "Marginal_A'Result <= Total (C)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Marginal_A'Result => C)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.marginal_b",
+        "name": "Marginal_B",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 50,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Total (C) <= Max_Trials"
+          },
+          {
+            "aspect": "post",
+            "clause": "Marginal_B'Result = C.N01 + C.N11"
+          },
+          {
+            "aspect": "post",
+            "clause": "Marginal_B'Result <= Total (C)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Marginal_B'Result => C)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.observe",
+        "name": "Observe",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 34,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Total (C) < Max_Trials"
+          },
+          {
+            "aspect": "post",
+            "clause": "Total (C) = Total (C'Old) + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.N00 = C'Old.N00 + (if E = Neither then 1 else 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.N10 = C'Old.N10 + (if E = A_Only then 1 else 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.N01 = C'Old.N01 + (if E = B_Only then 1 else 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.N11 = C'Old.N11 + (if E = Both then 1 else 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(C => (C, E))"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.total",
+        "name": "Total",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 26,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(Total'Result = C.N00 + C.N10 + C.N01 + C.N11)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Total'Result >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Total'Result <= 4 * Max_Trials)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Total'Result => C)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.union_count",
+        "name": "Union_Count",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 56,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Total (C) <= Max_Trials"
+          },
+          {
+            "aspect": "post",
+            "clause": "Union_Count'Result = C.N10 + C.N01 + C.N11"
+          },
+          {
+            "aspect": "post",
+            "clause": "Union_Count'Result <= Total (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Union_Count'Result >= C.N11"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Union_Count'Result => C)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "admission_core.union_probability",
+        "name": "Union_Probability",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "line": 71,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Joint <= P_A"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Joint <= P_B"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P_A + P_B <= Scale"
+          },
+          {
+            "aspect": "post",
+            "clause": "Union_Probability'Result = P_A + P_B - Joint"
+          },
+          {
+            "aspect": "post",
+            "clause": "Union_Probability'Result >= P_A"
+          },
+          {
+            "aspect": "post",
+            "clause": "Union_Probability'Result >= P_B"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Union_Probability'Result => (P_A, P_B, Joint))"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.add_grid_cell",
+        "name": "Add_Grid_Cell",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 281,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "for all K in Values'Range =>\n       Values (K).Joint in 0.0 .. 4.0 * Long_Float (I - 1) and\n       Values (K).Marginal in 0.0 .. 4.0 * Long_Float (I - 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(for all K in Values'Range => Values (K).Joint in 0.0 .. 4.0 * Long_Float (I))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(for all K in Values'Range => Values (K).Marginal in 0.0 .. 4.0 * Long_Float (I))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Values => (Weight, X, Y, Values), null => I)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.add_grid_cutoff",
+        "name": "Add_Grid_Cutoff",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 258,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Value.Joint in 0.0 .. 4.0 * Long_Float (I - 1)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Value.Marginal in 0.0 .. 4.0 * Long_Float (I - 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value.Joint in 0.0 .. 4.0 * Long_Float (I)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value.Marginal in 0.0 .. 4.0 * Long_Float (I)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Value => (Weight, X, Y, Cutoff, Value), null => I)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.add_grid_weight",
+        "name": "Add_Grid_Weight",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 244,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Running_Total in 0.0 .. 4.0 * Long_Float (I - 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Running_Total in 0.0 .. 4.0 * Long_Float (I)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Running_Total >= Running_Total'Old"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Running_Total => (Weight, Running_Total), null => I)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.basic_grid",
+        "name": "Basic_Grid",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 51,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "((for all K in Basic_Grid'Result'Range => Basic_Grid'Result (K).Joint >= 0.0))"
+          },
+          {
+            "aspect": "post",
+            "clause": "((for all K in Basic_Grid'Result'Range => Basic_Grid'Result (K).Joint <= 1.0))"
+          },
+          {
+            "aspect": "post",
+            "clause": "((for all K in Basic_Grid'Result'Range => Basic_Grid'Result (K).Marginal in 0.0 .. 1.0))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Basic_Grid'Result => null)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.calibrated_or_cutoff",
+        "name": "Calibrated_OR_Cutoff",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 40,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Target > 0.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Target < 0.5"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calibrated_OR_Cutoff'Result in 0.0 .. 8.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Calibrated_OR_Cutoff'Result => (Target, Rho))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.check_grid_state",
+        "name": "Check_Grid_State",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 302,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Total = Total'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "Values = Values'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "Total in 1.0E-100 .. 1.0E6"
+          },
+          {
+            "aspect": "post",
+            "clause": "(for all K in Values'Range =>\n          Values (K).Joint in 0.0 .. Total and Values (K).Marginal in 0.0 .. Total)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Total, Values) => (Total, Values))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.checked_exp",
+        "name": "Checked_Exp",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 52,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "X <= 1.0E-9"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Exp'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Exp'Result <= 1.0001)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Exp'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.checked_exponent",
+        "name": "Checked_Exponent",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 70,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Exponent'Result = X)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Exponent'Result <= 1.0E-9)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Towers_Boundary_Models.Exponent_Normal_Return (X, Checked_Exponent'Result))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Exponent'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.checked_log",
+        "name": "Checked_Log",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 34,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "X in 4.0E-10 .. 0.9999999999"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Log'Result >= -23.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Log'Result <= 0.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Log'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.checked_node",
+        "name": "Checked_Node",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 131,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Node'Result = X)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Node'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Node'Result <= 0.96)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Node'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.checked_probability",
+        "name": "Checked_Probability",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 87,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Probability'Result = P)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Probability'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Probability'Result <= 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Probability'Result => P)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.count_step",
+        "name": "Count_Step",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 118,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Long_Float (I) = Long_Float (I - 1) + 1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "4.0 * Long_Float (I) >= 4.0 * Long_Float (I - 1) + 2.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "8.0 * Long_Float (I) >= 8.0 * Long_Float (I - 1) + 6.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => I)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.density",
+        "name": "Density",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 173,
+        "contracts": [
+          {
+            "aspect": "pre",
+            "clause": "R in 0.0 .. 0.96"
+          },
+          {
+            "aspect": "pre",
+            "clause": "abs (A) <= 1.0E100"
+          },
+          {
+            "aspect": "pre",
+            "clause": "abs (B) <= 1.0E100"
+          },
+          {
+            "aspect": "post",
+            "clause": "Density'Result in 0.0 .. 1.0"
+          },
+          {
+            "aspect": "global",
+            "clause": "(Input => (A, B))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Density'Result => (R, A, B))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.inverse_sf",
+        "name": "Inverse_SF",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 26,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P > SF (12.0)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P < SF (-12.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Inverse_SF'Result in -12.0 .. 12.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Inverse_SF'Result => P)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.joint_tail",
+        "name": "Joint_Tail",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 31,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Steps mod 2 = 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "abs (A) <= 1.0E100"
+          },
+          {
+            "aspect": "pre",
+            "clause": "abs (B) <= 1.0E100"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Joint_Tail'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Joint_Tail'Result <= 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Joint_Tail'Result => (A, B, Rho, Steps))"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.normal_pair",
+        "name": "Normal_Pair",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 68,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "X >= -8.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "X <= 8.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y >= -8.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y <= 8.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((G, X, Y) => G)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.reset",
+        "name": "Reset",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 63,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Seed < 2_147_483_647"
+          },
+          {
+            "aspect": "post",
+            "clause": "G.State = State_Value (Seed)"
+          },
+          {
+            "aspect": "post",
+            "clause": "G.State >= 1"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(G => Seed)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.scale_normal",
+        "name": "Scale_Normal",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 397,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Scale_Normal'Result = Radius * Trig)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Scale_Normal'Result >= -8.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Scale_Normal'Result <= 8.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Scale_Normal'Result => (Radius, Trig))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.sf",
+        "name": "SF",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 20,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Z >= 10.0 then SF'Result < 1.0E-20)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Z <= -10.0 then SF'Result > 1.0 - 1.0E-14)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(SF'Result in 0.0 .. 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(SF'Result => Z)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.square_root",
+        "name": "Square_Root",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "line": 9,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "X in 0.0 .. 1.0E6"
+          },
+          {
+            "aspect": "post",
+            "clause": "Square_Root'Result in 0.0 .. 1.0E3"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 1.0E-30 then Square_Root'Result >= 1.0E-15)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 0.0625 then Square_Root'Result >= 0.25)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 1.0 then Square_Root'Result >= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0 then Square_Root'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 4.0 then Square_Root'Result <= 2.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 64.0 then Square_Root'Result <= 8.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Square_Root'Result => X)"
+          }
+        ],
+        "contract_count": 10,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_model.uniform",
+        "name": "Uniform",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 380,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(U in 4.0E-10 .. 0.9999999999)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(G.State >= 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(G.State < 2_147_483_647)"
+          },
+          {
+            "aspect": "post",
+            "clause": "G.State = (48_271 * G.State'Old) mod 2_147_483_647"
+          },
+          {
+            "aspect": "post",
+            "clause": "U = Long_Float (G.State) / 2_147_483_647.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((G, U) => G)"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.conditional_normal_return",
+        "name": "Conditional_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 126,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Conditional_Normal_Return'Result then J in 0 .. Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Conditional_Normal_Return'Result then M in 1 .. Scale and then J = Old_J and then M = Old_M and then J <= M)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if J in 0 .. Scale and then M in 1 .. Scale\n       and then J = Old_J and then M = Old_M and then J <= M then Conditional_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Conditional_Normal_Return'Result => (J, M, Old_J, Old_M))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.exp_normal_return",
+        "name": "Exp_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 47,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Exp_Normal_Return'Result then X <= 1.0E-9)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Exp_Normal_Return'Result then Y in 0.0 .. 1.0001)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0E-9 and then Y in 0.0 .. 1.0001 then Exp_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Exp_Normal_Return'Result => (X, Y))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.exponent_normal_return",
+        "name": "Exponent_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 65,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Exponent_Normal_Return'Result then After = Before)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Exponent_Normal_Return'Result then After <= 1.0E-9)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if After = Before and then After <= 1.0E-9 then Exponent_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Exponent_Normal_Return'Result => (Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.grid_cell_normal_return",
+        "name": "Grid_Cell_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 89,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Grid_Cell_Normal_Return'Result then Total in 1.0E-100 .. 1.0E6)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Grid_Cell_Normal_Return'Result then Joint in 0.0 .. Total and then Marginal in 0.0 .. Total)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Total in 1.0E-100 .. 1.0E6 and then\n       Joint in 0.0 .. Total and then Marginal in 0.0 .. Total then Grid_Cell_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Grid_Cell_Normal_Return'Result => (Total, Joint, Marginal))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.joint_normal_return",
+        "name": "Joint_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 137,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Joint_Normal_Return'Result then A in 0.0 .. 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Joint_Normal_Return'Result then B in 0.0 .. 1.0 and then J = Old_J and then J in 0.0 .. A and then J <= B)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if A in 0.0 .. 1.0 and then B in 0.0 .. 1.0\n       and then J = Old_J and then J in 0.0 .. A and then J <= B then Joint_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Joint_Normal_Return'Result => (J, A, B, Old_J))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.log_normal_return",
+        "name": "Log_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 39,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Log_Normal_Return'Result then X in 4.0E-10 .. 0.9999999999)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Log_Normal_Return'Result then Y in -23.0 .. 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X in 4.0E-10 .. 0.9999999999 and then Y in -23.0 .. 0.0 then Log_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Log_Normal_Return'Result => (X, Y))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.node_normal_return",
+        "name": "Node_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 81,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Node_Normal_Return'Result then After = Before)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Node_Normal_Return'Result then After in 0.0 .. 0.96)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if After = Before and then After in 0.0 .. 0.96 then Node_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Node_Normal_Return'Result => (Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_conditional",
+        "name": "Observe_Conditional",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 234,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Conditional_Normal_Return (J, M, Old_J, Old_M)"
+          },
+          {
+            "aspect": "post",
+            "clause": "J = Old_J"
+          },
+          {
+            "aspect": "post",
+            "clause": "M = Old_M"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (J, M, Old_J, Old_M))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_exp",
+        "name": "Observe_Exp",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 185,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Exp_Normal_Return (X, Y)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y <= 1.0001"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (X, Y))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_exponent",
+        "name": "Observe_Exponent",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 197,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Exponent_Normal_Return (Before, After)"
+          },
+          {
+            "aspect": "post",
+            "clause": "After = Before"
+          },
+          {
+            "aspect": "post",
+            "clause": "After <= 1.0E-9"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_grid_cell",
+        "name": "Observe_Grid_Cell",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 215,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Grid_Cell_Normal_Return (Total, Joint, Marginal)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Total = Old_Total"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Joint = Old_Joint"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Marginal = Old_Marginal"
+          },
+          {
+            "aspect": "post",
+            "clause": "Total = Old_Total"
+          },
+          {
+            "aspect": "post",
+            "clause": "Joint = Old_Joint"
+          },
+          {
+            "aspect": "post",
+            "clause": "Marginal = Old_Marginal"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Total, Joint, Marginal, Old_Total, Old_Joint, Old_Marginal))"
+          }
+        ],
+        "contract_count": 9,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_inverse_bracket",
+        "name": "Observe_Inverse_Bracket",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 245,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P > Lower_Tail"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P < Upper_Tail"
+          },
+          {
+            "aspect": "post",
+            "clause": "P > Lower_Tail"
+          },
+          {
+            "aspect": "post",
+            "clause": "P < Upper_Tail"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (P, Lower_Tail, Upper_Tail))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_joint",
+        "name": "Observe_Joint",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 239,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Joint_Normal_Return (J, A, B, Old_J)"
+          },
+          {
+            "aspect": "post",
+            "clause": "J = Old_J"
+          },
+          {
+            "aspect": "post",
+            "clause": "J in 0.0 .. A"
+          },
+          {
+            "aspect": "post",
+            "clause": "J <= B"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (J, A, B, Old_J))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_log",
+        "name": "Observe_Log",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 179,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Log_Normal_Return (X, Y)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y >= -23.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y <= 0.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (X, Y))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_node",
+        "name": "Observe_Node",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 209,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Node_Normal_Return (Before, After)"
+          },
+          {
+            "aspect": "post",
+            "clause": "After = Before"
+          },
+          {
+            "aspect": "post",
+            "clause": "After in 0.0 .. 0.96"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_probability",
+        "name": "Observe_Probability",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 203,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Probability_Normal_Return (Before, After)"
+          },
+          {
+            "aspect": "post",
+            "clause": "After = Before"
+          },
+          {
+            "aspect": "post",
+            "clause": "After in 0.0 .. 1.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_quantization",
+        "name": "Observe_Quantization",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 222,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Quantization_Normal_Return (P, Before, After)"
+          },
+          {
+            "aspect": "post",
+            "clause": "After = Before"
+          },
+          {
+            "aspect": "post",
+            "clause": "abs (Long_Float (After) / Long_Float (Scale) - P) <= 0.51E-15"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (P, Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_sqrt",
+        "name": "Observe_Sqrt",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 167,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Sqrt_Normal_Return (X, Y)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y <= 1.0E3"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (X, Y))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_survival",
+        "name": "Observe_Survival",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 173,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Survival_Normal_Return (Z, P)"
+          },
+          {
+            "aspect": "post",
+            "clause": "P >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "P <= 1.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Z, P))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_trig",
+        "name": "Observe_Trig",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 191,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trigonometric_Value (Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= -1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value <= 1.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.observe_union",
+        "name": "Observe_Union",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 229,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Union_Normal_Return (A, B, J, Old_A, Old_B, Old_J)"
+          },
+          {
+            "aspect": "post",
+            "clause": "A = Old_A"
+          },
+          {
+            "aspect": "post",
+            "clause": "B = Old_B"
+          },
+          {
+            "aspect": "post",
+            "clause": "J = Old_J"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (A, B, J, Old_A, Old_B, Old_J))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.probability_normal_return",
+        "name": "Probability_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 73,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Probability_Normal_Return'Result then After = Before)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Probability_Normal_Return'Result then After in 0.0 .. 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if After = Before and then After in 0.0 .. 1.0 then Probability_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Probability_Normal_Return'Result => (Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.project_conditional",
+        "name": "Project_Conditional",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 149,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Conditional_Normal_Return (J, M, Old_J, Old_M)"
+          },
+          {
+            "aspect": "post",
+            "clause": "M > 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "J >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "J <= M"
+          },
+          {
+            "aspect": "post",
+            "clause": "J = Old_J"
+          },
+          {
+            "aspect": "post",
+            "clause": "M = Old_M"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (J, M, Old_J, Old_M))"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.project_grid_cell",
+        "name": "Project_Grid_Cell",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 157,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Grid_Cell_Normal_Return (Total, Joint, Marginal)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Total > 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Joint >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Joint <= Total"
+          },
+          {
+            "aspect": "post",
+            "clause": "Marginal >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Marginal <= Total"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Total, Joint, Marginal))"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.quantization_normal_return",
+        "name": "Quantization_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 100,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Quantization_Normal_Return'Result then P in 0.0 .. 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Quantization_Normal_Return'Result then Before in 0 .. Scale and then After = Before and then abs (Long_Float (After) / Long_Float (Scale) - P) <= 0.51E-15)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if P in 0.0 .. 1.0 and then Before in 0 .. Scale\n       and then After = Before and then\n       abs (Long_Float (After) / Long_Float (Scale) - P) <= 0.51E-15 then Quantization_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Quantization_Normal_Return'Result => (P, Before, After))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.sqrt_normal_return",
+        "name": "Sqrt_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 7,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Sqrt_Normal_Return'Result then Y in 0.0 .. 1.0E3)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sqrt_Normal_Return'Result then (if X >= 1.0E-30 then Y >= 1.0E-15) and then (if X >= 0.0625 then Y >= 0.25) and then (if X >= 1.0 then Y >= 1.0) and then (if X <= 1.0 then Y <= 1.0) and then (if X <= 4.0 then Y <= 2.0) and then (if X <= 64.0 then Y <= 8.0))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Y in 0.0 .. 1.0E3\n       and then (if X >= 1.0E-30 then Y >= 1.0E-15)\n       and then (if X >= 0.0625 then Y >= 0.25)\n       and then (if X >= 1.0 then Y >= 1.0)\n       and then (if X <= 1.0 then Y <= 1.0)\n       and then (if X <= 4.0 then Y <= 2.0)\n       and then (if X <= 64.0 then Y <= 8.0) then Sqrt_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Sqrt_Normal_Return'Result => (X, Y))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.survival_normal_return",
+        "name": "Survival_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 27,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Survival_Normal_Return'Result then P in 0.0 .. 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Survival_Normal_Return'Result then (if Z >= 10.0 then P < 1.0E-20) and then (if Z <= -10.0 then P > 1.0 - 1.0E-14))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if P in 0.0 .. 1.0\n       and then (if Z >= 10.0 then P < 1.0E-20)\n       and then (if Z <= -10.0 then P > 1.0 - 1.0E-14) then Survival_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Survival_Normal_Return'Result => (Z, P))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.trigonometric_value",
+        "name": "Trigonometric_Value",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 57,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Trigonometric_Value'Result then Value >= -1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Trigonometric_Value'Result then Value <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in -1.0 .. 1.0 then Trigonometric_Value'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trigonometric_Value'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_boundary_models.union_normal_return",
+        "name": "Union_Normal_Return",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "line": 113,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Union_Normal_Return'Result then A in 0 .. Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Union_Normal_Return'Result then B in 0 .. Scale and then J in 0 .. Scale and then A = Old_A and then B = Old_B and then J = Old_J and then J <= A and then J <= B and then A + B <= Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if A in 0 .. Scale and then B in 0 .. Scale and then J in 0 .. Scale\n       and then A = Old_A and then B = Old_B and then J = Old_J\n       and then J <= A and then J <= B and then A + B <= Scale then Union_Normal_Return'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Union_Normal_Return'Result => (A, B, J, Old_A, Old_B, Old_J))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_demo.towers_demo",
+        "name": "Towers_Demo",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+        "line": 5,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Towers_IO.IO_State, Towers_IO_Models.Last_Receipt))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Towers_IO.IO_State => Towers_IO.IO_State, Towers_IO_Models.Last_Receipt => Towers_IO.IO_State, null => Towers_IO_Models.Last_Receipt)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Towers_IO_Models.Last_Receipt.Status = Towers_IO_Models.Normal_Return_Observed"
+          },
+          {
+            "aspect": "post",
+            "clause": "Towers_IO_Models.Last_Receipt.Requested_Files = 4"
+          },
+          {
+            "aspect": "post",
+            "clause": "Towers_IO_Models.Last_Receipt.Requested_Data_Rows = 12"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.calculate",
+        "name": "Calculate",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 142,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Row.A = A"
+          },
+          {
+            "aspect": "post",
+            "clause": "Row.B = B"
+          },
+          {
+            "aspect": "post",
+            "clause": "Row.Refinement >= 0.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(A => Left, B => Right, Row => (Left, Right))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.check_conditional_units",
+        "name": "Check_Conditional_Units",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 47,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "J = J'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "M = M'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "M > 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "J <= M"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((J, M) => (J, M))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.check_joint",
+        "name": "Check_Joint",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 64,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "J = J'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "J >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "J <= A"
+          },
+          {
+            "aspect": "post",
+            "clause": "J <= B"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(J => (J, A, B))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.check_union_units",
+        "name": "Check_Union_Units",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 27,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "A = A'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "B = B'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "J = J'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "J <= A"
+          },
+          {
+            "aspect": "post",
+            "clause": "J <= B"
+          },
+          {
+            "aspect": "post",
+            "clause": "A + B <= Scale"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((A, B, J) => (A, B, J))"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.checked_quantization",
+        "name": "Checked_Quantization",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 8,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Quantization'Result = Q)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(abs (Long_Float (Checked_Quantization'Result) / Long_Float (Scale) - P) <= 0.51E-15)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Towers_Boundary_Models.Quantization_Normal_Return (P, Long_Long_Integer (Q), Long_Long_Integer (Checked_Quantization'Result)))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Quantization'Result => (P, Q))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.compute",
+        "name": "Compute",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+        "line": 47,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "((for all K in Case_Index => Admission_Core.Total (Data.Simulation (K).Cells) = Trials))"
+          },
+          {
+            "aspect": "post",
+            "clause": "((for all K in Case_Index => Data.Simulation (K).Marginal_A = Admission_Core.Marginal_A (Data.Simulation (K).Cells)))"
+          },
+          {
+            "aspect": "post",
+            "clause": "((for all K in Case_Index => Data.Simulation (K).Marginal_B = Admission_Core.Marginal_B (Data.Simulation (K).Cells)))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Data => (Trials, Seed))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.conditional_value",
+        "name": "Conditional_Value",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 100,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Conditional_Value'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Conditional_Value'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Joint = 0.0 then Conditional_Value'Result = 0.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Conditional_Value'Result => (Joint, Marginal))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.observe_all",
+        "name": "Observe_All",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 182,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "for all K in Case_Index => Total (Tallies (K)) = Iteration - 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "(for all K in Case_Index => Total (Tallies (K)) = Iteration)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(for all K in Case_Index => Tallies (K).N11 <= Iteration)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Tallies => (Tallies, X, Y, A, B), null => Iteration)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.simulation_row_for",
+        "name": "Simulation_Row_For",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 202,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Total (Cells) = Trials"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Row_For'Result.Cells = Cells)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Row_For'Result.Marginal_A = Marginal_A (Cells))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Row_For'Result.Marginal_B = Marginal_B (Cells))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Row_For'Result.Union_N = Union_Count (Cells))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Simulation_Row_For'Result => (Cells, Trials))"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.units",
+        "name": "Units",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 79,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(abs (Long_Float (Units'Result) / Long_Float (Scale) - P) <= 0.51E-15)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Units'Result >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Units'Result <= Scale)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Units'Result => P)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.value",
+        "name": "Value",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+        "line": 41,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P.Denominator > 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P.Numerator <= P.Denominator"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Value'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Value'Result <= 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Value'Result => P)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_engine.wilson",
+        "name": "Wilson",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 114,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Successes <= Denominator"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Lo >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Hi <= 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Lo, Hi) => (Successes, Denominator))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io.read_seed",
+        "name": "Read_Seed",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "line": 17,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(Input => IO_State)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Read_Seed'Result >= 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Read_Seed'Result <= 2_147_483_646)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Towers_IO_Models.Valid_Seed (Long_Long_Integer (Read_Seed'Result)))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Read_Seed'Result => IO_State)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io.read_trials",
+        "name": "Read_Trials",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "line": 11,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(Input => IO_State)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Read_Trials'Result >= 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Read_Trials'Result <= Admission_Core.Max_Trials)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Towers_IO_Models.Valid_Trials (Long_Long_Integer (Read_Trials'Result)))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Read_Trials'Result => IO_State)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io.write_report",
+        "name": "Write_Report",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "line": 23,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => IO_State)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "(for all K in Towers_Engine.Case_Index => Admission_Core.Total (Data.Simulation (K).Cells) = Trials)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "(for all K in Towers_Engine.Case_Index => Data.Simulation (K).Marginal_A = Admission_Core.Marginal_A (Data.Simulation (K).Cells))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "(for all K in Towers_Engine.Case_Index => Data.Simulation (K).Marginal_B = Admission_Core.Marginal_B (Data.Simulation (K).Cells))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(IO_State => (Trials, Seed, Data, IO_State))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.case_name",
+        "name": "Case_Name",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 77,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if K = 1 then Case_Name'Result = \"equal_top_2_percent\")"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if K = 2 then Case_Name'Result = \"equal_top_0_1_percent\")"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if K = 3 then Case_Name'Result = \"equal_top_1_in_33000\")"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if K = 4 then Case_Name'Result = \"mixed_top_2_and_0_1_percent\")"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Case_Name'Result => K)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.case_name_agrees",
+        "name": "Case_Name_Agrees",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 89,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Case_Name_Agrees'Result then Text'Length = Case_Name (K)'Length)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Case_Name_Agrees'Result and then Text'Length = Case_Name (K)'Length then Text = Case_Name (K))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text = Case_Name (K) then Case_Name_Agrees'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Case_Name_Agrees'Result => (K, Text))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.check_case_name",
+        "name": "Check_Case_Name",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 214,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Case_Name_Agrees (K, Text)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Text = Case_Name (K)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Text'Length = Case_Name (K)'Length"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (K, Text))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.check_completed",
+        "name": "Check_Completed",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 225,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Status = Normal_Return_Observed"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Requested_Files = 4"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Requested_Data_Rows = 12"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Status = Normal_Return_Observed"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Trace)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.check_integer_field",
+        "name": "Check_Integer_Field",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 208,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Integer_Field (Text)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Text'Length > 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Text (Text'First) in '0' .. '9' or else (Text (Text'First) = '-' and then Text'Length > 1))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Text)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.check_real_field",
+        "name": "Check_Real_Field",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 202,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Real_Field (Text)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Text'Length > 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(for some C of Text => C in '0' .. '9')"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Text)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.check_report",
+        "name": "Check_Report",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 220,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Report_Valid (Trials, Seed, Data)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid_Trials (Trials)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid_Seed (Seed)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Trials, Seed, Data))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.check_seed",
+        "name": "Check_Seed",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 196,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Valid_Seed (Actual)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Actual >= 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Actual <= 2_147_483_646"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Actual)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.check_trials",
+        "name": "Check_Trials",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 190,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Valid_Trials (Actual)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Actual >= 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Actual <= Admission_Core.Max_Trials"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Actual)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.data_row_count",
+        "name": "Data_Row_Count",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 126,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Kind in Calculations | Simulation then Data_Row_Count'Result = 4)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Kind = Grid then Data_Row_Count'Result = 3)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Kind = Calibration then Data_Row_Count'Result = 1)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Data_Row_Count'Result => Kind)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.decimal_input",
+        "name": "Decimal_Input",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 14,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Decimal_Input'Result.Value <= Limit)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Decimal_Input'Result.Recognized then Text'Length > 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text'Length = 0 then not Decimal_Input'Result.Recognized)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Decimal_Input'Result => (Text, Limit))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.field_count",
+        "name": "Field_Count",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 114,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Kind = Calculations then Field_Count'Result = 16)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Kind = Grid then Field_Count'Result = 7)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Kind = Calibration then Field_Count'Result = 6)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Kind = Simulation then Field_Count'Result = 15)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Field_Count'Result => Kind)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.integer_field",
+        "name": "Integer_Field",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 60,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Integer_Field'Result then Text'Length > 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Integer_Field'Result then (Text (Text'First) in '0' .. '9' or else\n                 (Text (Text'First) = '-' and then Text'Length > 1)) and then (for all I in Text'Range =>\n          (if I /= Text'First then Text (I) in '0' .. '9')))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text'Length > 0\n       and then (Text (Text'First) in '0' .. '9' or else\n                 (Text (Text'First) = '-' and then Text'Length > 1))\n       and then (for all I in Text'Range =>\n          (if I /= Text'First then Text (I) in '0' .. '9')) then Integer_Field'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Integer_Field'Result => Text)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.observe_normal_return",
+        "name": "Observe_Normal_Return",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 174,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Status = Report_Requested"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Snapshot = Data"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Status = Normal_Return_Observed"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Snapshot = Data"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Trials = Trace.Trials'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Seed = Trace.Seed'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Requested_Files = Trace.Requested_Files'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Requested_Data_Rows = Trace.Requested_Data_Rows'Old"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trace => Trace, null => Data)"
+          }
+        ],
+        "contract_count": 10,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.observe_option",
+        "name": "Observe_Option",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 183,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Option_Agrees (Text, Actual, Limit)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(not Decimal_Input (Text, Limit).Recognized or else Actual = Decimal_Input (Text, Limit).Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Decimal_Input (Text, Limit).Recognized then Actual <= Limit)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Text, Actual, Limit))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.observe_seed",
+        "name": "Observe_Seed",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 157,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Status = Trials_Observed"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Status = Options_Observed"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Seed = Long_Long_Integer (Actual)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Trials = Trace.Trials'Old"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trace => (Trace, Actual))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.observe_trials",
+        "name": "Observe_Trials",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 150,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Status = Empty"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Status = Trials_Observed"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Trials = Actual"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Seed = Trace.Seed'Old"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trace => (Trace, Actual))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.option_agrees",
+        "name": "Option_Agrees",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 21,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Option_Agrees'Result then Actual >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Option_Agrees'Result then Actual <= Limit)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Option_Agrees'Result = (Actual in 0 .. Limit and then\n          (if Decimal_Input (Text, Limit).Recognized then Actual = Decimal_Input (Text, Limit).Value)))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Option_Agrees'Result => (Text, Actual, Limit))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.real_field",
+        "name": "Real_Field",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 46,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Real_Field'Result then Text'Length > 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Real_Field'Result then (for all C of Text => C in '0' .. '9' or C = '.'\n                   or C = 'E' or C = 'e' or C = '+' or C = '-') and then (for some C of Text => C in '0' .. '9'))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text'Length > 0\n       and then (for all C of Text => C in '0' .. '9' or C = '.'\n                   or C = 'E' or C = 'e' or C = '+' or C = '-')\n       and then (for some C of Text => C in '0' .. '9') then Real_Field'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Real_Field'Result => Text)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.report_valid",
+        "name": "Report_Valid",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 98,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Report_Valid'Result then Valid_Trials (Trials))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Report_Valid'Result then Valid_Seed (Seed) and then (for all K in Towers_Engine.Case_Index =>\n          Admission_Core.Total (Data.Simulation (K).Cells) = Trials))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Trials (Trials) and then Valid_Seed (Seed)\n       and then (for all K in Towers_Engine.Case_Index =>\n          Admission_Core.Total (Data.Simulation (K).Cells) = Trials) then Report_Valid'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Report_Valid'Result => (Trials, Seed, Data))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.request_report",
+        "name": "Request_Report",
+        "kind": "procedure",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 164,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Status = Options_Observed"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Trials = Trials"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trace.Seed = Long_Long_Integer (Seed)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Report_Valid (Trials, Long_Long_Integer (Seed), Data)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Status = Report_Requested"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Snapshot = Data"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Trials = Trials"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Seed = Long_Long_Integer (Seed)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Requested_Files = 4"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Requested_Data_Rows = 12"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trace => (Trials, Seed, Data), null => Trace)"
+          }
+        ],
+        "contract_count": 12,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.valid_seed",
+        "name": "Valid_Seed",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 38,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Seed'Result then Value >= 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Seed'Result then Value <= 2_147_483_646)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in 1 .. 2_147_483_646 then Valid_Seed'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid_Seed'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "towers_io_models.valid_trials",
+        "name": "Valid_Trials",
+        "kind": "function",
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "line": 31,
+        "contracts": [
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Trials'Result then Value >= 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Trials'Result then Value <= Admission_Core.Max_Trials)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in 1 .. Admission_Core.Max_Trials then Valid_Trials'Result)"
+          },
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid_Trials'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      }
+    ],
+    "sources": [
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+        "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+        "sha256": "077d3af2ce4a9ee400e9823fe36c3fc9d20b9f6410b6758ac14d60347f1a3a71"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "sha256": "bcb7a876586b87474737452dd20bdc0ea94804ccce8b4044d80713113f1fee12"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+        "sha256": "7dc1a6b119fc11004b7b08d047bbe0bbf6ddc8a20bad7106a4bb2ad404f5ce7f"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+        "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+        "sha256": "e2f716ccc14ef9bc2555d04ed22fde2941ef87c4fcf71dd7e2c863f0dd5706ae"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+        "sha256": "2e1aafd25fd37016413c34b3a57ca41dcbde7f5b0a60e744bae2af989c9bb67a"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "sha256": "d0f939b091b31bcda5eee8b77da7d85d880f072ee51722fc050fc938e76ec194"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+        "sha256": "92cd468e1e23d5a41986e73b91de00a697896237c0814ee118ff956f52a520cb"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+        "sha256": "e33e5050dfae56cac0d50ac341997d3cebffa324cf40e320009c73ac1bbe58e4"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+        "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+        "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+      }
+    ],
+    "excluded_completions": [
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 9,
+        "name": "C_Erfc",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 15,
+        "name": "Square_Root",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 40,
+        "name": "Checked_Log",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 58,
+        "name": "Checked_Exp",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 76,
+        "name": "Checked_Exponent",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 93,
+        "name": "Checked_Probability",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 104,
+        "name": "SF",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 137,
+        "name": "Checked_Node",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+        "line": 309,
+        "name": "Check_Grid_State",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 15,
+        "name": "Checked_Quantization",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 32,
+        "name": "Check_Union_Units",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 51,
+        "name": "Check_Conditional_Units",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+        "line": 68,
+        "name": "Check_Joint",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "line": 12,
+        "name": "F",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "line": 23,
+        "name": "N",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "line": 29,
+        "name": "Name",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "line": 46,
+        "name": "Read_Trials",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "line": 61,
+        "name": "Read_Seed",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "line": 76,
+        "name": "Write_Report",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+        "line": 77,
+        "name": "Run",
+        "reason": "SPARK_Mode Off completion"
+      }
+    ],
+    "insufficient": [
+      "admission_core.classify"
+    ],
+    "missing_native": [],
+    "invalid_native": [],
+    "unmatched_native": [],
+    "native_cross_check": true,
+    "complete": false
+  },
+  "complete": false
+}

@@ -6,9 +6,12 @@ package body Towers_Engine with SPARK_Mode is
    use Ada.Numerics.Long_Elementary_Functions;
 
    function Checked_Quantization (P : Probability; Q : Probability_Units)
-     return Probability_Units with Global => null,
-     Post => Checked_Quantization'Result = Q and
-       abs (Long_Float (Checked_Quantization'Result) / Long_Float (Scale) - P) <= 0.51E-15;
+     return Probability_Units with
+     Global => null,
+     Post => (Checked_Quantization'Result = Q) and then
+       (abs (Long_Float (Checked_Quantization'Result) / Long_Float (Scale) - P) <= 0.51E-15) and then
+       (Towers_Boundary_Models.Quantization_Normal_Return (P, Long_Long_Integer (Q), Long_Long_Integer (Checked_Quantization'Result))),
+     Depends => (Checked_Quantization'Result => (P, Q));
    function Checked_Quantization (P : Probability; Q : Probability_Units)
      return Probability_Units with SPARK_Mode => Off
    is
@@ -21,10 +24,11 @@ package body Towers_Engine with SPARK_Mode is
       return Q;
    end Checked_Quantization;
 
-   procedure Check_Union_Units (A, B, J : in out Probability_Units)
-     with Global => null,
+   procedure Check_Union_Units (A, B, J : in out Probability_Units) with
+     Global => null,
      Post => A = A'Old and B = B'Old and J = J'Old
-       and J <= A and J <= B and A + B <= Scale;
+       and J <= A and J <= B and A + B <= Scale,
+     Depends => ((A, B, J) => (A, B, J));
    procedure Check_Union_Units (A, B, J : in out Probability_Units)
      with SPARK_Mode => Off
    is
@@ -40,9 +44,10 @@ package body Towers_Engine with SPARK_Mode is
          Old_A, Old_B, Old_J);
    end Check_Union_Units;
 
-   procedure Check_Conditional_Units (J, M : in out Probability_Units)
-     with Global => null,
-     Post => J = J'Old and M = M'Old and M > 0 and J <= M;
+   procedure Check_Conditional_Units (J, M : in out Probability_Units) with
+     Global => null,
+     Post => J = J'Old and M = M'Old and M > 0 and J <= M,
+     Depends => ((J, M) => (J, M));
    procedure Check_Conditional_Units (J, M : in out Probability_Units)
      with SPARK_Mode => Off
    is
@@ -56,9 +61,10 @@ package body Towers_Engine with SPARK_Mode is
         (Long_Long_Integer (J), Long_Long_Integer (M), Old_J, Old_M);
    end Check_Conditional_Units;
 
-   procedure Check_Joint (J : in out Long_Float; A, B : Probability)
-     with Global => null,
-     Post => J = J'Old and J >= 0.0 and J <= A and J <= B;
+   procedure Check_Joint (J : in out Long_Float; A, B : Probability) with
+     Global => null,
+     Post => J = J'Old and J >= 0.0 and J <= A and J <= B,
+     Depends => (J => (J, A, B));
    procedure Check_Joint (J : in out Long_Float; A, B : Probability)
      with SPARK_Mode => Off
    is
@@ -70,9 +76,12 @@ package body Towers_Engine with SPARK_Mode is
       Towers_Boundary_Models.Observe_Joint (J, A, B, Old_J);
    end Check_Joint;
 
-   function Units (P : Probability) return Probability_Units
-     with Global => null,
-     Post => abs (Long_Float (Units'Result) / Long_Float (Scale) - P) <= 0.51E-15;
+   function Units (P : Probability) return Probability_Units with
+     Global => null,
+     Post => (abs (Long_Float (Units'Result) / Long_Float (Scale) - P) <= 0.51E-15) and then
+       (Units'Result >= 0) and then
+       (Units'Result <= Scale),
+     Depends => (Units'Result => P);
    function Units (P : Probability) return Probability_Units is
       Q : constant Probability_Units := Probability_Units (P * Long_Float (Scale));
    begin
@@ -88,8 +97,12 @@ package body Towers_Engine with SPARK_Mode is
       return Result;
    end Value;
 
-   function Conditional_Value (Joint, Marginal : Probability) return Probability
-     with Global => null;
+   function Conditional_Value (Joint, Marginal : Probability) return Probability with
+     Global => null,
+     Post => (Conditional_Value'Result >= 0.0) and then
+       (Conditional_Value'Result <= 1.0) and then
+       (if Joint = 0.0 then Conditional_Value'Result = 0.0),
+     Depends => (Conditional_Value'Result => (Joint, Marginal));
    function Conditional_Value (Joint, Marginal : Probability) return Probability is
       J : Probability_Units := Units (Joint);
       M : Probability_Units := Units (Marginal);
@@ -99,8 +112,12 @@ package body Towers_Engine with SPARK_Mode is
    end Conditional_Value;
 
    procedure Wilson (Successes : Count; Denominator : Trial_Count;
-                     Lo, Hi : out Probability)
-     with Global => null, Pre => Successes <= Denominator;
+                     Lo, Hi : out Probability) with
+     Global => null,
+     Pre => Successes <= Denominator,
+     Post => (Lo >= 0.0) and then
+       (Hi <= 1.0),
+     Depends => ((Lo, Hi) => (Successes, Denominator));
    procedure Wilson (Successes : Count; Denominator : Trial_Count;
                      Lo, Hi : out Probability) is
       Z : constant Long_Float := 1.959963984540054;
@@ -124,7 +141,10 @@ package body Towers_Engine with SPARK_Mode is
 
    procedure Calculate
      (Left, Right : Marginal_Probability; A, B : out Z_Value;
-      Row : out Calculation_Row) with Global => null;
+      Row : out Calculation_Row) with
+     Global => null,
+     Post => Row.A = A and then Row.B = B and then Row.Refinement >= 0.0,
+     Depends => (A => Left, B => Right, Row => (Left, Right));
    procedure Calculate
      (Left, Right : Marginal_Probability; A, B : out Z_Value;
       Row : out Calculation_Row)
@@ -161,10 +181,11 @@ package body Towers_Engine with SPARK_Mode is
 
    procedure Observe_All
      (Tallies : in out Tally_Array; Iteration : Trial_Count;
-      X, Y : Long_Float; A, B : Cutoff_Cases)
-     with Global => null,
+      X, Y : Long_Float; A, B : Cutoff_Cases) with
+     Global => null,
      Pre => (for all K in Case_Index => Total (Tallies (K)) = Iteration - 1),
-     Post => (for all K in Case_Index => Total (Tallies (K)) = Iteration);
+     Post => (for all K in Case_Index => Total (Tallies (K)) = Iteration) and then (for all K in Case_Index => Tallies (K).N11 <= Iteration),
+     Depends => (Tallies => (Tallies, X, Y, A, B), null => Iteration);
    procedure Observe_All
      (Tallies : in out Tally_Array; Iteration : Trial_Count;
       X, Y : Long_Float; A, B : Cutoff_Cases)
@@ -179,9 +200,14 @@ package body Towers_Engine with SPARK_Mode is
    end Observe_All;
 
    function Simulation_Row_For (Cells : Counts; Trials : Trial_Count)
-     return Simulation_Row with Global => null,
+     return Simulation_Row with
+     Global => null,
      Pre => Total (Cells) = Trials,
-     Post => Simulation_Row_For'Result.Cells = Cells;
+     Post => (Simulation_Row_For'Result.Cells = Cells) and then
+       (Simulation_Row_For'Result.Marginal_A = Marginal_A (Cells)) and then
+       (Simulation_Row_For'Result.Marginal_B = Marginal_B (Cells)) and then
+       (Simulation_Row_For'Result.Union_N = Union_Count (Cells)),
+     Depends => (Simulation_Row_For'Result => (Cells, Trials));
    function Simulation_Row_For (Cells : Counts; Trials : Trial_Count)
      return Simulation_Row
    is
@@ -257,6 +283,10 @@ package body Towers_Engine with SPARK_Mode is
          pragma Loop_Invariant
            (for all L in Case_Index => (if L < K then
               Total (Data.Simulation (L).Cells) = Trials));
+         pragma Loop_Invariant
+           (for all L in Case_Index => (if L < K then
+              Data.Simulation (L).Marginal_A = Marginal_A (Data.Simulation (L).Cells)
+              and then Data.Simulation (L).Marginal_B = Marginal_B (Data.Simulation (L).Cells)));
          Data.Simulation (K) := Simulation_Row_For (Tallies (K), Trials);
       end loop;
    end Compute;

@@ -1,0 +1,406 @@
+{
+  "schema": "python-check-executions-v1",
+  "host": "computer10",
+  "checks": [
+    {
+      "id": "coverage",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/check_contract_coverage.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-coverage.json",
+      "log_streams": "stdout",
+      "log_sha256": "51b0dd4ec79eb8eff590e99517e97fae9370c4d5d8eb0988e55502e0d3cbeb01",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "python_files": 26,
+        "named_functions": 250,
+        "deal_contracts": 1250,
+        "minimum_contracts": 5,
+        "minimum_observed": 5,
+        "complete": true
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-coverage.json"
+    },
+    {
+      "id": "static",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/check_static_lint.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-static.json",
+      "log_streams": "stdout",
+      "log_sha256": "4c955fd9f89d341ab0e839506d998096c9287de6c01bdc45e3f8d7e3acd72f6a",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "complete": true,
+        "python_files": 26,
+        "positive_files": 25,
+        "positive_returncode": 0,
+        "positive_diagnostics": [],
+        "negative_control_returncode": 1,
+        "negative_control_diagnostics": [
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "row": 20,
+            "col": 11,
+            "code": "DEL012",
+            "text": "post contract error",
+            "value": "-1",
+            "content": "    return -1"
+          }
+        ]
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-static.json"
+    },
+    {
+      "id": "pytest",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-pytest.log",
+      "log_streams": "combined stdout/stderr",
+      "log_sha256": "8f35a5be6733e629c1dffe546713b854a95f682edbc141881e6e4a52ec726892",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "passed": 256,
+        "warnings": 0,
+        "pytest_reported_duration_seconds": 91.95,
+        "deal_explicitly_enabled": true
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-pytest.log"
+    },
+    {
+      "id": "pytest-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "tests"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-pytest-optimized.log",
+      "log_streams": "combined stdout/stderr",
+      "log_sha256": "e8e4c6627781381c56edb4f7d925bea5cb09f2230d6d1afd738f5dd1cf97795e",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "passed": 256,
+        "warnings": 1,
+        "pytest_reported_duration_seconds": 91.94,
+        "deal_explicitly_enabled": true,
+        "warning": "Pytest warns that assertions outside test modules/plugins are disabled by Python -O; repository entry points and test fixtures explicitly enable Deal."
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-pytest-optimized.log"
+    },
+    {
+      "id": "dependencies",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-dependencies.log",
+      "log_streams": "stdout",
+      "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "dependency_conflicts": 0
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-dependencies.log"
+    },
+    {
+      "id": "symbolic",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "deal",
+        "prove",
+        "--skipped",
+        "--nocolor",
+        "verification/proof_gate.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-symbolic.log",
+      "log_streams": "combined stdout/stderr",
+      "log_sha256": "b30eee9868bbc79ef17728b4d69b6461277031711ccc214c462cf87a337f1a1a",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "proved_postconditions": 2,
+        "skipped": 0,
+        "failed": 0,
+        "scope": "Only totals_balanced and successful_checks in verification/proof_gate.py; not a symbolic proof of all Python functions."
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-symbolic.log"
+    },
+    {
+      "id": "hoeflin-python",
+      "argv": [
+        ".venv-deal/bin/python",
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-hoeflin-python.log",
+      "log_streams": "combined stdout/stderr",
+      "log_sha256": "9c7652a4131e570e0ada50e59c2c962478fc0aed846494e5b6fce13c274a2404",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "calculation_script_completed": true
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-hoeflin-python.log"
+    },
+    {
+      "id": "towers-python",
+      "argv": [
+        ".venv-deal/bin/python",
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "returncode_source": "Actual tool completion observed in the final run; not inferred from the log text.",
+      "log": "/tmp/composite-five-final-towers-python.log",
+      "log_streams": "combined stdout/stderr",
+      "log_sha256": "5be2cf4c750507c199640e10a593d0035be9b88b2196ac0f83bbada06f7195c1",
+      "started_at_utc": null,
+      "finished_at_utc": null,
+      "elapsed_seconds": null,
+      "timestamp_source": "Unavailable: these eight final executions did not record start/end wall-clock timestamps. File modification times are not execution timestamps.",
+      "result": {
+        "calculation_script_completed": true
+      },
+      "expected_returncode": 0,
+      "accepted": true,
+      "log_filename": "composite-five-final-towers-python.log"
+    },
+    {
+      "id": "coverage-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/check_contract_coverage.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "stdout_log": "/tmp/composite-five-final-coverage-optimized.json",
+      "stderr_log": "/tmp/composite-five-final-coverage-optimized.stderr",
+      "started_at_utc": "2026-11-04T06:07:27.462376+00:00",
+      "finished_at_utc": "2026-11-04T06:07:28.250789+00:00",
+      "elapsed_seconds": 0.7883887949865311,
+      "timestamp_source": "captured around subprocess.run by this metadata wrapper",
+      "stdout_sha256": "51b0dd4ec79eb8eff590e99517e97fae9370c4d5d8eb0988e55502e0d3cbeb01",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_returncode": 0,
+      "accepted": true,
+      "result": {
+        "python_files": 26,
+        "named_functions": 250,
+        "deal_contracts": 1250,
+        "minimum_contracts": 5,
+        "minimum_observed": 5,
+        "complete": true
+      },
+      "stdout_log_filename": "composite-five-final-coverage-optimized.json",
+      "stderr_log_filename": "composite-five-final-coverage-optimized.stderr"
+    },
+    {
+      "id": "static-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/check_static_lint.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "stdout_log": "/tmp/composite-five-final-static-optimized.json",
+      "stderr_log": "/tmp/composite-five-final-static-optimized.stderr",
+      "started_at_utc": "2026-11-04T06:07:27.462702+00:00",
+      "finished_at_utc": "2026-11-04T06:07:42.948558+00:00",
+      "elapsed_seconds": 15.485846983996453,
+      "timestamp_source": "captured around subprocess.run by this metadata wrapper",
+      "stdout_sha256": "4c955fd9f89d341ab0e839506d998096c9287de6c01bdc45e3f8d7e3acd72f6a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_returncode": 0,
+      "accepted": true,
+      "result": {
+        "complete": true,
+        "positive_files": 25,
+        "positive_diagnostics": [],
+        "negative_control_diagnostics": [
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "row": 20,
+            "col": 11,
+            "code": "DEL012",
+            "text": "post contract error",
+            "value": "-1",
+            "content": "    return -1"
+          }
+        ]
+      },
+      "optimization_scope": "The gate interpreter runs with -O. Its internal Deal lint subprocesses use sys.executable -m deal lint without -O. Separate direct optimized linter records below cover the linter itself.",
+      "stdout_log_filename": "composite-five-final-static-optimized.json",
+      "stderr_log_filename": "composite-five-final-static-optimized.stderr"
+    },
+    {
+      "id": "static-positive-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "deal",
+        "lint",
+        "--json",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+        "tests/conftest.py",
+        "tests/fixtures/nonzero_division_lint_probe.py",
+        "tests/test_contract_coverage.py",
+        "tests/test_evidence_contracts.py",
+        "tests/test_ghost_boundary_contracts.py",
+        "tests/test_numeric_contracts.py",
+        "tests/test_proof_gate_contracts.py",
+        "tests/test_runner_lint_contracts.py",
+        "tests/test_spark_contracts.py",
+        "tests/test_spark_coverage_contracts.py",
+        "tests/test_static_lint_contracts.py",
+        "tests/test_validator_contracts.py",
+        "verification/check_contract_coverage.py",
+        "verification/check_static_lint.py",
+        "verification/ghost_boundaries.py",
+        "verification/proof_gate.py",
+        "verification/replay_hoeflin.py",
+        "verification/run_computer10.py",
+        "verification/spark_contracts.py",
+        "verification/spark_coverage.py",
+        "verification/verify_evidence.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "stdout_log": "/tmp/composite-five-final-static-positive-optimized.jsonl",
+      "stderr_log": "/tmp/composite-five-final-static-positive-optimized.stderr",
+      "started_at_utc": "2026-11-04T06:08:47.904526+00:00",
+      "finished_at_utc": "2026-11-04T06:09:03.998120+00:00",
+      "elapsed_seconds": 16.093551855999976,
+      "timestamp_source": "captured around subprocess.run by this metadata wrapper",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_returncode": 0,
+      "accepted": true,
+      "result": {
+        "files": 25,
+        "diagnostics": []
+      },
+      "stdout_log_filename": "composite-five-final-static-positive-optimized.jsonl",
+      "stderr_log_filename": "composite-five-final-static-positive-optimized.stderr"
+    },
+    {
+      "id": "static-negative-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "deal",
+        "lint",
+        "--json",
+        "tests/fixtures/contract_negative_control.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 1,
+      "stdout_log": "/tmp/composite-five-final-static-negative-optimized.jsonl",
+      "stderr_log": "/tmp/composite-five-final-static-negative-optimized.stderr",
+      "started_at_utc": "2026-11-04T06:08:47.904769+00:00",
+      "finished_at_utc": "2026-11-04T06:08:49.376055+00:00",
+      "elapsed_seconds": 1.4712768540193792,
+      "timestamp_source": "captured around subprocess.run by this metadata wrapper",
+      "stdout_sha256": "2b89787b1f875f22b77f8ba0807fa0b90f27e67f80e367ed04a2cedd081f80a9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_returncode": 1,
+      "accepted": true,
+      "result": {
+        "diagnostics": [
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "row": 20,
+            "col": 11,
+            "code": "DEL012",
+            "text": "post contract error",
+            "value": "-1",
+            "content": "    return -1"
+          }
+        ],
+        "intentional_negative_control": true
+      },
+      "stdout_log_filename": "composite-five-final-static-negative-optimized.jsonl",
+      "stderr_log_filename": "composite-five-final-static-negative-optimized.stderr"
+    }
+  ],
+  "notes": [
+    "The eight original final executions returned zero in their actual exec/write_stdin completions.",
+    "Missing execution timestamps are explicit; no dates or durations are reconstructed from log metadata.",
+    "Python verification does not establish psychometric/model validity or a universal proof of all contracts.",
+    "Four additional optimized executions capture real UTC start/end timestamps and monotonic durations.",
+    "The direct optimized linter rejects only the same deliberate negative fixture, with expected return code 1.",
+    "The full pytest suites passed 256 cases in normal and optimized Python. The optimized warning concerns Python assertions, while Deal is explicitly enabled."
+  ]
+}

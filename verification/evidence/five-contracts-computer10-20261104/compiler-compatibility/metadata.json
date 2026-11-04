@@ -1,0 +1,134 @@
+{
+  "host": "computer10",
+  "date_local": "2026-11-04",
+  "tools": {
+    "native13": {
+      "gnat_path": "/home/anonymous/.config/alire/cache/dependencies/gnat_native_13.2.1_788a01f9/bin/gnat",
+      "version": "GNAT 13.2.0\nCopyright (C) 1996-2023, Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "binary_sha256": "7b695b2dca80c560ab2611f502d126a992b89688da3a315315b48b84b6c95656"
+    },
+    "system14": {
+      "gnat_path": "/usr/bin/gnat",
+      "version": "GNAT 14.2.0\nCopyright (C) 1996-2024, Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "binary_sha256": "67082a9217f83ff443253d5d02973615b3f2cc01d47e527d857d87229f7c2c4f"
+    }
+  },
+  "commands": {
+    "compile": [
+      "gnatmake",
+      "-f",
+      "OPTIMIZATION",
+      "-gnat2022",
+      "-gnata",
+      "-gnato",
+      "main.adb"
+    ],
+    "case_name_link_extra": [
+      "-largs",
+      "-lm"
+    ],
+    "run": [
+      "./main"
+    ],
+    "environment": "native13 prepends native13 GNAT bin to PATH; system14 uses system PATH"
+  },
+  "classify_observations": [
+    {
+      "compiler": "native13",
+      "optimization": "-O0",
+      "truth_table_cases": 4,
+      "caught_assertion_failures": 0
+    },
+    {
+      "compiler": "native13",
+      "optimization": "-O2",
+      "truth_table_cases": 4,
+      "caught_assertion_failures": 3
+    },
+    {
+      "compiler": "system14",
+      "optimization": "-O0",
+      "truth_table_cases": 4,
+      "caught_assertion_failures": 0
+    },
+    {
+      "compiler": "system14",
+      "optimization": "-O2",
+      "truth_table_cases": 4,
+      "caught_assertion_failures": 0
+    }
+  ],
+  "portable_variants": {
+    "compiler": "native13",
+    "optimization": "-O2",
+    "four_guarded_implications": {
+      "cases": 4,
+      "caught_assertion_failures": 0
+    },
+    "original_result_case_plus_implications": {
+      "cases": 4,
+      "caught_assertion_failures": 0
+    }
+  },
+  "case_name_observations": {
+    "compiler": "native13",
+    "optimization": "-O2",
+    "old_contract_cases": {
+      "cases": 4,
+      "caught_assertion_failures": 0,
+      "compiler_warning_lines": 5
+    },
+    "conditional_post": {
+      "cases": 4,
+      "caught_assertion_failures": 0,
+      "compiler_warning_lines": 0
+    }
+  },
+  "limitations": [
+    "Harnesses catch assertion exceptions and print them; zero process exit status alone is insufficient.",
+    "These finite cases do not establish compiler correctness in general.",
+    "The observed optimization/version difference is evidence of a toolchain compatibility problem, not a mathematical counterexample to the truth table."
+  ],
+  "retained_files": [
+    {
+      "path": "case-name-conditional-post.ads.txt",
+      "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+    },
+    {
+      "path": "case-name-main.adb",
+      "sha256": "34feb1c854f60bdae7bc1dd020705ea097aae20d51c7a078b6388c0847fdd3b1"
+    },
+    {
+      "path": "case-name-original-contract-cases.ads.txt",
+      "sha256": "780863f947541ee63a2dcdf9fb1b1d15babf389afaa408d9b4b943364095470f"
+    },
+    {
+      "path": "case-name-probe.log",
+      "sha256": "9d46a1cace1833678a8d3c99baa19e8c86c763a911734af0d5ffb10be4a10552"
+    },
+    {
+      "path": "classify-implication.ads.txt",
+      "sha256": "4e94e8db7976d0ed266c786cd1ea341d54068d0df240ebe6b500a3b79054f2f7"
+    },
+    {
+      "path": "classify-main.adb",
+      "sha256": "ed9bedb2b54b3af32dea0599020a0d8a9fcc21a63a46f8531c59427fdf43d924"
+    },
+    {
+      "path": "classify-original-biconditional.ads.txt",
+      "sha256": "b153f8f0298044ddc5166cd72fb36d3b9c2ea4baef0cb846cd25957453afe4a4"
+    },
+    {
+      "path": "classify-probe.log",
+      "sha256": "19fe0e54a902f31ab236eb1b9a5adeb16f43f61a53954b5c7651e64c947570f6"
+    },
+    {
+      "path": "classify-result-case.ads.txt",
+      "sha256": "5de599270d76ca657e058265eed5503057cac7015f2b8fcb5745b930fec5faa1"
+    },
+    {
+      "path": "classify-variants.log",
+      "sha256": "d592598279103f23d7c3ad156bc4bb68bb29c0c975c919baa4da775fee2df9e3"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/__main__.py", line 6, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/_cli/_main.py", line 63, in main
+    return args.cmd(args)
+           ~~~~~~~~^^^^^^
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/_cli/_prove.py", line 107, in __call__
+    failed += run_solver(
+              ~~~~~~~~~~^
+        path=path,
+        ^^^^^^^^^^
+    ...<2 lines>...
+        colors=colors,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/_cli/_prove.py", line 56, in run_solver
+    proof = theorem.prove()
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_theorem.py", line 199, in prove
+    for constraint in self.constraints:
+                      ^^^^^^^^^^^^^^^^
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_theorem.py", line 143, in constraints
+    contracts = eval_contracts(func=self._func, ctx=self._context)
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_contracts.py", line 43, in eval_contracts
+    for value in _eval_post(ctx=ctx, args=contract.args):
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_contracts.py", line 79, in _eval_post
+    eval_expr(node=contract.body, ctx=ctx),
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_registry.py", line 34, in __call__
+    result = handler(node, ctx)
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py", line 350, in eval_call
+    value = eval_expr(node=node.func, ctx=ctx)
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_registry.py", line 34, in __call__
+    result = handler(node, ctx)
+  File "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py", line 280, in eval_name
+    raise UnsupportedError('cannot resolve name', node.name)
+deal_solver._exceptions.UnsupportedError: cannot resolve name isinstance

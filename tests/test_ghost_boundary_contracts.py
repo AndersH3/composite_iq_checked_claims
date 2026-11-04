@@ -1,4 +1,5 @@
 """Ghost modeling coverage must expose every trusted boundary and real link."""
+from conftest import protected_history_intact, reference_inputs_intact
 import copy
 from copy import Error
 import hashlib
@@ -9,11 +10,12 @@ import pytest
 
 from verification.ghost_boundaries import (
     GHOST_SCHEMA, GLOBAL_OBLIGATION_SCOPES, ada_code, contract_reference, coupling_reference, foreign_imports,
-    pinned_ada_sources, validate_boundaries,
+    model_entity_kind, pinned_ada_sources, validate_boundaries,
 )
 
 
 @pytest.fixture
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
 @deal.pre(lambda tmp_path: isinstance(tmp_path, Path) and tmp_path.is_dir())
 @deal.post(lambda result: isinstance(result, dict) and set(result) == {"register", "coverage", "sources", "root"})
 @deal.raises(OSError, ValueError)
@@ -49,6 +51,7 @@ def ghost_fixture(tmp_path):
     return {"register": register, "coverage": coverage, "sources": sources, "root": tmp_path}
 
 
+@deal.ensure(lambda data, *, result: protected_history_intact())
 @deal.pre(lambda data: isinstance(data, dict))
 @deal.post(lambda result: isinstance(result, dict) and result["coverage_complete"])
 @deal.raises(OSError, FileNotFoundError, PermissionError, ValueError, UnicodeDecodeError)
@@ -57,6 +60,9 @@ def audit_fixture(data):
     return validate_boundaries(data["register"], "hoeflin", data["coverage"], data["sources"], data["root"])
 
 
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_complete_register_has_explicit_unproved_adequacy_and_implementation(ghost_fixture):
@@ -69,6 +75,9 @@ def test_complete_register_has_explicit_unproved_adequacy_and_implementation(gho
 
 
 @pytest.mark.parametrize("kind", ["spec-only", "foreign-import"])
+@deal.pre(lambda ghost_fixture, kind: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, kind, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, kind, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_omitted_spec_or_foreign_boundary_is_rejected(ghost_fixture, kind):
@@ -94,6 +103,9 @@ def test_omitted_spec_or_foreign_boundary_is_rejected(ghost_fixture, kind):
     ("contract_refs", ["Model.Missing"], "Contract references must name registered"),
     ("excluded_helpers", [None], "helper inventory is malformed"),
 ])
+@deal.pre(lambda ghost_fixture, field, value, message: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, field, value, message, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, field, value, message, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_invalid_mapping_cannot_pass(ghost_fixture, field, value, message):
@@ -104,6 +116,9 @@ def test_invalid_mapping_cannot_pass(ghost_fixture, field, value, message):
 
 
 @pytest.mark.parametrize("status", ["spec", "no"])
+@deal.pre(lambda ghost_fixture, status: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, status, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, status, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_model_without_analyzed_body_is_rejected(ghost_fixture, status):
@@ -113,6 +128,9 @@ def test_model_without_analyzed_body_is_rejected(ghost_fixture, status):
         audit_fixture(data)
 
 
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_model_at_wrong_native_source_is_rejected(ghost_fixture):
@@ -122,6 +140,9 @@ def test_model_at_wrong_native_source_is_rejected(ghost_fixture):
         audit_fixture(data)
 
 
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_duplicate_boundary_and_unknown_native_spec_are_rejected(ghost_fixture):
@@ -141,15 +162,21 @@ def test_duplicate_boundary_and_unknown_native_spec_are_rejected(ghost_fixture):
     "function Value return Boolean is begin return Model.Valid (X); end Value;",
     "function Value return Boolean with Post => Other.Valid (X);",
 ])
+@deal.pre(lambda text: protected_history_intact())
+@deal.ensure(lambda text, *, result: protected_history_intact())
+@deal.ensure(lambda text, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_comment_string_body_or_other_predicate_is_not_a_contract_link(text):
     assert not contract_reference(text, "Model.Valid")
     return None
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_real_pre_post_reference_is_case_insensitive_and_qualified():
     assert contract_reference("procedure P with Pre => MODEL . Valid (X);", "Model.Valid")
     assert contract_reference("function P return Float with Post => Model.Valid (P'Result);", "Model.Valid")
@@ -157,9 +184,12 @@ def test_real_pre_post_reference_is_case_insensitive_and_qualified():
     return None
 
 
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
-def test_changed_source_hash_and_non_ghost_model_are_rejected(ghost_fixture):
+def test_changed_source_hash_and_unclassified_ordinary_model_are_rejected(ghost_fixture):
     data = copy.deepcopy(ghost_fixture)
     path = data["root"].joinpath("model.ads")
     path.write_text(path.read_text().replace(", Ghost", ""))
@@ -168,10 +198,55 @@ def test_changed_source_hash_and_non_ghost_model_are_rejected(ghost_fixture):
     for source in data["sources"]:
         if source["path"] == "model.ads":
             source["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
-    with pytest.raises(ValueError, match="declared Ghost package"):
+    with pytest.raises(ValueError, match="Ordinary model must declare Global"):
         audit_fixture(data)
 
 
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write")
+def test_mixed_package_accepts_a_pure_registered_model(ghost_fixture):
+    data = copy.deepcopy(ghost_fixture)
+    path = data["root"].joinpath("model.ads")
+    path.write_text("package Model with SPARK_Mode is\n"
+                    "function Valid (X : Float) return Boolean is (X >= 0.0) "
+                    "with Global => null;\nend Model;\n")
+    for source in data["sources"]:
+        if source["path"] == "model.ads":
+            source["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    assert audit_fixture(data)["coverage_complete"]
+
+
+@pytest.mark.parametrize("package,declaration,kind", [
+    ("Model", "function Valid (X : Float) return Boolean is (X >= 0.0) with Global => null;", "pure-function"),
+    ("Model", "procedure Valid (X : Float) with Ghost, Global => null;", "ghost"),
+    ("Model", "procedure Valid (X : Float) with Global => null;", None),
+    ("Model", "procedure Valid (X : Float) with Global => null; -- Ghost", None),
+    ("Model", "function Valid return Boolean with Global => State;", None),
+    ("Model", "function Valid return Boolean with Global => null, SPARK_Mode => Off;", None),
+    ("Hoeflin_Boundary_Models", "procedure Note (X : in out Integer) with Global => null;", "request-receipt"),
+    ("Model", "procedure Note (X : in out Integer) with Global => null;", None),
+])
+@deal.pre(lambda package, declaration, kind: protected_history_intact())
+@deal.ensure(lambda package, declaration, kind, *, result: protected_history_intact())
+@deal.ensure(lambda package, declaration, kind, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_mixed_model_roles_require_real_contract_markers(package, declaration, kind):
+    source = "package " + package + " with SPARK_Mode is\n" + declaration + "\nend " + package + ";"
+    name = "Note" if "procedure Note" in declaration else "Valid"
+    if kind is None:
+        with pytest.raises(ValueError):
+            model_entity_kind(source, package + "." + name)
+    else:
+        assert model_entity_kind(source, package + "." + name) == kind
+
+
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_unsafe_duplicate_or_invalid_source_inventory_is_rejected(ghost_fixture):
@@ -187,8 +262,11 @@ def test_unsafe_duplicate_or_invalid_source_inventory_is_rejected(ghost_fixture)
         pinned_ada_sources([], ghost_fixture["root"])
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_foreign_import_inventory_ignores_comments_strings_and_parameter_semicolons():
     text = 'package body P is\n-- function Fake with Import;\n'
     text += 'function F (X : Float; Y : Float) return Float with Import, External_Name => "F";\nend P;'
@@ -196,14 +274,18 @@ def test_foreign_import_inventory_ignores_comments_strings_and_parameter_semicol
     return None
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_ghost_body_coupling_ignores_other_and_nested_operations():
     source = "with Model; use Model; package body P is\n"
     source += "procedure Other is begin Model.Observe (1.0); end Other;\n"
     source += "procedure Outer is procedure Nested is begin Model.Observe (1.0); end Nested; begin Nested; end Outer;\n"
     source += "procedure Actual is begin Observe (1.0); end Actual; end P;"
     assert coupling_reference(source, "Model.Observe", "P.Actual", "ghost-call")
+    assert coupling_reference(source, "Model.Observe", "P.Actual", "model-call")
     assert not coupling_reference(source, "Model.Observe", "P.Outer", "ghost-call")
     assert coupling_reference(source, "Model.Observe", "P.Outer.Nested", "ghost-call")
     with pytest.raises(ValueError, match="missing or ambiguous"):
@@ -211,6 +293,9 @@ def test_ghost_body_coupling_ignores_other_and_nested_operations():
     return None
 
 
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_unregistered_library_or_global_obligation_is_rejected(ghost_fixture):
@@ -224,6 +309,7 @@ def test_unregistered_library_or_global_obligation_is_rejected(ghost_fixture):
         audit_fixture(data)
 
 
+@deal.ensure(lambda data, relative, text, *, result: protected_history_intact())
 @deal.pre(lambda data, relative, text: isinstance(data, dict) and isinstance(relative, str) and isinstance(text, str))
 @deal.post(lambda result: result is None)
 @deal.raises(OSError, ValueError)
@@ -237,6 +323,8 @@ def replace_source(data, relative, text):
 
 
 @pytest.fixture
+@deal.pre(lambda ghost_fixture: protected_history_intact())
+@deal.ensure(lambda ghost_fixture, *, result: protected_history_intact())
 @deal.post(lambda result: isinstance(result, dict) and "register" in result)
 @deal.raises(OSError, ValueError, Error)
 @deal.has("read", "write")
@@ -265,6 +353,9 @@ def standard_fixture(ghost_fixture):
     return data
 
 
+@deal.pre(lambda standard_fixture: protected_history_intact())
+@deal.ensure(lambda standard_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda standard_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_standard_models_link_both_actual_cached_results(standard_fixture):
@@ -274,6 +365,9 @@ def test_standard_models_link_both_actual_cached_results(standard_fixture):
 
 
 @pytest.mark.parametrize("change", ["omit", "wrong-result", "wrong-callee", "unproved-caller", "backend-proof"])
+@deal.pre(lambda standard_fixture, change: protected_history_intact())
+@deal.ensure(lambda standard_fixture, change, *, result: protected_history_intact())
+@deal.ensure(lambda standard_fixture, change, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_standard_model_omissions_and_false_links_are_rejected(standard_fixture, change):
@@ -293,6 +387,9 @@ def test_standard_model_omissions_and_false_links_are_rejected(standard_fixture,
         audit_fixture(data)
 
 
+@deal.pre(lambda standard_fixture: protected_history_intact())
+@deal.ensure(lambda standard_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda standard_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_standard_observation_before_actual_call_cannot_pass(standard_fixture):
@@ -305,6 +402,9 @@ def test_standard_observation_before_actual_call_cannot_pass(standard_fixture):
         audit_fixture(data)
 
 
+@deal.pre(lambda standard_fixture: protected_history_intact())
+@deal.ensure(lambda standard_fixture, *, result: protected_history_intact())
+@deal.ensure(lambda standard_fixture, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_private_excluded_helper_must_have_its_own_ghost_link(standard_fixture):

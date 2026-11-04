@@ -20,6 +20,8 @@ import subprocess
 import tempfile
 import time
 
+import sys
+
 import deal
 from json import JSONDecodeError
 from subprocess import CalledProcessError, TimeoutExpired
@@ -28,11 +30,15 @@ from shutil import SameFileError, SpecialFileError
 try:
     from verification.proof_gate import totals_balanced, successful_checks
     from verification.spark_coverage import read_coverage
-    from verification.ghost_boundaries import GHOST_SCHEMA, validate_boundaries
+    from verification.spark_contracts import SCHEMA as CONTRACT_SCHEMA, inventory as contract_inventory
+    from verification.check_contract_coverage import audit_file, python_files, MINIMUM_CONTRACTS
+    from verification.ghost_boundaries import GHOST_SCHEMA, pinned_ada_sources, validate_boundaries
 except ModuleNotFoundError:
     from proof_gate import totals_balanced, successful_checks
     from spark_coverage import read_coverage
-    from ghost_boundaries import GHOST_SCHEMA, validate_boundaries
+    from spark_contracts import SCHEMA as CONTRACT_SCHEMA, inventory as contract_inventory
+    from check_contract_coverage import audit_file, python_files, MINIMUM_CONTRACTS
+    from ghost_boundaries import GHOST_SCHEMA, pinned_ada_sources, validate_boundaries
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = {
@@ -65,12 +71,18 @@ COUNT_PATTERN = re.compile(r"\d+")
 
 @deal.raises()
 @deal.has()
+@deal.post(lambda result: isinstance(result, bool))
+@deal.ensure(lambda value, result: not result or isinstance(value, str) and len(value) == 64)
+@deal.ensure(lambda value, result: not result or set(value) <= set("0123456789abcdef"))
 def is_sha256(value: str) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
 
 
-@deal.post(lambda result: isinstance(result, str) and result.endswith("+00:00"))
+@deal.post(lambda result: result.endswith('+00:00'))
+@deal.post(lambda result: isinstance(result, str))
 @deal.has("time")
+@deal.raises()
+@deal.post(lambda result: datetime.fromisoformat(result).tzinfo == timezone.utc)
 def utc() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -79,6 +91,7 @@ def utc() -> str:
 @deal.post(is_sha256)
 @deal.raises(OSError, ValueError)
 @deal.has("read")
+@deal.ensure(lambda path, result: result == hashlib.sha256(path.read_bytes()).hexdigest())
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -86,13 +99,15 @@ def digest(path: Path) -> str:
 @deal.pre(lambda path, value: isinstance(path, Path))
 @deal.post(lambda result: result is None)
 @deal.raises(OSError, ValueError, TypeError)
-@deal.has("write")
+@deal.has("read", "write")
+@deal.ensure(lambda path, value, result: path.read_text(encoding="utf-8") == json.dumps(value, indent=2) + "\n")
 def dump(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
 
-@deal.pre(lambda alire_dir: isinstance(alire_dir, Path) and alire_dir.is_dir())
+@deal.pre(lambda alire_dir: isinstance(alire_dir, Path))
+@deal.pre(lambda alire_dir: alire_dir.is_dir())
 @deal.post(lambda result: isinstance(result, dict)
            and all(isinstance(k, str) and isinstance(v, str) for k, v in result.items())
            and all(k in result for k in ("PATH", "GNATPROVE_ALIRE_PREFIX", "GNAT_NATIVE_ALIRE_PREFIX", "GPRBUILD_ALIRE_PREFIX")))
@@ -124,11 +139,8 @@ def environment(alire_dir: Path) -> dict:
     return env
 
 
-@deal.pre(lambda argv, cwd, env, log, wall_seconds=900:
-          isinstance(argv, list) and bool(argv) and all(isinstance(a, str) for a in argv)
-          and isinstance(cwd, Path) and cwd.is_dir() and isinstance(env, dict)
-          and all(isinstance(k, str) and isinstance(v, str) for k, v in env.items())
-          and isinstance(log, Path) and isinstance(wall_seconds, int) and wall_seconds > 0)
+@deal.pre(lambda argv, cwd, env, log, wall_seconds=900: isinstance(argv, list))
+@deal.pre(lambda argv, cwd, env, log, wall_seconds=900: bool(argv) and all((isinstance(a, str) for a in argv)) and isinstance(cwd, Path) and cwd.is_dir() and isinstance(env, dict) and all((isinstance(k, str) and isinstance(v, str) for k, v in env.items())) and isinstance(log, Path) and isinstance(wall_seconds, int) and (wall_seconds > 0))
 @deal.ensure(lambda argv, cwd, env, log, wall_seconds=900, result=None:
              result["argv"] == argv and result["cwd"] == str(cwd)
              and result["elapsed_seconds"] >= 0
@@ -161,9 +173,8 @@ def execute(argv: list, cwd: Path, env: dict, log: Path, wall_seconds: int = 900
             "timed_out": timed_out, "log_sha256": digest(log)}
 
 
-@deal.pre(lambda path, args, env: isinstance(path, Path) and path.is_file()
-          and isinstance(args, list) and all(isinstance(a, str) for a in args)
-          and isinstance(env, dict) and all(isinstance(k, str) and isinstance(v, str) for k, v in env.items()))
+@deal.pre(lambda path, args, env: isinstance(path, Path))
+@deal.pre(lambda path, args, env: path.is_file() and isinstance(args, list) and all((isinstance(a, str) for a in args)) and isinstance(env, dict) and all((isinstance(k, str) and isinstance(v, str) for k, v in env.items())))
 @deal.ensure(lambda path, args, env, result: result["path"] == str(path)
              and result["argv"] == [str(path), *args] and len(result["sha256"]) == 64
              and isinstance(result["returncode"], int) and isinstance(result["output"], str))
@@ -186,7 +197,8 @@ def version_record(path: Path, args: list, env: dict) -> dict:
 
 
 @deal.pre(lambda value: isinstance(value, str))
-@deal.post(lambda result: isinstance(result, int) and result >= 0)
+@deal.post(lambda result: result >= 0)
+@deal.post(lambda result: isinstance(result, int))
 @deal.raises(ValueError)
 @deal.has()
 def summary_number(value: str) -> int:
@@ -199,11 +211,8 @@ def summary_number(value: str) -> int:
 
 
 @deal.pre(lambda report: isinstance(report, Path))
-@deal.post(lambda result: isinstance(result, dict) and "Total" in result["categories"]
-           and result["categories"]["Total"]["total"] > 0
-           and all(totals_balanced(row["total"], row["flow"], row["provers"], row["justified"], row["unproved"])
-                   for row in result["categories"].values())
-           and isinstance(result["contains_not_proved"], bool) and len(result["report_sha256"]) == 64)
+@deal.post(lambda result: 'Total' in result['categories'] and result['categories']['Total']['total'] > 0 and all((totals_balanced(row['total'], row['flow'], row['provers'], row['justified'], row['unproved']) for row in result['categories'].values())) and isinstance(result['contains_not_proved'], bool) and (len(result['report_sha256']) == 64))
+@deal.post(lambda result: isinstance(result, dict))
 @deal.raises(OSError, ValueError)
 @deal.has("read")
 def report_summary(report: Path) -> dict:
@@ -226,8 +235,8 @@ def report_summary(report: Path) -> dict:
             "report_sha256": digest(report)}
 
 
-@deal.pre(lambda folder, target: isinstance(folder, Path) and folder.is_dir()
-          and folder.is_relative_to(ROOT) and isinstance(target, Path) and not target.exists())
+@deal.pre(lambda folder, target: isinstance(folder, Path))
+@deal.pre(lambda folder, target: folder.is_dir() and folder.is_relative_to(ROOT) and isinstance(target, Path) and (not target.exists()))
 @deal.post(lambda result: isinstance(result, list)
            and all(isinstance(e["path"], str) and len(e["sha256"]) == 64 for e in result))
 @deal.raises(OSError, ValueError, SameFileError, SpecialFileError)
@@ -247,13 +256,8 @@ def snapshot(folder: Path, target: Path) -> list:
     return copied
 
 
-@deal.pre(lambda name, folder, project, unit, aliases, label, work, output, env, config, timeout, wall:
-          isinstance(folder, Path) and folder.is_dir() and (folder.joinpath(project)).is_file()
-          and bool(name) and bool(unit) and bool(label) and bool(aliases)
-          and all(isinstance(a, str) and bool(a) for a in aliases)
-          and isinstance(work, Path) and work.is_dir() and isinstance(output, Path) and output.is_dir()
-          and isinstance(config, Path) and isinstance(env, dict) and "GNATPROVE_ALIRE_PREFIX" in env
-          and isinstance(timeout, int) and timeout > 0 and isinstance(wall, int) and wall > 0)
+@deal.pre(lambda name, folder, project, unit, aliases, label, work, output, env, config, timeout, wall: isinstance(folder, Path))
+@deal.pre(lambda name, folder, project, unit, aliases, label, work, output, env, config, timeout, wall: folder.is_dir() and folder.joinpath(project).is_file() and bool(name) and bool(unit) and bool(label) and bool(aliases) and all((isinstance(a, str) and bool(a) for a in aliases)) and isinstance(work, Path) and work.is_dir() and isinstance(output, Path) and output.is_dir() and isinstance(config, Path) and isinstance(env, dict) and ('GNATPROVE_ALIRE_PREFIX' in env) and isinstance(timeout, int) and (timeout > 0) and isinstance(wall, int) and (wall > 0))
 @deal.post(lambda result: isinstance(result["complete"], bool) and bool(result["sources"])
            and (not result["complete"] or successful_checks(result["returncode"],
                result["native"]["categories"]["Total"]["total"],
@@ -305,6 +309,7 @@ def campaign(name: str, folder: Path, project: str, unit: str, aliases: list, la
         try:
             registry = json.loads(output.joinpath("ghost_boundaries.json").read_text())
             result["ghost_boundaries"] = validate_boundaries(registry, name, result["coverage"], hashes, ROOT)
+            result["contract_floor"] = contract_inventory(pinned_ada_sources(hashes, ROOT), result["coverage"])
         except ValueError as error:
             result["ghost_boundary_error"] = str(error)
     total = result.get("native", {}).get("categories", {}).get("Total", {})
@@ -314,15 +319,19 @@ def campaign(name: str, folder: Path, project: str, unit: str, aliases: list, la
                            and not result.get("native", {}).get("contains_not_proved", True)
                            and result.get("coverage", {}).get("no_assumptions_or_suppressions", False)
                            and not result["missing_full_entities"]
-                           and (name not in PROJECTS or result.get("ghost_boundaries", {}).get("coverage_complete", False))
+                           and (name not in PROJECTS or (result.get("ghost_boundaries", {}).get("coverage_complete", False)
+                               and result.get("contract_floor", {}).get("complete", False)))
                            and ("in unit " + unit) in text)
     dump(run_dir.joinpath('result.json'), result)
     return result
 
 
-@deal.raises(SystemExit, OSError, ValueError, TypeError, JSONDecodeError, subprocess.SubprocessError,
+@deal.raises(SystemExit, OSError, ValueError, TypeError, SyntaxError, JSONDecodeError, subprocess.SubprocessError,
              CalledProcessError, TimeoutExpired, SameFileError, SpecialFileError)
-@deal.has("io", "syscall", "time")
+@deal.has("io", "syscall", "time", "import")
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
+@deal.pre(lambda: ROOT.is_dir())
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--alire-dir", type=Path,
@@ -371,6 +380,18 @@ def main() -> None:
     manifest = {"host": socket.gethostname(), "started_utc": utc(), "runner_sha256": digest(Path(__file__)),
                 "toolchain": tools, "provers_requested": aliases, "prover_config_sha256": digest(config),
                 "coverage_schema": "gnat13-sloc-v1", "projects": {}}
+    python_inventory = [audit_file(path) for path in python_files(ROOT)]
+    if any(row["insufficient"] or row["duplicated"] or not row["imports_deal"] for row in python_inventory):
+        raise ValueError("Python contract floor failed before proof campaign")
+    for row in python_inventory:
+        row["path"] = str(Path(row["path"]).relative_to(ROOT))
+        row["sha256"] = digest(ROOT.joinpath(row["path"]))
+    dump(output.joinpath("python_contracts.json"), python_inventory)
+    manifest["contract_floor_schema"] = CONTRACT_SCHEMA
+    manifest["minimum_contracts"] = MINIMUM_CONTRACTS
+    manifest["python_contracts_sha256"] = digest(output.joinpath("python_contracts.json"))
+    manifest["contract_checker_sha256"] = digest(ROOT.joinpath("verification/spark_contracts.py"))
+    manifest["python_checker_sha256"] = digest(ROOT.joinpath("verification/check_contract_coverage.py"))
     manifest["ghost_boundary_schema"] = GHOST_SCHEMA
     manifest["ghost_registry_sha256"] = digest(output.joinpath("ghost_boundaries.json"))
     dump(output.joinpath('manifest.json'), manifest)

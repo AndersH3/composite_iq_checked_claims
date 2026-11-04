@@ -5,7 +5,6 @@ with Hoeflin_Boundary_Models;
 package body Report_IO with SPARK_Mode => Off is
    package FIO is new Ada.Text_IO.Float_IO (Real);
    use Hoeflin_Boundary_Models;
-   Trace : Report_Trace := Empty_Trace with Ghost;
    procedure Number (X : Real; Digits_After : Natural) is
       Projection : constant Number_Projection := Project_Number (X, Digits_After) with Ghost;
    begin

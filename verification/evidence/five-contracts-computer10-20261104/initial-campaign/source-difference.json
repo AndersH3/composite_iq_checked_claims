@@ -1,0 +1,6 @@
+{
+  "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+  "initial_sha256": "21dac126efd2f323b8a74b397301da2d9e0c2ace63daf6b77b2c730185077f65",
+  "retained_bytes": "hoeflin_simulation.adb.txt",
+  "reason": "Initial new receipt postcondition required an outer-loop invariant. Final retry retains the numerical iteration sequence and adds indexed receipt bookkeeping invariants."
+}

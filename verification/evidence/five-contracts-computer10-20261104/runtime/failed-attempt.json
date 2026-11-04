@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/tmp/composite-five-runtime-final-nrv5_1fv/towers-check-source/bin/towers_demo",
+    "1000000",
+    "20261030",
+    "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime/towers/check"
+  ],
+  "cwd": "/tmp/composite-five-runtime-final-nrv5_1fv/towers-check-source",
+  "started_utc": "2026-11-04T06:01:21.580527+00:00",
+  "finished_utc": "2026-11-04T06:01:21.644999+00:00",
+  "elapsed_seconds": 0.0644995350157842,
+  "returncode": 1,
+  "expected_success": true,
+  "accepted": false,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "881660e992374580232a8af773dcef44f2a220108400773475c3ef5bd5bfbbee",
+  "observation": "GNAT13 optimized Classify assertion failed; subsequent compatibility investigation and fresh final runtime are recorded separately.",
+  "recorded_actual_failure": true
+}

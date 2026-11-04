@@ -36,8 +36,11 @@ package body Normal_Support with SPARK_Mode is
       return Value;
    end Survival;
 
-   procedure Check_Inverse_Bracket (P : Real; Lo, Hi : Bracket_Value)
-     with Global => null;
+   procedure Check_Inverse_Bracket (P : Real; Lo, Hi : Bracket_Value) with
+     Global => null,
+     Pre => P > 0.0 and then P < 1.0,
+     Post => Survival (Lo) >= P and then Survival (Hi) <= P,
+     Depends => (null => (P, Lo, Hi));
    procedure Check_Inverse_Bracket (P : Real; Lo, Hi : Bracket_Value)
      with SPARK_Mode => Off
    is
@@ -95,8 +98,12 @@ package body Normal_Support with SPARK_Mode is
    end Uniform;
 
    subtype Radius_Value is Real range 0.0 .. 9.0;
-   function Checked_Radius (U : Open_Unit) return Radius_Value
-     with Global => null;
+   function Checked_Radius (U : Open_Unit) return Radius_Value with
+     Global => null,
+     Post => (Checked_Radius'Result >= 0.0) and then
+       (Checked_Radius'Result <= 9.0) and then
+       (Hoeflin_Boundary_Models.Radius_Acceptable (U, Checked_Radius'Result)),
+     Depends => (Checked_Radius'Result => U);
    function Checked_Radius (U : Open_Unit) return Radius_Value
      with SPARK_Mode => Off
    is

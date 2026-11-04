@@ -1,0 +1,231 @@
+with Admission_Core;
+with Towers_Engine;
+--  Pure input predicates, ordinary request receipts, and Ghost observations.
+--  Request receipts do not certify operating-system success.
+--  Decimal parsing is exact for bounded, unsigned, digit-only input. Other
+--  Ada 'Value syntaxes retain their original parser and are not equated to it.
+package Towers_IO_Models with SPARK_Mode is
+   use type Towers_Engine.Results;
+   subtype Option_Limit is Long_Long_Integer range 0 .. 2_147_483_646;
+   type Decimal_Result is record
+      Recognized : Boolean := False;
+      Value : Option_Limit := 0;
+   end record;
+   function Decimal_Input (Text : String; Limit : Option_Limit)
+      return Decimal_Result with
+     Global => null,
+     Post => (Decimal_Input'Result.Value <= Limit) and then
+       (if Decimal_Input'Result.Recognized then Text'Length > 0) and then
+       (if Text'Length = 0 then not Decimal_Input'Result.Recognized),
+     Depends => (Decimal_Input'Result => (Text, Limit));
+   function Option_Agrees
+     (Text : String; Actual : Long_Long_Integer; Limit : Option_Limit)
+      return Boolean with
+     Global => null,
+     Post => (if Option_Agrees'Result then Actual >= 0) and then
+       (if Option_Agrees'Result then Actual <= Limit) and then
+       (Option_Agrees'Result = (Actual in 0 .. Limit and then
+          (if Decimal_Input (Text, Limit).Recognized then Actual = Decimal_Input (Text, Limit).Value))),
+     Depends => (Option_Agrees'Result => (Text, Actual, Limit));
+
+   function Valid_Trials (Value : Long_Long_Integer) return Boolean
+   is (Value in 1 .. Admission_Core.Max_Trials) with
+     Post => (if Valid_Trials'Result then Value >= 1) and then
+       (if Valid_Trials'Result then Value <= Admission_Core.Max_Trials) and then
+       (if Value in 1 .. Admission_Core.Max_Trials then Valid_Trials'Result),
+     Global => null,
+     Depends => (Valid_Trials'Result => Value);
+   function Valid_Seed (Value : Long_Long_Integer) return Boolean
+   is (Value in 1 .. 2_147_483_646) with
+     Post => (if Valid_Seed'Result then Value >= 1) and then
+       (if Valid_Seed'Result then Value <= 2_147_483_646) and then
+       (if Value in 1 .. 2_147_483_646 then Valid_Seed'Result),
+     Global => null,
+     Depends => (Valid_Seed'Result => Value);
+
+   function Real_Field (Text : String) return Boolean
+   is (Text'Length > 0
+       and then (for all C of Text => C in '0' .. '9' or C = '.'
+                   or C = 'E' or C = 'e' or C = '+' or C = '-')
+       and then (for some C of Text => C in '0' .. '9')) with
+     Post => (if Real_Field'Result then Text'Length > 0) and then
+       (if Real_Field'Result then (for all C of Text => C in '0' .. '9' or C = '.'
+                   or C = 'E' or C = 'e' or C = '+' or C = '-') and then (for some C of Text => C in '0' .. '9')) and then
+       (if Text'Length > 0
+       and then (for all C of Text => C in '0' .. '9' or C = '.'
+                   or C = 'E' or C = 'e' or C = '+' or C = '-')
+       and then (for some C of Text => C in '0' .. '9') then Real_Field'Result),
+     Global => null,
+     Depends => (Real_Field'Result => Text);
+   function Integer_Field (Text : String) return Boolean
+   is (Text'Length > 0
+       and then (Text (Text'First) in '0' .. '9' or else
+                 (Text (Text'First) = '-' and then Text'Length > 1))
+       and then (for all I in Text'Range =>
+          (if I /= Text'First then Text (I) in '0' .. '9'))) with
+     Post => (if Integer_Field'Result then Text'Length > 0) and then
+       (if Integer_Field'Result then (Text (Text'First) in '0' .. '9' or else
+                 (Text (Text'First) = '-' and then Text'Length > 1)) and then (for all I in Text'Range =>
+          (if I /= Text'First then Text (I) in '0' .. '9'))) and then
+       (if Text'Length > 0
+       and then (Text (Text'First) in '0' .. '9' or else
+                 (Text (Text'First) = '-' and then Text'Length > 1))
+       and then (for all I in Text'Range =>
+          (if I /= Text'First then Text (I) in '0' .. '9')) then Integer_Field'Result),
+     Global => null,
+     Depends => (Integer_Field'Result => Text);
+   function Case_Name (K : Towers_Engine.Case_Index) return String
+   is (case K is
+         when 1 => "equal_top_2_percent",
+         when 2 => "equal_top_0_1_percent",
+         when 3 => "equal_top_1_in_33000",
+         when 4 => "mixed_top_2_and_0_1_percent") with
+     Post => (if K = 1 then Case_Name'Result = "equal_top_2_percent") and then
+       (if K = 2 then Case_Name'Result = "equal_top_0_1_percent") and then
+       (if K = 3 then Case_Name'Result = "equal_top_1_in_33000") and then
+       (if K = 4 then Case_Name'Result = "mixed_top_2_and_0_1_percent"),
+     Global => null,
+     Depends => (Case_Name'Result => K);
+   function Case_Name_Agrees (K : Towers_Engine.Case_Index; Text : String)
+      return Boolean
+   is (Text = Case_Name (K)) with
+     Post => (if Case_Name_Agrees'Result then Text'Length = Case_Name (K)'Length) and then
+       (if Case_Name_Agrees'Result and then Text'Length = Case_Name (K)'Length then Text = Case_Name (K)) and then
+       (if Text = Case_Name (K) then Case_Name_Agrees'Result),
+     Global => null,
+     Depends => (Case_Name_Agrees'Result => (K, Text));
+
+   function Report_Valid
+     (Trials, Seed : Long_Long_Integer; Data : Towers_Engine.Results)
+      return Boolean
+   is (Valid_Trials (Trials) and then Valid_Seed (Seed)
+       and then (for all K in Towers_Engine.Case_Index =>
+          Admission_Core.Total (Data.Simulation (K).Cells) = Trials)) with
+     Post => (if Report_Valid'Result then Valid_Trials (Trials)) and then
+       (if Report_Valid'Result then Valid_Seed (Seed) and then (for all K in Towers_Engine.Case_Index =>
+          Admission_Core.Total (Data.Simulation (K).Cells) = Trials)) and then
+       (if Valid_Trials (Trials) and then Valid_Seed (Seed)
+       and then (for all K in Towers_Engine.Case_Index =>
+          Admission_Core.Total (Data.Simulation (K).Cells) = Trials) then Report_Valid'Result),
+     Global => null,
+     Depends => (Report_Valid'Result => (Trials, Seed, Data));
+
+   type File_Kind is (Calculations, Grid, Calibration, Simulation);
+   function Field_Count (Kind : File_Kind) return Positive
+   is (case Kind is
+         when Calculations => 16,
+         when Grid => 7,
+         when Calibration => 6,
+         when Simulation => 15) with
+     Post => (if Kind = Calculations then Field_Count'Result = 16) and then
+       (if Kind = Grid then Field_Count'Result = 7) and then
+       (if Kind = Calibration then Field_Count'Result = 6) and then
+       (if Kind = Simulation then Field_Count'Result = 15),
+     Global => null,
+     Depends => (Field_Count'Result => Kind);
+   function Data_Row_Count (Kind : File_Kind) return Positive
+   is (case Kind is
+         when Calculations | Simulation => 4,
+         when Grid => 3,
+         when Calibration => 1) with
+     Post => (if Kind in Calculations | Simulation then Data_Row_Count'Result = 4) and then
+       (if Kind = Grid then Data_Row_Count'Result = 3) and then
+       (if Kind = Calibration then Data_Row_Count'Result = 1),
+     Global => null,
+     Depends => (Data_Row_Count'Result => Kind);
+
+   type Stage is (Empty, Trials_Observed, Options_Observed,
+                  Report_Requested, Normal_Return_Observed);
+   type Receipt is record
+      Status : Stage := Empty;
+      Trials, Seed : Long_Long_Integer := 0;
+      Requested_Files : Natural := 0;
+      Requested_Data_Rows : Natural := 0;
+      Snapshot : Towers_Engine.Results;
+   end record;
+   --  Ordinary receipt state keeps normal-return contracts executable even
+   --  when the separately marked Ghost observations are ignored.
+   Last_Receipt : Receipt;
+
+   procedure Observe_Trials
+     (Trace : in out Receipt; Actual : Towers_Engine.Trial_Count) with
+     Global => null,
+     Pre => Trace.Status = Empty,
+     Post => Trace.Status = Trials_Observed and Trace.Trials = Actual
+       and Trace.Seed = Trace.Seed'Old,
+     Depends => (Trace => (Trace, Actual));
+   procedure Observe_Seed
+     (Trace : in out Receipt; Actual : Towers_Engine.Seed_Value) with
+     Global => null,
+     Pre => Trace.Status = Trials_Observed,
+     Post => Trace.Status = Options_Observed and Trace.Seed = Long_Long_Integer (Actual)
+       and Trace.Trials = Trace.Trials'Old,
+     Depends => (Trace => (Trace, Actual));
+   procedure Request_Report
+     (Trace : in out Receipt; Trials : Towers_Engine.Trial_Count;
+      Seed : Towers_Engine.Seed_Value; Data : Towers_Engine.Results) with
+     Global => null,
+     Pre => Trace.Status = Options_Observed and Trace.Trials = Trials
+       and Trace.Seed = Long_Long_Integer (Seed) and Report_Valid (Trials, Long_Long_Integer (Seed), Data),
+     Post => Trace.Status = Report_Requested and Trace.Snapshot = Data
+       and Trace.Trials = Trials and Trace.Seed = Long_Long_Integer (Seed)
+       and Trace.Requested_Files = 4 and Trace.Requested_Data_Rows = 12,
+     Depends => (Trace => (Trials, Seed, Data), null => Trace);
+   procedure Observe_Normal_Return
+     (Trace : in out Receipt; Data : Towers_Engine.Results) with
+     Global => null,
+     Pre => Trace.Status = Report_Requested and Trace.Snapshot = Data,
+     Post => Trace.Status = Normal_Return_Observed and Trace.Snapshot = Data
+       and Trace.Trials = Trace.Trials'Old and Trace.Seed = Trace.Seed'Old
+       and Trace.Requested_Files = Trace.Requested_Files'Old
+       and Trace.Requested_Data_Rows = Trace.Requested_Data_Rows'Old,
+     Depends => (Trace => Trace, null => Data);
+   procedure Observe_Option
+     (Text : String; Actual : Long_Long_Integer; Limit : Option_Limit) with
+     Ghost,
+     Global => null,
+     Pre => Option_Agrees (Text, Actual, Limit),
+     Post => (not Decimal_Input (Text, Limit).Recognized or else Actual = Decimal_Input (Text, Limit).Value) and then (if Decimal_Input (Text, Limit).Recognized then Actual <= Limit),
+     Depends => (null => (Text, Actual, Limit));
+   procedure Check_Trials (Actual : Long_Long_Integer) with
+     Ghost,
+     Global => null,
+     Pre => Valid_Trials (Actual),
+     Post => Actual >= 1 and then Actual <= Admission_Core.Max_Trials,
+     Depends => (null => Actual);
+   procedure Check_Seed (Actual : Long_Long_Integer) with
+     Ghost,
+     Global => null,
+     Pre => Valid_Seed (Actual),
+     Post => Actual >= 1 and then Actual <= 2_147_483_646,
+     Depends => (null => Actual);
+   procedure Check_Real_Field (Text : String) with
+     Ghost,
+     Global => null,
+     Pre => Real_Field (Text),
+     Post => Text'Length > 0 and then (for some C of Text => C in '0' .. '9'),
+     Depends => (null => Text);
+   procedure Check_Integer_Field (Text : String) with
+     Ghost,
+     Global => null,
+     Pre => Integer_Field (Text),
+     Post => Text'Length > 0 and then (Text (Text'First) in '0' .. '9' or else (Text (Text'First) = '-' and then Text'Length > 1)),
+     Depends => (null => Text);
+   procedure Check_Case_Name (K : Towers_Engine.Case_Index; Text : String) with
+     Ghost,
+     Global => null,
+     Pre => Case_Name_Agrees (K, Text),
+     Post => Text = Case_Name (K) and then Text'Length = Case_Name (K)'Length,
+     Depends => (null => (K, Text));
+   procedure Check_Report (Trials, Seed : Long_Long_Integer; Data : Towers_Engine.Results) with Ghost,
+     Global => null,
+     Pre => Report_Valid (Trials, Seed, Data),
+     Post => Valid_Trials (Trials) and then Valid_Seed (Seed),
+     Depends => (null => (Trials, Seed, Data));
+   procedure Check_Completed (Trace : Receipt) with Ghost,
+     Global => null,
+     Pre => Trace.Status = Normal_Return_Observed
+       and Trace.Requested_Files = 4 and Trace.Requested_Data_Rows = 12,
+     Post => Trace.Status = Normal_Return_Observed,
+     Depends => (null => Trace);
+end Towers_IO_Models;

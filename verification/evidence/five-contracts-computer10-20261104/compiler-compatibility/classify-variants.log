@@ -1,0 +1,29 @@
+implications build 0 gcc -c -O2 -gnat2022 -gnata -gnato main.adb
+gcc -c -O2 -gnat2022 -gnata -gnato admission_core.adb
+gnatbind -x main.ali
+gnatlink main.ali -O2
+
+FALSE FALSE
+NEITHER
+FALSE TRUE
+B_ONLY
+TRUE FALSE
+A_ONLY
+TRUE TRUE
+BOTH
+
+result_characterization build 0 gcc -c -O2 -gnat2022 -gnata -gnato main.adb
+gcc -c -O2 -gnat2022 -gnata -gnato admission_core.adb
+gnatbind -x main.ali
+gnatlink main.ali -O2
+
+FALSE FALSE
+NEITHER
+FALSE TRUE
+B_ONLY
+TRUE FALSE
+A_ONLY
+TRUE TRUE
+BOTH
+
+/tmp/spark-five-classify-variants-ejztgsss

@@ -1,0 +1,1 @@
+{"path": "tests/fixtures/contract_negative_control.py", "row": 20, "col": 11, "code": "DEL012", "text": "post contract error", "value": "-1", "content": "    return -1"}

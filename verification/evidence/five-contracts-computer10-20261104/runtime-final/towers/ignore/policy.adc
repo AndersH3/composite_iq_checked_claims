@@ -1,0 +1,2 @@
+pragma Assertion_Policy (Check);
+pragma Assertion_Policy (Ghost => Ignore);

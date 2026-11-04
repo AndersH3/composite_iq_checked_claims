@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+    "-m",
+    "deal",
+    "prove",
+    "--skipped",
+    "--nocolor",
+    "tests/fixtures/contract_negative_control.py"
+  ],
+  "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+  "started_utc": "2026-11-04T22:23:27.323370+00:00",
+  "finished_utc": "2026-11-04T22:23:27.730048+00:00",
+  "elapsed_seconds": 0.40666943398537114,
+  "returncode": 1,
+  "classification": "unsupported",
+  "counts_as_successful_rejection": false,
+  "stdout_sha256": "7ea16ee0930803cf3b9032e4549f8305f61f654a9f021f6a6b0bcfd072c7d947",
+  "stderr_sha256": "7ac90aade43034bb2ace3224642fffee311635ca0c7d1e29c5ee97698cb13b85",
+  "limitation": "Deal Solver cannot resolve the isinstance postcondition on the intentionally wrong fixture. Its exception is not a counterexample or successful rejection. The separate static DEL012 rejection remains successful."
+}

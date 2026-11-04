@@ -1,7 +1,16 @@
+with Hoeflin_Boundary_Models;
+use type Hoeflin_Boundary_Models.Event_Count;
+use type Hoeflin_Boundary_Models.Event_Kind;
+use type Hoeflin_Boundary_Models.Section_Kind;
 with Hoeflin_Core;
 with Normal_Support;
 with Report_IO;
-procedure Hoeflin_Calculations with SPARK_Mode is
+procedure Hoeflin_Calculations with
+     SPARK_Mode,
+     Global => (In_Out => (Report_IO.Report_Output, Report_IO.Trace)),
+     Depends => ((Report_IO.Report_Output, Report_IO.Trace) => (Report_IO.Report_Output, Report_IO.Trace)),
+     Post => Report_IO.Trace.Section = Hoeflin_Boundary_Models.Examples and then Report_IO.Trace.Last_Event = Hoeflin_Boundary_Models.Example_Event and then Report_IO.Trace.Rows = 4 and then Report_IO.Trace.Columns = 2
+   is
    use Hoeflin_Core;
    Counts : constant array (Positive range <>) of Test_Count :=
      (1, 2, 3, 4, 5, 10, 100, 1_000);

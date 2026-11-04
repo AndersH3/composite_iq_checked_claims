@@ -228,6 +228,12 @@
       "git_blob": "2c23400e56a1ed3cef79732e2bf4f992123db9e4",
       "sha256": "c4d040b895ae4b9185350a8cca1948c5ae5a9c2f3242965f5368b00588fddae6",
       "commit": "ce0e895e472de86a6760f05a34d654f32ab0820e"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "git_blob": "164dc2a224fc52fc67622c85b1b6dea59fbc28d1",
+      "sha256": "685ce453f0e4bd0e352508001a8a7d88f771668c5968ca6cc30f368e4fba2602",
+      "commit": "2a8e983fb3c8b90436b89db6e6adfe170872f5f5"
     }
   ]
 }

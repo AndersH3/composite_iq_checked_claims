@@ -7,6 +7,8 @@ import math
 from pathlib import Path
 import re
 
+import sys
+
 import deal
 from scipy.stats import norm
 
@@ -23,6 +25,8 @@ FIELDS = ("tests", "mean_z", "mean_score_sd16")
 @deal.post(lambda result: isinstance(result, bool))
 @deal.has()
 @deal.raises()
+@deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
+@deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
 def _finite(value) -> bool:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return False
@@ -56,8 +60,8 @@ def mean_threshold(n: int, rho: float, quantile: float) -> float:
     return quantile * math.sqrt(variance_factor(n, rho))
 
 
-@deal.pre(lambda numerator, denominator: _finite(numerator) and abs(numerator) <= 1e100
-          and _finite(denominator) and 1e-100 <= denominator <= 1e100)
+@deal.pre(lambda numerator, denominator: _finite(numerator))
+@deal.pre(lambda numerator, denominator: abs(numerator) <= 1e+100 and _finite(denominator) and (1e-100 <= denominator <= 1e+100))
 @deal.post(lambda result: _finite(result))
 @deal.has()
 @deal.raises()
@@ -69,6 +73,8 @@ def _positive_ratio(numerator: float, denominator: float) -> float:
 @deal.post(lambda result: isinstance(result, bool))
 @deal.has()
 @deal.raises()
+@deal.ensure(lambda rows, result: not result or len(rows) == len(COUNTS) + 1)
+@deal.ensure(lambda rows, result: not result or [row[0] for row in rows] == [str(n) for n in COUNTS] + ["infinity"])
 def _valid_rows(rows) -> bool:
     if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
         return False
@@ -85,6 +91,8 @@ def _valid_rows(rows) -> bool:
 @deal.post(_valid_rows)
 @deal.has()
 @deal.raises()
+@deal.pre(lambda: bool(COUNTS) and len(COUNTS) == len(set(COUNTS)) and all(type(n) is int and 1 <= n <= 1_000_000 for n in COUNTS))
+@deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1 and _finite(Q) and 0 < Q <= 10)
 def thresholds() -> list[tuple[str, float, float]]:
     rows = []
     for n in COUNTS:
@@ -109,8 +117,9 @@ def check_close(actual: float, expected: float, label: str) -> None:
 
 @deal.pre(_valid_rows)
 @deal.post(lambda result: result is None)
-@deal.has("write")
+@deal.has("read", "write")
 @deal.raises(OSError, csv.Error)
+@deal.ensure(lambda rows, result: CSV_PATH.is_file())
 def write_csv(rows: list[tuple[str, float, float]]) -> None:
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
@@ -124,6 +133,7 @@ def write_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.post(lambda result: result is None)
 @deal.has("read")
 @deal.raises(OSError, ValueError, csv.Error)
+@deal.ensure(lambda rows, result: _valid_rows(rows))
 def verify_csv(rows: list[tuple[str, float, float]]) -> None:
     with CSV_PATH.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
@@ -151,6 +161,7 @@ def verify_csv(rows: list[tuple[str, float, float]]) -> None:
 @deal.post(lambda result: result is None)
 @deal.has("read", "stdout")
 @deal.raises(OSError, ValueError)
+@deal.ensure(lambda rows, result: _valid_rows(rows))
 def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
     if not TEX_PATH.exists():
         print("XeLaTeX source not present; source-value check skipped.")
@@ -170,6 +181,9 @@ def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
 
 @deal.post(lambda result: result is None)
 @deal.raises(ValueError)
+@deal.ensure(lambda result: math.isclose(Q, 4.753424308822899, rel_tol=0, abs_tol=1e-9))
+@deal.pre(lambda: _finite(Q) and 0 < Q <= 10)
+@deal.pre(lambda: _finite(RHO) and 0 < RHO < 1)
 def verify_examples() -> None:
     check_close(Q, 4.753424308822899, "upper-tail normal quantile")
     check_close(float(norm.sf(Q)), 1e-6, "quantile's upper-tail probability")
@@ -197,6 +211,8 @@ def verify_examples() -> None:
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "syscall")
 @deal.raises(OSError, ValueError, csv.Error, SystemExit)
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true",

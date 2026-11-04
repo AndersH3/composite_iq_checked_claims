@@ -6,6 +6,8 @@ import csv
 import math
 from pathlib import Path
 
+import sys
+
 import deal
 import numpy as np
 from scipy.integrate import quad
@@ -36,6 +38,8 @@ GRID_FIELDS = (
 @deal.post(lambda result: isinstance(result, bool))
 @deal.has()
 @deal.raises()
+@deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
+@deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
 def _finite(value) -> bool:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return False
@@ -57,8 +61,8 @@ def probability_union(p_a: float, p_b: float, joint: float) -> float:
     return p_a + p_b - joint
 
 
-@deal.pre(lambda joint, marginal: _finite(joint) and _finite(marginal)
-          and 0 <= joint <= marginal <= 1 and marginal > 0)
+@deal.pre(lambda joint, marginal: _finite(joint))
+@deal.pre(lambda joint, marginal: _finite(marginal) and 0 <= joint <= marginal <= 1 and (marginal > 0))
 @deal.post(lambda result: _finite(result) and 0 <= result <= 1)
 @deal.has()
 @deal.raises()
@@ -96,7 +100,8 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
         lambda x: norm.pdf(x) * norm.sf((b - rho * x) / scale),
         a, math.inf, epsabs=1e-14, epsrel=2e-14, limit=200,
     )
-    @deal.pre(lambda r: _finite(r) and -.95 <= r <= .95)
+    @deal.pre(lambda r: _finite(r))
+    @deal.pre(lambda r: -0.95 <= r <= 0.95)
     @deal.post(lambda result: _finite(result) and result >= 0)
     @deal.has()
     @deal.raises()
@@ -117,6 +122,8 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
 @deal.post(lambda result: isinstance(result, bool))
 @deal.has()
 @deal.raises()
+@deal.ensure(lambda fields, rows, result: not result or len(fields) == len(set(fields)) and all(isinstance(field, str) and field for field in fields))
+@deal.ensure(lambda fields, rows, result: not result or all(isinstance(row, dict) and set(row) == set(fields) for row in rows))
 def _valid_fields_rows(fields, rows) -> bool:
     if not isinstance(fields, (tuple, list)) or not fields:
         return False
@@ -137,6 +144,8 @@ def _valid_fields_rows(fields, rows) -> bool:
 @deal.post(lambda result: isinstance(result, bool))
 @deal.has()
 @deal.raises()
+@deal.ensure(lambda rows, result: not result or len(rows) == len(CASES))
+@deal.ensure(lambda rows, result: not result or [(row["case"], row["p_a"], row["p_b"]) for row in rows] == list(CASES))
 def _valid_admissions(rows) -> bool:
     if not _valid_fields_rows(ADMISSION_FIELDS, rows) or len(rows) != len(CASES):
         return False
@@ -154,6 +163,8 @@ def _valid_admissions(rows) -> bool:
 @deal.post(lambda result: isinstance(result, bool))
 @deal.has()
 @deal.raises()
+@deal.ensure(lambda rows, result: not result or tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164))
+@deal.ensure(lambda rows, result: not result or all(_finite(row[field]) and 0 <= row[field] <= 1 for row in rows for field in ("marginal_continuous", "joint_continuous", "conditional_continuous", "grid_joint", "grid_marginal", "grid_conditional")))
 def _valid_grid(rows) -> bool:
     return (_valid_fields_rows(GRID_FIELDS, rows) and len(rows) == 3
             and tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164)
@@ -165,6 +176,8 @@ def _valid_grid(rows) -> bool:
 @deal.post(_valid_admissions)
 @deal.has("stderr")
 @deal.raises(ValueError)
+@deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
+@deal.pre(lambda: bool(CASES) and len({row[0] for row in CASES}) == len(CASES) and all(isinstance(label, str) and label and _finite(p_a) and _finite(p_b) and 0 < p_a < 1 and 0 < p_b < 1 for label, p_a, p_b in CASES))
 def admission_rows() -> list[dict]:
     rows = []
     for label, p_a, p_b in CASES:
@@ -187,6 +200,8 @@ def admission_rows() -> list[dict]:
 @deal.post(_valid_grid)
 @deal.has("stderr")
 @deal.raises(ValueError)
+@deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
+@deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == len(GRID_FIELDS) and all(isinstance(field, str) and field for field in GRID_FIELDS))
 def basic_grid() -> list[dict]:
     """Reproduce Q..199 STEP .5 point sums in the published BASIC program.
 
@@ -223,7 +238,8 @@ def basic_grid() -> list[dict]:
     return rows
 
 
-@deal.pre(lambda path, fields, rows: isinstance(path, Path) and _valid_fields_rows(fields, rows))
+@deal.pre(lambda path, fields, rows: isinstance(path, Path))
+@deal.pre(lambda path, fields, rows: _valid_fields_rows(fields, rows))
 @deal.post(lambda result: result is None)
 @deal.has("write")
 @deal.raises(OSError, csv.Error)
@@ -235,7 +251,8 @@ def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
-@deal.pre(lambda path, fields, expected: isinstance(path, Path) and _valid_fields_rows(fields, expected))
+@deal.pre(lambda path, fields, expected: isinstance(path, Path))
+@deal.pre(lambda path, fields, expected: _valid_fields_rows(fields, expected))
 @deal.post(lambda result: result is None)
 @deal.has("read")
 @deal.raises(OSError, ValueError, csv.Error)
@@ -263,7 +280,8 @@ def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> Non
                 close(number, float(value), f"{path.name}: {field}")
 
 
-@deal.pre(lambda admissions, grid: _valid_admissions(admissions) and _valid_grid(grid))
+@deal.pre(lambda admissions, grid: _valid_admissions(admissions))
+@deal.pre(lambda admissions, grid: _valid_grid(grid))
 @deal.post(lambda result: result is None)
 @deal.has("stderr")
 @deal.raises(ValueError)
@@ -305,6 +323,8 @@ def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "syscall")
 @deal.raises(OSError, ValueError, csv.Error, SystemExit)
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true", help="regenerate CSVs before checking")

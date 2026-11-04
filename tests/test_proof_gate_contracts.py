@@ -1,4 +1,5 @@
 """A balanced report must not be mistaken for a completed proof campaign."""
+from conftest import protected_history_intact, reference_inputs_intact
 import deal
 from hypothesis import given, settings, strategies as st
 import pytest
@@ -15,16 +16,22 @@ from conftest import ROOT
     (0, 3, 1, 0, False),
     (0, 3, 0, 1, False),
 ])
+@deal.pre(lambda proof_runner, returncode, total, unproved, justified, expected: protected_history_intact())
+@deal.ensure(lambda proof_runner, returncode, total, unproved, justified, expected, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, returncode, total, unproved, justified, expected, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_success_gate_rejects_empty_failed_or_unfinished_runs(
     proof_runner, returncode, total, unproved, justified, expected,
 ):
     assert proof_runner.successful_checks(returncode, total, unproved, justified) is expected
 
 
+@deal.pre(lambda proof_runner: protected_history_intact())
+@deal.ensure(lambda proof_runner, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_count_gates_reject_negative_counts(proof_runner):
     for index in range(5):
         counts = [0] * 5
@@ -38,8 +45,11 @@ def test_count_gates_reject_negative_counts(proof_runner):
 
 @settings(max_examples=40, derandomize=True, deadline=None)
 @given(flow=st.integers(0, 10_000), proved=st.integers(1, 10_000))
+@deal.pre(lambda proof_runner, flow, proved: protected_history_intact())
+@deal.ensure(lambda proof_runner, flow, proved, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, flow, proved, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_moving_a_check_to_unproved_preserves_balance_but_rejects_success(proof_runner, flow, proved):
     total = flow + proved
     assert proof_runner.totals_balanced(total, flow, proved, 0, 0)
@@ -50,6 +60,9 @@ def test_moving_a_check_to_unproved_preserves_balance_but_rejects_success(proof_
 
 
 @pytest.mark.parametrize("project,total", [("hoeflin", 47), ("towers", 31)])
+@deal.pre(lambda proof_runner, project, total: protected_history_intact())
+@deal.ensure(lambda proof_runner, project, total, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, project, total, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read')
 def test_native_report_parser_accepts_retained_portfolios(proof_runner, project, total):
@@ -67,6 +80,9 @@ def test_native_report_parser_accepts_retained_portfolios(proof_runner, project,
     "Total  5  1  1  .  1\n",
     "Total  3  malformed  1  .  1\n",
 ])
+@deal.pre(lambda proof_runner, tmp_path, text: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, text, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, text, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write')
 def test_native_report_parser_rejects_missing_zero_or_inconsistent_totals(proof_runner, tmp_path, text):

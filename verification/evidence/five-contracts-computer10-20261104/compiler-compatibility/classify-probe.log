@@ -1,0 +1,60 @@
+native13 -O0 compile 0 gcc -c -O0 -gnat2022 -gnata -gnato main.adb
+gcc -c -O0 -gnat2022 -gnata -gnato admission_core.adb
+gnatbind -x main.ali
+gnatlink main.ali -O0
+
+FALSE FALSE
+NEITHER
+FALSE TRUE
+B_ONLY
+TRUE FALSE
+A_ONLY
+TRUE TRUE
+BOTH
+
+native13 -O2 compile 0 gcc -c -O2 -gnat2022 -gnata -gnato main.adb
+gcc -c -O2 -gnat2022 -gnata -gnato admission_core.adb
+gnatbind -x main.ali
+gnatlink main.ali -O2
+
+FALSE FALSE
+NEITHER
+FALSE TRUE
+raised ADA.ASSERTIONS.ASSERTION_ERROR : failed postcondition from admission_core.ads:20
+
+TRUE FALSE
+raised ADA.ASSERTIONS.ASSERTION_ERROR : failed postcondition from admission_core.ads:19
+
+TRUE TRUE
+raised ADA.ASSERTIONS.ASSERTION_ERROR : failed postcondition from admission_core.ads:21
+
+
+system14 -O0 compile 0 x86_64-linux-gnu-gcc-14 -c -O0 -gnat2022 -gnata -gnato main.adb
+x86_64-linux-gnu-gcc-14 -c -O0 -gnat2022 -gnata -gnato admission_core.adb
+x86_64-linux-gnu-gnatbind-14 -x main.ali
+x86_64-linux-gnu-gnatlink-14 main.ali -O0
+
+FALSE FALSE
+NEITHER
+FALSE TRUE
+B_ONLY
+TRUE FALSE
+A_ONLY
+TRUE TRUE
+BOTH
+
+system14 -O2 compile 0 x86_64-linux-gnu-gcc-14 -c -O2 -gnat2022 -gnata -gnato main.adb
+x86_64-linux-gnu-gcc-14 -c -O2 -gnat2022 -gnata -gnato admission_core.adb
+x86_64-linux-gnu-gnatbind-14 -x main.ali
+x86_64-linux-gnu-gnatlink-14 main.ali -O2
+
+FALSE FALSE
+NEITHER
+FALSE TRUE
+B_ONLY
+TRUE FALSE
+A_ONLY
+TRUE TRUE
+BOTH
+
+root /tmp/spark-five-classify-d08wih7i

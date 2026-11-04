@@ -1,0 +1,213 @@
+{
+  "calculations": {
+    "threshold_rows": 9,
+    "worked_examples": 4,
+    "max_absolute_numeric_error": 2.842170943040401e-14,
+    "tolerance": 5e-11
+  },
+  "simulation": {
+    "cases": [
+      {
+        "tests": 1,
+        "trials": 1000000,
+        "mean": 0.000396960621,
+        "variance": 0.999022834983,
+        "tails": {
+          "2": {
+            "observed": 0.022603,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.022313511140830446,
+              0.02289615664691315
+            ]
+          },
+          "3": {
+            "observed": 0.001312,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.0012429436311996475,
+              0.0013848877329150741
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 1
+      },
+      {
+        "tests": 2,
+        "trials": 1000000,
+        "mean": 0.000500600578,
+        "variance": 0.999648643612,
+        "tails": {
+          "2": {
+            "observed": 0.022704,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.0224138757137443,
+              0.022997791298027592
+            ]
+          },
+          "3": {
+            "observed": 0.001331,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.001261432560346942,
+              0.0014043986577929048
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 0
+      },
+      {
+        "tests": 3,
+        "trials": 1000000,
+        "mean": 0.000549135607,
+        "variance": 0.999999029903,
+        "tails": {
+          "2": {
+            "observed": 0.022734,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.022443687264764676,
+              0.023027979516520577
+            ]
+          },
+          "3": {
+            "observed": 0.001337,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.0012672719307754855,
+              0.001410559241267033
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 1
+      },
+      {
+        "tests": 4,
+        "trials": 1000000,
+        "mean": 0.000578090038,
+        "variance": 1.000226064517,
+        "tails": {
+          "2": {
+            "observed": 0.022721,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.022430768909625136,
+              0.023014897971537662
+            ]
+          },
+          "3": {
+            "observed": 0.001326,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.0012565666959684944,
+              0.001399264560585793
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 1
+      },
+      {
+        "tests": 5,
+        "trials": 1000000,
+        "mean": 0.000597630133,
+        "variance": 1.000387080893,
+        "tails": {
+          "2": {
+            "observed": 0.022742,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.022451637034203095,
+              0.023036029685619047
+            ]
+          },
+          "3": {
+            "observed": 0.001323,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.0012536472991339597,
+              0.0013961839804689923
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 1
+      },
+      {
+        "tests": 10,
+        "trials": 1000000,
+        "mean": 0.000644415597,
+        "variance": 1.0007990624,
+        "tails": {
+          "2": {
+            "observed": 0.022752,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.022461574259309565,
+              0.0230460923836837
+            ]
+          },
+          "3": {
+            "observed": 0.001306,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.0012371057921822127,
+              0.0013787256180298377
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 1
+      },
+      {
+        "tests": 100,
+        "trials": 1000000,
+        "mean": 0.000711588303,
+        "variance": 1.001461529144,
+        "tails": {
+          "2": {
+            "observed": 0.022734,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.022443687264764676,
+              0.023027979516520577
+            ]
+          },
+          "3": {
+            "observed": 0.001322,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.0012526741872233998,
+              0.0013951571000624405
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 1
+      },
+      {
+        "tests": 1000,
+        "trials": 1000000,
+        "mean": 0.000729020918,
+        "variance": 1.001649338633,
+        "tails": {
+          "2": {
+            "observed": 0.022685,
+            "reference": 0.022750131948179195,
+            "wilson_95_interval": [
+              0.02239499513375443,
+              0.022978672023992338
+            ]
+          },
+          "3": {
+            "observed": 0.001325,
+            "reference": 0.0013498980316300933,
+            "wilson_95_interval": [
+              0.0012555935535180167,
+              0.001398237710719159
+            ]
+          }
+        },
+        "rare_count_descriptive_only": 1
+      }
+    ],
+    "limitation": "MC diagnostics do not establish the one-in-a-million tail, libm correctness, model validity, or formal proof."
+  }
+}

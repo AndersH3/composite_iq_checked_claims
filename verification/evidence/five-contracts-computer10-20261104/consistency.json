@@ -1,0 +1,39 @@
+{
+  "reviewed_utc": "2026-11-04T22:24:53.111178+00:00",
+  "historical_blobs_preserved": 603,
+  "source_files_pinned": 96,
+  "proof_native_checks": 1100,
+  "python_files": 26,
+  "python_functions": 251,
+  "python_distinct_contracts": 1255,
+  "python_tests_normal": 262,
+  "python_tests_optimized": 262,
+  "minimum_distinct_python_contracts": 5,
+  "no_upper_limit": true,
+  "accepted_threshold_regressions": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "rejected_threshold_regressions": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "spark_subprograms": 164,
+  "spark_explicit_contracts": 923,
+  "minimum_spark_entries": 5,
+  "pdf_total_pages": 22,
+  "pdf_visual_qa_passed": true,
+  "symbolic_negative_fixture": "unsupported: isinstance cannot be resolved; not counted as successful rejection",
+  "failed_attempts_retained": true,
+  "native_outputs_unchanged": true,
+  "notes": [
+    "Final source-pinned floors use the comment-aware checker. Initial native records and exact original checker bytes are retained; final assembly is explicit.",
+    "Both reports use actual final native totals and coverage, final Python checks and minimum semantics, current mixed Ghost/ordinary receipt scope and full AI disclosures.",
+    "No statistical-model validity or end-to-end proof of trusted numerical/I/O implementations is inferred."
+  ]
+}

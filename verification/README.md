@@ -5,7 +5,7 @@ The two analysis folders contain standalone Ada implementations:
 - [Hoeflin/Ferguson](../analyses/hoeflin-ferguson/ada/): corrected thresholds, composite and latent-factor examples, and a Gaussian common-factor simulation.
 - [Towers](../analyses/towers-multiple-test-admissions/ada/): bivariate-normal probabilities, the BASIC grid, calibrated admission cutoffs, and correlated-score simulations.
 
-The [Ghost-boundary computer10 campaign](evidence/ghost-boundaries-computer10-20261101/REPORT.md) records the current source scope, proof results, native `.spark` coverage, source-bound Ghost models, checked interfaces, erasure regressions, numerical comparisons, and Python checks. The [earlier expanded campaign](evidence/spark-expanded-computer10-20261031/REPORT.md) preserves its 209/434-check results against revision `ce0e895`; those are historical counts for the implementation before the Ghost additions. The [original campaign](evidence/computer10-20261031/REPORT.md) and [earlier integration campaign](evidence/deal-lint-spark-computer10-20261031/REPORT.md) remain immutable historical snapshots. Their 47-check Hoeflin and 31-check Towers totals apply to the old projects containing only the arithmetic cores; they are not totals for the expanded implementation.
+The [five-contract computer10 campaign](evidence/five-contracts-computer10-20261104/REPORT.md) records the current source scope, proof results, native `.spark` coverage, source-bound Ghost models, checked interfaces, erasure regressions, numerical comparisons, and Python checks. The [earlier expanded campaign](evidence/spark-expanded-computer10-20261031/REPORT.md) preserves its 209/434-check results against revision `ce0e895`; those are historical counts for the implementation before the Ghost additions. The [original campaign](evidence/computer10-20261031/REPORT.md) and [earlier integration campaign](evidence/deal-lint-spark-computer10-20261031/REPORT.md) remain immutable historical snapshots. Their 47-check Hoeflin and 31-check Towers totals apply to the old projects containing only the arithmetic cores; they are not totals for the expanded implementation.
 
 ## Reproduce the proof campaign
 
@@ -21,9 +21,19 @@ Each invocation creates a new evidence directory and uses fresh temporary source
 
 An intentionally wrong inclusion-exclusion implementation in [negative_control](negative_control/) must be rejected. It is excluded from both production proof projects. A campaign is accepted only when the negative control is rejected with a native unproved contract and both production portfolios exit successfully, contain nonempty native totals, and report zero unproved and zero justified checks. Native coverage must also be retained and pass the assumption/suppression checks. A nonzero exit, missing report, timeout, incomplete metadata, or parsing failure cannot count as a successful project proof.
 
+## Five explicit contracts per subprogram
+
+`python verification/spark_contracts.py` inventories every supported project Ada function and procedure, including local, Ghost and specification-only interfaces. It counts top-level Pre/Post/Refined_Post conjunction clauses, Contract_Cases alternatives, and each explicit Global/Depends aspect. Ghost, SPARK_Mode, Inline, subtype declarations, body assertions and unsupported aspects are excluded. Exact normalized duplicates and literal Boolean padding fail. The per-entity inventory retains each clause and source location. Five entries do not imply five logically independent guarantees: bounds, predicate characterizations and endpoint consequences can overlap.
+
+The checker handles this repository's restricted Ada subset, rejects ambiguous repeated/overloaded names and pragma-based mode changes, and relies on GNAT for Ada syntax/conformance. Native audits cross-check subprogram locations and all/spec status, and account separately for package/type entities. This is a structural floor and provenance check, not a general Ada semantic analyzer or proof that the specifications are adequate.
+
+The model packages contain ordinary pure predicates/types so ordinary contracts can use them legally. Numerical observations, lexical checks and projection lemmas remain explicit Ghost operations. Hoeflin `Note` and Towers `Observe_Trials`, `Observe_Seed`, `Request_Report`, `Observe_Normal_Return` update ordinary request receipts; these remain active under Ghost Ignore and support normal-return postconditions. They record requested/observed state, not actual persistent bytes or filesystem success.
+
+Current campaigns must pin both contract checkers, the complete Python inventory and a native-cross-checked SPARK clause inventory. Removing the new schema cannot downgrade an unrecognized/current campaign to an older policy. Historical exceptions require one of the exact retained campaign names and an explicitly matching old source checkout.
+
 ## What the proofs establish
 
-The expanded proof projects enumerate the original cores, numerical support, calculation/simulation engines, SPARK-on main procedures, I/O interfaces, and three implemented Ghost packages. `Hoeflin_Simulation`, `Hoeflin_Calculations`, and `Towers_Demo` are now in SPARK. Random-state updates, uniform generation, bisection and quadrature orchestration, simulation loops, accumulation, event counting, and probability conversion can therefore be analyzed along with the core arithmetic.
+The expanded proof projects enumerate the original cores, numerical support, calculation/simulation engines, SPARK-on main procedures, I/O interfaces, and three implemented model packages with explicit Ghost observers and checkers. `Hoeflin_Simulation`, `Hoeflin_Calculations`, and `Towers_Demo` are now in SPARK. Random-state updates, uniform generation, bisection and quadrature orchestration, simulation loops, accumulation, event counting, and probability conversion can therefore be analyzed along with the core arithmetic.
 
 The Hoeflin core includes exact integer variance bookkeeping and bounded floating-point transforms. Some transforms use algebraically equivalent evaluation orders that aid proof; numerical equivalence is checked against the direct report formulas, rather than asserted to be bit-identical.
 
@@ -37,7 +47,7 @@ The installed Ada elementary-function specifications support SPARK, but provide 
 
 `Hoeflin_Boundary_Models` and `Towers_Boundary_Models` encode accepted normal-return bounds and unchanged-value relationships. Actual excluded bodies invoke Ghost observers after ordinary checks. Explicit sine/cosine range observers inspect the actual cached elementary-function results in analyzed code. `Towers_IO_Models` and the Hoeflin receipt model cover restricted decimal parsing, integer images or lexical fields, requested data/layouts, observations and state transitions. These models have implemented, analyzed bodies; no imported model axioms or `pragma Assume` statements are used.
 
-The [source-pinned register](ghost_boundaries.json) maps all native specification-only entities and both foreign imports, plus the three Hoeflin and four Towers private I/O helpers. It also maps the two trigonometric calls per project and inventories every external with-unit and five global unproved domains. The [Deal-contracted checker](ghost_boundaries.py) requires actual named source couplings, declared Ghost packages, native `all` model/caller statuses, complete inventories and explicit false implementation/adequacy-proof flags. Its constrained Ada source checks are a provenance audit, not a general Ada parser, semantic resolver or refinement proof.
+The [source-pinned register](ghost_boundaries.json) maps all native specification-only entities and both foreign imports, plus the three Hoeflin and four Towers private I/O helpers. It also maps the two trigonometric calls per project and inventories every external with-unit and five global unproved domains. The [Deal-contracted checker](ghost_boundaries.py) requires actual named source couplings, ordinary pure predicates, explicit Ghost observer/checker procedures or the five allowed ordinary request-receipt updates, native `all` model/caller statuses, complete inventories and explicit false implementation/adequacy-proof flags. Its constrained Ada source checks are a provenance audit, not a general Ada parser, semantic resolver or refinement proof.
 
 A proved Ghost observation procedure is conditional on its precondition. Calls from excluded bodies are not thereby statically proved; they execute their Ghost checks when enabled. The Hoeflin receipt records a bounded modular summary and an admissibility flag, not proof that every output call follows a protocol. The Towers receipt records four requested files and twelve requested data rows followed by a normal return; it does not prove actual filesystem contents or persistence. Decimal and field models have restricted stated scopes. Backend accuracy, exact formatting/CSV bytes, failures/exceptions, physical I/O and model adequacy remain explicit obligations.
 
@@ -77,7 +87,7 @@ python3 verification/replay_hoeflin.py \
 
 Monte Carlo uncertainty is reported explicitly. Rare counts are descriptive; these sample sizes do not establish a one-in-a-million psychometric frequency.
 
-Audit the committed Ghost-boundary campaign against the current source with `python3 verification/verify_evidence.py`. Its default evidence directory is `verification/evidence/ghost-boundaries-computer10-20261101`. The runner produces native proof/coverage and source-identity records. The published campaign additionally contains runtime, Python, document and complete checksum/source inventories; a new runner directory needs equivalent release inventories before the full retained-evidence auditor can accept it. The auditor checks checksums, native totals, raw coverage, source identities, Ghost mappings, and both negative-control results; it does not rerun the provers or independently validate SMT proof objects.
+Audit the committed five-contract campaign against the current source with `python3 verification/verify_evidence.py`. Its default evidence directory is `verification/evidence/five-contracts-computer10-20261104`. The runner produces native proof/coverage and source-identity records. The published campaign additionally contains runtime, Python, document and complete checksum/source inventories; a new runner directory needs equivalent release inventories before the full retained-evidence auditor can accept it. The auditor checks checksums, native totals, raw coverage, source identities, Ghost mappings, and both negative-control results; it does not rerun the provers or independently validate SMT proof objects.
 
 ## Audit historical campaigns explicitly
 
@@ -91,7 +101,17 @@ python3 verification/verify_evidence.py \
   --source-root /tmp/composite-iq-before-expansion
 ```
 
-The same explicit source root applies to the retained `deal-spark-computer10-20261031` and `deal-lint-spark-computer10-20261031` campaigns. The 643-check expanded campaign predates the Ghost models and requires its own matching source revision:
+The 1 November Ghost campaign predates the five-contract changes and requires its matching source revision:
+
+```sh
+git worktree add --detach /tmp/composite-iq-ghost-source \
+  2a8e983fb3c8b90436b89db6e6adfe170872f5f5
+python3 verification/verify_evidence.py \
+  verification/evidence/ghost-boundaries-computer10-20261101 \
+  --source-root /tmp/composite-iq-ghost-source
+```
+
+The pre-expansion source root shown first applies to the retained `deal-spark-computer10-20261031` and `deal-lint-spark-computer10-20261031` campaigns. The 643-check expanded campaign predates the Ghost models and requires its own matching source revision:
 
 ```sh
 git worktree add --detach /tmp/composite-iq-expanded-source \
@@ -105,7 +125,7 @@ Its older required-body inventory is checked under the explicit historical polic
 
 ## Python contracts
 
-Every current Python file and every named function, including tests and fixtures, carries Deal contracts. Install `requirements-dev.txt` and run `make check` from the repository root. The coverage gate also runs in GitHub Actions and inspects Git's file inventory, so adding a new Python file or function without contracts fails the check.
+Every current Python file imports Deal. Every named function, including tests and fixtures, carries at least five distinct meaningful Deal decorators. The gate accepts five or more distinct decorators, with no upper limit, and regression-tests five through eight. It rejects missing/insufficient declarations and repeated normalized syntax; it does not prove semantic independence or correctness. Install `requirements-dev.txt` and run `make check` from the repository root. The coverage gate also runs in GitHub Actions and inspects Git's file inventory, so adding a new Python file or function without contracts fails the check.
 
 Run `python verification/check_static_lint.py` to inventory every Python file, require clean maintained code, and verify that the negative control still fails. Both `make check` and GitHub Actions enforce this gate. CLI entry points explicitly enable Deal even under `python -O`. The pinned Typeguard 3 integration is required by Deal 4.24.6's generated type checks. The current campaign report records the checks for the current implementation, including the native-coverage, Ghost-register and evidence-auditor tests. The full AI disclosure is in the main README and both reports.
 

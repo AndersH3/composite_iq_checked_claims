@@ -10,8 +10,8 @@ import deal
 ROOT = Path(__file__).resolve().parent
 
 
-@deal.pre(lambda numerator, denominator: type(numerator) is int and type(denominator) is int
-          and 1 <= numerator < denominator <= 2_147_483_647)
+@deal.pre(lambda numerator, denominator: type(numerator) is int)
+@deal.pre(lambda numerator, denominator: type(denominator) is int and 1 <= numerator < denominator <= 2147483647)
 @deal.post(lambda result: math.isfinite(result) and 0 < result < 1)
 @deal.raises()
 @deal.has()
@@ -20,7 +20,8 @@ def _open_unit_ratio(numerator, denominator):
     return numerator / denominator
 
 
-@deal.pre(lambda condition, message: type(condition) is bool and isinstance(message, str))
+@deal.pre(lambda condition, message: type(condition) is bool)
+@deal.pre(lambda condition, message: isinstance(message, str))
 @deal.ensure(lambda condition, message, result: condition and result is None)
 @deal.raises(ValueError)
 @deal.has()
@@ -30,7 +31,8 @@ def require(condition, message):
         raise ValueError(message)
 
 
-@deal.pre(lambda path: isinstance(path, Path) and path.is_file())
+@deal.pre(lambda path: isinstance(path, Path))
+@deal.pre(lambda path: path.is_file())
 @deal.post(lambda result: isinstance(result, list) and all(
     isinstance(row, dict) and all(isinstance(key, str) and isinstance(value, str)
                                  for key, value in row.items()) for row in result))
@@ -48,9 +50,8 @@ def read(path):
     return rows
 
 
-@deal.pre(lambda x, y, label, tolerance=1e-10:
-          math.isfinite(x) and math.isfinite(y) and math.isfinite(tolerance)
-          and tolerance > 0 and isinstance(label, str))
+@deal.pre(lambda x, y, label, tolerance=1e-10: math.isfinite(x))
+@deal.pre(lambda x, y, label, tolerance=1e-10: math.isfinite(y) and math.isfinite(tolerance) and (tolerance > 0) and isinstance(label, str))
 @deal.ensure(lambda x, y, label, tolerance=1e-10, result=None:
              result is None and abs(x-y) <= tolerance)
 @deal.raises(ValueError)
@@ -60,8 +61,8 @@ def close(x, y, label, tolerance=1e-10):
         raise ValueError(f"{label}: {x!r} differs from reference {y!r}")
 
 
-@deal.pre(lambda rows, columns, label: isinstance(rows, list) and isinstance(columns, set)
-          and all(isinstance(row, dict) for row in rows) and isinstance(label, str))
+@deal.pre(lambda rows, columns, label: isinstance(rows, list))
+@deal.pre(lambda rows, columns, label: isinstance(columns, set) and all((isinstance(row, dict) for row in rows)) and isinstance(label, str))
 @deal.ensure(lambda rows, columns, label, result:
              result is None and all(columns <= row.keys() for row in rows))
 @deal.raises(ValueError)
@@ -71,8 +72,8 @@ def require_columns(rows, columns, label):
     return None
 
 
-@deal.pre(lambda directory, replay=False: isinstance(directory, Path) and directory.is_dir()
-          and type(replay) is bool)
+@deal.pre(lambda directory, replay=False: isinstance(directory, Path))
+@deal.pre(lambda directory, replay=False: directory.is_dir() and type(replay) is bool)
 @deal.post(lambda result: result is None)
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.has("read", "stdout")

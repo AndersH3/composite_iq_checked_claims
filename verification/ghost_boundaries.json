@@ -122,7 +122,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Read_Simulation_Options",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -173,7 +173,7 @@
           }
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -184,7 +184,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Read_Simulation_Options",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -201,7 +201,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -212,7 +212,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Simulation_Header",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -229,7 +229,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -240,7 +240,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Simulation_Row",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -257,7 +257,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -268,7 +268,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Calculations_Header",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -285,7 +285,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -296,7 +296,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Calculation_Row",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -313,7 +313,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -324,7 +324,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Infinite_Row",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -341,7 +341,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -352,7 +352,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Examples_Header",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -369,7 +369,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -380,7 +380,7 @@
         "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
         "implementation_proved": false,
         "model_adequacy_proved": false,
-        "link_kind": "ghost-call",
+        "link_kind": "model-call",
         "contract_entity": "Report_IO.Example",
         "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
         "model_entities": [
@@ -397,7 +397,7 @@
           "Hoeflin_Boundary_Models.Note"
         ],
         "obligations": [
-          "A bounded Ghost summary records requested/observed event, nominal column count, typed payload and admissibility flag. It is not a proof that every protocol call is admissible; counters use modulo 2^64 and no full character stream is retained.",
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
           "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
         ]
       },
@@ -873,7 +873,7 @@
   },
   "global_unproved_obligations": {
     "numerical-backends": "C erfc, Ada elementary-function implementations, ABI/representation, rounding accuracy and backend totality are unproved. Ghost predicates describe checked normal-return properties, not certified analytic functions or error bounds.",
-    "runtime-and-io": "Ada runtime, argument retrieval/Value attributes, string/image/formatting generics, memory/resource failures, filesystem effects, permissions, buffering, physical bytes, and exception/failure semantics remain unproved. Ghost ledgers record observations/requests and normal returns, not operating-system success or full persistent output traces.",
+    "runtime-and-io": "Ada runtime, argument retrieval/Value attributes, string/image/formatting generics, memory/resource failures, filesystem effects, permissions, buffering, physical bytes, and exception/failure semantics remain unproved. Ordinary SPARK request receipts and separately marked Ghost observations record requests and normal-return values, not operating-system success or full persistent output traces.",
     "model-adequacy": "An analyzed Ghost model does not prove that an excluded implementation refines it, that guards never reject, or that the model is a complete specification. Decimal recognition, lexical fields, bounded payload summaries and nominal layouts have stated restricted scopes; coupled calls in Off bodies are execution observations, not static refinement proofs.",
     "psychometric-validity": "No Ghost model establishes empirical test correlations, population calibration, Gaussian distributions, pseudo-random independence, extreme-tail frequencies, reliability interpretation or psychometric validity. These require separate mathematical/statistical and empirical justification.",
     "toolchain-and-provers": "Compiler/runtime translation, target floating representation, GNATprove/Why3/SMT solvers, operating system and hardware are trusted verification infrastructure; neither their implementations nor independent proof-object checking are proved by this campaign."

@@ -1,0 +1,34 @@
+current build 0 gcc -c -O2 -gnat2022 -gnata -gnato main.adb
+gcc -c -O2 -gnat2022 -gnata -gnato towers_io_models.adb
+towers_io_models.ads:83:06: warning: contract cases do not mention result [-gnatw.t]
+towers_io_models.ads:83:51: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]
+towers_io_models.ads:84:34: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]
+towers_io_models.ads:85:34: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]
+towers_io_models.ads:86:35: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]
+gcc -c -O2 -gnat2022 -gnata -gnato towers_engine.adb
+gcc -c -O2 -gnat2022 -gnata -gnato admission_core.adb
+gcc -c -O2 -gnat2022 -gnata -gnato towers_boundary_models.adb
+gcc -c -O2 -gnat2022 -gnata -gnato normal_model.adb
+gnatbind -x main.ali
+gnatlink main.ali -O2 -lm
+
+equal_top_2_percent
+equal_top_0_1_percent
+equal_top_1_in_33000
+mixed_top_2_and_0_1_percent
+
+post build 0 gcc -c -O2 -gnat2022 -gnata -gnato main.adb
+gcc -c -O2 -gnat2022 -gnata -gnato towers_io_models.adb
+gcc -c -O2 -gnat2022 -gnata -gnato towers_engine.adb
+gcc -c -O2 -gnat2022 -gnata -gnato admission_core.adb
+gcc -c -O2 -gnat2022 -gnata -gnato towers_boundary_models.adb
+gcc -c -O2 -gnat2022 -gnata -gnato normal_model.adb
+gnatbind -x main.ali
+gnatlink main.ali -O2 -lm
+
+equal_top_2_percent
+equal_top_0_1_percent
+equal_top_1_in_33000
+mixed_top_2_and_0_1_percent
+
+/tmp/spark-five-case-name-_nspaz29

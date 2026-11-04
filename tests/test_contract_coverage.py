@@ -1,10 +1,14 @@
 """Audit decorators as syntax, rather than trusting mentions in text."""
+from conftest import protected_history_intact, reference_inputs_intact
 import deal
 import pytest
 
 from conftest import ROOT
 
 
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
 def test_coverage_finds_a_missing_function_contract(coverage_checker, tmp_path):
@@ -16,6 +20,9 @@ def test_coverage_finds_a_missing_function_contract(coverage_checker, tmp_path):
     assert [row["name"] for row in report["missing"]] == ["unchecked"]
 
 
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
 def test_comments_and_strings_are_not_counted_as_contracts(coverage_checker, tmp_path):
@@ -32,30 +39,46 @@ def unchecked(value):
     assert [row["name"] for row in report["missing"]] == ["unchecked"]
 
 
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
 def test_coverage_accepts_a_real_deal_import_alias(coverage_checker, tmp_path):
     path = tmp_path / "aliased.py"
-    path.write_text("import deal as contracts\n\n@contracts.post(lambda result: result > 0)\n"
+    path.write_text("import deal as contracts\n\n@contracts.post(lambda result: isinstance(result, int))\n"
+                    "@contracts.post(lambda result: result > 0)\n"
+                    "@contracts.post(lambda result: result <= 1)\n"
+                    "@contracts.raises()\n@contracts.has()\n"
                     "def checked():\n    return 1\n")
     report = coverage_checker.audit_file(path)
     assert report["imports_deal"] is True
-    assert report["function_count"] == report["contract_count"] == 1
+    assert report["function_count"] == 1 and report["contract_count"] == 5
     assert report["missing"] == []
+    assert report["insufficient"] == []
 
 
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "stdout", "stderr", "import")
 def test_coverage_checks_nested_functions(coverage_checker, tmp_path):
     path = tmp_path / "nested.py"
     path.write_text("import deal\n\n@deal.post(lambda result: callable(result))\n"
+                    "@deal.post(lambda result: result.__name__ == 'unchecked_inner')\n"
+                    "@deal.post(lambda result: result() == 1)\n"
+                    "@deal.raises()\n@deal.has()\n"
                     "def checked_outer():\n    def unchecked_inner():\n        return 1\n"
                     "    return unchecked_inner\n")
     report = coverage_checker.audit_file(path)
-    assert report["function_count"] == 2 and report["contract_count"] == 1
+    assert report["function_count"] == 2 and report["contract_count"] == 5
     assert [row["name"] for row in report["missing"]] == ["unchecked_inner"]
 
 
+@deal.pre(lambda coverage_checker: protected_history_intact())
+@deal.ensure(lambda coverage_checker, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "time", "stdout", "stderr", "import")
 def test_every_repository_python_function_has_a_real_contract(coverage_checker):
@@ -65,9 +88,59 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         report = coverage_checker.audit_file(path)
         assert report["imports_deal"], path
         assert not report["missing"], (path, report["missing"])
+        assert not report["insufficient"], (path, report["insufficient"])
+        assert not report["duplicated"], (path, report["duplicated"])
         assert report["contract_count"] > 0, path
 
 
+@pytest.mark.parametrize("count", range(9))
+@deal.pre(lambda coverage_checker, tmp_path, count: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, count, *, result: protected_history_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "import")
+@deal.ensure(lambda coverage_checker, tmp_path, count, *, result: reference_inputs_intact())
+def test_contract_floor_accepts_five_or_more_distinct_decorators(coverage_checker, tmp_path, count):
+    path = tmp_path / "floor.py"
+    declarations = ["@deal.has()", "@deal.raises()",
+                    "@deal.pre(lambda value: type(value) is int)",
+                    "@deal.pre(lambda value: 0 <= value <= 4)",
+                    "@deal.ensure(lambda value, result: result == value + 1)",
+                    "@deal.post(lambda result: type(result) is int)",
+                    "@deal.post(lambda result: 1 <= result <= 5)",
+                    "@deal.ensure(lambda value, result: result > value)"]
+    path.write_text("import deal\n" + "\n".join(declarations[:count])
+                    + "\ndef checked(value):\n    return value + 1\n")
+    report = coverage_checker.audit_file(path)
+    assert bool(report["insufficient"]) is (count < 5)
+    assert report["contract_count"] == count
+    assert report["function_contracts"][0]["distinct_contract_count"] == count
+
+
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "import")
+def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker, tmp_path):
+    path = tmp_path / "duplicates.py"
+    path.write_text("import deal\nimport deal as contracts\n"
+                    "@deal.post(lambda result: result > 0)\n"
+                    "@contracts.post(lambda result: result  >  0)\n"
+                    "@deal.post(lambda result: isinstance(result, int))\n"
+                    "@deal.raises()\n@deal.has()\n"
+                    "def checked():\n    return 1\n")
+    report = coverage_checker.audit_file(path)
+    assert report["contract_count"] == 5
+    row, = report["function_contracts"]
+    assert row["distinct_contract_count"] == 4
+    assert row["duplicate_contract_count"] == 1
+    assert report["insufficient"] == [row]
+    assert report["duplicated"] == [row]
+
+
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "time", "stdout", "stderr", "import")
 def test_empty_python_inventory_cannot_establish_coverage(coverage_checker, tmp_path):

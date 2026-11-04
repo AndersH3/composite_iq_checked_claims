@@ -1,0 +1,388 @@
+{
+  "files": [
+    {
+      "path": ".github/workflows/python-contracts.yml",
+      "sha256": "76bd58cfc58304b636fedd520fd68f467bdfc6226527bd2d8a9195c6bde9990c"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "ac44e4500151e42fe477502d2610b05feeb31adfa9c144dc2b859f9d00121ddd"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "00228470a5a50315b53934bdb575cd58166cbdd07721b92e6b90c5969faa18e9"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+    },
+    {
+      "path": "Makefile",
+      "sha256": "985539e218a357099b394bea9d5c20272e95ff9a82c36c705975212b02e1f749"
+    },
+    {
+      "path": "README.md",
+      "sha256": "eed394f5a3641ece1486dd0ebfc6e6f2b2a90ef57dbf3ba322a321de4334473d"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/.gitignore",
+      "sha256": "128abf51744274d26deca16d85de8b939a0832284446ddeee089b0431dd02254"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/Makefile",
+      "sha256": "47d7163a72ab60b49048281875cd4c5e60853721a001682953bfa5024d29c641"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/README.md",
+      "sha256": "5ae77ad42a39d0c26701f24600cc243b7e4e4197eb73764b6893504d9212f0dd"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/.gitignore",
+      "sha256": "4bb5b58c3f16b031d75d55d396f8fdf19ea8b129867d5ba20ec5b09e4776e39b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/Makefile",
+      "sha256": "cb7f09651222c75b42a0c2e3351175dad45c2d09a09c67b1777989cd5ce02542"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/README.md",
+      "sha256": "021236906cf2ad9e0784458acdaf83580be86579413cff50f5d1ff1f4a3b7e92"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+      "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+      "sha256": "329212558bf330309ed012cbe75774ceb97cb4b54b14e77517c7e50f69ce052a"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "sha256": "66773b1017d34b2b95440efd663c8160cc60e0b53411d3f377838f4923639d0e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+      "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+      "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+      "sha256": "deef3784a729fc8a36ef5a8991010e0f288bce00861d68aed39ee71ae871bcd9"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "89a311af8ade4c0c749b828fe36740fc5f227f0ea759bd7e9ad913129793e731"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+      "sha256": "f8f56bd3f41655f803ef0b7df8dd33f886bb02347002b1668eafb74d2f0b968f"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+      "sha256": "890cd53e4dc3a0443fd35e9e89ac49733e1c40d21593257e42f961a6c1c12599"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+      "sha256": "1ffb5535050d3b36150e7f7b19dc2d34b083b44b1e2784e2d2286d39ec50b156"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/analysis.md",
+      "sha256": "c8a824488b7567e7f45923e2afe15d0bf9aa3918e320a1aa75894d0b941c5bb8"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+      "sha256": "d51c1d2e4e5d5f323c16c201a9f41d514bb8f7a1db90f0d309308db9bb2ad229"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/data/thresholds.csv",
+      "sha256": "cfd1eb98e954303b1b537b65c6524814af74b6f8ff345fe85aac4a75244b7fca"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "sha256": "43c230d04cfe1504d93a56e9d4bde97d694f1568036c32f5738d5412c6d25ef6"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/references.bib",
+      "sha256": "b88b4fd4fd8693526a20378959a1532c8cd39a882c811ac9800e3ec81fd1c9e8"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/requirements.txt",
+      "sha256": "f0d4db86b2f7c8074b966ed93a4867984da31c4c15545c7a157fc55a0dd4fe46"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "sha256": "32f27a17b4d86614327c72f9386d160c76e4d4de2fcf36ac16e74cc919ef5244"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/.gitignore",
+      "sha256": "128abf51744274d26deca16d85de8b939a0832284446ddeee089b0431dd02254"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/Makefile",
+      "sha256": "4722c8c0d376e96dd96be915fa4947fd29f6a0f08ffc9d2d3c5a8974ab4d615e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/README.md",
+      "sha256": "0a7d6d151c31a06b783ecb071daaba75325bf05b0c0c06c40e596e650b814adc"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/.gitignore",
+      "sha256": "5f0dbdeca7698f2ff395bb79858b12377cd62be03c1b7e048e81f1c288ba6cbb"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/Makefile",
+      "sha256": "1d7bb0e13f83daa95f877a977471b982dca2327c1fe118729fd0593fa28d5ccd"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/README.md",
+      "sha256": "361dd567566c37f2a1e62f87f2b0d942754f7a5227a990c972fbdd374bb7b73c"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "077d3af2ce4a9ee400e9823fe36c3fc9d20b9f6410b6758ac14d60347f1a3a71"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "bcb7a876586b87474737452dd20bdc0ea94804ccce8b4044d80713113f1fee12"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "7dc1a6b119fc11004b7b08d047bbe0bbf6ddc8a20bad7106a4bb2ad404f5ce7f"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+      "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+      "sha256": "e2f716ccc14ef9bc2555d04ed22fde2941ef87c4fcf71dd7e2c863f0dd5706ae"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "2e1aafd25fd37016413c34b3a57ca41dcbde7f5b0a60e744bae2af989c9bb67a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+      "sha256": "d0f939b091b31bcda5eee8b77da7d85d880f072ee51722fc050fc938e76ec194"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+      "sha256": "92cd468e1e23d5a41986e73b91de00a697896237c0814ee118ff956f52a520cb"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+      "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+      "sha256": "e33e5050dfae56cac0d50ac341997d3cebffa324cf40e320009c73ac1bbe58e4"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+      "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+      "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "68970c0902dee2d29c58e6f70bb553cbd2f9741b9bb695bb88baffa1eebcd742"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "sha256": "cc2cc8e8edcfc2839c5bd266d4d776d11299c982357b4144969f60891a56ea0e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/analysis.md",
+      "sha256": "1dc57e682b7d97d4c3e926467c7bc845739fdb2a622b31bb6b45634cfba9ab47"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/data/admission_probabilities.csv",
+      "sha256": "9c6a742856ed11c2a2b3813775238703b3e6749b5b5ddf2201ff266678333f05"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/data/followup_grid.csv",
+      "sha256": "2e0980e77fb04b9ef409f2cf5a1a51fdbd8d93f45e4691789808c7b0966e50bc"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "sha256": "f7096e7a0ac2b308f6a354baf6a19e8712cc6e37044175914065f6d63fe899e5"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/references.bib",
+      "sha256": "94afa3e2cf21c4698bcbf4ab2724a7a10b3a22373527f424445f65be009a0722"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/requirements.txt",
+      "sha256": "44f21c884c6647a743cd6e2dff2f6d7b426776253bcb9257c131937ea0727f7a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "sha256": "fc2878626a914ac9ef1c88c291ae1c3b3b983cb49b2c15d21ae4c36c496cc0f6"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/source_manifest.json",
+      "sha256": "d473571506ab94c97a2757a7f8d18d51f73fd75258536b477a0748d7f32dde19"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex",
+      "sha256": "461893050769adcf767ed02b9048af86dd6b80295cef463254f543249412226e"
+    },
+    {
+      "path": "requirements-dev.txt",
+      "sha256": "d91cd29fbc928c4a42df00c51b6c3560c80a44046d5436296682a8ba0a240f60"
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "f774953527c5c5dfdef85454b53932df7b0aaf68afe1947ae27201a56d1757ba"
+    },
+    {
+      "path": "tests/fixtures/contract_negative_control.py",
+      "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+    },
+    {
+      "path": "tests/fixtures/nonzero_division_lint_probe.py",
+      "sha256": "572b6bd1fdbe9746e028c52b1fa65061bd70f4fde726dc1dfd9b303f629360be"
+    },
+    {
+      "path": "tests/test_contract_coverage.py",
+      "sha256": "1d6be1b661896a3119bc613de090cd3c70d5db161a0fcf572fc9f4069050a117"
+    },
+    {
+      "path": "tests/test_evidence_contracts.py",
+      "sha256": "c0d9c95db12961d076713eff500b9d145b5a17a29e4defee97f73b1208288d60"
+    },
+    {
+      "path": "tests/test_ghost_boundary_contracts.py",
+      "sha256": "530d50eacdc9a697c32a50c61dde609c5b029194ed05cff94cdef77db069c851"
+    },
+    {
+      "path": "tests/test_numeric_contracts.py",
+      "sha256": "efe034a426416d47885bdb97b67d91c4fbfe27386d8f7d60a71a008244109b89"
+    },
+    {
+      "path": "tests/test_proof_gate_contracts.py",
+      "sha256": "6c104ef4915968393425a426f5e244c0a67e528ca59de159f8b0676995648781"
+    },
+    {
+      "path": "tests/test_runner_lint_contracts.py",
+      "sha256": "ee4a3efc9d4dd84fb5cdfcd426d9ae0795be0bcd0ca7bc9f8267b7c96a8e02eb"
+    },
+    {
+      "path": "tests/test_spark_contracts.py",
+      "sha256": "2f90aca85c44c48619af942334c485076d99d0e70d93986a93d82b9d8d1bc56c"
+    },
+    {
+      "path": "tests/test_spark_coverage_contracts.py",
+      "sha256": "02e410d65f0c52bbfe140b0f89faf9cf90b9c1b4246c9ee6db819614dcd47ac7"
+    },
+    {
+      "path": "tests/test_static_lint_contracts.py",
+      "sha256": "582197536a3f56e5d201657ba5756cd7a984c57d930dc8720b551f1c6e31634f"
+    },
+    {
+      "path": "tests/test_validator_contracts.py",
+      "sha256": "83889ee9e3e0a8c7aeb0901e856d81e07fe875416c9e75c3020ca24ecaf36269"
+    },
+    {
+      "path": "verification/.gitignore",
+      "sha256": "2e214cdf20bfa8a01a40f596c6c9345fe9380d3efeaae2a86ccdd83d0c7901f0"
+    },
+    {
+      "path": "verification/README.md",
+      "sha256": "b0ace9510a733f12924d76660e6ccf6c143a3beb4b6d518c860323eedce57f8e"
+    },
+    {
+      "path": "verification/check_contract_coverage.py",
+      "sha256": "f99c7697e512318c541b9efb4f94d5887a133ff2767d55752e11c56af84e1999"
+    },
+    {
+      "path": "verification/check_static_lint.py",
+      "sha256": "5484f01fe99b230f77ba3148f73b31ed2642252da81b4bd12d86105931456602"
+    },
+    {
+      "path": "verification/ghost_boundaries.json",
+      "sha256": "a80cac2c9affc6bca64ea7204e275d9629a7190482c1d58959babfe7127c3117"
+    },
+    {
+      "path": "verification/ghost_boundaries.py",
+      "sha256": "a6ccd4afd2f233e4ebe031b8ed5286e691547514a3734fa5e7b6f94b83d16ff5"
+    },
+    {
+      "path": "verification/ghost_negative_control/ghost_negative.gpr",
+      "sha256": "eb2209cea7da9cd15daada366cea67f9bb8cd9ef74250defe2c2033e9be71b7c"
+    },
+    {
+      "path": "verification/ghost_negative_control/src/negative_ghost_ledger.adb",
+      "sha256": "f248773bac8592dcadd5bfdc7a06c3eb4e257f6efeba931693f5fb635fa4d130"
+    },
+    {
+      "path": "verification/ghost_negative_control/src/negative_ghost_ledger.ads",
+      "sha256": "41cb07e6db3a4f1cd267e0a5f9629a3f1d21edf644bd35247deb26887292d44f"
+    },
+    {
+      "path": "verification/negative_control/negative.gpr",
+      "sha256": "f131c920b5791e5b011833d9bcaf8d35cabcf794d7882bc303b281916cba09a9"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.adb",
+      "sha256": "26d1a77d839429b703b08b4a5f8c1f35d60b4afa60e6f22ed9942bb7915c732d"
+    },
+    {
+      "path": "verification/negative_control/src/negative_union.ads",
+      "sha256": "525641d2936d64c87260c91c1c0faf6e3c8637985485d094906ba62dcb9811cd"
+    },
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "sha256": "91d4a975b84badf342863d90d3a823aec1453c5fcc4d466e33f3e615777fdc3d"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910"
+    },
+    {
+      "path": "verification/source_history.json",
+      "sha256": "68dfe94ff2a8fad9768f83d2b62a3a696d1d0008c481d526590496ac8f04a93a"
+    },
+    {
+      "path": "verification/spark_contracts.py",
+      "sha256": "6f646a682df0f53c1d20649f55c33f096a823d984011c3efcb9f9d17966c17b9"
+    },
+    {
+      "path": "verification/spark_coverage.py",
+      "sha256": "4fa33d7e7d7e0b2c32957514ee1d8b0295d839e88ada34bcf43bba454d496ff1"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "sha256": "ae7c18ecf8fb61e1be438df339dc08f18309bd736de11c9a027fb0672dfeb43e"
+    }
+  ]
+}

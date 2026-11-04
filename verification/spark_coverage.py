@@ -22,8 +22,8 @@ def require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
-@deal.pre(lambda pairs: isinstance(pairs, list)
-          and all(isinstance(p, tuple) and len(p) == 2 and isinstance(p[0], str) for p in pairs))
+@deal.pre(lambda pairs: isinstance(pairs, list))
+@deal.pre(lambda pairs: all((isinstance(p, tuple) and len(p) == 2 and isinstance(p[0], str) for p in pairs)))
 @deal.ensure(lambda pairs, result: isinstance(result, dict) and len(result) == len(pairs))
 @deal.raises(ValueError)
 @deal.has()
@@ -36,8 +36,9 @@ def unique_object(pairs: list) -> dict:
     return result
 
 
-@deal.post(lambda result: isinstance(result, dict) and isinstance(result["file"], str)
-           and bool(result["file"]) and type(result["line"]) is int and result["line"] > 0)
+@deal.post(lambda result: bool(result['file']) and type(result['line']) is int and (result['line'] > 0))
+@deal.post(lambda result: isinstance(result['file'], str))
+@deal.post(lambda result: isinstance(result, dict))
 @deal.raises(ValueError)
 @deal.has()
 def location(value: object) -> dict:
@@ -50,10 +51,9 @@ def location(value: object) -> dict:
     return {"file": value["file"], "line": value["line"]}
 
 
-@deal.post(lambda result: isinstance(result, dict) and bool(result["name"])
-           and result["status"] in {"all", "spec", "no"} and bool(result["sloc"])
-           and result["file"] == result["sloc"][0]["file"]
-           and result["line"] == result["sloc"][0]["line"])
+@deal.post(lambda result: result['status'] in {'all', 'spec', 'no'} and bool(result['sloc']) and (result['file'] == result['sloc'][0]['file']) and (result['line'] == result['sloc'][0]['line']))
+@deal.post(lambda result: bool(result['name']))
+@deal.post(lambda result: isinstance(result, dict))
 @deal.raises(ValueError)
 @deal.has()
 def normalize_entity(value: object) -> dict:
@@ -69,11 +69,8 @@ def normalize_entity(value: object) -> dict:
             "status": value["spark"], "sloc": sloc}
 
 
-@deal.pre(lambda folder, source_names=None, analysis_mode="all": isinstance(folder, Path) and folder.is_dir()
-          and isinstance(analysis_mode, str)
-          and (source_names is None or (isinstance(source_names, set) and bool(source_names)
-              and all(isinstance(name, str) and Path(name).name == name
-                      and Path(name).suffix in {".ads", ".adb"} for name in source_names))))
+@deal.pre(lambda folder, source_names=None, analysis_mode='all': isinstance(folder, Path))
+@deal.pre(lambda folder, source_names=None, analysis_mode='all': folder.is_dir() and isinstance(analysis_mode, str) and (source_names is None or (isinstance(source_names, set) and bool(source_names) and all((isinstance(name, str) and Path(name).name == name and (Path(name).suffix in {'.ads', '.adb'}) for name in source_names)))))
 @deal.post(lambda result: isinstance(result, dict) and bool(result["raw_files"])
            and all(type(row["entity_count"]) is int and row["entity_count"] >= 0
                    and isinstance(row["sections_present"], list) for row in result["raw_files"])

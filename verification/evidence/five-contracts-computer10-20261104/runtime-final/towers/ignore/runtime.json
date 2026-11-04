@@ -1,0 +1,312 @@
+{
+  "project": "towers",
+  "policy": "ignore",
+  "sources": [
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "077d3af2ce4a9ee400e9823fe36c3fc9d20b9f6410b6758ac14d60347f1a3a71"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "bcb7a876586b87474737452dd20bdc0ea94804ccce8b4044d80713113f1fee12"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "7dc1a6b119fc11004b7b08d047bbe0bbf6ddc8a20bad7106a4bb2ad404f5ce7f"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+      "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+      "sha256": "e2f716ccc14ef9bc2555d04ed22fde2941ef87c4fcf71dd7e2c863f0dd5706ae"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "2e1aafd25fd37016413c34b3a57ca41dcbde7f5b0a60e744bae2af989c9bb67a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+      "sha256": "d0f939b091b31bcda5eee8b77da7d85d880f072ee51722fc050fc938e76ec194"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+      "sha256": "92cd468e1e23d5a41986e73b91de00a697896237c0814ee118ff956f52a520cb"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+      "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+      "sha256": "e33e5050dfae56cac0d50ac341997d3cebffa324cf40e320009c73ac1bbe58e4"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+      "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+      "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "68970c0902dee2d29c58e6f70bb553cbd2f9741b9bb695bb88baffa1eebcd742"
+    }
+  ],
+  "policy_sha256": "0da255863c39f60408c80c86238350799ebcfaefd5150ba3577da257ba2f5d37",
+  "commands": [
+    {
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+        "-P",
+        "towers.gpr",
+        "-p",
+        "-cargs",
+        "-gnatec=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/ignore/policy.adc"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:06:45.931594+00:00",
+      "finished_utc": "2026-11-04T06:06:48.300718+00:00",
+      "elapsed_seconds": 2.3691347719868645,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "144cf01b9509de6552d56a51d8e3e227fb01c94df64ca76ee8639205e1e19ebe",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "1000000",
+        "20261030",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/ignore"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:06:48.307768+00:00",
+      "finished_utc": "2026-11-04T06:06:48.572417+00:00",
+      "elapsed_seconds": 0.2646487589809112,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "9b05add91870516fedae0fb977bf3936e3011e5c1995a0a54012263dd1ddc503",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/ignore",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:48.573205+00:00",
+      "finished_utc": "2026-11-04T06:06:57.530085+00:00",
+      "elapsed_seconds": 8.956887339008972,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "-O",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/ignore",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:57.530293+00:00",
+      "finished_utc": "2026-11-04T06:07:07.361286+00:00",
+      "elapsed_seconds": 9.830992219009204,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "executables": {
+    "towers_demo": "d25452432ebf8ab3d83db5fda80de8e02e70656b7ad5e655c689b98a8886d33a"
+  },
+  "csvs": [
+    {
+      "path": "calculation.csv",
+      "sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/ignore/calculation.csv",
+      "reference_sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762",
+      "byte_identical": true
+    },
+    {
+      "path": "calibration.csv",
+      "sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/ignore/calibration.csv",
+      "reference_sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400",
+      "byte_identical": true
+    },
+    {
+      "path": "grid.csv",
+      "sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/ignore/grid.csv",
+      "reference_sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a",
+      "byte_identical": true
+    },
+    {
+      "path": "simulation.csv",
+      "sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/ignore/simulation.csv",
+      "reference_sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5",
+      "byte_identical": true
+    }
+  ],
+  "edge_checks": [
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "1",
+        "1",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-1"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.361453+00:00",
+      "finished_utc": "2026-11-04T06:07:07.393649+00:00",
+      "elapsed_seconds": 0.032206825009780005,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "9f183f3b8e8767457cdce8c8d07de46f54075cf905eb10799bd53c45c18637f0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        " +1 ",
+        " +1 ",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-2"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.393807+00:00",
+      "finished_utc": "2026-11-04T06:07:07.426042+00:00",
+      "elapsed_seconds": 0.03224557900102809,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "d3a1af5e700b4f3d0a6a46284192c12b7cf072146644a0d306099dee92d6644f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "0_001",
+        "0_001",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-3"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.426198+00:00",
+      "finished_utc": "2026-11-04T06:07:07.458372+00:00",
+      "elapsed_seconds": 0.03218422702047974,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "96bf2cc7acd051d3f792d93474701f2147f1a9451243d3b8d877bd18f63183d3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "2#1#",
+        "16#1#",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-4"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.458529+00:00",
+      "finished_utc": "2026-11-04T06:07:07.490751+00:00",
+      "elapsed_seconds": 0.03223003199673258,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "04154c9f743c3601010f14976403d2af434779593a0cb10bd54182fa4bc2d15e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "1E0",
+        "1E0",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-5"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.490897+00:00",
+      "finished_utc": "2026-11-04T06:07:07.555654+00:00",
+      "elapsed_seconds": 0.06477196898777038,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "60e8912bd712c5ea8369fc230bbb6c8a7a5df50f4e5d2912c857d9091df50ba1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "1",
+        "2147483646",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-6"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.555829+00:00",
+      "finished_utc": "2026-11-04T06:07:07.590219+00:00",
+      "elapsed_seconds": 0.03440017599496059,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "3849e945ca5a6ed1db1d779e9c01434296715b3de514ae4b353e77b32bb346a3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "0",
+        "1",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-7"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.590378+00:00",
+      "finished_utc": "2026-11-04T06:07:07.592792+00:00",
+      "elapsed_seconds": 0.0024234809970948845,
+      "returncode": 1,
+      "expected_success": false,
+      "accepted": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f268082d89de72937a7ddfe207d111441491e694d896160ba9e50fcb6ed392d1"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source/bin/towers_demo",
+        "1",
+        "2147483647",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-edge-8"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-ignore-source",
+      "started_utc": "2026-11-04T06:07:07.592948+00:00",
+      "finished_utc": "2026-11-04T06:07:07.594656+00:00",
+      "elapsed_seconds": 0.0017441390082240105,
+      "returncode": 1,
+      "expected_success": false,
+      "accepted": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8b411ce0d2fc454863265bc8e3b23795c866e9d62e337aed7c89229fd5a6105c"
+    }
+  ],
+  "all_passed": true
+}

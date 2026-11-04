@@ -1,0 +1,3 @@
+tests/fixtures/contract_negative_control.py
+  probability_identity
+    proved! post-condition, post-condition

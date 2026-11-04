@@ -1,4 +1,5 @@
 """Source identity checks keep missing history and changed Ada observable."""
+from conftest import protected_history_intact, reference_inputs_intact
 import hashlib
 import json
 from pathlib import Path
@@ -13,6 +14,9 @@ from conftest import ROOT
 from verification import verify_evidence as auditor
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "stdout", "stderr")
 def test_current_source_returns_its_nonempty_absolute_path(tmp_path):
@@ -24,6 +28,9 @@ def test_current_source_returns_its_nonempty_absolute_path(tmp_path):
     assert Path(result).is_absolute()
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "stdout", "stderr")
 def test_changed_ada_cannot_use_historical_python_fallback(tmp_path):
@@ -32,6 +39,9 @@ def test_changed_ada_cannot_use_historical_python_fallback(tmp_path):
                                 "0" * 64, tmp_path.joinpath("unused.json"))
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "syscall", "stdout", "stderr")
 def test_missing_historical_git_object_has_an_explicit_error(tmp_path):
@@ -43,6 +53,9 @@ def test_missing_historical_git_object_has_an_explicit_error(tmp_path):
         auditor.evidence_source(relative, "0" * 64, history, tmp_path.joinpath("missing.git"))
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "syscall", "stdout", "stderr")
 def test_malformed_source_history_preserves_json_decode_error(tmp_path):
@@ -52,6 +65,8 @@ def test_malformed_source_history_preserves_json_decode_error(tmp_path):
         auditor.evidence_source("verification/verify_evidence.py", "0" * 64, history)
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
 @deal.post(lambda result: result is None)
 @deal.raises(OSError, ValueError, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
 @deal.has("read", "write", "syscall", "stdout", "stderr")
@@ -71,6 +86,9 @@ def test_optimized_auditor_cli_keeps_json_failure_observable(tmp_path):
     assert "RaisesContractError" not in process.stderr
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "syscall", "stdout", "stderr")
 def test_historical_ada_requires_an_explicit_matching_source_tree(tmp_path):
@@ -85,6 +103,9 @@ def test_historical_ada_requires_an_explicit_matching_source_tree(tmp_path):
         auditor.evidence_source(relative, expected, tmp_path.joinpath("unused.json"))
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "syscall", "stdout", "stderr")
 def test_explicit_source_tree_does_not_allow_an_ada_hash_mismatch(tmp_path):
@@ -95,20 +116,27 @@ def test_explicit_source_tree_does_not_allow_an_ada_hash_mismatch(tmp_path):
                                 source_root=tmp_path)
 
 
+@deal.pre(protected_history_intact)
+@deal.ensure(lambda *, result: protected_history_intact())
 @deal.post(lambda result: isinstance(result, dict)
            and set(result["projects"]) == set(auditor.PROJECTS)
            and result["coverage_schema"] == "gnat13-sloc-v1")
 @deal.raises()
-@deal.has()
+@deal.has("read")
 def coverage_manifest() -> dict:
-    return {"coverage_schema": "gnat13-sloc-v1", "ghost_boundary_schema": auditor.GHOST_SCHEMA,
+    return {"contract_floor_schema": auditor.CONTRACT_SCHEMA, "minimum_contracts": 5,
+            "python_contracts_sha256": "2" * 64, "contract_checker_sha256": "3" * 64,
+            "python_checker_sha256": "4" * 64, "coverage_schema": "gnat13-sloc-v1", "ghost_boundary_schema": auditor.GHOST_SCHEMA,
             "ghost_registry_sha256": "1" * 64, "ghost_negative_control": {}, "projects": {
-        name: {"portfolio": {"coverage": {}, "ghost_boundaries": {}, "required_full_entities": sorted(required)}}
+        name: {"portfolio": {"coverage": {}, "ghost_boundaries": {}, "contract_floor": {"complete": True}, "required_full_entities": sorted(required)}}
         for name, required in auditor.REQUIRED_BODIES.items()}}
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_complete_policy_requires_both_projects_and_all_required_bodies():
     assert auditor.campaign_policy(coverage_manifest(), "expanded-campaign", False)
     return None
@@ -119,8 +147,11 @@ def test_complete_policy_requires_both_projects_and_all_required_bodies():
     ("deal-lint-spark-computer10-20261031", False),
     ("spark-expanded-computer10-20261031", False),
     ("spark-expanded-computer10-20261031", True), ("unknown-campaign", True)])
+@deal.pre(lambda campaign, explicit: protected_history_intact())
+@deal.ensure(lambda campaign, explicit, *, result: protected_history_intact())
+@deal.ensure(lambda campaign, explicit, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_schema_downgrade_cannot_pass_for_current_or_unrecognized_campaign(campaign, explicit):
     with pytest.raises(ValueError, match="coverage schema is required"):
         auditor.campaign_policy({"projects": {}}, campaign, explicit)
@@ -128,16 +159,22 @@ def test_schema_downgrade_cannot_pass_for_current_or_unrecognized_campaign(campa
 
 
 @pytest.mark.parametrize("campaign", sorted(auditor.LEGACY_CAMPAIGNS))
+@deal.pre(lambda campaign: protected_history_intact())
+@deal.ensure(lambda campaign, *, result: protected_history_intact())
+@deal.ensure(lambda campaign, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_known_legacy_campaign_allows_only_explicit_historical_context(campaign):
     assert auditor.campaign_policy({"projects": {}}, campaign, True) is False
     return None
 
 
 @pytest.mark.parametrize("change", ["omit", "add"])
+@deal.pre(lambda change: protected_history_intact())
+@deal.ensure(lambda change, *, result: protected_history_intact())
+@deal.ensure(lambda change, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_coverage_campaign_cannot_change_production_project_inventory(change):
     manifest = coverage_manifest()
     if change == "omit":
@@ -149,8 +186,11 @@ def test_coverage_campaign_cannot_change_production_project_inventory(change):
     return None
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_coverage_campaign_requires_a_portfolio_for_each_project():
     manifest = coverage_manifest()
     manifest["projects"]["towers"] = {}
@@ -160,8 +200,11 @@ def test_coverage_campaign_requires_a_portfolio_for_each_project():
 
 
 @pytest.mark.parametrize("change", ["omit", "replace", "duplicate"])
+@deal.pre(lambda change: protected_history_intact())
+@deal.ensure(lambda change, *, result: protected_history_intact())
+@deal.ensure(lambda change, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_coverage_campaign_cannot_weaken_required_body_inventory(change):
     manifest = coverage_manifest()
     required = manifest["projects"]["hoeflin"]["portfolio"]["required_full_entities"]
@@ -176,8 +219,11 @@ def test_coverage_campaign_cannot_weaken_required_body_inventory(change):
     return None
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_coverage_campaign_cannot_omit_raw_coverage_record():
     manifest = coverage_manifest()
     del manifest["projects"]["hoeflin"]["portfolio"]["coverage"]
@@ -186,8 +232,11 @@ def test_coverage_campaign_cannot_omit_raw_coverage_record():
     return None
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_unknown_coverage_schema_cannot_pass_even_for_legacy_campaign():
     manifest = coverage_manifest()
     manifest["coverage_schema"] = "unknown"
@@ -196,8 +245,11 @@ def test_unknown_coverage_schema_cannot_pass_even_for_legacy_campaign():
     return None
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_expanded_historical_policy_requires_explicit_context_and_original_bodies():
     manifest = coverage_manifest()
     del manifest["ghost_boundary_schema"]
@@ -217,8 +269,11 @@ def test_expanded_historical_policy_requires_explicit_context_and_original_bodie
     ("missing-hash", "Ghost registry hash is invalid"),
     ("missing-control", "Ghost negative control is missing"),
     ("missing-result", "Ghost boundary result is missing")])
+@deal.pre(lambda change, message: protected_history_intact())
+@deal.ensure(lambda change, message, *, result: protected_history_intact())
+@deal.ensure(lambda change, message, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has()
+@deal.has("read")
 def test_ghost_campaign_policy_cannot_drop_modeling_evidence(change, message):
     manifest = coverage_manifest()
     if change == "missing-schema":
@@ -240,8 +295,11 @@ def test_ghost_campaign_policy_cannot_drop_modeling_evidence(change, message):
     ("schema", "coverage schema is required"),
     ("project", "Production project inventory"),
     ("body", "Required-body inventory differs")])
+@deal.pre(lambda tmp_path, change, message: protected_history_intact())
+@deal.ensure(lambda tmp_path, change, message, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, change, message, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has("read", "write", "syscall")
+@deal.has("import", "read", "write", "syscall")
 def test_full_auditor_rejects_incomplete_policy_before_source_checks(tmp_path, change, message):
     manifest = coverage_manifest()
     if change == "schema":
@@ -253,3 +311,30 @@ def test_full_auditor_rejects_incomplete_policy_before_source_checks(tmp_path, c
     tmp_path.joinpath("manifest.json").write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match=message):
         auditor.verify(tmp_path)
+
+
+@pytest.mark.parametrize("key", ["contract_floor_schema", "python_contracts_sha256", "contract_checker_sha256", "python_checker_sha256"])
+@deal.pre(lambda key: protected_history_intact())
+@deal.ensure(lambda key, *, result: protected_history_intact())
+@deal.ensure(lambda key, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_current_campaign_requires_contract_floor_identity(key):
+    manifest = coverage_manifest()
+    del manifest[key]
+    with pytest.raises(ValueError, match="[Cc]ontract|Five-contract"):
+        auditor.campaign_policy(manifest, "five-contracts-current", False)
+    return None
+
+
+@deal.pre(protected_history_intact)
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_current_campaign_rejects_missing_spark_contract_floor():
+    manifest = coverage_manifest()
+    del manifest["projects"]["hoeflin"]["portfolio"]["contract_floor"]
+    with pytest.raises(ValueError, match="SPARK contract floor"):
+        auditor.campaign_policy(manifest, "five-contracts-current", False)
+    return None

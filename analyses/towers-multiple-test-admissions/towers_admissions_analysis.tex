@@ -46,7 +46,7 @@
 \title{Multiple-Test Admissions}
 \subtitle{A joint analysis and corrected version of two Grady Towers letters}
 \author{}
-\date{1 November 2026}
+\date{4 November 2026}
 
 \begin{document}
 \maketitle
@@ -500,16 +500,16 @@ The proof project now enumerates all thirteen source files, including the
 trusted I/O completion. Turning an aspect on is a language-coverage change;
 the fresh native proof results below provide the separate verification evidence.
 
-The \href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/ghost-boundaries-computer10-20261101/REPORT.md}{Ghost-boundary computer10 campaign}
-was completed on 1 November 2026. It records exact commands, tool versions, source
+The \href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/five-contracts-computer10-20261104/REPORT.md}{Five-contract computer10 campaign}
+was completed on 4 November 2026. It records exact commands, tool versions, source
 hashes, native reports and raw coverage, checksums, numerical comparisons,
 and Python results. Earlier 31-check and 110-test results remain immutable
 historical snapshots; they are not totals for this expanded implementation.
 
 \subsection{SPARK scope and results}
 
-The fresh five-prover portfolio discharged \textbf{498 checks:
-123 flow checks and 375 prover checks}, with zero unproved
+The fresh five-prover portfolio discharged \textbf{696 checks:
+230 flow checks and 466 prover checks}, with zero unproved
 and zero justified checks. CVC5, Z3, Alt-Ergo, classic COLIBRI, and Yices were
 requested together. A completed portfolio does not imply that every solver
 completed every independent obligation. The deliberately incorrect union
@@ -518,7 +518,7 @@ use fresh source copies and object directories. The matching toolchain
 reports GNAT 13.2.0 and GNATprove banner \texttt{0.0w}; its executable hashes
 are recorded in the manifest.
 
-Native coverage records 90 \texttt{all}, 16 \texttt{spec},
+Native coverage records 89 \texttt{all}, 16 \texttt{spec},
 and zero \texttt{no} entities. The statuses describe analyzed bodies and
 trusted specifications, not successful proofs by themselves. Whole off-mode
 units can emit empty native entity arrays, so zero \texttt{no} entries do
@@ -540,6 +540,14 @@ requires a probability strictly inside the endpoint survival bracket.
 The main cases satisfy these implementation domains.
 Small SPARK helpers and proved loop invariants bound accumulation
 without importing proof axioms or changing the numerical summation order.
+
+The native Towers proof completed successfully on its first retained
+invocation. The initial structural floor checker misread a comment before
+a postcondition aspect and marked its separate floor result incomplete.
+That parser bug was corrected and regression-tested; the final inventory
+was re-audited against the identical native proof and pinned Ada source.
+The initial record and checker source remain available. The final
+manifest distinguishes proof execution from the subsequent release audit.
 
 \subsection{Checked interfaces and numerical limitations}
 
@@ -575,9 +583,35 @@ marginal \(p=1/33{,}000\), this is at most approximately
 only for quantization. Raw floating union and conditional values are
 retained alongside the exact-core results.
 
+\subsection{Five explicit contracts per subprogram}
+
+Every current SPARK function and procedure, including local and Ghost
+helpers and trusted interfaces, has at least five explicit entries.
+This project inventories 53 functions and 46 procedures; the full repository has
+164 subprograms and 923 entries, including both negative controls.
+The audit counts top-level \texttt{Pre}/\texttt{Post} conjuncts,
+\texttt{Contract\_Cases} alternatives and explicit
+\texttt{Global}/\texttt{Depends} aspects. Mode flags, subtype declarations,
+body assertions, duplicates and literal Boolean padding do not count.
+The entries can overlap logically; five does not mean five independent
+guarantees.
+
+The checker handles this project's restricted Ada subset and cross-checks
+native locations and \texttt{all}/\texttt{spec} statuses; GNAT checks syntax
+and conformance. This structural floor does not certify specification
+adequacy, trusted implementation refinement or statistical validity.
+
+Python requires at least five distinct real Deal decorators per named
+function, expressing appropriate domain, result, exception, side-effect
+or preservation properties. There is no upper limit: regression cases
+accept five, six, seven and eight distinct decorators and reject zero
+through four. Repeated normalized syntax cannot pad the count.
+
 \subsection{Ghost models and excluded implementation refinement}
 
-The implemented Ghost package \texttt{Towers\_Boundary\_Models} specifies
+The implemented SPARK package \texttt{Towers\_Boundary\_Models} uses ordinary
+pure predicates/types and explicitly Ghost observers and projection lemmas
+to specify
 the accepted normal-return
 bounds and unchanged-value relationships of all eight numerical and four
 engine completions. It also observes the actual typed sine and cosine
@@ -597,10 +631,12 @@ retain their original parser and a bounded-value observation; universal
 parser equivalence is not proved. Field predicates do not certify numeric
 round trips, formatting accuracy, or complete CSV syntax.
 
-The Ghost receipt in the main procedure records returned options, the
+The ordinary request receipt in the main procedure records returned options, the
 requested data snapshot, four requested files and twelve requested data
 rows, followed by an observed normal return. Its state-transition and
-payload-preservation contracts are analyzed in SPARK. These quantities
+payload-preservation contracts are analyzed in SPARK and remain executable
+under Ghost Ignore. The four receipt-update operations are ordinary SPARK;
+separate numerical and lexical observations remain Ghost. These quantities
 are requests and observations, not proofs that files exist, contain those
 bytes, were closed successfully, or persist on disk. The implementation's
 refinement of the model and its failure or exception semantics remain
@@ -608,7 +644,7 @@ explicit obligations.
 
 The audited register maps all native specification-only entities, the
 foreign import, and the four private I/O helpers, including the nested
-writer, to actual source-bound Ghost uses and analyzed model entities.
+writer, to actual source-bound Ghost observations and analyzed model entities.
 Separate cached sine/cosine assignments and their Ghost observations are
 also checked. External library units and global unproved domains are
 inventoried. Coverage of the register does not prove adequacy of its
@@ -625,6 +661,15 @@ SPARK's Ghost rules and the unproved excluded-code boundary remain distinct.
 See \href{https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html}{AdaCore's specification guide}
 for the modeling and erasure semantics.
 
+Runtime checks exposed a failed assertion in the installed GNAT 13.2.0
+build at \texttt{-O2}, for a classification postcondition written with
+Boolean equivalences. An isolated test of all four Boolean inputs passed
+at \texttt{-O0} and with GNAT 14.2.0. The equivalent guarded conditions pass
+in the required GNAT 13.2.0 \texttt{-O2} build, with the function body
+unchanged. The failed attempt and compatibility probes are retained.
+Compiler correctness remains part of the trusted infrastructure; finite
+compatibility tests are not a compiler proof.
+
 \subsection{Numerical regression, Deal, and evidence audits}
 
 A fresh Ada build reproduces all four retained CSVs byte for byte.
@@ -637,16 +682,16 @@ not random independence. Wilson intervals describe simulation uncertainty
 under the model; rare events at this sample size cannot establish extreme-tail
 psychometric frequencies.
 
-All current Python files and named functions, including tests, fixtures,
-and evidence tools, carry Deal contracts. The final repository-wide
-inventory has 24 files, 213 named functions, and 607 Deal decorators with
-zero gaps. All 23 positive files have zero lint diagnostics, and 209 tests
+All current Python files import Deal. Each named function, including tests,
+fixtures and evidence tools, carries at least five distinct Deal decorators. The final repository-wide
+inventory has 26 files, 251 named functions, and 1,255 Deal decorators with
+zero gaps. All 25 positive files have zero lint diagnostics, and 262 tests
 pass in each execution mode. Coverage, clean positive
 static lint, the exact expected \texttt{DEL012} negative control,
 runtime/property tests, numerical scripts, and historical-source audits
 pass in normal and optimized Python. CLI entry points explicitly enable
-Deal under optimization. Deal Solver proves the two pure proof-acceptance
-gate postconditions and rejects the incorrect symbolic control. These
+Deal under optimization. Deal Solver proves two pure gate postconditions; symbolic negative
+verification is unsupported because of \texttt{isinstance}. These
 focused results do not prove the full Python programs, SciPy, or subprocess
 handling; clean lint and finite tests are not universal proofs.
 
@@ -719,7 +764,7 @@ draws under the stated mathematical model. The repository preserves source
 and evidence history, but not a complete prompt/tool transcript, exact
 per-line authorship, or an AI-contribution percentage. Those details cannot
 be reconstructed reliably and have not been invented. The disclosure is
-current through 1 November 2026.
+current through 4 November 2026.
 
 \clearpage
 \bibliographystyle{plainnat}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Require real Deal decorators on every named function in repository Python."""
+"""Require at least five real Deal decorators on every named Python function."""
 import argparse
 import ast
 import json
@@ -7,13 +7,17 @@ from pathlib import Path
 import subprocess
 from subprocess import CalledProcessError
 
+import sys
+
 import deal
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"}
+MINIMUM_CONTRACTS = 5
 
 
-@deal.pre(lambda node, aliases: isinstance(node, ast.expr) and isinstance(aliases, set))
+@deal.pre(lambda node, aliases: isinstance(node, ast.expr))
+@deal.pre(lambda node, aliases: isinstance(aliases, set))
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises()
 @deal.has()
@@ -23,24 +27,50 @@ def is_contract(node: ast.expr, aliases: set) -> bool:
             and expression.value.id in aliases and expression.attr in CONTRACTS)
 
 
-@deal.pre(lambda path: isinstance(path, Path) and path.suffix == ".py")
+@deal.pre(lambda path: isinstance(path, Path))
+@deal.pre(lambda path: path.suffix == '.py')
 @deal.post(lambda result: result["function_count"] >= 0 and isinstance(result["missing"], list)
            and isinstance(result["imports_deal"], bool) and result["contract_count"] >= 0)
-@deal.raises(OSError, ValueError, SyntaxError)
+@deal.raises(OSError, ValueError, SyntaxError, TypeError)
 @deal.has("read", "import")
 def audit_file(path: Path) -> dict:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)
                for alias in node.names if alias.name == "deal"}
     functions = [node for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
-    missing = [{"name": node.name, "line": node.lineno} for node in functions
-               if not any(is_contract(d, aliases) for d in node.decorator_list)]
-    count = sum(is_contract(d, aliases) for node in functions for d in node.decorator_list)
+    function_contracts = []
+    for node in functions:
+        decorators = [d for d in node.decorator_list if is_contract(d, aliases)]
+        identities = []
+        for decorator in decorators:
+            expression = decorator.func if isinstance(decorator, ast.Call) else decorator
+            # Normalize the imported Deal alias while retaining validator,
+            # exception, marker and keyword syntax. Locations/whitespace are
+            # not part of identity. This is a structural, not semantic, test.
+            identity = (expression.attr,
+                        tuple(ast.dump(arg, include_attributes=False) for arg in decorator.args)
+                        if isinstance(decorator, ast.Call) else None,
+                        tuple((keyword.arg, ast.dump(keyword.value, include_attributes=False))
+                              for keyword in decorator.keywords)
+                        if isinstance(decorator, ast.Call) else None)
+            identities.append(identity)
+        function_contracts.append({"name": node.name, "line": node.lineno,
+                                   "contract_count": len(decorators),
+                                   "distinct_contract_count": len(set(identities)),
+                                   "duplicate_contract_count": len(identities) - len(set(identities))})
+    missing = [{"name": row["name"], "line": row["line"]} for row in function_contracts
+               if row["contract_count"] == 0]
+    insufficient = [row for row in function_contracts if row["distinct_contract_count"] < MINIMUM_CONTRACTS]
+    duplicated = [row for row in function_contracts if row["duplicate_contract_count"]]
+    count = sum(row["contract_count"] for row in function_contracts)
     return {"path": str(path), "function_count": len(functions), "missing": missing,
-            "imports_deal": bool(aliases), "contract_count": count}
+            "imports_deal": bool(aliases), "contract_count": count,
+            "minimum_contracts": MINIMUM_CONTRACTS, "function_contracts": function_contracts,
+            "insufficient": insufficient, "duplicated": duplicated}
 
 
-@deal.pre(lambda root: isinstance(root, Path) and root.is_dir())
+@deal.pre(lambda root: isinstance(root, Path))
+@deal.pre(lambda root: root.is_dir())
 @deal.post(lambda result: isinstance(result, list) and len(result) > 0
            and len(result) == len(set(result)) and all(p.suffix == ".py" for p in result))
 @deal.raises(OSError, ValueError, subprocess.SubprocessError)
@@ -63,16 +93,22 @@ def python_files(root: Path) -> list:
     return paths
 
 
-@deal.raises(SystemExit, OSError, ValueError, SyntaxError, subprocess.SubprocessError)
+@deal.raises(SystemExit, OSError, ValueError, SyntaxError, TypeError, subprocess.SubprocessError)
 @deal.has("read", "stdout", "stderr", "syscall", "import")
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
+@deal.pre(lambda: ROOT.is_dir())
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     rows = [audit_file(path) for path in python_files(args.root)]
-    problems = [r for r in rows if r["missing"] or not r["imports_deal"] or r["contract_count"] == 0]
+    problems = [r for r in rows if r["insufficient"] or r["duplicated"]
+                or not r["imports_deal"] or r["contract_count"] == 0]
     report = {"python_files": len(rows), "named_functions": sum(r["function_count"] for r in rows),
               "deal_contracts": sum(r["contract_count"] for r in rows), "problems": problems,
+              "minimum_contracts": MINIMUM_CONTRACTS,
+              "minimum_observed": min(row["distinct_contract_count"] for r in rows for row in r["function_contracts"]),
               "complete": not problems}
     print(json.dumps(report, indent=2))
     raise SystemExit(1 if problems else 0)

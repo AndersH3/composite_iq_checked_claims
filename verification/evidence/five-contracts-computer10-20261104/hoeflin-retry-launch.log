@@ -1,0 +1,54 @@
+{
+  "complete": true,
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 50,
+        "flow": 50,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 28,
+        "flow": 28,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 176,
+        "flow": 0,
+        "provers": 176,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 27,
+        "flow": 0,
+        "provers": 27,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 72,
+        "flow": 0,
+        "provers": 72,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 404,
+        "flow": 129,
+        "provers": 275,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 6,
+    "contains_not_proved": false,
+    "report_sha256": "174c2c2f02fcaf8af7ae874084ff27f4d2b806fd2af67fe90b8b3aa17b80458d"
+  },
+  "coverage": null,
+  "contract_floor_complete": true
+}

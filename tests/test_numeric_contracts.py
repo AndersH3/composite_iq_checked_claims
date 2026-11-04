@@ -1,4 +1,5 @@
 """Check domain rejection and independent mathematical properties."""
+from conftest import protected_history_intact, reference_inputs_intact
 import math
 
 import deal
@@ -14,16 +15,22 @@ UNIT = st.floats(min_value=0, max_value=1, allow_nan=False, allow_infinity=False
     (0, .6), (-1, .6), (1_000_001, .6), (True, .6), (1.5, .6),
     (3, -.1), (3, 1.1), (3, math.nan), (3, math.inf), (3, True),
 ])
+@deal.pre(lambda hoeflin, n, rho: protected_history_intact())
+@deal.ensure(lambda hoeflin, n, rho, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, n, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_variance_rejects_invalid_domain(hoeflin, n, rho):
     with pytest.raises(deal.PreContractError):
         hoeflin.variance_factor(n, rho)
 
 
 @pytest.mark.parametrize("quantile", [-1.0, 10.1, math.nan, math.inf, True])
+@deal.pre(lambda hoeflin, quantile: protected_history_intact())
+@deal.ensure(lambda hoeflin, quantile, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, quantile, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_threshold_rejects_invalid_quantile(hoeflin, quantile):
     with pytest.raises(deal.PreContractError):
         hoeflin.mean_threshold(3, .6, quantile)
@@ -31,8 +38,11 @@ def test_threshold_rejects_invalid_quantile(hoeflin, quantile):
 
 @PROPERTY
 @given(n=st.integers(1, 1_000_000), rho=UNIT)
+@deal.pre(lambda hoeflin, n, rho: protected_history_intact())
+@deal.ensure(lambda hoeflin, n, rho, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, n, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_variance_between_independent_and_identical_limits(hoeflin, n, rho):
     factor = hoeflin.variance_factor(n, rho)
     assert 1/n - 2e-15 <= factor <= 1 + 2e-15
@@ -43,8 +53,11 @@ def test_variance_between_independent_and_identical_limits(hoeflin, n, rho):
 
 @PROPERTY
 @given(n=st.integers(1, 500_000), extra=st.integers(1, 500_000), rho=UNIT)
+@deal.pre(lambda hoeflin, n, extra, rho: protected_history_intact())
+@deal.ensure(lambda hoeflin, n, extra, rho, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, n, extra, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_more_tests_reduce_required_mean_at_fixed_correlation(hoeflin, n, extra, rho):
     assert hoeflin.mean_threshold(n + extra, rho, 4.753424308822899) <= (
         hoeflin.mean_threshold(n, rho, 4.753424308822899) + 2e-14
@@ -53,13 +66,19 @@ def test_more_tests_reduce_required_mean_at_fixed_correlation(hoeflin, n, extra,
 
 @PROPERTY
 @given(rho=UNIT, quantile=st.floats(0, 10, allow_nan=False, allow_infinity=False))
+@deal.pre(lambda hoeflin, rho, quantile: protected_history_intact())
+@deal.ensure(lambda hoeflin, rho, quantile, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, rho, quantile, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_one_test_is_unaffected_by_intertest_correlation(hoeflin, rho, quantile):
     assert hoeflin.variance_factor(1, rho) == pytest.approx(1.0, abs=2e-15)
     assert hoeflin.mean_threshold(1, rho, quantile) == pytest.approx(quantile, abs=2e-14)
 
 
+@deal.pre(lambda hoeflin: protected_history_intact())
+@deal.ensure(lambda hoeflin, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read')
 def test_corrected_hundred_test_threshold_and_stored_table(hoeflin):
@@ -76,8 +95,11 @@ def test_corrected_hundred_test_threshold_and_stored_table(hoeflin):
     (.2, .3, -.1), (.2, .3, .4), (.8, .8, .5), (math.nan, .2, 0),
     (.2, math.inf, 0), (True, .2, 0),
 ])
+@deal.pre(lambda towers, p_a, p_b, joint: protected_history_intact())
+@deal.ensure(lambda towers, p_a, p_b, joint, *, result: protected_history_intact())
+@deal.ensure(lambda towers, p_a, p_b, joint, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_union_rejects_impossible_probabilities(towers, p_a, p_b, joint):
     with pytest.raises(deal.PreContractError):
         towers.probability_union(p_a, p_b, joint)
@@ -86,8 +108,11 @@ def test_union_rejects_impossible_probabilities(towers, p_a, p_b, joint):
 @pytest.mark.parametrize("joint,marginal", [
     (0, 0), (.3, .2), (-.1, .2), (math.nan, .2), (.1, math.inf), (False, .2),
 ])
+@deal.pre(lambda towers, joint, marginal: protected_history_intact())
+@deal.ensure(lambda towers, joint, marginal, *, result: protected_history_intact())
+@deal.ensure(lambda towers, joint, marginal, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_conditional_rejects_invalid_domain(towers, joint, marginal):
     with pytest.raises(deal.PreContractError):
         towers.conditional_probability(joint, marginal)
@@ -95,8 +120,11 @@ def test_conditional_rejects_invalid_domain(towers, joint, marginal):
 
 @PROPERTY
 @given(a=st.sets(st.integers(0, 15)), b=st.sets(st.integers(0, 15)))
+@deal.pre(lambda towers, a, b: protected_history_intact())
+@deal.ensure(lambda towers, a, b, *, result: protected_history_intact())
+@deal.ensure(lambda towers, a, b, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_union_matches_independent_finite_set_counting(towers, a, b):
     # Dyadic probabilities avoid ambiguity at floating Frechet boundaries.
     value = towers.probability_union(len(a)/16, len(b)/16, len(a & b)/16)
@@ -111,8 +139,11 @@ def test_union_matches_independent_finite_set_counting(towers, a, b):
     (math.nan, 1, .7), (1, math.inf, .7), (9, 1, .7),
     (1, 1, 1.0), (1, 1, -.951), (True, 1, .7),
 ])
+@deal.pre(lambda towers, a, b, rho: protected_history_intact())
+@deal.ensure(lambda towers, a, b, rho, *, result: protected_history_intact())
+@deal.ensure(lambda towers, a, b, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_joint_tail_rejects_invalid_domain(towers, a, b, rho):
     with pytest.raises(deal.PreContractError):
         towers.joint_tail(a, b, rho)
@@ -121,8 +152,11 @@ def test_joint_tail_rejects_invalid_domain(towers, a, b, rho):
 @PROPERTY
 @given(a=st.floats(0, 4, allow_nan=False, allow_infinity=False),
        b=st.floats(0, 4, allow_nan=False, allow_infinity=False))
+@deal.pre(lambda towers, a, b: protected_history_intact())
+@deal.ensure(lambda towers, a, b, *, result: protected_history_intact())
+@deal.ensure(lambda towers, a, b, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_independent_gaussian_tail_factorizes(towers, a, b):
     assert towers.joint_tail(a, b, 0.0) == pytest.approx(norm.sf(a)*norm.sf(b), abs=1e-14)
 
@@ -131,8 +165,11 @@ def test_independent_gaussian_tail_factorizes(towers, a, b):
 @given(a=st.floats(0, 4, allow_nan=False, allow_infinity=False),
        b=st.floats(0, 4, allow_nan=False, allow_infinity=False),
        rho=st.floats(-.5, .8, allow_nan=False, allow_infinity=False))
+@deal.pre(lambda towers, a, b, rho: protected_history_intact())
+@deal.ensure(lambda towers, a, b, rho, *, result: protected_history_intact())
+@deal.ensure(lambda towers, a, b, rho, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_joint_tail_is_symmetric_and_bounded(towers, a, b, rho):
     result = towers.joint_tail(a, b, rho)
     assert result == pytest.approx(towers.joint_tail(b, a, rho), abs=1e-14)
@@ -143,21 +180,30 @@ def test_joint_tail_is_symmetric_and_bounded(towers, a, b, rho):
     (.02, .02, .006276274020528095),
     (.02, .001, .0006585888039150674),
 ])
+@deal.pre(lambda towers, p_a, p_b, expected: protected_history_intact())
+@deal.ensure(lambda towers, p_a, p_b, expected, *, result: protected_history_intact())
+@deal.ensure(lambda towers, p_a, p_b, expected, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_admission_reference_overlaps(towers, p_a, p_b, expected):
     result = towers.joint_tail(float(norm.isf(p_a)), float(norm.isf(p_b)), .7)
     assert result == pytest.approx(expected, abs=1e-14)
 
 
+@deal.pre(lambda towers: protected_history_intact())
+@deal.ensure(lambda towers, *, result: protected_history_intact())
+@deal.ensure(lambda towers, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_higher_correlation_increases_mixed_overlap(towers):
     a, b = float(norm.isf(.02)), float(norm.isf(.001))
     results = [towers.joint_tail(a, b, r) for r in (.3, .5, .7, .9)]
     assert all(left < right for left, right in zip(results, results[1:]))
 
 
+@deal.pre(lambda towers: protected_history_intact())
+@deal.ensure(lambda towers, *, result: protected_history_intact())
+@deal.ensure(lambda towers, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read')
 def test_towers_reference_csvs(towers):
@@ -168,6 +214,9 @@ def test_towers_reference_csvs(towers):
 
 
 @pytest.mark.parametrize("kernel", ["variance", "conditional"])
+@deal.pre(lambda hoeflin, towers, kernel: protected_history_intact())
+@deal.ensure(lambda hoeflin, towers, kernel, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, towers, kernel, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write', 'import', 'global', 'random', 'time')
 def test_deal_generated_contract_cases(hoeflin, towers, kernel):

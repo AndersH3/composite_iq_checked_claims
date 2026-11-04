@@ -1,4 +1,5 @@
 """Validate retained outputs and reject deliberately corrupted copies."""
+from conftest import protected_history_intact, reference_inputs_intact
 import csv
 import io
 import math
@@ -15,6 +16,7 @@ import pytest
 from conftest import EVIDENCE, ROOT, load_script
 
 
+@deal.ensure(lambda path, field, value, index=0, *, result: protected_history_intact())
 @deal.pre(lambda path, field, value, index=0:
           isinstance(path, Path) and path.is_file() and isinstance(field, str) and bool(field)
           and isinstance(value, str) and isinstance(index, int) and not isinstance(index, bool) and index >= 0)
@@ -32,6 +34,7 @@ def rewrite_csv(path: Path, field: str, value: str, index: int = 0) -> None:
         writer.writerows(rows)
 
 
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
 @deal.pre(lambda tmp_path: isinstance(tmp_path, Path) and tmp_path.is_dir()
           and not (tmp_path / "calculations.csv").exists())
 @deal.post(lambda result: isinstance(result, Path) and result.is_file()
@@ -54,8 +57,11 @@ def corrupted_hoeflin_calculations(tmp_path: Path) -> Path:
 
 
 @pytest.mark.parametrize("actual,expected", [(math.nan, 1.0), (1.0, math.inf)])
+@deal.pre(lambda hoeflin_validator, towers_validator, actual, expected: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, towers_validator, actual, expected, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, towers_validator, actual, expected, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_comparison_helpers_reject_nonfinite_values(hoeflin_validator, towers_validator, actual, expected):
     with pytest.raises(deal.PreContractError):
         hoeflin_validator.require_close(actual, expected, "nonfinite")
@@ -64,8 +70,11 @@ def test_comparison_helpers_reject_nonfinite_values(hoeflin_validator, towers_va
 
 
 @pytest.mark.parametrize("tolerance", [0.0, -1.0, math.nan, math.inf])
+@deal.pre(lambda hoeflin_validator, towers_validator, tolerance: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, towers_validator, tolerance, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, towers_validator, tolerance, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_comparison_helpers_reject_invalid_tolerances(hoeflin_validator, towers_validator, tolerance):
     with pytest.raises(deal.PreContractError):
         hoeflin_validator.require_close(1.0, 1.0, "invalid tolerance", atol=tolerance)
@@ -76,15 +85,21 @@ def test_comparison_helpers_reject_invalid_tolerances(hoeflin_validator, towers_
 @pytest.mark.parametrize("successes,total", [
     (-1, 10), (11, 10), (0, 0), (0, 100_000_001), (True, 10), (0, True),
 ])
+@deal.pre(lambda hoeflin_validator, successes, total: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, successes, total, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, successes, total, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_wilson_rejects_invalid_count_domain(hoeflin_validator, successes, total):
     with pytest.raises(deal.PreContractError):
         hoeflin_validator.wilson(successes, total)
 
 
+@deal.pre(lambda hoeflin_validator: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_wilson_extreme_counts_are_finite_ordered_intervals(hoeflin_validator):
     for successes in (0, 100):
         lower, upper = hoeflin_validator.wilson(successes, 100)
@@ -95,8 +110,11 @@ def test_wilson_extreme_counts_are_finite_ordered_intervals(hoeflin_validator):
 
 @settings(max_examples=40, derandomize=True, deadline=None)
 @given(total=st.integers(1, 100_000_000), fraction=st.floats(0, 1, allow_nan=False, allow_infinity=False))
+@deal.pre(lambda hoeflin_validator, total, fraction: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, total, fraction, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, total, fraction, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
-@deal.has('stdout', 'stderr')
+@deal.has('stdout', 'stderr', "read")
 def test_wilson_respects_success_failure_symmetry(hoeflin_validator, total, fraction):
     successes = min(total, int(total * fraction))
     lo, hi = hoeflin_validator.wilson(successes, total)
@@ -105,6 +123,9 @@ def test_wilson_respects_success_failure_symmetry(hoeflin_validator, total, frac
     assert hi == pytest.approx(1-other_lo, abs=2e-14)
 
 
+@deal.pre(lambda hoeflin_validator: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read')
 def test_hoeflin_retained_calculations_and_simulation_are_accepted(hoeflin_validator):
@@ -115,12 +136,18 @@ def test_hoeflin_retained_calculations_and_simulation_are_accepted(hoeflin_valid
     assert len(simulation["cases"]) == 8
 
 
+@deal.pre(lambda towers_validator: protected_history_intact())
+@deal.ensure(lambda towers_validator, *, result: protected_history_intact())
+@deal.ensure(lambda towers_validator, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read')
 def test_towers_retained_calculations_and_simulation_are_accepted(towers_validator):
     towers_validator.validate(EVIDENCE / "towers", replay=False)
 
 
+@deal.pre(lambda hoeflin_validator, tmp_path: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write')
 def test_hoeflin_validator_rejects_nonfinite_calculated_value(hoeflin_validator, tmp_path):
@@ -129,6 +156,9 @@ def test_hoeflin_validator_rejects_nonfinite_calculated_value(hoeflin_validator,
         hoeflin_validator.validate_calculations(path)
 
 
+@deal.pre(lambda hoeflin_validator, tmp_path: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin_validator, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write')
 def test_hoeflin_validator_rejects_non_nested_counts(hoeflin_validator, tmp_path):
@@ -147,6 +177,9 @@ def test_hoeflin_validator_rejects_non_nested_counts(hoeflin_validator, tmp_path
         hoeflin_validator.validate_simulation(path)
 
 
+@deal.pre(lambda towers_validator, tmp_path: protected_history_intact())
+@deal.ensure(lambda towers_validator, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda towers_validator, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write')
 def test_towers_validator_rejects_missing_data_rows(towers_validator, tmp_path):
@@ -157,6 +190,9 @@ def test_towers_validator_rejects_missing_data_rows(towers_validator, tmp_path):
         towers_validator.validate(directory)
 
 
+@deal.pre(lambda towers_validator, tmp_path: protected_history_intact())
+@deal.ensure(lambda towers_validator, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda towers_validator, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write')
 def test_towers_validator_rejects_negative_count_cell(towers_validator, tmp_path):
@@ -167,6 +203,7 @@ def test_towers_validator_rejects_negative_count_cell(towers_validator, tmp_path
         towers_validator.validate(directory)
 
 
+@deal.ensure(lambda arguments, *, result: protected_history_intact())
 @deal.pre(lambda arguments: isinstance(arguments, (list, tuple)) and bool(arguments)
           and all(isinstance(value, (str, Path)) for value in arguments)
           and Path(arguments[0]).is_file())
@@ -182,6 +219,9 @@ def assert_optimized_cli_rejects(arguments: list) -> None:
     assert "ValueError" in process.stderr or "ContractError" in process.stderr, process.stderr
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write', 'syscall', 'time')
 def test_hoeflin_optimized_cli_rejects_corrupt_data(tmp_path):
@@ -191,6 +231,9 @@ def test_hoeflin_optimized_cli_rejects_corrupt_data(tmp_path):
     ])
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write', 'syscall', 'time')
 def test_towers_optimized_cli_rejects_corrupt_data(tmp_path):
@@ -202,6 +245,9 @@ def test_towers_optimized_cli_rejects_corrupt_data(tmp_path):
     ])
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write', 'import', 'global')
 def test_contract_negative_control_rejects_bad_precondition():
@@ -210,6 +256,9 @@ def test_contract_negative_control_rejects_bad_precondition():
         module.probability_identity(-.1)
 
 
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has('stdout', 'stderr', 'read', 'write', 'import', 'global')
 def test_contract_negative_control_rejects_wrong_postcondition():

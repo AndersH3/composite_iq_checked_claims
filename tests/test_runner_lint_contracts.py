@@ -1,4 +1,5 @@
 """Exercise literal toolchain exports and unchecked version-process failures."""
+from conftest import protected_history_intact, reference_inputs_intact
 import os
 from pathlib import Path
 import subprocess
@@ -9,6 +10,9 @@ import deal
 import pytest
 
 
+@deal.pre(lambda proof_runner: protected_history_intact())
+@deal.ensure(lambda proof_runner, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "stdout", "stderr")
 def test_version_record_retains_nonzero_exit_and_both_streams(proof_runner):
@@ -19,6 +23,9 @@ def test_version_record_retains_nonzero_exit_and_both_streams(proof_runner):
     assert result["sha256"] == proof_runner.digest(executable)
 
 
+@deal.pre(lambda proof_runner, tmp_path: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "syscall", "time", "stdout", "stderr")
 def test_version_record_kills_and_reaps_timed_out_process(proof_runner, tmp_path):
@@ -38,6 +45,9 @@ def test_version_record_kills_and_reaps_timed_out_process(proof_runner, tmp_path
     "export UNEXPECTED='/tmp'",
     "export PATH='/first'\nexport PATH='/second'",
 ])
+@deal.pre(lambda proof_runner, tmp_path, extra: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, extra, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, extra, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "stdout", "stderr", "global")
 def test_environment_rejects_malformed_unknown_or_duplicate_exports(proof_runner, tmp_path, extra):
@@ -47,6 +57,9 @@ def test_environment_rejects_malformed_unknown_or_duplicate_exports(proof_runner
             proof_runner.environment(tmp_path)
 
 
+@deal.pre(lambda proof_runner, tmp_path: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda proof_runner, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "syscall", "stdout", "stderr", "global")
 def test_environment_preserves_quoted_values_without_shell_expansion(proof_runner, tmp_path):

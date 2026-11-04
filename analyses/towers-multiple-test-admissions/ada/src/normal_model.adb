@@ -31,9 +31,12 @@ package body Normal_Model with SPARK_Mode is
       return Result;
    end Square_Root;
 
-   function Checked_Log (X : Long_Float) return Long_Float
-     with Global => null, Pre => X in 4.0E-10 .. 0.9999999999,
-     Post => Checked_Log'Result in -23.0 .. 0.0;
+   function Checked_Log (X : Long_Float) return Long_Float with
+     Global => null,
+     Pre => X in 4.0E-10 .. 0.9999999999,
+     Post => (Checked_Log'Result >= -23.0) and then
+       (Checked_Log'Result <= 0.0),
+     Depends => (Checked_Log'Result => X);
    function Checked_Log (X : Long_Float) return Long_Float
      with SPARK_Mode => Off
    is
@@ -46,9 +49,12 @@ package body Normal_Model with SPARK_Mode is
       return Result;
    end Checked_Log;
 
-   function Checked_Exp (X : Long_Float) return Long_Float
-     with Global => null, Pre => X <= 1.0E-9,
-     Post => Checked_Exp'Result in 0.0 .. 1.0001;
+   function Checked_Exp (X : Long_Float) return Long_Float with
+     Global => null,
+     Pre => X <= 1.0E-9,
+     Post => (Checked_Exp'Result >= 0.0) and then
+       (Checked_Exp'Result <= 1.0001),
+     Depends => (Checked_Exp'Result => X);
    function Checked_Exp (X : Long_Float) return Long_Float
      with SPARK_Mode => Off
    is
@@ -61,10 +67,12 @@ package body Normal_Model with SPARK_Mode is
       return Result;
    end Checked_Exp;
 
-   function Checked_Exponent (X : Long_Float) return Long_Float
-     with Global => null,
-     Post => Checked_Exponent'Result = X and
-       Checked_Exponent'Result <= 1.0E-9;
+   function Checked_Exponent (X : Long_Float) return Long_Float with
+     Global => null,
+     Post => (Checked_Exponent'Result = X) and then
+       (Checked_Exponent'Result <= 1.0E-9) and then
+       (Towers_Boundary_Models.Exponent_Normal_Return (X, Checked_Exponent'Result)),
+     Depends => (Checked_Exponent'Result => X);
    function Checked_Exponent (X : Long_Float) return Long_Float
      with SPARK_Mode => Off
    is
@@ -76,8 +84,12 @@ package body Normal_Model with SPARK_Mode is
       return X;
    end Checked_Exponent;
 
-   function Checked_Probability (P : Long_Float) return Probability
-     with Global => null, Post => Checked_Probability'Result = P;
+   function Checked_Probability (P : Long_Float) return Probability with
+     Global => null,
+     Post => (Checked_Probability'Result = P) and then
+       (Checked_Probability'Result >= 0.0) and then
+       (Checked_Probability'Result <= 1.0),
+     Depends => (Checked_Probability'Result => P);
    function Checked_Probability (P : Long_Float) return Probability
      with SPARK_Mode => Off
    is
@@ -103,18 +115,25 @@ package body Normal_Model with SPARK_Mode is
       return Result;
    end SF;
 
-   procedure Count_Step (I : Positive) with Ghost, Global => null,
+   procedure Count_Step (I : Positive) with
+     Ghost,
+     Global => null,
      Post => Long_Float (I) = Long_Float (I - 1) + 1.0
        and 4.0 * Long_Float (I) >= 4.0 * Long_Float (I - 1) + 2.0
-       and 8.0 * Long_Float (I) >= 8.0 * Long_Float (I - 1) + 6.0;
+       and 8.0 * Long_Float (I) >= 8.0 * Long_Float (I - 1) + 6.0,
+     Depends => (null => I);
    procedure Count_Step (I : Positive) is
    begin
       pragma Assert (Long_Float (I) = Long_Float (I - 1) + 1.0);
    end Count_Step;
 
    subtype Integration_Point is Long_Float range 0.0 .. 0.96;
-   function Checked_Node (X : Long_Float) return Integration_Point
-     with Global => null, Post => Checked_Node'Result = X;
+   function Checked_Node (X : Long_Float) return Integration_Point with
+     Global => null,
+     Post => (Checked_Node'Result = X) and then
+       (Checked_Node'Result >= 0.0) and then
+       (Checked_Node'Result <= 0.96),
+     Depends => (Checked_Node'Result => X);
    function Checked_Node (X : Long_Float) return Integration_Point
      with SPARK_Mode => Off
    is
@@ -151,10 +170,12 @@ package body Normal_Model with SPARK_Mode is
      (A, B : Long_Float; Rho : Correlation; Steps : Positive := 20_000)
       return Probability
    is
-      function Density (R : Long_Float) return Long_Float
-        with Pre => R in 0.0 .. 0.96
+      function Density (R : Long_Float) return Long_Float with
+     Pre => R in 0.0 .. 0.96
           and abs (A) <= 1.0E100 and abs (B) <= 1.0E100,
-        Post => Density'Result in 0.0 .. 1.0;
+     Post => Density'Result in 0.0 .. 1.0,
+     Global => (Input => (A, B)),
+     Depends => (Density'Result => (R, A, B));
       function Density (R : Long_Float) return Long_Float is
          S : constant Long_Float := 1.0 - R * R;
          Power, Numerator, Root, Result : Long_Float;
@@ -221,10 +242,11 @@ package body Normal_Model with SPARK_Mode is
    end record;
    type Grid_Accumulators is array (1 .. 3) of Grid_Accumulator;
    procedure Add_Grid_Weight
-     (I : Positive; Weight : Probability; Running_Total : in out Long_Float)
-     with Global => null,
+     (I : Positive; Weight : Probability; Running_Total : in out Long_Float) with
+     Global => null,
      Pre => Running_Total in 0.0 .. 4.0 * Long_Float (I - 1),
-     Post => Running_Total in 0.0 .. 4.0 * Long_Float (I);
+     Post => Running_Total in 0.0 .. 4.0 * Long_Float (I) and then Running_Total >= Running_Total'Old,
+     Depends => (Running_Total => (Weight, Running_Total), null => I);
    procedure Add_Grid_Weight
      (I : Positive; Weight : Probability; Running_Total : in out Long_Float)
    is
@@ -235,12 +257,13 @@ package body Normal_Model with SPARK_Mode is
 
    procedure Add_Grid_Cutoff
      (I : Positive; Weight : Probability; X, Y, Cutoff : Long_Float;
-      Value : in out Grid_Accumulator)
-     with Global => null,
+      Value : in out Grid_Accumulator) with
+     Global => null,
      Pre => Value.Joint in 0.0 .. 4.0 * Long_Float (I - 1) and
        Value.Marginal in 0.0 .. 4.0 * Long_Float (I - 1),
      Post => Value.Joint in 0.0 .. 4.0 * Long_Float (I) and
-       Value.Marginal in 0.0 .. 4.0 * Long_Float (I);
+       Value.Marginal in 0.0 .. 4.0 * Long_Float (I),
+     Depends => (Value => (Weight, X, Y, Cutoff, Value), null => I);
    procedure Add_Grid_Cutoff
      (I : Positive; Weight : Probability; X, Y, Cutoff : Long_Float;
       Value : in out Grid_Accumulator)
@@ -257,14 +280,14 @@ package body Normal_Model with SPARK_Mode is
 
    procedure Add_Grid_Cell
      (I : Positive; Weight : Probability; X, Y : Long_Float;
-      Values : in out Grid_Accumulators)
-     with Global => null,
+      Values : in out Grid_Accumulators) with
+     Global => null,
      Pre => (for all K in Values'Range =>
        Values (K).Joint in 0.0 .. 4.0 * Long_Float (I - 1) and
        Values (K).Marginal in 0.0 .. 4.0 * Long_Float (I - 1)),
-     Post => (for all K in Values'Range =>
-       Values (K).Joint in 0.0 .. 4.0 * Long_Float (I) and
-       Values (K).Marginal in 0.0 .. 4.0 * Long_Float (I));
+     Post => (for all K in Values'Range => Values (K).Joint in 0.0 .. 4.0 * Long_Float (I)) and then
+       (for all K in Values'Range => Values (K).Marginal in 0.0 .. 4.0 * Long_Float (I)),
+     Depends => (Values => (Weight, X, Y, Values), null => I);
    procedure Add_Grid_Cell
      (I : Positive; Weight : Probability; X, Y : Long_Float;
       Values : in out Grid_Accumulators)
@@ -276,12 +299,13 @@ package body Normal_Model with SPARK_Mode is
       Add_Grid_Cutoff (I, Weight, X, Y, 164.0, Values (3));
    end Add_Grid_Cell;
 
-   procedure Check_Grid_State (Total : in out Long_Float; Values : in out Grid_Accumulators)
-     with Global => null,
+   procedure Check_Grid_State (Total : in out Long_Float; Values : in out Grid_Accumulators) with
+     Global => null,
      Post => Total = Total'Old and Values = Values'Old and
        Total in 1.0E-100 .. 1.0E6 and
        (for all K in Values'Range =>
-          Values (K).Joint in 0.0 .. Total and Values (K).Marginal in 0.0 .. Total);
+          Values (K).Joint in 0.0 .. Total and Values (K).Marginal in 0.0 .. Total),
+     Depends => ((Total, Values) => (Total, Values));
    procedure Check_Grid_State (Total : in out Long_Float; Values : in out Grid_Accumulators)
      with SPARK_Mode => Off
    is
@@ -353,11 +377,14 @@ package body Normal_Model with SPARK_Mode is
       G.State := Long_Long_Integer (Seed);
    end Reset;
 
-   procedure Uniform (G : in out Generator; U : out Long_Float)
-     with Global => null,
-     Post => U in 4.0E-10 .. 0.9999999999
-       and G.State = (48_271 * G.State'Old) mod 2_147_483_647
-       and U = Long_Float (G.State) / 2_147_483_647.0;
+   procedure Uniform (G : in out Generator; U : out Long_Float) with
+     Global => null,
+     Post => (U in 4.0E-10 .. 0.9999999999) and then
+       (G.State >= 1) and then
+       (G.State < 2_147_483_647) and then
+       G.State = (48_271 * G.State'Old) mod 2_147_483_647 and then
+       U = Long_Float (G.State) / 2_147_483_647.0,
+     Depends => ((G, U) => G);
    procedure Uniform (G : in out Generator; U : out Long_Float) is
    begin
       --  Park-Miller multiplicative generator; exact integer recurrence.
@@ -368,7 +395,12 @@ package body Normal_Model with SPARK_Mode is
    subtype Radius_Value is Long_Float range 0.0 .. 8.0;
    subtype Trig_Value is Long_Float range -1.0 .. 1.0;
    function Scale_Normal (Radius : Radius_Value; Trig : Trig_Value)
-      return Normal_Value with Global => null;
+      return Normal_Value with
+     Global => null,
+     Post => (Scale_Normal'Result = Radius * Trig) and then
+       (Scale_Normal'Result >= -8.0) and then
+       (Scale_Normal'Result <= 8.0),
+     Depends => (Scale_Normal'Result => (Radius, Trig));
    function Scale_Normal (Radius : Radius_Value; Trig : Trig_Value)
       return Normal_Value is
    begin

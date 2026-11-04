@@ -1,0 +1,29 @@
+{
+  "host": "computer10",
+  "started_utc": "2026-11-04T06:09:24.729705+00:00",
+  "runner_sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910",
+  "config_path": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/provers.conf",
+  "config_sha256": "2097d660d64be2ff574554435c33de07e9bdcb6f51b72aa1af16e6583c1a5538",
+  "call": {
+    "function": "verification.run_computer10.campaign",
+    "name": "hoeflin",
+    "folder": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson/ada",
+    "project": "hoeflin_proof.gpr",
+    "unit": "hoeflin_core",
+    "aliases": [
+      "Colibri_Classic",
+      "cvc5",
+      "z3",
+      "altergo",
+      "Yices"
+    ],
+    "label": "portfolio",
+    "output": "/tmp/composite-five-hoeflin-retry",
+    "timeout": 30,
+    "wall": 1800
+  },
+  "reason": "Fresh full retry after initial source driver receipt postcondition lacked an outer-loop invariant; initial failed native result is retained separately.",
+  "work": "/tmp/composite-five-hoeflin-retry-work-ycn3uf9x",
+  "finished_utc": "2026-11-04T06:18:58.815202+00:00",
+  "complete": true
+}

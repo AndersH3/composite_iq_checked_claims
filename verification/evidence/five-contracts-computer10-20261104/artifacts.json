@@ -1,0 +1,203 @@
+{
+  "reports": [
+    {
+      "source": "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+      "source_sha256": "d51c1d2e4e5d5f323c16c201a9f41d514bb8f7a1db90f0d309308db9bb2ad229",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "pdf_sha256": "43c230d04cfe1504d93a56e9d4bde97d694f1568036c32f5738d5412c6d25ef6",
+      "pages": 10,
+      "engine": "XeLaTeX",
+      "document_class": "scrartcl",
+      "margins_mm": 16,
+      "build_argv": [
+        "latexmk",
+        "-xelatex",
+        "-outdir=/tmp/composite-five-final-pdf-hoeflin",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "composite_iq_analysis.tex"
+      ],
+      "build_cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson",
+      "build_returncode": 0,
+      "build_timestamps": null,
+      "build_timestamp_note": "Wall-clock build start/end times were not recorded; no times were inferred from file metadata.",
+      "render_argv": [
+        "pdftoppm",
+        "-scale-to",
+        "1600",
+        "-png",
+        "/tmp/composite-five-final-pdf-hoeflin/composite_iq_analysis.pdf",
+        "/tmp/composite-five-latest-render-hoeflin"
+      ],
+      "render_returncode": 0,
+      "rendered_pages": [
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-01.png",
+          "sha256": "9945bda601226c5f84e387ffea121f246f17dbede08270cb9160d7601782e999"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-02.png",
+          "sha256": "018044aa0861418c8d8d5f61e2049b29051d06f0449d4ee993b081f2ede9ade6"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-03.png",
+          "sha256": "ca257ef24323a4021478ef09294ab80dd9cc96f87f16084bcca5f6f5a22f0f10"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-04.png",
+          "sha256": "883893ed8eb11dcdeb92100e656ccd2772f5333942bf5be7deeef85634fbd5d8"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-05.png",
+          "sha256": "0f6f3224a162e25ee719ab6e73655343f95cda2a952fd350b4ea74022f6eec34"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-06.png",
+          "sha256": "a2e8ac51d3ceab91240f120ce1033d56f185cb21553b8903aa86fcc44b3c8683"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-07.png",
+          "sha256": "d24a9aba50966b6be9a3abeb237e735f21ca8df15ba673c28e51541feeeeb04b"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-08.png",
+          "sha256": "5f5e5b430cc1eb68032cf067469020c0e8cd6bcf1a189895aaffc0c6eabb683e"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-09.png",
+          "sha256": "04b8b530f29272e0b41aa979585ab7b6c64ad02b58b14e604e5becf4a721c684"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-hoeflin-10.png",
+          "sha256": "cba10dcd62ba5a11629e6cc87ddec6e8c01faebc179b12216bca9621ee617864"
+        }
+      ],
+      "visual_review": "All pages inspected by AI reviewers; no clipping, overlap, missing glyphs or near-blank orphan pages."
+    },
+    {
+      "source": "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex",
+      "source_sha256": "461893050769adcf767ed02b9048af86dd6b80295cef463254f543249412226e",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "pdf_sha256": "f7096e7a0ac2b308f6a354baf6a19e8712cc6e37044175914065f6d63fe899e5",
+      "pages": 12,
+      "engine": "XeLaTeX",
+      "document_class": "scrartcl",
+      "margins_mm": 16,
+      "build_argv": [
+        "latexmk",
+        "-xelatex",
+        "-outdir=/tmp/composite-five-final-pdf-towers",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "towers_admissions_analysis.tex"
+      ],
+      "build_cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions",
+      "build_returncode": 0,
+      "build_timestamps": null,
+      "build_timestamp_note": "Wall-clock build start/end times were not recorded; no times were inferred from file metadata.",
+      "render_argv": [
+        "pdftoppm",
+        "-scale-to",
+        "1600",
+        "-png",
+        "/tmp/composite-five-final-pdf-towers/towers_admissions_analysis.pdf",
+        "/tmp/composite-five-latest-render-towers"
+      ],
+      "render_returncode": 0,
+      "rendered_pages": [
+        {
+          "path": "/tmp/composite-five-latest-render-towers-01.png",
+          "sha256": "4512caca76433546d5c2d6525b240e2e05459c93518cf7d6deb916176f1ca7e5"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-02.png",
+          "sha256": "6a8c54027f0970a3b6ae50006b01f1d7457419a0d5fb9e5c649b3735565cbe88"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-03.png",
+          "sha256": "0ff555b78df2dc005c5617deaf5faa5abefb92b0f0895f7b519c9c99f502d40e"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-04.png",
+          "sha256": "cea9f832b5f43762422c3fb244de193d12f0cefc569d432ad83ae8fb0250158b"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-05.png",
+          "sha256": "24b060ad8b89e2e80c40c1fb0a33d8a5abd24c8b7b01366ee47dc6e133d4d5cc"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-06.png",
+          "sha256": "ac5186ff2fe1a6dc62ec0ec0c615da71b0c078e0613db6eac6637b1579bcd906"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-07.png",
+          "sha256": "e3c26fd634898f4bd5ee40f3e200f220a42e1a3fc5a48a4a6c38b384aff7af8a"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-08.png",
+          "sha256": "7ccc913e24ec5484b34acfeccee767e3539c51bdb53151754c61e02f901d86d3"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-09.png",
+          "sha256": "eadefa75dfca8e5403bf94c5094074eb1989cef247920a328039eb1cc3f4381f"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-10.png",
+          "sha256": "7ddf1f0f2908868a18636dc077f696196c3117c5071e51d957ab86ae8595c41b"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-11.png",
+          "sha256": "8a40829b53527fda353a25538be462da59198287882f0f8a9d66a1097bc63cad"
+        },
+        {
+          "path": "/tmp/composite-five-latest-render-towers-12.png",
+          "sha256": "9a12a0fa69d0e12dd07452c06d14bf33f8e40e40fefaf716372591999d29400a"
+        }
+      ],
+      "visual_review": "All pages inspected by AI reviewers; no clipping, overlap, missing glyphs or near-blank orphan pages."
+    }
+  ],
+  "tools": {
+    "xelatex": {
+      "path": "/usr/bin/xelatex",
+      "sha256": "f55d68533cce6f5d55d0e9c0158f8a2acc804d58025f0066fc774b7edb535b01",
+      "argv": [
+        "/usr/bin/xelatex",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "XeTeX 3.141592653-2.6-0.999996 (TeX Live 2025/dev/Debian)\nkpathsea version 6.4.0/dev\nCopyright 2024 SIL International, Jonathan Kew and Khaled Hosny.\nThere is NO warranty.  Redistribution of this software is\ncovered by the terms of both the XeTeX copyright and\nthe Lesser GNU General Public License.\nFor more information about these matters, see the file\nnamed COPYING and the XeTeX source.\nPrimary author of XeTeX: Jonathan Kew.\nCompiled with ICU version 76.1; using 76.1\nCompiled with zlib version 1.3.1; using 1.3.1\nCompiled with FreeType2 version 2.13.3; using 2.13.3\nCompiled with Graphite2 version 1.3.14; using 1.3.14\nCompiled with HarfBuzz version 10.2.0; using 10.2.0\nCompiled with libpng version 1.6.47; using 1.6.48\nCompiled with pplib version v2.2\nCompiled with fontconfig version 2.15.0; using 2.15.0"
+    },
+    "latexmk": {
+      "path": "/usr/bin/latexmk",
+      "sha256": "a397d77d429e58567cae4cbdc1107567568549bc9047a34196f47022a0b07174",
+      "argv": [
+        "/usr/bin/latexmk",
+        "--version"
+      ],
+      "returncode": 0,
+      "output": "Latexmk, John Collins, 11 Dec. 2024. Version 4.86"
+    },
+    "pdftoppm": {
+      "path": "/usr/bin/pdftoppm",
+      "sha256": "f22d753dfb4c31c9f0198d608982dac5b06a3c5d9a08d7d9bf0c6004f08a1a56",
+      "argv": [
+        "/usr/bin/pdftoppm",
+        "-v"
+      ],
+      "returncode": 0,
+      "output": "pdftoppm version 25.03.0\nCopyright 2005-2025 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+    },
+    "pdfinfo": {
+      "path": "/usr/bin/pdfinfo",
+      "sha256": "a1a371340d7b76e7d501da9136cc9256dfdb9cbdf09300520d7a3b4465343e67",
+      "argv": [
+        "/usr/bin/pdfinfo",
+        "-v"
+      ],
+      "returncode": 0,
+      "output": "pdfinfo version 25.03.0\nCopyright 2005-2025 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC"
+    }
+  },
+  "visual_review_scope": "Latest 22 rendered pages, all inspected; AI/tool review, not independent human peer review."
+}

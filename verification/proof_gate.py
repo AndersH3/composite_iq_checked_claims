@@ -2,8 +2,8 @@
 import deal
 
 
-@deal.pre(lambda total, flow, proved, justified, unproved:
-          total >= 0 and flow >= 0 and proved >= 0 and justified >= 0 and unproved >= 0)
+@deal.pre(lambda total, flow, proved, justified, unproved: total >= 0)
+@deal.pre(lambda total, flow, proved, justified, unproved: flow >= 0 and proved >= 0 and (justified >= 0) and (unproved >= 0))
 @deal.ensure(lambda total, flow, proved, justified, unproved, result:
              result == (total == flow + proved + justified + unproved))
 @deal.raises()
@@ -12,8 +12,8 @@ def totals_balanced(total: int, flow: int, proved: int, justified: int, unproved
     return total == flow + proved + justified + unproved
 
 
-@deal.pre(lambda returncode, total, unproved, justified:
-          total >= 0 and unproved >= 0 and justified >= 0)
+@deal.pre(lambda returncode, total, unproved, justified: total >= 0)
+@deal.pre(lambda returncode, total, unproved, justified: unproved >= 0 and justified >= 0)
 @deal.ensure(lambda returncode, total, unproved, justified, result:
              result == (returncode == 0 and total > 0 and unproved == 0 and justified == 0))
 @deal.raises()

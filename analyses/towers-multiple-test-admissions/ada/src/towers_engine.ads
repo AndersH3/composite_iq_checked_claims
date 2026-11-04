@@ -38,11 +38,16 @@ package Towers_Engine with SPARK_Mode is
         Calibrated_Union : Long_Float := 0.0;
    end record;
 
-   function Value (P : Admission_Core.Rational_Probability) return Normal_Model.Probability
-     with Global => null,
-     Pre => P.Denominator > 0 and P.Numerator <= P.Denominator;
-   procedure Compute (Trials : Trial_Count; Seed : Seed_Value; Data : out Results)
-     with Global => null,
-     Post => (for all K in Case_Index =>
-       Admission_Core.Total (Data.Simulation (K).Cells) = Trials);
+   function Value (P : Admission_Core.Rational_Probability) return Normal_Model.Probability with
+     Global => null,
+     Pre => P.Denominator > 0 and P.Numerator <= P.Denominator,
+     Post => (Value'Result >= 0.0) and then
+       (Value'Result <= 1.0),
+     Depends => (Value'Result => P);
+   procedure Compute (Trials : Trial_Count; Seed : Seed_Value; Data : out Results) with
+     Global => null,
+     Post => ((for all K in Case_Index => Admission_Core.Total (Data.Simulation (K).Cells) = Trials)) and then
+       ((for all K in Case_Index => Data.Simulation (K).Marginal_A = Admission_Core.Marginal_A (Data.Simulation (K).Cells))) and then
+       ((for all K in Case_Index => Data.Simulation (K).Marginal_B = Admission_Core.Marginal_B (Data.Simulation (K).Cells))),
+     Depends => (Data => (Trials, Seed));
 end Towers_Engine;

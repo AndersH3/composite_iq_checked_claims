@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 import subprocess
 
+import sys
+
 import deal
 from json import JSONDecodeError
 from subprocess import CalledProcessError
@@ -16,14 +18,18 @@ from subprocess import CalledProcessError
 try:
     from verification.run_computer10 import ROOT, PROJECTS, BASE_REQUIRED_BODIES, REQUIRED_BODIES, report_summary, is_sha256
     from verification.spark_coverage import read_coverage
+    from verification.spark_contracts import SCHEMA as CONTRACT_SCHEMA, inventory as contract_inventory
+    from verification.check_contract_coverage import audit_file, python_files, MINIMUM_CONTRACTS
     from verification.ghost_boundaries import GHOST_SCHEMA, ghost_package, pinned_ada_sources, validate_boundaries
 except ModuleNotFoundError:
     from run_computer10 import ROOT, PROJECTS, BASE_REQUIRED_BODIES, REQUIRED_BODIES, report_summary, is_sha256
     from spark_coverage import read_coverage
+    from spark_contracts import SCHEMA as CONTRACT_SCHEMA, inventory as contract_inventory
+    from check_contract_coverage import audit_file, python_files, MINIMUM_CONTRACTS
     from ghost_boundaries import GHOST_SCHEMA, ghost_package, pinned_ada_sources, validate_boundaries
 
 DEFAULT_HISTORY = ROOT.joinpath("verification/source_history.json")
-DEFAULT_EVIDENCE = ROOT.joinpath("verification/evidence/ghost-boundaries-computer10-20261101")
+DEFAULT_EVIDENCE = ROOT.joinpath("verification/evidence/five-contracts-computer10-20261104")
 LEGACY_CAMPAIGNS = {
     "computer10-20261031", "deal-spark-computer10-20261031",
     "deal-lint-spark-computer10-20261031",
@@ -34,6 +40,7 @@ LEGACY_CAMPAIGNS = {
 @deal.post(is_sha256)
 @deal.raises(OSError, ValueError)
 @deal.has("read")
+@deal.ensure(lambda path, result: result == hashlib.sha256(path.read_bytes()).hexdigest())
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -49,11 +56,11 @@ def check(condition: bool, message: str) -> None:
     return None
 
 
-@deal.pre(lambda manifest, campaign_name, explicit_source:
-          isinstance(manifest, dict) and isinstance(campaign_name, str) and bool(campaign_name)
-          and isinstance(explicit_source, bool))
+@deal.pre(lambda manifest, campaign_name, explicit_source: isinstance(manifest, dict)
+          and isinstance(campaign_name, str) and bool(campaign_name) and isinstance(explicit_source, bool))
+@deal.post(lambda result: isinstance(result, bool))
 @deal.ensure(lambda manifest, campaign_name, explicit_source, result:
-             isinstance(result, bool) and result == ("coverage_schema" in manifest))
+             result == ("coverage_schema" in manifest))
 @deal.raises(ValueError)
 @deal.has()
 def campaign_policy(manifest: dict, campaign_name: str, explicit_source: bool) -> bool:
@@ -75,6 +82,16 @@ def campaign_policy(manifest: dict, campaign_name: str, explicit_source: bool) -
         check(manifest["ghost_boundary_schema"] == GHOST_SCHEMA, "Unknown ghost boundary schema")
         check(is_sha256(manifest.get("ghost_registry_sha256")), "Ghost registry hash is invalid")
         check(isinstance(manifest.get("ghost_negative_control"), dict), "Ghost negative control is missing")
+    floor = "contract_floor_schema" in manifest
+    prior_coverage = {"spark-expanded-computer10-20261031", "ghost-boundaries-computer10-20261101"}
+    check(floor or (explicit_source and campaign_name in prior_coverage),
+          "Five-contract schema is required for current or unrecognized campaigns")
+    if floor:
+        check(manifest["contract_floor_schema"] == CONTRACT_SCHEMA
+              and manifest.get("minimum_contracts") == MINIMUM_CONTRACTS, "Invalid five-contract schema or minimum")
+        check(all(is_sha256(manifest.get(key)) for key in
+                  ("python_contracts_sha256", "contract_checker_sha256", "python_checker_sha256")),
+              "Contract checker/inventory hashes are invalid")
     required_policy = REQUIRED_BODIES if ghost else BASE_REQUIRED_BODIES
     projects = manifest.get("projects")
     check(isinstance(projects, dict) and set(projects) == set(PROJECTS),
@@ -90,16 +107,18 @@ def campaign_policy(manifest: dict, campaign_name: str, explicit_source: bool) -
                   and len(required) == len(required_policy[name])
                   and set(required) == required_policy[name],
                   "Required-body inventory differs from the runner policy: " + name + "/" + str(label))
+            if floor:
+                check(isinstance(recorded.get("contract_floor"), dict)
+                      and recorded["contract_floor"].get("complete") is True,
+                      "SPARK contract floor is missing or incomplete: " + name + "/" + str(label))
             if ghost:
                 check(isinstance(recorded.get("ghost_boundaries"), dict),
                       "Ghost boundary result is missing: " + name + "/" + str(label))
     return True
 
 
-@deal.pre(lambda relative, expected, history, git_dir=None, source_root=ROOT: isinstance(relative, str) and isinstance(expected, str)
-          and len(expected) == 64 and all(c in "0123456789abcdef" for c in expected)
-          and isinstance(history, Path) and (git_dir is None or isinstance(git_dir, Path))
-          and isinstance(source_root, Path) and source_root.is_dir())
+@deal.pre(lambda relative, expected, history, git_dir=None, source_root=ROOT: isinstance(relative, str))
+@deal.pre(lambda relative, expected, history, git_dir=None, source_root=ROOT: isinstance(expected, str) and len(expected) == 64 and all((c in '0123456789abcdef' for c in expected)) and isinstance(history, Path) and (git_dir is None or isinstance(git_dir, Path)) and isinstance(source_root, Path) and source_root.is_dir())
 @deal.ensure(lambda relative, expected, history, git_dir=None, source_root=ROOT, result=None:
              isinstance(result, str) and bool(result)
              and (result == str(source_root.joinpath(relative)) or result.startswith("git:")))
@@ -132,14 +151,12 @@ def evidence_source(relative: str, expected: str, history: Path, git_dir: Path |
     raise ValueError("Proof source changed: " + relative)
 
 
-@deal.pre(lambda folder, source_history=DEFAULT_HISTORY, git_dir=None, source_root=ROOT:
-          isinstance(folder, Path) and folder.is_dir()
-          and isinstance(source_history, Path) and (git_dir is None or isinstance(git_dir, Path))
-          and isinstance(source_root, Path) and source_root.is_dir())
+@deal.pre(lambda folder, source_history=DEFAULT_HISTORY, git_dir=None, source_root=ROOT: isinstance(folder, Path))
+@deal.pre(lambda folder, source_history=DEFAULT_HISTORY, git_dir=None, source_root=ROOT: folder.is_dir() and isinstance(source_history, Path) and (git_dir is None or isinstance(git_dir, Path)) and isinstance(source_root, Path) and source_root.is_dir())
 @deal.post(lambda result: result["production_checks"] > 0 and result["portfolio_complete"] is True
            and result["negative_control_rejected"] is True and isinstance(result["historical_python_sources"], list))
-@deal.raises(OSError, ValueError, KeyError, TypeError, JSONDecodeError, subprocess.SubprocessError)
-@deal.has("read", "syscall")
+@deal.raises(OSError, ValueError, KeyError, TypeError, SyntaxError, JSONDecodeError, subprocess.SubprocessError)
+@deal.has("read", "syscall", "import")
 def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path | None = None,
            source_root: Path = ROOT) -> dict:
     folder = folder.resolve()
@@ -158,6 +175,19 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
         registry = json.loads(registry_path.read_text())
     evidence_source("verification/run_computer10.py", manifest["runner_sha256"], source_history, git_dir, source_root)
     check(sha(folder.joinpath("provers.conf")) == manifest["prover_config_sha256"], "Prover configuration changed")
+    if "contract_floor_schema" in manifest:
+        for relative, key in (("verification/spark_contracts.py", "contract_checker_sha256"),
+                              ("verification/check_contract_coverage.py", "python_checker_sha256")):
+            evidence_source(relative, manifest[key], source_history, git_dir, source_root)
+        python_path = folder.joinpath("python_contracts.json")
+        check(sha(python_path) == manifest["python_contracts_sha256"], "Python contract inventory changed")
+        python_inventory = [audit_file(path) for path in python_files(source_root)]
+        for row in python_inventory:
+            row["path"] = str(Path(row["path"]).relative_to(source_root))
+            row["sha256"] = sha(source_root.joinpath(row["path"]))
+        check(python_inventory == json.loads(python_path.read_text()), "Python contract inventory differs from selected source")
+        check(all(not row["insufficient"] and not row["duplicated"] and row["imports_deal"] for row in python_inventory),
+              "Python five-contract floor failed")
     totals = 0
     archived_python = []
     for name, runs in manifest["projects"].items():
@@ -176,6 +206,10 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
                 analyzed = {row["name"].casefold() for row in coverage["entities"] if row["status"] == "all"}
                 missing = [entity for entity in recorded["required_full_entities"] if entity.casefold() not in analyzed]
                 check(missing == recorded["missing_full_entities"], "Required-body coverage record disagrees")
+                if "contract_floor_schema" in manifest:
+                    floor = contract_inventory(pinned_ada_sources(recorded["sources"], source_root), coverage)
+                    check(floor == recorded["contract_floor"] and floor["complete"],
+                          "SPARK contract inventory differs or is incomplete: " + name + "/" + label)
                 if registry is not None:
                     ghost = validate_boundaries(registry, name, coverage, recorded["sources"], source_root)
                     check(ghost == recorded["ghost_boundaries"], "Ghost boundary coverage disagrees: " + name + "/" + label)
@@ -243,8 +277,11 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
             "source_context": "current" if source_root.resolve() == ROOT else "explicit"}
 
 
-@deal.raises(SystemExit, OSError, ValueError, KeyError, TypeError, JSONDecodeError, subprocess.SubprocessError)
-@deal.has("read", "stdout", "stderr", "syscall")
+@deal.raises(SystemExit, OSError, ValueError, KeyError, TypeError, SyntaxError, JSONDecodeError, subprocess.SubprocessError)
+@deal.has("read", "stdout", "stderr", "syscall", "import")
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
+@deal.pre(lambda: ROOT.is_dir())
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", nargs="?", type=Path,

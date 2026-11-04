@@ -1,0 +1,6 @@
+equal_top_2_percent: both=6239/1000000; 95% Wilson [0.006086556746, 0.006395236765]; model=0.006276274021
+equal_top_0_1_percent: both=167/1000000; 95% Wilson [0.0001435212472, 0.0001943189138]; model=0.0001595891947
+equal_top_1_in_33000: both=4/1000000; 95% Wilson [1.555522948e-06, 1.028589038e-05]; model=2.312497921e-06
+mixed_top_2_and_0_1_percent: both=640/1000000; 95% Wilson [0.000592313521, 0.000691523006]; model=0.0006585888039
+Independent Python replay matches all four count cells for 1000000 trials.
+Ada numerical outputs agree with independent SciPy reference CSVs within 1e-10 absolute tolerance.

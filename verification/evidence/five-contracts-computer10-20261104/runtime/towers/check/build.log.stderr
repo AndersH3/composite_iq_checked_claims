@@ -1,0 +1,5 @@
+towers_io_models.ads:83:06: warning: contract cases do not mention result [-gnatw.t]
+towers_io_models.ads:83:51: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]
+towers_io_models.ads:84:34: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]
+towers_io_models.ads:85:34: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]
+towers_io_models.ads:86:35: warning: contract case does not check the outcome of calling "Case_Name" [-gnatw.t]

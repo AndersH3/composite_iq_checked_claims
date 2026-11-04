@@ -14,14 +14,14 @@ import re
 
 import numpy as np
 from scipy.stats import norm
+import sys
+
 import deal
 
 
 @deal.pre(lambda simulation: isinstance(simulation, Path))
-@deal.post(lambda result: result["cases"] == 8 and 2 <= result["trials_per_case"] <= 100_000_000
-           and 0 <= result["seed"] < 2**64 and result["all_tail_counts_match"] is True
-           and result["mean_and_variance_agree"] is True
-           and len(result["input_sha256"]) == len(result["replay_source_sha256"]) == 64)
+@deal.post(lambda result: 2 <= result['trials_per_case'] <= 100000000 and 0 <= result['seed'] < 2 ** 64 and (result['all_tail_counts_match'] is True) and (result['mean_and_variance_agree'] is True) and (len(result['input_sha256']) == len(result['replay_source_sha256']) == 64))
+@deal.post(lambda result: result['cases'] == 8)
 @deal.raises(OSError, ValueError, KeyError, TypeError, MemoryError, OverflowError)
 @deal.has("read")
 def replay(simulation: Path) -> dict:
@@ -78,6 +78,8 @@ def replay(simulation: Path) -> dict:
 @deal.post(lambda result: result is None)
 @deal.raises(SystemExit, OSError, ValueError, KeyError, TypeError, MemoryError, OverflowError)
 @deal.has("read", "write", "stdout", "stderr")
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("simulation", type=Path)

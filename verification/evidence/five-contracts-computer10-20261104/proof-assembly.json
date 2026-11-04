@@ -1,0 +1,42 @@
+{
+  "schema": "source-pinned-proof-assembly-v1",
+  "assembled_utc": "2026-11-04T22:09:18.805908+00:00",
+  "initial_manifest": "initial-campaign/manifest.json",
+  "initial_launcher_returncode": 1,
+  "initial_checker_sha256": "91568e2258eef4cdb8faa74c3a752e2e768a985b821a696a765d4be8610854f4",
+  "initial_checker_source": "initial-checker-source.txt",
+  "final_checker_sha256": "6f646a682df0f53c1d20649f55c33f096a823d984011c3efcb9f9d17966c17b9",
+  "hoeflin_retry_launch": "hoeflin-retry-launch.json",
+  "native_results": [
+    {
+      "project": "hoeflin",
+      "native": {
+        "total": 404,
+        "flow": 129,
+        "provers": 275,
+        "justified": 0,
+        "unproved": 0
+      },
+      "native_report_sha256": "174c2c2f02fcaf8af7ae874084ff27f4d2b806fd2af67fe90b8b3aa17b80458d",
+      "contract_floor_complete": true
+    },
+    {
+      "project": "towers",
+      "native": {
+        "total": 696,
+        "flow": 230,
+        "provers": 466,
+        "justified": 0,
+        "unproved": 0
+      },
+      "native_report_sha256": "4d72db70e9c5094005eaec11eb839ddb21a64226fb426b4dd4f8dd72d5ad69cf",
+      "contract_floor_complete": true
+    }
+  ],
+  "notes": [
+    "The initial Hoeflin proof had one unproved new driver receipt postcondition. Its complete native output and initial source are retained. A fresh full-project retry adds receipt loop invariants and proves every check.",
+    "The initial Towers native proof completed with zero unproved checks, but the initial structural checker failed to recognize a Post aspect preceded by comments. The fixed checker was regression-tested and the floor re-audited against the identical native proof and source hashes.",
+    "Final contract inventories were regenerated at release with the fixed checker. No native reports, solver outputs or invocation logs were edited.",
+    "The final manifest assembles actual successful invocations and subsequent source-pinned structural audits. Its completion flag is not the exit status of the retained initial launcher."
+  ]
+}

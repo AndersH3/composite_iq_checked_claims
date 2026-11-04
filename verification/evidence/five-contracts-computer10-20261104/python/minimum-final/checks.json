@@ -1,0 +1,525 @@
+{
+  "schema": "python-check-executions-v1",
+  "iteration": "Final checks after adding explicit acceptance regressions for six, seven and eight distinct Deal decorators. Five is a minimum, not an exact count.",
+  "host": "computer10",
+  "checks": [
+    {
+      "id": "coverage",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/check_contract_coverage.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-coverage.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-coverage.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-coverage.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-coverage.stderr",
+      "stdout_sha256": "08e25bab0776c5bca6d29c03491411ad68341d342caa56ab61638a4bc6674cab",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:51.044268+00:00",
+      "finished_at_utc": "2026-11-04T22:09:51.640453+00:00",
+      "elapsed_seconds": 0.5961816419730894,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "complete": true,
+        "python_files": 26,
+        "named_functions": 251,
+        "deal_contracts": 1255,
+        "minimum_contracts": 5,
+        "minimum_observed": 5
+      }
+    },
+    {
+      "id": "coverage-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/check_contract_coverage.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-coverage-optimized.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-coverage-optimized.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-coverage-optimized.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-coverage-optimized.stderr",
+      "stdout_sha256": "08e25bab0776c5bca6d29c03491411ad68341d342caa56ab61638a4bc6674cab",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:51.044570+00:00",
+      "finished_at_utc": "2026-11-04T22:09:52.107157+00:00",
+      "elapsed_seconds": 1.0625931050162762,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "complete": true,
+        "python_files": 26,
+        "named_functions": 251,
+        "deal_contracts": 1255,
+        "minimum_contracts": 5,
+        "minimum_observed": 5
+      }
+    },
+    {
+      "id": "pytest",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-pytest.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-pytest.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-pytest.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-pytest.stderr",
+      "stdout_sha256": "d9cef18ca4e9e8a2ce5a12a188d22945156c6eb4c8d089e146e54c9767b23203",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:51.044839+00:00",
+      "finished_at_utc": "2026-11-04T22:11:00.252335+00:00",
+      "elapsed_seconds": 69.20750065299217,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "passed": 262,
+        "warnings": 0,
+        "pytest_reported_duration_seconds": 68.57,
+        "expected_test_count": 262,
+        "deal_explicitly_enabled": true
+      }
+    },
+    {
+      "id": "pytest-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "tests"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-pytest-optimized.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-pytest-optimized.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-pytest-optimized.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-pytest-optimized.stderr",
+      "stdout_sha256": "4ce2781666b6c0773844b90b3e2867964fdb6ab4589c97aa69f6f52c297ecf24",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:51.045293+00:00",
+      "finished_at_utc": "2026-11-04T22:11:01.228501+00:00",
+      "elapsed_seconds": 70.18321322201518,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "passed": 262,
+        "warnings": 1,
+        "pytest_reported_duration_seconds": 68.71,
+        "expected_test_count": 262,
+        "deal_explicitly_enabled": true
+      },
+      "optimization_scope": "Python runs with -O; pytest warns about assertions outside test modules/plugins. Repository fixtures explicitly enable Deal."
+    },
+    {
+      "id": "static",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/check_static_lint.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-static.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-static.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-static.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-static.stderr",
+      "stdout_sha256": "4c955fd9f89d341ab0e839506d998096c9287de6c01bdc45e3f8d7e3acd72f6a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:51.045518+00:00",
+      "finished_at_utc": "2026-11-04T22:10:08.476893+00:00",
+      "elapsed_seconds": 17.431379899033345,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "complete": true,
+        "python_files": 26,
+        "positive_files": 25,
+        "positive_returncode": 0,
+        "positive_diagnostics": [],
+        "negative_control_returncode": 1,
+        "negative_control_diagnostics": [
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "row": 20,
+            "col": 11,
+            "code": "DEL012",
+            "text": "post contract error",
+            "value": "-1",
+            "content": "    return -1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "static-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/check_static_lint.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-static-optimized.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-static-optimized.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-static-optimized.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-static-optimized.stderr",
+      "stdout_sha256": "4c955fd9f89d341ab0e839506d998096c9287de6c01bdc45e3f8d7e3acd72f6a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:51.046685+00:00",
+      "finished_at_utc": "2026-11-04T22:10:08.608977+00:00",
+      "elapsed_seconds": 17.562290853995364,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "complete": true,
+        "python_files": 26,
+        "positive_files": 25,
+        "positive_returncode": 0,
+        "positive_diagnostics": [],
+        "negative_control_returncode": 1,
+        "negative_control_diagnostics": [
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "row": 20,
+            "col": 11,
+            "code": "DEL012",
+            "text": "post contract error",
+            "value": "-1",
+            "content": "    return -1"
+          }
+        ]
+      },
+      "optimization_scope": "The gate interpreter uses -O; its lint child command omits -O. Separate direct optimized lint executions below cover the lint interpreter."
+    },
+    {
+      "id": "static-positive-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "deal",
+        "lint",
+        "--json",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+        "tests/conftest.py",
+        "tests/fixtures/nonzero_division_lint_probe.py",
+        "tests/test_contract_coverage.py",
+        "tests/test_evidence_contracts.py",
+        "tests/test_ghost_boundary_contracts.py",
+        "tests/test_numeric_contracts.py",
+        "tests/test_proof_gate_contracts.py",
+        "tests/test_runner_lint_contracts.py",
+        "tests/test_spark_contracts.py",
+        "tests/test_spark_coverage_contracts.py",
+        "tests/test_static_lint_contracts.py",
+        "tests/test_validator_contracts.py",
+        "verification/check_contract_coverage.py",
+        "verification/check_static_lint.py",
+        "verification/ghost_boundaries.py",
+        "verification/proof_gate.py",
+        "verification/replay_hoeflin.py",
+        "verification/run_computer10.py",
+        "verification/spark_contracts.py",
+        "verification/spark_coverage.py",
+        "verification/verify_evidence.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-static-positive-optimized.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-static-positive-optimized.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-static-positive-optimized.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-static-positive-optimized.stderr",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:51.640513+00:00",
+      "finished_at_utc": "2026-11-04T22:10:07.912464+00:00",
+      "elapsed_seconds": 16.271957996010315,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "positive_files": 25,
+        "diagnostics": "",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "static-negative-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "deal",
+        "lint",
+        "--json",
+        "tests/fixtures/contract_negative_control.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "accepted": true,
+      "stdout_log": "/tmp/composite-five-minimum-final-static-negative-optimized.stdout",
+      "stderr_log": "/tmp/composite-five-minimum-final-static-negative-optimized.stderr",
+      "stdout_log_filename": "composite-five-minimum-final-static-negative-optimized.stdout",
+      "stderr_log_filename": "composite-five-minimum-final-static-negative-optimized.stderr",
+      "stdout_sha256": "2b89787b1f875f22b77f8ba0807fa0b90f27e67f80e367ed04a2cedd081f80a9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-11-04T22:09:52.107227+00:00",
+      "finished_at_utc": "2026-11-04T22:09:53.950814+00:00",
+      "elapsed_seconds": 1.8435955159948207,
+      "timestamp_source": "Captured around subprocess.run by the execution wrapper.",
+      "result": {
+        "negative_control_diagnostics": [
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "row": 20,
+            "col": 11,
+            "code": "DEL012",
+            "text": "post contract error",
+            "value": "-1",
+            "content": "    return -1"
+          }
+        ]
+      }
+    }
+  ],
+  "python_source_hashes_before": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "sha256": "66773b1017d34b2b95440efd663c8160cc60e0b53411d3f377838f4923639d0e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "sha256": "32f27a17b4d86614327c72f9386d160c76e4d4de2fcf36ac16e74cc919ef5244"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "sha256": "cc2cc8e8edcfc2839c5bd266d4d776d11299c982357b4144969f60891a56ea0e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "sha256": "fc2878626a914ac9ef1c88c291ae1c3b3b983cb49b2c15d21ae4c36c496cc0f6"
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "f774953527c5c5dfdef85454b53932df7b0aaf68afe1947ae27201a56d1757ba"
+    },
+    {
+      "path": "tests/fixtures/contract_negative_control.py",
+      "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+    },
+    {
+      "path": "tests/fixtures/nonzero_division_lint_probe.py",
+      "sha256": "572b6bd1fdbe9746e028c52b1fa65061bd70f4fde726dc1dfd9b303f629360be"
+    },
+    {
+      "path": "tests/test_contract_coverage.py",
+      "sha256": "1d6be1b661896a3119bc613de090cd3c70d5db161a0fcf572fc9f4069050a117"
+    },
+    {
+      "path": "tests/test_evidence_contracts.py",
+      "sha256": "c0d9c95db12961d076713eff500b9d145b5a17a29e4defee97f73b1208288d60"
+    },
+    {
+      "path": "tests/test_ghost_boundary_contracts.py",
+      "sha256": "530d50eacdc9a697c32a50c61dde609c5b029194ed05cff94cdef77db069c851"
+    },
+    {
+      "path": "tests/test_numeric_contracts.py",
+      "sha256": "efe034a426416d47885bdb97b67d91c4fbfe27386d8f7d60a71a008244109b89"
+    },
+    {
+      "path": "tests/test_proof_gate_contracts.py",
+      "sha256": "6c104ef4915968393425a426f5e244c0a67e528ca59de159f8b0676995648781"
+    },
+    {
+      "path": "tests/test_runner_lint_contracts.py",
+      "sha256": "ee4a3efc9d4dd84fb5cdfcd426d9ae0795be0bcd0ca7bc9f8267b7c96a8e02eb"
+    },
+    {
+      "path": "tests/test_spark_contracts.py",
+      "sha256": "2f90aca85c44c48619af942334c485076d99d0e70d93986a93d82b9d8d1bc56c"
+    },
+    {
+      "path": "tests/test_spark_coverage_contracts.py",
+      "sha256": "02e410d65f0c52bbfe140b0f89faf9cf90b9c1b4246c9ee6db819614dcd47ac7"
+    },
+    {
+      "path": "tests/test_static_lint_contracts.py",
+      "sha256": "582197536a3f56e5d201657ba5756cd7a984c57d930dc8720b551f1c6e31634f"
+    },
+    {
+      "path": "tests/test_validator_contracts.py",
+      "sha256": "83889ee9e3e0a8c7aeb0901e856d81e07fe875416c9e75c3020ca24ecaf36269"
+    },
+    {
+      "path": "verification/check_contract_coverage.py",
+      "sha256": "f99c7697e512318c541b9efb4f94d5887a133ff2767d55752e11c56af84e1999"
+    },
+    {
+      "path": "verification/check_static_lint.py",
+      "sha256": "5484f01fe99b230f77ba3148f73b31ed2642252da81b4bd12d86105931456602"
+    },
+    {
+      "path": "verification/ghost_boundaries.py",
+      "sha256": "a6ccd4afd2f233e4ebe031b8ed5286e691547514a3734fa5e7b6f94b83d16ff5"
+    },
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "sha256": "91d4a975b84badf342863d90d3a823aec1453c5fcc4d466e33f3e615777fdc3d"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910"
+    },
+    {
+      "path": "verification/spark_contracts.py",
+      "sha256": "6f646a682df0f53c1d20649f55c33f096a823d984011c3efcb9f9d17966c17b9"
+    },
+    {
+      "path": "verification/spark_coverage.py",
+      "sha256": "4fa33d7e7d7e0b2c32957514ee1d8b0295d839e88ada34bcf43bba454d496ff1"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "sha256": "ae7c18ecf8fb61e1be438df339dc08f18309bd736de11c9a027fb0672dfeb43e"
+    }
+  ],
+  "python_source_hashes_after": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "sha256": "66773b1017d34b2b95440efd663c8160cc60e0b53411d3f377838f4923639d0e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "sha256": "32f27a17b4d86614327c72f9386d160c76e4d4de2fcf36ac16e74cc919ef5244"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "sha256": "cc2cc8e8edcfc2839c5bd266d4d776d11299c982357b4144969f60891a56ea0e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "sha256": "fc2878626a914ac9ef1c88c291ae1c3b3b983cb49b2c15d21ae4c36c496cc0f6"
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "f774953527c5c5dfdef85454b53932df7b0aaf68afe1947ae27201a56d1757ba"
+    },
+    {
+      "path": "tests/fixtures/contract_negative_control.py",
+      "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+    },
+    {
+      "path": "tests/fixtures/nonzero_division_lint_probe.py",
+      "sha256": "572b6bd1fdbe9746e028c52b1fa65061bd70f4fde726dc1dfd9b303f629360be"
+    },
+    {
+      "path": "tests/test_contract_coverage.py",
+      "sha256": "1d6be1b661896a3119bc613de090cd3c70d5db161a0fcf572fc9f4069050a117"
+    },
+    {
+      "path": "tests/test_evidence_contracts.py",
+      "sha256": "c0d9c95db12961d076713eff500b9d145b5a17a29e4defee97f73b1208288d60"
+    },
+    {
+      "path": "tests/test_ghost_boundary_contracts.py",
+      "sha256": "530d50eacdc9a697c32a50c61dde609c5b029194ed05cff94cdef77db069c851"
+    },
+    {
+      "path": "tests/test_numeric_contracts.py",
+      "sha256": "efe034a426416d47885bdb97b67d91c4fbfe27386d8f7d60a71a008244109b89"
+    },
+    {
+      "path": "tests/test_proof_gate_contracts.py",
+      "sha256": "6c104ef4915968393425a426f5e244c0a67e528ca59de159f8b0676995648781"
+    },
+    {
+      "path": "tests/test_runner_lint_contracts.py",
+      "sha256": "ee4a3efc9d4dd84fb5cdfcd426d9ae0795be0bcd0ca7bc9f8267b7c96a8e02eb"
+    },
+    {
+      "path": "tests/test_spark_contracts.py",
+      "sha256": "2f90aca85c44c48619af942334c485076d99d0e70d93986a93d82b9d8d1bc56c"
+    },
+    {
+      "path": "tests/test_spark_coverage_contracts.py",
+      "sha256": "02e410d65f0c52bbfe140b0f89faf9cf90b9c1b4246c9ee6db819614dcd47ac7"
+    },
+    {
+      "path": "tests/test_static_lint_contracts.py",
+      "sha256": "582197536a3f56e5d201657ba5756cd7a984c57d930dc8720b551f1c6e31634f"
+    },
+    {
+      "path": "tests/test_validator_contracts.py",
+      "sha256": "83889ee9e3e0a8c7aeb0901e856d81e07fe875416c9e75c3020ca24ecaf36269"
+    },
+    {
+      "path": "verification/check_contract_coverage.py",
+      "sha256": "f99c7697e512318c541b9efb4f94d5887a133ff2767d55752e11c56af84e1999"
+    },
+    {
+      "path": "verification/check_static_lint.py",
+      "sha256": "5484f01fe99b230f77ba3148f73b31ed2642252da81b4bd12d86105931456602"
+    },
+    {
+      "path": "verification/ghost_boundaries.py",
+      "sha256": "a6ccd4afd2f233e4ebe031b8ed5286e691547514a3734fa5e7b6f94b83d16ff5"
+    },
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "sha256": "91d4a975b84badf342863d90d3a823aec1453c5fcc4d466e33f3e615777fdc3d"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910"
+    },
+    {
+      "path": "verification/spark_contracts.py",
+      "sha256": "6f646a682df0f53c1d20649f55c33f096a823d984011c3efcb9f9d17966c17b9"
+    },
+    {
+      "path": "verification/spark_coverage.py",
+      "sha256": "4fa33d7e7d7e0b2c32957514ee1d8b0295d839e88ada34bcf43bba454d496ff1"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "sha256": "ae7c18ecf8fb61e1be438df339dc08f18309bd736de11c9a027fb0672dfeb43e"
+    }
+  ],
+  "python_sources_unchanged_during_checks": true,
+  "accepted": true,
+  "notes": [
+    "All 26 maintained Python files are inventoried. The intentionally incorrect fixture is the one expected static failure.",
+    "No source or dependency file was modified during the checks.",
+    "Direct optimized lint calls complement the optimized gate, whose lint children omit -O."
+  ]
+}

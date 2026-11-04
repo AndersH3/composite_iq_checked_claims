@@ -1,0 +1,135 @@
+{
+  "spark": [
+    {
+      "name": "Report_IO",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 5
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Read_Simulation_Options",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 18
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Simulation_Header",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 26
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Simulation_Row",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 33
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Calculations_Header",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 43
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Calculation_Row",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 50
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Infinite_Row",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 58
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Examples_Header",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 66
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Report_IO.Example",
+      "sloc": [
+        {
+          "file": "report_io.ads",
+          "line": 73
+        }
+      ],
+      "spark": "spec"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "report_io.ads",
+      "line": 8,
+      "col": 3,
+      "rule": "DEPENDS_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Report_IO",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 5
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+  },
+  "proof": [
+  ],
+  "assumptions": [
+  ],
+  "timings": {
+    "init_why_sections": 9.15999989956617E-04,
+    "globals (advanced)": 1.09390001744032E-02,
+    "flow analysis": 2.10960004478693E-02,
+    "marking": 7.01999990269542E-04,
+    "translation of standard": 2.31499993242323E-03,
+    "properties (advanced)": 1.10000000859145E-04,
+    "globals (basic)": 1.58709995448589E-02
+  }
+}

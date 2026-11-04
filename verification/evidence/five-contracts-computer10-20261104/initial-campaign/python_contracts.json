@@ -1,0 +1,2090 @@
+[
+  {
+    "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+    "function_count": 7,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 35,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "_positive_ratio",
+        "line": 26,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "require_close",
+        "line": 37,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "csv_rows",
+        "line": 47,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "validate_calculations",
+        "line": 67,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "wilson",
+        "line": 116,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "validate_simulation",
+        "line": 136,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 188,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "66773b1017d34b2b95440efd663c8160cc60e0b53411d3f377838f4923639d0e"
+  },
+  {
+    "path": "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+    "function_count": 12,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 60,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "_finite",
+        "line": 30,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "variance_factor",
+        "line": 46,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "mean_threshold",
+        "line": 58,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "_positive_ratio",
+        "line": 68,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "_valid_rows",
+        "line": 78,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "thresholds",
+        "line": 96,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "check_close",
+        "line": 113,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "write_csv",
+        "line": 123,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "verify_csv",
+        "line": 137,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "verify_source_values",
+        "line": 165,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "verify_examples",
+        "line": 187,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 216,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "32f27a17b4d86614327c72f9386d160c76e4d4de2fcf36ac16e74cc919ef5244"
+  },
+  {
+    "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+    "function_count": 6,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 30,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "_open_unit_ratio",
+        "line": 18,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "require",
+        "line": 28,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "read",
+        "line": 41,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "close",
+        "line": 59,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "require_columns",
+        "line": 70,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "validate",
+        "line": 80,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "cc2cc8e8edcfc2839c5bd266d4d776d11299c982357b4144969f60891a56ea0e"
+  },
+  {
+    "path": "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+    "function_count": 15,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 75,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "_finite",
+        "line": 43,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "probability_union",
+        "line": 59,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "conditional_probability",
+        "line": 69,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "close",
+        "line": 82,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "joint_tail",
+        "line": 96,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "_valid_fields_rows",
+        "line": 127,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "_valid_admissions",
+        "line": 149,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "_valid_grid",
+        "line": 168,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "admission_rows",
+        "line": 181,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "basic_grid",
+        "line": 205,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "write_csv",
+        "line": 246,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "verify_csv",
+        "line": 259,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "verify_known_results",
+        "line": 288,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 328,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "density_at_cutoffs",
+        "line": 108,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "fc2878626a914ac9ef1c88c291ae1c3b3b983cb49b2c15d21ae4c36c496cc0f6"
+  },
+  {
+    "path": "tests/conftest.py",
+    "function_count": 10,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 50,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "protected_history_intact",
+        "line": 38,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "reference_inputs_intact",
+        "line": 57,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "load_script",
+        "line": 75,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "contracts_enabled",
+        "line": 89,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "hoeflin",
+        "line": 100,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "towers",
+        "line": 111,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "hoeflin_validator",
+        "line": 122,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "towers_validator",
+        "line": 133,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "proof_runner",
+        "line": 144,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "coverage_checker",
+        "line": 155,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "f774953527c5c5dfdef85454b53932df7b0aaf68afe1947ae27201a56d1757ba"
+  },
+  {
+    "path": "tests/fixtures/contract_negative_control.py",
+    "function_count": 2,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 10,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "probability_identity",
+        "line": 10,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "negative_probability",
+        "line": 19,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+  },
+  {
+    "path": "tests/fixtures/nonzero_division_lint_probe.py",
+    "function_count": 2,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 10,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "positive_ratio",
+        "line": 12,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "safe_half",
+        "line": 21,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "572b6bd1fdbe9746e028c52b1fa65061bd70f4fde726dc1dfd9b303f629360be"
+  },
+  {
+    "path": "tests/test_contract_coverage.py",
+    "function_count": 8,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 40,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "test_coverage_finds_a_missing_function_contract",
+        "line": 14,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_comments_and_strings_are_not_counted_as_contracts",
+        "line": 28,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_coverage_accepts_a_real_deal_import_alias",
+        "line": 47,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_coverage_checks_nested_functions",
+        "line": 66,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_every_repository_python_function_has_a_real_contract",
+        "line": 84,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_five_contract_floor_rejects_zero_through_four",
+        "line": 102,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_duplicate_aliases_and_whitespace_do_not_meet_the_floor",
+        "line": 120,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_empty_python_inventory_cannot_establish_coverage",
+        "line": 142,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "64dd8198f64532a10aa120c800280e6a1178794415b95af68f7eb0bb627767b4"
+  },
+  {
+    "path": "tests/test_evidence_contracts.py",
+    "function_count": 21,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 105,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "test_current_source_returns_its_nonempty_absolute_path",
+        "line": 22,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_changed_ada_cannot_use_historical_python_fallback",
+        "line": 36,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_missing_historical_git_object_has_an_explicit_error",
+        "line": 47,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_malformed_source_history_preserves_json_decode_error",
+        "line": 61,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_optimized_auditor_cli_keeps_json_failure_observable",
+        "line": 73,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_historical_ada_requires_an_explicit_matching_source_tree",
+        "line": 94,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_explicit_source_tree_does_not_allow_an_ada_hash_mismatch",
+        "line": 111,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "coverage_manifest",
+        "line": 126,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_complete_policy_requires_both_projects_and_all_required_bodies",
+        "line": 140,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_schema_downgrade_cannot_pass_for_current_or_unrecognized_campaign",
+        "line": 155,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_known_legacy_campaign_allows_only_explicit_historical_context",
+        "line": 167,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_coverage_campaign_cannot_change_production_project_inventory",
+        "line": 178,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_coverage_campaign_requires_a_portfolio_for_each_project",
+        "line": 194,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_coverage_campaign_cannot_weaken_required_body_inventory",
+        "line": 208,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_coverage_campaign_cannot_omit_raw_coverage_record",
+        "line": 227,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_unknown_coverage_schema_cannot_pass_even_for_legacy_campaign",
+        "line": 240,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_expanded_historical_policy_requires_explicit_context_and_original_bodies",
+        "line": 253,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_ghost_campaign_policy_cannot_drop_modeling_evidence",
+        "line": 277,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_full_auditor_rejects_incomplete_policy_before_source_checks",
+        "line": 303,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_current_campaign_requires_contract_floor_identity",
+        "line": 322,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_current_campaign_rejects_missing_spark_contract_floor",
+        "line": 335,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "c0d9c95db12961d076713eff500b9d145b5a17a29e4defee97f73b1208288d60"
+  },
+  {
+    "path": "tests/test_ghost_boundary_contracts.py",
+    "function_count": 23,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 115,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "ghost_fixture",
+        "line": 23,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "audit_fixture",
+        "line": 59,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_complete_register_has_explicit_unproved_adequacy_and_implementation",
+        "line": 68,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_omitted_spec_or_foreign_boundary_is_rejected",
+        "line": 83,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_invalid_mapping_cannot_pass",
+        "line": 111,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_model_without_analyzed_body_is_rejected",
+        "line": 124,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_model_at_wrong_native_source_is_rejected",
+        "line": 136,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_duplicate_boundary_and_unknown_native_spec_are_rejected",
+        "line": 148,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_comment_string_body_or_other_predicate_is_not_a_contract_link",
+        "line": 170,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_real_pre_post_reference_is_case_insensitive_and_qualified",
+        "line": 180,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_changed_source_hash_and_unclassified_ordinary_model_are_rejected",
+        "line": 192,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_mixed_package_accepts_a_pure_registered_model",
+        "line": 210,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_mixed_model_roles_require_real_contract_markers",
+        "line": 237,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_unsafe_duplicate_or_invalid_source_inventory_is_rejected",
+        "line": 252,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_foreign_import_inventory_ignores_comments_strings_and_parameter_semicolons",
+        "line": 270,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_ghost_body_coupling_ignores_other_and_nested_operations",
+        "line": 282,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_unregistered_library_or_global_obligation_is_rejected",
+        "line": 301,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "replace_source",
+        "line": 317,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "standard_fixture",
+        "line": 331,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_standard_models_link_both_actual_cached_results",
+        "line": 361,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_standard_model_omissions_and_false_links_are_rejected",
+        "line": 373,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_standard_observation_before_actual_call_cannot_pass",
+        "line": 395,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_private_excluded_helper_must_have_its_own_ghost_link",
+        "line": 410,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "530d50eacdc9a697c32a50c61dde609c5b029194ed05cff94cdef77db069c851"
+  },
+  {
+    "path": "tests/test_numeric_contracts.py",
+    "function_count": 16,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 80,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "test_variance_rejects_invalid_domain",
+        "line": 23,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_threshold_rejects_invalid_quantile",
+        "line": 34,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_variance_between_independent_and_identical_limits",
+        "line": 46,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_more_tests_reduce_required_mean_at_fixed_correlation",
+        "line": 61,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_one_test_is_unaffected_by_intertest_correlation",
+        "line": 74,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_corrected_hundred_test_threshold_and_stored_table",
+        "line": 84,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_union_rejects_impossible_probabilities",
+        "line": 103,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_conditional_rejects_invalid_domain",
+        "line": 116,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_union_matches_independent_finite_set_counting",
+        "line": 128,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_joint_tail_rejects_invalid_domain",
+        "line": 147,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_independent_gaussian_tail_factorizes",
+        "line": 160,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_joint_tail_is_symmetric_and_bounded",
+        "line": 173,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_admission_reference_overlaps",
+        "line": 188,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_higher_correlation_increases_mixed_overlap",
+        "line": 198,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_towers_reference_csvs",
+        "line": 209,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_deal_generated_contract_cases",
+        "line": 222,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "efe034a426416d47885bdb97b67d91c4fbfe27386d8f7d60a71a008244109b89"
+  },
+  {
+    "path": "tests/test_proof_gate_contracts.py",
+    "function_count": 5,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 25,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "test_success_gate_rejects_empty_failed_or_unfinished_runs",
+        "line": 24,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_count_gates_reject_negative_counts",
+        "line": 35,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_moving_a_check_to_unproved_preserves_balance_but_rejects_success",
+        "line": 53,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_native_report_parser_accepts_retained_portfolios",
+        "line": 68,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_native_report_parser_rejects_missing_zero_or_inconsistent_totals",
+        "line": 88,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "6c104ef4915968393425a426f5e244c0a67e528ca59de159f8b0676995648781"
+  },
+  {
+    "path": "tests/test_runner_lint_contracts.py",
+    "function_count": 4,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 20,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "test_version_record_retains_nonzero_exit_and_both_streams",
+        "line": 18,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_version_record_kills_and_reaps_timed_out_process",
+        "line": 31,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_environment_rejects_malformed_unknown_or_duplicate_exports",
+        "line": 53,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_environment_preserves_quoted_values_without_shell_expansion",
+        "line": 65,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "ee4a3efc9d4dd84fb5cdfcd426d9ae0795be0bcd0ca7bc9f8267b7c96a8e02eb"
+  },
+  {
+    "path": "tests/test_spark_contracts.py",
+    "function_count": 18,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 90,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "test_mask_preserves_locations_and_ignores_comments_strings_and_characters",
+        "line": 33,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_forward_declaration_pairs_with_body_and_qualified_parameter_types",
+        "line": 48,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_overloaded_names_are_rejected_instead_of_merged",
+        "line": 61,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_four_clauses_fail_and_five_pass",
+        "line": 73,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_ghost_mode_ranges_and_body_assertions_do_not_count",
+        "line": 86,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_top_level_conjunctions_and_atomic_conditionals",
+        "line": 113,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_empty_behavioral_clauses_are_rejected",
+        "line": 123,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_repeated_clauses_are_rejected_despite_case_and_whitespace",
+        "line": 133,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_literal_boolean_padding_is_rejected",
+        "line": 144,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_native_source_locations_match_both_specification_and_body",
+        "line": 155,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_missing_native_entity_cannot_establish_complete_coverage",
+        "line": 171,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_native_non_spark_status_cannot_establish_complete_coverage",
+        "line": 182,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_unmatched_native_subprogram_cannot_disappear_from_the_floor",
+        "line": 194,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_native_package_interface_is_explicitly_outside_the_subprogram_floor",
+        "line": 208,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_unsupported_mode_pragmas_fail_closed",
+        "line": 222,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_off_completion_keeps_the_explicit_interface_in_the_inventory",
+        "line": 232,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_contract_case_alternatives_count_as_distinct_behavioral_clauses",
+        "line": 245,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_all_current_ada_interfaces_meet_the_explicit_contract_floor",
+        "line": 257,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "b125682b24e004c8a2ecf2b1261c33015f5c2e131b26e9e7a1c8e233a8e70f5a"
+  },
+  {
+    "path": "tests/test_spark_coverage_contracts.py",
+    "function_count": 17,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 85,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "entity",
+        "line": 20,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "write_native",
+        "line": 30,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_native_statuses_are_separate_and_raw_hashes_match",
+        "line": 42,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_duplicate_identical_entities_are_counted_once",
+        "line": 58,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_conflicting_duplicate_status_cannot_pass",
+        "line": 75,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_filter_uses_location_chain_and_preserves_external_assumption_flags",
+        "line": 87,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_suppressed_messages_are_reported_even_with_empty_justification",
+        "line": 105,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_missing_or_empty_native_inventory_cannot_pass",
+        "line": 119,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_malformed_entity_schema_is_rejected",
+        "line": 138,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_invalid_json_or_missing_sections_cannot_pass",
+        "line": 151,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_source_filter_cannot_make_empty_coverage_successful",
+        "line": 162,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_malformed_assumption_or_suppression_metadata_cannot_pass",
+        "line": 177,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_source_filter_cannot_hide_malformed_foreign_entities",
+        "line": 190,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_explicit_flow_mode_retains_empty_units_without_claiming_proof_completeness",
+        "line": 201,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_flow_mode_cannot_satisfy_completion_even_if_proof_arrays_are_present",
+        "line": 221,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_flow_mode_validates_present_optional_sections",
+        "line": 235,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_unknown_analysis_mode_is_explicitly_rejected",
+        "line": 248,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "02e410d65f0c52bbfe140b0f89faf9cf90b9c1b4246c9ee6db819614dcd47ac7"
+  },
+  {
+    "path": "tests/test_static_lint_contracts.py",
+    "function_count": 8,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 40,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "lint_checker",
+        "line": 20,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "division_probe",
+        "line": 30,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "control_reports",
+        "line": 40,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_real_positive_and_negative_lint_controls_are_accepted",
+        "line": 51,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_missing_or_broken_negative_diagnostic_cannot_pass",
+        "line": 65,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_new_unsafe_implementation_is_reported_by_the_real_linter",
+        "line": 76,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_missing_negative_control_cannot_pass",
+        "line": 92,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_division_control_checks_its_domain_without_changing_arithmetic",
+        "line": 104,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "582197536a3f56e5d201657ba5756cd7a984c57d930dc8720b551f1c6e31634f"
+  },
+  {
+    "path": "tests/test_validator_contracts.py",
+    "function_count": 18,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 90,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "rewrite_csv",
+        "line": 26,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "corrupted_hoeflin_calculations",
+        "line": 44,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_comparison_helpers_reject_nonfinite_values",
+        "line": 65,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_comparison_helpers_reject_invalid_tolerances",
+        "line": 78,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_wilson_rejects_invalid_count_domain",
+        "line": 93,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_wilson_extreme_counts_are_finite_ordered_intervals",
+        "line": 103,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_wilson_respects_success_failure_symmetry",
+        "line": 118,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_hoeflin_retained_calculations_and_simulation_are_accepted",
+        "line": 131,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_towers_retained_calculations_and_simulation_are_accepted",
+        "line": 144,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_hoeflin_validator_rejects_nonfinite_calculated_value",
+        "line": 153,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_hoeflin_validator_rejects_non_nested_counts",
+        "line": 164,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_towers_validator_rejects_missing_data_rows",
+        "line": 185,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_towers_validator_rejects_negative_count_cell",
+        "line": 198,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "assert_optimized_cli_rejects",
+        "line": 214,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_hoeflin_optimized_cli_rejects_corrupt_data",
+        "line": 227,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_towers_optimized_cli_rejects_corrupt_data",
+        "line": 239,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_contract_negative_control_rejects_bad_precondition",
+        "line": 253,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "test_contract_negative_control_rejects_wrong_postcondition",
+        "line": 264,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "83889ee9e3e0a8c7aeb0901e856d81e07fe875416c9e75c3020ca24ecaf36269"
+  },
+  {
+    "path": "verification/check_contract_coverage.py",
+    "function_count": 4,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 20,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "is_contract",
+        "line": 24,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "audit_file",
+        "line": 36,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "python_files",
+        "line": 78,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 101,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "f99c7697e512318c541b9efb4f94d5887a133ff2767d55752e11c56af84e1999"
+  },
+  {
+    "path": "verification/check_static_lint.py",
+    "function_count": 3,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 15,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "lint_paths",
+        "line": 32,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "accepted",
+        "line": 51,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 71,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "5484f01fe99b230f77ba3148f73b31ed2642252da81b4bd12d86105931456602"
+  },
+  {
+    "path": "verification/ghost_boundaries.py",
+    "function_count": 14,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 70,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "require",
+        "line": 29,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "ada_code",
+        "line": 40,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "declaration_end",
+        "line": 51,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "operation_body",
+        "line": 69,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "contract_reference",
+        "line": 106,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "source_mapping",
+        "line": 124,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "ghost_package",
+        "line": 134,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "model_entity_kind",
+        "line": 154,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "pinned_ada_sources",
+        "line": 197,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "foreign_imports",
+        "line": 226,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "external_dependencies",
+        "line": 250,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "coupling_reference",
+        "line": 268,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "validate_standard_models",
+        "line": 292,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "validate_boundaries",
+        "line": 358,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "a6ccd4afd2f233e4ebe031b8ed5286e691547514a3734fa5e7b6f94b83d16ff5"
+  },
+  {
+    "path": "verification/proof_gate.py",
+    "function_count": 2,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 10,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "totals_balanced",
+        "line": 11,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "successful_checks",
+        "line": 21,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+  },
+  {
+    "path": "verification/replay_hoeflin.py",
+    "function_count": 2,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 10,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "replay",
+        "line": 27,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 83,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "91d4a975b84badf342863d90d3a823aec1453c5fcc4d466e33f3e615777fdc3d"
+  },
+  {
+    "path": "verification/run_computer10.py",
+    "function_count": 12,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 60,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "is_sha256",
+        "line": 77,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "utc",
+        "line": 86,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "digest",
+        "line": 95,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "dump",
+        "line": 104,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "environment",
+        "line": 116,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "execute",
+        "line": 152,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "version_record",
+        "line": 183,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "summary_number",
+        "line": 204,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "report_summary",
+        "line": 218,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "snapshot",
+        "line": 244,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "campaign",
+        "line": 269,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 335,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910"
+  },
+  {
+    "path": "verification/spark_contracts.py",
+    "function_count": 10,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 50,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "require",
+        "line": 31,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "masked",
+        "line": 41,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "split_top",
+        "line": 51,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "unparenthesized",
+        "line": 74,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "clauses",
+        "line": 99,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "declarations",
+        "line": 115,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "contract_entries",
+        "line": 176,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "inventory",
+        "line": 205,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "current_sources",
+        "line": 289,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 300,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "91568e2258eef4cdb8faa74c3a752e2e768a985b821a696a765d4be8610854f4"
+  },
+  {
+    "path": "verification/spark_coverage.py",
+    "function_count": 5,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 25,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "require",
+        "line": 20,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "unique_object",
+        "line": 30,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "location",
+        "line": 44,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "normalize_entity",
+        "line": 59,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "read_coverage",
+        "line": 88,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "4fa33d7e7d7e0b2c32957514ee1d8b0295d839e88ada34bcf43bba454d496ff1"
+  },
+  {
+    "path": "verification/verify_evidence.py",
+    "function_count": 6,
+    "missing": [],
+    "imports_deal": true,
+    "contract_count": 30,
+    "minimum_contracts": 5,
+    "function_contracts": [
+      {
+        "name": "sha",
+        "line": 44,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "check",
+        "line": 53,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "campaign_policy",
+        "line": 66,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "evidence_source",
+        "line": 127,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "verify",
+        "line": 160,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      },
+      {
+        "name": "main",
+        "line": 285,
+        "contract_count": 5,
+        "distinct_contract_count": 5,
+        "duplicate_contract_count": 0
+      }
+    ],
+    "insufficient": [],
+    "duplicated": [],
+    "sha256": "ae7c18ecf8fb61e1be438df339dc08f18309bd736de11c9a027fb0672dfeb43e"
+  }
+]

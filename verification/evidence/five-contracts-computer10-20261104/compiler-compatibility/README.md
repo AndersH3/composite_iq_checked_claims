@@ -1,0 +1,7 @@
+# Compiler compatibility probes, computer10, 4 November 2026
+
+The four Boolean inputs exhaust Classify's input domain. The original biconditional postcondition passes with GNAT 13 at -O0 and GNAT 14 at -O0/-O2, but GNAT 13 at -O2 raises caught assertion errors for three inputs. Four equivalent guarded implications pass all four with GNAT 13 at -O2. Function bodies are unchanged. The published Classify uses those guarded implications.
+
+Case_Name's expression-function Contract_Cases form returns all four expected names under GNAT 13 at -O2 but emits five compiler warnings that Result is absent. An equivalent four-clause conditional Post emits no warnings and passes all four names; the published specification uses this form.
+
+Logs record compiler commands and printed results. The harness catches exceptions so inspect output, not just process status. metadata.json records tool versions and hashes. To reproduce, copy the production Towers Ada src files into an isolated directory, overlay the desired .ads.txt variant as its corresponding package .ads, copy the corresponding harness to main.adb, and run the recorded gnatmake/run commands with the named GNAT bin directory first in PATH. Classify probes need only admission_core.ads/.adb; Case_Name probes additionally need the other Towers sources and -largs -lm. This is a finite compatibility regression, not a general compiler-correctness proof.

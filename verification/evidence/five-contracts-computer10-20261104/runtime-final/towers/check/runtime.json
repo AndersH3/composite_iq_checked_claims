@@ -1,0 +1,312 @@
+{
+  "project": "towers",
+  "policy": "check",
+  "sources": [
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+      "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+      "sha256": "077d3af2ce4a9ee400e9823fe36c3fc9d20b9f6410b6758ac14d60347f1a3a71"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+      "sha256": "bcb7a876586b87474737452dd20bdc0ea94804ccce8b4044d80713113f1fee12"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+      "sha256": "7dc1a6b119fc11004b7b08d047bbe0bbf6ddc8a20bad7106a4bb2ad404f5ce7f"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+      "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+      "sha256": "e2f716ccc14ef9bc2555d04ed22fde2941ef87c4fcf71dd7e2c863f0dd5706ae"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+      "sha256": "2e1aafd25fd37016413c34b3a57ca41dcbde7f5b0a60e744bae2af989c9bb67a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+      "sha256": "d0f939b091b31bcda5eee8b77da7d85d880f072ee51722fc050fc938e76ec194"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+      "sha256": "92cd468e1e23d5a41986e73b91de00a697896237c0814ee118ff956f52a520cb"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+      "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+      "sha256": "e33e5050dfae56cac0d50ac341997d3cebffa324cf40e320009c73ac1bbe58e4"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+      "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+      "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers.gpr",
+      "sha256": "7c369eab00dc14b256698f925e477334469387023f6d089cae76b97cb6d32cb1"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/towers_proof.gpr",
+      "sha256": "68970c0902dee2d29c58e6f70bb553cbd2f9741b9bb695bb88baffa1eebcd742"
+    }
+  ],
+  "policy_sha256": "7e8c33fa414c4d4fa74dac5ce5222ffc4837d308af4005251356e5807e7558c4",
+  "commands": [
+    {
+      "argv": [
+        "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+        "-P",
+        "towers.gpr",
+        "-p",
+        "-cargs",
+        "-gnatec=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/check/policy.adc"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:23.839678+00:00",
+      "finished_utc": "2026-11-04T06:06:26.615852+00:00",
+      "elapsed_seconds": 2.776177667983575,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "144cf01b9509de6552d56a51d8e3e227fb01c94df64ca76ee8639205e1e19ebe",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "1000000",
+        "20261030",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/check"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:26.623786+00:00",
+      "finished_utc": "2026-11-04T06:06:26.939166+00:00",
+      "elapsed_seconds": 0.31537690199911594,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "80206b3180a25cd0b8f5b10c27ff2344af33ab2ddc3c1ddd1d6069d6115f44e3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/check",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:26.940043+00:00",
+      "finished_utc": "2026-11-04T06:06:35.943262+00:00",
+      "elapsed_seconds": 9.003226795990486,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+        "-O",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/check",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-04T06:06:35.943414+00:00",
+      "finished_utc": "2026-11-04T06:06:45.558420+00:00",
+      "elapsed_seconds": 9.61501450400101,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "executables": {
+    "towers_demo": "0105474e5da3941b41e373d5d04fe35f5d5e069cea029be948e0f2f877b7e35e"
+  },
+  "csvs": [
+    {
+      "path": "calculation.csv",
+      "sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/calculation.csv",
+      "reference_sha256": "b6911770ea31a37bc8ebcdcda7f57199d66765045b535d34a7bcf68efe731762",
+      "byte_identical": true
+    },
+    {
+      "path": "calibration.csv",
+      "sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/calibration.csv",
+      "reference_sha256": "c471c67d4ce908658e01e556c5ab3e4aca76605dd9ae38c314193eda11fd7400",
+      "byte_identical": true
+    },
+    {
+      "path": "grid.csv",
+      "sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/grid.csv",
+      "reference_sha256": "30f902d88797b4729e5375df021a8f3af2af312abbd4e22355586fcc0293fa7a",
+      "byte_identical": true
+    },
+    {
+      "path": "simulation.csv",
+      "sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5",
+      "reference": "verification/evidence/ghost-boundaries-computer10-20261101/runtime/towers/check/simulation.csv",
+      "reference_sha256": "18044600a574e19d0bdd2576fdba7782c8b43d80cd6b3bae9a30fba2b1ea35b5",
+      "byte_identical": true
+    }
+  ],
+  "edge_checks": [
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "1",
+        "1",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-1"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.558578+00:00",
+      "finished_utc": "2026-11-04T06:06:45.622843+00:00",
+      "elapsed_seconds": 0.06427424200228415,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "394315334420c34c1c24faab2247976ff58a7ffaed64782f0474f1c61805284f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        " +1 ",
+        " +1 ",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-2"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.622988+00:00",
+      "finished_utc": "2026-11-04T06:06:45.687200+00:00",
+      "elapsed_seconds": 0.06422224899870344,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "f1ae46a42157d68946ad523f06457656cbb124d3a282112717005d8b973d74ca",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "0_001",
+        "0_001",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-3"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.687351+00:00",
+      "finished_utc": "2026-11-04T06:06:45.722777+00:00",
+      "elapsed_seconds": 0.03543390301638283,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "e6cb2d9ede7c387d793835e16b61ef4548c9495f0153adc018ddc38c0a77a660",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "2#1#",
+        "16#1#",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-4"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.722926+00:00",
+      "finished_utc": "2026-11-04T06:06:45.787125+00:00",
+      "elapsed_seconds": 0.06420896499184892,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "488eb323fc27ba8b585dc0a6e64ba9048eb9dd3283c424fd7c4531c9e8bfc1c6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "1E0",
+        "1E0",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-5"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.787272+00:00",
+      "finished_utc": "2026-11-04T06:06:45.851497+00:00",
+      "elapsed_seconds": 0.06423302099574357,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "70b112fc270f0040e33e328c8a808c4f9c350c8a1c9304aa20fa5c944d83c6c0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "1",
+        "2147483646",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-6"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.851649+00:00",
+      "finished_utc": "2026-11-04T06:06:45.915910+00:00",
+      "elapsed_seconds": 0.06427059799898416,
+      "returncode": 0,
+      "expected_success": true,
+      "accepted": true,
+      "stdout_sha256": "784e14f68df3366e21e8d8533761ef56ae43c19e1873e5d532b092f94f1fcdbd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "0",
+        "1",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-7"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.916065+00:00",
+      "finished_utc": "2026-11-04T06:06:45.917833+00:00",
+      "elapsed_seconds": 0.0017730079998727888,
+      "returncode": 1,
+      "expected_success": false,
+      "accepted": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f268082d89de72937a7ddfe207d111441491e694d896160ba9e50fcb6ed392d1"
+    },
+    {
+      "argv": [
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source/bin/towers_demo",
+        "1",
+        "2147483647",
+        "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-edge-8"
+      ],
+      "cwd": "/tmp/composite-five-runtime-final-r5s_d9w8/towers-check-source",
+      "started_utc": "2026-11-04T06:06:45.917937+00:00",
+      "finished_utc": "2026-11-04T06:06:45.919547+00:00",
+      "elapsed_seconds": 0.0016126889968290925,
+      "returncode": 1,
+      "expected_success": false,
+      "accepted": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8b411ce0d2fc454863265bc8e3b23795c866e9d62e337aed7c89229fd5a6105c"
+    }
+  ],
+  "all_passed": true
+}

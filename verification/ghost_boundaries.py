@@ -13,8 +13,12 @@ GHOST_SCHEMA = "spark-ghost-boundaries-v1"
 PROJECT_NAMES = {"hoeflin", "towers"}
 GLOBAL_OBLIGATION_SCOPES = {"numerical-backends", "runtime-and-io", "model-adequacy",
                             "psychometric-validity", "toolchain-and-provers"}
+REQUEST_RECEIPTS = {"hoeflin_boundary_models.note", "towers_io_models.observe_trials",
+                    "towers_io_models.observe_seed", "towers_io_models.request_report",
+                    "towers_io_models.observe_normal_return"}
 STRINGS = re.compile(r'"(?:""|[^"])*"')
 COMMENTS = re.compile(r"--[^\n]*")
+WITH = re.compile(r"\bwith\b", re.IGNORECASE)
 
 
 @deal.pre(lambda condition, message: isinstance(condition, bool) and isinstance(message, str))
@@ -32,13 +36,15 @@ def require(condition: bool, message: str) -> None:
 @deal.post(lambda result: isinstance(result, str))
 @deal.raises()
 @deal.has()
+@deal.ensure(lambda text, result: len(result) <= len(text))
 def ada_code(text: str) -> str:
     """Remove strings and comments before checking Ada identifiers/contracts."""
     without_strings = STRINGS.sub('""', text)
     return COMMENTS.sub("", without_strings)
 
 
-@deal.pre(lambda code, start: isinstance(code, str) and type(start) is int and 0 <= start <= len(code))
+@deal.pre(lambda code, start: isinstance(code, str))
+@deal.pre(lambda code, start: type(start) is int and 0 <= start <= len(code))
 @deal.post(lambda result: type(result) is int and result >= 0)
 @deal.raises()
 @deal.has()
@@ -55,7 +61,8 @@ def declaration_end(code: str, start: int) -> int:
     return len(code)
 
 
-@deal.pre(lambda text, entity: isinstance(text, str) and isinstance(entity, str) and bool(entity))
+@deal.pre(lambda text, entity: isinstance(text, str))
+@deal.pre(lambda text, entity: isinstance(entity, str) and bool(entity))
 @deal.post(lambda result: isinstance(result, str) and bool(result))
 @deal.raises(ValueError)
 @deal.has()
@@ -91,7 +98,8 @@ def operation_body(text: str, entity: str) -> str:
     return body
 
 
-@deal.pre(lambda text, reference: isinstance(text, str) and isinstance(reference, str) and bool(reference))
+@deal.pre(lambda text, reference: isinstance(text, str))
+@deal.pre(lambda text, reference: isinstance(reference, str) and bool(reference))
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises()
 @deal.has()
@@ -111,24 +119,78 @@ def contract_reference(text: str, reference: str) -> bool:
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises()
 @deal.has()
+@deal.ensure(lambda value, result: not result or isinstance(value, dict) and bool(value))
+@deal.ensure(lambda value, result: not result or all(isinstance(key, str) and isinstance(text, str) for key, text in value.items()))
 def source_mapping(value: object) -> bool:
     return isinstance(value, dict) and bool(value) and all(
         isinstance(key, str) and isinstance(text, str) for key, text in value.items())
 
 
 @deal.pre(lambda text: isinstance(text, str))
-@deal.post(lambda result: isinstance(result, str) and bool(result))
+@deal.post(lambda result: bool(result))
+@deal.post(lambda result: isinstance(result, str))
 @deal.raises(ValueError)
 @deal.has()
 def ghost_package(text: str) -> str:
+    """Select a SPARK model package, including mixed ordinary/Ghost packages.
+
+    Individual registered entities are checked separately. Package membership
+    alone does not make an ordinary declaration Ghost.
+    """
     header = re.search(r"\bpackage\s+(\w+)\s+with\s+([^;]*?)\bis\b",
                        ada_code(text), re.IGNORECASE)
-    require(header is not None and re.search(r"\bGhost\b", header.group(2), re.IGNORECASE) is not None,
-            "Model must belong to a declared Ghost package")
+    require(header is not None
+            and re.search(r"\bSPARK_Mode\b", header.group(2), re.IGNORECASE) is not None
+            and re.search(r"\bSPARK_Mode\s*=>\s*Off\b", header.group(2), re.IGNORECASE) is None,
+            "Model must belong to a declared SPARK package")
     return header.group(1)
 
 
-@deal.pre(lambda sources, source_root: isinstance(sources, list) and isinstance(source_root, Path) and source_root.is_dir())
+@deal.pre(lambda text, entity: isinstance(text, str))
+@deal.pre(lambda text, entity: isinstance(entity, str) and bool(entity))
+@deal.post(lambda result: result in {"ghost", "pure-function", "request-receipt"})
+@deal.raises(ValueError)
+@deal.has()
+def model_entity_kind(text: str, entity: str) -> str:
+    """Require Ghost observations or an explicit ordinary model role.
+
+    Ordinary functions must declare Global=>null. The five named ordinary
+    receipt updates mutate explicit request state; they make no physical IO
+    guarantee. This source check is deliberately limited to the project's
+    unoverloaded model declarations; native SPARK coverage is checked as well.
+    """
+    code = ada_code(text)
+    package = ghost_package(text)
+    require(entity.casefold().startswith(package.casefold() + "."),
+            "Model entity belongs to another package")
+    header = re.search(r"\bpackage\s+\w+\s+with\s+([^;]*?)\bis\b", code, re.IGNORECASE)
+    if re.search(r"\bGhost\b", header.group(1), re.IGNORECASE) is not None:
+        return "ghost"
+    leaf = entity.rsplit(".", 1)[-1]
+    declarations = list(re.finditer(r"\b(function|procedure)\s+" + re.escape(leaf) + r"\b",
+                                   code, re.IGNORECASE))
+    require(len(declarations) == 1, "Model declaration is missing or ambiguous: " + entity)
+    selected = declarations[0]
+    declaration = code[selected.end():declaration_end(code, selected.end())]
+    require(re.search(r"\bSPARK_Mode\s*=>\s*Off\b", declaration, re.IGNORECASE) is None,
+            "Model declaration cannot disable SPARK: " + entity)
+    aspects = WITH.split(declaration)
+    contract = aspects[-1] if len(aspects) > 1 else ""
+    if re.search(r"(?:^|,)\s*Ghost\s*(?:,|$)", contract, re.IGNORECASE) is not None:
+        return "ghost"
+    require(re.search(r"\bGlobal\s*=>\s*null\b", contract, re.IGNORECASE) is not None,
+            "Ordinary model must declare Global => null: " + entity)
+    if selected.group(1).casefold() == "function":
+        require(re.search(r"\bSide_Effects\b", contract, re.IGNORECASE) is None,
+                "Ordinary model function must be pure: " + entity)
+        return "pure-function"
+    require(entity.casefold() in REQUEST_RECEIPTS,
+            "Model observer/check procedure must be explicitly Ghost: " + entity)
+    return "request-receipt"
+
+
+@deal.pre(lambda sources, source_root: isinstance(sources, list))
+@deal.pre(lambda sources, source_root: isinstance(source_root, Path) and source_root.is_dir())
 @deal.post(source_mapping)
 @deal.raises(OSError, FileNotFoundError, PermissionError, ValueError, UnicodeDecodeError)
 @deal.has("read")
@@ -155,8 +217,8 @@ def pinned_ada_sources(sources: list, source_root: Path) -> dict:
     return dict(result)
 
 
-@deal.pre(lambda texts: isinstance(texts, dict)
-          and all(isinstance(k, str) and isinstance(v, str) for k, v in texts.items()))
+@deal.pre(lambda texts: isinstance(texts, dict))
+@deal.pre(lambda texts: all((isinstance(k, str) and isinstance(v, str) for k, v in texts.items())))
 @deal.post(lambda result: isinstance(result, dict)
            and all(isinstance(k, str) and isinstance(v, str) for k, v in result.items()))
 @deal.raises(ValueError)
@@ -180,8 +242,8 @@ def foreign_imports(texts: dict) -> dict:
     return found
 
 
-@deal.pre(lambda texts: isinstance(texts, dict)
-          and all(isinstance(k, str) and isinstance(v, str) for k, v in texts.items()))
+@deal.pre(lambda texts: isinstance(texts, dict))
+@deal.pre(lambda texts: all((isinstance(k, str) and isinstance(v, str) for k, v in texts.items())))
 @deal.post(lambda result: isinstance(result, set) and all(isinstance(value, str) for value in result))
 @deal.raises()
 @deal.has()
@@ -198,14 +260,13 @@ def external_dependencies(texts: dict) -> set:
     return units - internal
 
 
-@deal.pre(lambda text, reference, entity, kind:
-          isinstance(text, str) and isinstance(reference, str) and bool(reference)
-          and isinstance(entity, str) and bool(entity) and isinstance(kind, str))
+@deal.pre(lambda text, reference, entity, kind: isinstance(text, str))
+@deal.pre(lambda text, reference, entity, kind: isinstance(reference, str) and bool(reference) and isinstance(entity, str) and bool(entity) and isinstance(kind, str))
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises(ValueError)
 @deal.has()
 def coupling_reference(text: str, reference: str, entity: str, kind: str) -> bool:
-    require(kind in {"contract", "ghost-call"}, "Unknown ghost coupling kind")
+    require(kind in {"contract", "ghost-call", "model-call"}, "Unknown ghost coupling kind")
     if kind == "contract":
         leaf = entity.rsplit(".", 1)[-1]
         code = ada_code(text)
@@ -223,9 +284,8 @@ def coupling_reference(text: str, reference: str, entity: str, kind: str) -> boo
     return used is not None and re.search(r"(?<![\w.])" + re.escape(leaf) + r"\s*\(", body, re.IGNORECASE) is not None
 
 
-@deal.pre(lambda entries, texts, analyzed, math_dependency:
-          isinstance(entries, list) and isinstance(texts, dict) and isinstance(analyzed, dict)
-          and isinstance(math_dependency, bool))
+@deal.pre(lambda entries, texts, analyzed, math_dependency: isinstance(entries, list))
+@deal.pre(lambda entries, texts, analyzed, math_dependency: isinstance(texts, dict) and isinstance(analyzed, dict) and isinstance(math_dependency, bool))
 @deal.post(lambda result: isinstance(result, list) and len(result) in {0, 2})
 @deal.raises(ValueError)
 @deal.has()
@@ -247,6 +307,7 @@ def validate_standard_models(entries: list, texts: dict, analyzed: dict,
                 and isinstance(refs, list) and len(refs) == 1 and refs[0] in models,
                 "Standard ghost model entities are invalid")
         for model in models:
+            model_entity_kind(texts[model_file], model)
             row = analyzed.get(model.casefold())
             require(row is not None and model.casefold().startswith(package.casefold() + ".")
                     and Path(row.get("file", "")).name == Path(model_file).name,
@@ -277,6 +338,8 @@ def validate_standard_models(entries: list, texts: dict, analyzed: dict,
             require(re.search(r"\bpackage\s+" + re.escape(alias) + r"\s+renames\s+" + re.escape(unit) + r"\s*;",
                               code, re.IGNORECASE) is not None, "Standard callee alias is not bound")
         body = operation_body(texts[source], operation)
+        require(model_entity_kind(texts[model_file], refs[0]) == "ghost",
+                "Standard-library observer must be Ghost")
         assignment = re.search(r"\b" + re.escape(argument) + r"\s*:=\s*" + re.escape(callee) + r"\s*\(", body, re.IGNORECASE)
         observation = re.search(r"\b" + re.escape(refs[0]) + r"\s*\(\s*" + re.escape(argument) + r"\s*\)",
                                 body, re.IGNORECASE)
@@ -285,10 +348,8 @@ def validate_standard_models(entries: list, texts: dict, analyzed: dict,
     return entries
 
 
-@deal.pre(lambda register, project, coverage, sources, source_root:
-          isinstance(register, dict) and isinstance(project, str)
-          and isinstance(coverage, dict) and isinstance(sources, list)
-          and isinstance(source_root, Path) and source_root.is_dir())
+@deal.pre(lambda register, project, coverage, sources, source_root: isinstance(register, dict))
+@deal.pre(lambda register, project, coverage, sources, source_root: isinstance(project, str) and isinstance(coverage, dict) and isinstance(sources, list) and isinstance(source_root, Path) and source_root.is_dir())
 @deal.post(lambda result: isinstance(result, dict) and result["coverage_complete"] is True
            and result["implementation_proved"] is False and result["model_adequacy_proved"] is False
            and result["boundary_count"] == len(result["boundaries"]) and result["boundary_count"] > 0)
@@ -385,6 +446,7 @@ def validate_boundaries(register: dict, project: str, coverage: dict,
                 and all(isinstance(value, str) and value.casefold() in {model.casefold() for model in models}
                         for value in refs), "Contract references must name registered ghost models: " + name)
         for model in models:
+            model_entity_kind(texts[model_file], model)
             row = analyzed.get(model.casefold())
             require(row is not None and model.casefold().startswith(model_package.casefold() + ".")
                     and Path(row.get("file", "")).name == Path(model_file).name,
@@ -396,6 +458,10 @@ def validate_boundaries(register: dict, project: str, coverage: dict,
         link_kind = entry.get("link_kind", "contract")
         require(isinstance(contract_entity, str) and bool(contract_entity) and isinstance(link_kind, str),
                 "Ghost coupling operation is invalid")
+        if link_kind in {"ghost-call", "model-call"}:
+            require(all((model_entity_kind(texts[model_file], ref) == "ghost")
+                        == (link_kind == "ghost-call") for ref in refs),
+                    "Model coupling kind differs from the declared Ghost role")
         paired_spec = str(Path(contract_file).with_suffix(".ads"))
         contract_text = texts[contract_file]
         if paired_spec != contract_file and paired_spec in texts:
@@ -418,6 +484,11 @@ def validate_boundaries(register: dict, project: str, coverage: dict,
             helper_key = (helper_file, helper_name.rsplit(".", 1)[-1].casefold())
             require(helper_key in private and helper_key not in modeled_private,
                     "Excluded helper is absent or duplicated")
+            helper_kind = helper.get("link_kind", "contract")
+            if helper_kind in {"ghost-call", "model-call"}:
+                require(all((model_entity_kind(texts[model_file], ref) == "ghost")
+                            == (helper_kind == "ghost-call") for ref in helper_refs),
+                        "Helper coupling kind differs from the declared Ghost role")
             helper_text = texts[helper_file]
             paired_spec = str(Path(helper_file).with_suffix(".ads"))
             if paired_spec != helper_file and paired_spec in texts:

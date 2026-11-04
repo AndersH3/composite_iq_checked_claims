@@ -1,4 +1,5 @@
 """Native coverage cannot pass by omitting files or hiding trusted boundaries."""
+from conftest import protected_history_intact, reference_inputs_intact
 import hashlib
 import json
 from pathlib import Path
@@ -9,16 +10,18 @@ import pytest
 from verification.spark_coverage import read_coverage
 
 
+@deal.ensure(lambda name, status='all', file='sample.ads', line=1, *, result: protected_history_intact())
 @deal.pre(lambda name, status="all", file="sample.ads", line=1:
           isinstance(name, str) and bool(name) and isinstance(status, str)
           and isinstance(file, str) and type(line) is int)
 @deal.post(lambda result: isinstance(result, dict) and bool(result["sloc"]))
 @deal.raises()
-@deal.has()
+@deal.has("read")
 def entity(name: str, status: str = "all", file: str = "sample.ads", line: int = 1) -> dict:
     return {"name": name, "sloc": [{"file": file, "line": line}], "spark": status}
 
 
+@deal.ensure(lambda path, entities, assume=None, flow=None, proof=None, *, result: protected_history_intact())
 @deal.pre(lambda path, entities, assume=None, flow=None, proof=None:
           isinstance(path, Path) and path.suffix == ".spark" and isinstance(entities, list))
 @deal.post(lambda result: isinstance(result, Path) and result.is_file())
@@ -31,6 +34,9 @@ def write_native(path: Path, entities: list, assume=None, flow=None, proof=None)
     return path
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_native_statuses_are_separate_and_raw_hashes_match(tmp_path):
@@ -44,6 +50,9 @@ def test_native_statuses_are_separate_and_raw_hashes_match(tmp_path):
     assert result["no_assumptions_or_suppressions"]
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_duplicate_identical_entities_are_counted_once(tmp_path):
@@ -58,6 +67,9 @@ def test_duplicate_identical_entities_are_counted_once(tmp_path):
                for row in result["raw_files"])
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_conflicting_duplicate_status_cannot_pass(tmp_path):
@@ -67,6 +79,9 @@ def test_conflicting_duplicate_status_cannot_pass(tmp_path):
         read_coverage(tmp_path)
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_filter_uses_location_chain_and_preserves_external_assumption_flags(tmp_path):
@@ -82,6 +97,9 @@ def test_filter_uses_location_chain_and_preserves_external_assumption_flags(tmp_
 
 
 @pytest.mark.parametrize("section", ["flow", "proof"])
+@deal.pre(lambda tmp_path, section: protected_history_intact())
+@deal.ensure(lambda tmp_path, section, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, section, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_suppressed_messages_are_reported_even_with_empty_justification(tmp_path, section):
@@ -93,6 +111,9 @@ def test_suppressed_messages_are_reported_even_with_empty_justification(tmp_path
     assert not result["no_assumptions_or_suppressions"]
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_missing_or_empty_native_inventory_cannot_pass(tmp_path):
@@ -109,6 +130,9 @@ def test_missing_or_empty_native_inventory_cannot_pass(tmp_path):
     {"name": "Bad", "spark": "all", "sloc": [{"file": "sample.ads", "line": True}]},
     {"name": "Bad", "spark": "all", "sloc": [{"file": "sample.ads", "line": 0}]},
     {"name": "Bad", "spark": "all", "sloc": [{"file": "", "line": 1}]}])
+@deal.pre(lambda tmp_path, row: protected_history_intact())
+@deal.ensure(lambda tmp_path, row, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, row, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_malformed_entity_schema_is_rejected(tmp_path, row):
@@ -119,6 +143,9 @@ def test_malformed_entity_schema_is_rejected(tmp_path, row):
 
 @pytest.mark.parametrize("text", ["{", "[]", '{"spark": []}',
     '{"spark": [], "spark": [], "flow": [], "proof": [], "pragma_assume": []}'])
+@deal.pre(lambda tmp_path, text: protected_history_intact())
+@deal.ensure(lambda tmp_path, text, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, text, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_invalid_json_or_missing_sections_cannot_pass(tmp_path, text):
@@ -127,6 +154,9 @@ def test_invalid_json_or_missing_sections_cannot_pass(tmp_path, text):
         read_coverage(tmp_path)
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_source_filter_cannot_make_empty_coverage_successful(tmp_path):
@@ -139,6 +169,9 @@ def test_source_filter_cannot_make_empty_coverage_successful(tmp_path):
     ("pragma_assume", [{"file": "sample.adb", "line": 2, "col": False}]),
     ("proof", [{"file": "sample.adb", "line": 2, "suppressed": False}]),
     ("flow", [None])])
+@deal.pre(lambda tmp_path, section, entries: protected_history_intact())
+@deal.ensure(lambda tmp_path, section, entries, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, section, entries, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_malformed_assumption_or_suppression_metadata_cannot_pass(tmp_path, section, entries):
@@ -149,6 +182,9 @@ def test_malformed_assumption_or_suppression_metadata_cannot_pass(tmp_path, sect
         read_coverage(tmp_path)
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_source_filter_cannot_hide_malformed_foreign_entities(tmp_path):
@@ -157,6 +193,9 @@ def test_source_filter_cannot_hide_malformed_foreign_entities(tmp_path):
         read_coverage(tmp_path, {"sample.ads"})
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_explicit_flow_mode_retains_empty_units_without_claiming_proof_completeness(tmp_path):
@@ -174,6 +213,9 @@ def test_explicit_flow_mode_retains_empty_units_without_claiming_proof_completen
         read_coverage(tmp_path)
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_flow_mode_cannot_satisfy_completion_even_if_proof_arrays_are_present(tmp_path):
@@ -185,6 +227,9 @@ def test_flow_mode_cannot_satisfy_completion_even_if_proof_arrays_are_present(tm
 
 
 @pytest.mark.parametrize("section,value", [("proof", None), ("pragma_assume", {}), ("flow", None)])
+@deal.pre(lambda tmp_path, section, value: protected_history_intact())
+@deal.ensure(lambda tmp_path, section, value, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, section, value, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_flow_mode_validates_present_optional_sections(tmp_path, section, value):
@@ -195,6 +240,9 @@ def test_flow_mode_validates_present_optional_sections(tmp_path, section, value)
         read_coverage(tmp_path, analysis_mode="flow")
 
 
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write")
 def test_unknown_analysis_mode_is_explicitly_rejected(tmp_path):

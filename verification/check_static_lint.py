@@ -22,10 +22,8 @@ except ModuleNotFoundError:
 NEGATIVE_CONTROL = "tests/fixtures/contract_negative_control.py"
 
 
-@deal.pre(lambda root, paths: isinstance(root, Path) and root.is_dir()
-          and isinstance(paths, list) and bool(paths)
-          and all(isinstance(path, Path) and path.is_file()
-                  and path.is_relative_to(root) and path.suffix == ".py" for path in paths))
+@deal.pre(lambda root, paths: isinstance(root, Path))
+@deal.pre(lambda root, paths: root.is_dir() and isinstance(paths, list) and bool(paths) and all((isinstance(path, Path) and path.is_file() and path.is_relative_to(root) and (path.suffix == '.py') for path in paths)))
 @deal.post(lambda result: isinstance(result, dict) and isinstance(result["returncode"], int)
            and isinstance(result["stdout"], str) and isinstance(result["stderr"], str)
            and isinstance(result["diagnostics"], list) and bool(result["paths"]))
@@ -45,9 +43,8 @@ def lint_paths(root: Path, paths: list) -> dict:
             "stdout": stdout, "stderr": stderr, "diagnostics": diagnostics}
 
 
-@deal.pre(lambda positive, negative: isinstance(positive, dict) and isinstance(negative, dict)
-          and all(key in record for record in (positive, negative)
-                  for key in ("returncode", "stdout", "stderr", "diagnostics")))
+@deal.pre(lambda positive, negative: isinstance(positive, dict))
+@deal.pre(lambda positive, negative: isinstance(negative, dict) and all((key in record for record in (positive, negative) for key in ('returncode', 'stdout', 'stderr', 'diagnostics'))))
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises()
 @deal.has()
@@ -68,6 +65,9 @@ def accepted(positive: dict, negative: dict) -> bool:
 
 @deal.raises(SystemExit, OSError, ValueError, JSONDecodeError, subprocess.SubprocessError, TimeoutExpired)
 @deal.has("read", "syscall", "stdout", "stderr")
+@deal.pre(lambda: isinstance(sys.argv, list))
+@deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
+@deal.pre(lambda: ROOT.is_dir())
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)

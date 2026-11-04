@@ -1,0 +1,2 @@
+{"max_absolute_numeric_error": 2.842170943040401e-14, "threshold_rows": 9, "tolerance": 5e-11, "worked_examples": 4}
+Validated 8 simulation cases (moderate-tail diagnostics only).
