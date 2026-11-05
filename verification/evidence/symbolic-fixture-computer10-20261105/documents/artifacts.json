@@ -1,0 +1,205 @@
+{
+  "checked_utc": "2026-11-05T12:46:36.215355+00:00",
+  "host": "computer10",
+  "engine": "XeTeX 3.141592653-2.6-0.999996 (TeX Live 2025/dev/Debian)",
+  "format": "XeLaTeX, KOMA-Script scrartcl, A4, 16 mm margins",
+  "documents": [
+    {
+      "source": "analyses/hoeflin-ferguson/composite_iq_analysis.tex",
+      "source_sha256": "d73ec7d53def74de693da685ca1057265d5dfadf713322b697790fd4bd93c630",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "pdf_sha256": "b03316027bd1ededf7eb8545d11b27bc68535682f86e4e7beffc348e30c4e3a9",
+      "pages": 10,
+      "build_argv": [
+        "latexmk",
+        "-xelatex",
+        "-outdir=/tmp/composite-symbolic-pdf-hoeflin",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "composite_iq_analysis.tex"
+      ],
+      "build_cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/hoeflin-ferguson",
+      "build_returncode": 0,
+      "render_argv": [
+        "pdftoppm",
+        "-scale-to",
+        "1600",
+        "-png",
+        "/tmp/composite-symbolic-pdf-hoeflin/composite_iq_analysis.pdf",
+        "/tmp/composite-symbolic-render-hoeflin/page"
+      ],
+      "render_returncode": 0,
+      "reviewed_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rendered_page_sha256": [
+        {
+          "page": 1,
+          "sha256": "12b6035d4f5fae570c7d2426a14ec743acfc9bf768527064f7bb4696f145f9bb"
+        },
+        {
+          "page": 2,
+          "sha256": "018044aa0861418c8d8d5f61e2049b29051d06f0449d4ee993b081f2ede9ade6"
+        },
+        {
+          "page": 3,
+          "sha256": "ca257ef24323a4021478ef09294ab80dd9cc96f87f16084bcca5f6f5a22f0f10"
+        },
+        {
+          "page": 4,
+          "sha256": "883893ed8eb11dcdeb92100e656ccd2772f5333942bf5be7deeef85634fbd5d8"
+        },
+        {
+          "page": 5,
+          "sha256": "0f6f3224a162e25ee719ab6e73655343f95cda2a952fd350b4ea74022f6eec34"
+        },
+        {
+          "page": 6,
+          "sha256": "f378ecacfc11120e9c4a47a3732965e673087fa1c4cd7ace1deb47163276ba52"
+        },
+        {
+          "page": 7,
+          "sha256": "d24a9aba50966b6be9a3abeb237e735f21ca8df15ba673c28e51541feeeeb04b"
+        },
+        {
+          "page": 8,
+          "sha256": "bc9fe528de4aa6e3f9f610f724f789e9a9db44156ed0eb4d2ffaee9fa27d88b0"
+        },
+        {
+          "page": 9,
+          "sha256": "db00d0b98654c23f95cfa916c509c3154db88828f06008ba2e0015565bfaf8ca"
+        },
+        {
+          "page": 10,
+          "sha256": "cba10dcd62ba5a11629e6cc87ddec6e8c01faebc179b12216bca9621ee617864"
+        }
+      ],
+      "final_count_correction_changed_pages": [
+        "page-08.png"
+      ],
+      "other_rendered_pages_byte_identical_to_previously_reviewed_images": true,
+      "visual_review": "All pages reviewed in contact sheets; final changed pages reviewed again at full resolution. No clipping, overlapping text, missing glyphs, orphan overflow page or broken formulas observed.",
+      "final_log_checks": {
+        "overfull": false,
+        "undefined_references": false,
+        "missing_glyphs": false,
+        "unicode_math_compatibility_warnings_retained": true
+      }
+    },
+    {
+      "source": "analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex",
+      "source_sha256": "56547d3825ddc292bbd40465509b2878d7af2375fdd496e792caa7b397c2b092",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "pdf_sha256": "6f7a3a4cfe776fa98be2fc5999bdf51c1b2007f53efd44d8dafabe47c634caeb",
+      "pages": 12,
+      "build_argv": [
+        "latexmk",
+        "-xelatex",
+        "-outdir=/tmp/composite-symbolic-pdf-towers",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "towers_admissions_analysis.tex"
+      ],
+      "build_cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/analyses/towers-multiple-test-admissions",
+      "build_returncode": 0,
+      "render_argv": [
+        "pdftoppm",
+        "-scale-to",
+        "1600",
+        "-png",
+        "/tmp/composite-symbolic-pdf-towers/towers_admissions_analysis.pdf",
+        "/tmp/composite-symbolic-render-towers/page"
+      ],
+      "render_returncode": 0,
+      "reviewed_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "rendered_page_sha256": [
+        {
+          "page": 1,
+          "sha256": "9b389dd675d4df5ed4c216925cc27b15ba875914719686038b232c8681e9abde"
+        },
+        {
+          "page": 2,
+          "sha256": "6a8c54027f0970a3b6ae50006b01f1d7457419a0d5fb9e5c649b3735565cbe88"
+        },
+        {
+          "page": 3,
+          "sha256": "0ff555b78df2dc005c5617deaf5faa5abefb92b0f0895f7b519c9c99f502d40e"
+        },
+        {
+          "page": 4,
+          "sha256": "cea9f832b5f43762422c3fb244de193d12f0cefc569d432ad83ae8fb0250158b"
+        },
+        {
+          "page": 5,
+          "sha256": "24b060ad8b89e2e80c40c1fb0a33d8a5abd24c8b7b01366ee47dc6e133d4d5cc"
+        },
+        {
+          "page": 6,
+          "sha256": "ac5186ff2fe1a6dc62ec0ec0c615da71b0c078e0613db6eac6637b1579bcd906"
+        },
+        {
+          "page": 7,
+          "sha256": "00c8840b650da797932e8ef7421638bf1de5d1bac86368714a09f977ade09317"
+        },
+        {
+          "page": 8,
+          "sha256": "7ccc913e24ec5484b34acfeccee767e3539c51bdb53151754c61e02f901d86d3"
+        },
+        {
+          "page": 9,
+          "sha256": "eadefa75dfca8e5403bf94c5094074eb1989cef247920a328039eb1cc3f4381f"
+        },
+        {
+          "page": 10,
+          "sha256": "f36653c5769b2e9734312dc9b2f63cad45e970bbc559c0e110748cd7926b267f"
+        },
+        {
+          "page": 11,
+          "sha256": "e5ef24f13aff698639e8ec69f619acd195e224d8782007c925bb4e696eb041d8"
+        },
+        {
+          "page": 12,
+          "sha256": "9a12a0fa69d0e12dd07452c06d14bf33f8e40e40fefaf716372591999d29400a"
+        }
+      ],
+      "final_count_correction_changed_pages": [
+        "page-10.png"
+      ],
+      "other_rendered_pages_byte_identical_to_previously_reviewed_images": true,
+      "visual_review": "All pages reviewed in contact sheets; final changed pages reviewed again at full resolution. No clipping, overlapping text, missing glyphs, orphan overflow page or broken formulas observed.",
+      "final_log_checks": {
+        "overfull": false,
+        "undefined_references": false,
+        "missing_glyphs": false,
+        "unicode_math_compatibility_warnings_retained": true
+      }
+    }
+  ],
+  "complete": true,
+  "notes": [
+    "Command exit codes were observed; exact start/end times of the earlier build/render calls were not instrumented and are not inferred.",
+    "Final log checks refer to the completed XeLaTeX passes, not initial citation-resolution passes."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "host": "computer10",
+  "checks": [
+    {
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:47:18.460518+00:00",
+      "finished_utc": "2026-11-05T12:47:19.701854+00:00",
+      "elapsed_seconds": 1.241329500975553,
+      "returncode": 0,
+      "stdout_log": "current-audit/normal.stdout",
+      "stderr_log": "current-audit/normal.stderr",
+      "stdout_sha256": "b6635e97e718e34e50b80d855d4fb8a3114f5562ce8c860a84965f67f9a92ba9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:47:19.718884+00:00",
+      "finished_utc": "2026-11-05T12:47:21.225487+00:00",
+      "elapsed_seconds": 1.50660397100728,
+      "returncode": 0,
+      "stdout_log": "current-audit/optimized.stdout",
+      "stderr_log": "current-audit/optimized.stderr",
+      "stdout_sha256": "b6635e97e718e34e50b80d855d4fb8a3114f5562ce8c860a84965f67f9a92ba9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "complete": true,
+  "scope": "Current source, complete native provenance/coverage/floors, symbolic records and release checksums. No prover rerun."
+}

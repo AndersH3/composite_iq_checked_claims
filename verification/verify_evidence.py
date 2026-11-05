@@ -18,18 +18,20 @@ from subprocess import CalledProcessError
 try:
     from verification.run_computer10 import ROOT, PROJECTS, BASE_REQUIRED_BODIES, REQUIRED_BODIES, report_summary, is_sha256
     from verification.spark_coverage import read_coverage
+    from verification.check_symbolic import SCHEMA as SYMBOLIC_SCHEMA, accepted as symbolic_accepted, normalized_source, UnsupportedError
     from verification.spark_contracts import SCHEMA as CONTRACT_SCHEMA, inventory as contract_inventory
     from verification.check_contract_coverage import audit_file, python_files, MINIMUM_CONTRACTS
     from verification.ghost_boundaries import GHOST_SCHEMA, ghost_package, pinned_ada_sources, validate_boundaries
 except ModuleNotFoundError:
     from run_computer10 import ROOT, PROJECTS, BASE_REQUIRED_BODIES, REQUIRED_BODIES, report_summary, is_sha256
     from spark_coverage import read_coverage
+    from check_symbolic import SCHEMA as SYMBOLIC_SCHEMA, accepted as symbolic_accepted, normalized_source, UnsupportedError
     from spark_contracts import SCHEMA as CONTRACT_SCHEMA, inventory as contract_inventory
     from check_contract_coverage import audit_file, python_files, MINIMUM_CONTRACTS
     from ghost_boundaries import GHOST_SCHEMA, ghost_package, pinned_ada_sources, validate_boundaries
 
 DEFAULT_HISTORY = ROOT.joinpath("verification/source_history.json")
-DEFAULT_EVIDENCE = ROOT.joinpath("verification/evidence/five-contracts-computer10-20261104")
+DEFAULT_EVIDENCE = ROOT.joinpath("verification/evidence/symbolic-fixture-computer10-20261105")
 LEGACY_CAMPAIGNS = {
     "computer10-20261031", "deal-spark-computer10-20261031",
     "deal-lint-spark-computer10-20261031",
@@ -114,6 +116,20 @@ def campaign_policy(manifest: dict, campaign_name: str, explicit_source: bool) -
             if ghost:
                 check(isinstance(recorded.get("ghost_boundaries"), dict),
                       "Ghost boundary result is missing: " + name + "/" + str(label))
+    symbolic = "symbolic_schema" in manifest
+    prior_symbolic = LEGACY_CAMPAIGNS | {"spark-expanded-computer10-20261031",
+        "ghost-boundaries-computer10-20261101", "five-contracts-computer10-20261104"}
+    check(symbolic or (explicit_source and campaign_name in prior_symbolic),
+          "Symbolic verification schema is required for current or unrecognized campaigns")
+    if symbolic:
+        check(manifest["symbolic_schema"] == SYMBOLIC_SCHEMA, "Unknown symbolic verification schema")
+        check(all(is_sha256(manifest.get(key)) for key in
+                  ("symbolic_report_sha256", "symbolic_checker_sha256")), "Symbolic report/checker hashes are invalid")
+        relative = manifest.get("symbolic_report")
+        check(isinstance(relative, str) and bool(relative), "Symbolic report path is missing")
+        path = Path(relative)
+        check(not path.is_absolute() and ".." not in path.parts and path.suffix == ".json",
+              "Unsafe symbolic report path")
     return True
 
 
@@ -151,6 +167,82 @@ def evidence_source(relative: str, expected: str, history: Path, git_dir: Path |
     raise ValueError("Proof source changed: " + relative)
 
 
+@deal.pre(lambda manifest, source_root: isinstance(manifest, dict))
+@deal.pre(lambda manifest, source_root: isinstance(source_root, Path) and source_root.is_dir())
+@deal.post(lambda result: result is None)
+@deal.raises(OSError, ValueError, KeyError, TypeError, JSONDecodeError)
+@deal.has("read")
+def verify_native_origin(manifest: dict, source_root: Path) -> None:
+    """Reused proofs retain exactly the pinned invocation and source records."""
+    origin = manifest.get("native_proof_origin")
+    if origin is None:
+        return None
+    check(isinstance(origin, dict), "Native proof origin must be an object")
+    relative = origin.get("campaign")
+    check(isinstance(relative, str) and relative.startswith("verification/evidence/"),
+          "Native proof origin campaign path is invalid")
+    path = Path(relative)
+    check(not path.is_absolute() and ".." not in path.parts, "Unsafe native proof origin path")
+    revision = origin.get("revision")
+    check(isinstance(revision, str) and len(revision) == 40
+          and set(revision) <= set("0123456789abcdef"), "Native proof origin revision is invalid")
+    expected = origin.get("manifest_sha256")
+    check(is_sha256(expected), "Native proof origin manifest hash is invalid")
+    source = source_root.joinpath(path, "manifest.json")
+    check(source.is_file() and not source.is_symlink(), "Native proof origin manifest is missing")
+    check(sha(source) == expected, "Native proof origin manifest changed")
+    prior = json.loads(source.read_text())
+    check(isinstance(prior, dict), "Native proof origin manifest must be an object")
+    for key in ("projects", "negative_control", "ghost_negative_control", "toolchain",
+                "provers_requested", "prover_config_sha256", "runner_sha256"):
+        check(manifest.get(key) == prior.get(key) and key in prior,
+              "Reused native proof record differs from its origin: " + key)
+    hashes = {name: runs["portfolio"]["native"]["report_sha256"]
+              for name, runs in manifest["projects"].items()}
+    check(origin.get("native_reports") == hashes, "Native proof origin report inventory differs")
+    return None
+
+
+@deal.pre(lambda folder, manifest, source_root: isinstance(folder, Path) and folder.is_dir())
+@deal.pre(lambda folder, manifest, source_root: isinstance(manifest, dict) and isinstance(source_root, Path) and source_root.is_dir())
+@deal.post(lambda result: result is None)
+@deal.raises(OSError, ValueError, KeyError, TypeError, JSONDecodeError)
+@deal.has("read")
+def verify_symbolic_record(folder: Path, manifest: dict, source_root: Path) -> None:
+    """Validate the recorded outcomes against exact selected-source identities."""
+    checker = source_root.joinpath("verification/check_symbolic.py")
+    check(checker.is_file() and not checker.is_symlink(), "Symbolic checker must be a regular source file")
+    check(sha(checker) == manifest["symbolic_checker_sha256"], "Symbolic checker source changed")
+    relative = manifest["symbolic_report"]
+    check(isinstance(relative, str) and bool(relative), "Symbolic report path is missing")
+    report_path = folder.joinpath(relative)
+    check(report_path.resolve().is_relative_to(folder.resolve()), "Unsafe symbolic report path")
+    check(report_path.is_file() and not report_path.is_symlink(), "Symbolic report must be a regular file")
+    check(sha(report_path) == manifest["symbolic_report_sha256"], "Symbolic report changed")
+    symbolic = json.loads(report_path.read_text())
+    check(isinstance(symbolic, dict) and symbolic.get("complete") is True and symbolic_accepted(symbolic),
+          "Symbolic verification outcomes are missing, unsupported or incorrect")
+    expected_sources = {"verification/proof_gate.py", "tests/fixtures/contract_negative_control.py"}
+    sources = symbolic.get("files")
+    check(isinstance(sources, list) and len(sources) == len(expected_sources)
+          and all(isinstance(entry, dict) for entry in sources)
+          and {entry.get("path") for entry in sources} == expected_sources,
+          "Symbolic source inventory differs")
+    for entry in sources:
+        check(is_sha256(entry.get("sha256")), "Symbolic source hash is invalid")
+        path = source_root.joinpath(entry["path"])
+        check(path.is_file() and not path.is_symlink(), "Symbolic input must be a regular source file")
+        check(sha(path) == entry["sha256"], "Symbolic input source changed: " + entry["path"])
+        try:
+            normalized = normalized_source(path.read_text())
+        except (SyntaxError, UnsupportedError) as error:
+            raise ValueError("Symbolic input normalization is unsupported: " + entry["path"]) from error
+        normalized_sha = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+        check(entry.get("normalized_sha256") == normalized_sha,
+              "Symbolic normalized source differs: " + entry["path"])
+    return None
+
+
 @deal.pre(lambda folder, source_history=DEFAULT_HISTORY, git_dir=None, source_root=ROOT: isinstance(folder, Path))
 @deal.pre(lambda folder, source_history=DEFAULT_HISTORY, git_dir=None, source_root=ROOT: folder.is_dir() and isinstance(source_history, Path) and (git_dir is None or isinstance(git_dir, Path)) and isinstance(source_root, Path) and source_root.is_dir())
 @deal.post(lambda result: result["production_checks"] > 0 and result["portfolio_complete"] is True
@@ -165,6 +257,7 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
     coverage_campaign = campaign_policy(manifest, folder.name, source_root.resolve() != ROOT)
     check(manifest["host"].split(".")[0] == "computer10", "Wrong recorded host")
     check(manifest["portfolio_complete"], "Campaign did not finish successfully")
+    verify_native_origin(manifest, source_root)
     registry = None
     if "ghost_boundary_schema" in manifest:
         registry_path = folder.joinpath("ghost_boundaries.json")
@@ -188,6 +281,8 @@ def verify(folder: Path, source_history: Path = DEFAULT_HISTORY, git_dir: Path |
         check(python_inventory == json.loads(python_path.read_text()), "Python contract inventory differs from selected source")
         check(all(not row["insufficient"] and not row["duplicated"] and row["imports_deal"] for row in python_inventory),
               "Python five-contract floor failed")
+    if "symbolic_schema" in manifest:
+        verify_symbolic_record(folder, manifest, source_root)
     totals = 0
     archived_python = []
     for name, runs in manifest["projects"].items():

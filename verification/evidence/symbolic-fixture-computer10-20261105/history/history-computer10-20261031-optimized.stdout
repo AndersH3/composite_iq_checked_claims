@@ -1,0 +1,4 @@
+Verified evidence integrity: 78 production checks; zero unproved or justified portfolio checks.
+Selected explicit source tree: /tmp/composite-iq-prior-source-2c32
+Ada/SPARK source identities match; 5 historical Python sources match immutable Git objects.
+The deliberately incorrect union contract was rejected. Individual incomplete solver runs remain recorded as incomplete.

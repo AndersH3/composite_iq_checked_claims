@@ -1,0 +1,258 @@
+........................................................................ [ 20%]
+........................................................................ [ 41%]
+........................................................................ [ 62%]
+........................................................................ [ 83%]
+.......................................................                  [100%]
+=============================== warnings summary ===============================
+.venv-deal/lib/python3.13/site-packages/_pytest/config/__init__.py:1291
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/_pytest/config/__init__.py:1291: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)
+  
+    self._warn_about_missing_assertion(mode)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_proxies/_pattern.py:3
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_proxies/_pattern.py:3: DeprecationWarning: module 'sre_constants' is deprecated
+    import sre_constants
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_proxies/_pattern.py:4
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_proxies/_pattern.py:4: DeprecationWarning: module 'sre_parse' is deprecated
+    import sre_parse
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:65
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:65: DeprecationWarning: importing 'Const' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Const)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:74
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:74: DeprecationWarning: importing 'BinOp' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.BinOp)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:86
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:86: DeprecationWarning: importing 'Compare' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Compare)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:102
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:102: DeprecationWarning: importing 'BoolOp' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.BoolOp)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:116
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:116: DeprecationWarning: importing 'List' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.List)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:126
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:126: DeprecationWarning: importing 'Set' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Set)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:134
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:134: DeprecationWarning: importing 'Dict' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Dict)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:144
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:144: DeprecationWarning: importing 'Tuple' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Tuple)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:154
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:154: DeprecationWarning: importing 'ListComp' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.ListComp)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:240
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:240: DeprecationWarning: importing 'Subscript' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Subscript)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:261
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:261: DeprecationWarning: importing 'Name' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Name)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:283
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:283: DeprecationWarning: importing 'Attribute' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Attribute)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:307
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:307: DeprecationWarning: importing 'UnaryOp' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.UnaryOp)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:321
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:321: DeprecationWarning: importing 'IfExp' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.IfExp)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:335
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:335: DeprecationWarning: importing 'Call' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Call)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:358
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:358: DeprecationWarning: importing 'Lambda' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_expr.register(astroid.Lambda)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:20
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:20: DeprecationWarning: importing 'FunctionDef' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.FunctionDef)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:49
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:49: DeprecationWarning: importing 'Assert' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Assert)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:58
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:58: DeprecationWarning: importing 'Expr' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Expr)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:63
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:63: DeprecationWarning: importing 'Assign' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Assign)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:85
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:85: DeprecationWarning: importing 'Return' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Return)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:93
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:93: DeprecationWarning: importing 'If' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.If)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:155
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:155: DeprecationWarning: importing 'Raise' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Raise)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:185
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:185: DeprecationWarning: importing 'Global' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Global)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:186
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:186: DeprecationWarning: importing 'ImportFrom' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.ImportFrom)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:187
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:187: DeprecationWarning: importing 'Import' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Import)
+
+.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:188
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_stmt.py:188: DeprecationWarning: importing 'Pass' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @eval_stmt.register(astroid.Pass)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Assert' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Attribute' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'BinOp' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Call' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Compare' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Global' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Lambda' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Nonlocal' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Raise' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Return' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'YieldFrom' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:27: DeprecationWarning: importing 'Yield' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    astroid_type = getattr(astroid, name)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/imports.py:17
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/imports.py:17: DeprecationWarning: importing 'ImportFrom' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @get_imports.register(lambda: astroid.ImportFrom)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/markers.py:107
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/markers.py:107: DeprecationWarning: importing 'Import' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @get_markers.register(lambda: astroid.Import)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/markers.py:117
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/markers.py:117: DeprecationWarning: importing 'ImportFrom' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @get_markers.register(lambda: astroid.ImportFrom)
+
+.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/pre.py:20
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/pre.py:20: DeprecationWarning: importing 'Call' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    @get_pre.register(lambda: astroid.Call)
+
+tests/test_evidence_contracts.py: 112 warnings
+tests/test_symbolic_contracts.py: 209 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_theorem.py:98: DeprecationWarning: importing 'FunctionDef' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if isinstance(node, astroid.FunctionDef):
+
+tests/test_evidence_contracts.py: 42 warnings
+tests/test_symbolic_contracts.py: 78 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_theorem.py:102: DeprecationWarning: importing 'ClassDef' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if isinstance(node, astroid.ClassDef):
+
+tests/test_evidence_contracts.py: 140 warnings
+tests/test_symbolic_contracts.py: 260 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_annotations.py:54: DeprecationWarning: importing 'Attribute' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if isinstance(node, astroid.Attribute):
+
+tests/test_evidence_contracts.py: 140 warnings
+tests/test_symbolic_contracts.py: 260 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_annotations.py:56: DeprecationWarning: importing 'Name' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if isinstance(node, astroid.Name):
+
+tests/test_evidence_contracts.py: 560 warnings
+tests/test_symbolic_contracts.py: 1004 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:97: DeprecationWarning: importing 'Name' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if astroid is not None and isinstance(expr, astroid.Name):
+
+tests/test_evidence_contracts.py: 280 warnings
+tests/test_symbolic_contracts.py: 502 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/common.py:100: DeprecationWarning: importing 'Attribute' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if astroid is not None and isinstance(expr, astroid.Attribute):
+
+tests/test_evidence_contracts.py: 70 warnings
+tests/test_symbolic_contracts.py: 128 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_contracts.py:56: DeprecationWarning: importing 'Lambda' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if not isinstance(contract, astroid.Lambda):
+
+tests/test_evidence_contracts.py: 280 warnings
+tests/test_symbolic_contracts.py: 502 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal/linter/_extractors/contracts.py:77: DeprecationWarning: importing 'Name' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if astroid is not None and isinstance(contract, astroid.Name):
+
+tests/test_evidence_contracts.py: 42 warnings
+tests/test_symbolic_contracts.py: 76 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_contracts.py:86: DeprecationWarning: importing 'Lambda' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if not isinstance(contract, astroid.Lambda):
+
+tests/test_evidence_contracts.py: 56 warnings
+tests/test_symbolic_contracts.py: 98 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_contracts.py:65: DeprecationWarning: importing 'Lambda' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if not isinstance(contract, astroid.Lambda):
+
+tests/test_evidence_contracts.py: 28 warnings
+tests/test_symbolic_contracts.py: 48 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:272: DeprecationWarning: importing 'FunctionDef' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if isinstance(func, astroid.FunctionDef) and func.body:
+
+tests/test_evidence_contracts.py: 14 warnings
+tests/test_symbolic_contracts.py: 24 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_eval_expr.py:351: DeprecationWarning: importing 'Attribute' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if isinstance(node.func, astroid.Attribute):
+
+tests/test_evidence_contracts.py: 14 warnings
+tests/test_symbolic_contracts.py: 24 warnings
+  /home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/lib/python3.13/site-packages/deal_solver/_proxies/_func.py:33: DeprecationWarning: importing 'FunctionDef' from 'astroid' is deprecated and will be removed in v5, import it from 'astroid.nodes' instead
+    if isinstance(self.impl, astroid.FunctionDef):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+343 passed, 5037 warnings in 129.26s (0:02:09)

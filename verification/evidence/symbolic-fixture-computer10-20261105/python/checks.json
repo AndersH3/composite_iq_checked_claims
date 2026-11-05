@@ -1,0 +1,2271 @@
+{
+  "schema": "python-check-executions-v1",
+  "host": "computer10",
+  "started_utc": "2026-11-05T12:40:30.940268+00:00",
+  "finished_utc": "2026-11-05T12:42:41.765594+00:00",
+  "checks": [
+    {
+      "id": "coverage",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/check_contract_coverage.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:30.940509+00:00",
+      "finished_utc": "2026-11-05T12:40:31.796294+00:00",
+      "elapsed_seconds": 0.8557893469696864,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/coverage.stdout",
+      "stderr_log": "python/coverage.stderr",
+      "stdout_sha256": "1fe2f935a52ae3ee9cb367ed9b93c5e78197650843b847b83a70ba4f51ff19d1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "python_files": 28,
+        "named_functions": 292,
+        "deal_contracts": 1460,
+        "problems": [],
+        "minimum_contracts": 5,
+        "minimum_observed": 5,
+        "complete": true
+      }
+    },
+    {
+      "id": "coverage-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/check_contract_coverage.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:30.940689+00:00",
+      "finished_utc": "2026-11-05T12:40:32.366099+00:00",
+      "elapsed_seconds": 1.4254167000181042,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/coverage-optimized.stdout",
+      "stderr_log": "python/coverage-optimized.stderr",
+      "stdout_sha256": "1fe2f935a52ae3ee9cb367ed9b93c5e78197650843b847b83a70ba4f51ff19d1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "python_files": 28,
+        "named_functions": 292,
+        "deal_contracts": 1460,
+        "problems": [],
+        "minimum_contracts": 5,
+        "minimum_observed": 5,
+        "complete": true
+      }
+    },
+    {
+      "id": "static",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/check_static_lint.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:30.940869+00:00",
+      "finished_utc": "2026-11-05T12:40:57.567499+00:00",
+      "elapsed_seconds": 26.62663476204034,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/static.stdout",
+      "stderr_log": "python/static.stderr",
+      "stdout_sha256": "ca4e92b59554bbb9919e56389365539a56e8379f0bd377cbd73596058ceb4c65",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "python_files": 28,
+        "positive_files": 27,
+        "positive": {
+          "argv": [
+            "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+            "-m",
+            "deal",
+            "lint",
+            "--json",
+            "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+            "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+            "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+            "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+            "tests/conftest.py",
+            "tests/fixtures/nonzero_division_lint_probe.py",
+            "tests/test_contract_coverage.py",
+            "tests/test_evidence_contracts.py",
+            "tests/test_ghost_boundary_contracts.py",
+            "tests/test_numeric_contracts.py",
+            "tests/test_proof_gate_contracts.py",
+            "tests/test_runner_lint_contracts.py",
+            "tests/test_spark_contracts.py",
+            "tests/test_spark_coverage_contracts.py",
+            "tests/test_static_lint_contracts.py",
+            "tests/test_symbolic_contracts.py",
+            "tests/test_validator_contracts.py",
+            "verification/check_contract_coverage.py",
+            "verification/check_static_lint.py",
+            "verification/check_symbolic.py",
+            "verification/ghost_boundaries.py",
+            "verification/proof_gate.py",
+            "verification/replay_hoeflin.py",
+            "verification/run_computer10.py",
+            "verification/spark_contracts.py",
+            "verification/spark_coverage.py",
+            "verification/verify_evidence.py"
+          ],
+          "paths": [
+            "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+            "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+            "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+            "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+            "tests/conftest.py",
+            "tests/fixtures/nonzero_division_lint_probe.py",
+            "tests/test_contract_coverage.py",
+            "tests/test_evidence_contracts.py",
+            "tests/test_ghost_boundary_contracts.py",
+            "tests/test_numeric_contracts.py",
+            "tests/test_proof_gate_contracts.py",
+            "tests/test_runner_lint_contracts.py",
+            "tests/test_spark_contracts.py",
+            "tests/test_spark_coverage_contracts.py",
+            "tests/test_static_lint_contracts.py",
+            "tests/test_symbolic_contracts.py",
+            "tests/test_validator_contracts.py",
+            "verification/check_contract_coverage.py",
+            "verification/check_static_lint.py",
+            "verification/check_symbolic.py",
+            "verification/ghost_boundaries.py",
+            "verification/proof_gate.py",
+            "verification/replay_hoeflin.py",
+            "verification/run_computer10.py",
+            "verification/spark_contracts.py",
+            "verification/spark_coverage.py",
+            "verification/verify_evidence.py"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": "",
+          "diagnostics": []
+        },
+        "negative_control": {
+          "argv": [
+            "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+            "-m",
+            "deal",
+            "lint",
+            "--json",
+            "tests/fixtures/contract_negative_control.py"
+          ],
+          "paths": [
+            "tests/fixtures/contract_negative_control.py"
+          ],
+          "returncode": 1,
+          "stdout": "{\"path\": \"tests/fixtures/contract_negative_control.py\", \"row\": 20, \"col\": 11, \"code\": \"DEL012\", \"text\": \"post contract error\", \"value\": \"-1\", \"content\": \"    return -1\"}\n",
+          "stderr": "",
+          "diagnostics": [
+            {
+              "path": "tests/fixtures/contract_negative_control.py",
+              "row": 20,
+              "col": 11,
+              "code": "DEL012",
+              "text": "post contract error",
+              "value": "-1",
+              "content": "    return -1"
+            }
+          ]
+        },
+        "complete": true
+      }
+    },
+    {
+      "id": "static-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/check_static_lint.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:30.941237+00:00",
+      "finished_utc": "2026-11-05T12:40:56.951006+00:00",
+      "elapsed_seconds": 26.009760882006958,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/static-optimized.stdout",
+      "stderr_log": "python/static-optimized.stderr",
+      "stdout_sha256": "ca4e92b59554bbb9919e56389365539a56e8379f0bd377cbd73596058ceb4c65",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "python_files": 28,
+        "positive_files": 27,
+        "positive": {
+          "argv": [
+            "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+            "-m",
+            "deal",
+            "lint",
+            "--json",
+            "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+            "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+            "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+            "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+            "tests/conftest.py",
+            "tests/fixtures/nonzero_division_lint_probe.py",
+            "tests/test_contract_coverage.py",
+            "tests/test_evidence_contracts.py",
+            "tests/test_ghost_boundary_contracts.py",
+            "tests/test_numeric_contracts.py",
+            "tests/test_proof_gate_contracts.py",
+            "tests/test_runner_lint_contracts.py",
+            "tests/test_spark_contracts.py",
+            "tests/test_spark_coverage_contracts.py",
+            "tests/test_static_lint_contracts.py",
+            "tests/test_symbolic_contracts.py",
+            "tests/test_validator_contracts.py",
+            "verification/check_contract_coverage.py",
+            "verification/check_static_lint.py",
+            "verification/check_symbolic.py",
+            "verification/ghost_boundaries.py",
+            "verification/proof_gate.py",
+            "verification/replay_hoeflin.py",
+            "verification/run_computer10.py",
+            "verification/spark_contracts.py",
+            "verification/spark_coverage.py",
+            "verification/verify_evidence.py"
+          ],
+          "paths": [
+            "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+            "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+            "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+            "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+            "tests/conftest.py",
+            "tests/fixtures/nonzero_division_lint_probe.py",
+            "tests/test_contract_coverage.py",
+            "tests/test_evidence_contracts.py",
+            "tests/test_ghost_boundary_contracts.py",
+            "tests/test_numeric_contracts.py",
+            "tests/test_proof_gate_contracts.py",
+            "tests/test_runner_lint_contracts.py",
+            "tests/test_spark_contracts.py",
+            "tests/test_spark_coverage_contracts.py",
+            "tests/test_static_lint_contracts.py",
+            "tests/test_symbolic_contracts.py",
+            "tests/test_validator_contracts.py",
+            "verification/check_contract_coverage.py",
+            "verification/check_static_lint.py",
+            "verification/check_symbolic.py",
+            "verification/ghost_boundaries.py",
+            "verification/proof_gate.py",
+            "verification/replay_hoeflin.py",
+            "verification/run_computer10.py",
+            "verification/spark_contracts.py",
+            "verification/spark_coverage.py",
+            "verification/verify_evidence.py"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": "",
+          "diagnostics": []
+        },
+        "negative_control": {
+          "argv": [
+            "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/.venv-deal/bin/python",
+            "-m",
+            "deal",
+            "lint",
+            "--json",
+            "tests/fixtures/contract_negative_control.py"
+          ],
+          "paths": [
+            "tests/fixtures/contract_negative_control.py"
+          ],
+          "returncode": 1,
+          "stdout": "{\"path\": \"tests/fixtures/contract_negative_control.py\", \"row\": 20, \"col\": 11, \"code\": \"DEL012\", \"text\": \"post contract error\", \"value\": \"-1\", \"content\": \"    return -1\"}\n",
+          "stderr": "",
+          "diagnostics": [
+            {
+              "path": "tests/fixtures/contract_negative_control.py",
+              "row": 20,
+              "col": 11,
+              "code": "DEL012",
+              "text": "post contract error",
+              "value": "-1",
+              "content": "    return -1"
+            }
+          ]
+        },
+        "complete": true
+      }
+    },
+    {
+      "id": "pytest",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:30.941438+00:00",
+      "finished_utc": "2026-11-05T12:42:41.016844+00:00",
+      "elapsed_seconds": 130.07541140099056,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/pytest.stdout",
+      "stderr_log": "python/pytest.stderr",
+      "stdout_sha256": "d9f40dd4ffaafc6e301aa7d0a0730ed5d3d05f179bd74c633d966e04b1722efb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "passed": 343,
+        "warnings": 5036,
+        "duration_seconds": 129.18
+      }
+    },
+    {
+      "id": "pytest-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "tests"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:30.941945+00:00",
+      "finished_utc": "2026-11-05T12:42:41.762258+00:00",
+      "elapsed_seconds": 130.8203188519692,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/pytest-optimized.stdout",
+      "stderr_log": "python/pytest-optimized.stderr",
+      "stdout_sha256": "6ddde746de769dc407633577f521a9b9215e93c24afaba827fac112ac65b5eab",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "passed": 343,
+        "warnings": 5037,
+        "duration_seconds": 129.26
+      }
+    },
+    {
+      "id": "symbolic",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/check_symbolic.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:31.796433+00:00",
+      "finished_utc": "2026-11-05T12:40:32.574683+00:00",
+      "elapsed_seconds": 0.778256144025363,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/symbolic.stdout",
+      "stderr_log": "python/symbolic.stderr",
+      "stdout_sha256": "4d033eb3185731c52f33b24e97f7e514fd53ad770fd23dd0688331606f0dd231",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "schema": "deal-symbolic-int-v1",
+        "adapter": "isinstance-int-v1",
+        "normalization": "pure-comparison-chains-v1",
+        "toolchain": {
+          "deal": "4.24.6",
+          "deal_solver": "0.1.2"
+        },
+        "files": [
+          {
+            "path": "verification/proof_gate.py",
+            "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a",
+            "normalized_sha256": "a502f6c46900cfc67725c9be2f7f5d7789796513eedbd604565aba6443a3355f",
+            "theorems": [
+              {
+                "conclusion": "OK",
+                "description": "post-condition",
+                "error": null,
+                "counterexample": null,
+                "name": "totals_balanced",
+                "obligations": [
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              },
+              {
+                "conclusion": "OK",
+                "description": "post-condition",
+                "error": null,
+                "counterexample": null,
+                "name": "successful_checks",
+                "obligations": [
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505",
+            "normalized_sha256": "fc6aca2111764229a4862538374f93a0c972283caa339f29ad6ec80d79653d23",
+            "theorems": [
+              {
+                "conclusion": "OK",
+                "description": "post-condition, post-condition",
+                "error": null,
+                "counterexample": null,
+                "name": "probability_identity",
+                "obligations": [
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  },
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 1,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              },
+              {
+                "conclusion": "FAIL",
+                "description": "post-condition",
+                "error": null,
+                "counterexample": {},
+                "name": "negative_probability",
+                "obligations": [
+                  {
+                    "conclusion": "FAIL",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": {},
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "counterexample"
+                  },
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 1,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  },
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 2,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "sources": [
+          {
+            "path": "verification/proof_gate.py",
+            "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+          },
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+          }
+        ],
+        "complete": true
+      }
+    },
+    {
+      "id": "symbolic-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/check_symbolic.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:32.366259+00:00",
+      "finished_utc": "2026-11-05T12:40:33.705583+00:00",
+      "elapsed_seconds": 1.339330134971533,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/symbolic-optimized.stdout",
+      "stderr_log": "python/symbolic-optimized.stderr",
+      "stdout_sha256": "4d033eb3185731c52f33b24e97f7e514fd53ad770fd23dd0688331606f0dd231",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "schema": "deal-symbolic-int-v1",
+        "adapter": "isinstance-int-v1",
+        "normalization": "pure-comparison-chains-v1",
+        "toolchain": {
+          "deal": "4.24.6",
+          "deal_solver": "0.1.2"
+        },
+        "files": [
+          {
+            "path": "verification/proof_gate.py",
+            "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a",
+            "normalized_sha256": "a502f6c46900cfc67725c9be2f7f5d7789796513eedbd604565aba6443a3355f",
+            "theorems": [
+              {
+                "conclusion": "OK",
+                "description": "post-condition",
+                "error": null,
+                "counterexample": null,
+                "name": "totals_balanced",
+                "obligations": [
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              },
+              {
+                "conclusion": "OK",
+                "description": "post-condition",
+                "error": null,
+                "counterexample": null,
+                "name": "successful_checks",
+                "obligations": [
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505",
+            "normalized_sha256": "fc6aca2111764229a4862538374f93a0c972283caa339f29ad6ec80d79653d23",
+            "theorems": [
+              {
+                "conclusion": "OK",
+                "description": "post-condition, post-condition",
+                "error": null,
+                "counterexample": null,
+                "name": "probability_identity",
+                "obligations": [
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  },
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 1,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              },
+              {
+                "conclusion": "FAIL",
+                "description": "post-condition",
+                "error": null,
+                "counterexample": {},
+                "name": "negative_probability",
+                "obligations": [
+                  {
+                    "conclusion": "FAIL",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": {},
+                    "index": 0,
+                    "kind": "post-condition",
+                    "outcome": "counterexample"
+                  },
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 1,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  },
+                  {
+                    "conclusion": "OK",
+                    "description": "post-condition",
+                    "error": null,
+                    "counterexample": null,
+                    "index": 2,
+                    "kind": "post-condition",
+                    "outcome": "proved"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "sources": [
+          {
+            "path": "verification/proof_gate.py",
+            "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+          },
+          {
+            "path": "tests/fixtures/contract_negative_control.py",
+            "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+          }
+        ],
+        "complete": true
+      }
+    },
+    {
+      "id": "spark-contracts",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/spark_contracts.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:32.574868+00:00",
+      "finished_utc": "2026-11-05T12:40:32.877608+00:00",
+      "elapsed_seconds": 0.3027727180160582,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/spark-contracts.stdout",
+      "stderr_log": "python/spark-contracts.stderr",
+      "stdout_sha256": "28642297555100617c8509b3e9d92f0e118428368dad6e4cc2ee99f6fb5b78ce",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "schema": "explicit-contract-clauses-v1",
+        "minimum_required": 5,
+        "minimum_observed": 5,
+        "procedures": 75,
+        "contracts": 923,
+        "sources": [
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+            "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+            "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+            "sha256": "deef3784a729fc8a36ef5a8991010e0f288bce00861d68aed39ee71ae871bcd9"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+            "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+            "sha256": "89a311af8ade4c0c749b828fe36740fc5f227f0ea759bd7e9ad913129793e731"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+            "sha256": "f8f56bd3f41655f803ef0b7df8dd33f886bb02347002b1668eafb74d2f0b968f"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+            "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "sha256": "890cd53e4dc3a0443fd35e9e89ac49733e1c40d21593257e42f961a6c1c12599"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+            "sha256": "1ffb5535050d3b36150e7f7b19dc2d34b083b44b1e2784e2d2286d39ec50b156"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+            "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+            "sha256": "077d3af2ce4a9ee400e9823fe36c3fc9d20b9f6410b6758ac14d60347f1a3a71"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "sha256": "bcb7a876586b87474737452dd20bdc0ea94804ccce8b4044d80713113f1fee12"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+            "sha256": "7dc1a6b119fc11004b7b08d047bbe0bbf6ddc8a20bad7106a4bb2ad404f5ce7f"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+            "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+            "sha256": "e2f716ccc14ef9bc2555d04ed22fde2941ef87c4fcf71dd7e2c863f0dd5706ae"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+            "sha256": "2e1aafd25fd37016413c34b3a57ca41dcbde7f5b0a60e744bae2af989c9bb67a"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "sha256": "d0f939b091b31bcda5eee8b77da7d85d880f072ee51722fc050fc938e76ec194"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+            "sha256": "92cd468e1e23d5a41986e73b91de00a697896237c0814ee118ff956f52a520cb"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+            "sha256": "e33e5050dfae56cac0d50ac341997d3cebffa324cf40e320009c73ac1bbe58e4"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+            "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+            "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+          },
+          {
+            "path": "verification/ghost_negative_control/src/negative_ghost_ledger.adb",
+            "sha256": "f248773bac8592dcadd5bfdc7a06c3eb4e257f6efeba931693f5fb635fa4d130"
+          },
+          {
+            "path": "verification/ghost_negative_control/src/negative_ghost_ledger.ads",
+            "sha256": "41cb07e6db3a4f1cd267e0a5f9629a3f1d21edf644bd35247deb26887292d44f"
+          },
+          {
+            "path": "verification/negative_control/src/negative_union.adb",
+            "sha256": "26d1a77d839429b703b08b4a5f8c1f35d60b4afa60e6f22ed9942bb7915c732d"
+          },
+          {
+            "path": "verification/negative_control/src/negative_union.ads",
+            "sha256": "525641d2936d64c87260c91c1c0faf6e3c8637985485d094906ba62dcb9811cd"
+          }
+        ],
+        "excluded_completions": [
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 7,
+            "name": "C_Erfc",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 10,
+            "name": "Square_Root",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 25,
+            "name": "Survival",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 44,
+            "name": "Check_Inverse_Bracket",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 75,
+            "name": "Rare_Quantile",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 107,
+            "name": "Checked_Radius",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 8,
+            "name": "Number",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 14,
+            "name": "Trimmed",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 21,
+            "name": "Read_Simulation_Options",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 36,
+            "name": "Simulation_Header",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 44,
+            "name": "Simulation_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 58,
+            "name": "Calculations_Header",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 63,
+            "name": "Named_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 72,
+            "name": "Calculation_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 78,
+            "name": "Infinite_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 84,
+            "name": "Examples_Header",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 89,
+            "name": "Example",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 9,
+            "name": "C_Erfc",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 15,
+            "name": "Square_Root",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 40,
+            "name": "Checked_Log",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 58,
+            "name": "Checked_Exp",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 76,
+            "name": "Checked_Exponent",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 93,
+            "name": "Checked_Probability",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 104,
+            "name": "SF",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 137,
+            "name": "Checked_Node",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 309,
+            "name": "Check_Grid_State",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 15,
+            "name": "Checked_Quantization",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 32,
+            "name": "Check_Union_Units",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 51,
+            "name": "Check_Conditional_Units",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 68,
+            "name": "Check_Joint",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 12,
+            "name": "F",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 23,
+            "name": "N",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 29,
+            "name": "Name",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 46,
+            "name": "Read_Trials",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 61,
+            "name": "Read_Seed",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 76,
+            "name": "Write_Report",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 77,
+            "name": "Run",
+            "reason": "SPARK_Mode Off completion"
+          }
+        ],
+        "insufficient": [],
+        "missing_native": [],
+        "invalid_native": [],
+        "unmatched_native": [],
+        "native_cross_check": false,
+        "complete": true
+      }
+    },
+    {
+      "id": "spark-contracts-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/spark_contracts.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:32.879051+00:00",
+      "finished_utc": "2026-11-05T12:40:33.589656+00:00",
+      "elapsed_seconds": 0.7106099450029433,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/spark-contracts-optimized.stdout",
+      "stderr_log": "python/spark-contracts-optimized.stderr",
+      "stdout_sha256": "28642297555100617c8509b3e9d92f0e118428368dad6e4cc2ee99f6fb5b78ce",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "schema": "explicit-contract-clauses-v1",
+        "minimum_required": 5,
+        "minimum_observed": 5,
+        "procedures": 75,
+        "contracts": 923,
+        "sources": [
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+            "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+            "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+            "sha256": "deef3784a729fc8a36ef5a8991010e0f288bce00861d68aed39ee71ae871bcd9"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+            "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+            "sha256": "89a311af8ade4c0c749b828fe36740fc5f227f0ea759bd7e9ad913129793e731"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+            "sha256": "f8f56bd3f41655f803ef0b7df8dd33f886bb02347002b1668eafb74d2f0b968f"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+            "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "sha256": "890cd53e4dc3a0443fd35e9e89ac49733e1c40d21593257e42f961a6c1c12599"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+            "sha256": "1ffb5535050d3b36150e7f7b19dc2d34b083b44b1e2784e2d2286d39ec50b156"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.adb",
+            "sha256": "8e29db6395e5a9f861c077119b186608faa352ccfa29ca20ad5121c8eaa7c9df"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/admission_core.ads",
+            "sha256": "077d3af2ce4a9ee400e9823fe36c3fc9d20b9f6410b6758ac14d60347f1a3a71"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "sha256": "bcb7a876586b87474737452dd20bdc0ea94804ccce8b4044d80713113f1fee12"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.ads",
+            "sha256": "7dc1a6b119fc11004b7b08d047bbe0bbf6ddc8a20bad7106a4bb2ad404f5ce7f"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.adb",
+            "sha256": "ee2abeb80e7a79dcb29e87f700bbf4f4d5dd3d679ecf0d22aba9d6925c412a61"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_boundary_models.ads",
+            "sha256": "e2f716ccc14ef9bc2555d04ed22fde2941ef87c4fcf71dd7e2c863f0dd5706ae"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_demo.adb",
+            "sha256": "2e1aafd25fd37016413c34b3a57ca41dcbde7f5b0a60e744bae2af989c9bb67a"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "sha256": "d0f939b091b31bcda5eee8b77da7d85d880f072ee51722fc050fc938e76ec194"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.ads",
+            "sha256": "92cd468e1e23d5a41986e73b91de00a697896237c0814ee118ff956f52a520cb"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "sha256": "e08638f0b02f8ec4ef791beb050629e6fbf5d12321a6a34719019d99a8994c3d"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.ads",
+            "sha256": "e33e5050dfae56cac0d50ac341997d3cebffa324cf40e320009c73ac1bbe58e4"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.adb",
+            "sha256": "d131d221900e1c7d05851694e3e517db994489fc8f4616d4a5d650779abe344a"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io_models.ads",
+            "sha256": "25b47b71e05af458d720079519bb095e5d5b81ff6a9feada360380987d3a03a3"
+          },
+          {
+            "path": "verification/ghost_negative_control/src/negative_ghost_ledger.adb",
+            "sha256": "f248773bac8592dcadd5bfdc7a06c3eb4e257f6efeba931693f5fb635fa4d130"
+          },
+          {
+            "path": "verification/ghost_negative_control/src/negative_ghost_ledger.ads",
+            "sha256": "41cb07e6db3a4f1cd267e0a5f9629a3f1d21edf644bd35247deb26887292d44f"
+          },
+          {
+            "path": "verification/negative_control/src/negative_union.adb",
+            "sha256": "26d1a77d839429b703b08b4a5f8c1f35d60b4afa60e6f22ed9942bb7915c732d"
+          },
+          {
+            "path": "verification/negative_control/src/negative_union.ads",
+            "sha256": "525641d2936d64c87260c91c1c0faf6e3c8637985485d094906ba62dcb9811cd"
+          }
+        ],
+        "excluded_completions": [
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 7,
+            "name": "C_Erfc",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 10,
+            "name": "Square_Root",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 25,
+            "name": "Survival",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 44,
+            "name": "Check_Inverse_Bracket",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 75,
+            "name": "Rare_Quantile",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+            "line": 107,
+            "name": "Checked_Radius",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 8,
+            "name": "Number",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 14,
+            "name": "Trimmed",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 21,
+            "name": "Read_Simulation_Options",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 36,
+            "name": "Simulation_Header",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 44,
+            "name": "Simulation_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 58,
+            "name": "Calculations_Header",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 63,
+            "name": "Named_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 72,
+            "name": "Calculation_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 78,
+            "name": "Infinite_Row",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 84,
+            "name": "Examples_Header",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "line": 89,
+            "name": "Example",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 9,
+            "name": "C_Erfc",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 15,
+            "name": "Square_Root",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 40,
+            "name": "Checked_Log",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 58,
+            "name": "Checked_Exp",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 76,
+            "name": "Checked_Exponent",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 93,
+            "name": "Checked_Probability",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 104,
+            "name": "SF",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 137,
+            "name": "Checked_Node",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/normal_model.adb",
+            "line": 309,
+            "name": "Check_Grid_State",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 15,
+            "name": "Checked_Quantization",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 32,
+            "name": "Check_Union_Units",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 51,
+            "name": "Check_Conditional_Units",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_engine.adb",
+            "line": 68,
+            "name": "Check_Joint",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 12,
+            "name": "F",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 23,
+            "name": "N",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 29,
+            "name": "Name",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 46,
+            "name": "Read_Trials",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 61,
+            "name": "Read_Seed",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 76,
+            "name": "Write_Report",
+            "reason": "SPARK_Mode Off completion"
+          },
+          {
+            "path": "analyses/towers-multiple-test-admissions/ada/src/towers_io.adb",
+            "line": 77,
+            "name": "Run",
+            "reason": "SPARK_Mode Off completion"
+          }
+        ],
+        "insufficient": [],
+        "missing_native": [],
+        "invalid_native": [],
+        "unmatched_native": [],
+        "native_cross_check": false,
+        "complete": true
+      }
+    },
+    {
+      "id": "hoeflin-calculations",
+      "argv": [
+        ".venv-deal/bin/python",
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:33.591172+00:00",
+      "finished_utc": "2026-11-05T12:40:34.827450+00:00",
+      "elapsed_seconds": 1.2362793589709327,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/hoeflin-calculations.stdout",
+      "stderr_log": "python/hoeflin-calculations.stderr",
+      "stdout_sha256": "9c7652a4131e570e0ada50e59c2c962478fc0aed846494e5b6fce13c274a2404",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "hoeflin-calculations-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:33.705745+00:00",
+      "finished_utc": "2026-11-05T12:40:35.769916+00:00",
+      "elapsed_seconds": 2.064176910032984,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/hoeflin-calculations-optimized.stdout",
+      "stderr_log": "python/hoeflin-calculations-optimized.stderr",
+      "stdout_sha256": "9c7652a4131e570e0ada50e59c2c962478fc0aed846494e5b6fce13c274a2404",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "towers-calculations",
+      "argv": [
+        ".venv-deal/bin/python",
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:34.827569+00:00",
+      "finished_utc": "2026-11-05T12:40:37.482791+00:00",
+      "elapsed_seconds": 2.6552278710296378,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/towers-calculations.stdout",
+      "stderr_log": "python/towers-calculations.stderr",
+      "stdout_sha256": "5be2cf4c750507c199640e10a593d0035be9b88b2196ac0f83bbada06f7195c1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "towers-calculations-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:35.770032+00:00",
+      "finished_utc": "2026-11-05T12:40:38.749639+00:00",
+      "elapsed_seconds": 2.979617918957956,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/towers-calculations-optimized.stdout",
+      "stderr_log": "python/towers-calculations-optimized.stderr",
+      "stdout_sha256": "5be2cf4c750507c199640e10a593d0035be9b88b2196ac0f83bbada06f7195c1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "static-positive-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "deal",
+        "lint",
+        "--json",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+        "tests/conftest.py",
+        "tests/fixtures/nonzero_division_lint_probe.py",
+        "tests/test_contract_coverage.py",
+        "tests/test_evidence_contracts.py",
+        "tests/test_ghost_boundary_contracts.py",
+        "tests/test_numeric_contracts.py",
+        "tests/test_proof_gate_contracts.py",
+        "tests/test_runner_lint_contracts.py",
+        "tests/test_spark_contracts.py",
+        "tests/test_spark_coverage_contracts.py",
+        "tests/test_static_lint_contracts.py",
+        "tests/test_symbolic_contracts.py",
+        "tests/test_validator_contracts.py",
+        "verification/check_contract_coverage.py",
+        "verification/check_static_lint.py",
+        "verification/check_symbolic.py",
+        "verification/ghost_boundaries.py",
+        "verification/proof_gate.py",
+        "verification/replay_hoeflin.py",
+        "verification/run_computer10.py",
+        "verification/spark_contracts.py",
+        "verification/spark_coverage.py",
+        "verification/verify_evidence.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:37.482953+00:00",
+      "finished_utc": "2026-11-05T12:41:01.422786+00:00",
+      "elapsed_seconds": 23.939839451981243,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/static-positive-optimized.stdout",
+      "stderr_log": "python/static-positive-optimized.stderr",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "static-negative-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "-m",
+        "deal",
+        "lint",
+        "--json",
+        "tests/fixtures/contract_negative_control.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:38.749763+00:00",
+      "finished_utc": "2026-11-05T12:40:40.856133+00:00",
+      "elapsed_seconds": 2.106376590032596,
+      "returncode": 1,
+      "expected_returncode": 1,
+      "accepted": true,
+      "stdout_log": "python/static-negative-optimized.stdout",
+      "stderr_log": "python/static-negative-optimized.stderr",
+      "stdout_sha256": "2b89787b1f875f22b77f8ba0807fa0b90f27e67f80e367ed04a2cedd081f80a9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "dependencies",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:40.856255+00:00",
+      "finished_utc": "2026-11-05T12:40:41.188707+00:00",
+      "elapsed_seconds": 0.3324579239706509,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/dependencies.stdout",
+      "stderr_log": "python/dependencies.stderr",
+      "stdout_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "freeze",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "pip",
+        "freeze"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:41.188809+00:00",
+      "finished_utc": "2026-11-05T12:40:41.665567+00:00",
+      "elapsed_seconds": 0.47676333400886506,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/freeze.stdout",
+      "stderr_log": "python/freeze.stderr",
+      "stdout_sha256": "b2e747dbf05c29c915956b078d0cce31691b8fab56e33554dd9653e22f330365",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "compileall",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-m",
+        "compileall",
+        "-q",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+        "tests/conftest.py",
+        "tests/fixtures/contract_negative_control.py",
+        "tests/fixtures/nonzero_division_lint_probe.py",
+        "tests/test_contract_coverage.py",
+        "tests/test_evidence_contracts.py",
+        "tests/test_ghost_boundary_contracts.py",
+        "tests/test_numeric_contracts.py",
+        "tests/test_proof_gate_contracts.py",
+        "tests/test_runner_lint_contracts.py",
+        "tests/test_spark_contracts.py",
+        "tests/test_spark_coverage_contracts.py",
+        "tests/test_static_lint_contracts.py",
+        "tests/test_symbolic_contracts.py",
+        "tests/test_validator_contracts.py",
+        "verification/check_contract_coverage.py",
+        "verification/check_static_lint.py",
+        "verification/check_symbolic.py",
+        "verification/ghost_boundaries.py",
+        "verification/proof_gate.py",
+        "verification/replay_hoeflin.py",
+        "verification/run_computer10.py",
+        "verification/spark_contracts.py",
+        "verification/spark_coverage.py",
+        "verification/verify_evidence.py"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:41.665693+00:00",
+      "finished_utc": "2026-11-05T12:40:41.755979+00:00",
+      "elapsed_seconds": 0.09029222995741293,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/compileall.stdout",
+      "stderr_log": "python/compileall.stderr",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "hoeflin-validate",
+      "argv": [
+        ".venv-deal/bin/python",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "--calculations",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/check/calculations.csv",
+        "--simulation",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/check/simulation.csv"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:41.756075+00:00",
+      "finished_utc": "2026-11-05T12:40:42.817571+00:00",
+      "elapsed_seconds": 1.0615028080064803,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/hoeflin-validate.stdout",
+      "stderr_log": "python/hoeflin-validate.stderr",
+      "stdout_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "hoeflin-replay",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/replay_hoeflin.py",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/check/simulation.csv"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:42.817698+00:00",
+      "finished_utc": "2026-11-05T12:40:44.911322+00:00",
+      "elapsed_seconds": 2.0936295090359636,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/hoeflin-replay.stdout",
+      "stderr_log": "python/hoeflin-replay.stderr",
+      "stdout_sha256": "b00834fc72b8b39871f06f71bb5d93c4d8ee22221954dad4c44989fbbd8a5ac5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "towers-validate-replay",
+      "argv": [
+        ".venv-deal/bin/python",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/check",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:44.911426+00:00",
+      "finished_utc": "2026-11-05T12:40:56.271437+00:00",
+      "elapsed_seconds": 11.36001786601264,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/towers-validate-replay.stdout",
+      "stderr_log": "python/towers-validate-replay.stderr",
+      "stdout_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "hoeflin-validate-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+        "--calculations",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/check/calculations.csv",
+        "--simulation",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/check/simulation.csv"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:56.271548+00:00",
+      "finished_utc": "2026-11-05T12:40:58.379060+00:00",
+      "elapsed_seconds": 2.1075189510011114,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/hoeflin-validate-optimized.stdout",
+      "stderr_log": "python/hoeflin-validate-optimized.stderr",
+      "stdout_sha256": "997a25590b78664c3d2151ce564fca7d62ce0998ecd15b9640e27ac7292065b1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "hoeflin-replay-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/replay_hoeflin.py",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/hoeflin/check/simulation.csv"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:56.951149+00:00",
+      "finished_utc": "2026-11-05T12:40:59.639021+00:00",
+      "elapsed_seconds": 2.687877174001187,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/hoeflin-replay-optimized.stdout",
+      "stderr_log": "python/hoeflin-replay-optimized.stderr",
+      "stdout_sha256": "b00834fc72b8b39871f06f71bb5d93c4d8ee22221954dad4c44989fbbd8a5ac5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "towers-validate-replay-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+        "verification/evidence/five-contracts-computer10-20261104/runtime-final/towers/check",
+        "--replay"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:57.567637+00:00",
+      "finished_utc": "2026-11-05T12:41:07.231183+00:00",
+      "elapsed_seconds": 9.663552972022444,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "python/towers-validate-replay-optimized.stdout",
+      "stderr_log": "python/towers-validate-replay-optimized.stderr",
+      "stdout_sha256": "77060858f67fbb35c79042782d0bebd90f59712f4390030af246180743806e13",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-computer10-20261031",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py",
+        "verification/evidence/computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2c32",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:58.379159+00:00",
+      "finished_utc": "2026-11-05T12:40:58.818393+00:00",
+      "elapsed_seconds": 0.4392409360152669,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-computer10-20261031.stdout",
+      "stderr_log": "history/history-computer10-20261031.stderr",
+      "stdout_sha256": "1a95d2cf2d43daae937e4178563472f24840d1cbd66bfa126758534dad75230f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-computer10-20261031-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py",
+        "verification/evidence/computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2c32",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:58.818491+00:00",
+      "finished_utc": "2026-11-05T12:40:59.487523+00:00",
+      "elapsed_seconds": 0.6690402189851739,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-computer10-20261031-optimized.stdout",
+      "stderr_log": "history/history-computer10-20261031-optimized.stderr",
+      "stdout_sha256": "1a95d2cf2d43daae937e4178563472f24840d1cbd66bfa126758534dad75230f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-deal-spark-computer10-20261031",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py",
+        "verification/evidence/deal-spark-computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2c32",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:59.487627+00:00",
+      "finished_utc": "2026-11-05T12:40:59.814238+00:00",
+      "elapsed_seconds": 0.3266178600024432,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-deal-spark-computer10-20261031.stdout",
+      "stderr_log": "history/history-deal-spark-computer10-20261031.stderr",
+      "stdout_sha256": "1a95d2cf2d43daae937e4178563472f24840d1cbd66bfa126758534dad75230f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-deal-spark-computer10-20261031-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py",
+        "verification/evidence/deal-spark-computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2c32",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:59.639116+00:00",
+      "finished_utc": "2026-11-05T12:41:00.460645+00:00",
+      "elapsed_seconds": 0.8215360990143381,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-deal-spark-computer10-20261031-optimized.stdout",
+      "stderr_log": "history/history-deal-spark-computer10-20261031-optimized.stderr",
+      "stdout_sha256": "1a95d2cf2d43daae937e4178563472f24840d1cbd66bfa126758534dad75230f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-deal-lint-spark-computer10-20261031",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py",
+        "verification/evidence/deal-lint-spark-computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2c32",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:40:59.814343+00:00",
+      "finished_utc": "2026-11-05T12:41:00.075107+00:00",
+      "elapsed_seconds": 0.2607713199686259,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-deal-lint-spark-computer10-20261031.stdout",
+      "stderr_log": "history/history-deal-lint-spark-computer10-20261031.stderr",
+      "stdout_sha256": "234b927da8dfe218f228db040958b6970cc9789a567581bac62b4707bc5c1d0e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-deal-lint-spark-computer10-20261031-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py",
+        "verification/evidence/deal-lint-spark-computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2c32",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:41:00.075210+00:00",
+      "finished_utc": "2026-11-05T12:41:00.677944+00:00",
+      "elapsed_seconds": 0.6027414019918069,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-deal-lint-spark-computer10-20261031-optimized.stdout",
+      "stderr_log": "history/history-deal-lint-spark-computer10-20261031-optimized.stderr",
+      "stdout_sha256": "234b927da8dfe218f228db040958b6970cc9789a567581bac62b4707bc5c1d0e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-spark-expanded-computer10-20261031",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py",
+        "verification/evidence/spark-expanded-computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-ce0e",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:41:00.460781+00:00",
+      "finished_utc": "2026-11-05T12:41:00.926361+00:00",
+      "elapsed_seconds": 0.46558575000381097,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-spark-expanded-computer10-20261031.stdout",
+      "stderr_log": "history/history-spark-expanded-computer10-20261031.stderr",
+      "stdout_sha256": "15152b02e44b6373fa6ee6312cdbc87d7738907b55264904122e1d18949eba63",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-spark-expanded-computer10-20261031-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py",
+        "verification/evidence/spark-expanded-computer10-20261031",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-ce0e",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:41:00.678057+00:00",
+      "finished_utc": "2026-11-05T12:41:01.431828+00:00",
+      "elapsed_seconds": 0.7537773229996674,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-spark-expanded-computer10-20261031-optimized.stdout",
+      "stderr_log": "history/history-spark-expanded-computer10-20261031-optimized.stderr",
+      "stdout_sha256": "15152b02e44b6373fa6ee6312cdbc87d7738907b55264904122e1d18949eba63",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-ghost-boundaries-computer10-20261101",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py",
+        "verification/evidence/ghost-boundaries-computer10-20261101",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2a8e",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:41:00.926465+00:00",
+      "finished_utc": "2026-11-05T12:41:01.540689+00:00",
+      "elapsed_seconds": 0.6142302060034126,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-ghost-boundaries-computer10-20261101.stdout",
+      "stderr_log": "history/history-ghost-boundaries-computer10-20261101.stderr",
+      "stdout_sha256": "64ff040cf7635b02867fc4fc1e9307328392359be4e1d0cd3bb76291283592ed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-ghost-boundaries-computer10-20261101-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py",
+        "verification/evidence/ghost-boundaries-computer10-20261101",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-2a8e",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:41:01.422898+00:00",
+      "finished_utc": "2026-11-05T12:41:02.312038+00:00",
+      "elapsed_seconds": 0.8891457230201922,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-ghost-boundaries-computer10-20261101-optimized.stdout",
+      "stderr_log": "history/history-ghost-boundaries-computer10-20261101-optimized.stderr",
+      "stdout_sha256": "64ff040cf7635b02867fc4fc1e9307328392359be4e1d0cd3bb76291283592ed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-five-contracts-computer10-20261104",
+      "argv": [
+        ".venv-deal/bin/python",
+        "verification/verify_evidence.py",
+        "verification/evidence/five-contracts-computer10-20261104",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-1e499",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:41:01.431926+00:00",
+      "finished_utc": "2026-11-05T12:41:02.543291+00:00",
+      "elapsed_seconds": 1.1113703720038757,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-five-contracts-computer10-20261104.stdout",
+      "stderr_log": "history/history-five-contracts-computer10-20261104.stderr",
+      "stdout_sha256": "dbbd4c15fcbc6c5cfcc57deba40f2d38362bfe420bd31bd358304a309671abc0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "history-five-contracts-computer10-20261104-optimized",
+      "argv": [
+        ".venv-deal/bin/python",
+        "-O",
+        "verification/verify_evidence.py",
+        "verification/evidence/five-contracts-computer10-20261104",
+        "--source-root",
+        "/tmp/composite-iq-prior-source-1e499",
+        "--git-dir",
+        "/tmp/composite-iq-historical-git"
+      ],
+      "cwd": "/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims",
+      "started_utc": "2026-11-05T12:41:01.540798+00:00",
+      "finished_utc": "2026-11-05T12:41:02.935188+00:00",
+      "elapsed_seconds": 1.394396145013161,
+      "returncode": 0,
+      "expected_returncode": 0,
+      "accepted": true,
+      "stdout_log": "history/history-five-contracts-computer10-20261104-optimized.stdout",
+      "stderr_log": "history/history-five-contracts-computer10-20261104-optimized.stderr",
+      "stdout_sha256": "dbbd4c15fcbc6c5cfcc57deba40f2d38362bfe420bd31bd358304a309671abc0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "python_source_hashes_before": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "sha256": "66773b1017d34b2b95440efd663c8160cc60e0b53411d3f377838f4923639d0e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "sha256": "32f27a17b4d86614327c72f9386d160c76e4d4de2fcf36ac16e74cc919ef5244"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "sha256": "cc2cc8e8edcfc2839c5bd266d4d776d11299c982357b4144969f60891a56ea0e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "sha256": "fc2878626a914ac9ef1c88c291ae1c3b3b983cb49b2c15d21ae4c36c496cc0f6"
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "f774953527c5c5dfdef85454b53932df7b0aaf68afe1947ae27201a56d1757ba"
+    },
+    {
+      "path": "tests/fixtures/contract_negative_control.py",
+      "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+    },
+    {
+      "path": "tests/fixtures/nonzero_division_lint_probe.py",
+      "sha256": "572b6bd1fdbe9746e028c52b1fa65061bd70f4fde726dc1dfd9b303f629360be"
+    },
+    {
+      "path": "tests/test_contract_coverage.py",
+      "sha256": "1d6be1b661896a3119bc613de090cd3c70d5db161a0fcf572fc9f4069050a117"
+    },
+    {
+      "path": "tests/test_evidence_contracts.py",
+      "sha256": "c09754412b0bdd419608c280cecdd00eeb88398434ecd5cc3362325bea8dbbcb"
+    },
+    {
+      "path": "tests/test_ghost_boundary_contracts.py",
+      "sha256": "530d50eacdc9a697c32a50c61dde609c5b029194ed05cff94cdef77db069c851"
+    },
+    {
+      "path": "tests/test_numeric_contracts.py",
+      "sha256": "efe034a426416d47885bdb97b67d91c4fbfe27386d8f7d60a71a008244109b89"
+    },
+    {
+      "path": "tests/test_proof_gate_contracts.py",
+      "sha256": "6c104ef4915968393425a426f5e244c0a67e528ca59de159f8b0676995648781"
+    },
+    {
+      "path": "tests/test_runner_lint_contracts.py",
+      "sha256": "ee4a3efc9d4dd84fb5cdfcd426d9ae0795be0bcd0ca7bc9f8267b7c96a8e02eb"
+    },
+    {
+      "path": "tests/test_spark_contracts.py",
+      "sha256": "2f90aca85c44c48619af942334c485076d99d0e70d93986a93d82b9d8d1bc56c"
+    },
+    {
+      "path": "tests/test_spark_coverage_contracts.py",
+      "sha256": "02e410d65f0c52bbfe140b0f89faf9cf90b9c1b4246c9ee6db819614dcd47ac7"
+    },
+    {
+      "path": "tests/test_static_lint_contracts.py",
+      "sha256": "582197536a3f56e5d201657ba5756cd7a984c57d930dc8720b551f1c6e31634f"
+    },
+    {
+      "path": "tests/test_symbolic_contracts.py",
+      "sha256": "4f36047e37a88dfafb4a2014bc0337270e5b943aa0ac19cace123e2660777e10"
+    },
+    {
+      "path": "tests/test_validator_contracts.py",
+      "sha256": "83889ee9e3e0a8c7aeb0901e856d81e07fe875416c9e75c3020ca24ecaf36269"
+    },
+    {
+      "path": "verification/check_contract_coverage.py",
+      "sha256": "f99c7697e512318c541b9efb4f94d5887a133ff2767d55752e11c56af84e1999"
+    },
+    {
+      "path": "verification/check_static_lint.py",
+      "sha256": "5484f01fe99b230f77ba3148f73b31ed2642252da81b4bd12d86105931456602"
+    },
+    {
+      "path": "verification/check_symbolic.py",
+      "sha256": "cb8414669925226bea6dff662901c6df58ab9bd586f5e811fabce74915b94fe1"
+    },
+    {
+      "path": "verification/ghost_boundaries.py",
+      "sha256": "a6ccd4afd2f233e4ebe031b8ed5286e691547514a3734fa5e7b6f94b83d16ff5"
+    },
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "sha256": "91d4a975b84badf342863d90d3a823aec1453c5fcc4d466e33f3e615777fdc3d"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910"
+    },
+    {
+      "path": "verification/spark_contracts.py",
+      "sha256": "6f646a682df0f53c1d20649f55c33f096a823d984011c3efcb9f9d17966c17b9"
+    },
+    {
+      "path": "verification/spark_coverage.py",
+      "sha256": "4fa33d7e7d7e0b2c32957514ee1d8b0295d839e88ada34bcf43bba454d496ff1"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "sha256": "8f127031f074122e35172682f0ce3527e6530ffd83c09ef2bea828ed4d709cb1"
+    }
+  ],
+  "python_source_hashes_after": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/scripts/validate_results.py",
+      "sha256": "66773b1017d34b2b95440efd663c8160cc60e0b53411d3f377838f4923639d0e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+      "sha256": "32f27a17b4d86614327c72f9386d160c76e4d4de2fcf36ac16e74cc919ef5244"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/ada/validate_results.py",
+      "sha256": "cc2cc8e8edcfc2839c5bd266d4d776d11299c982357b4144969f60891a56ea0e"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+      "sha256": "fc2878626a914ac9ef1c88c291ae1c3b3b983cb49b2c15d21ae4c36c496cc0f6"
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "f774953527c5c5dfdef85454b53932df7b0aaf68afe1947ae27201a56d1757ba"
+    },
+    {
+      "path": "tests/fixtures/contract_negative_control.py",
+      "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+    },
+    {
+      "path": "tests/fixtures/nonzero_division_lint_probe.py",
+      "sha256": "572b6bd1fdbe9746e028c52b1fa65061bd70f4fde726dc1dfd9b303f629360be"
+    },
+    {
+      "path": "tests/test_contract_coverage.py",
+      "sha256": "1d6be1b661896a3119bc613de090cd3c70d5db161a0fcf572fc9f4069050a117"
+    },
+    {
+      "path": "tests/test_evidence_contracts.py",
+      "sha256": "c09754412b0bdd419608c280cecdd00eeb88398434ecd5cc3362325bea8dbbcb"
+    },
+    {
+      "path": "tests/test_ghost_boundary_contracts.py",
+      "sha256": "530d50eacdc9a697c32a50c61dde609c5b029194ed05cff94cdef77db069c851"
+    },
+    {
+      "path": "tests/test_numeric_contracts.py",
+      "sha256": "efe034a426416d47885bdb97b67d91c4fbfe27386d8f7d60a71a008244109b89"
+    },
+    {
+      "path": "tests/test_proof_gate_contracts.py",
+      "sha256": "6c104ef4915968393425a426f5e244c0a67e528ca59de159f8b0676995648781"
+    },
+    {
+      "path": "tests/test_runner_lint_contracts.py",
+      "sha256": "ee4a3efc9d4dd84fb5cdfcd426d9ae0795be0bcd0ca7bc9f8267b7c96a8e02eb"
+    },
+    {
+      "path": "tests/test_spark_contracts.py",
+      "sha256": "2f90aca85c44c48619af942334c485076d99d0e70d93986a93d82b9d8d1bc56c"
+    },
+    {
+      "path": "tests/test_spark_coverage_contracts.py",
+      "sha256": "02e410d65f0c52bbfe140b0f89faf9cf90b9c1b4246c9ee6db819614dcd47ac7"
+    },
+    {
+      "path": "tests/test_static_lint_contracts.py",
+      "sha256": "582197536a3f56e5d201657ba5756cd7a984c57d930dc8720b551f1c6e31634f"
+    },
+    {
+      "path": "tests/test_symbolic_contracts.py",
+      "sha256": "4f36047e37a88dfafb4a2014bc0337270e5b943aa0ac19cace123e2660777e10"
+    },
+    {
+      "path": "tests/test_validator_contracts.py",
+      "sha256": "83889ee9e3e0a8c7aeb0901e856d81e07fe875416c9e75c3020ca24ecaf36269"
+    },
+    {
+      "path": "verification/check_contract_coverage.py",
+      "sha256": "f99c7697e512318c541b9efb4f94d5887a133ff2767d55752e11c56af84e1999"
+    },
+    {
+      "path": "verification/check_static_lint.py",
+      "sha256": "5484f01fe99b230f77ba3148f73b31ed2642252da81b4bd12d86105931456602"
+    },
+    {
+      "path": "verification/check_symbolic.py",
+      "sha256": "cb8414669925226bea6dff662901c6df58ab9bd586f5e811fabce74915b94fe1"
+    },
+    {
+      "path": "verification/ghost_boundaries.py",
+      "sha256": "a6ccd4afd2f233e4ebe031b8ed5286e691547514a3734fa5e7b6f94b83d16ff5"
+    },
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "sha256": "91d4a975b84badf342863d90d3a823aec1453c5fcc4d466e33f3e615777fdc3d"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910"
+    },
+    {
+      "path": "verification/spark_contracts.py",
+      "sha256": "6f646a682df0f53c1d20649f55c33f096a823d984011c3efcb9f9d17966c17b9"
+    },
+    {
+      "path": "verification/spark_coverage.py",
+      "sha256": "4fa33d7e7d7e0b2c32957514ee1d8b0295d839e88ada34bcf43bba454d496ff1"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "sha256": "8f127031f074122e35172682f0ce3527e6530ffd83c09ef2bea828ed4d709cb1"
+    }
+  ],
+  "python_sources_unchanged_during_checks": true,
+  "accepted": true,
+  "notes": [
+    "Fresh checks on computer10. Ada sources unchanged; native SPARK proofs are retained from the pinned prior campaign and freshly audited, not rerun.",
+    "All named functions require at least five distinct Deal contracts, with no upper limit.",
+    "Direct optimized lint complements the optimized gate, whose lint child interpreters omit -O.",
+    "Upstream astroid deprecation warnings and optimized pytest assertion warnings remain visible, without suppression.",
+    "Numerical validation/replay uses the six retained CSVs; no additional Monte Carlo sample size is claimed."
+  ]
+}

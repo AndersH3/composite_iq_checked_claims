@@ -1,0 +1,135 @@
+{
+  "schema": "deal-symbolic-int-v1",
+  "adapter": "isinstance-int-v1",
+  "normalization": "pure-comparison-chains-v1",
+  "toolchain": {
+    "deal": "4.24.6",
+    "deal_solver": "0.1.2"
+  },
+  "files": [
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a",
+      "normalized_sha256": "a502f6c46900cfc67725c9be2f7f5d7789796513eedbd604565aba6443a3355f",
+      "theorems": [
+        {
+          "conclusion": "OK",
+          "description": "post-condition",
+          "error": null,
+          "counterexample": null,
+          "name": "totals_balanced",
+          "obligations": [
+            {
+              "conclusion": "OK",
+              "description": "post-condition",
+              "error": null,
+              "counterexample": null,
+              "index": 0,
+              "kind": "post-condition",
+              "outcome": "proved"
+            }
+          ]
+        },
+        {
+          "conclusion": "OK",
+          "description": "post-condition",
+          "error": null,
+          "counterexample": null,
+          "name": "successful_checks",
+          "obligations": [
+            {
+              "conclusion": "OK",
+              "description": "post-condition",
+              "error": null,
+              "counterexample": null,
+              "index": 0,
+              "kind": "post-condition",
+              "outcome": "proved"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/contract_negative_control.py",
+      "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505",
+      "normalized_sha256": "fc6aca2111764229a4862538374f93a0c972283caa339f29ad6ec80d79653d23",
+      "theorems": [
+        {
+          "conclusion": "OK",
+          "description": "post-condition, post-condition",
+          "error": null,
+          "counterexample": null,
+          "name": "probability_identity",
+          "obligations": [
+            {
+              "conclusion": "OK",
+              "description": "post-condition",
+              "error": null,
+              "counterexample": null,
+              "index": 0,
+              "kind": "post-condition",
+              "outcome": "proved"
+            },
+            {
+              "conclusion": "OK",
+              "description": "post-condition",
+              "error": null,
+              "counterexample": null,
+              "index": 1,
+              "kind": "post-condition",
+              "outcome": "proved"
+            }
+          ]
+        },
+        {
+          "conclusion": "FAIL",
+          "description": "post-condition",
+          "error": null,
+          "counterexample": {},
+          "name": "negative_probability",
+          "obligations": [
+            {
+              "conclusion": "FAIL",
+              "description": "post-condition",
+              "error": null,
+              "counterexample": {},
+              "index": 0,
+              "kind": "post-condition",
+              "outcome": "counterexample"
+            },
+            {
+              "conclusion": "OK",
+              "description": "post-condition",
+              "error": null,
+              "counterexample": null,
+              "index": 1,
+              "kind": "post-condition",
+              "outcome": "proved"
+            },
+            {
+              "conclusion": "OK",
+              "description": "post-condition",
+              "error": null,
+              "counterexample": null,
+              "index": 2,
+              "kind": "post-condition",
+              "outcome": "proved"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a"
+    },
+    {
+      "path": "tests/fixtures/contract_negative_control.py",
+      "sha256": "7f448b22a0c934ae5eee2ab4a7f51395878ec2923ed1ac095fd1c320ed8c2505"
+    }
+  ],
+  "complete": true
+}

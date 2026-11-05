@@ -46,7 +46,7 @@
 \title{Multiple-Test Admissions}
 \subtitle{A joint analysis and corrected version of two Grady Towers letters}
 \author{}
-\date{4 November 2026}
+\date{5 November 2026}
 
 \begin{document}
 \maketitle
@@ -498,17 +498,19 @@ explicit numerical completions. Parsing and CSV/file output are isolated
 in \texttt{Towers\_IO}, with external state modeled in its SPARK interface.
 The proof project now enumerates all thirteen source files, including the
 trusted I/O completion. Turning an aspect on is a language-coverage change;
-the fresh native proof results below provide the separate verification evidence.
+the recorded native proof results below provide the separate verification evidence.
 
 The \href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/five-contracts-computer10-20261104/REPORT.md}{Five-contract computer10 campaign}
-was completed on 4 November 2026. It records exact commands, tool versions, source
-hashes, native reports and raw coverage, checksums, numerical comparisons,
-and Python results. Earlier 31-check and 110-test results remain immutable
+was completed on 4 November 2026. It retains commands, tool versions, source
+hashes, native reports, raw coverage and numerical comparisons. The
+\href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/symbolic-fixture-computer10-20261105/REPORT.md}{symbolic-check follow-up}
+adds fresh Python verification and re-audits the unchanged native evidence;
+it does not claim new prover invocations. Earlier 31-check and 110-test results remain immutable
 historical snapshots; they are not totals for this expanded implementation.
 
 \subsection{SPARK scope and results}
 
-The fresh five-prover portfolio discharged \textbf{696 checks:
+The 4 November five-prover portfolio discharged \textbf{696 checks:
 230 flow checks and 466 prover checks}, with zero unproved
 and zero justified checks. CVC5, Z3, Alt-Ergo, classic COLIBRI, and Yices were
 requested together. A completed portfolio does not imply that every solver
@@ -672,7 +674,7 @@ compatibility tests are not a compiler proof.
 
 \subsection{Numerical regression, Deal, and evidence audits}
 
-A fresh Ada build reproduces all four retained CSVs byte for byte.
+The 4 November Ada build reproduced all four retained CSVs byte for byte.
 Independent SciPy validation and Python replay pass normally and under
 \texttt{python -O}. One million shared correlated pairs from seed
 \texttt{20261030} supply the four cases; all 16 event-cell counts match
@@ -684,16 +686,20 @@ psychometric frequencies.
 
 All current Python files import Deal. Each named function, including tests,
 fixtures and evidence tools, carries at least five distinct Deal decorators. The final repository-wide
-inventory has 26 files, 251 named functions, and 1,255 Deal decorators with
-zero gaps. All 25 positive files have zero lint diagnostics, and 262 tests
-pass in each execution mode. Coverage, clean positive
-static lint, the exact expected \texttt{DEL012} negative control,
-runtime/property tests, numerical scripts, and historical-source audits
-pass in normal and optimized Python. CLI entry points explicitly enable
-Deal under optimization. Deal Solver proves two pure gate postconditions; symbolic negative
-verification is unsupported because of \texttt{isinstance}. These
-focused results do not prove the full Python programs, SciPy, or subprocess
-handling; clean lint and finite tests are not universal proofs.
+inventory has 28 files, 292 named functions, and 1,460 Deal decorators with
+zero gaps. All 27 positive files are lint-clean, and 343 tests pass in each mode.
+Coverage, static lint, the exact expected \texttt{DEL012} negative control,
+runtime/property tests, numerical scripts and historical-source audits pass normally
+and optimized. CLI contracts explicitly remain enabled under optimization.
+
+The scoped, version-pinned symbolic gate proves three correct theorems and rejects
+the unchanged negative fixture with an actual counterexample. Of seven postconditions,
+six prove and one fails as expected; none is skipped. The integer-type model retains
+Python's Boolean subtype semantics; restricted comparison-chain normalization preserves
+both bounds. Other classes, sorts and unsafe chains fail closed. Original contracts and
+installed dependencies are unchanged. The extension uses private pinned APIs and remains
+trusted tooling. These focused results do not prove the full programs, SciPy or
+subprocess handling; clean lint and finite tests are not universal proofs.
 
 From a full clone, install the pinned dependencies and run
 \texttt{make check}. Audit the current campaign with
@@ -764,7 +770,7 @@ draws under the stated mathematical model. The repository preserves source
 and evidence history, but not a complete prompt/tool transcript, exact
 per-line authorship, or an AI-contribution percentage. Those details cannot
 be reconstructed reliably and have not been invented. The disclosure is
-current through 4 November 2026.
+current through 5 November 2026.
 
 \clearpage
 \bibliographystyle{plainnat}

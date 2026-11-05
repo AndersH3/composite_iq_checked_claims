@@ -1,0 +1,237 @@
+{
+  "spark": [
+    {
+      "name": "Towers_IO",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 4
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Towers_IO.Read_Trials",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 11
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Towers_IO.Read_Seed",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 17
+        }
+      ],
+      "spark": "spec"
+    },
+    {
+      "name": "Towers_IO.Write_Report",
+      "sloc": [
+        {
+          "file": "towers_io.ads",
+          "line": 23
+        }
+      ],
+      "spark": "spec"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "towers_io.ads",
+      "line": 6,
+      "col": 3,
+      "rule": "DEPENDS_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_IO",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-47ugixyk/towers/portfolio/proof_obj/gnatprove/towers_io__write_report"
+  },
+  "proof": [
+    {
+      "file": "towers_io.ads",
+      "line": 27,
+      "col": 212,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_IO.Write_Report",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 23
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 4.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 3.00000000000000E-02
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_io.ads",
+      "check_line": 27,
+      "check_col": 212,
+      "msg_id": 1,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 3.99999991059303E-02
+        }
+      }
+    },
+    {
+      "file": "towers_io.ads",
+      "line": 27,
+      "col": 351,
+      "rule": "VC_PRECONDITION",
+      "severity": "info",
+      "entity": {
+        "name": "Towers_IO.Write_Report",
+        "sloc": [
+          {
+            "file": "towers_io.ads",
+            "line": 23
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Valid",
+              "steps": 1,
+              "time": 5.00000000000000E-02
+            },
+            "Colibri_Classic": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 7.80000000000000E-01
+            },
+            "Yices": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "altergo": {
+              "result": "Failure\n(interrupted)",
+              "steps": 1,
+              "time": 0
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "towers_io.ads",
+      "check_line": 27,
+      "check_col": 351,
+      "msg_id": 2,
+      "session_dir": 1,
+      "how_proved": "prover",
+      "stats": {
+        "CVC5": {
+          "count": 1,
+          "max_steps": 1,
+          "max_time": 5.00000007450581E-02
+        }
+      }
+    }
+  ],
+  "assumptions": [
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 1.55055999755859E-01,
+    "gnatwhy3.transformations.eliminate_algebraic": 1.00801996886730E-01,
+    "init_why_sections": 3.99999989895150E-04,
+    "gnatwhy3.transformations.detect_polymorphism": 1.43900001421571E-03,
+    "gnatwhy3.transformations.eliminate_literal": 7.80790001153946E-02,
+    "gnatwhy3.run_vcs": 1.62200001068413E-03,
+    "globals (advanced)": 1.68149992823601E-02,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 9.41000040620565E-03,
+    "flow analysis": 1.57600000966340E-03,
+    "gnatwhy3.transformations.encoding_smt": 8.54059979319572E-02,
+    "gnatwhy3.transformations.simplify_formula": 7.11909979581833E-02,
+    "marking": 1.93999992916360E-04,
+    "translation of standard": 2.84900004044175E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 2.22769994288683E-02,
+    "gnatwhy3.transformations.instantiate_predicate": 1.75669994205236E-02,
+    "properties (advanced)": 3.50000009348150E-05,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 7.41600012406707E-03,
+    "gnatwhy3.register_vcs": 1.39750000089407E-02,
+    "gnatwhy3.transformations.eliminate_epsilon": 6.19050003588200E-02,
+    "globals (basic)": 2.29540001600981E-02,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 1.26009002327919E-01,
+    "gnatwhy3.schedule_vcs": 1.67599990963936E-02,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 1.70000002981396E-05,
+    "gnatwhy3.save_session": 4.20900015160441E-03,
+    "gnatwhy3.transformations.encoding_sort": 1.58190000802279E-02,
+    "gnatwhy3.transformations.eliminate_inductive": 4.12780009210110E-02,
+    "gnatwhy3.transformations.compile_match": 1.82349998503923E-02,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 9.99999974737875E-06,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 1.70510001480579E-02,
+    "gnatwhy3.transformations.eliminate_definition": 1.29169998690486E-02,
+    "gnatwhy3.transformations.eliminate_builtin": 7.65089988708496E-02,
+    "gnatwhy3.transformations.discriminate_if_poly": 2.40000008489005E-05,
+    "gnatwhy3.transformations.introduce_premises": 1.27010000869632E-02,
+    "gnatwhy3.init": 5.94864010810852E-01
+  }
+}

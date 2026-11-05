@@ -5,7 +5,7 @@ The two analysis folders contain standalone Ada implementations:
 - [Hoeflin/Ferguson](../analyses/hoeflin-ferguson/ada/): corrected thresholds, composite and latent-factor examples, and a Gaussian common-factor simulation.
 - [Towers](../analyses/towers-multiple-test-admissions/ada/): bivariate-normal probabilities, the BASIC grid, calibrated admission cutoffs, and correlated-score simulations.
 
-The [five-contract computer10 campaign](evidence/five-contracts-computer10-20261104/REPORT.md) records the current source scope, proof results, native `.spark` coverage, source-bound Ghost models, checked interfaces, erasure regressions, numerical comparisons, and Python checks. The [earlier expanded campaign](evidence/spark-expanded-computer10-20261031/REPORT.md) preserves its 209/434-check results against revision `ce0e895`; those are historical counts for the implementation before the Ghost additions. The [original campaign](evidence/computer10-20261031/REPORT.md) and [earlier integration campaign](evidence/deal-lint-spark-computer10-20261031/REPORT.md) remain immutable historical snapshots. Their 47-check Hoeflin and 31-check Towers totals apply to the old projects containing only the arithmetic cores; they are not totals for the expanded implementation.
+The [symbolic-check follow-up](evidence/symbolic-fixture-computer10-20261105/REPORT.md) records fresh Python checks and re-audits the unchanged 1,100 native SPARK checks from the [five-contract computer10 campaign](evidence/five-contracts-computer10-20261104/REPORT.md). No new GNATprove invocation is claimed for this Python-only fix. The native campaign retains source scope, proof results, raw `.spark` coverage, source-bound Ghost models, checked interfaces, erasure regressions and numerical comparisons. The [earlier expanded campaign](evidence/spark-expanded-computer10-20261031/REPORT.md) preserves its 209/434-check results against revision `ce0e895`; those are historical counts for the implementation before the Ghost additions. The [original campaign](evidence/computer10-20261031/REPORT.md) and [earlier integration campaign](evidence/deal-lint-spark-computer10-20261031/REPORT.md) remain immutable historical snapshots. Their 47-check Hoeflin and 31-check Towers totals apply to the old projects containing only the arithmetic cores; they are not totals for the expanded implementation.
 
 ## Reproduce the proof campaign
 
@@ -87,7 +87,7 @@ python3 verification/replay_hoeflin.py \
 
 Monte Carlo uncertainty is reported explicitly. Rare counts are descriptive; these sample sizes do not establish a one-in-a-million psychometric frequency.
 
-Audit the committed five-contract campaign against the current source with `python3 verification/verify_evidence.py`. Its default evidence directory is `verification/evidence/five-contracts-computer10-20261104`. The runner produces native proof/coverage and source-identity records. The published campaign additionally contains runtime, Python, document and complete checksum/source inventories; a new runner directory needs equivalent release inventories before the full retained-evidence auditor can accept it. The auditor checks checksums, native totals, raw coverage, source identities, Ghost mappings, and both negative-control results; it does not rerun the provers or independently validate SMT proof objects.
+Audit the committed symbolic-check follow-up against the current source with `python3 verification/verify_evidence.py`. Its default evidence directory is `verification/evidence/symbolic-fixture-computer10-20261105`. The follow-up pins the unchanged native records to their five-contract origin and checks the symbolic outcomes, original input hashes and normalized-input hashes against the selected source tree. The runner produces native proof/coverage and source-identity records. The published campaign additionally contains runtime, Python, document and complete checksum/source inventories; a new runner directory needs equivalent release inventories before the full retained-evidence auditor can accept it. The auditor checks checksums, native totals, raw coverage, source identities, Ghost mappings, and both negative-control results; it does not rerun the provers or independently validate SMT proof objects.
 
 ## Audit historical campaigns explicitly
 
@@ -122,6 +122,33 @@ python3 verification/verify_evidence.py \
 ```
 
 Its older required-body inventory is checked under the explicit historical policy; it cannot opt a current Ghost campaign out of model coverage. A mismatch against the selected Ada tree is an error. Historical Python tooling may still be resolved through verified Git blob identities in [source_history.json](source_history.json); there is no automatic Ada fallback. `--git-dir PATH` supplies a separate Git object database when needed. No historical uncontracted Python copies are added to the current tree.
+
+The five-contract campaign predates the symbolic-check extension and now requires its explicit source revision:
+
+```sh
+git worktree add --detach /tmp/composite-iq-five-contract-source \
+  1e4990e9eee64c8b353aea4b32da3a367deca1cd
+python3 verification/verify_evidence.py \
+  verification/evidence/five-contracts-computer10-20261104 \
+  --source-root /tmp/composite-iq-five-contract-source
+```
+
+Together, these commands cover the six retained SPARK campaigns. Missing symbolic metadata is allowed only for these explicitly named historical campaigns with an explicit historical source root; it cannot downgrade a current campaign.
+
+## Deal symbolic check
+
+```sh
+python verification/check_symbolic.py
+python -O verification/check_symbolic.py
+```
+
+The project gate requires Deal 4.24.6 and Deal Solver 0.1.2. It checks both pure acceptance functions and both functions in the unchanged negative fixture. The three correct theorems prove; the deliberately incorrect function yields an actual counterexample to its nonnegative-result postcondition. All seven postcondition obligations are inspected individually: six prove and one has the expected counterexample. An empty counterexample mapping is valid for the no-argument negative function. Skips, unsupported operations, tool errors, missing clauses or unexpected outcomes fail the gate. `make check` and GitHub Actions run this gate.
+
+Stock Deal Solver cannot resolve `isinstance` in this fixture. The gate temporarily registers a project-local model of positional `isinstance(value, int)` for known primitive solver sorts. Integer and Boolean values return true, preserving Python's Boolean subtype behavior; float and string values return false. Other classes, sorts and unsupported source forms fail closed. The registry is restored even after an exception. Original fixture bytes, runtime contracts and installed dependency files are unchanged. The unextended `python -m deal prove` command still lacks this model and is not the reproduction command for the resolved check.
+
+The pinned solver also evaluates only the first comparison in a chain. Before symbolic extraction, the gate expands chains with simple name/constant operands into conjunctions, retaining every bound and Python's short-circuit order in this restricted scalar subset. It rejects operands unsafe to repeat, such as calls, attributes and subscripts. The record pins both original and normalized source hashes. Regression cases detect a dropped upper bound, distinguish integer/Boolean returns from numerically equal floats, and exercise failure/skip handling and registry restoration.
+
+This adapter and normalization use private, version-pinned solver APIs and belong to the trusted verification tooling; tests do not prove their general correctness. They support the two recorded source files, not arbitrary Python or universal verification of the project. Runtime/property tests, static lint, limited symbolic results, native SPARK proofs and statistical-model validity remain distinct evidence.
 
 ## Python contracts
 

@@ -1,0 +1,200 @@
+{
+  "spark": [
+    {
+      "name": "Negative_Union",
+      "sloc": [
+        {
+          "file": "negative_union.ads",
+          "line": 2
+        }
+      ],
+      "spark": "all"
+    },
+    {
+      "name": "Negative_Union.Union_Size",
+      "sloc": [
+        {
+          "file": "negative_union.ads",
+          "line": 4
+        }
+      ],
+      "spark": "all"
+    }
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+    {
+      "file": "negative_union.ads",
+      "line": 5,
+      "col": 6,
+      "rule": "GLOBAL_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Negative_Union.Union_Size",
+        "sloc": [
+          {
+            "file": "negative_union.ads",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 0,
+      "how_proved": "flow"
+    },
+    {
+      "file": "negative_union.ads",
+      "line": 8,
+      "col": 6,
+      "rule": "DEPENDS_WRONG",
+      "severity": "info",
+      "entity": {
+        "name": "Negative_Union.Union_Size",
+        "sloc": [
+          {
+            "file": "negative_union.ads",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": {
+      },
+      "msg_id": 1,
+      "how_proved": "flow"
+    }
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+    " 1": "/tmp/composite-iq-spark-47ugixyk/negative_control/portfolio/obj-proof/gnatprove/negative_union__union_size"
+  },
+  "proof": [
+    {
+      "file": "negative_union.ads",
+      "line": 7,
+      "col": 14,
+      "rule": "VC_POSTCONDITION",
+      "severity": "medium",
+      "entity": {
+        "name": "Negative_Union.Union_Size",
+        "sloc": [
+          {
+            "file": "negative_union.ads",
+            "line": 4
+          }
+        ]
+      },
+      "check_tree": [
+        {
+          "proof_attempts": {
+            "CVC5": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 0
+            },
+            "Colibri_Classic": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 4.80000000000000E-01
+            },
+            "Yices": {
+              "result": "High failure",
+              "steps": 1,
+              "time": 0
+            },
+            "Z3": {
+              "result": "Unknown\n(sat)",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            },
+            "altergo": {
+              "result": "Unknown\n()",
+              "steps": 1,
+              "time": 2.00000000000000E-02
+            }
+          },
+          "transformations": {
+          }
+        }
+      ],
+      "check_file": "negative_union.ads",
+      "check_line": 7,
+      "check_col": 14,
+      "msg_id": 2,
+      "session_dir": 1,
+      "how_proved": "prover"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_AORTE",
+        "arg": {
+          "name": "Negative_Union",
+          "sloc": [
+            {
+              "file": "negative_union.ads",
+              "line": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "assumptions": [
+      ],
+      "claim": {
+        "predicate": "CLAIM_EFFECTS",
+        "arg": {
+          "name": "Negative_Union.Union_Size",
+          "sloc": [
+            {
+              "file": "negative_union.ads",
+              "line": 4
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "timings": {
+    "gnatwhy3.transformations.inline_trivial": 2.28999997489154E-03,
+    "gnatwhy3.transformations.eliminate_algebraic": 2.46399990282953E-03,
+    "init_why_sections": 6.66000007186085E-04,
+    "gnatwhy3.transformations.detect_polymorphism": 5.90000017837156E-05,
+    "gnatwhy3.transformations.eliminate_literal": 2.27999989874661E-03,
+    "gnatwhy3.run_vcs": 2.87099997512996E-03,
+    "globals (advanced)": 1.55999994603917E-04,
+    "gnatwhy3.transformations.eliminate_algebraic_if_poly": 1.63999997312203E-04,
+    "flow analysis": 8.44000023789704E-04,
+    "gnatwhy3.transformations.encoding_smt": 3.64300003275275E-03,
+    "gnatwhy3.transformations.simplify_formula": 1.50500005111098E-03,
+    "marking": 4.19999996665865E-05,
+    "translation of standard": 3.17399995401502E-03,
+    "gnatwhy3.transformations.eliminate_recursion": 3.15000012051314E-04,
+    "gnatwhy3.transformations.instantiate_predicate": 1.18999996630009E-04,
+    "properties (advanced)": 1.20000004244503E-05,
+    "gnatwhy3.transformations.eliminate_definition_conditionally": 5.29999997525010E-05,
+    "gnatwhy3.register_vcs": 1.71900005079806E-03,
+    "gnatwhy3.transformations.eliminate_epsilon": 1.98900001123548E-03,
+    "globals (basic)": 2.01000002562068E-04,
+    "gnatwhy3.transformations.remove_unused_keep_constants": 3.83600010536611E-03,
+    "gnatwhy3.schedule_vcs": 2.22999998368323E-03,
+    "gnatwhy3.transformations.prepare_for_counterexmp": 3.99999998990097E-06,
+    "gnatwhy3.save_session": 1.20199995581061E-03,
+    "gnatwhy3.transformations.encoding_sort": 9.25000000279397E-04,
+    "gnatwhy3.transformations.eliminate_inductive": 9.07999987248331E-04,
+    "gnatwhy3.transformations.compile_match": 2.80999985989183E-04,
+    "gnatwhy3.transformations.encoding_smt_if_poly": 3.99999998990097E-06,
+    "gnatwhy3.transformations.eliminate_unused_hypo": 6.84000027831644E-04,
+    "gnatwhy3.transformations.eliminate_definition": 0.00000000000000E+00,
+    "gnatwhy3.transformations.eliminate_builtin": 1.61299994215369E-03,
+    "gnatwhy3.transformations.discriminate_if_poly": 6.00000021222513E-06,
+    "gnatwhy3.transformations.introduce_premises": 1.02700002025813E-03,
+    "gnatwhy3.init": 4.84091013669968E-01
+  }
+}

@@ -1,0 +1,21 @@
+Title:           Multiple-Test Admissions: A Joint Analysis of Two Grady Towers Letters
+Subject:         Bivariate normal overlap, eligibility rules, and corrected conditional probabilities
+Keywords:        IQ, admissions, Grady Towers, bivariate normal, phi correlation, selection
+Author:          Prepared with OpenAI Codex
+Creator:         LaTeX with hyperref
+Producer:        xdvipdfmx (20240305)
+CreationDate:    Thu Nov  5 13:45:14 2026 CET
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           12
+Encrypted:       no
+Page size:       595.28 x 841.89 pts (A4)
+Page rot:        0
+File size:       99159 bytes
+Optimized:       no
+PDF version:     1.5

@@ -1,0 +1,9 @@
+{
+  "python_files": 28,
+  "named_functions": 292,
+  "deal_contracts": 1460,
+  "problems": [],
+  "minimum_contracts": 5,
+  "minimum_observed": 5,
+  "complete": true
+}

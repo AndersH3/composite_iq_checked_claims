@@ -1,0 +1,10 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+negative_ghost_ledger.ads:6:06: info: data dependencies proved
+
+negative_ghost_ledger.ads:8:14: medium: postcondition might fail, cannot prove Count = Count'Old + 1
+    8 |     Post => Count = Count'Old + 1 and then Count > Count'Old,
+      |             ^~~~~~~~~~~~~~~~~~~~~
+negative_ghost_ledger.ads:9:06: info: flow dependencies proved
+Summary logged in /tmp/composite-iq-spark-47ugixyk/ghost_negative_control/portfolio/obj-proof/gnatprove/gnatprove.out
+gnatprove: unproved check messages considered as errors

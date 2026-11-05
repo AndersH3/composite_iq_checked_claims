@@ -30,12 +30,9 @@ jobs:
         run: python verification/check_static_lint.py
       - name: Runtime and property tests
         run: python -m pytest -q tests
-      - name: Symbolically verify the two pure acceptance gates
-        run: |
-          python -m deal prove --skipped --nocolor verification/proof_gate.py | tee proof-gate.log
-          test "$(grep -c 'proved! post-condition' proof-gate.log)" -eq 2
-          if grep -E 'skipped|failed' proof-gate.log; then exit 1; fi
-      - name: Audit current five-contract SPARK evidence
+      - name: Symbolically verify acceptance gates and the unchanged negative fixture
+        run: python verification/check_symbolic.py
+      - name: Audit current symbolic-fix and source-pinned SPARK evidence
         run: python verification/verify_evidence.py
       - name: Audit prior SPARK campaigns against their explicit source revision
         run: |
@@ -47,3 +44,5 @@ jobs:
           python verification/verify_evidence.py verification/evidence/spark-expanded-computer10-20261031 --source-root "$RUNNER_TEMP/composite-iq-expanded-source"
           git worktree add --detach "$RUNNER_TEMP/composite-iq-ghost-source" 2a8e983fb3c8b90436b89db6e6adfe170872f5f5
           python verification/verify_evidence.py verification/evidence/ghost-boundaries-computer10-20261101 --source-root "$RUNNER_TEMP/composite-iq-ghost-source"
+          git worktree add --detach "$RUNNER_TEMP/composite-iq-five-contract-source" 1e4990e9eee64c8b353aea4b32da3a367deca1cd
+          python verification/verify_evidence.py verification/evidence/five-contracts-computer10-20261104 --source-root "$RUNNER_TEMP/composite-iq-five-contract-source"

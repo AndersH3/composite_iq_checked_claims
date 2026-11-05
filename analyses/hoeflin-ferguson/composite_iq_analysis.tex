@@ -51,7 +51,7 @@
 \title{Combining IQ Scores}
 \subtitle{Analysis and a corrected statistical treatment}
 \author{}
-\date{4 November 2026}
+\date{5 November 2026}
 
 \begin{document}
 \maketitle
@@ -415,9 +415,11 @@ The proof project enumerates all ten source files, including the trusted
 I/O completion, rather than selecting only the core.
 
 The \href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/five-contracts-computer10-20261104/REPORT.md}{Five-contract computer10 evidence report}
-records current source hashes, exact commands, tool identities, native
-reports, coverage, numerical comparisons, and Python checks. This campaign
-was completed on 4 November 2026. Earlier 47-check and 110-test results remain
+records source hashes, commands, tool identities, native reports, coverage
+and numerical comparisons from 4 November 2026. The
+\href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/symbolic-fixture-computer10-20261105/REPORT.md}{symbolic-check follow-up}
+adds fresh Python verification and re-audits these unchanged native records;
+it does not claim new prover invocations. Earlier 47-check and 110-test results remain
 immutable historical snapshots, not counts for the expanded implementation.
 
 \subsection{What is now analyzed}
@@ -432,7 +434,7 @@ successor lemma is proved, not imported as an axiom. The original arithmetic
 core still establishes exact integer variance bookkeeping, bounded
 floating-point transforms, and nested event counts with specified increments.
 
-The fresh five-prover portfolio discharged \textbf{404 native checks:
+The 4 November five-prover portfolio discharged \textbf{404 native checks:
 129 flow checks and 275 prover checks}, with zero unproved and zero justified
 checks. CVC5, Z3, Alt-Ergo, classic COLIBRI, and Yices were requested together.
 This result does not imply that every solver independently completed every
@@ -544,7 +546,7 @@ The register is a coverage and provenance audit, not a proof of model
 adequacy. The deliberately wrong Ghost event-counter postcondition must
 be rejected, in addition to the original incorrect union control.
 
-Fresh builds with Ghost enabled and disabled retain ordinary assertion
+The 4 November builds with Ghost enabled and disabled retain ordinary assertion
 checking. Both policies reproduce the original million-trial CSVs byte for
 byte, and the validators and replay pass in normal and optimized Python.
 Representative decimal, signed, whitespace, underscore, based-literal,
@@ -572,24 +574,22 @@ pass. Numerical equivalence of the core's evaluation orders is checked
 against the report formulas; bit identity is claimed only for the CSV
 comparisons.
 
-Every current Python file imports Deal. Each named function, including tests
-and evidence tools, carries at least five distinct Deal decorators. Repository-wide coverage, clean positive
-static lint, the expected \texttt{DEL012} negative control, runtime/property
-tests, numerical scripts, and explicit historical-source evidence audits
-pass in normal and optimized Python. The final inventory has 26 files, 251 named functions, and 1,255 Deal
-decorators with zero gaps; all 25 positive files have zero lint diagnostics,
-and 262 tests pass in each execution mode. Deal Solver proves two pure gate postconditions; symbolic negative
-verification is unsupported because of \texttt{isinstance}. These results, clean lint and finite tests do not prove the full Python
-programs.
-CLI entry points explicitly enable Deal under optimized Python.
+All 28 current Python files import Deal. All 292 named functions, including tests
+and evidence tools, carry at least five distinct decorators: 1,460 in total, with
+zero gaps. All 27 positive files are lint-clean; the negative fixture gives exactly
+the expected \texttt{DEL012}. All 343 tests, numerical scripts, contract coverage
+and historical-source audits pass normally and under optimization; CLI contracts remain enabled.
+The version-pinned symbolic gate proves three correct theorems and rejects the
+unchanged negative fixture with a counterexample. Six postconditions prove and one
+fails as expected, with no skips. Its integer-type model preserves Boolean subtype
+semantics; restricted chain expansion retains both bounds. Unsupported forms fail
+closed. The adapter and normalizer are trusted tooling, not proofs of arbitrary
+Python, libraries or the full programs. Original contracts and dependencies are unchanged.
 
-The current evidence auditor checks both required projects, required
-SPARK-on algorithm/driver entities, native totals, raw coverage, source
-hashes, checksums, and negative controls. Historical Ada campaigns require
-an explicitly selected matching source tree; there is no automatic Ada
-fallback. Historical Python may be resolved through verified immutable Git
-blobs. An evidence audit checks record integrity and source identity; it
-does not rerun the provers or independently validate SMT proof objects.
+The auditor checks required projects and SPARK-on bodies, native totals, coverage,
+source identities, checksums and negative controls. Historical Ada requires an
+explicit matching source tree; historical Python may use verified immutable Git blobs.
+Audits do not rerun provers or independently validate SMT proof objects.
 
 Common random numbers make the eight simulation cases dependent. Replay
 does not establish independent draws; rare counts at this sample size do
@@ -650,7 +650,7 @@ draws under the stated mathematical model. The repository preserves source
 and evidence history, but not a complete prompt/tool transcript, exact
 per-line authorship, or an AI-contribution percentage. Those details cannot
 be reconstructed reliably and have not been invented. The disclosure is
-current through 4 November 2026.
+current through 5 November 2026.
 
 \clearpage
 \bibliographystyle{plainnat}

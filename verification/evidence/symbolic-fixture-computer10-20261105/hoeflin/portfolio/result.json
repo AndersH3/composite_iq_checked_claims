@@ -1,0 +1,4071 @@
+{
+  "argv": [
+    "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+    "-P",
+    "hoeflin_proof.gpr",
+    "--mode=all",
+    "--report=statistics",
+    "--checks-as-errors",
+    "--warnings=error",
+    "--level=2",
+    "--steps=0",
+    "--counterexamples=off",
+    "-j2",
+    "-f",
+    "-U",
+    "--no-subprojects",
+    "--timeout=30",
+    "--prover=Colibri_Classic,cvc5,z3,altergo,Yices",
+    "--why3-conf=/home/anonymous/Documents/ChatGPT/New Scoring System/composite_iq_checked_claims/verification/evidence/five-contracts-computer10-20261104/provers.conf"
+  ],
+  "cwd": "/tmp/composite-five-hoeflin-retry-work-ycn3uf9x/hoeflin/portfolio",
+  "started_utc": "2026-11-04T06:09:24.741416+00:00",
+  "finished_utc": "2026-11-04T06:18:58.569009+00:00",
+  "elapsed_seconds": 573.8275251589948,
+  "returncode": 0,
+  "timed_out": false,
+  "log_sha256": "160846b111e77ea4a0ea0dec607eaf93b427398f66442c62ad8fcb597e200d1c",
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 50,
+        "flow": 50,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 28,
+        "flow": 28,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 176,
+        "flow": 0,
+        "provers": 176,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 27,
+        "flow": 0,
+        "provers": 27,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 72,
+        "flow": 0,
+        "provers": 72,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 404,
+        "flow": 129,
+        "provers": 275,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 6,
+    "contains_not_proved": false,
+    "report_sha256": "174c2c2f02fcaf8af7ae874084ff27f4d2b806fd2af67fe90b8b3aa17b80458d"
+  },
+  "sources": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin.gpr",
+      "sha256": "4e551d39e56dc78003cc1290519021e64e84b0f1b5b96088545d67c26f14792b"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/hoeflin_proof.gpr",
+      "sha256": "329212558bf330309ed012cbe75774ceb97cb4b54b14e77517c7e50f69ce052a"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+      "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+      "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+      "sha256": "deef3784a729fc8a36ef5a8991010e0f288bce00861d68aed39ee71ae871bcd9"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "89a311af8ade4c0c749b828fe36740fc5f227f0ea759bd7e9ad913129793e731"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+      "sha256": "f8f56bd3f41655f803ef0b7df8dd33f886bb02347002b1668eafb74d2f0b968f"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+      "sha256": "890cd53e4dc3a0443fd35e9e89ac49733e1c40d21593257e42f961a6c1c12599"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+      "sha256": "1ffb5535050d3b36150e7f7b19dc2d34b083b44b1e2784e2d2286d39ec50b156"
+    }
+  ],
+  "provers_requested": [
+    "Colibri_Classic",
+    "cvc5",
+    "z3",
+    "altergo",
+    "Yices"
+  ],
+  "coverage": {
+    "source_names": [
+      "hoeflin_boundary_models.adb",
+      "hoeflin_boundary_models.ads",
+      "hoeflin_calculations.adb",
+      "hoeflin_core.adb",
+      "hoeflin_core.ads",
+      "hoeflin_simulation.adb",
+      "normal_support.adb",
+      "normal_support.ads",
+      "report_io.adb",
+      "report_io.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 53,
+      "spec": 14,
+      "no": 0
+    },
+    "total_entities": 67,
+    "entities": [
+      {
+        "name": "Hoeflin_Boundary_Models",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 3,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 3
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Probability_Value",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 8,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 8
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Sqrt_Acceptable",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 15,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 26,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 34,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Log_Acceptable",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 41,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Radius_Acceptable",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 48,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 48
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Trig_Acceptable",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 57,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 57
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Erfc_Scaling",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 64,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Sqrt",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 70,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 70
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Probability",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 76,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 76
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Erfc",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 82,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 82
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Inverse_Bracket",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 88,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 88
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Rare_Quantile",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 93,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 93
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Log_Radius",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 99,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 99
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Trig",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 104,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 104
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Column_Count",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 141,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 141
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Options_Payload",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 153,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 153
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Calculation_Payload",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 161,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 161
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Simulation_Payload",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 171,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 171
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Example_Payload",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 189,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 189
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Can_Emit",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 196,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 196
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Transition",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 216,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 216
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Note",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 231,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 231
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Numeric_Format",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 238,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 238
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Valid_Column_Label",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 245,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 245
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Decimal_Image",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 253,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 253
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Decimal_Image",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 259,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 259
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Project_Number",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 269,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 269
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Number",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 277,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 277
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Project_Label",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 286,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 286
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Boundary_Models.Observe_Label",
+        "file": "hoeflin_boundary_models.ads",
+        "line": 293,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_boundary_models.ads",
+            "line": 293
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Calculations",
+        "file": "hoeflin_calculations.adb",
+        "line": 8,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_calculations.adb",
+            "line": 8
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core",
+        "file": "hoeflin_core.ads",
+        "line": 2,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 2
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Variance_Numerator",
+        "file": "hoeflin_core.ads",
+        "line": 13,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 13
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Variance_Factor",
+        "file": "hoeflin_core.ads",
+        "line": 19,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Latent_Reliability",
+        "file": "hoeflin_core.ads",
+        "line": 27,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Threshold",
+        "file": "hoeflin_core.ads",
+        "line": 35,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 35
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Composite",
+        "file": "hoeflin_core.ads",
+        "line": 43,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 43
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.IQ",
+        "file": "hoeflin_core.ads",
+        "line": 51,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 51
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Valid",
+        "file": "hoeflin_core.ads",
+        "line": 66,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 66
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Core.Observe",
+        "file": "hoeflin_core.ads",
+        "line": 75,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_core.ads",
+            "line": 75
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation",
+        "file": "hoeflin_simulation.adb",
+        "line": 9,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Combine",
+        "file": "hoeflin_simulation.adb",
+        "line": 28,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Frequency",
+        "file": "hoeflin_simulation.adb",
+        "line": 41,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Count_Step",
+        "file": "hoeflin_simulation.adb",
+        "line": 51,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 51
+          }
+        ]
+      },
+      {
+        "name": "Hoeflin_Simulation.Add_To_Sum",
+        "file": "hoeflin_simulation.adb",
+        "line": 63,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "hoeflin_simulation.adb",
+            "line": 63
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Check_Inverse_Bracket",
+        "file": "normal_support.adb",
+        "line": 39,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.adb",
+            "line": 39
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Checked_Radius",
+        "file": "normal_support.adb",
+        "line": 101,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.adb",
+            "line": 101
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support",
+        "file": "normal_support.ads",
+        "line": 4,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Survival",
+        "file": "normal_support.ads",
+        "line": 17,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Inverse_Survival",
+        "file": "normal_support.ads",
+        "line": 23,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Square_Root",
+        "file": "normal_support.ads",
+        "line": 28,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Rare_Quantile",
+        "file": "normal_support.ads",
+        "line": 35,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 35
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.State_Value",
+        "file": "normal_support.ads",
+        "line": 46,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 46
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Reset",
+        "file": "normal_support.ads",
+        "line": 52,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 52
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Uniform",
+        "file": "normal_support.ads",
+        "line": 57,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 57
+          }
+        ]
+      },
+      {
+        "name": "Normal_Support.Normal_Pair",
+        "file": "normal_support.ads",
+        "line": 63,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "normal_support.ads",
+            "line": 63
+          }
+        ]
+      },
+      {
+        "name": "Report_IO",
+        "file": "report_io.ads",
+        "line": 5,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 5
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Read_Simulation_Options",
+        "file": "report_io.ads",
+        "line": 18,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Simulation_Header",
+        "file": "report_io.ads",
+        "line": 26,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Simulation_Row",
+        "file": "report_io.ads",
+        "line": 33,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 33
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Calculations_Header",
+        "file": "report_io.ads",
+        "line": 43,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 43
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Calculation_Row",
+        "file": "report_io.ads",
+        "line": 50,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 50
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Infinite_Row",
+        "file": "report_io.ads",
+        "line": 58,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 58
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Examples_Header",
+        "file": "report_io.ads",
+        "line": 66,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 66
+          }
+        ]
+      },
+      {
+        "name": "Report_IO.Example",
+        "file": "report_io.ads",
+        "line": 73,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "report_io.ads",
+            "line": 73
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "obj-proof/gnatprove/hoeflin_boundary_models.spark",
+        "sha256": "68d3901ebc3adc4cca4fbf540ad0de9852a00e2624c999af954cdaedbd496291",
+        "entity_count": 32,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/hoeflin_calculations.spark",
+        "sha256": "5bdb1449a2f34ac72c994f3718c6e241cc46844d7b340291175db1eb3fba5343",
+        "entity_count": 1,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/hoeflin_core.spark",
+        "sha256": "bb84a502522450dae8596774ad052875c4ff7bd9eb4a98b3be9e5e2243f66c92",
+        "entity_count": 9,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/hoeflin_simulation.spark",
+        "sha256": "008f4580db485bb4acd875e8a98d604112d3a3631c732171a1441cbec467e6fd",
+        "entity_count": 5,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/normal_support.spark",
+        "sha256": "cb7faa513334aa9b83520fac52b68c0b2e1ecd5ddbe7ddb4c0a8863982fa5d1b",
+        "entity_count": 11,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/report_io.spark",
+        "sha256": "9f3557590af91b2851141c7924228d6aedeb45985c7ea8cd7f2e0f110d671cf1",
+        "entity_count": 9,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "required_full_entities": [
+    "Hoeflin_Boundary_Models",
+    "Hoeflin_Boundary_Models.Observe_Trig",
+    "Hoeflin_Boundary_Models.Trig_Acceptable",
+    "Hoeflin_Calculations",
+    "Hoeflin_Core.Observe",
+    "Hoeflin_Simulation",
+    "Normal_Support.Inverse_Survival",
+    "Normal_Support.Normal_Pair",
+    "Normal_Support.Reset",
+    "Normal_Support.Uniform"
+  ],
+  "missing_full_entities": [],
+  "ghost_boundaries": {
+    "schema": "spark-ghost-boundaries-v1",
+    "project": "hoeflin",
+    "coverage_complete": true,
+    "implementation_proved": false,
+    "model_adequacy_proved": false,
+    "boundary_count": 15,
+    "native_spec_entities": [
+      "normal_support.check_inverse_bracket",
+      "normal_support.checked_radius",
+      "normal_support.rare_quantile",
+      "normal_support.square_root",
+      "normal_support.survival",
+      "report_io",
+      "report_io.calculation_row",
+      "report_io.calculations_header",
+      "report_io.example",
+      "report_io.examples_header",
+      "report_io.infinite_row",
+      "report_io.read_simulation_options",
+      "report_io.simulation_header",
+      "report_io.simulation_row"
+    ],
+    "foreign_imports": [
+      "normal_support.c_erfc"
+    ],
+    "external_dependencies": {
+      "ada.command_line": "OS argument strings/counts and Ada Value parsing/failure behavior remain unproved; modeled observations cover typed normal-return options and, where recognized, the restricted decimal grammar.",
+      "ada.numerics.long_elementary_functions": "Installed elementary-function specifications are trusted interfaces. Their implementations, analytic accuracy, rounding/error bounds and totality are not proved; Ghost acceptance predicates model checked normal returns.",
+      "ada.text_io": "Text_IO and its instantiated numeric formatting generics, buffering, physical stdout/file bytes, persistence and exceptions remain unproved. Ghost models cover nominal fields/layouts and input/output observations only.",
+      "interfaces": "Machine integer representation and runtime/compiler implementation of interface operations remain trusted; project arithmetic proofs concern Ada semantics, not generated machine-code verification.",
+      "interfaces.c": "C double conversion, foreign ABI, libm implementation, error behavior and platform representation remain trusted; the C erfc boundary is explicitly modeled but not proved."
+    },
+    "global_unproved_obligations": {
+      "numerical-backends": "C erfc, Ada elementary-function implementations, ABI/representation, rounding accuracy and backend totality are unproved. Ghost predicates describe checked normal-return properties, not certified analytic functions or error bounds.",
+      "runtime-and-io": "Ada runtime, argument retrieval/Value attributes, string/image/formatting generics, memory/resource failures, filesystem effects, permissions, buffering, physical bytes, and exception/failure semantics remain unproved. Ordinary SPARK request receipts and separately marked Ghost observations record requests and normal-return values, not operating-system success or full persistent output traces.",
+      "model-adequacy": "An analyzed Ghost model does not prove that an excluded implementation refines it, that guards never reject, or that the model is a complete specification. Decimal recognition, lexical fields, bounded payload summaries and nominal layouts have stated restricted scopes; coupled calls in Off bodies are execution observations, not static refinement proofs.",
+      "psychometric-validity": "No Ghost model establishes empirical test correlations, population calibration, Gaussian distributions, pseudo-random independence, extreme-tail frequencies, reliability interpretation or psychometric validity. These require separate mathematical/statistical and empirical justification.",
+      "toolchain-and-provers": "Compiler/runtime translation, target floating representation, GNATprove/Why3/SMT solvers, operating system and hardware are trusted verification infrastructure; neither their implementations nor independent proof-object checking are proved by this campaign."
+    },
+    "standard_library_models": [
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Cos",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Trig",
+          "Hoeflin_Boundary_Models.Trig_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "contract_entity": "Normal_Support.Normal_Pair",
+        "source_callee": "Math.Cos",
+        "observed_argument": "Cosine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      },
+      {
+        "entity": "Ada.Numerics.Long_Elementary_Functions.Sin",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Trig",
+          "Hoeflin_Boundary_Models.Trig_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Trig"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "contract_entity": "Normal_Support.Normal_Pair",
+        "source_callee": "Math.Sin",
+        "observed_argument": "Sine",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "obligations": [
+          "The Ghost observation checks the actual cached Sin/Cos return against [-1,1], under the installed elementary-function specification.",
+          "No backend, trigonometric identity, periodicity, rounding accuracy or analytic approximation error is proved."
+        ]
+      }
+    ],
+    "private_helpers": [
+      [
+        "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "named_row"
+      ],
+      [
+        "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "number"
+      ],
+      [
+        "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "trimmed"
+      ]
+    ],
+    "boundaries": [
+      {
+        "entity": "Normal_Support.Check_Inverse_Bracket",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Check_Inverse_Bracket",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Inverse_Bracket",
+          "Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Inverse_Bracket"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Checked_Radius",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Checked_Radius",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Log_Radius",
+          "Hoeflin_Boundary_Models.Log_Acceptable",
+          "Hoeflin_Boundary_Models.Radius_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Log_Radius"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Survival",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Survival",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Probability",
+          "Hoeflin_Boundary_Models.Probability_Value",
+          "Hoeflin_Boundary_Models.Observe_Erfc",
+          "Hoeflin_Boundary_Models.Erfc_Scaling"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Probability"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Square_Root",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Square_Root",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Sqrt",
+          "Hoeflin_Boundary_Models.Sqrt_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Sqrt"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Normal_Support.Rare_Quantile",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Rare_Quantile",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Rare_Quantile",
+          "Hoeflin_Boundary_Models.Rare_Quantile_Acceptable"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Rare_Quantile"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The source-bound Ghost observation checks actual normal-return values against its acceptance predicate when Ghost checking is enabled; its call is erased under Ghost Ignore while ordinary contracts and runtime guards remain.",
+          "The Off implementation, guard success/failure behavior, analytic accuracy and completeness of the acceptance model are not proved. Ghost procedure contracts are verified under their stated preconditions; invocation from the excluded body is not a static refinement proof."
+        ]
+      },
+      {
+        "entity": "Report_IO",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Read_Simulation_Options",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload",
+          "Hoeflin_Boundary_Models.Observe_Number",
+          "Hoeflin_Boundary_Models.Project_Number",
+          "Hoeflin_Boundary_Models.Observe_Decimal_Image",
+          "Hoeflin_Boundary_Models.Decimal_Image",
+          "Hoeflin_Boundary_Models.Observe_Label",
+          "Hoeflin_Boundary_Models.Project_Label",
+          "Hoeflin_Boundary_Models.Numeric_Format",
+          "Hoeflin_Boundary_Models.Valid_Column_Label"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "excluded_helpers": [
+          {
+            "entity": "Report_IO.Number",
+            "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "contract_refs": [
+              "Hoeflin_Boundary_Models.Observe_Number"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Report_IO.Trimmed",
+            "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "contract_refs": [
+              "Hoeflin_Boundary_Models.Observe_Decimal_Image"
+            ],
+            "link_kind": "ghost-call"
+          },
+          {
+            "entity": "Report_IO.Named_Row",
+            "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+            "contract_refs": [
+              "Hoeflin_Boundary_Models.Observe_Label"
+            ],
+            "link_kind": "ghost-call"
+          }
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Read_Simulation_Options",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Read_Simulation_Options",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Simulation_Header",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Simulation_Header",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Simulation_Row",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Simulation_Row",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Calculations_Header",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Calculations_Header",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Calculation_Row",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Calculation_Row",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Infinite_Row",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Infinite_Row",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Examples_Header",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Examples_Header",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Report_IO.Example",
+        "kind": "spec-only",
+        "source": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "model-call",
+        "contract_entity": "Report_IO.Example",
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Note",
+          "Hoeflin_Boundary_Models.Transition",
+          "Hoeflin_Boundary_Models.Can_Emit",
+          "Hoeflin_Boundary_Models.Column_Count",
+          "Hoeflin_Boundary_Models.Options_Payload",
+          "Hoeflin_Boundary_Models.Calculation_Payload",
+          "Hoeflin_Boundary_Models.Simulation_Payload",
+          "Hoeflin_Boundary_Models.Example_Payload"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Note"
+        ],
+        "obligations": [
+          "Ordinary SPARK request receipts record typed returned options and requested output data/layout and remain active under Ghost Ignore. Separately marked Ghost observations check lexical fields and restricted decimal recognition. Neither role proves physical IO or a complete persistent output trace.",
+          "Formatting, precision, actual CSV bytes, argument parsing semantics, physical IO, persistence and exceptions remain unproved. Label projection retains length/separator counts, not complete characters; numeric projection records inputs and precision request, not formatted accuracy."
+        ]
+      },
+      {
+        "entity": "Normal_Support.C_Erfc",
+        "kind": "foreign-import",
+        "source": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "model_file": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "implementation_proved": false,
+        "model_adequacy_proved": false,
+        "link_kind": "ghost-call",
+        "contract_entity": "Normal_Support.Survival",
+        "model_entities": [
+          "Hoeflin_Boundary_Models.Observe_Erfc",
+          "Hoeflin_Boundary_Models.Erfc_Scaling",
+          "Hoeflin_Boundary_Models.Probability_Value"
+        ],
+        "contract_refs": [
+          "Hoeflin_Boundary_Models.Observe_Erfc"
+        ],
+        "contract_file": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "obligations": [
+          "The wrapper observes actual C-derived values and its checked normal-return acceptance model. This is not a proof of the imported C implementation, ABI, erfc identity, approximation error, rounding behavior or totality."
+        ]
+      }
+    ]
+  },
+  "contract_floor": {
+    "schema": "explicit-contract-clauses-v1",
+    "minimum_required": 5,
+    "minimum_observed": 5,
+    "functions": 35,
+    "procedures": 28,
+    "contracts": 356,
+    "entities": [
+      {
+        "identity": "hoeflin_boundary_models.calculation_payload",
+        "name": "Calculation_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 161,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.N = N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.Factor = Factor)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.Z = Z)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.Score = Score)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Calculation_Payload'Result => (N, Factor, Z, Score))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.can_emit",
+        "name": "Can_Emit",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 196,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = No_Event then not Can_Emit'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = Options_Read then Can_Emit'Result = (Data.Trials >= 2))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = Example_Event then Can_Emit'Result = (Trace.Section = Examples))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Can_Emit'Result => (Trace, Event, Data))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.column_count",
+        "name": "Column_Count",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 141,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event in Simulation_Header_Event | Simulation_Row_Event then Column_Count'Result = 11)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event in Calculations_Header_Event | Calculation_Row_Event | Infinite_Row_Event then Column_Count'Result = 4)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = Example_Event then Column_Count'Result = 2)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event in No_Event | Options_Read | Examples_Header_Event then Column_Count'Result = 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Column_Count'Result => Event)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.decimal_image",
+        "name": "Decimal_Image",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 253,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Decimal_Image'Result then Valid_Column_Label (Text))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text'Length = 0 then not Decimal_Image'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text'Length > 1 and then Text (Text'First) = '0' then not Decimal_Image'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Decimal_Image'Result => (N, Text))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.erfc_scaling",
+        "name": "Erfc_Scaling",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 64,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Raw in 0.0 .. 2.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Probability_Value (Erfc_Scaling'Result))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Erfc_Scaling'Result = 0.5 * Raw)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Erfc_Scaling'Result => Raw)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.example_payload",
+        "name": "Example_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 189,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Example_Payload'Result.Label_Length = Label_Length)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Example_Payload'Result.Value = Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Example_Payload'Result.N = 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Example_Payload'Result => (Label_Length, Value))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.inverse_bracket_acceptable",
+        "name": "Inverse_Bracket_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 26,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Inverse_Bracket_Acceptable'Result then Lower_SF >= P)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Inverse_Bracket_Acceptable'Result then Upper_SF <= P)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Lower_SF >= P and then Upper_SF <= P then Inverse_Bracket_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Inverse_Bracket_Acceptable'Result => (P, Lower_SF, Upper_SF))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.log_acceptable",
+        "name": "Log_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 41,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Log_Acceptable'Result then Value >= -38.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Log_Acceptable'Result then Value <= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in -38.0 .. 0.0 then Log_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Log_Acceptable'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.note",
+        "name": "Note",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 231,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Trace = Transition (Trace'Old, Event, Data))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Trace.Last_Event = Event)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Trace.Data = Data)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trace => (Trace, Event, Data))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.numeric_format",
+        "name": "Numeric_Format",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 238,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Numeric_Format'Result then Digits_After = 12 or else Digits_After = 14)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Digits_After = 12 then Numeric_Format'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Digits_After = 14 then Numeric_Format'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Numeric_Format'Result => Digits_After)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_decimal_image",
+        "name": "Observe_Decimal_Image",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 259,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Decimal_Image (N, Text)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid_Column_Label (Text)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Text'Length > 0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (N, Text))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_erfc",
+        "name": "Observe_Erfc",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 82,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Raw in 0.0 .. 2.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Scaled = Erfc_Scaling (Raw)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Probability_Value (Scaled)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Scaled = Erfc_Scaling (Raw)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Raw, Scaled))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_inverse_bracket",
+        "name": "Observe_Inverse_Bracket",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 88,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Inverse_Bracket_Acceptable (P, Lower_SF, Upper_SF)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Lower_SF >= P"
+          },
+          {
+            "aspect": "post",
+            "clause": "Upper_SF <= P"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (P, Lower_SF, Upper_SF))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_label",
+        "name": "Observe_Label",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 293,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Length = Text'Length"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Commas <= Text'Length"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Line_Feeds <= Text'Length"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Carriage_Returns <= Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Projection.Length = Text'Length"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Text, Projection))"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_log_radius",
+        "name": "Observe_Log_Radius",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 99,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Log_Acceptable (Log_U)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Radius_Acceptable (U, Radius)"
+          },
+          {
+            "aspect": "post",
+            "clause": "U > 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Radius in 0.0 .. 9.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (U, Log_U, Radius))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_number",
+        "name": "Observe_Number",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 277,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Value = Value"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Decimal_Places = Decimal_Places"
+          },
+          {
+            "aspect": "post",
+            "clause": "Projection.Value = Value"
+          },
+          {
+            "aspect": "post",
+            "clause": "Projection.Decimal_Places = Decimal_Places"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Value, Decimal_Places, Projection))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_probability",
+        "name": "Observe_Probability",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 76,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Probability_Value (Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value <= 1.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_rare_quantile",
+        "name": "Observe_Rare_Quantile",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 93,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Rare_Quantile_Acceptable (Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= 3.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value <= 10.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_sqrt",
+        "name": "Observe_Sqrt",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 70,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Sqrt_Acceptable (X, Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0 then Value <= 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (X, Value))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_trig",
+        "name": "Observe_Trig",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 104,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trig_Acceptable (Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= -1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value <= 1.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.options_payload",
+        "name": "Options_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 153,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Options_Payload'Result.Trials = Trials)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Options_Payload'Result.Seed = Seed)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Options_Payload'Result.N = 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Options_Payload'Result => (Trials, Seed))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.probability_value",
+        "name": "Probability_Value",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 8,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Probability_Value'Result then Value >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Probability_Value'Result then Value <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in 0.0 .. 1.0 then Probability_Value'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Probability_Value'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.project_label",
+        "name": "Project_Label",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 286,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Length = Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Commas <= Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Line_Feeds <= Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Carriage_Returns <= Text'Length"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Project_Label'Result => Text)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.project_number",
+        "name": "Project_Number",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 269,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Numeric_Format (Decimal_Places)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Project_Number'Result.Value = Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Project_Number'Result.Decimal_Places = Decimal_Places)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Project_Number'Result => (Value, Decimal_Places))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.radius_acceptable",
+        "name": "Radius_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 48,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Radius_Acceptable'Result then U in 2.0 ** (-53) .. 1.0 - 2.0 ** (-53))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Radius_Acceptable'Result then Radius in 0.0 .. 9.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if U in 2.0 ** (-53) .. 1.0 - 2.0 ** (-53)\n      and then Radius in 0.0 .. 9.0 then Radius_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Radius_Acceptable'Result => (U, Radius))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.rare_quantile_acceptable",
+        "name": "Rare_Quantile_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 34,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Rare_Quantile_Acceptable'Result then Value >= 3.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Rare_Quantile_Acceptable'Result then Value <= 10.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in 3.0 .. 10.0 then Rare_Quantile_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Rare_Quantile_Acceptable'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.simulation_payload",
+        "name": "Simulation_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 171,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.N = N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Trials = Trials)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Mean = Mean)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Variance = Variance)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Counts = C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Rate_Two = Rate_Two)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Rate_Three = Rate_Three)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Expected_Two = Expected_Two)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Expected_Three = Expected_Three)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Simulation_Payload'Result => (N, Trials, Mean, Variance, C, Rate_Two, Rate_Three, Expected_Two, Expected_Three))"
+          }
+        ],
+        "contract_count": 11,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.sqrt_acceptable",
+        "name": "Sqrt_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 15,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sqrt_Acceptable'Result then Value >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sqrt_Acceptable'Result then (if X <= 1.0 then Value <= 1.0) and then (if X >= 1.0E-6 then Value >= 0.0005))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value >= 0.0\n      and then (if X <= 1.0 then Value <= 1.0)\n      and then (if X >= 1.0E-6 then Value >= 0.0005) then Sqrt_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Sqrt_Acceptable'Result => (X, Value))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.transition",
+        "name": "Transition",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 216,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Last_Event = Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Events = Trace.Events + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Columns = Column_Count (Event)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Data = Data"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Last_Call_Admissible = Can_Emit (Trace, Event, Data)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Section =\n         (case Event is\n            when Simulation_Header_Event => Simulation,\n            when Calculations_Header_Event => Calculations,\n            when Examples_Header_Event => Examples,\n            when others => Trace.Section)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Transition'Result => (Trace, Event, Data))"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.trig_acceptable",
+        "name": "Trig_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 57,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Trig_Acceptable'Result then Value >= -1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Trig_Acceptable'Result then Value <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in -1.0 .. 1.0 then Trig_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trig_Acceptable'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.valid_column_label",
+        "name": "Valid_Column_Label",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 245,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Column_Label'Result then Label'Length > 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Column_Label'Result then (for all C of Label => C /= ',' and then C /= ASCII.LF and then C /= ASCII.CR))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Label'Length > 0 and then (for all C of Label => C /= ',' and then C /= ASCII.LF and then C /= ASCII.CR) then Valid_Column_Label'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid_Column_Label'Result => Label)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_calculations.hoeflin_calculations",
+        "name": "Hoeflin_Calculations",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+        "line": 8,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_IO.Report_Output, Report_IO.Trace))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_IO.Report_Output, Report_IO.Trace) => (Report_IO.Report_Output, Report_IO.Trace))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Section = Hoeflin_Boundary_Models.Examples"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Last_Event = Hoeflin_Boundary_Models.Example_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Rows = 4"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Columns = 2"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.composite",
+        "name": "Composite",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 43,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Composite'Result >= Mean_Z)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Scale = 1.0 then Composite'Result = Mean_Z)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Mean_Z = 0.0 then Composite'Result = 0.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Composite'Result => (Mean_Z, Scale))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.iq",
+        "name": "IQ",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 51,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Z = 0.0 => IQ'Result = 100.0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Z = 20_000.0 => IQ'Result = 320_100.0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "others => IQ'Result = 100.0 + 16.0 * Z"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(IQ'Result => Z)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.latent_reliability",
+        "name": "Latent_Reliability",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 27,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Latent_Reliability'Result in 0.0 .. 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 0 then Latent_Reliability'Result = 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 1_000 then Latent_Reliability'Result = 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Latent_Reliability'Result => (N, R))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.observe",
+        "name": "Observe",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 75,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Valid (C)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "C.Total < Sample_Count'Last"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Rare_Cutoff >= 3.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Total = C.Total'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Above_Two = C.Above_Two'Old + (if Z > 2.0 then 1 else 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Above_Three = C.Above_Three'Old + (if Z > 3.0 then 1 else 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Above_Rare = C.Above_Rare'Old + (if Z > Rare_Cutoff then 1 else 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(C => (C, Z, Rare_Cutoff))"
+          }
+        ],
+        "contract_count": 10,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.threshold",
+        "name": "Threshold",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 35,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Threshold'Result <= Quantile)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Scale = 1.0 then Threshold'Result = Quantile)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Quantile = 0.0 then Threshold'Result = 0.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Threshold'Result => (Quantile, Scale))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.valid",
+        "name": "Valid",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 66,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then C.Above_Rare <= C.Above_Three)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then C.Above_Three <= C.Above_Two and then C.Above_Two <= C.Total)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C.Above_Rare <= C.Above_Three and then C.Above_Three <= C.Above_Two and then C.Above_Two <= C.Total then Valid'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid'Result => C)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.variance_factor",
+        "name": "Variance_Factor",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 19,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Variance_Factor'Result = Real (Variance_Numerator (N, R)) / Real (1_000 * Long_Long_Integer (N)))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if N = 1 then Variance_Factor'Result = 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 1_000 then Variance_Factor'Result = 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Variance_Factor'Result => (N, R))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.variance_numerator",
+        "name": "Variance_Numerator",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 13,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Variance_Numerator'Result = 1_000 + Long_Long_Integer (R) * Long_Long_Integer (N - 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Variance_Numerator'Result <= 1_000 * Long_Long_Integer (N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Variance_Numerator'Result >= 1_000"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Variance_Numerator'Result => (N, R))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_simulation.add_to_sum",
+        "name": "Add_To_Sum",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+        "line": 63,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "I > 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Running_Total in\n       -(Real (I - 1) * 65_536.0) .. Real (I - 1) * 65_536.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Running_Total in -(Real (I) * 65_536.0) .. Real (I) * 65_536.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Running_Total => (Sample, Running_Total), null => I)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_simulation.combine",
+        "name": "Combine",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+        "line": 28,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Combine'Result >= -40_000.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Combine'Result <= 40_000.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Combine'Result = (Common * X + Residual * Y) / Scale)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Combine'Result => (Common, Residual, X, Y, Scale))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_simulation.count_step",
+        "name": "Count_Step",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+        "line": 51,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "I > 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Real (I) = Real (I - 1) + 1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Real (I) * 65_536.0 >= Real (I - 1) * 65_536.0 + 60_000.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Real (I) * 2.0 ** 32 >= Real (I - 1) * 2.0 ** 32 + 2.0 ** 31"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => I)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_simulation.frequency",
+        "name": "Frequency",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+        "line": 41,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Denominator > 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Numerator <= Denominator"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Frequency'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Frequency'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Numerator = 0 then Frequency'Result = 0.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Frequency'Result => (Numerator, Denominator))"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_simulation.hoeflin_simulation",
+        "name": "Hoeflin_Simulation",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+        "line": 9,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(Input => Report_IO.Command_Input, In_Out => (Report_IO.Report_Output, Report_IO.Trace))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_IO.Report_Output, Report_IO.Trace) => (Report_IO.Report_Output, Report_IO.Trace, Report_IO.Command_Input))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Section = Hoeflin_Boundary_Models.Simulation"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Last_Event = Hoeflin_Boundary_Models.Simulation_Row_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Rows = 8"
+          },
+          {
+            "aspect": "post",
+            "clause": "Report_IO.Trace.Columns = 11"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.check_inverse_bracket",
+        "name": "Check_Inverse_Bracket",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 39,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P > 0.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P < 1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Survival (Lo) >= P"
+          },
+          {
+            "aspect": "post",
+            "clause": "Survival (Hi) <= P"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (P, Lo, Hi))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.checked_radius",
+        "name": "Checked_Radius",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 101,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Radius'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Radius'Result <= 9.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Hoeflin_Boundary_Models.Radius_Acceptable (U, Checked_Radius'Result))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Radius'Result => U)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.inverse_survival",
+        "name": "Inverse_Survival",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 23,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P > 0.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P < 1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Inverse_Survival'Result in -12.0 .. 12.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Inverse_Survival'Result => P)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.normal_pair",
+        "name": "Normal_Pair",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 63,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "X >= -9.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "X <= 9.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y >= -9.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y <= 9.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((G, X, Y) => G)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.rare_quantile",
+        "name": "Rare_Quantile",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 35,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Rare_Quantile'Result >= 3.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Rare_Quantile'Result <= 10.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Hoeflin_Boundary_Models.Rare_Quantile_Acceptable (Rare_Quantile'Result))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Rare_Quantile'Result => null)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.reset",
+        "name": "Reset",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 52,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "State_Value (G) = Seed"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(G => Seed)"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Seed = 0 => G.State = 0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Seed = Interfaces.Unsigned_64'Last => G.State = Interfaces.Unsigned_64'Last"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "others => G.State = Seed"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.square_root",
+        "name": "Square_Root",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 28,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Square_Root'Result >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0 then Square_Root'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 1.0E-6 then Square_Root'Result >= 0.0005)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Square_Root'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.state_value",
+        "name": "State_Value",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 46,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "G.State = 0 => State_Value'Result = 0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "G.State = Interfaces.Unsigned_64'Last => State_Value'Result = Interfaces.Unsigned_64'Last"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "others => State_Value'Result = G.State"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(State_Value'Result => G)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.survival",
+        "name": "Survival",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 17,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Survival'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Survival'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Hoeflin_Boundary_Models.Probability_Value (Survival'Result))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Survival'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.uniform",
+        "name": "Uniform",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 57,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(State_Value (G) = State_Value (G)'Old * 6_364_136_223_846_793_005 + 1_442_695_040_888_963_407)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(U >= 2.0 ** (-53))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(U <= 1.0 - 2.0 ** (-53))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((G, U) => G)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.calculation_row",
+        "name": "Calculation_Row",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 50,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_Output, Trace))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Calculation_Row_Event, Hoeflin_Boundary_Models.Calculation_Payload (N, Factor, Z, Score))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Calculation_Row_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Rows = Trace.Rows'Old + 1"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_Output, Trace) => (N, Factor, Z, Score, Report_Output, Trace))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.calculations_header",
+        "name": "Calculations_Header",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 43,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_Output, Trace))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Calculations_Header_Event, Hoeflin_Boundary_Models.Empty_Payload)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Calculations_Header_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Rows = 0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_Output, Trace) => (Report_Output, Trace))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.example",
+        "name": "Example",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 73,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_Output, Trace))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Example_Event, Hoeflin_Boundary_Models.Example_Payload (Label'Length, X))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Example_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Rows = Trace.Rows'Old + 1"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_Output, Trace) => (Label, X, Report_Output, Trace))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.examples_header",
+        "name": "Examples_Header",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 66,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_Output, Trace))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Examples_Header_Event, Hoeflin_Boundary_Models.Empty_Payload)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Examples_Header_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Rows = 0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_Output, Trace) => (Report_Output, Trace))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.infinite_row",
+        "name": "Infinite_Row",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 58,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_Output, Trace))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Infinite_Row_Event, Hoeflin_Boundary_Models.Calculation_Payload (0, Factor, Z, Score))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Infinite_Row_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Rows = Trace.Rows'Old + 1"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_Output, Trace) => (Factor, Z, Score, Report_Output, Trace))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.read_simulation_options",
+        "name": "Read_Simulation_Options",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 18,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(Input => Command_Input, In_Out => Trace)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Options_Read, Hoeflin_Boundary_Models.Options_Payload (Trials, Seed))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Options_Read"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trials >= 2"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Trials, Seed, Trace) => (Command_Input, Trace))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.simulation_header",
+        "name": "Simulation_Header",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 26,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_Output, Trace))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Simulation_Header_Event, Hoeflin_Boundary_Models.Options_Payload (0, Seed))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Simulation_Header_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Rows = 0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_Output, Trace) => (Seed, Report_Output, Trace))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "report_io.simulation_row",
+        "name": "Simulation_Row",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "line": 33,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "(In_Out => (Report_Output, Trace))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trials >= 2"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Valid (C)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "C.Total = Trials"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace = Hoeflin_Boundary_Models.Transition (Trace'Old, Hoeflin_Boundary_Models.Simulation_Row_Event, Hoeflin_Boundary_Models.Simulation_Payload (N, Trials, Mean, Variance, C, Rate_Two, Rate_Three, Expected_Two, Expected_Three))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Last_Event = Hoeflin_Boundary_Models.Simulation_Row_Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Events = Trace.Events'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Trace.Rows = Trace.Rows'Old + 1"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((Report_Output, Trace) => (N, Trials, Mean, Variance, C, Rate_Two, Rate_Three, Expected_Two, Expected_Three, Report_Output, Trace))"
+          }
+        ],
+        "contract_count": 9,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      }
+    ],
+    "sources": [
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+        "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_calculations.adb",
+        "sha256": "deef3784a729fc8a36ef5a8991010e0f288bce00861d68aed39ee71ae871bcd9"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+        "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "sha256": "89a311af8ade4c0c749b828fe36740fc5f227f0ea759bd7e9ad913129793e731"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_simulation.adb",
+        "sha256": "f8f56bd3f41655f803ef0b7df8dd33f886bb02347002b1668eafb74d2f0b968f"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "sha256": "890cd53e4dc3a0443fd35e9e89ac49733e1c40d21593257e42f961a6c1c12599"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.ads",
+        "sha256": "1ffb5535050d3b36150e7f7b19dc2d34b083b44b1e2784e2d2286d39ec50b156"
+      }
+    ],
+    "excluded_completions": [
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 7,
+        "name": "C_Erfc",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 10,
+        "name": "Square_Root",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 25,
+        "name": "Survival",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 44,
+        "name": "Check_Inverse_Bracket",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 75,
+        "name": "Rare_Quantile",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 107,
+        "name": "Checked_Radius",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 8,
+        "name": "Number",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 14,
+        "name": "Trimmed",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 21,
+        "name": "Read_Simulation_Options",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 36,
+        "name": "Simulation_Header",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 44,
+        "name": "Simulation_Row",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 58,
+        "name": "Calculations_Header",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 63,
+        "name": "Named_Row",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 72,
+        "name": "Calculation_Row",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 78,
+        "name": "Infinite_Row",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 84,
+        "name": "Examples_Header",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/report_io.adb",
+        "line": 89,
+        "name": "Example",
+        "reason": "SPARK_Mode Off completion"
+      }
+    ],
+    "insufficient": [],
+    "missing_native": [],
+    "invalid_native": [],
+    "unmatched_native": [],
+    "native_cross_check": true,
+    "complete": true
+  },
+  "complete": true,
+  "release_contract_audit": {
+    "source": "Current source-pinned clause inventory regenerated with the comment-aware checker; native proof report and invocation are unchanged.",
+    "checker_sha256": "6f646a682df0f53c1d20649f55c33f096a823d984011c3efcb9f9d17966c17b9"
+  }
+}
