@@ -713,7 +713,8 @@ Theorem positive_scale_preserves_cutoff_order :
     mu + sigma * z1 <= mu + sigma * z2.
 Proof.
   intros z1 z2 mu sigma Hsigma Horder.
-  nra.
+  apply Rplus_le_compat_l.
+  apply Rmult_le_compat_l; [lra | exact Horder].
 Qed.
 
 Theorem composite_standardized_cutoff_round_trip :
