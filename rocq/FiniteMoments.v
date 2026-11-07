@@ -622,4 +622,128 @@ Section FiniteProbabilityMoments.
     apply variance_nonnegative; assumption.
   Qed.
 
+
+  (* Concrete bridge from finite covariance algebra to the report's
+     two-/three-test average-correlation identities.  Each statement
+     refers to the same finite reference distribution. *)
+
+  Theorem mean_of_centered_standardized_score :
+    forall f sd,
+      total_mass = 1 -> sd <> 0 ->
+      expect (fun x => (f x - expect f) / sd) = 0.
+  Proof.
+    intros f sd Hmass Hsd.
+    transitivity
+      (expect (fun x => (/sd) * (f x - expect f))).
+    - apply expectation_ext; intro x; unfold Rdiv; ring.
+    - rewrite expectation_scale, expectation_sub.
+      rewrite expectation_constant, Hmass; ring.
+  Qed.
+
+  Theorem mean_of_iq_reporting_scale :
+    forall f sd scale,
+      total_mass = 1 -> sd <> 0 ->
+      expect (fun x => 100 + scale * ((f x - expect f) / sd)) = 100.
+  Proof.
+    intros f sd scale Hmass Hsd.
+    transitivity
+      (expect (fun x => scale * ((f x - expect f) / sd) + 100)).
+    - apply expectation_ext; intro x; ring.
+    - rewrite (expectation_affine
+        (fun x => (f x - expect f) / sd) scale 100 Hmass).
+      rewrite (mean_of_centered_standardized_score f sd Hmass Hsd).
+      ring.
+  Qed.
+
+  Theorem covariance_invariant_under_both_shifts :
+    forall f g a b,
+      total_mass = 1 ->
+      covariance (fun x => f x + a) (fun x => g x + b)
+      = covariance f g.
+  Proof.
+    intros f g a b Hmass.
+    rewrite (covariance_invariant_under_first_shift
+      f (fun x => g x + b) a Hmass).
+    apply covariance_invariant_under_second_shift; exact Hmass.
+  Qed.
+
+  Theorem covariance_of_centered_standardized_scores :
+    forall f g sd_f sd_g,
+      total_mass = 1 ->
+      sd_f <> 0 -> sd_g <> 0 ->
+      covariance
+        (fun x => (f x - expect f) / sd_f)
+        (fun x => (g x - expect g) / sd_g)
+      = covariance f g / (sd_f * sd_g).
+  Proof.
+    intros f g sd_f sd_g Hmass Hsf Hsg.
+    transitivity
+      (covariance
+        (fun x => (/sd_f) * (f x + (- expect f)))
+        (fun x => (/sd_g) * (g x + (- expect g)))).
+    - apply covariance_extensional;
+        intro x; unfold Rdiv; ring.
+    - rewrite covariance_scale_first, covariance_scale_second.
+      rewrite (covariance_invariant_under_both_shifts
+        f g (- expect f) (- expect g) Hmass).
+      field; nra.
+  Qed.
+
+  Theorem self_covariance_of_standardized_score :
+    forall f sd,
+      total_mass = 1 -> sd <> 0 ->
+      variance f = sd * sd ->
+      covariance
+        (fun x => (f x - expect f) / sd)
+        (fun x => (f x - expect f) / sd) = 1.
+  Proof.
+    intros f sd Hmass Hsd Hvar.
+    rewrite (covariance_of_centered_standardized_scores
+      f f sd sd Hmass Hsd Hsd).
+    change (variance f / (sd * sd) = 1).
+    rewrite Hvar; field; nra.
+  Qed.
+
+  Theorem variance_of_three_score_average :
+    forall f g h,
+      variance (fun x => (f x + g x + h x) / 3) =
+      (variance f + variance g + variance h +
+       2 * covariance f g + 2 * covariance f h +
+       2 * covariance g h) / 9.
+  Proof.
+    intros f g h.
+    transitivity
+      (variance (fun x => (/3) * ((f x + g x) + h x))).
+    - apply variance_extensional; intro x; unfold Rdiv; ring.
+    - rewrite variance_of_scaled_score.
+      rewrite variance_of_two_score_sum.
+      rewrite variance_of_two_score_sum.
+      rewrite covariance_add_first.
+      field.
+  Qed.
+
+  Theorem variance_of_three_standardized_score_average :
+    forall f g h rho,
+      variance f = 1 -> variance g = 1 -> variance h = 1 ->
+      covariance f g + covariance f h + covariance g h = 3 * rho ->
+      variance (fun x => (f x + g x + h x) / 3) =
+        (1 + 2 * rho) / 3.
+  Proof.
+    intros f g h rho Hf Hg Hh Hpair.
+    rewrite variance_of_three_score_average, Hf, Hg, Hh.
+    field_simplify; lra.
+  Qed.
+
+  Theorem variance_of_two_standardized_score_average :
+    forall f g rho,
+      variance f = 1 -> variance g = 1 ->
+      covariance f g = rho ->
+      variance (fun x => (f x + g x) / 2) =
+        (1 + rho) / 2.
+  Proof.
+    intros f g rho Hf Hg Hcov.
+    rewrite (variance_of_two_unit_variance_average f g Hf Hg).
+    rewrite Hcov; reflexivity.
+  Qed.
+
 End FiniteProbabilityMoments.
