@@ -78,6 +78,40 @@ Proof.
   - rewrite IH; ring.
 Qed.
 
+(* Map composition and signed sums reuse Stdlib.List and existing
+   finite-sum linearity instead of introducing new recursions. *)
+Lemma finite_sum_map {A B : Type} :
+  forall (xs : list A) (g : A -> B) (f : B -> R),
+    finite_sum f (map g xs) =
+      finite_sum (fun x => f (g x)) xs.
+Proof.
+  intros xs g f.
+  unfold finite_sum.
+  rewrite map_map.
+  reflexivity.
+Qed.
+
+Lemma finite_sum_neg {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    finite_sum (fun x => - f x) xs = - finite_sum f xs.
+Proof.
+  intros xs f.
+  transitivity (finite_sum (fun x => (-1) * f x) xs).
+  - apply finite_sum_ext; intro x; ring.
+  - rewrite finite_sum_scale; ring.
+Qed.
+
+Lemma finite_sum_sub {A : Type} :
+  forall (xs : list A) (f g : A -> R),
+    finite_sum (fun x => f x - g x) xs =
+      finite_sum f xs - finite_sum g xs.
+Proof.
+  intros xs f g.
+  transitivity (finite_sum (fun x => f x + - g x) xs).
+  - apply finite_sum_ext; intro x; ring.
+  - rewrite finite_sum_add, finite_sum_neg; ring.
+Qed.
+
 Lemma finite_sum_app {A : Type} :
   forall (f : A -> R) (xs ys : list A),
     finite_sum f (xs ++ ys) = finite_sum f xs + finite_sum f ys.
@@ -101,4 +135,14 @@ Proof.
     rewrite IH; reflexivity.
   - unfold finite_sum; simpl; ring.
   - transitivity (finite_sum f ys); assumption.
+Qed.
+
+(* Reversal is a standard-library permutation, hence sum preserving. *)
+Lemma finite_sum_rev {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    finite_sum f (rev xs) = finite_sum f xs.
+Proof.
+  intros xs f.
+  apply finite_sum_permutation.
+  apply Permutation_sym, Permutation_rev.
 Qed.
