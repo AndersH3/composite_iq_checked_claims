@@ -484,3 +484,117 @@ Proof.
   unfold latent_posterior_variance, equal_weight_variance.
   field; nra.
 Qed.
+
+
+(* Standard deviation is the standard-library real square root; the
+   mathematics below reuses Stdlib.Reals sqrt_sqrt, sqrt_pos and sqrt_le_1
+   rather than supplying any bespoke square-root implementation. *)
+
+Definition composite_standard_deviation (n rho : R) : R :=
+  sqrt (equal_weight_variance n rho).
+
+Theorem composite_standard_deviation_nonnegative :
+  forall n rho, 0 <= composite_standard_deviation n rho.
+Proof.
+  intros n rho.
+  unfold composite_standard_deviation.
+  apply sqrt_pos.
+Qed.
+
+Theorem composite_standard_deviation_squared :
+  forall n rho,
+    1 <= n -> 0 <= rho -> rho <= 1 ->
+    composite_standard_deviation n rho *
+      composite_standard_deviation n rho =
+      equal_weight_variance n rho.
+Proof.
+  intros n rho Hn Hr0 Hr1.
+  unfold composite_standard_deviation.
+  apply sqrt_sqrt.
+  pose proof (variance_strictly_positive n rho Hn Hr0 Hr1); lra.
+Qed.
+
+Theorem composite_standard_deviation_at_zero_correlation :
+  forall n, 1 <= n ->
+    composite_standard_deviation n 0 = sqrt (1 / n).
+Proof.
+  intros n Hn.
+  unfold composite_standard_deviation.
+  rewrite independent_tests_variance by lra.
+  reflexivity.
+Qed.
+
+Theorem composite_standard_deviation_at_perfect_correlation :
+  forall n, 1 <= n ->
+    composite_standard_deviation n 1 = 1.
+Proof.
+  intros n Hn.
+  unfold composite_standard_deviation.
+  rewrite perfectly_correlated_variance by lra.
+  apply sqrt_1.
+Qed.
+
+Theorem composite_standard_deviation_nondecreasing_in_correlation :
+  forall n rho1 rho2,
+    1 <= n -> 0 <= rho1 -> rho1 <= rho2 -> rho2 <= 1 ->
+    composite_standard_deviation n rho1 <=
+      composite_standard_deviation n rho2.
+Proof.
+  intros n rho1 rho2 Hn Hr0 Horder Hr1.
+  assert (Hv1 : 0 <= equal_weight_variance n rho1).
+  { assert (Hr1a : rho1 <= 1) by lra.
+    pose proof (variance_strictly_positive n rho1 Hn Hr0 Hr1a); lra. }
+  assert (Hv2 : 0 <= equal_weight_variance n rho2).
+  { assert (Hr2a : 0 <= rho2) by lra.
+    pose proof (variance_strictly_positive n rho2 Hn Hr2a Hr1); lra. }
+  unfold composite_standard_deviation.
+  apply sqrt_le_1; try assumption.
+  apply variance_nondecreasing_in_correlation; lra.
+Qed.
+
+Theorem composite_standard_deviation_nonincreasing_in_test_count :
+  forall n1 n2 rho,
+    1 <= n1 -> n1 <= n2 ->
+    0 <= rho -> rho <= 1 ->
+    composite_standard_deviation n2 rho <=
+      composite_standard_deviation n1 rho.
+Proof.
+  intros n1 n2 rho Hn1 Horder Hr0 Hr1.
+  assert (Hn2 : 1 <= n2) by lra.
+  assert (Hv1 : 0 <= equal_weight_variance n1 rho).
+  { pose proof (variance_strictly_positive n1 rho Hn1 Hr0 Hr1).
+    lra. }
+  assert (Hv2 : 0 <= equal_weight_variance n2 rho).
+  { pose proof (variance_strictly_positive n2 rho Hn2 Hr0 Hr1).
+    lra. }
+  unfold composite_standard_deviation.
+  apply sqrt_le_1; try assumption.
+  apply variance_decreases_with_test_count; lra.
+Qed.
+
+Theorem composite_standard_deviation_at_most_one :
+  forall n rho,
+    1 <= n -> 0 <= rho -> rho <= 1 ->
+    composite_standard_deviation n rho <= 1.
+Proof.
+  intros n rho Hn Hr0 Hr1.
+  unfold composite_standard_deviation.
+  rewrite <- sqrt_1.
+  apply sqrt_le_1.
+  - pose proof (variance_strictly_positive n rho Hn Hr0 Hr1); lra.
+  - lra.
+  - apply variance_at_most_one; lra.
+Qed.
+
+Theorem composite_standard_deviation_at_least_sqrt_correlation :
+  forall n rho,
+    1 <= n -> 0 <= rho -> rho <= 1 ->
+    sqrt rho <= composite_standard_deviation n rho.
+Proof.
+  intros n rho Hn Hr0 Hr1.
+  unfold composite_standard_deviation.
+  apply sqrt_le_1.
+  - exact Hr0.
+  - pose proof (variance_strictly_positive n rho Hn Hr0 Hr1); lra.
+  - apply variance_at_least_correlation; lra.
+Qed.
