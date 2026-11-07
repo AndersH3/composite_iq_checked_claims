@@ -766,13 +766,11 @@ Section FiniteProbabilityMoments.
       (f : Outcome -> R) (fs : list (Outcome -> R)) : R :=
     fold_right Rplus 0 (map (covariance f) fs).
 
-  Fixpoint covariance_double_sum
+  (* Double covariance sum is a fold over the row-fold operator. *)
+  Definition covariance_double_sum
       (fs gs : list (Outcome -> R)) : R :=
-    match fs with
-    | [] => 0
-    | f :: tl => covariance_row_sum f gs +
-                 covariance_double_sum tl gs
-    end.
+    fold_right Rplus 0
+      (map (fun f => covariance_row_sum f gs) fs).
 
   (* Sum the covariance-matrix diagonal using Stdlib.List. *)
   Definition diagonal_variance_sum
