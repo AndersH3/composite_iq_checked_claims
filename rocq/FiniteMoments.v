@@ -947,7 +947,7 @@ Section FiniteProbabilityMoments.
   Proof.
     intros left right.
     unfold matrix_bilinear_form, covariance_cross_matrix.
-    induction left as [|[a f] rest IH]; simpl.
+    induction left as [|[a f] rest IH]; simpl; fold vector_dot.
     - reflexivity.
     - rewrite covariance_row_as_vector_dot, IH; ring.
   Qed.
