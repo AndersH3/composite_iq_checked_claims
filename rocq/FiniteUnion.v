@@ -331,6 +331,90 @@ Section FiniteOutcomeSpace.
     intro a; simpl; tauto.
   Qed.
 
+
+  (* Boolean complement and inclusion-exclusion are interpreted through
+     Stdlib.Bool's negb/orb/andb, without a bespoke event-set datatype.
+     These identities hold for arbitrary real weights; nonnegativity and
+     normalization are required only for probability bounds. *)
+
+  Lemma indicator_complement :
+    forall b, indicator (negb b) + indicator b = 1.
+  Proof.
+    intros []; reflexivity.
+  Qed.
+
+  Theorem finite_prob_complement :
+    forall weights samples e,
+      finite_prob weights samples (fun x => negb (e x)) +
+        finite_prob weights samples e =
+        finite_sum weights samples.
+  Proof.
+    intros weights samples e.
+    unfold finite_prob.
+    rewrite <- finite_sum_addition.
+    apply finite_sum_extensional; intro x.
+    rewrite <- Rmult_plus_distr_l.
+    rewrite indicator_complement.
+    ring.
+  Qed.
+
+  Theorem normalized_finite_prob_complement :
+    forall weights samples e,
+      finite_sum weights samples = 1 ->
+      finite_prob weights samples (fun x => negb (e x)) =
+        1 - finite_prob weights samples e.
+  Proof.
+    intros weights samples e Htotal.
+    pose proof (finite_prob_complement weights samples e) as H.
+    rewrite Htotal in H; lra.
+  Qed.
+
+  Lemma indicator_union_intersection :
+    forall b c,
+      indicator (orb b c) + indicator (andb b c) =
+        indicator b + indicator c.
+  Proof.
+    intros [] []; reflexivity.
+  Qed.
+
+  Theorem finite_prob_inclusion_exclusion :
+    forall weights samples e f,
+      finite_prob weights samples (fun x => orb (e x) (f x)) +
+        finite_prob weights samples (fun x => andb (e x) (f x)) =
+      finite_prob weights samples e + finite_prob weights samples f.
+  Proof.
+    intros weights samples e f.
+    unfold finite_prob.
+    rewrite <- !finite_sum_addition.
+    apply finite_sum_extensional; intro x.
+    rewrite <- !Rmult_plus_distr_l.
+    rewrite indicator_union_intersection.
+    ring.
+  Qed.
+
+  Theorem two_event_union_probability :
+    forall weights samples e f,
+      union_prob weights samples [e; f] =
+        finite_prob weights samples (fun x => orb (e x) (f x)).
+  Proof.
+    intros weights samples e f.
+    unfold union_prob, finite_prob.
+    apply finite_sum_extensional; intro x.
+    unfold any_event; simpl.
+    destruct (e x), (f x); reflexivity.
+  Qed.
+
+  Theorem two_event_union_inclusion_exclusion :
+    forall weights samples e f,
+      union_prob weights samples [e; f] +
+        finite_prob weights samples (fun x => andb (e x) (f x)) =
+      finite_prob weights samples e + finite_prob weights samples f.
+  Proof.
+    intros weights samples e f.
+    rewrite two_event_union_probability.
+    apply finite_prob_inclusion_exclusion.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
