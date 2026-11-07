@@ -11,11 +11,10 @@ Section FiniteProbabilityMoments.
   Variable samples : list Outcome.
   Variable weight : Outcome -> R.
 
-  Fixpoint sum_finite (f : Outcome -> R) (xs : list Outcome) : R :=
-    match xs with
-    | [] => 0
-    | x :: rest => f x + sum_finite f rest
-    end.
+  (* Use Stdlib.List's map/fold_right rather than a custom recursive
+     numerical summation. Both operations are in the Rocq 9.2 Stdlib. *)
+  Definition sum_finite (f : Outcome -> R) (xs : list Outcome) : R :=
+    fold_right Rplus 0 (map f xs).
 
   Definition total_mass : R := sum_finite weight samples.
 
@@ -904,11 +903,11 @@ Section FiniteProbabilityMoments.
      weights.  No matrix equalities are postulated: all entries are the
      finite-space covariance defined above. *)
 
-  Fixpoint vector_dot (xs ys : list R) : R :=
-    match xs, ys with
-    | a :: as_, b :: bs_ => a * b + vector_dot as_ bs_
-    | _, _ => 0
-    end.
+  (* List.combine gives the library's standard zip/truncate semantics;
+     map and fold_right perform the inner product without bespoke recursion. *)
+  Definition vector_dot (xs ys : list R) : R :=
+    fold_right Rplus 0
+      (map (fun p => fst p * snd p) (combine xs ys)).
 
   Definition covariance_cross_matrix
     (left right : list (R * (Outcome -> R))) : list (list R) :=
