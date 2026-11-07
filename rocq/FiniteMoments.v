@@ -6,7 +6,7 @@ From Stdlib Require Import Reals Lra Psatz List.
 Import ListNotations.
 Open Scope R_scope.
 
-Section FiniteMoments.
+Section FiniteProbabilityMoments.
   Variable Outcome : Type.
   Variable samples : list Outcome.
   Variable weight : Outcome -> R.
@@ -110,15 +110,10 @@ Section FiniteMoments.
   Theorem expectation_zero :
     expect (fun _ => 0) = 0.
   Proof.
-    transitivity (0 * expect (fun _ => 1)).
-    - unfold expect.
-      induction samples as [|x xs IH]; simpl.
-      + ring.
-      + assert (Hz : sum_finite (fun x : Outcome => weight x * 0) xs = 0).
-        { induction xs as [|y ys IHys]; simpl; try ring.
-          rewrite IHys; ring. }
-        rewrite Hz; ring.
-    - ring.
+    unfold expect.
+    induction samples as [|x xs IH]; simpl.
+    - reflexivity.
+    - rewrite IH; ring.
   Qed.
 
   Theorem expectation_constant :
@@ -271,7 +266,7 @@ Section FiniteMoments.
     rewrite covariance_add_first.
     rewrite covariance_add_second.
     rewrite (covariance_add_second g f g).
-    rewrite covariance_symmetric.
+    rewrite (covariance_symmetric g f).
     ring.
   Qed.
 
@@ -338,4 +333,4 @@ Section FiniteMoments.
     rewrite Hc1, Hc2, Hcc; ring.
   Qed.
 
-End FiniteMoments.
+End FiniteProbabilityMoments.
