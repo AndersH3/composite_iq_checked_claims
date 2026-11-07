@@ -148,10 +148,13 @@ Section FiniteOutcomeSpace.
   Proof.
     intros weights samples events.
     induction events as [|e es IH]; simpl.
-    - induction samples as [|x xs IHxs];
-        unfold finite_sum in *; simpl.
-      + reflexivity.
-      + rewrite IHxs; ring.
+    - change (finite_sum (fun x => weights x * 0) samples = 0).
+      transitivity (finite_sum (fun _ => 0) samples).
+      + apply finite_sum_extensional; intro x; ring.
+      + induction samples as [|x xs IHxs];
+          unfold finite_sum in *; simpl.
+        * reflexivity.
+        * rewrite IHxs; ring.
     - unfold finite_prob.
       rewrite <- IH.
       transitivity (finite_sum
