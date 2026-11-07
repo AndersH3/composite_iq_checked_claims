@@ -231,10 +231,10 @@ Section FiniteOutcomeSpace.
     forall weights samples, union_prob weights samples [] = 0.
   Proof.
     intros weights samples.
-    induction samples as [|x xs IH].
-    - reflexivity.
-    - change (weights x * 0 + union_prob weights xs [] = 0).
-      rewrite IH; ring.
+    unfold union_prob, finite_prob.
+    transitivity (finite_sum (fun _ => 0) samples).
+    - apply finite_sum_extensional; intro x; simpl; ring.
+    - apply FiniteSum.finite_sum_zero.
   Qed.
 
   Theorem singleton_family_probability :
@@ -244,8 +244,10 @@ Section FiniteOutcomeSpace.
   Proof.
     intros weights samples e.
     unfold union_prob, finite_prob.
-    apply finite_sum_extensional; intro x; simpl.
-    destruct (e x); simpl; ring.
+    apply finite_sum_extensional; intro x.
+    unfold any_event; simpl.
+    rewrite orb_false_r.
+    reflexivity.
   Qed.
 
 
@@ -379,7 +381,8 @@ Section FiniteOutcomeSpace.
     unfold union_prob, finite_prob.
     apply finite_sum_extensional; intro x.
     unfold any_event; simpl.
-    destruct (e x), (f x); reflexivity.
+    rewrite orb_false_r.
+    reflexivity.
   Qed.
 
   Theorem two_event_union_inclusion_exclusion :
