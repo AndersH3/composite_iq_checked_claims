@@ -32,4 +32,4 @@ jobs:
           docker run --rm \
             -v "$PWD/rocq:/src:ro" \
             rocq/rocq-prover:9.2.0 \
-            sh -ec 'mkdir -p /tmp/checked && cp /src/*.v /tmp/checked/ && cd /tmp/checked && rocq --version && rocq compile FiniteSum.v && rocq compile Hoeflin.v && rocq compile Admissions.v && rocq compile FiniteUnion.v && rocq compile FiniteMoments.v'
+            sh -ec 'mkdir -p /tmp/checked && cp /src/*.v /tmp/checked/ && cd /tmp/checked && rocq --version && rocq compile FiniteSum.v && rocq compile Hoeflin.v && rocq compile Admissions.v && rocq compile FiniteUnion.v && rocq compile FiniteMoments.v && rocq compile FiniteBridge.v'
