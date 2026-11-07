@@ -776,12 +776,10 @@ Section FiniteProbabilityMoments.
                  covariance_double_sum tl gs
     end.
 
-  Fixpoint diagonal_variance_sum
+  (* Sum the covariance-matrix diagonal using Stdlib.List. *)
+  Definition diagonal_variance_sum
       (fs : list (Outcome -> R)) : R :=
-    match fs with
-    | [] => 0
-    | f :: tl => variance f + diagonal_variance_sum tl
-    end.
+    fold_right Rplus 0 (map variance fs).
 
   Fixpoint unordered_covariance_sum
       (fs : list (Outcome -> R)) : R :=
