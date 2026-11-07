@@ -505,4 +505,121 @@ Section FiniteProbabilityMoments.
       ring.
   Qed.
 
+
+  (* General, arbitrary-length finite weighted composites.  The expression
+     quadratic_form xs ys is the explicitly expanded sum of all
+     a_i b_j Cov(X_i,Y_j); no matrix or covariance axioms are postulated. *)
+
+  Fixpoint linear_combination
+    (components : list (R * (Outcome -> R))) (x : Outcome) : R :=
+    match components with
+    | [] => 0
+    | (a, f) :: tail => a * f x + linear_combination tail x
+    end.
+
+  Fixpoint linear_expectation
+    (components : list (R * (Outcome -> R))) : R :=
+    match components with
+    | [] => 0
+    | (a, f) :: tail => a * expect f + linear_expectation tail
+    end.
+
+  Fixpoint covariance_row
+    (f : Outcome -> R)
+    (components : list (R * (Outcome -> R))) : R :=
+    match components with
+    | [] => 0
+    | (b, g) :: tail => b * covariance f g + covariance_row f tail
+    end.
+
+  Fixpoint covariance_quadratic_form
+    (left right : list (R * (Outcome -> R))) : R :=
+    match left with
+    | [] => 0
+    | (a, f) :: tail =>
+      a * covariance_row f right +
+        covariance_quadratic_form tail right
+    end.
+
+  Lemma expectation_of_general_weighted_sum :
+    forall components,
+      expect (linear_combination components) =
+        linear_expectation components.
+  Proof.
+    induction components as [|[a f] tail IH].
+    - cbn [linear_combination linear_expectation].
+      apply expectation_zero.
+    - cbn [linear_combination linear_expectation].
+      rewrite expectation_add, expectation_scale.
+      replace (expect (fun x => linear_combination tail x))
+        with (expect (linear_combination tail)).
+      + rewrite IH; reflexivity.
+      + apply expectation_ext; intro x; reflexivity.
+  Qed.
+
+  Lemma covariance_of_general_weighted_second :
+    forall f components,
+      total_mass = 1 ->
+      covariance f (linear_combination components) =
+        covariance_row f components.
+  Proof.
+    intros f components Hmass.
+    induction components as [|[b g] tail IH].
+    - cbn [linear_combination covariance_row].
+      apply covariance_with_constant_second; exact Hmass.
+    - cbn [linear_combination covariance_row].
+      rewrite covariance_add_second, covariance_scale_second.
+      replace (covariance f
+         (fun x => linear_combination tail x))
+        with (covariance f (linear_combination tail)).
+      + rewrite IH; reflexivity.
+      + apply covariance_extensional; intro x; reflexivity.
+  Qed.
+
+  Theorem covariance_of_general_weighted_sums :
+    forall left right,
+      total_mass = 1 ->
+      covariance (linear_combination left)
+                 (linear_combination right) =
+        covariance_quadratic_form left right.
+  Proof.
+    intros left right Hmass.
+    induction left as [|[a f] tail IH].
+    - cbn [linear_combination covariance_quadratic_form].
+      apply covariance_with_constant_first; exact Hmass.
+    - cbn [linear_combination covariance_quadratic_form].
+      rewrite covariance_add_first, covariance_scale_first.
+      replace (covariance
+        (fun x => linear_combination tail x)
+        (linear_combination right))
+      with (covariance (linear_combination tail)
+                       (linear_combination right)).
+      + rewrite IH.
+        rewrite (covariance_of_general_weighted_second f right Hmass).
+        reflexivity.
+      + apply covariance_extensional; intro x; reflexivity.
+  Qed.
+
+  Theorem variance_of_general_weighted_sum :
+    forall components,
+      total_mass = 1 ->
+      variance (linear_combination components) =
+        covariance_quadratic_form components components.
+  Proof.
+    intros components Hmass.
+    unfold variance.
+    apply covariance_of_general_weighted_sums; exact Hmass.
+  Qed.
+
+  Theorem covariance_quadratic_form_nonnegative :
+    forall components,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= covariance_quadratic_form components components.
+  Proof.
+    intros components Hmass Hweights.
+    rewrite <- (variance_of_general_weighted_sum components Hmass).
+    apply variance_nonnegative; assumption.
+  Qed.
+
 End FiniteProbabilityMoments.
