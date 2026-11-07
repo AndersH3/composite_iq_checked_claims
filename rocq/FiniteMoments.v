@@ -1204,4 +1204,119 @@ Section FiniteProbabilityMoments.
         fs n rho Hmass Hw Hlength Hn Hunit Hpair).
   Qed.
 
+
+  (* Cauchy--Schwarz for finite covariance, derived from the nonnegativity
+     of every variance Var(f + t*g).  This is stronger than the previously
+     established arithmetic-mean bound on two covariance entries. *)
+
+  Lemma nonnegative_quadratic_discriminant :
+    forall A B C,
+      0 <= A -> 0 <= C ->
+      (forall t, 0 <= A + 2 * t * B + t * t * C) ->
+      B * B <= A * C.
+  Proof.
+    intros A B C HA HC Hquad.
+    destruct (Rlt_dec 0 C) as [HCpos | HCnot].
+    - specialize (Hquad (- B / C)).
+      assert (Hexpr :
+        A + 2 * (- B / C) * B +
+          (- B / C) * (- B / C) * C =
+        (A * C - B * B) / C).
+      { field; lra. }
+      rewrite Hexpr in Hquad.
+      unfold Rdiv in Hquad.
+      assert (Hinv : 0 < / C).
+      { apply Rinv_0_lt_compat; exact HCpos. }
+      nra.
+    - assert (Hzero : C = 0) by lra.
+      subst C.
+      destruct (Req_EM_T B 0) as [HB | HB].
+      + subst B; nra.
+      + specialize (Hquad (- (A + 1) / (2 * B))).
+        assert (Hexpr :
+          A + 2 * (- (A + 1) / (2 * B)) * B +
+              (- (A + 1) / (2 * B)) *
+              (- (A + 1) / (2 * B)) * 0 = -1).
+        { field; nra. }
+        rewrite Hexpr in Hquad.
+        lra.
+  Qed.
+
+  Theorem finite_covariance_cauchy_schwarz_squared :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      covariance f g * covariance f g <= variance f * variance g.
+  Proof.
+    intros f g Hmass Hw.
+    apply nonnegative_quadratic_discriminant.
+    - apply variance_nonnegative; assumption.
+    - apply variance_nonnegative; assumption.
+    - intro t.
+      pose proof (variance_nonnegative
+        (fun x => f x + t * g x) Hmass Hw) as Hvar.
+      rewrite variance_of_two_score_sum,
+        variance_of_scaled_score, covariance_scale_second in Hvar.
+      replace (variance f + (t * t) * variance g +
+               2 * (t * covariance f g))
+        with (variance f + 2 * t * covariance f g +
+              t * t * variance g) in Hvar by ring.
+      exact Hvar.
+  Qed.
+
+  Theorem zero_variance_implies_zero_covariance_first :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      variance f = 0 ->
+      covariance f g = 0.
+  Proof.
+    intros f g Hmass Hw Hzero.
+    pose proof
+      (finite_covariance_cauchy_schwarz_squared f g Hmass Hw)
+      as Hcs.
+    rewrite Hzero in Hcs.
+    nra.
+  Qed.
+
+  Theorem zero_variance_implies_zero_covariance_second :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      variance g = 0 ->
+      covariance f g = 0.
+  Proof.
+    intros f g Hmass Hw Hzero.
+    rewrite covariance_symmetric.
+    apply zero_variance_implies_zero_covariance_first;
+      assumption.
+  Qed.
+
+  Theorem nonzero_covariance_implies_positive_variances :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      covariance f g <> 0 ->
+      0 < variance f /\ 0 < variance g.
+  Proof.
+    intros f g Hmass Hw Hcov.
+    pose proof (variance_nonnegative f Hmass Hw) as Hf.
+    pose proof (variance_nonnegative g Hmass Hw) as Hg.
+    split.
+    - destruct (Rle_dec (variance f) 0) as [Hle | Hnot].
+      + assert (Hz : variance f = 0) by lra.
+        pose proof
+          (zero_variance_implies_zero_covariance_first
+            f g Hmass Hw Hz) as Hc.
+        contradiction.
+      + lra.
+    - destruct (Rle_dec (variance g) 0) as [Hle | Hnot].
+      + assert (Hz : variance g = 0) by lra.
+        pose proof
+          (zero_variance_implies_zero_covariance_second
+            f g Hmass Hw Hz) as Hc.
+        contradiction.
+      + lra.
+  Qed.
+
 End FiniteProbabilityMoments.
