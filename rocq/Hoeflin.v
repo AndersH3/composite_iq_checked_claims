@@ -5,6 +5,32 @@
 From Stdlib Require Import Reals Lra Psatz.
 Open Scope R_scope.
 
+(* Avoid reliance on version-specific division-inequality lemma names. *)
+Local Lemma nonnegative_quotient :
+  forall numerator denominator,
+    0 <= numerator -> 0 < denominator ->
+    0 <= numerator / denominator.
+Proof.
+  intros a b Ha Hb.
+  unfold Rdiv.
+  assert (Hinv : 0 < / b).
+  { apply Rinv_0_lt_compat; exact Hb. }
+  nra.
+Qed.
+
+Local Lemma positive_quotient :
+  forall numerator denominator,
+    0 < numerator -> 0 < denominator ->
+    0 < numerator / denominator.
+Proof.
+  intros a b Ha Hb.
+  unfold Rdiv.
+  assert (Hinv : 0 < / b).
+  { apply Rinv_0_lt_compat; exact Hb. }
+  nra.
+Qed.
+
+
 Definition equal_weight_variance (n rho : R) : R :=
   rho + (1 - rho) / n.
 
@@ -75,7 +101,7 @@ Theorem variance_strictly_positive :
 Proof.
   intros n rho Hn Hr0 Hr1.
   rewrite variance_alternative_form by lra.
-  apply Rdiv_lt_0_compat; nra.
+  apply positive_quotient; nra.
 Qed.
 
 Theorem variance_at_least_correlation :
@@ -86,7 +112,7 @@ Proof.
   intros n rho Hn Hr.
   unfold equal_weight_variance.
   assert (Hq : 0 <= (1 - rho) / n).
-  { apply Rdiv_le_0_compat; lra. }
+  { apply nonnegative_quotient; lra. }
   lra.
 Qed.
 
@@ -97,7 +123,7 @@ Theorem variance_at_most_one :
 Proof.
   intros n rho Hn Hr.
   assert (Hdiff : 0 <= (n - 1) * (1 - rho) / n).
-  { apply Rdiv_le_0_compat; nra. }
+  { apply nonnegative_quotient; nra. }
   assert (Heq :
     1 - equal_weight_variance n rho =
       (n - 1) * (1 - rho) / n).
@@ -112,7 +138,7 @@ Theorem variance_nondecreasing_in_correlation :
 Proof.
   intros n rho1 rho2 Hn Hr.
   assert (Hq : 0 <= (n - 1) * (rho2 - rho1) / n).
-  { apply Rdiv_le_0_compat; nra. }
+  { apply nonnegative_quotient; nra. }
   assert (Heq :
     equal_weight_variance n rho2 - equal_weight_variance n rho1 =
       (n - 1) * (rho2 - rho1) / n).
@@ -202,7 +228,7 @@ Theorem latent_reliability_nonnegative :
 Proof.
   intros n rho Hn Hr.
   unfold latent_reliability.
-  apply Rdiv_le_0_compat; nra.
+  apply nonnegative_quotient; nra.
 Qed.
 
 Theorem latent_posterior_variance_nonnegative :
@@ -212,7 +238,7 @@ Theorem latent_posterior_variance_nonnegative :
 Proof.
   intros n rho Hn Hr0 Hr1.
   unfold latent_posterior_variance.
-  apply Rdiv_le_0_compat; nra.
+  apply nonnegative_quotient; nra.
 Qed.
 
 Theorem latent_reliability_at_most_one :
