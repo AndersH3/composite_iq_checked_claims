@@ -943,9 +943,14 @@ Section FiniteProbabilityMoments.
       covariance_row f components.
   Proof.
     intros f components.
-    induction components as [|[a g] rest IH]; unfold vector_dot in *; simpl.
+    induction components as [|[a g] rest IH].
     - reflexivity.
-    - rewrite IH; ring.
+    - change
+        (a * covariance f g +
+         vector_dot (map fst rest)
+           (map (fun c => covariance f (snd c)) rest) =
+         a * covariance f g + covariance_row f rest).
+      rewrite IH; ring.
   Qed.
 
   Lemma covariance_double_sum_as_matrix_product :
