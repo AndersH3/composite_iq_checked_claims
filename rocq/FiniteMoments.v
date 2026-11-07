@@ -34,9 +34,10 @@ Section FiniteProbabilityMoments.
       (forall x, f x = g x) ->
       sum_finite f xs = sum_finite g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g Hfg; unfold sum_finite in *; simpl.
-    - reflexivity.
-    - rewrite (Hfg x), (IH f g Hfg); reflexivity.
+    intros xs f g Hfg.
+    unfold sum_finite.
+    f_equal.
+    apply map_ext; exact Hfg.
   Qed.
 
   Lemma sum_finite_add :
