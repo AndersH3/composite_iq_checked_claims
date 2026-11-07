@@ -741,5 +741,7 @@ Proof.
   pose proof
     (composite_standard_deviation_nonincreasing_in_test_count
       n1 n2 rho Hn Horder Hr0 Hr1) as Hsd.
-  nra.
+  apply Rplus_le_compat_l.
+  apply Rmult_le_compat_r; [exact Hz |].
+  apply Rmult_le_compat_l; [exact Hscale | exact Hsd].
 Qed.
