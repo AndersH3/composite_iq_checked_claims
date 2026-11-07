@@ -831,11 +831,14 @@ Section FiniteProbabilityMoments.
       covariance f (sum_scores fs) = covariance_row_sum f fs.
   Proof.
     intros f fs Hmass.
-    induction fs as [|g fs IH]; unfold sum_scores in *; simpl.
-    - apply covariance_with_constant_second; exact Hmass.
-    - rewrite covariance_add_second.
-      rewrite IH.
-      ring.
+    induction fs as [|g fs IH].
+    - change (covariance f (fun _ => 0) = 0).
+      apply covariance_with_constant_second; exact Hmass.
+    - change
+        (covariance f (fun x => g x + sum_scores fs x) =
+         covariance f g + covariance_row_sum f fs).
+      rewrite covariance_add_second.
+      rewrite IH; ring.
   Qed.
 
   Lemma covariance_of_sum_scores :
@@ -1164,8 +1167,10 @@ Section FiniteProbabilityMoments.
   Proof.
     intros f fs.
     induction fs as [|g rest IH]; intros Hmass Hw Hf Hunit.
-    - simpl; lra.
-    - cbn [covariance_row_sum length].
+    - unfold covariance_row_sum; simpl; lra.
+    - change
+        (covariance f g + covariance_row_sum f rest <=
+         INR (S (length rest))).
       rewrite S_INR.
       assert (Hg : variance g = 1).
       { apply Hunit; simpl; auto. }
