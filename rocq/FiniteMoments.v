@@ -546,7 +546,9 @@ Section FiniteProbabilityMoments.
     induction components as [|[a f] tail IH].
     - cbn [linear_combination linear_expectation].
       apply expectation_zero.
-    - cbn [linear_combination linear_expectation].
+    - change
+        (expect (fun x => a * f x + linear_combination tail x) =
+         a * expect f + linear_expectation tail).
       rewrite expectation_add, expectation_scale.
       replace (expect (fun x => linear_combination tail x))
         with (expect (linear_combination tail)).
@@ -564,7 +566,10 @@ Section FiniteProbabilityMoments.
     induction components as [|[b g] tail IH].
     - cbn [linear_combination covariance_row].
       apply covariance_with_constant_second; exact Hmass.
-    - cbn [linear_combination covariance_row].
+    - change
+        (covariance f
+          (fun x => b * g x + linear_combination tail x) =
+         b * covariance f g + covariance_row f tail).
       rewrite covariance_add_second, covariance_scale_second.
       replace (covariance f
          (fun x => linear_combination tail x))
@@ -584,7 +589,12 @@ Section FiniteProbabilityMoments.
     induction left as [|[a f] tail IH].
     - cbn [linear_combination covariance_quadratic_form].
       apply covariance_with_constant_first; exact Hmass.
-    - cbn [linear_combination covariance_quadratic_form].
+    - change
+        (covariance
+          (fun x => a * f x + linear_combination tail x)
+          (linear_combination right) =
+         a * covariance_row f right +
+           covariance_quadratic_form tail right).
       rewrite covariance_add_first, covariance_scale_first.
       replace (covariance
         (fun x => linear_combination tail x)
