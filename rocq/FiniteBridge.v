@@ -138,3 +138,112 @@ Proof.
     + right; lra.
   - intros [H | H]; rewrite H; ring.
 Qed.
+
+(* Completing the square yields this universal Bernoulli bound.  It
+   is an algebraic upper bound, not a claim that arbitrary signed weights
+   define a probability distribution. *)
+Theorem finite_event_indicator_variance_at_most_quarter :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (event : A -> bool),
+    @FiniteMoments.variance A samples weight
+      (fun x => FiniteUnion.indicator (event x)) <= /4.
+Proof.
+  intros A samples weight event.
+  rewrite finite_event_indicator_variance.
+  set (p := @FiniteUnion.finite_prob A weight samples event).
+  assert (Hsquare : 0 <= Rsqr (p - /2)) by apply Rle_0_sqr.
+  unfold Rsqr in Hsquare.
+  nra.
+Qed.
+
+(* Complement variance requires a normalized finite total mass. *)
+Theorem finite_event_indicator_complement_variance :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (event : A -> bool),
+    @FiniteMoments.total_mass A samples weight = 1 ->
+    @FiniteMoments.variance A samples weight
+      (fun x => FiniteUnion.indicator (negb (event x))) =
+    @FiniteMoments.variance A samples weight
+      (fun x => FiniteUnion.indicator (event x)).
+Proof.
+  intros A samples weight event Hmass.
+  rewrite !finite_event_indicator_variance.
+  rewrite (@FiniteUnion.normalized_finite_prob_complement
+    A weight samples event Hmass).
+  ring.
+Qed.
+
+(* Use established covariance extensionality, affine-shift
+   invariance and homogeneity; avoid re-expanding finite sums. *)
+Theorem finite_event_indicator_covariance_complement_second :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (a b : A -> bool),
+    @FiniteMoments.total_mass A samples weight = 1 ->
+    @FiniteMoments.covariance A samples weight
+      (fun x => FiniteUnion.indicator (a x))
+      (fun x => FiniteUnion.indicator (negb (b x))) =
+    - @FiniteMoments.covariance A samples weight
+      (fun x => FiniteUnion.indicator (a x))
+      (fun x => FiniteUnion.indicator (b x)).
+Proof.
+  intros A samples weight a b Hmass.
+  transitivity
+    (@FiniteMoments.covariance A samples weight
+      (fun x => FiniteUnion.indicator (a x))
+      (fun x => (-1) * FiniteUnion.indicator (b x) + 1)).
+  - apply FiniteMoments.covariance_extensional.
+    + intro x; reflexivity.
+    + intro x; destruct (b x); simpl; ring.
+  - rewrite (@FiniteMoments.covariance_invariant_under_second_shift
+      A samples weight
+      (fun x => FiniteUnion.indicator (a x))
+      (fun x => (-1) * FiniteUnion.indicator (b x)) 1 Hmass).
+    rewrite (@FiniteMoments.covariance_scale_second
+      A samples weight
+      (fun x => FiniteUnion.indicator (a x))
+      (fun x => FiniteUnion.indicator (b x)) (-1)).
+    ring.
+Qed.
+
+Theorem finite_event_indicator_covariance_complement_first :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (a b : A -> bool),
+    @FiniteMoments.total_mass A samples weight = 1 ->
+    @FiniteMoments.covariance A samples weight
+      (fun x => FiniteUnion.indicator (negb (a x)))
+      (fun x => FiniteUnion.indicator (b x)) =
+    - @FiniteMoments.covariance A samples weight
+      (fun x => FiniteUnion.indicator (a x))
+      (fun x => FiniteUnion.indicator (b x)).
+Proof.
+  intros A samples weight a b Hmass.
+  rewrite (@FiniteMoments.covariance_symmetric
+    A samples weight
+    (fun x => FiniteUnion.indicator (negb (a x)))
+    (fun x => FiniteUnion.indicator (b x))).
+  rewrite (@FiniteMoments.covariance_symmetric
+    A samples weight
+    (fun x => FiniteUnion.indicator (a x))
+    (fun x => FiniteUnion.indicator (b x))).
+  apply finite_event_indicator_covariance_complement_second.
+  exact Hmass.
+Qed.
+
+Theorem finite_event_indicator_covariance_complement_both :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (a b : A -> bool),
+    @FiniteMoments.total_mass A samples weight = 1 ->
+    @FiniteMoments.covariance A samples weight
+      (fun x => FiniteUnion.indicator (negb (a x)))
+      (fun x => FiniteUnion.indicator (negb (b x))) =
+    @FiniteMoments.covariance A samples weight
+      (fun x => FiniteUnion.indicator (a x))
+      (fun x => FiniteUnion.indicator (b x)).
+Proof.
+  intros A samples weight a b Hmass.
+  rewrite (finite_event_indicator_covariance_complement_first
+    A samples weight a (fun x => negb (b x)) Hmass).
+  rewrite (finite_event_indicator_covariance_complement_second
+    A samples weight a b Hmass).
+  ring.
+Qed.
