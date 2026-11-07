@@ -25,11 +25,10 @@ Section FiniteOutcomeSpace.
     | e :: es => indicator (e x) + sum_event_indicators es x
     end.
 
-  Fixpoint finite_sum (f : Outcome -> R) (xs : list Outcome) : R :=
-    match xs with
-    | [] => 0
-    | x :: rest => f x + finite_sum f rest
-    end.
+  (* Finite integration uses standard List.fold_right/map, as in
+     FiniteMoments; the sample list may contain repeated outcomes. *)
+  Definition finite_sum (f : Outcome -> R) (xs : list Outcome) : R :=
+    fold_right Rplus 0 (map f xs).
 
   Definition finite_prob (weights : Outcome -> R)
     (samples : list Outcome) (event : Event) : R :=
@@ -107,7 +106,8 @@ Section FiniteOutcomeSpace.
       (forall x, In x xs -> f x <= g x) ->
       finite_sum f xs <= finite_sum g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g Hle; simpl.
+    induction xs as [|x xs IH]; intros f g Hle;
+      unfold finite_sum in *; simpl.
     - lra.
     - assert (Hx : f x <= g x) by (apply Hle; simpl; auto).
       assert (Hxs : finite_sum f xs <= finite_sum g xs).
@@ -119,7 +119,8 @@ Section FiniteOutcomeSpace.
     forall xs f g, (forall x, f x = g x) ->
       finite_sum f xs = finite_sum g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g Heq; simpl.
+    induction xs as [|x xs IH]; intros f g Heq;
+      unfold finite_sum in *; simpl.
     - reflexivity.
     - rewrite (Heq x), (IH f g Heq); reflexivity.
   Qed.
@@ -129,7 +130,8 @@ Section FiniteOutcomeSpace.
       finite_sum (fun x => f x + g x) xs =
         finite_sum f xs + finite_sum g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g; simpl.
+    induction xs as [|x xs IH]; intros f g;
+      unfold finite_sum in *; simpl.
     - ring.
     - rewrite IH; ring.
   Qed.
@@ -142,7 +144,8 @@ Section FiniteOutcomeSpace.
   Proof.
     intros weights samples events.
     induction events as [|e es IH]; simpl.
-    - induction samples as [|x xs IHxs]; simpl.
+    - induction samples as [|x xs IHxs];
+        unfold finite_sum in *; simpl.
       + reflexivity.
       + rewrite IHxs; ring.
     - unfold finite_prob.
@@ -223,7 +226,8 @@ Section FiniteOutcomeSpace.
     intros weights samples events Hweights.
     unfold union_prob, finite_prob.
     revert Hweights.
-    induction samples as [|x xs IH]; intros Hweights; simpl.
+    induction samples as [|x xs IH]; intros Hweights;
+      unfold finite_sum in *; simpl.
     - lra.
     - assert (Hw : 0 <= weights x)
         by (apply Hweights; simpl; auto).
