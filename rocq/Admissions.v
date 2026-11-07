@@ -611,3 +611,52 @@ Proof.
   lra.
 Qed.
 
+
+
+(* Complement the existing upper bounds on conditional admission rates.
+   Stdlib real sign lemmas supply the quotient reasoning; the events'
+   finite-cell nonnegativity is explicit in TwoEventModel. *)
+
+Theorem conditional_B_given_A_nonnegative :
+  forall m, 0 < p_A m ->
+    0 <= conditional_B_given_A m.
+Proof.
+  intros m Hpositive.
+  unfold conditional_B_given_A, Rdiv.
+  apply Rmult_le_pos.
+  - apply overlap_nonnegative.
+  - apply Rlt_le, Rinv_0_lt_compat; exact Hpositive.
+Qed.
+
+Theorem conditional_A_given_B_nonnegative :
+  forall m, 0 < p_B m ->
+    0 <= conditional_A_given_B m.
+Proof.
+  intros m Hpositive.
+  unfold conditional_A_given_B, Rdiv.
+  apply Rmult_le_pos.
+  - apply overlap_nonnegative.
+  - apply Rlt_le, Rinv_0_lt_compat; exact Hpositive.
+Qed.
+
+Theorem conditional_B_given_A_unit_interval :
+  forall m, 0 < p_A m ->
+    0 <= conditional_B_given_A m /\
+    conditional_B_given_A m <= 1.
+Proof.
+  intros m Hpositive.
+  split.
+  - apply conditional_B_given_A_nonnegative; exact Hpositive.
+  - apply conditional_second_le_one; exact Hpositive.
+Qed.
+
+Theorem conditional_A_given_B_unit_interval :
+  forall m, 0 < p_B m ->
+    0 <= conditional_A_given_B m /\
+    conditional_A_given_B m <= 1.
+Proof.
+  intros m Hpositive.
+  split.
+  - apply conditional_A_given_B_nonnegative; exact Hpositive.
+  - apply conditional_first_le_one; exact Hpositive.
+Qed.
