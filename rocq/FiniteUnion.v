@@ -224,7 +224,8 @@ Section FiniteOutcomeSpace.
   Proof.
     intros weights samples events Hweights.
     unfold union_prob, finite_prob.
-    induction samples as [|x xs IH]; simpl.
+    revert Hweights.
+    induction samples as [|x xs IH]; intros Hweights; simpl.
     - lra.
     - assert (Hw : 0 <= weights x)
         by (apply Hweights; simpl; auto).
