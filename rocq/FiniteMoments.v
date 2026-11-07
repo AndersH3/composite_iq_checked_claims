@@ -503,28 +503,26 @@ Section FiniteProbabilityMoments.
      pairs; no separate recursive evaluator is needed. *)
   Definition linear_combination
     (components : list (R * (Outcome -> R))) (x : Outcome) : R :=
-    fold_right Rplus 0
-      (map (fun c => fst c * snd c x) components).
+    FiniteSum.finite_sum (fun c => fst c * snd c x) components.
 
   (* Apply the built-in list fold to weighted component expectations. *)
   Definition linear_expectation
     (components : list (R * (Outcome -> R))) : R :=
-    fold_right Rplus 0
-      (map (fun c => fst c * expect (snd c)) components).
+    FiniteSum.finite_sum (fun c => fst c * expect (snd c)) components.
 
   (* The covariance coefficient row is an ordinary list fold. *)
   Definition covariance_row
     (f : Outcome -> R)
     (components : list (R * (Outcome -> R))) : R :=
-    fold_right Rplus 0
-      (map (fun c => fst c * covariance f (snd c)) components).
+    FiniteSum.finite_sum
+      (fun c => fst c * covariance f (snd c)) components.
 
   (* The double covariance sum is a fold of coefficient-weighted
      covariance rows, reusing the row fold above. *)
   Definition covariance_quadratic_form
     (left right : list (R * (Outcome -> R))) : R :=
-    fold_right Rplus 0
-      (map (fun c => fst c * covariance_row (snd c) right) left).
+    FiniteSum.finite_sum
+      (fun c => fst c * covariance_row (snd c) right) left.
 
   Lemma expectation_of_general_weighted_sum :
     forall components,
@@ -750,23 +748,22 @@ Section FiniteProbabilityMoments.
 
   (* Standard-library list fold for a sum of score functions. *)
   Definition sum_scores (fs : list (Outcome -> R)) (x : Outcome) : R :=
-    fold_right Rplus 0 (map (fun f => f x) fs).
+    FiniteSum.finite_sum (fun f => f x) fs.
 
   (* Unweighted covariance matrix row: a standard list fold. *)
   Definition covariance_row_sum
       (f : Outcome -> R) (fs : list (Outcome -> R)) : R :=
-    fold_right Rplus 0 (map (covariance f) fs).
+    FiniteSum.finite_sum (covariance f) fs.
 
   (* Double covariance sum is a fold over the row-fold operator. *)
   Definition covariance_double_sum
       (fs gs : list (Outcome -> R)) : R :=
-    fold_right Rplus 0
-      (map (fun f => covariance_row_sum f gs) fs).
+    FiniteSum.finite_sum (fun f => covariance_row_sum f gs) fs.
 
   (* Sum the covariance-matrix diagonal using Stdlib.List. *)
   Definition diagonal_variance_sum
       (fs : list (Outcome -> R)) : R :=
-    fold_right Rplus 0 (map variance fs).
+    FiniteSum.finite_sum variance fs.
 
   Fixpoint unordered_covariance_sum
       (fs : list (Outcome -> R)) : R :=
@@ -929,8 +926,8 @@ Section FiniteProbabilityMoments.
   (* List.combine gives the library's standard zip/truncate semantics;
      map and fold_right perform the inner product without bespoke recursion. *)
   Definition vector_dot (xs ys : list R) : R :=
-    fold_right Rplus 0
-      (map (fun p => fst p * snd p) (combine xs ys)).
+    FiniteSum.finite_sum
+      (fun p => fst p * snd p) (combine xs ys).
 
   Definition covariance_cross_matrix
     (left right : list (R * (Outcome -> R))) : list (list R) :=
