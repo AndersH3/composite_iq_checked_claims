@@ -412,3 +412,75 @@ Proof.
       n1 n2 rho Hn1 Hn2 Hr0 Hr1) as Hv.
   lra.
 Qed.
+
+
+(* Elementary quantitative consequences of the equal-weight formula, under
+   fixed average correlation. These statements do not extrapolate empirical
+   correlation stability as the test battery grows. *)
+
+Theorem doubling_battery_halves_variance_excess :
+  forall n rho,
+    0 < n ->
+    equal_weight_variance (2 * n) rho - rho =
+      (equal_weight_variance n rho - rho) / 2.
+Proof.
+  intros n rho Hn.
+  unfold equal_weight_variance.
+  field; lra.
+Qed.
+
+Theorem nonnegative_correlation_variance_at_least_independent :
+  forall n rho,
+    1 <= n -> 0 <= rho ->
+    1 / n <= equal_weight_variance n rho.
+Proof.
+  intros n rho Hn Hr.
+  assert (Heq :
+    equal_weight_variance n rho - 1 / n = (n - 1) * rho / n).
+  { unfold equal_weight_variance; field; lra. }
+  assert (Hnonneg : 0 <= (n - 1) * rho / n).
+  { apply nonnegative_quotient; nra. }
+  lra.
+Qed.
+
+Theorem variance_excess_bound_by_inverse_battery_size :
+  forall n rho,
+    0 < n -> 0 <= rho -> rho <= 1 ->
+    0 <= equal_weight_variance n rho - rho /\
+    equal_weight_variance n rho - rho <= 1 / n.
+Proof.
+  intros n rho Hn Hr0 Hr1.
+  rewrite variance_gap_to_limiting_correlation by lra.
+  assert (Hlower : 0 <= (1 - rho) / n).
+  { apply nonnegative_quotient; lra. }
+  assert (Hdiff : 0 <= rho / n).
+  { apply nonnegative_quotient; lra. }
+  assert (Hident : 1 / n - (1 - rho) / n = rho / n).
+  { field; lra. }
+  lra.
+Qed.
+
+Theorem latent_reliability_times_composite_variance :
+  forall n rho,
+    1 <= n -> 0 <= rho ->
+    latent_reliability n rho * equal_weight_variance n rho = rho.
+Proof.
+  intros n rho Hn Hr.
+  assert (Hd : 0 < 1 + (n - 1) * rho).
+  { apply latent_variance_denominator_positive; assumption. }
+  unfold latent_reliability, equal_weight_variance.
+  field; nra.
+Qed.
+
+Theorem latent_posterior_times_composite_variance :
+  forall n rho,
+    1 <= n -> 0 <= rho ->
+    latent_posterior_variance n rho *
+      equal_weight_variance n rho = (1 - rho) / n.
+Proof.
+  intros n rho Hn Hr.
+  assert (Hd : 0 < 1 + (n - 1) * rho).
+  { apply latent_variance_denominator_positive; assumption. }
+  unfold latent_posterior_variance, equal_weight_variance.
+  field; nra.
+Qed.
