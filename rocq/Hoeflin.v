@@ -692,3 +692,54 @@ Proof.
   - lra.
   - exact Hvlt.
 Qed.
+
+
+(* Reporting-threshold transformations are exact real identities.  They do
+   not provide Gaussian quantiles, empirical cutoffs, or tail probabilities. *)
+
+Theorem standardized_affine_cutoff_round_trip :
+  forall z mu sigma,
+    0 < sigma ->
+    standardize (mu + sigma * z) mu sigma = z.
+Proof.
+  intros z mu sigma Hsigma.
+  unfold standardize.
+  field; lra.
+Qed.
+
+Theorem positive_scale_preserves_cutoff_order :
+  forall z1 z2 mu sigma,
+    0 < sigma -> z1 <= z2 ->
+    mu + sigma * z1 <= mu + sigma * z2.
+Proof.
+  intros z1 z2 mu sigma Hsigma Horder.
+  nra.
+Qed.
+
+Theorem composite_standardized_cutoff_round_trip :
+  forall z mu scale n rho,
+    1 <= n -> 0 <= rho -> rho <= 1 -> 0 < scale ->
+    standardize
+      (mu + (scale * composite_standard_deviation n rho) * z)
+      mu (scale * composite_standard_deviation n rho) = z.
+Proof.
+  intros z mu scale n rho Hn Hr0 Hr1 Hscale.
+  pose proof
+    (composite_standard_deviation_positive n rho Hn Hr0 Hr1) as Hsd.
+  apply standardized_affine_cutoff_round_trip; nra.
+Qed.
+
+Theorem positive_cutoff_nonincreasing_with_test_count :
+  forall n1 n2 rho mu scale z,
+    1 <= n1 -> n1 <= n2 ->
+    0 <= rho -> rho <= 1 ->
+    0 <= scale -> 0 <= z ->
+    mu + (scale * composite_standard_deviation n2 rho) * z <=
+      mu + (scale * composite_standard_deviation n1 rho) * z.
+Proof.
+  intros n1 n2 rho mu scale z Hn Horder Hr0 Hr1 Hscale Hz.
+  pose proof
+    (composite_standard_deviation_nonincreasing_in_test_count
+      n1 n2 rho Hn Horder Hr0 Hr1) as Hsd.
+  nra.
+Qed.
