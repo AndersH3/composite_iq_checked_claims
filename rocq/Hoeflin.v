@@ -281,3 +281,130 @@ Qed.
 (* The covariance/conditional-Gaussian interpretation of these formulas,
    numerical normal quantiles and the limiting sqrt expression are NOT
    established by these algebraic theorems. *)
+
+
+(* Extensions: monotonicity and sensitivity of the composite's dispersion.
+   For fixed rho <= 1, averaging more equally weighted tests cannot
+   increase this model variance. No distributional assumption is used. *)
+
+Theorem variance_decreases_with_test_count :
+  forall n1 n2 rho,
+    1 <= n1 -> n1 <= n2 -> rho <= 1 ->
+    equal_weight_variance n2 rho <= equal_weight_variance n1 rho.
+Proof.
+  intros n1 n2 rho Hn1 Horder Hr.
+  assert (Hfrac :
+    0 <= (1 - rho) * (n2 - n1) / (n1 * n2)).
+  { apply nonnegative_quotient; nra. }
+  assert (Hidentity :
+    equal_weight_variance n1 rho -
+      equal_weight_variance n2 rho =
+      (1 - rho) * (n2 - n1) / (n1 * n2)).
+  { unfold equal_weight_variance; field; nra. }
+  lra.
+Qed.
+
+Theorem variance_strictly_decreases_with_test_count :
+  forall n1 n2 rho,
+    1 <= n1 -> n1 < n2 -> rho < 1 ->
+    equal_weight_variance n2 rho < equal_weight_variance n1 rho.
+Proof.
+  intros n1 n2 rho Hn1 Horder Hr.
+  assert (Hfrac :
+    0 < (1 - rho) * (n2 - n1) / (n1 * n2)).
+  { apply positive_quotient; nra. }
+  assert (Hidentity :
+    equal_weight_variance n1 rho -
+      equal_weight_variance n2 rho =
+      (1 - rho) * (n2 - n1) / (n1 * n2)).
+  { unfold equal_weight_variance; field; nra. }
+  lra.
+Qed.
+
+Theorem variance_is_affine_in_correlation :
+  forall n rho,
+    n <> 0 ->
+    equal_weight_variance n rho =
+      1 / n + ((n - 1) / n) * rho.
+Proof.
+  intros n rho Hn.
+  unfold equal_weight_variance.
+  field; lra.
+Qed.
+
+Theorem variance_correlation_sensitivity :
+  forall n rho1 rho2,
+    n <> 0 ->
+    equal_weight_variance n rho2 -
+      equal_weight_variance n rho1 =
+      ((n - 1) / n) * (rho2 - rho1).
+Proof.
+  intros n rho1 rho2 Hn.
+  unfold equal_weight_variance.
+  field; lra.
+Qed.
+
+Theorem variance_of_two_equicorrelated_tests :
+  forall rho, equal_weight_variance 2 rho = (1 + rho) / 2.
+Proof.
+  intro rho; unfold equal_weight_variance; field.
+Qed.
+
+Theorem variance_of_three_equicorrelated_tests :
+  forall rho, equal_weight_variance 3 rho = (1 + 2 * rho) / 3.
+Proof.
+  intro rho; unfold equal_weight_variance; field.
+Qed.
+
+Theorem latent_variance_denominator_positive :
+  forall n rho,
+    1 <= n -> 0 <= rho ->
+    0 < 1 + (n - 1) * rho.
+Proof.
+  intros n rho Hn Hr; nra.
+Qed.
+
+Theorem latent_variance_decreases_with_test_count :
+  forall n1 n2 rho,
+    1 <= n1 -> n1 <= n2 ->
+    0 <= rho -> rho <= 1 ->
+    latent_posterior_variance n2 rho <=
+      latent_posterior_variance n1 rho.
+Proof.
+  intros n1 n2 rho Hn1 Hn2 Hr0 Hr1.
+  assert (Hd1 : 0 < 1 + (n1 - 1) * rho)
+    by (apply latent_variance_denominator_positive; nra).
+  assert (Hd2 : 0 < 1 + (n2 - 1) * rho)
+    by (apply latent_variance_denominator_positive; nra).
+  assert (Hq :
+    0 <= ((1 - rho) * rho * (n2 - n1)) /
+      ((1 + (n1 - 1) * rho) * (1 + (n2 - 1) * rho))).
+  { apply nonnegative_quotient; nra. }
+  assert (Hident :
+    latent_posterior_variance n1 rho -
+      latent_posterior_variance n2 rho =
+      ((1 - rho) * rho * (n2 - n1)) /
+      ((1 + (n1 - 1) * rho) * (1 + (n2 - 1) * rho))).
+  { unfold latent_posterior_variance; field; nra. }
+  lra.
+Qed.
+
+Theorem latent_reliability_increases_with_test_count :
+  forall n1 n2 rho,
+    1 <= n1 -> n1 <= n2 ->
+    0 <= rho -> rho <= 1 ->
+    latent_reliability n1 rho <= latent_reliability n2 rho.
+Proof.
+  intros n1 n2 rho Hn1 Hn2 Hr0 Hr1.
+  pose proof
+    (latent_reliability_plus_posterior_variance n1 rho Hn1 Hr0)
+    as Hfirst.
+  pose proof
+    (latent_reliability_plus_posterior_variance n2 rho
+      (Rle_trans _ _ _ Hn1 Hn2) Hr0)
+    as Hsecond.
+  pose proof
+    (latent_variance_decreases_with_test_count
+      n1 n2 rho Hn1 Hn2 Hr0 Hr1) as Hv.
+  lra.
+Qed.
