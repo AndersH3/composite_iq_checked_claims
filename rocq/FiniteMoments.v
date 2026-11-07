@@ -1163,7 +1163,7 @@ Section FiniteProbabilityMoments.
   Proof.
     intros f fs.
     induction fs as [|g rest IH]; intros Hmass Hw Hf Hunit.
-    - unfold covariance_row_sum; simpl; lra.
+    - change (0 <= 0); lra.
     - change
         (covariance f g + covariance_row_sum f rest <=
          INR (S (length rest))).
