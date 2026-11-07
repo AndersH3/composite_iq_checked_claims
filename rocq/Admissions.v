@@ -518,3 +518,116 @@ Proof.
   pose proof (inclusion_exclusion m) as H.
   lra.
 Qed.
+
+
+(* Independence is an explicit hypothesis about event probabilities.
+   These consequences are exact even though the source report's empirical
+   admissions tests need not satisfy independence. *)
+
+Theorem independent_either_as_complement_product :
+  forall m,
+    p_both m = p_A m * p_B m ->
+    p_either m = 1 - (1 - p_A m) * (1 - p_B m).
+Proof.
+  intros m Hjoint.
+  rewrite (independent_events_union_formula m Hjoint).
+  ring.
+Qed.
+
+Theorem independent_equal_marginals_as_complement_square :
+  forall m p,
+    p_A m = p -> p_B m = p ->
+    p_both m = p * p ->
+    p_either m = 1 - (1 - p) * (1 - p).
+Proof.
+  intros m p Ha Hb Hj.
+  rewrite (independent_equal_marginal_union m p Ha Hb Hj).
+  ring.
+Qed.
+
+Theorem independent_conditional_B_equals_marginal :
+  forall m,
+    0 < p_A m ->
+    p_both m = p_A m * p_B m ->
+    conditional_B_given_A m = p_B m.
+Proof.
+  intros m Hpositive Hind.
+  unfold conditional_B_given_A.
+  rewrite Hind.
+  field; lra.
+Qed.
+
+Theorem independent_conditional_A_equals_marginal :
+  forall m,
+    0 < p_B m ->
+    p_both m = p_A m * p_B m ->
+    conditional_A_given_B m = p_A m.
+Proof.
+  intros m Hpositive Hind.
+  unfold conditional_A_given_B.
+  rewrite Hind.
+  field; lra.
+Qed.
+
+Theorem independent_exactly_one_formula :
+  forall m,
+    p_both m = p_A m * p_B m ->
+    p_exactly_one m =
+      p_A m * (1 - p_B m) + p_B m * (1 - p_A m).
+Proof.
+  intros m Hind.
+  rewrite exactly_one_formula, Hind.
+  ring.
+Qed.
+
+Theorem disjointness_iff_union_is_sum :
+  forall m,
+    p_both m = 0 <->
+    p_either m = p_A m + p_B m.
+Proof.
+  intros m; split.
+  - apply disjoint_events_union_is_sum.
+  - intro Heq.
+    pose proof (inclusion_exclusion m).
+    lra.
+Qed.
+
+Theorem complete_coverage_iff_no_failures :
+  forall m,
+    p_either m = 1 <-> neither m = 0.
+Proof.
+  intro m; split; intro H.
+  - pose proof (union_complement m); lra.
+  - pose proof (union_complement m); lra.
+Qed.
+
+Theorem equal_marginals_overlap_lower_bound :
+  forall m p,
+    p_A m = p -> p_B m = p ->
+    2 * p - 1 <= p_both m.
+Proof.
+  intros m p Ha Hb.
+  pose proof (frechet_lower_bound m).
+  lra.
+Qed.
+
+Theorem zero_first_marginal_forces_zero_overlap :
+  forall m,
+    p_A m = 0 -> p_both m = 0.
+Proof.
+  intros m Ha.
+  pose proof (overlap_nonnegative m).
+  pose proof (both_at_most_first m).
+  lra.
+Qed.
+
+Theorem zero_second_marginal_forces_zero_overlap :
+  forall m,
+    p_B m = 0 -> p_both m = 0.
+Proof.
+  intros m Hb.
+  pose proof (overlap_nonnegative m).
+  pose proof (both_at_most_second m).
+  lra.
+Qed.
+
