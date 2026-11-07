@@ -62,7 +62,8 @@ Section FiniteOutcomeSpace.
   Proof.
     intros events; induction events as [|e es IH]; intro x; simpl.
     - lra.
-    - specialize (IH x).
+    - change (0 <= indicator (e x) + sum_event_indicators es x).
+      specialize (IH x).
       pose proof (indicator_nonnegative (e x)).
       lra.
   Qed.
