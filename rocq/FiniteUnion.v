@@ -4,6 +4,7 @@
    Unlike an abstract measure axiom, finite probabilities are computed from
    nonnegative weights on concrete outcomes. *)
 From Stdlib Require Import Reals Lra Psatz List Bool Sorting.Permutation.
+Require Import FiniteSum.
 Import ListNotations.
 Open Scope R_scope.
 
@@ -23,10 +24,10 @@ Section FiniteOutcomeSpace.
     (x : Outcome) : R :=
     fold_right Rplus 0 (map (fun e => indicator (e x)) events).
 
-  (* Finite integration uses standard List.fold_right/map, as in
-     FiniteMoments; the sample list may contain repeated outcomes. *)
+  (* Retain the original public name as a transparent wrapper around
+     the same shared finite-sum implementation used in FiniteMoments. *)
   Definition finite_sum (f : Outcome -> R) (xs : list Outcome) : R :=
-    fold_right Rplus 0 (map f xs).
+    FiniteSum.finite_sum f xs.
 
   Definition finite_prob (weights : Outcome -> R)
     (samples : list Outcome) (event : Event) : R :=
@@ -59,11 +60,10 @@ Section FiniteOutcomeSpace.
     forall events x, 0 <= sum_event_indicators events x.
   Proof.
     intros events x.
-    induction events as [|e es IH];
-      unfold sum_event_indicators in *; simpl.
-    - lra.
-    - pose proof (indicator_nonnegative (e x)).
-      lra.
+    change (0 <= FiniteSum.finite_sum
+      (fun e => indicator (e x)) events).
+    apply FiniteSum.finite_sum_nonnegative.
+    intros e Hin; apply indicator_nonnegative.
   Qed.
 
   Lemma union_indicator_bound :
@@ -105,15 +105,8 @@ Section FiniteOutcomeSpace.
       (forall x, In x xs -> f x <= g x) ->
       finite_sum f xs <= finite_sum g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g Hle;
-      unfold finite_sum in *; simpl.
-    - lra.
-    - assert (Hx : f x <= g x) by (apply Hle; simpl; auto).
-      assert (Hxs :
-        fold_right Rplus 0 (map f xs) <=
-        fold_right Rplus 0 (map g xs)).
-      { apply IH. intros y Hy. apply Hle. simpl; auto. }
-      lra.
+    intros xs f g Hle.
+    apply FiniteSum.finite_sum_monotone; exact Hle.
   Qed.
 
   Lemma finite_sum_extensional :
@@ -121,9 +114,7 @@ Section FiniteOutcomeSpace.
       finite_sum f xs = finite_sum g xs.
   Proof.
     intros xs f g Heq.
-    unfold finite_sum.
-    f_equal.
-    apply map_ext; exact Heq.
+    apply FiniteSum.finite_sum_ext; exact Heq.
   Qed.
 
   Lemma finite_sum_addition :
@@ -131,10 +122,8 @@ Section FiniteOutcomeSpace.
       finite_sum (fun x => f x + g x) xs =
         finite_sum f xs + finite_sum g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g;
-      unfold finite_sum in *; simpl.
-    - ring.
-    - rewrite IH; ring.
+    intros xs f g.
+    apply FiniteSum.finite_sum_add.
   Qed.
 
   Lemma interchange_finite_sums :
@@ -148,10 +137,7 @@ Section FiniteOutcomeSpace.
     - change (finite_sum (fun x => weights x * 0) samples = 0).
       transitivity (finite_sum (fun _ => 0) samples).
       + apply finite_sum_extensional; intro x; ring.
-      + induction samples as [|x xs IHxs];
-          unfold finite_sum in *; simpl.
-        * reflexivity.
-        * rewrite IHxs; ring.
+      + apply FiniteSum.finite_sum_zero.
     - change
         (finite_sum (fun x =>
            weights x * (indicator (e x) + sum_event_indicators es x))
@@ -235,18 +221,11 @@ Section FiniteOutcomeSpace.
   Proof.
     intros weights samples events Hweights.
     unfold union_prob, finite_prob.
-    revert Hweights.
-    induction samples as [|x xs IH]; intros Hweights;
-      unfold finite_sum in *; simpl.
-    - lra.
-    - assert (Hw : 0 <= weights x)
-        by (apply Hweights; simpl; auto).
-      assert (Hind : 0 <= indicator (any_event events x))
-        by apply indicator_nonnegative.
-      assert (Htail : forall y, In y xs -> 0 <= weights y).
-      { intros y Hy. apply Hweights. simpl; auto. }
-      specialize (IH Htail).
-      nra.
+    apply FiniteSum.finite_sum_nonnegative.
+    intros x Hx.
+    apply Rmult_le_pos.
+    - apply Hweights; exact Hx.
+    - apply indicator_nonnegative.
   Qed.
 
   Theorem empty_family_probability_zero :
@@ -450,13 +429,11 @@ Section FiniteOutcomeSpace.
         sum_marginal_probs weights samples right.
   Proof.
     intros weights samples left right.
-    unfold sum_marginal_probs.
-    rewrite map_app, fold_right_app.
-    generalize (map (finite_prob weights samples) left).
-    intros values.
-    induction values as [|p values IH]; simpl.
-    - ring.
-    - rewrite IH; ring.
+    change (FiniteSum.finite_sum
+              (finite_prob weights samples) (left ++ right) =
+            FiniteSum.finite_sum (finite_prob weights samples) left +
+            FiniteSum.finite_sum (finite_prob weights samples) right).
+    apply FiniteSum.finite_sum_app.
   Qed.
 
 End FiniteOutcomeSpace.
