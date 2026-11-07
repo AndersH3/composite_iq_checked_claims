@@ -210,8 +210,8 @@ Section FiniteProbabilityMoments.
     - ring.
     - transitivity
         (expect (fun x => f x * h x + g x * h x)).
+      + symmetry; apply expectation_add.
       + apply expectation_ext; intro x; ring.
-      + apply expectation_add.
   Qed.
 
   Theorem covariance_scale_second :
