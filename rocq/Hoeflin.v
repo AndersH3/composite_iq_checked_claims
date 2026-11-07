@@ -746,3 +746,43 @@ Proof.
   apply Rmult_le_compat_r; [exact Hz |].
   apply Rmult_le_compat_l; [exact Hscale | exact Hsd].
 Qed.
+
+
+(* Reporting-scale order facts reuse the Stdlib ordered-field lemmas.
+   Unlike a probabilistic tail statement, these require only positive
+   scaling and the established affine reporting definitions. *)
+
+Theorem standardize_preserves_order :
+  forall x y mu sigma,
+    0 < sigma -> x <= y ->
+    standardize x mu sigma <= standardize y mu sigma.
+Proof.
+  intros x y mu sigma Hsigma Horder.
+  unfold standardize, Rdiv.
+  apply Rmult_le_compat_r.
+  - apply Rlt_le, Rinv_0_lt_compat; exact Hsigma.
+  - lra.
+Qed.
+
+Theorem iq_report_preserves_order :
+  forall x y scale,
+    0 <= scale -> x <= y ->
+    iq_report x scale <= iq_report y scale.
+Proof.
+  intros x y scale Hscale Horder.
+  unfold iq_report.
+  apply Rplus_le_compat_l.
+  apply Rmult_le_compat_l; assumption.
+Qed.
+
+Theorem standardized_iq_reporting_preserves_order :
+  forall x y mu sigma scale,
+    0 < sigma -> 0 <= scale -> x <= y ->
+    iq_report (standardize x mu sigma) scale <=
+      iq_report (standardize y mu sigma) scale.
+Proof.
+  intros x y mu sigma scale Hsigma Hscale Horder.
+  apply iq_report_preserves_order.
+  - exact Hscale.
+  - apply standardize_preserves_order; assumption.
+Qed.
