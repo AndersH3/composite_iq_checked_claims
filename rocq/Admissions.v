@@ -660,3 +660,46 @@ Proof.
   - apply conditional_A_given_B_nonnegative; exact Hpositive.
   - apply conditional_first_le_one; exact Hpositive.
 Qed.
+
+
+Theorem overlap_at_most_either :
+  forall m, p_both m <= p_either m.
+Proof.
+  intro m.
+  rewrite exactly_one_vs_union.
+  pose proof (exactly_one_nonnegative m).
+  lra.
+Qed.
+
+Theorem conditional_both_given_either_unit_interval :
+  forall m, 0 < p_either m ->
+    0 <= conditional_both_given_either m /\
+    conditional_both_given_either m <= 1.
+Proof.
+  intros m Hpositive.
+  assert (Hinv : 0 <= / p_either m).
+  { apply Rlt_le, Rinv_0_lt_compat; exact Hpositive. }
+  unfold conditional_both_given_either, Rdiv.
+  split.
+  - apply Rmult_le_pos.
+    + apply overlap_nonnegative.
+    + exact Hinv.
+  - replace 1 with (p_either m * / p_either m)
+      by (field; lra).
+    apply Rmult_le_compat_r.
+    + exact Hinv.
+    + apply overlap_at_most_either.
+Qed.
+
+Theorem conditional_not_A_given_B_unit_interval :
+  forall m, 0 < p_B m ->
+    0 <= conditional_not_A_given_B m /\
+    conditional_not_A_given_B m <= 1.
+Proof.
+  intros m Hpositive.
+  pose proof (conditional_failure_complement m Hpositive) as Hsum.
+  pose proof (conditional_A_given_B_nonnegative m Hpositive) as Hother.
+  split.
+  - apply conditional_failure_nonnegative; exact Hpositive.
+  - lra.
+Qed.
