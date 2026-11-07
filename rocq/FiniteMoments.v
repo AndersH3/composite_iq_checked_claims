@@ -522,13 +522,12 @@ Section FiniteProbabilityMoments.
     fold_right Rplus 0
       (map (fun c => fst c * expect (snd c)) components).
 
-  Fixpoint covariance_row
+  (* The covariance coefficient row is an ordinary list fold. *)
+  Definition covariance_row
     (f : Outcome -> R)
     (components : list (R * (Outcome -> R))) : R :=
-    match components with
-    | [] => 0
-    | (b, g) :: tail => b * covariance f g + covariance_row f tail
-    end.
+    fold_right Rplus 0
+      (map (fun c => fst c * covariance f (snd c)) components).
 
   Fixpoint covariance_quadratic_form
     (left right : list (R * (Outcome -> R))) : R :=
