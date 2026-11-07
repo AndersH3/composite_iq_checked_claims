@@ -11,6 +11,7 @@ With Rocq Prover 9.2 and its standard library:
 ```sh
 rocq compile rocq/Hoeflin.v
 rocq compile rocq/Admissions.v
+rocq compile rocq/FiniteUnion.v
 ```
 
 The GitHub Actions workflow at
@@ -40,6 +41,7 @@ external SMT certificates, or \`native_compute\` trust extensions.
 | Distinguish binary phi numerator and continuous Pearson correlation | \`binary_indicator_covariance_numerator\`, \`binary_independence_criterion\` | Proves the binary covariance numerator and independence criterion; **not** the numerical continuous/discrete correlation discrepancy |
 | Published mixed-case 2.11% figure is impossible from marginals of 2% and 0.1% | \`original_mixed_union_impossible\` | Exact rational contradiction from the union bound |
 | Marginal rates do not determine overlap or OR admission fraction | \`same_marginals_different_joint\`, \`same_marginals_different_union\` | Constructive four-cell counterexamples |
+| Arbitrary number of admission routes: every marginal <= union <= sum of marginals and union <= 1 | `arbitrary_union_bound`, `arbitrary_union_contains_every_member`, `normalized_arbitrary_union_at_most_one`, and supporting lemmas in `FiniteUnion.v` | Explicit finite sample outcomes with nonnegative weights; no normality or independence |
 | Repeated independent-attempt formula \(1-(1-p)^m\) | \`independent_union_formula\`, \`independent_union_one\`, \`independent_union_two\` | Induction on the independent-union recurrence; **not** an assertion that real retests are independent |
 | BASIC grid node count, constant factors, quarter-point boundary shift | \`grid_node_count\`, \`grid_scale_factors_cancel\`, \`half_point_grid_midpoint_shift\` | Exact arithmetic only; does **not** certify numerical quadrature error |
 
@@ -68,9 +70,7 @@ with checked arithmetic proofs. No data are imported into the kernel.
 The next valuable targets are: (1) finite-space proofs of variance/covariance
 of weighted sums; (2) theorem-level construction and normalization of
 bivariate Gaussian densities; (3) verified normal-tail numerical bounds;
-(4) an inductive arbitrary-number-of-tests union bound with an explicit
-finite event-space model; and (5) Gaussian common-factor conditional-moment
-theorems. Numerical tables must remain labeled numerical until certified
+(4) extension of the finite event-space union bounds to abstract measure-theoretic spaces; and (5) Gaussian common-factor conditional-moment theorems. Numerical tables must remain labeled numerical until certified
 interval arithmetic is available.
 
 This work is AI-generated and requires independent review of the
