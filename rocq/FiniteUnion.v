@@ -72,9 +72,12 @@ Section FiniteOutcomeSpace.
     forall events x,
       indicator (any_event events x) <= sum_event_indicators events x.
   Proof.
-    intros events; induction events as [|e es IH]; intro x; simpl.
-    - unfold indicator; lra.
-    - destruct (e x) eqn:He; simpl.
+    intros events; induction events as [|e es IH]; intro x.
+    - simpl; unfold indicator; lra.
+    - change
+        (indicator (orb (e x) (any_event es x)) <=
+         indicator (e x) + sum_event_indicators es x).
+      destruct (e x) eqn:He; simpl.
       + pose proof (sum_indicators_nonnegative es x); lra.
       + specialize (IH x); lra.
   Qed.
