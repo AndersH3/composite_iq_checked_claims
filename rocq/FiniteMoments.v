@@ -792,9 +792,16 @@ Section FiniteProbabilityMoments.
       covariance_double_sum fs (f :: gs) =
         covariance_row_sum f fs + covariance_double_sum fs gs.
   Proof.
-    intros fs; induction fs as [|g fs IH]; intros f gs; simpl.
-    - ring.
-    - rewrite IH.
+    intros fs; induction fs as [|g fs IH]; intros f gs.
+    - cbn [covariance_double_sum].
+      unfold covariance_row_sum; simpl; ring.
+    - change
+        (covariance_row_sum g (f :: gs) +
+         covariance_double_sum fs (f :: gs) =
+         covariance_row_sum f (g :: fs) +
+         covariance_double_sum fs gs).
+      rewrite IH.
+      cbn [covariance_row_sum].
       rewrite (covariance_symmetric g f).
       ring.
   Qed.
