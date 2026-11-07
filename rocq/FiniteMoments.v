@@ -1117,4 +1117,91 @@ Section FiniteProbabilityMoments.
     lra.
   Qed.
 
+
+  Lemma covariance_row_sum_bounded_by_count :
+    forall f fs,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      variance f = 1 ->
+      (forall g, In g fs -> variance g = 1) ->
+      covariance_row_sum f fs <= INR (length fs).
+  Proof.
+    intros f fs.
+    induction fs as [|g rest IH]; intros Hmass Hw Hf Hunit.
+    - simpl; lra.
+    - cbn [covariance_row_sum length].
+      rewrite S_INR.
+      assert (Hg : variance g = 1).
+      { apply Hunit; simpl; auto. }
+      assert (Hrest : forall h, In h rest -> variance h = 1).
+      { intros h Hh. apply Hunit; simpl; auto. }
+      pose proof
+        (covariance_of_unit_variance_scores_bounded
+          f g Hmass Hw Hf Hg) as [_ Hcov].
+      specialize (IH Hmass Hw Hf Hrest).
+      lra.
+  Qed.
+
+  Lemma unordered_covariance_sum_bounded_by_pair_count :
+    forall fs,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall f, In f fs -> variance f = 1) ->
+      2 * unordered_covariance_sum fs <=
+        INR (length fs) * (INR (length fs) - 1).
+  Proof.
+    induction fs as [|f rest IH]; intros Hmass Hw Hunit.
+    - simpl; lra.
+    - cbn [unordered_covariance_sum length].
+      rewrite S_INR.
+      assert (Hf : variance f = 1).
+      { apply Hunit; simpl; auto. }
+      assert (Hrest : forall g, In g rest -> variance g = 1).
+      { intros g Hg. apply Hunit; simpl; auto. }
+      pose proof
+        (covariance_row_sum_bounded_by_count f rest
+          Hmass Hw Hf Hrest) as Hrow.
+      specialize (IH Hmass Hw Hrest).
+      nra.
+  Qed.
+
+  Theorem feasible_average_pair_correlation_upper_bound :
+    forall fs n rho,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      n = INR (length fs) ->
+      1 < n ->
+      (forall f, In f fs -> variance f = 1) ->
+      2 * unordered_covariance_sum fs = n * (n - 1) * rho ->
+      rho <= 1.
+  Proof.
+    intros fs n rho Hmass Hw Hlength Hn Hunit Hpair.
+    pose proof
+      (unordered_covariance_sum_bounded_by_pair_count
+        fs Hmass Hw Hunit) as Hsum.
+    rewrite <- Hlength in Hsum.
+    rewrite Hpair in Hsum.
+    assert (Hd : 0 < n * (n - 1)) by nra.
+    set (d := n * (n - 1)) in *.
+    nra.
+  Qed.
+
+  Theorem feasible_average_pair_correlation_interval :
+    forall fs n rho,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      n = INR (length fs) ->
+      1 < n ->
+      (forall f, In f fs -> variance f = 1) ->
+      2 * unordered_covariance_sum fs = n * (n - 1) * rho ->
+      -1 / (n - 1) <= rho /\ rho <= 1.
+  Proof.
+    intros fs n rho Hmass Hw Hlength Hn Hunit Hpair.
+    split.
+    - apply (feasible_average_pair_correlation_lower_bound
+        fs n rho Hmass Hw Hlength Hn Hunit Hpair).
+    - apply (feasible_average_pair_correlation_upper_bound
+        fs n rho Hmass Hw Hlength Hn Hunit Hpair).
+  Qed.
+
 End FiniteProbabilityMoments.
