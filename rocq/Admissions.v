@@ -418,3 +418,103 @@ Qed.
 
 (* Numerical bivariate-normal integrals and their error bounds are NOT
    claimed as Rocq theorems here. *)
+
+
+(* Further distribution-free consequences of admission through either test.
+   All statements follow from the four nonnegative disjoint outcome cells;
+   in particular, they do not depend on a bivariate-normal assumption. *)
+
+Theorem exactly_one_nonnegative :
+  forall m, 0 <= p_exactly_one m.
+Proof.
+  intros m.
+  unfold p_exactly_one.
+  pose proof (only_A_nonnegative m).
+  pose proof (only_B_nonnegative m).
+  lra.
+Qed.
+
+Theorem exactly_one_at_most_either :
+  forall m, p_exactly_one m <= p_either m.
+Proof.
+  intros m.
+  unfold p_exactly_one, p_either.
+  pose proof (joint_nonnegative m).
+  lra.
+Qed.
+
+Theorem intersection_at_most_minimum_marginal :
+  forall m p, p_A m <= p -> p_B m <= p -> p_both m <= p.
+Proof.
+  intros m p Ha Hb.
+  pose proof (both_at_most_first m).
+  lra.
+Qed.
+
+Theorem union_equal_marginal_lower_bound :
+  forall m p, p_A m = p -> p_B m = p -> p <= p_either m.
+Proof.
+  intros m p Ha Hb.
+  pose proof (union_at_least_first m).
+  lra.
+Qed.
+
+Theorem union_equal_marginal_upper_bound :
+  forall m p, p_A m = p -> p_B m = p -> p_either m <= 2 * p.
+Proof.
+  intros m p Ha Hb.
+  pose proof (union_bound m).
+  lra.
+Qed.
+
+Theorem disjoint_events_union_is_sum :
+  forall m, p_both m = 0 ->
+    p_either m = p_A m + p_B m.
+Proof.
+  intros m Hj.
+  rewrite inclusion_exclusion, Hj; ring.
+Qed.
+
+Theorem independent_events_union_formula :
+  forall m, p_both m = p_A m * p_B m ->
+    p_either m = p_A m + p_B m - p_A m * p_B m.
+Proof.
+  intros m Hj.
+  rewrite inclusion_exclusion, Hj; reflexivity.
+Qed.
+
+Theorem independent_equal_marginal_union :
+  forall m p,
+    p_A m = p -> p_B m = p ->
+    p_both m = p * p ->
+    p_either m = 2 * p - p * p.
+Proof.
+  intros m p Ha Hb Hj.
+  rewrite inclusion_exclusion, Ha, Hb, Hj; ring.
+Qed.
+
+Theorem all_first_passers_also_second_union :
+  forall m, p_both m = p_A m -> p_either m = p_B m.
+Proof.
+  intros m Hj.
+  pose proof (inclusion_exclusion m) as H.
+  rewrite Hj in H; lra.
+Qed.
+
+Theorem excess_marginal_mass_forces_overlap :
+  forall m, 1 < p_A m + p_B m -> 0 < p_both m.
+Proof.
+  intros m Hsum.
+  pose proof (frechet_lower_bound m).
+  lra.
+Qed.
+
+Theorem lower_bound_on_overlap_from_union :
+  forall m pA pB u,
+    p_A m = pA -> p_B m = pB -> p_either m = u ->
+    p_both m = pA + pB - u.
+Proof.
+  intros m pA pB u Ha Hb Hu.
+  pose proof (inclusion_exclusion m) as H.
+  lra.
+Qed.
