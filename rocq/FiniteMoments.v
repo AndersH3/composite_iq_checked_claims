@@ -1071,7 +1071,7 @@ Section FiniteProbabilityMoments.
     intros f g Hmass Hw Hf Hg.
     pose proof
       (covariance_of_unit_variance_scores_bounded
-        f g Hmass Hw Hf Hg) as [_ Hcov].
+        f g Hmass Hw Hf Hg) as [Hlower Hupper].
     rewrite (variance_of_two_unit_variance_average f g Hf Hg).
     split; lra.
   Qed.
