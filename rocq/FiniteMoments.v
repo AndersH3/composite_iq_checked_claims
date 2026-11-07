@@ -299,7 +299,13 @@ Section FiniteProbabilityMoments.
     unfold centered_second_moment.
     apply expectation_nonnegative.
     - exact Hw.
-    - intros x Hx; nra.
+    - intros x Hx.
+      set (d := f x - expect f).
+      destruct (Rle_dec 0 d) as [Hd | Hd].
+      + apply Rmult_le_pos; assumption.
+      + assert (Hle : d <= 0) by lra.
+        replace (d * d) with ((-d) * (-d)) by ring.
+        apply Rmult_le_pos; lra.
   Qed.
 
   Theorem covariance_with_constant_first :
