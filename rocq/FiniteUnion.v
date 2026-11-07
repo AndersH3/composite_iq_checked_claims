@@ -340,7 +340,7 @@ Section FiniteOutcomeSpace.
   Lemma indicator_complement :
     forall b, indicator (negb b) + indicator b = 1.
   Proof.
-    intros []; reflexivity.
+    intros []; simpl; ring.
   Qed.
 
   Theorem finite_prob_complement :
@@ -374,7 +374,7 @@ Section FiniteOutcomeSpace.
       indicator (orb b c) + indicator (andb b c) =
         indicator b + indicator c.
   Proof.
-    intros [] []; reflexivity.
+    intros [] []; simpl; ring.
   Qed.
 
   Theorem finite_prob_inclusion_exclusion :
