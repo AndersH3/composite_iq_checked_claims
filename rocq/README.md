@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **281 theorem, lemma and example declarations** in six
+for the two reports. **289 theorem, lemma and example declarations** in six
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -70,6 +70,39 @@ rewritten or that the finite probability model was replaced. This stage adds **n
 functionality already in the standard library. More advanced continuous
 probability and matrix formalization should evaluate established Rocq
 mathematics libraries before introducing new foundational code.
+
+## November 7 continuation: finite bridges and library refactoring
+
+The Rocq 9.2 kernel has checked **289 declarations**, counted directly as
+`Theorem`, `Lemma` and `Example` statements in the six current source files
+(`Hoeflin` 64, `Admissions` 67, `FiniteUnion` 30,
+`FiniteMoments` 102, `FiniteSum` 12, and `FiniteBridge` 14).
+This corrects the previous prose count of 65 in `Hoeflin.v`;
+the source contains 64 named theorem declarations.
+
+- The shared `FiniteSum` module now proves `finite_sum_map`,
+  `finite_sum_neg`, `finite_sum_sub`, and `finite_sum_rev`.
+  These reuse `Stdlib.List.map_map`, the previously proved sum
+  linearity, and `Stdlib.Sorting.Permutation.Permutation_rev`;
+  no independent summation recursion was introduced.
+- Three `FiniteUnion` proofs now use the existing shared zero-sum
+  identity and `Stdlib.Bool.orb_false_r`, replacing an explicit
+  sample-list induction and Boolean case analyses.
+- Five new `FiniteBridge` statements prove the universal
+  Bernoulli upper variance bound of `1/4`, complement invariance
+  of indicator variance under normalized total mass, and the
+  covariance sign changes under complementing one or both events.
+  The proofs reuse earlier finite covariance extensionality,
+  shift invariance, scaling and symmetry rather than recalculating
+  the underlying finite sums.
+
+The `1/4` variance upper bound is an algebraic identity for
+`p(1-p)`; interpreting this quantity as a nonnegative variance
+still requires appropriate sample-weight hypotheses. Complement
+covariance and variance formulas explicitly require total mass one.
+All previous theorem statements are preserved. No claim is made
+about Gaussian conditioning, empirical IQ psychometrics or continuous
+probability measures.
 
 ## Claims and exact theorem correspondences
 
