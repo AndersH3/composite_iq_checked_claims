@@ -834,3 +834,40 @@ Proof.
     nra. }
   apply fixed_correlation_variance_epsilon_bound; assumption.
 Qed.
+
+
+(* Positive reporting cutoffs inherit the finite-battery standard-deviation
+   ordering from existing theorems.  The only arithmetic is the standard
+   ordered-field compatibility of positive scalar multiplication. *)
+
+Theorem positive_cutoff_nondecreasing_in_correlation :
+  forall n rho1 rho2 mu scale z,
+    1 <= n -> 0 <= rho1 -> rho1 <= rho2 -> rho2 <= 1 ->
+    0 <= scale -> 0 <= z ->
+    mu + (scale * composite_standard_deviation n rho1) * z <=
+      mu + (scale * composite_standard_deviation n rho2) * z.
+Proof.
+  intros n rho1 rho2 mu scale z Hn Hr0 Horder Hr1 Hscale Hz.
+  pose proof
+    (composite_standard_deviation_nondecreasing_in_correlation
+      n rho1 rho2 Hn Hr0 Horder Hr1) as Hsd.
+  apply Rplus_le_compat_l.
+  apply Rmult_le_compat_r; [exact Hz |].
+  apply Rmult_le_compat_l; [exact Hscale | exact Hsd].
+Qed.
+
+Theorem positive_cutoff_strictly_increases_in_correlation :
+  forall n rho1 rho2 mu scale z,
+    1 < n -> 0 <= rho1 -> rho1 < rho2 -> rho2 <= 1 ->
+    0 < scale -> 0 < z ->
+    mu + (scale * composite_standard_deviation n rho1) * z <
+      mu + (scale * composite_standard_deviation n rho2) * z.
+Proof.
+  intros n rho1 rho2 mu scale z Hn Hr0 Horder Hr1 Hscale Hz.
+  pose proof
+    (composite_standard_deviation_strictly_increases_in_correlation
+      n rho1 rho2 Hn Hr0 Horder Hr1) as Hsd.
+  apply Rplus_lt_compat_l.
+  apply Rmult_lt_compat_r; [exact Hz |].
+  apply Rmult_lt_compat_l; [exact Hscale | exact Hsd].
+Qed.
