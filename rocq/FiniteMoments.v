@@ -2,7 +2,7 @@
    Nonnegative normalized weights form an explicit finite probability model.
    All moment laws are derived from finite sums, not assumed as axioms.
    No Gaussian or empirical psychometric assumptions are used. *)
-From Stdlib Require Import Reals Lra Psatz List.
+From Stdlib Require Import Reals Lra Psatz List Sorting.Permutation.
 Import ListNotations.
 Open Scope R_scope.
 
@@ -1745,6 +1745,52 @@ Section FiniteProbabilityMoments.
     rewrite (fixed_basis_weighted_variance_identity
       coefficients basis Hlength Hmass).
     exact Hquadratic.
+  Qed.
+
+
+  (* The sum of a finite score battery is order independent.
+     Stdlib.Sorting.Permutation supplies the list-permutation relation
+     and its standard induction; the proof uses only commutativity of
+     real addition, not a custom sorting or indexing implementation. *)
+
+  Lemma sum_scores_permutation_invariant :
+    forall fs gs,
+      Permutation fs gs ->
+      forall x, sum_scores fs x = sum_scores gs x.
+  Proof.
+    intros fs gs Hperm x.
+    induction Hperm as
+      [| f fs gs Hperm IH | f g fs | fs gs hs Hfirst IHfirst Hsecond IHsecond].
+    - reflexivity.
+    - change (f x + sum_scores fs x =
+              f x + sum_scores gs x).
+      rewrite IH; reflexivity.
+    - change (f x + (g x + sum_scores fs x) =
+              g x + (f x + sum_scores fs x)).
+      ring.
+    - transitivity (sum_scores gs x); assumption.
+  Qed.
+
+  Theorem variance_of_permuted_score_sum :
+    forall fs gs,
+      Permutation fs gs ->
+      variance (sum_scores fs) = variance (sum_scores gs).
+  Proof.
+    intros fs gs Hperm.
+    apply variance_extensional; intro x.
+    apply sum_scores_permutation_invariant; exact Hperm.
+  Qed.
+
+  Theorem equal_weight_variance_permutation_invariant :
+    forall fs gs n,
+      Permutation fs gs ->
+      variance (fun x => sum_scores fs x / n) =
+        variance (fun x => sum_scores gs x / n).
+  Proof.
+    intros fs gs n Hperm.
+    apply variance_extensional; intro x.
+    rewrite (sum_scores_permutation_invariant fs gs Hperm x).
+    reflexivity.
   Qed.
 
 End FiniteProbabilityMoments.
