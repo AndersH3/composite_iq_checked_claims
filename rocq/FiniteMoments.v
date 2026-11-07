@@ -529,14 +529,12 @@ Section FiniteProbabilityMoments.
     fold_right Rplus 0
       (map (fun c => fst c * covariance f (snd c)) components).
 
-  Fixpoint covariance_quadratic_form
+  (* The double covariance sum is a fold of coefficient-weighted
+     covariance rows, reusing the row fold above. *)
+  Definition covariance_quadratic_form
     (left right : list (R * (Outcome -> R))) : R :=
-    match left with
-    | [] => 0
-    | (a, f) :: tail =>
-      a * covariance_row f right +
-        covariance_quadratic_form tail right
-    end.
+    fold_right Rplus 0
+      (map (fun c => fst c * covariance_row (snd c) right) left).
 
   Lemma expectation_of_general_weighted_sum :
     forall components,
