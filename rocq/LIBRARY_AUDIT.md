@@ -52,6 +52,24 @@ migration of all report-specific definitions to abstract measure theory.
 The latter requires a chosen library version, import interoperability,
 explicit equivalence theorems, and separate build/test validation.
 
+## Additional Rocq 9.2 standard-library substitutions
+
+The November 7 continuation kept all existing theorem types and used
+the following library-based constructions and verified proof refactors.
+
+| Module | Reused library and existing proofs | Mathematical result |
+|---|---|---|
+| `FiniteUnion.v` | `Stdlib.Bool.negb/orb/andb`, `Stdlib.List.existsb_app`, `map_app`, `fold_right_app`, and established finite-sum additivity/extensionality | Exact finite-event complement, binary inclusion–exclusion and event-family append formulas; no new event-set data structure |
+| `FiniteMoments.v` | `Stdlib.Reals.Rle_0_sqr`, `Rmult_integral`, `Stdlib.Sorting.Permutation`, plus the existing centered-second-moment and fixed-basis covariance identities | Replaces the last manual real-square sign case split in the variance-nonnegative proof, derives the positive-weight support consequence of zero variance and establishes score-battery permutation invariance |
+| `Admissions.v` | Existing conditional numerators, independence implications and `Stdlib.Reals.Rmult_comm` | Establishes both converses: under positive conditioning mass, independence is equivalent to conditional = marginal |
+| `Hoeflin.v` | Existing composite-standard-deviation monotonicity and `Stdlib.Reals.Rplus_le_compat_l`, `Rmult_le_compat_l/r` and strict analogues | Derives weak and strict correlation-dependent cutoff-order theorems without duplicating the SD argument |
+
+**Boundary:** There is deliberately no dependency on MathComp or Coquelicot
+for simple finite Boolean/list and ordered-field calculations already
+supported by Rocq Stdlib. Full replacement of the list-based finite
+model by a general measure or matrix library is a future migration,
+not something completed by these proof additions.
+
 ## Deliberately retained project-specific definitions
 
 - **Four-cell admissions model:** `TwoEventModel` defines the actual
