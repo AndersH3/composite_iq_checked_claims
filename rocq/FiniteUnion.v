@@ -71,7 +71,7 @@ Section FiniteOutcomeSpace.
       indicator (any_event events x) <= sum_event_indicators events x.
   Proof.
     intros events; induction events as [|e es IH]; intro x.
-    - simpl; unfold indicator; lra.
+    - change (0 <= 0); lra.
     - change
         (indicator (orb (e x) (any_event es x)) <=
          indicator (e x) + sum_event_indicators es x).
