@@ -643,8 +643,9 @@ Section FiniteProbabilityMoments.
     transitivity
       (expect (fun x => (/sd) * (f x - expect f))).
     - apply expectation_ext; intro x; unfold Rdiv; ring.
-    - rewrite expectation_scale, expectation_sub.
-      rewrite expectation_constant, Hmass; ring.
+    - rewrite expectation_scale.
+      rewrite (centered_score_has_zero_expectation f Hmass).
+      ring.
   Qed.
 
   Theorem mean_of_iq_reporting_scale :
@@ -1588,6 +1589,86 @@ Section FiniteProbabilityMoments.
     intros f g Hf Hg.
     rewrite variance_of_two_score_sum, Hf, Hg.
     split; intro H; lra.
+  Qed.
+
+
+  (* Reuse the already proved shift invariance and covariance bilinearity
+     rather than expanding finite expectations again. *)
+
+  Theorem variance_of_affine_score :
+    forall f a b,
+      total_mass = 1 ->
+      variance (fun x => a * f x + b) =
+        (a * a) * variance f.
+  Proof.
+    intros f a b Hmass.
+    rewrite (variance_of_shifted_score
+      (fun x => a * f x) b Hmass).
+    apply variance_of_scaled_score.
+  Qed.
+
+  Theorem covariance_of_affine_scores :
+    forall f g a b c d,
+      total_mass = 1 ->
+      covariance (fun x => a * f x + b)
+                 (fun x => c * g x + d) =
+        a * c * covariance f g.
+  Proof.
+    intros f g a b c d Hmass.
+    rewrite (covariance_invariant_under_first_shift
+      (fun x => a * f x) (fun x => c * g x + d) b Hmass).
+    rewrite (covariance_invariant_under_second_shift
+      (fun x => a * f x) (fun x => c * g x) d Hmass).
+    rewrite covariance_scale_first, covariance_scale_second.
+    ring.
+  Qed.
+
+  (* Matrix dimensions are consequences of Stdlib.List.map_length and
+     in_map_iff, rather than new recursive matrix-size functions. *)
+
+  Lemma basis_covariance_matrix_row_count :
+    forall basis,
+      length (basis_covariance_matrix basis) = length basis.
+  Proof.
+    intro basis.
+    unfold basis_covariance_matrix.
+    apply map_length.
+  Qed.
+
+  Lemma basis_covariance_matrix_column_count :
+    forall basis row,
+      In row (basis_covariance_matrix basis) ->
+      length row = length basis.
+  Proof.
+    intros basis row Hin.
+    unfold basis_covariance_matrix in Hin.
+    apply in_map_iff in Hin.
+    destruct Hin as [f [Hrow _]].
+    subst row.
+    apply map_length.
+  Qed.
+
+  Lemma basis_cross_covariance_matrix_row_count :
+    forall left right,
+      length (basis_cross_covariance_matrix left right) =
+        length left.
+  Proof.
+    intros left right.
+    unfold basis_cross_covariance_matrix.
+    apply map_length.
+  Qed.
+
+  Lemma basis_cross_covariance_matrix_column_count :
+    forall left right row,
+      In row (basis_cross_covariance_matrix left right) ->
+      length row = length right.
+  Proof.
+    intros left right row Hin.
+    unfold basis_cross_covariance_matrix in Hin.
+    apply in_map_iff in Hin.
+    destruct Hin as [f [Hrow _]].
+    subst row.
+    apply map_length.
   Qed.
 
 End FiniteProbabilityMoments.
