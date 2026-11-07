@@ -22,7 +22,7 @@ Section FiniteOutcomeSpace.
   (* Count event indicators using the standard list fold. *)
   Definition sum_event_indicators (events : list Event)
     (x : Outcome) : R :=
-    fold_right Rplus 0 (map (fun e => indicator (e x)) events).
+    FiniteSum.finite_sum (fun e => indicator (e x)) events.
 
   (* Retain the original public name as a transparent wrapper around
      the same shared finite-sum implementation used in FiniteMoments. *)
@@ -37,8 +37,7 @@ Section FiniteOutcomeSpace.
   Definition sum_marginal_probs
     (weights : Outcome -> R) (samples : list Outcome)
     (events : list Event) : R :=
-    fold_right Rplus 0
-      (map (finite_prob weights samples) events).
+    FiniteSum.finite_sum (finite_prob weights samples) events.
 
   Definition union_prob (weights : Outcome -> R)
     (samples : list Outcome) (events : list Event) : R :=
