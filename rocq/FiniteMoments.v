@@ -1619,7 +1619,7 @@ Section FiniteProbabilityMoments.
     ring.
   Qed.
 
-  (* Matrix dimensions are consequences of Stdlib.List.map_length and
+  (* Matrix dimensions are consequences of Stdlib.List.length_map and
      in_map_iff, rather than new recursive matrix-size functions. *)
 
   Lemma basis_covariance_matrix_row_count :
@@ -1628,7 +1628,7 @@ Section FiniteProbabilityMoments.
   Proof.
     intro basis.
     unfold basis_covariance_matrix.
-    apply map_length.
+    apply length_map.
   Qed.
 
   Lemma basis_covariance_matrix_column_count :
@@ -1641,7 +1641,7 @@ Section FiniteProbabilityMoments.
     apply in_map_iff in Hin.
     destruct Hin as [f [Hrow _]].
     subst row.
-    apply map_length.
+    apply length_map.
   Qed.
 
   Lemma basis_cross_covariance_matrix_row_count :
@@ -1651,7 +1651,7 @@ Section FiniteProbabilityMoments.
   Proof.
     intros left right.
     unfold basis_cross_covariance_matrix.
-    apply map_length.
+    apply length_map.
   Qed.
 
   Lemma basis_cross_covariance_matrix_column_count :
@@ -1664,7 +1664,7 @@ Section FiniteProbabilityMoments.
     apply in_map_iff in Hin.
     destruct Hin as [f [Hrow _]].
     subst row.
-    apply map_length.
+    apply length_map.
   Qed.
 
 
@@ -1765,9 +1765,7 @@ Section FiniteProbabilityMoments.
     - change (f x + sum_scores fs x =
               f x + sum_scores gs x).
       rewrite IH; reflexivity.
-    - change (f x + (g x + sum_scores fs x) =
-              g x + (f x + sum_scores fs x)).
-      ring.
+    - unfold sum_scores; simpl; ring.
     - transitivity (sum_scores gs x); assumption.
   Qed.
 
