@@ -40,28 +40,29 @@ Theorem first_marginal_nonnegative :
   forall m, 0 <= p_A m.
 Proof.
   intro m; unfold p_A.
-  pose proof (joint_nonnegative m).
-  pose proof (only_A_nonnegative m).
-  lra.
+  apply Rplus_le_le_0_compat.
+  - apply joint_nonnegative.
+  - apply only_A_nonnegative.
 Qed.
 
 Theorem second_marginal_nonnegative :
   forall m, 0 <= p_B m.
 Proof.
   intro m; unfold p_B.
-  pose proof (joint_nonnegative m).
-  pose proof (only_B_nonnegative m).
-  lra.
+  apply Rplus_le_le_0_compat.
+  - apply joint_nonnegative.
+  - apply only_B_nonnegative.
 Qed.
 
 Theorem union_nonnegative :
   forall m, 0 <= p_either m.
 Proof.
   intro m; unfold p_either.
-  pose proof (joint_nonnegative m).
-  pose proof (only_A_nonnegative m).
-  pose proof (only_B_nonnegative m).
-  lra.
+  apply Rplus_le_le_0_compat.
+  - apply Rplus_le_le_0_compat.
+    + apply joint_nonnegative.
+    + apply only_A_nonnegative.
+  - apply only_B_nonnegative.
 Qed.
 
 Theorem union_at_most_one :
