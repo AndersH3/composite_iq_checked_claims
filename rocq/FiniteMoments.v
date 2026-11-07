@@ -746,4 +746,155 @@ Section FiniteProbabilityMoments.
     rewrite Hcov; reflexivity.
   Qed.
 
+
+  (* The full equal-weight battery identity.  The off-diagonal sum counts
+     each distinct unordered test pair exactly once, regardless of whether
+     pairwise correlations are equal. *)
+
+  Fixpoint sum_scores (fs : list (Outcome -> R)) (x : Outcome) : R :=
+    match fs with
+    | [] => 0
+    | f :: tl => f x + sum_scores tl x
+    end.
+
+  Fixpoint covariance_row_sum
+      (f : Outcome -> R) (fs : list (Outcome -> R)) : R :=
+    match fs with
+    | [] => 0
+    | g :: tl => covariance f g + covariance_row_sum f tl
+    end.
+
+  Fixpoint covariance_double_sum
+      (fs gs : list (Outcome -> R)) : R :=
+    match fs with
+    | [] => 0
+    | f :: tl => covariance_row_sum f gs +
+                 covariance_double_sum tl gs
+    end.
+
+  Fixpoint diagonal_variance_sum
+      (fs : list (Outcome -> R)) : R :=
+    match fs with
+    | [] => 0
+    | f :: tl => variance f + diagonal_variance_sum tl
+    end.
+
+  Fixpoint unordered_covariance_sum
+      (fs : list (Outcome -> R)) : R :=
+    match fs with
+    | [] => 0
+    | f :: tl => covariance_row_sum f tl +
+                 unordered_covariance_sum tl
+    end.
+
+  Lemma covariance_double_sum_second_cons :
+    forall fs f gs,
+      covariance_double_sum fs (f :: gs) =
+        covariance_row_sum f fs + covariance_double_sum fs gs.
+  Proof.
+    intros fs; induction fs as [|g fs IH]; intros f gs; simpl.
+    - ring.
+    - rewrite IH.
+      rewrite (covariance_symmetric g f).
+      ring.
+  Qed.
+
+  Lemma double_sum_diagonal_off_diagonal :
+    forall fs,
+      covariance_double_sum fs fs =
+      diagonal_variance_sum fs + 2 * unordered_covariance_sum fs.
+  Proof.
+    induction fs as [|f fs IH]; simpl.
+    - ring.
+    - rewrite (covariance_double_sum_second_cons fs f fs).
+      rewrite IH.
+      unfold variance; ring.
+  Qed.
+
+  Lemma covariance_with_sum_scores :
+    forall f fs, total_mass = 1 ->
+      covariance f (sum_scores fs) = covariance_row_sum f fs.
+  Proof.
+    intros f fs Hmass.
+    induction fs as [|g fs IH]; simpl.
+    - apply covariance_with_constant_second; exact Hmass.
+    - rewrite covariance_add_second.
+      rewrite IH.
+      ring.
+  Qed.
+
+  Lemma covariance_of_sum_scores :
+    forall fs gs, total_mass = 1 ->
+      covariance (sum_scores fs) (sum_scores gs) =
+        covariance_double_sum fs gs.
+  Proof.
+    intros fs gs Hmass.
+    induction fs as [|f fs IH]; simpl.
+    - apply covariance_with_constant_first; exact Hmass.
+    - rewrite covariance_add_first.
+      rewrite (covariance_with_sum_scores f gs Hmass).
+      rewrite IH.
+      ring.
+  Qed.
+
+  Theorem variance_of_unweighted_sum :
+    forall fs, total_mass = 1 ->
+      variance (sum_scores fs) = covariance_double_sum fs fs.
+  Proof.
+    intros fs Hmass.
+    unfold variance.
+    apply covariance_of_sum_scores; exact Hmass.
+  Qed.
+
+  Theorem variance_of_rescaled_unweighted_sum :
+    forall fs n,
+      total_mass = 1 -> n <> 0 ->
+      variance (fun x => sum_scores fs x / n) =
+        (diagonal_variance_sum fs + 2 * unordered_covariance_sum fs)
+          / (n * n).
+  Proof.
+    intros fs n Hmass Hn.
+    transitivity (variance (fun x => (/n) * sum_scores fs x)).
+    - apply variance_extensional; intro x.
+      unfold Rdiv; ring.
+    - rewrite variance_of_scaled_score.
+      rewrite (variance_of_unweighted_sum fs Hmass).
+      rewrite double_sum_diagonal_off_diagonal.
+      field; lra.
+  Qed.
+
+  Lemma diagonal_variance_sum_of_unit_scores :
+    forall fs,
+      (forall f, In f fs -> variance f = 1) ->
+      diagonal_variance_sum fs = INR (length fs).
+  Proof.
+    induction fs as [|f fs IH]; intros Hunit; simpl.
+    - reflexivity.
+    - rewrite S_INR.
+      assert (Hhead : variance f = 1).
+      { apply Hunit; simpl; auto. }
+      assert (Htail : forall g, In g fs -> variance g = 1).
+      { intros g Hg. apply Hunit; simpl; auto. }
+      rewrite Hhead, (IH Htail); ring.
+  Qed.
+
+  Theorem equal_weight_variance_from_finite_covariances :
+    forall fs n rho,
+      total_mass = 1 ->
+      n = INR (length fs) ->
+      1 < n ->
+      (forall f, In f fs -> variance f = 1) ->
+      2 * unordered_covariance_sum fs = n * (n - 1) * rho ->
+      variance (fun x => sum_scores fs x / n) =
+        rho + (1 - rho) / n.
+  Proof.
+    intros fs n rho Hmass Hlength Hn Hunit Hpairs.
+    rewrite (variance_of_rescaled_unweighted_sum fs n Hmass)
+      by lra.
+    rewrite (diagonal_variance_sum_of_unit_scores fs Hunit).
+    rewrite <- Hlength.
+    rewrite Hpairs.
+    field; nra.
+  Qed.
+
 End FiniteProbabilityMoments.
