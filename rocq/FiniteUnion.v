@@ -58,11 +58,11 @@ Section FiniteOutcomeSpace.
   Lemma sum_indicators_nonnegative :
     forall events x, 0 <= sum_event_indicators events x.
   Proof.
-    intros events; induction events as [|e es IH]; intro x; simpl.
+    intros events x.
+    induction events as [|e es IH];
+      unfold sum_event_indicators in *; simpl.
     - lra.
-    - change (0 <= indicator (e x) + sum_event_indicators es x).
-      specialize (IH x).
-      pose proof (indicator_nonnegative (e x)).
+    - pose proof (indicator_nonnegative (e x)).
       lra.
   Qed.
 
