@@ -22,9 +22,10 @@ proof statements and report mappings do not change.
 ## Consolidated finite real sums and verified model bridge
 
 The shared `FiniteSum.v` module implements one definition using
-`Stdlib.List.map` and `fold_right`, and proves **eight reusable
+`Stdlib.List.map` and `fold_right`, and proves **twelve reusable
 lemmas**: extensionality, addition, scalar multiplication, positivity,
-monotonicity, zero sums, append, and permutation invariance. In
+monotonicity, zero sums, append, permutation invariance, map composition,
+negation, subtraction, and reversal. In
 `FiniteMoments.v` and `FiniteUnion.v`, public `sum_finite` and
 `finite_sum` remain transparent aliases. Existing theorem signatures
 are preserved, while the previous duplicate inductions now delegate
@@ -38,7 +39,7 @@ in the finite-moment module, `unordered_covariance_sum`, depends on
 the current list suffix and therefore cannot be replaced by a plain
 sum over the original list without changing semantics.
 
-`FiniteBridge.v` adds **nine kernel-checked declarations** that join
+`FiniteBridge.v` adds **fourteen kernel-checked declarations** that join
 the two models through the shared finite sum. In particular,
 `finite_event_probability_is_indicator_expectation` proves that
 event mass equals expectation of the corresponding Boolean indicator;
@@ -46,6 +47,8 @@ event mass equals expectation of the corresponding Boolean indicator;
 `finite_event_indicator_covariance` proves the intersection-minus-product
 identity; and the next two theorems derive the zero-covariance
 independence and zero-variance extremal-mass characterizations.
+Five further declarations prove the Bernoulli quarter-variance upper bound,
+complement variance invariance, and three indicator-covariance complement laws.
 
 **Proof boundaries:** these are exact algebraic identities for finite
 real-weighted samples. A probabilistic interpretation requires
@@ -106,6 +109,33 @@ for simple finite Boolean/list and ordered-field calculations already
 supported by Rocq Stdlib. Full replacement of the list-based finite
 model by a general measure or matrix library is a future migration,
 not something completed by these proof additions.
+
+## Additional library-backed refactoring and proof results (November 7)
+
+- `FiniteSum.v` derives map preservation using Rocq's `map_map`,
+  reversal preservation using `Permutation_rev`, and signed-sum
+  operations from existing finite-sum additivity and scaling. This
+  adds **four** declarations without additional custom recursion.
+- `FiniteUnion.v` no longer inducts over outcomes to show an empty
+  event-family has zero probability. It instead uses the existing
+  `finite_sum_zero` result. For singleton and two-event families,
+  `orb_false_r` replaces Boolean truth-table proof branches.
+- `FiniteBridge.v` obtains **five** new theorems by reduction to
+  established finite-moment identities. The proof of `Var(1_A) <= 1/4`
+  uses the standard nonnegativity of real squares. The remaining
+  statements interpret event complements through normalization and
+  covariance shift/scale/symmetry.
+- An actual source recount reports **289** named theorem/lemma/example
+  declarations: 64, 67, 30, 102, 12 and 14 for `Hoeflin`,
+  `Admissions`, `FiniteUnion`, `FiniteMoments`, `FiniteSum`
+  and `FiniteBridge`, respectively. The previous tally overcounted
+  the `Hoeflin` module by one.
+
+All three proof-source changes passed the Rocq 9.2 kernel job at
+commit `65f1e6924b9edfa4bfc6799be27fe890d20a325a`.
+The root README, historical Ada/SPARK evidence, and report PDFs
+were not modified. This remains a targeted refactor, not a claim of
+wholesale migration to MathComp, Coquelicot or general measure theory.
 
 ## Deliberately retained project-specific definitions
 
