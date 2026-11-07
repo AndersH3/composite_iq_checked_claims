@@ -76,8 +76,10 @@ Section FiniteOutcomeSpace.
         (indicator (orb (e x) (any_event es x)) <=
          indicator (e x) + sum_event_indicators es x).
       destruct (e x) eqn:He; simpl.
-      + pose proof (sum_indicators_nonnegative es x); lra.
-      + specialize (IH x); lra.
+      + pose proof (sum_indicators_nonnegative es x) as Hpos.
+        unfold sum_event_indicators in *; lra.
+      + specialize (IH x).
+        unfold sum_event_indicators in *; lra.
   Qed.
 
   Lemma event_member_implies_union :
