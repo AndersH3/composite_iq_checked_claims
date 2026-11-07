@@ -786,3 +786,51 @@ Proof.
   - exact Hscale.
   - apply standardize_preserves_order; assumption.
 Qed.
+
+
+(* Quantitative epsilon bounds do not require a separate asymptotic-limit
+   infrastructure: they follow from the exact fixed-rho variance gap and
+   standard ordered-field identities.  The parameter rho is held fixed. *)
+
+Theorem fixed_correlation_variance_epsilon_bound :
+  forall n rho eps,
+    0 < n -> rho <= 1 -> 0 < eps ->
+    1 - rho < eps * n ->
+    0 <= equal_weight_variance n rho - rho /\
+      equal_weight_variance n rho - rho < eps.
+Proof.
+  intros n rho eps Hn Hr Heps Hthreshold.
+  rewrite variance_gap_to_limiting_correlation by lra.
+  assert (Hinv : 0 < / n).
+  { apply Rinv_0_lt_compat; exact Hn. }
+  assert (Hscaled :
+    (1 - rho) * / n < (eps * n) * / n).
+  { apply Rmult_lt_compat_r; assumption. }
+  replace ((eps * n) * / n) with eps in Hscaled.
+  2: { field; lra. }
+  unfold Rdiv; split.
+  - apply Rmult_le_pos; lra.
+  - exact Hscaled.
+Qed.
+
+Theorem fixed_correlation_variance_epsilon_after_threshold :
+  forall n rho eps,
+    rho <= 1 -> 0 < eps ->
+    (1 - rho) / eps < n ->
+    0 <= equal_weight_variance n rho - rho /\
+      equal_weight_variance n rho - rho < eps.
+Proof.
+  intros n rho eps Hr Heps Hcount.
+  assert (Hratio_nonnegative : 0 <= (1 - rho) / eps).
+  { apply nonnegative_quotient; lra. }
+  assert (Hn : 0 < n) by lra.
+  assert (Hthreshold :
+    (1 - rho) < eps * n).
+  { assert (Hm :
+      ((1 - rho) / eps) * eps < n * eps).
+    { apply Rmult_lt_compat_r; assumption. }
+    replace (((1 - rho) / eps) * eps)
+      with (1 - rho) in Hm by (field; lra).
+    nra. }
+  apply fixed_correlation_variance_epsilon_bound; assumption.
+Qed.
