@@ -1353,7 +1353,7 @@ Section FiniteProbabilityMoments.
   Qed.
 
   Lemma coefficients_of_combine :
-    forall coefficients basis,
+    forall (coefficients : list R) (basis : list (Outcome -> R)),
       length coefficients = length basis ->
       map fst (combine coefficients basis) = coefficients.
   Proof.
@@ -1368,7 +1368,7 @@ Section FiniteProbabilityMoments.
   Qed.
 
   Lemma basis_of_combine :
-    forall coefficients basis,
+    forall (coefficients : list R) (basis : list (Outcome -> R)),
       length coefficients = length basis ->
       map snd (combine coefficients basis) = basis.
   Proof.
