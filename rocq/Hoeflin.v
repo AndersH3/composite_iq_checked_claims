@@ -379,7 +379,11 @@ Proof.
   assert (Hq :
     0 <= ((1 - rho) * rho * (n2 - n1)) /
       ((1 + (n1 - 1) * rho) * (1 + (n2 - 1) * rho))).
-  { apply nonnegative_quotient; nra. }
+  { apply nonnegative_quotient.
+    - apply Rmult_le_pos.
+      + apply Rmult_le_pos; lra.
+      + lra.
+    - nra. }
   assert (Hident :
     latent_posterior_variance n1 rho -
       latent_posterior_variance n2 rho =
