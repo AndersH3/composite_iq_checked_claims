@@ -2,7 +2,7 @@
    A finite, four-cell probability space makes the logical assumptions explicit:
    A and B partition into both, A-only, B-only, and neither.  No normal
    distribution, independence or unproved probability axioms are imported. *)
-From Stdlib Require Import Reals Lra Psatz.
+From Stdlib Require Import Reals Lra Psatz Arith.PeanoNat.
 Open Scope R_scope.
 
 (* Reuse Stdlib.Reals quotient, inverse, and product sign lemmas. *)
@@ -311,30 +311,31 @@ Qed.
 
 (* Independence recurrence: the assumption is encoded by the recurrence,
    rather than silently asserted for real test/retest data. *)
-Fixpoint independent_union (p : R) (n : nat) : R :=
-  match n with
-  | O => 0
-  | S k => independent_union p k + p - independent_union p k * p
-  end.
+(* Stdlib Nat.iter encodes the independence recurrence without an extra
+   recursive function. The closed form remains a theorem, not a definition. *)
+Definition independent_union (p : R) (n : nat) : R :=
+  Nat.iter n (fun u => u + p - u * p) 0.
 
 Theorem independent_union_formula :
   forall p n, independent_union p n = 1 - (1 - p) ^ n.
 Proof.
   intros p n; induction n as [| k IH].
-  - simpl; ring.
-  - simpl; rewrite IH; ring.
+  - unfold independent_union; simpl; ring.
+  - unfold independent_union in *.
+    rewrite Nat.iter_succ.
+    rewrite IH; simpl; ring.
 Qed.
 
 Theorem independent_union_one :
   forall p, independent_union p 1%nat = p.
 Proof.
-  intro p; simpl; ring.
+  intro p; unfold independent_union; simpl; ring.
 Qed.
 
 Theorem independent_union_two :
   forall p, independent_union p 2%nat = 2 * p - p * p.
 Proof.
-  intro p; simpl; ring.
+  intro p; unfold independent_union; simpl; ring.
 Qed.
 
 (* Two explicit probability models with equal marginals but different overlap.
