@@ -516,12 +516,11 @@ Section FiniteProbabilityMoments.
     | (a, f) :: tail => a * f x + linear_combination tail x
     end.
 
-  Fixpoint linear_expectation
+  (* Apply the built-in list fold to weighted component expectations. *)
+  Definition linear_expectation
     (components : list (R * (Outcome -> R))) : R :=
-    match components with
-    | [] => 0
-    | (a, f) :: tail => a * expect f + linear_expectation tail
-    end.
+    fold_right Rplus 0
+      (map (fun c => fst c * expect (snd c)) components).
 
   Fixpoint covariance_row
     (f : Outcome -> R)
