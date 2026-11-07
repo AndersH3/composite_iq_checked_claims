@@ -1,19 +1,23 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **264 theorem, lemma and example declarations** in four
+for the two reports. **281 theorem, lemma and example declarations** in six
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
 ## Reproduction
 
-With Rocq Prover 9.2 and its standard library:
+With Rocq Prover 9.2 and its standard library, compile from the
+`rocq/` directory so the shared local modules are on the load path:
 
 ```sh
-rocq compile rocq/Hoeflin.v
-rocq compile rocq/Admissions.v
-rocq compile rocq/FiniteUnion.v
-rocq compile rocq/FiniteMoments.v
+cd rocq
+rocq compile FiniteSum.v
+rocq compile Hoeflin.v
+rocq compile Admissions.v
+rocq compile FiniteUnion.v
+rocq compile FiniteMoments.v
+rocq compile FiniteBridge.v
 ```
 
 The GitHub Actions workflow at
@@ -29,14 +33,17 @@ external SMT certificates, or `native_compute` trust extensions.
 ## Standard-library reuse
 
 For elementary calculations, the proof modules now reuse Rocq 9.2's
-**standard library** rather than maintaining duplicate recursion:
+**standard library** and a single shared finite real-sum wrapper rather
+than maintaining separate recursive or list-fold algebra:
 
-- **`Stdlib.List`**: `map`, `fold_right`, and `combine` implement finite
-  sums (`sum_finite`), score sums (`sum_scores`), dot products
-  (`vector_dot`), and the fixed-basis coefficient/score pairing
-  (`weighted_basis_sum`). The final helper delegates to the already
-  proved general `linear_combination` instead of having another
-  recursive implementation.
+- **`FiniteSum.v` / `Stdlib.List`**: a single transparent `finite_sum`
+  implements finite integration with `map` and `fold_right`. Both
+  `FiniteUnion.v` and `FiniteMoments.v` reuse its extensionality,
+  additivity, scaling, nonnegativity, order, concatenation and
+  permutation proofs. Weighted composites, covariance sums, list-vector
+  dot products and event marginals use the same fold. `List.combine`
+  pairs basis scores and coefficients with explicit equal-length
+  hypotheses whenever truncation would affect a theorem.
 - **`Stdlib.Reals`**: `sqrt`, `sqrt_pos`, `sqrt_sqrt`,
   `sqrt_lt_R0`, `sqrt_le_1`, `sqrt_lt_1`, and `sqrt_1`
   supply the square-root definition, fundamental properties, and
@@ -51,7 +58,10 @@ For elementary calculations, the proof modules now reuse Rocq 9.2's
 
 Report-specific covariance, variance, weighted-component, and event
 definitions remain explicit to make their probabilistic assumptions
-visible.
+visible. **`FiniteBridge.v`** proves that finite-event probabilities are
+finite expectations of Boolean indicators. It derives Bernoulli
+variance, event-indicator covariance and the finite independence
+criterion without adding independence or measure axioms.
 
 A module-by-module inventory, migration criteria and deferred library
 candidates are documented in [LIBRARY_AUDIT.md](LIBRARY_AUDIT.md). This is
@@ -81,6 +91,9 @@ mathematics libraries before introducing new foundational code.
 | IQ standardization and same-SD composite reporting | `iq_standardization_inversion`, `iq_report_standardization`, `equal_sd_composite_scale`, `standardized_160_sd15`, `standardized_160_sd16` | Exact algebra; standard deviations/divisors assumed nonzero |
 | Normalized variance and threshold rescaling | `normalized_variance_is_one`, `threshold_recovered_after_normalization` | Uses an **assumed** variance and its nonzero squared divisor; not a distribution theorem |
 | Latent-factor squared correlation and conditional-variance expressions | `latent_reliability_plus_posterior_variance`, `latent_reliability_nonnegative`, `latent_posterior_variance_nonnegative`, `latent_reliability_at_most_one`, and boundary cases | Algebra for the report's *given* expressions; **does not prove the Gaussian conditional-distribution derivation** |
+| Shared finite real-sum infrastructure (technical bridge) | `FiniteSum.finite_sum_ext`, `finite_sum_add`, `finite_sum_scale`, `finite_sum_nonnegative`, `finite_sum_monotone`, `finite_sum_zero`, `finite_sum_app`, `finite_sum_permutation` | Exact `Stdlib.List` folds replace repeated finite-sum proofs in both domain models; no probability normalization is assumed by the generic library |
+| Finite Boolean event and moment models agree | `finite_sum_models_agree`, `finite_total_mass_models_agree`, `finite_event_probability_is_indicator_expectation` | Certified equality between the original finite-event sum/probability and finite-moment sum/indicator expectation for arbitrary real weights |
+| Event-indicator Bernoulli variance, covariance and independence | `indicator_square`, `indicator_product_and`, `finite_event_indicator_variance`, `finite_event_indicator_covariance`, `finite_event_independence_iff_zero_indicator_covariance`, `finite_event_indicator_zero_variance_iff_extreme_mass` | Algebraically proves Var(1_A)=p_A(1−p_A), Cov(1_A,1_B)=p_(A∩B)−p_A p_B and zero covariance iff the finite product identity; to interpret the masses as probabilities, nonnegative normalized weights are required |
 | Finite expectation: linearity, constants, centering, and nonnegative means | `expectation_add`, `expectation_scale`, `expectation_affine`, `centered_score_has_zero_expectation`, `expectation_nonnegative` | Finite sums with explicit masses; normalization and nonnegativity required where stated |
 | Zero variance and finite support | `sum_finite_zero_implies_zero_terms`, `zero_variance_is_constant_on_positive_mass`, `null_covariance_direction_constant_on_positive_mass` | The variance-zero implication holds on outcomes of **positive probability weight**, using Stdlib `Rle_0_sqr` and `Rmult_integral`. A zero covariance-matrix quadratic direction makes the weighted score constant on support; no rank theorem is claimed |
 | Affine finite-score variance and covariance | `variance_of_affine_score`, `covariance_of_affine_scores` | Reuses already verified shift invariance and covariance bilinearity, requiring a normalized finite probability mass rather than introducing new integration algebra |
@@ -146,13 +159,13 @@ with checked arithmetic proofs. No data are imported into the kernel.
 
 ## Research extensions
 
-The next valuable targets are: (1) certified covariance-matrix rank
-statements beyond the proved zero-quadratic-form support consequence,
-(2) an explicit finite-event/finite-moment interpretation bridge,
-(3) using a maintained measure-theory library with checked equivalence
-lemmas for continuous probability, (4) bivariate Gaussian density
-normalization and certified tail enclosures, and (5) Gaussian
-common-factor conditional-moment theorems. Numerical tables must remain labeled numerical until certified
+The next valuable targets are: (1) a checked connection from the
+four-cell `TwoEventModel` to the now-verified Boolean-event/moment
+bridge, (2) certified covariance-matrix rank statements beyond the
+zero-quadratic-form support result, (3) using a maintained measure-theory
+library with checked finite-to-continuous interpretation lemmas,
+(4) bivariate Gaussian density normalization and certified tail
+enclosures, and (5) Gaussian common-factor conditional-moment theorems. Numerical tables must remain labeled numerical until certified
 interval arithmetic is available.
 
 This work is AI-generated and requires independent review of the
