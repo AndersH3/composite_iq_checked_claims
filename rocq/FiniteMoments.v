@@ -761,12 +761,10 @@ Section FiniteProbabilityMoments.
   Definition sum_scores (fs : list (Outcome -> R)) (x : Outcome) : R :=
     fold_right Rplus 0 (map (fun f => f x) fs).
 
-  Fixpoint covariance_row_sum
+  (* Unweighted covariance matrix row: a standard list fold. *)
+  Definition covariance_row_sum
       (f : Outcome -> R) (fs : list (Outcome -> R)) : R :=
-    match fs with
-    | [] => 0
-    | g :: tl => covariance f g + covariance_row_sum f tl
-    end.
+    fold_right Rplus 0 (map (covariance f) fs).
 
   Fixpoint covariance_double_sum
       (fs gs : list (Outcome -> R)) : R :=
