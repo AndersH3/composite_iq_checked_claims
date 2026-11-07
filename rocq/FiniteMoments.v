@@ -826,7 +826,14 @@ Section FiniteProbabilityMoments.
                 unordered_covariance_sum fs)).
       rewrite (covariance_double_sum_second_cons fs f fs).
       rewrite IH.
-      cbn [covariance_row_sum].
+      change
+        ((covariance f f + covariance_row_sum f fs) +
+          (covariance_row_sum f fs +
+            (diagonal_variance_sum fs +
+             2 * unordered_covariance_sum fs)) =
+         variance f + diagonal_variance_sum fs +
+           2 * (covariance_row_sum f fs +
+                unordered_covariance_sum fs)).
       unfold variance; ring.
   Qed.
 
