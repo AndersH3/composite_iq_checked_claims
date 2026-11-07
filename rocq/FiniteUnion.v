@@ -3,7 +3,7 @@
       max_i P(A_i) <= P(union_i A_i) <= min(1, sum_i P(A_i)).
    Unlike an abstract measure axiom, finite probabilities are computed from
    nonnegative weights on concrete outcomes. *)
-From Stdlib Require Import Reals Lra Psatz List Bool.
+From Stdlib Require Import Reals Lra Psatz List Bool Sorting.Permutation.
 Import ListNotations.
 Open Scope R_scope.
 
@@ -268,6 +268,67 @@ Section FiniteOutcomeSpace.
     unfold union_prob, finite_prob.
     apply finite_sum_extensional; intro x; simpl.
     destruct (e x); simpl; ring.
+  Qed.
+
+
+  (* Event lists represent sets for union probability: only their membership
+     matters.  Bool.existsb_exists and Sorting.Permutation.Permutation_in
+     replace a custom induction over list permutations. *)
+
+  Theorem union_prob_membership_extensional :
+    forall weights samples left right,
+      (forall e, In e left <-> In e right) ->
+      union_prob weights samples left =
+        union_prob weights samples right.
+  Proof.
+    intros weights samples left right Hmembers.
+    unfold union_prob, finite_prob.
+    apply finite_sum_extensional; intro x.
+    assert (Hevents : any_event left x = any_event right x).
+    { destruct (any_event left x) eqn:Hleft;
+      destruct (any_event right x) eqn:Hright; try reflexivity.
+      - unfold any_event in Hleft, Hright.
+        apply existsb_exists in Hleft.
+        destruct Hleft as [e [Hin He]].
+        assert (Hyes : existsb (fun a => a x) right = true).
+        { apply existsb_exists. exists e. split.
+          - apply (proj1 (Hmembers e)); exact Hin.
+          - exact He. }
+        rewrite Hright in Hyes; discriminate.
+      - unfold any_event in Hleft, Hright.
+        apply existsb_exists in Hright.
+        destruct Hright as [e [Hin He]].
+        assert (Hyes : existsb (fun a => a x) left = true).
+        { apply existsb_exists. exists e. split.
+          - apply (proj2 (Hmembers e)); exact Hin.
+          - exact He. }
+        rewrite Hleft in Hyes; discriminate. }
+    rewrite Hevents; reflexivity.
+  Qed.
+
+  Theorem union_prob_permutation_invariant :
+    forall weights samples left right,
+      Permutation left right ->
+      union_prob weights samples left =
+        union_prob weights samples right.
+  Proof.
+    intros weights samples left right Hperm.
+    apply union_prob_membership_extensional.
+    intro e; split; intro Hin.
+    - eapply Permutation_in; eauto.
+    - eapply Permutation_in.
+      + apply Permutation_sym; exact Hperm.
+      + exact Hin.
+  Qed.
+
+  Theorem union_prob_duplicate_route :
+    forall weights samples e events,
+      union_prob weights samples (e :: e :: events) =
+        union_prob weights samples (e :: events).
+  Proof.
+    intros weights samples e events.
+    apply union_prob_membership_extensional.
+    intro a; simpl; tauto.
   Qed.
 
 End FiniteOutcomeSpace.
