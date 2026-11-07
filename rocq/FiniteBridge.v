@@ -45,7 +45,7 @@ Lemma indicator_product_and :
     FiniteUnion.indicator b * FiniteUnion.indicator c =
       FiniteUnion.indicator (andb b c).
 Proof.
-  intros [] []; unfold FiniteUnion.indicator; ring.
+  intros [] []; unfold FiniteUnion.indicator; simpl; ring.
 Qed.
 
 Theorem finite_event_indicator_variance :
