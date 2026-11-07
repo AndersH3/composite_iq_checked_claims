@@ -3,6 +3,7 @@
    All moment laws are derived from finite sums, not assumed as axioms.
    No Gaussian or empirical psychometric assumptions are used. *)
 From Stdlib Require Import Reals Lra Psatz List Sorting.Permutation.
+Require Import FiniteSum.
 Import ListNotations.
 Open Scope R_scope.
 
@@ -11,10 +12,10 @@ Section FiniteProbabilityMoments.
   Variable samples : list Outcome.
   Variable weight : Outcome -> R.
 
-  (* Use Stdlib.List's map/fold_right rather than a custom recursive
-     numerical summation. Both operations are in the Rocq 9.2 Stdlib. *)
+  (* Keep the original public name as a transparent alias.  Both this
+     moment model and FiniteUnion now use the same shared Stdlib fold. *)
   Definition sum_finite (f : Outcome -> R) (xs : list Outcome) : R :=
-    fold_right Rplus 0 (map f xs).
+    FiniteSum.finite_sum f xs.
 
   Definition total_mass : R := sum_finite weight samples.
 
@@ -35,9 +36,7 @@ Section FiniteProbabilityMoments.
       sum_finite f xs = sum_finite g xs.
   Proof.
     intros xs f g Hfg.
-    unfold sum_finite.
-    f_equal.
-    apply map_ext; exact Hfg.
+    apply FiniteSum.finite_sum_ext; exact Hfg.
   Qed.
 
   Lemma sum_finite_add :
@@ -45,9 +44,8 @@ Section FiniteProbabilityMoments.
       sum_finite (fun x => f x + g x) xs =
         sum_finite f xs + sum_finite g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g; unfold sum_finite in *; simpl.
-    - ring.
-    - rewrite IH; ring.
+    intros xs f g.
+    apply FiniteSum.finite_sum_add.
   Qed.
 
   Lemma sum_finite_scale :
@@ -55,9 +53,8 @@ Section FiniteProbabilityMoments.
       sum_finite (fun x => a * f x) xs =
         a * sum_finite f xs.
   Proof.
-    induction xs as [|x xs IH]; intros a f; unfold sum_finite in *; simpl.
-    - ring.
-    - rewrite IH; ring.
+    intros xs a f.
+    apply FiniteSum.finite_sum_scale.
   Qed.
 
   Lemma sum_finite_nonnegative :
@@ -65,12 +62,8 @@ Section FiniteProbabilityMoments.
       (forall x, In x xs -> 0 <= f x) ->
       0 <= sum_finite f xs.
   Proof.
-    induction xs as [|x xs IH]; intros f Hf; unfold sum_finite in *; simpl.
-    - lra.
-    - assert (Hx : 0 <= f x) by (apply Hf; simpl; auto).
-      assert (Htail : forall y, In y xs -> 0 <= f y).
-      { intros y Hy; apply Hf; simpl; auto. }
-      specialize (IH f Htail); lra.
+    intros xs f Hf.
+    apply FiniteSum.finite_sum_nonnegative; exact Hf.
   Qed.
 
   Theorem expectation_ext :
@@ -110,10 +103,10 @@ Section FiniteProbabilityMoments.
   Theorem expectation_zero :
     expect (fun _ => 0) = 0.
   Proof.
-    unfold expect, sum_finite.
-    induction samples as [|x xs IH]; simpl.
-    - reflexivity.
-    - rewrite IH; ring.
+    unfold expect.
+    transitivity (sum_finite (fun _ => 0) samples).
+    - apply sum_finite_ext; intro x; ring.
+    - apply FiniteSum.finite_sum_zero.
   Qed.
 
   Theorem expectation_constant :
@@ -1759,14 +1752,9 @@ Section FiniteProbabilityMoments.
       forall x, sum_scores fs x = sum_scores gs x.
   Proof.
     intros fs gs Hperm x.
-    induction Hperm as
-      [| f fs gs Hperm IH | f g fs | fs gs hs Hfirst IHfirst Hsecond IHsecond].
-    - reflexivity.
-    - change (f x + sum_scores fs x =
-              f x + sum_scores gs x).
-      rewrite IH; reflexivity.
-    - unfold sum_scores; simpl; ring.
-    - transitivity (sum_scores gs x); assumption.
+    change (FiniteSum.finite_sum (fun f => f x) fs =
+            FiniteSum.finite_sum (fun f => f x) gs).
+    apply FiniteSum.finite_sum_permutation; exact Hperm.
   Qed.
 
   Theorem variance_of_permuted_score_sum :
