@@ -5,7 +5,9 @@
 From Stdlib Require Import Reals Lra Psatz.
 Open Scope R_scope.
 
-(* Avoid reliance on version-specific division-inequality lemma names. *)
+(* Only the non-strict quotient sign combination needs a local helper:
+   Rmult_le_pos and Rinv_0_lt_compat are from Stdlib.Reals; strictly
+   positive quotients use Stdlib.RIneq.Rdiv_lt_0_compat directly. *)
 Local Lemma nonnegative_quotient :
   forall numerator denominator,
     0 <= numerator -> 0 < denominator ->
@@ -13,21 +15,9 @@ Local Lemma nonnegative_quotient :
 Proof.
   intros a b Ha Hb.
   unfold Rdiv.
-  assert (Hinv : 0 < / b).
-  { apply Rinv_0_lt_compat; exact Hb. }
-  nra.
-Qed.
-
-Local Lemma positive_quotient :
-  forall numerator denominator,
-    0 < numerator -> 0 < denominator ->
-    0 < numerator / denominator.
-Proof.
-  intros a b Ha Hb.
-  unfold Rdiv.
-  assert (Hinv : 0 < / b).
-  { apply Rinv_0_lt_compat; exact Hb. }
-  nra.
+  apply Rmult_le_pos.
+  - exact Ha.
+  - apply Rlt_le, Rinv_0_lt_compat; exact Hb.
 Qed.
 
 
@@ -101,7 +91,7 @@ Theorem variance_strictly_positive :
 Proof.
   intros n rho Hn Hr0 Hr1.
   rewrite variance_alternative_form by lra.
-  apply positive_quotient; nra.
+  apply Rdiv_lt_0_compat; nra.
 Qed.
 
 Theorem variance_at_least_correlation :
@@ -312,7 +302,7 @@ Proof.
   intros n1 n2 rho Hn1 Horder Hr.
   assert (Hfrac :
     0 < (1 - rho) * (n2 - n1) / (n1 * n2)).
-  { apply positive_quotient; nra. }
+  { apply Rdiv_lt_0_compat; nra. }
   assert (Hidentity :
     equal_weight_variance n1 rho -
       equal_weight_variance n2 rho =
@@ -645,7 +635,7 @@ Proof.
   assert (Hrho1le : rho1 <= 1) by lra.
   assert (Hr2 : 0 <= rho2) by lra.
   assert (Hcoeff : 0 < (n - 1) / n).
-  { apply positive_quotient; lra. }
+  { apply Rdiv_lt_0_compat; lra. }
   assert (Hdelta :
     0 < equal_weight_variance n rho2 -
         equal_weight_variance n rho1).
@@ -688,7 +678,7 @@ Proof.
   assert (Hn1 : 1 <= n) by lra.
   assert (Hrle : rho <= 1) by lra.
   assert (Hgap : 0 < (n - 1) * (1 - rho) / n).
-  { apply positive_quotient; nra. }
+  { apply Rdiv_lt_0_compat; nra. }
   assert (Heq :
     1 - equal_weight_variance n rho =
       (n - 1) * (1 - rho) / n).
