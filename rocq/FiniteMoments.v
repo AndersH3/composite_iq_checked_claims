@@ -814,7 +814,7 @@ Section FiniteProbabilityMoments.
       diagonal_variance_sum fs + 2 * unordered_covariance_sum fs.
   Proof.
     induction fs as [|f fs IH].
-    - unfold diagonal_variance_sum; simpl; ring.
+    - unfold covariance_double_sum, diagonal_variance_sum; simpl; ring.
     - change
         (covariance_row_sum f (f :: fs) +
          covariance_double_sum fs (f :: fs) =
