@@ -339,4 +339,170 @@ Section FiniteProbabilityMoments.
     rewrite Hc1, Hc2, Hcc; ring.
   Qed.
 
+
+  (* Further elementary consequences for the report's weighted composites.
+     These require only finite expectation algebra and, where noted,
+     a normalized finite probability mass. *)
+
+  Theorem covariance_extensional :
+    forall f f' g g',
+      (forall x, f x = f' x) ->
+      (forall x, g x = g' x) ->
+      covariance f g = covariance f' g'.
+  Proof.
+    intros f f' g g' Hf Hg.
+    unfold covariance.
+    rewrite (expectation_ext f f' Hf).
+    rewrite (expectation_ext g g' Hg).
+    assert (Hprod :
+      expect (fun x => f x * g x) =
+      expect (fun x => f' x * g' x)).
+    { apply expectation_ext; intro x.
+      rewrite Hf, Hg; reflexivity. }
+    rewrite Hprod; reflexivity.
+  Qed.
+
+  Theorem variance_extensional :
+    forall f g, (forall x, f x = g x) ->
+      variance f = variance g.
+  Proof.
+    intros f g Hfg.
+    unfold variance.
+    apply covariance_extensional; exact Hfg.
+  Qed.
+
+  Theorem centered_score_has_zero_expectation :
+    forall f, total_mass = 1 ->
+      expect (fun x => f x - expect f) = 0.
+  Proof.
+    intros f Hmass.
+    rewrite expectation_sub, expectation_constant, Hmass.
+    ring.
+  Qed.
+
+  Theorem covariance_with_constant_second :
+    forall f c, total_mass = 1 ->
+      covariance f (fun _ => c) = 0.
+  Proof.
+    intros f c Hmass.
+    rewrite covariance_symmetric.
+    apply covariance_with_constant_first; exact Hmass.
+  Qed.
+
+  Theorem covariance_invariant_under_first_shift :
+    forall f g c, total_mass = 1 ->
+      covariance (fun x => f x + c) g = covariance f g.
+  Proof.
+    intros f g c Hmass.
+    rewrite covariance_add_first.
+    rewrite (covariance_with_constant_first g c Hmass).
+    ring.
+  Qed.
+
+  Theorem covariance_invariant_under_second_shift :
+    forall f g c, total_mass = 1 ->
+      covariance f (fun x => g x + c) = covariance f g.
+  Proof.
+    intros f g c Hmass.
+    rewrite covariance_add_second.
+    rewrite (covariance_with_constant_second f c Hmass).
+    ring.
+  Qed.
+
+  Theorem variance_of_two_weighted_scores :
+    forall f g a b,
+      variance (fun x => a * f x + b * g x) =
+        (a * a) * variance f +
+        (b * b) * variance g +
+        2 * a * b * covariance f g.
+  Proof.
+    intros f g a b.
+    rewrite variance_of_two_score_sum.
+    rewrite !variance_of_scaled_score.
+    rewrite covariance_scale_first, covariance_scale_second.
+    ring.
+  Qed.
+
+  Theorem covariance_of_two_weighted_pairs :
+    forall f g h k a b c d,
+      covariance (fun x => a * f x + b * g x)
+                 (fun x => c * h x + d * k x) =
+        a * c * covariance f h +
+        a * d * covariance f k +
+        b * c * covariance g h +
+        b * d * covariance g k.
+  Proof.
+    intros f g h k a b c d.
+    rewrite covariance_add_first.
+    rewrite covariance_add_second.
+    rewrite (covariance_add_second (fun x => b * g x)
+                                  (fun x => c * h x)
+                                  (fun x => d * k x)).
+    repeat rewrite covariance_scale_first.
+    repeat rewrite covariance_scale_second.
+    ring.
+  Qed.
+
+  Theorem variance_of_two_score_average :
+    forall f g,
+      variance (fun x => (f x + g x) / 2) =
+        (variance f + variance g + 2 * covariance f g) / 4.
+  Proof.
+    intros f g.
+    transitivity
+      (variance (fun x => (/2) * (f x + g x))).
+    - apply variance_extensional; intro x.
+      unfold Rdiv; ring.
+    - rewrite variance_of_scaled_score, variance_of_two_score_sum.
+      field.
+  Qed.
+
+  Theorem variance_of_two_unit_variance_average :
+    forall f g,
+      variance f = 1 -> variance g = 1 ->
+      variance (fun x => (f x + g x) / 2) =
+        (1 + covariance f g) / 2.
+  Proof.
+    intros f g Hf Hg.
+    rewrite variance_of_two_score_average.
+    rewrite Hf, Hg; field.
+  Qed.
+
+  Theorem variance_of_standardized_score :
+    forall f mu sd,
+      total_mass = 1 ->
+      sd <> 0 ->
+      sd * sd = variance f ->
+      variance (fun x => (f x - mu) / sd) = 1.
+  Proof.
+    intros f mu sd Hmass Hsd Hvar.
+    transitivity
+      (variance (fun x => (/sd) * (f x + (-mu)))).
+    - apply variance_extensional; intro x.
+      unfold Rdiv; ring.
+    - rewrite variance_of_scaled_score.
+      rewrite (variance_of_shifted_score f (-mu) Hmass).
+      rewrite <- Hvar.
+      field; lra.
+  Qed.
+
+  Theorem variance_of_iq_reporting_scale :
+    forall f mu sd scale,
+      total_mass = 1 ->
+      sd <> 0 ->
+      sd * sd = variance f ->
+      variance (fun x => 100 + scale * ((f x - mu) / sd)) =
+        scale * scale.
+  Proof.
+    intros f mu sd scale Hmass Hsd Hvar.
+    transitivity
+      (variance (fun x => scale * ((f x - mu) / sd) + 100)).
+    - apply variance_extensional; intro x; ring.
+    - rewrite (variance_of_shifted_score
+        (fun x => scale * ((f x - mu) / sd)) 100 Hmass).
+      rewrite variance_of_scaled_score.
+      rewrite (variance_of_standardized_score f mu sd Hmass Hsd Hvar).
+      ring.
+  Qed.
+
 End FiniteProbabilityMoments.
