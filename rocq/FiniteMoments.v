@@ -870,8 +870,7 @@ Section FiniteProbabilityMoments.
   Proof.
     induction fs as [|f fs IH]; intros Hunit; simpl.
     - reflexivity.
-    - rewrite S_INR.
-      assert (Hhead : variance f = 1).
+    - assert (Hhead : variance f = 1).
       { apply Hunit; simpl; auto. }
       assert (Htail : forall g, In g fs -> variance g = 1).
       { intros g Hg. apply Hunit; simpl; auto. }
