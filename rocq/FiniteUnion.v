@@ -155,12 +155,18 @@ Section FiniteOutcomeSpace.
           unfold finite_sum in *; simpl.
         * reflexivity.
         * rewrite IHxs; ring.
-    - unfold finite_prob.
+    - change
+        (finite_sum (fun x =>
+           weights x * (indicator (e x) + sum_event_indicators es x))
+           samples =
+         finite_prob weights samples e +
+           sum_marginal_probs weights samples es).
       rewrite <- IH.
+      unfold finite_prob.
       transitivity (finite_sum
         (fun x => weights x * indicator (e x) +
                   weights x * sum_event_indicators es x) samples).
-      + apply finite_sum_extensional; intro x; simpl; ring.
+      + apply finite_sum_extensional; intro x; ring.
       + rewrite finite_sum_addition; reflexivity.
   Qed.
 
