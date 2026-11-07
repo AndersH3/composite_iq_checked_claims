@@ -18,12 +18,10 @@ Section FiniteOutcomeSpace.
   Definition any_event (events : list Event) (x : Outcome) : bool :=
     existsb (fun e => e x) events.
 
-  Fixpoint sum_event_indicators (events : list Event)
+  (* Count event indicators using the standard list fold. *)
+  Definition sum_event_indicators (events : list Event)
     (x : Outcome) : R :=
-    match events with
-    | [] => 0
-    | e :: es => indicator (e x) + sum_event_indicators es x
-    end.
+    fold_right Rplus 0 (map (fun e => indicator (e x)) events).
 
   (* Finite integration uses standard List.fold_right/map, as in
      FiniteMoments; the sample list may contain repeated outcomes. *)
