@@ -1,0 +1,38 @@
+name: Rocq proofs
+
+on:
+  push:
+    paths:
+      - 'rocq/**'
+      - '.github/workflows/rocq-proofs.yml'
+  pull_request:
+    paths:
+      - 'rocq/**'
+      - '.github/workflows/rocq-proofs.yml'
+  workflow_dispatch:
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    container:
+      image: rocq/rocq-prover:9.2.0
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Print Rocq version
+        run: rocq --version
+
+      - name: Reject unfinished proof placeholders and new axioms
+        shell: bash
+        run: |
+          if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' rocq/*.v; then
+            echo 'Proof placeholders or extra axioms are forbidden.' >&2
+            exit 1
+          fi
+
+      - name: Kernel-check Hoeflin/Ferguson lemmas
+        run: rocq compile rocq/Hoeflin.v
+
+      - name: Kernel-check Towers admission lemmas
+        run: rocq compile rocq/Admissions.v
