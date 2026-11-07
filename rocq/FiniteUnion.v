@@ -415,6 +415,50 @@ Section FiniteOutcomeSpace.
     apply finite_prob_inclusion_exclusion.
   Qed.
 
+
+  (* Concatenating event families is covered by Stdlib.List.existsb_app;
+     concatenating marginal sums uses map_app and fold_right_app. *)
+
+  Lemma any_event_append :
+    forall left right x,
+      any_event (left ++ right) x =
+        orb (any_event left x) (any_event right x).
+  Proof.
+    intros left right x.
+    unfold any_event.
+    rewrite existsb_app.
+    reflexivity.
+  Qed.
+
+  Theorem union_prob_append :
+    forall weights samples left right,
+      union_prob weights samples (left ++ right) =
+        finite_prob weights samples
+          (fun x => orb (any_event left x) (any_event right x)).
+  Proof.
+    intros weights samples left right.
+    unfold union_prob, finite_prob.
+    apply finite_sum_extensional; intro x.
+    rewrite any_event_append.
+    reflexivity.
+  Qed.
+
+  Theorem sum_marginal_probs_append :
+    forall weights samples left right,
+      sum_marginal_probs weights samples (left ++ right) =
+        sum_marginal_probs weights samples left +
+        sum_marginal_probs weights samples right.
+  Proof.
+    intros weights samples left right.
+    unfold sum_marginal_probs.
+    rewrite map_app, fold_right_app.
+    generalize (map (finite_prob weights samples) left).
+    intros values.
+    induction values as [|p values IH]; simpl.
+    - ring.
+    - rewrite IH; ring.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
