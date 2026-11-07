@@ -829,8 +829,11 @@ Section FiniteProbabilityMoments.
     induction fs as [|f fs IH]; unfold sum_scores in *; simpl.
     - apply covariance_with_constant_first; exact Hmass.
     - rewrite covariance_add_first.
-      rewrite (covariance_with_sum_scores f gs Hmass).
-      rewrite IH.
+      change
+        (covariance f (sum_scores gs) +
+         covariance (sum_scores fs) (sum_scores gs) =
+         covariance_row_sum f gs + covariance_double_sum fs gs).
+      rewrite (covariance_with_sum_scores f gs Hmass), IH.
       ring.
   Qed.
 
