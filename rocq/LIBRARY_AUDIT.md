@@ -40,7 +40,7 @@ previous public theorem types:
   standardized score now reuses
   `centered_score_has_zero_expectation` instead of duplicating the finite
   expectation calculation. Four matrix shape lemmas use
-  `Stdlib.List.map_length` and `in_map_iff`.
+  `Stdlib.List.length_map` and `in_map_iff`.
 - **Admissions.v:** conditional event probabilities are bounded by
   0 and 1 using existing four-cell probability identities together
   with `Stdlib.Reals.Rmult_le_pos`,
