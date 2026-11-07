@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **209 theorem, lemma and example declarations** in four
+for the two reports. **222 theorem, lemma and example declarations** in four
 Rocq files have passed Rocq 9.2 compilation (including four internal
 quotient-sign helper lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
@@ -27,6 +27,31 @@ The workflow also rejects the syntactic use of `Admitted`, `Axiom`,
 There are no added logical axioms, admitted lemmas, opaque oracle results,
 external SMT certificates, or `native_compute` trust extensions.
 
+## Standard-library reuse
+
+For elementary calculations, the proof modules now reuse Rocq 9.2's
+**standard library** rather than maintaining duplicate recursion:
+
+- **`Stdlib.List`**: `map`, `fold_right`, and `combine` implement finite
+  sums (`sum_finite`), score sums (`sum_scores`), dot products
+  (`vector_dot`), and the fixed-basis coefficient/score pairing
+  (`weighted_basis_sum`). The final helper delegates to the already
+  proved general `linear_combination` instead of having another
+  recursive implementation.
+- **`Stdlib.Reals`**: `sqrt`, `sqrt_pos`, `sqrt_sqrt`,
+  `sqrt_lt_R0`, `sqrt_le_1`, `sqrt_lt_1`, and `sqrt_1`
+  supply the square-root definition, fundamental properties, and
+  order comparisons in the composite standard-deviation results.
+- **`Stdlib.Lra` / `Stdlib.Psatz`** and the standard `ring` /
+  `field` tactics handle ordinary real arithmetic.
+
+Report-specific covariance, variance, weighted-component, and event
+definitions remain explicit to make their probabilistic assumptions
+visible. This stage adds **no external dependency** just to reproduce
+functionality already in the standard library. More advanced continuous
+probability and matrix formalization should evaluate established Rocq
+mathematics libraries before introducing new foundational code.
+
 ## Claims and exact theorem correspondences
 
 | Report claim | Rocq statement(s) | Scope and qualification |
@@ -37,6 +62,9 @@ external SMT certificates, or `native_compute` trust extensions.
 | Equal-weight variance sensitivity to battery size and population correlation | `variance_decreases_with_test_count`, `variance_strictly_decreases_with_test_count`, `variance_correlation_sensitivity`, `variance_of_two_equicorrelated_tests`, `variance_of_three_equicorrelated_tests` | These are exact algebraic monotonicity formulas at fixed correlation; they are not a claim that adding real-world tests leaves correlation fixed |
 | Common-factor reliability and posterior-variance monotonicity | `latent_variance_denominator_positive`, `latent_variance_decreases_with_test_count`, `latent_reliability_increases_with_test_count` | Algebra conditional on the report's common-factor expressions, not their Gaussian derivation |
 | Quantitative variance stabilization and factor decomposition | `doubling_battery_halves_variance_excess`, `nonnegative_correlation_variance_at_least_independent`, `variance_excess_bound_by_inverse_battery_size`, `latent_reliability_times_composite_variance`, `latent_posterior_times_composite_variance` | Exact at fixed average correlation; the latent reliability identities assume the report's specified factor expressions |
+| Composite standard deviation: standard-library square root and boundaries | `composite_standard_deviation_nonnegative`, `composite_standard_deviation_squared`, `composite_standard_deviation_at_zero_correlation`, `composite_standard_deviation_at_perfect_correlation`, `composite_standard_deviation_positive` | Uses Rocq's `sqrt` and its library lemmas; requires a feasible positive-variance parameter range where stated |
+| Composite SD comparison under fixed average correlation | `composite_standard_deviation_nondecreasing_in_correlation`, `composite_standard_deviation_nonincreasing_in_test_count`, `composite_standard_deviation_strictly_decreases_with_test_count`, `composite_standard_deviation_strictly_increases_in_correlation` | Exact algebra followed by monotonicity of `sqrt`; the changes are conditional on keeping the parameter rho fixed as test count changes |
+| Composite SD bounds against unit and independent-test baselines | `composite_standard_deviation_at_most_one`, `composite_standard_deviation_at_least_sqrt_correlation`, `composite_standard_deviation_at_least_independent_baseline`, `composite_standard_deviation_strictly_below_one` | For n ≥ 1 and 0 ≤ rho ≤ 1 unless stronger hypotheses are stated; no quantile or tail-probability implication is certified |
 | IQ standardization and same-SD composite reporting | `iq_standardization_inversion`, `iq_report_standardization`, `equal_sd_composite_scale`, `standardized_160_sd15`, `standardized_160_sd16` | Exact algebra; standard deviations/divisors assumed nonzero |
 | Normalized variance and threshold rescaling | `normalized_variance_is_one`, `threshold_recovered_after_normalization` | Uses an **assumed** variance and its nonzero squared divisor; not a distribution theorem |
 | Latent-factor squared correlation and conditional-variance expressions | `latent_reliability_plus_posterior_variance`, `latent_reliability_nonnegative`, `latent_posterior_variance_nonnegative`, `latent_reliability_at_most_one`, and boundary cases | Algebra for the report's *given* expressions; **does not prove the Gaussian conditional-distribution derivation** |
@@ -96,13 +124,13 @@ with checked arithmetic proofs. No data are imported into the kernel.
 
 ## Research extensions
 
-The next valuable targets are: (1) rigorous finite-battery bounds for
-standard deviations and score thresholds at fixed average correlation,
-(2) covariance-matrix properties for indexed score bases and rank constraints,
+The next valuable targets are: (1) finite-battery reporting-score
+threshold transformations (without claiming tail probabilities),
+(2) covariance-matrix rank and equality properties for indexed score bases,
 (3) extending finite event and moment identities to abstract probability
-measures, (4) theorem-level construction and normalization of bivariate
-Gaussian densities and certified tail enclosures, and (5) Gaussian common-factor
-conditional-moment theorems. Numerical tables must remain labeled numerical until certified
+measures using an established library, (4) library-based bivariate Gaussian
+density normalization and certified tail enclosures, and (5) Gaussian
+common-factor conditional-moment theorems. Numerical tables must remain labeled numerical until certified
 interval arithmetic is available.
 
 This work is AI-generated and requires independent review of the
