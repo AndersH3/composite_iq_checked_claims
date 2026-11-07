@@ -1,6 +1,6 @@
 # Rocq proof-library audit and refactoring plan
 
-This audit covers the four Rocq modules in the Hoeflin/Ferguson and Towers formalization.
+This audit covers all **six Rocq modules** in the Hoeflin/Ferguson and Towers formalization, including the shared finite-sum and event-to-moment bridge modules.
 It distinguishes **library functionality that should be reused** from
 **report-specific definitions that must remain explicit**.
 
@@ -10,14 +10,51 @@ It distinguishes **library functionality that should be reused** from
 |---|---|---|
 | `Hoeflin.v` | `Stdlib.Reals`: `Rplus_le_compat_l`, `Rmult_le_compat_l`, `Rdiv_lt_0_compat`, `sqrt_pos`, `sqrt_sqrt`, `sqrt_le_1`, `sqrt_lt_1` | Use the ordered-field and square-root lemmas directly rather than duplicating their proofs. Reuse them for reporting-scale monotonicity. |
 | `Admissions.v` | `Stdlib.Reals.Rplus_le_le_0_compat`, `Stdlib.Lra`, `Stdlib.Psatz`, `Stdlib.Arith.PeanoNat` | Nonnegativity of sums uses library sign lemmas. Keep the four-cell model as explicit report evidence; it is not generic probability infrastructure. |
-| `FiniteUnion.v` | `Stdlib.List` / `Stdlib.Bool`: `existsb`, `existsb_exists`, `map_ext`, `map`, `fold_right` | Use library Boolean-list membership and extensionality instead of explicit list inductions. Finite integration and marginal aggregation are already list folds. |
-| `FiniteMoments.v` | `Stdlib.List`: `map_ext`, `map`, `fold_right`, `combine`, `map_map`; `Stdlib.Reals` | Use standard list operators for score sums, expectations, covariance rows and matrix-vector products. Extensionality reduces to `map_ext`. |
+| `FiniteUnion.v` | `Stdlib.List` / `Stdlib.Bool`: `existsb`, `existsb_exists`, `map_ext`, `map`, `fold_right` | Use library Boolean-list membership and extensionality instead of explicit list inductions. Finite integration and marginal aggregation now delegate to `FiniteSum.finite_sum`. |
+| `FiniteMoments.v` | `Stdlib.List`: `map_ext`, `map`, `fold_right`, `combine`, `map_map`; `Stdlib.Reals` | Score sums, weighted expectations, covariance rows and matrix-vector products reuse `FiniteSum.finite_sum`; the remaining matrix/basis definitions retain their report-specific meaning. |
 
 The previous library refactoring also replaced recursive `sum_finite`,
 `sum_scores`, `vector_dot`, `linear_combination`, and
 `weighted_basis_sum` implementations by standard folds and
 `List.combine`. Preserve the public names as thin wrappers so downstream
 proof statements and report mappings do not change.
+
+## Consolidated finite real sums and verified model bridge
+
+The shared `FiniteSum.v` module implements one definition using
+`Stdlib.List.map` and `fold_right`, and proves **eight reusable
+lemmas**: extensionality, addition, scalar multiplication, positivity,
+monotonicity, zero sums, append, and permutation invariance. In
+`FiniteMoments.v` and `FiniteUnion.v`, public `sum_finite` and
+`finite_sum` remain transparent aliases. Existing theorem signatures
+are preserved, while the previous duplicate inductions now delegate
+to this shared module.
+
+The same shared fold is used by **weighted score combinations, linear
+expectations, covariance rows and quadratic forms, score-battery sums,
+diagonal variances, vector dot products, Boolean indicator sums and
+marginal probability sums**. The only remaining custom list recursion
+in the finite-moment module, `unordered_covariance_sum`, depends on
+the current list suffix and therefore cannot be replaced by a plain
+sum over the original list without changing semantics.
+
+`FiniteBridge.v` adds **nine kernel-checked declarations** that join
+the two models through the shared finite sum. In particular,
+`finite_event_probability_is_indicator_expectation` proves that
+event mass equals expectation of the corresponding Boolean indicator;
+`finite_event_indicator_variance` proves the Bernoulli identity;
+`finite_event_indicator_covariance` proves the intersection-minus-product
+identity; and the next two theorems derive the zero-covariance
+independence and zero-variance extremal-mass characterizations.
+
+**Proof boundaries:** these are exact algebraic identities for finite
+real-weighted samples. A probabilistic interpretation requires
+nonnegative masses summing to one; neither the bridge nor the
+shared sum assumes normality, empirical reliability, or independence.
+
+The pinned GitHub Actions job compiles `FiniteSum.v` before dependent
+models and `FiniteBridge.v` after both models. No additional library
+version is introduced beyond Rocq 9.2's standard library.
 
 ## Verified continuation: direct library-based proof reuse
 
@@ -124,7 +161,7 @@ not something completed by these proof additions.
 
 ## Scope limitation
 
-This audit covers all four proof modules; it does **not** claim that each
+This audit covers all six proof modules; it does **not** claim that each
 proof has been rewritten, that general finite probability has been replaced
 by abstract measure theory, or that the report's empirical claims have been
 proved. The remaining migration is structural work requiring explicit
