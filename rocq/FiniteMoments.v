@@ -868,9 +868,11 @@ Section FiniteProbabilityMoments.
       (forall f, In f fs -> variance f = 1) ->
       diagonal_variance_sum fs = INR (length fs).
   Proof.
-    induction fs as [|f fs IH]; intros Hunit; simpl.
+    induction fs as [|f fs IH]; intros Hunit.
     - reflexivity.
-    - assert (Hhead : variance f = 1).
+    - cbn [diagonal_variance_sum length].
+      rewrite S_INR.
+      assert (Hhead : variance f = 1).
       { apply Hunit; simpl; auto. }
       assert (Htail : forall g, In g fs -> variance g = 1).
       { intros g Hg. apply Hunit; simpl; auto. }
