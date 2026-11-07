@@ -642,7 +642,7 @@ Theorem composite_standard_deviation_strictly_increases_in_correlation :
 Proof.
   intros n rho1 rho2 Hn Hr0 Horder Hr1.
   assert (Hn1 : 1 <= n) by lra.
-  assert (Hr1 : rho1 <= 1) by lra.
+  assert (Hrho1le : rho1 <= 1) by lra.
   assert (Hr2 : 0 <= rho2) by lra.
   assert (Hcoeff : 0 < (n - 1) / n).
   { apply positive_quotient; lra. }
@@ -653,7 +653,7 @@ Proof.
     nra. }
   unfold composite_standard_deviation.
   apply sqrt_lt_1.
-  - pose proof (variance_strictly_positive n rho1 Hn1 Hr0 Hr1).
+  - pose proof (variance_strictly_positive n rho1 Hn1 Hr0 Hrho1le).
     lra.
   - pose proof (variance_strictly_positive n rho2 Hn1 Hr2 Hr1).
     lra.
