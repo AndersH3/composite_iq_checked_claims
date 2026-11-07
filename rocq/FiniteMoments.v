@@ -802,7 +802,11 @@ Section FiniteProbabilityMoments.
            (covariance_row_sum g gs +
             covariance_double_sum fs gs)).
       rewrite IH.
-      cbn [covariance_row_sum].
+      change
+        ((covariance g f + covariance_row_sum g gs) +
+          (covariance_row_sum f fs + covariance_double_sum fs gs) =
+         (covariance f g + covariance_row_sum f fs) +
+          (covariance_row_sum g gs + covariance_double_sum fs gs)).
       rewrite (covariance_symmetric g f).
       ring.
   Qed.
