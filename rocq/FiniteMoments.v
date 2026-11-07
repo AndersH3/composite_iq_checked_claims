@@ -1003,4 +1003,77 @@ Section FiniteProbabilityMoments.
     apply variance_nonnegative; assumption.
   Qed.
 
+
+  (* Elementary variance and correlation bounds derived from positivity,
+     rather than assuming any covariance or Pearson coefficient bounds. *)
+
+  Theorem covariance_at_most_half_sum_of_variances :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      2 * covariance f g <= variance f + variance g.
+  Proof.
+    intros f g Hmass Hw.
+    pose proof
+      (variance_nonnegative (fun x => f x - g x) Hmass Hw) as Hvar.
+    assert (Hidentity :
+      variance (fun x => f x - g x) =
+        variance f + variance g - 2 * covariance f g).
+    { transitivity
+        (variance (fun x => 1 * f x + (-1) * g x)).
+      - apply variance_extensional; intro x; ring.
+      - rewrite variance_of_two_weighted_scores; ring. }
+    rewrite Hidentity in Hvar.
+    lra.
+  Qed.
+
+  Theorem covariance_at_least_negative_half_sum_of_variances :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      - (variance f + variance g) <= 2 * covariance f g.
+  Proof.
+    intros f g Hmass Hw.
+    pose proof
+      (variance_nonnegative (fun x => f x + g x) Hmass Hw) as Hvar.
+    rewrite variance_of_two_score_sum in Hvar.
+    lra.
+  Qed.
+
+  Theorem covariance_of_unit_variance_scores_bounded :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      variance f = 1 ->
+      variance g = 1 ->
+      -1 <= covariance f g /\ covariance f g <= 1.
+  Proof.
+    intros f g Hmass Hw Hf Hg.
+    pose proof
+      (covariance_at_most_half_sum_of_variances f g Hmass Hw)
+      as Hupper.
+    pose proof
+      (covariance_at_least_negative_half_sum_of_variances
+        f g Hmass Hw) as Hlower.
+    rewrite Hf, Hg in Hupper, Hlower.
+    lra.
+  Qed.
+
+  Theorem average_of_two_unit_variance_scores_bounded :
+    forall f g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      variance f = 1 ->
+      variance g = 1 ->
+      0 <= variance (fun x => (f x + g x) / 2) /\
+      variance (fun x => (f x + g x) / 2) <= 1.
+  Proof.
+    intros f g Hmass Hw Hf Hg.
+    pose proof
+      (covariance_of_unit_variance_scores_bounded
+        f g Hmass Hw Hf Hg) as [_ Hcov].
+    rewrite (variance_of_two_unit_variance_average f g Hf Hg).
+    split; lra.
+  Qed.
+
 End FiniteProbabilityMoments.
