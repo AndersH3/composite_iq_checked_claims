@@ -898,4 +898,109 @@ Section FiniteProbabilityMoments.
     field; nra.
   Qed.
 
+
+  (* Concrete matrix notation: a covariance matrix is represented as a
+     rectangular list of rows, its coefficient vector as a list of real
+     weights.  No matrix equalities are postulated: all entries are the
+     finite-space covariance defined above. *)
+
+  Fixpoint vector_dot (xs ys : list R) : R :=
+    match xs, ys with
+    | a :: as_, b :: bs_ => a * b + vector_dot as_ bs_
+    | _, _ => 0
+    end.
+
+  Definition covariance_cross_matrix
+    (left right : list (R * (Outcome -> R))) : list (list R) :=
+    map (fun c => map
+      (fun d => covariance (snd c) (snd d)) right) left.
+
+  Definition covariance_matrix
+    (components : list (R * (Outcome -> R))) : list (list R) :=
+    covariance_cross_matrix components components.
+
+  Definition matrix_bilinear_form
+    (left_coeffs right_coeffs : list R)
+    (matrix : list (list R)) : R :=
+    vector_dot left_coeffs (map (vector_dot right_coeffs) matrix).
+
+  Definition matrix_quadratic_form
+    (coeffs : list R) (matrix : list (list R)) : R :=
+    matrix_bilinear_form coeffs coeffs matrix.
+
+  Lemma covariance_row_as_vector_dot :
+    forall f components,
+      vector_dot (map fst components)
+        (map (fun c => covariance f (snd c)) components) =
+      covariance_row f components.
+  Proof.
+    intros f components.
+    induction components as [|[a g] rest IH]; simpl.
+    - reflexivity.
+    - rewrite IH; ring.
+  Qed.
+
+  Lemma covariance_double_sum_as_matrix_product :
+    forall left right,
+      matrix_bilinear_form (map fst left) (map fst right)
+        (covariance_cross_matrix left right) =
+      covariance_quadratic_form left right.
+  Proof.
+    intros left right.
+    unfold matrix_bilinear_form, covariance_cross_matrix.
+    induction left as [|[a f] rest IH]; simpl.
+    - reflexivity.
+    - rewrite covariance_row_as_vector_dot, IH; ring.
+  Qed.
+
+  Theorem covariance_matrix_quadratic_form_identity :
+    forall components,
+      matrix_quadratic_form (map fst components)
+        (covariance_matrix components) =
+      covariance_quadratic_form components components.
+  Proof.
+    intro components.
+    unfold matrix_quadratic_form, covariance_matrix.
+    apply covariance_double_sum_as_matrix_product.
+  Qed.
+
+  Theorem covariance_cross_matrix_bilinear_identity :
+    forall left right,
+      total_mass = 1 ->
+      matrix_bilinear_form (map fst left) (map fst right)
+        (covariance_cross_matrix left right) =
+      covariance (linear_combination left) (linear_combination right).
+  Proof.
+    intros left right Hmass.
+    rewrite covariance_double_sum_as_matrix_product.
+    symmetry.
+    apply covariance_of_general_weighted_sums; exact Hmass.
+  Qed.
+
+  Theorem covariance_matrix_quadratic_form_is_variance :
+    forall components,
+      total_mass = 1 ->
+      matrix_quadratic_form (map fst components)
+        (covariance_matrix components) =
+      variance (linear_combination components).
+  Proof.
+    intros components Hmass.
+    rewrite covariance_matrix_quadratic_form_identity.
+    symmetry.
+    apply variance_of_general_weighted_sum; exact Hmass.
+  Qed.
+
+  Theorem covariance_matrix_is_positive_semidefinite :
+    forall components,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= matrix_quadratic_form (map fst components)
+        (covariance_matrix components).
+  Proof.
+    intros components Hmass Hnonneg.
+    rewrite (covariance_matrix_quadratic_form_is_variance
+      components Hmass).
+    apply variance_nonnegative; assumption.
+  Qed.
+
 End FiniteProbabilityMoments.
