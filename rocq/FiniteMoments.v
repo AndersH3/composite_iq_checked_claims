@@ -799,7 +799,8 @@ Section FiniteProbabilityMoments.
         (covariance_row_sum g (f :: gs) +
          covariance_double_sum fs (f :: gs) =
          covariance_row_sum f (g :: fs) +
-         covariance_double_sum fs gs).
+           (covariance_row_sum g gs +
+            covariance_double_sum fs gs)).
       rewrite IH.
       cbn [covariance_row_sum].
       rewrite (covariance_symmetric g f).
