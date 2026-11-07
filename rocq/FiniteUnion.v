@@ -13,11 +13,10 @@ Section FiniteOutcomeSpace.
 
   Definition indicator (b : bool) : R := if b then 1 else 0.
 
-  Fixpoint any_event (events : list Event) (x : Outcome) : bool :=
-    match events with
-    | [] => false
-    | e :: es => orb (e x) (any_event es x)
-    end.
+  (* Stdlib.List.existsb is the finite Boolean OR over event membership;
+     no project-specific Boolean recursion is required. *)
+  Definition any_event (events : list Event) (x : Outcome) : bool :=
+    existsb (fun e => e x) events.
 
   Fixpoint sum_event_indicators (events : list Event)
     (x : Outcome) : R :=
