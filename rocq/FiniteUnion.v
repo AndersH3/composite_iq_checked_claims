@@ -86,13 +86,10 @@ Section FiniteOutcomeSpace.
     forall events e x, In e events ->
       e x = true -> any_event events x = true.
   Proof.
-    induction events as [|f fs IH]; intros e x Hin Htrue.
-    - inversion Hin.
-    - simpl in Hin.
-      destruct Hin as [Heq | Hin].
-      + subst f. simpl. rewrite Htrue. reflexivity.
-      + simpl. specialize (IH e x Hin Htrue).
-        rewrite IH. destruct (f x); reflexivity.
+    intros events e x Hin Htrue.
+    unfold any_event.
+    apply existsb_exists.
+    exists e; split; assumption.
   Qed.
 
   Lemma indicator_implication_bound :
@@ -123,10 +120,10 @@ Section FiniteOutcomeSpace.
     forall xs f g, (forall x, f x = g x) ->
       finite_sum f xs = finite_sum g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g Heq;
-      unfold finite_sum in *; simpl.
-    - reflexivity.
-    - rewrite (Heq x), (IH f g Heq); reflexivity.
+    intros xs f g Heq.
+    unfold finite_sum.
+    f_equal.
+    apply map_ext; exact Heq.
   Qed.
 
   Lemma finite_sum_addition :
