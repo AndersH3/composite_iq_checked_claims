@@ -253,13 +253,10 @@ Theorem conditional_failure_nonnegative :
   forall m, 0 < p_B m ->
     0 <= conditional_not_A_given_B m.
 Proof.
-  intros m Hb; unfold conditional_not_A_given_B.
-  unfold Rdiv.
+  intros m Hb; unfold conditional_not_A_given_B, Rdiv.
   apply Rmult_le_pos.
-  - assumption.
-  - apply Rlt_le, Rinv_0_lt_compat; assumption.
   - apply only_B_nonnegative.
-  - lra.
+  - apply Rlt_le, Rinv_0_lt_compat; exact Hb.
 Qed.
 
 Theorem binary_indicator_covariance_numerator :
