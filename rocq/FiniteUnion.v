@@ -110,7 +110,9 @@ Section FiniteOutcomeSpace.
       unfold finite_sum in *; simpl.
     - lra.
     - assert (Hx : f x <= g x) by (apply Hle; simpl; auto).
-      assert (Hxs : finite_sum f xs <= finite_sum g xs).
+      assert (Hxs :
+        fold_right Rplus 0 (map f xs) <=
+        fold_right Rplus 0 (map g xs)).
       { apply IH. intros y Hy. apply Hle. simpl; auto. }
       lra.
   Qed.
