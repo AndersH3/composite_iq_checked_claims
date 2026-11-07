@@ -240,10 +240,10 @@ Section FiniteOutcomeSpace.
     forall weights samples, union_prob weights samples [] = 0.
   Proof.
     intros weights samples.
-    unfold union_prob, finite_prob.
-    induction samples as [|x xs IH]; simpl.
+    induction samples as [|x xs IH].
     - reflexivity.
-    - rewrite IH; ring.
+    - change (weights x * 0 + union_prob weights xs [] = 0).
+      rewrite IH; ring.
   Qed.
 
   Theorem singleton_family_probability :
