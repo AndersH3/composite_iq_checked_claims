@@ -32,14 +32,12 @@ Section FiniteOutcomeSpace.
     (samples : list Outcome) (event : Event) : R :=
       finite_sum (fun x => weights x * indicator (event x)) samples.
 
-  Fixpoint sum_marginal_probs
+  (* The same list fold computes the marginal union-bound total. *)
+  Definition sum_marginal_probs
     (weights : Outcome -> R) (samples : list Outcome)
     (events : list Event) : R :=
-    match events with
-    | [] => 0
-    | e :: es => finite_prob weights samples e +
-                 sum_marginal_probs weights samples es
-    end.
+    fold_right Rplus 0
+      (map (finite_prob weights samples) events).
 
   Definition union_prob (weights : Outcome -> R)
     (samples : list Outcome) (events : list Event) : R :=
