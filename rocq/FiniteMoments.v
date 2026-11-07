@@ -1462,4 +1462,89 @@ Section FiniteProbabilityMoments.
     apply variance_nonnegative; assumption.
   Qed.
 
+
+  (* Correlation bounds for scores whose positive standard deviations are
+     provided with the proof that each squares to its finite variance. *)
+
+  Theorem normalized_covariance_is_between_minus_one_and_one :
+    forall f g sd_f sd_g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 < sd_f -> 0 < sd_g ->
+      variance f = sd_f * sd_f ->
+      variance g = sd_g * sd_g ->
+      -1 <= covariance f g / (sd_f * sd_g) /\
+            covariance f g / (sd_f * sd_g) <= 1.
+  Proof.
+    intros f g sd_f sd_g Hmass Hw Hsf Hsg Hvarf Hvarg.
+    pose proof (finite_covariance_cauchy_schwarz_squared
+      f g Hmass Hw) as Hcs.
+    rewrite Hvarf, Hvarg in Hcs.
+    replace ((sd_f * sd_f) * (sd_g * sd_g))
+      with ((sd_f * sd_g) * (sd_f * sd_g)) in Hcs by ring.
+    assert (Hden : 0 < sd_f * sd_g) by nra.
+    assert (Hbound :
+      - (sd_f * sd_g) <= covariance f g /\
+      covariance f g <= sd_f * sd_g) by nra.
+    assert (Hinv : 0 < / (sd_f * sd_g)).
+    { apply Rinv_0_lt_compat; exact Hden. }
+    assert (Hid : (sd_f * sd_g) * / (sd_f * sd_g) = 1).
+    { field; lra. }
+    unfold Rdiv.
+    destruct Hbound as [Hlow Hhigh].
+    split; nra.
+  Qed.
+
+  Theorem centered_standardized_covariance_in_unit_interval :
+    forall f g sd_f sd_g,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 < sd_f -> 0 < sd_g ->
+      variance f = sd_f * sd_f ->
+      variance g = sd_g * sd_g ->
+      -1 <= covariance
+        (fun x => (f x - expect f) / sd_f)
+        (fun x => (g x - expect g) / sd_g) /\
+      covariance
+        (fun x => (f x - expect f) / sd_f)
+        (fun x => (g x - expect g) / sd_g) <= 1.
+  Proof.
+    intros f g sd_f sd_g Hmass Hw Hsf Hsg Hvarf Hvarg.
+    assert (Hnzf : sd_f <> 0) by lra.
+    assert (Hnzg : sd_g <> 0) by lra.
+    rewrite (covariance_of_centered_standardized_scores
+      f g sd_f sd_g Hmass Hnzf Hnzg).
+    apply normalized_covariance_is_between_minus_one_and_one;
+      assumption.
+  Qed.
+
+  Theorem unit_covariance_one_iff_difference_has_zero_variance :
+    forall f g,
+      variance f = 1 -> variance g = 1 ->
+      covariance f g = 1 <->
+      variance (fun x => f x - g x) = 0.
+  Proof.
+    intros f g Hf Hg.
+    assert (Hidentity :
+      variance (fun x => f x - g x) =
+      2 - 2 * covariance f g).
+    { transitivity
+        (variance (fun x => 1 * f x + (-1) * g x)).
+      - apply variance_extensional; intro x; ring.
+      - rewrite variance_of_two_weighted_scores, Hf, Hg; ring. }
+    rewrite Hidentity.
+    split; intro H; lra.
+  Qed.
+
+  Theorem unit_covariance_minus_one_iff_sum_has_zero_variance :
+    forall f g,
+      variance f = 1 -> variance g = 1 ->
+      covariance f g = -1 <->
+      variance (fun x => f x + g x) = 0.
+  Proof.
+    intros f g Hf Hg.
+    rewrite variance_of_two_score_sum, Hf, Hg.
+    split; intro H; lra.
+  Qed.
+
 End FiniteProbabilityMoments.
