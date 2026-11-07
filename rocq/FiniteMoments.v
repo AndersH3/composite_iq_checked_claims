@@ -509,12 +509,12 @@ Section FiniteProbabilityMoments.
      quadratic_form xs ys is the explicitly expanded sum of all
      a_i b_j Cov(X_i,Y_j); no matrix or covariance axioms are postulated. *)
 
-  Fixpoint linear_combination
+  (* Weighted scores are a standard finite fold over (coefficient,score)
+     pairs; no separate recursive evaluator is needed. *)
+  Definition linear_combination
     (components : list (R * (Outcome -> R))) (x : Outcome) : R :=
-    match components with
-    | [] => 0
-    | (a, f) :: tail => a * f x + linear_combination tail x
-    end.
+    fold_right Rplus 0
+      (map (fun c => fst c * snd c x) components).
 
   (* Apply the built-in list fold to weighted component expectations. *)
   Definition linear_expectation
