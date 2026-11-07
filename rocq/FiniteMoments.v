@@ -564,7 +564,7 @@ Section FiniteProbabilityMoments.
   Proof.
     intros f components Hmass.
     induction components as [|[b g] tail IH].
-    - cbn [linear_combination covariance_row].
+    - change (covariance f (fun _ => 0) = 0).
       apply covariance_with_constant_second; exact Hmass.
     - change
         (covariance f
@@ -587,7 +587,8 @@ Section FiniteProbabilityMoments.
   Proof.
     intros left right Hmass.
     induction left as [|[a f] tail IH].
-    - cbn [linear_combination covariance_quadratic_form].
+    - change
+        (covariance (fun _ => 0) (linear_combination right) = 0).
       apply covariance_with_constant_first; exact Hmass.
     - change
         (covariance
