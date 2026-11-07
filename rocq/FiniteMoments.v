@@ -750,11 +750,9 @@ Section FiniteProbabilityMoments.
      each distinct unordered test pair exactly once, regardless of whether
      pairwise correlations are equal. *)
 
-  Fixpoint sum_scores (fs : list (Outcome -> R)) (x : Outcome) : R :=
-    match fs with
-    | [] => 0
-    | f :: tl => f x + sum_scores tl x
-    end.
+  (* Standard-library list fold for a sum of score functions. *)
+  Definition sum_scores (fs : list (Outcome -> R)) (x : Outcome) : R :=
+    fold_right Rplus 0 (map (fun f => f x) fs).
 
   Fixpoint covariance_row_sum
       (f : Outcome -> R) (fs : list (Outcome -> R)) : R :=
@@ -815,7 +813,7 @@ Section FiniteProbabilityMoments.
       covariance f (sum_scores fs) = covariance_row_sum f fs.
   Proof.
     intros f fs Hmass.
-    induction fs as [|g fs IH]; simpl.
+    induction fs as [|g fs IH]; unfold sum_scores in *; simpl.
     - apply covariance_with_constant_second; exact Hmass.
     - rewrite covariance_add_second.
       rewrite IH.
@@ -828,7 +826,7 @@ Section FiniteProbabilityMoments.
         covariance_double_sum fs gs.
   Proof.
     intros fs gs Hmass.
-    induction fs as [|f fs IH]; simpl.
+    induction fs as [|f fs IH]; unfold sum_scores in *; simpl.
     - apply covariance_with_constant_first; exact Hmass.
     - rewrite covariance_add_first.
       rewrite (covariance_with_sum_scores f gs Hmass).
@@ -1334,14 +1332,12 @@ Section FiniteProbabilityMoments.
      coefficients.  The equal-length premise prevents silent truncation by
      the standard List.combine operation. *)
 
-  Fixpoint weighted_basis_sum
+  (* Reuse List.combine and the general weighted combination; the
+     equal-length premise in subsequent theorems avoids truncation. *)
+  Definition weighted_basis_sum
     (coefficients : list R) (basis : list (Outcome -> R))
     (x : Outcome) : R :=
-    match coefficients, basis with
-    | a :: more_coefficients, f :: more_scores =>
-        a * f x + weighted_basis_sum more_coefficients more_scores x
-    | _, _ => 0
-    end.
+    linear_combination (combine coefficients basis) x.
 
   Definition basis_covariance_matrix
     (basis : list (Outcome -> R)) : list (list R) :=
@@ -1355,12 +1351,7 @@ Section FiniteProbabilityMoments.
     forall coefficients basis x,
       weighted_basis_sum coefficients basis x =
       linear_combination (combine coefficients basis) x.
-  Proof.
-    induction coefficients as [|a coefficients IH];
-      intros basis x; destruct basis as [|f rest];
-      simpl; try reflexivity.
-    rewrite IH; reflexivity.
-  Qed.
+  Proof. reflexivity. Qed.
 
   Lemma coefficients_of_combine :
     forall (coefficients : list R) (basis : list (Outcome -> R)),
