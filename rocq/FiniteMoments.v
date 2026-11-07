@@ -806,10 +806,17 @@ Section FiniteProbabilityMoments.
       covariance_double_sum fs fs =
       diagonal_variance_sum fs + 2 * unordered_covariance_sum fs.
   Proof.
-    induction fs as [|f fs IH]; simpl.
-    - ring.
-    - rewrite (covariance_double_sum_second_cons fs f fs).
+    induction fs as [|f fs IH].
+    - change (0 = 0); reflexivity.
+    - change
+        (covariance_row_sum f (f :: fs) +
+         covariance_double_sum fs (f :: fs) =
+         variance f + diagonal_variance_sum fs +
+           2 * (covariance_row_sum f fs +
+                unordered_covariance_sum fs)).
+      rewrite (covariance_double_sum_second_cons fs f fs).
       rewrite IH.
+      cbn [covariance_row_sum].
       unfold variance; ring.
   Qed.
 
