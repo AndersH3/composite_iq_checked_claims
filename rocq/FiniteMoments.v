@@ -1319,4 +1319,147 @@ Section FiniteProbabilityMoments.
       + lra.
   Qed.
 
+
+  (* A fixed basis of scores, with the covariance matrix independent of the
+     coefficients.  The equal-length premise prevents silent truncation by
+     the standard List.combine operation. *)
+
+  Fixpoint weighted_basis_sum
+    (coefficients : list R) (basis : list (Outcome -> R))
+    (x : Outcome) : R :=
+    match coefficients, basis with
+    | a :: more_coefficients, f :: more_scores =>
+        a * f x + weighted_basis_sum more_coefficients more_scores x
+    | _, _ => 0
+    end.
+
+  Definition basis_covariance_matrix
+    (basis : list (Outcome -> R)) : list (list R) :=
+    map (fun f => map (fun g => covariance f g) basis) basis.
+
+  Definition basis_cross_covariance_matrix
+    (left right : list (Outcome -> R)) : list (list R) :=
+    map (fun f => map (fun g => covariance f g) right) left.
+
+  Lemma weighted_basis_sum_as_combination :
+    forall coefficients basis x,
+      weighted_basis_sum coefficients basis x =
+      linear_combination (combine coefficients basis) x.
+  Proof.
+    induction coefficients as [|a coefficients IH];
+      intros basis x; destruct basis as [|f rest];
+      simpl; try reflexivity.
+    rewrite IH; reflexivity.
+  Qed.
+
+  Lemma coefficients_of_combine :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      map fst (combine coefficients basis) = coefficients.
+  Proof.
+    induction coefficients as [|a coefficients IH];
+      intros basis Hlength.
+    - destruct basis; simpl in *; [reflexivity | discriminate].
+    - destruct basis as [|f rest]; simpl in Hlength;
+        [discriminate |].
+      simpl; f_equal.
+      apply IH.
+      injection Hlength as Htail; exact Htail.
+  Qed.
+
+  Lemma basis_of_combine :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      map snd (combine coefficients basis) = basis.
+  Proof.
+    induction coefficients as [|a coefficients IH];
+      intros basis Hlength.
+    - destruct basis; simpl in *; [reflexivity | discriminate].
+    - destruct basis as [|f rest]; simpl in Hlength;
+        [discriminate |].
+      simpl; f_equal.
+      apply IH.
+      injection Hlength as Htail; exact Htail.
+  Qed.
+
+  Lemma covariance_matrix_uses_only_basis :
+    forall components,
+      covariance_matrix components =
+        basis_covariance_matrix (map snd components).
+  Proof.
+    intros components.
+    unfold covariance_matrix, covariance_cross_matrix,
+      basis_covariance_matrix.
+    rewrite map_map.
+    apply map_ext; intro component.
+    rewrite map_map.
+    reflexivity.
+  Qed.
+
+  Lemma covariance_cross_matrix_uses_only_bases :
+    forall left right,
+      covariance_cross_matrix left right =
+        basis_cross_covariance_matrix
+          (map snd left) (map snd right).
+  Proof.
+    intros left right.
+    unfold covariance_cross_matrix, basis_cross_covariance_matrix.
+    rewrite map_map.
+    apply map_ext; intro component.
+    rewrite map_map.
+    reflexivity.
+  Qed.
+
+  Theorem fixed_basis_covariance_matrix_representation :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      covariance_matrix (combine coefficients basis) =
+        basis_covariance_matrix basis.
+  Proof.
+    intros coefficients basis Hlength.
+    rewrite covariance_matrix_uses_only_basis.
+    rewrite (basis_of_combine coefficients basis Hlength).
+    reflexivity.
+  Qed.
+
+  Theorem fixed_basis_weighted_variance_identity :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      variance (weighted_basis_sum coefficients basis) =
+        matrix_quadratic_form coefficients
+          (basis_covariance_matrix basis).
+  Proof.
+    intros coefficients basis Hlength Hmass.
+    transitivity
+      (variance (linear_combination
+        (combine coefficients basis))).
+    - apply variance_extensional; intro x.
+      apply weighted_basis_sum_as_combination.
+    - symmetry.
+      pose proof
+        (covariance_matrix_quadratic_form_is_variance
+          (combine coefficients basis) Hmass) as Hidentity.
+      rewrite (coefficients_of_combine
+        coefficients basis Hlength) in Hidentity.
+      rewrite (fixed_basis_covariance_matrix_representation
+        coefficients basis Hlength) in Hidentity.
+      exact Hidentity.
+  Qed.
+
+  Theorem fixed_basis_covariance_matrix_positive_semidefinite :
+    forall basis coefficients,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis).
+  Proof.
+    intros basis coefficients Hlength Hmass Hw.
+    rewrite <-
+      (fixed_basis_weighted_variance_identity
+        coefficients basis Hlength Hmass).
+    apply variance_nonnegative; assumption.
+  Qed.
+
 End FiniteProbabilityMoments.
