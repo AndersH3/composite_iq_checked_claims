@@ -1076,4 +1076,45 @@ Section FiniteProbabilityMoments.
     split; lra.
   Qed.
 
+
+  (* For a feasible finite battery, the average correlation cannot be
+     arbitrarily negative: the covariance matrix is positive semidefinite.
+     This gives rho >= -1/(n-1), without assuming equicorrelation. *)
+
+  Theorem feasible_average_pair_correlation_lower_bound :
+    forall fs n rho,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      n = INR (length fs) ->
+      1 < n ->
+      (forall f, In f fs -> variance f = 1) ->
+      2 * unordered_covariance_sum fs = n * (n - 1) * rho ->
+      -1 / (n - 1) <= rho.
+  Proof.
+    intros fs n rho Hmass Hw Hlength Hn Hunit Hpair.
+    pose proof (variance_nonnegative
+      (fun x => sum_scores fs x / n) Hmass Hw) as Hvariance.
+    rewrite (equal_weight_variance_from_finite_covariances
+      fs n rho Hmass Hlength Hn Hunit Hpair) in Hvariance.
+    assert (Hidentity :
+      rho + (1 - rho) / n = (1 + (n - 1) * rho) / n).
+    { field; lra. }
+    rewrite Hidentity in Hvariance.
+    assert (Hnumerator : 0 <= 1 + (n - 1) * rho).
+    { unfold Rdiv in Hvariance.
+      assert (Hinv : 0 < / n).
+      { apply Rinv_0_lt_compat; lra. }
+      nra. }
+    assert (Hdiff :
+      rho - (-1 / (n - 1)) = (1 + (n - 1) * rho) / (n - 1)).
+    { field; lra. }
+    assert (Hnonneg : 0 <= rho - (-1 / (n - 1))).
+    { rewrite Hdiff.
+      unfold Rdiv.
+      assert (Hinv : 0 < / (n - 1)).
+      { apply Rinv_0_lt_compat; lra. }
+      nra. }
+    lra.
+  Qed.
+
 End FiniteProbabilityMoments.
