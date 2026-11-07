@@ -552,6 +552,7 @@ Theorem independent_conditional_B_equals_marginal :
     conditional_B_given_A m = p_B m.
 Proof.
   intros m Hpositive Hind.
+  unfold p_both in Hind.
   unfold conditional_B_given_A.
   rewrite Hind.
   field; lra.
@@ -564,6 +565,7 @@ Theorem independent_conditional_A_equals_marginal :
     conditional_A_given_B m = p_A m.
 Proof.
   intros m Hpositive Hind.
+  unfold p_both in Hind.
   unfold conditional_A_given_B.
   rewrite Hind.
   field; lra.
