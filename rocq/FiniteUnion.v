@@ -100,8 +100,7 @@ Section FiniteOutcomeSpace.
       (b = true -> c = true) ->
       indicator b <= indicator c.
   Proof.
-    intros [] [] H; unfold indicator; try lra.
-    exfalso. discriminate (H eq_refl).
+    intros [] [] H; unfold indicator; lra.
   Qed.
 
   Lemma finite_sum_monotone :
