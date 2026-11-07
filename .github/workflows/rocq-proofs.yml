@@ -14,15 +14,9 @@ on:
 jobs:
   kernel-check:
     runs-on: ubuntu-latest
-    container:
-      image: rocq/rocq-prover:9.2.0
-      options: --user root
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
-      - name: Print Rocq version
-        run: rocq --version
 
       - name: Reject unfinished proof placeholders and new axioms
         shell: bash
@@ -32,8 +26,10 @@ jobs:
             exit 1
           fi
 
-      - name: Kernel-check Hoeflin/Ferguson lemmas
-        run: rocq compile rocq/Hoeflin.v
-
-      - name: Kernel-check Towers admission lemmas
-        run: rocq compile rocq/Admissions.v
+      - name: Kernel-check all proofs with Rocq 9.2
+        shell: bash
+        run: |
+          docker run --rm \
+            -v "$PWD/rocq:/src:ro" \
+            rocq/rocq-prover:9.2.0 \
+            sh -ec 'mkdir -p /tmp/checked && cp /src/*.v /tmp/checked/ && cd /tmp/checked && rocq --version && rocq compile Hoeflin.v && rocq compile Admissions.v'
