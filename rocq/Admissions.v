@@ -5,31 +5,7 @@
 From Stdlib Require Import Reals Lra Psatz.
 Open Scope R_scope.
 
-(* Avoid reliance on version-specific division-inequality lemma names. *)
-Local Lemma nonnegative_quotient :
-  forall numerator denominator,
-    0 <= numerator -> 0 < denominator ->
-    0 <= numerator / denominator.
-Proof.
-  intros a b Ha Hb.
-  unfold Rdiv.
-  assert (Hinv : 0 < / b).
-  { apply Rinv_0_lt_compat; exact Hb. }
-  nra.
-Qed.
-
-Local Lemma positive_quotient :
-  forall numerator denominator,
-    0 < numerator -> 0 < denominator ->
-    0 < numerator / denominator.
-Proof.
-  intros a b Ha Hb.
-  unfold Rdiv.
-  assert (Hinv : 0 < / b).
-  { apply Rinv_0_lt_compat; exact Hb. }
-  nra.
-Qed.
-
+(* Reuse Stdlib.Reals quotient, inverse, and product sign lemmas. *)
 
 Record TwoEventModel : Type := {
   joint : R;
@@ -278,7 +254,10 @@ Theorem conditional_failure_nonnegative :
     0 <= conditional_not_A_given_B m.
 Proof.
   intros m Hb; unfold conditional_not_A_given_B.
-  apply nonnegative_quotient.
+  unfold Rdiv.
+  apply Rmult_le_pos.
+  - assumption.
+  - apply Rlt_le, Rinv_0_lt_compat; assumption.
   - apply only_B_nonnegative.
   - lra.
 Qed.
