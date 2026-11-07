@@ -883,7 +883,8 @@ Section FiniteProbabilityMoments.
   Proof.
     induction fs as [|f fs IH]; intros Hunit.
     - reflexivity.
-    - cbn [diagonal_variance_sum length].
+    - change (variance f + diagonal_variance_sum fs =
+                INR (S (length fs))).
       rewrite S_INR.
       assert (Hhead : variance f = 1).
       { apply Hunit; simpl; auto. }
