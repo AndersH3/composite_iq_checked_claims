@@ -703,3 +703,40 @@ Proof.
   - apply conditional_failure_nonnegative; exact Hpositive.
   - lra.
 Qed.
+
+
+(* Observing that a conditional rate equals its corresponding marginal is
+   equivalent to the algebraic independence criterion, when the
+   conditioning marginal is positive.  These converses reuse the proven
+   conditional numerators rather than manipulate divisions again. *)
+
+Theorem independence_iff_conditional_B_equals_marginal :
+  forall m,
+    0 < p_A m ->
+    (p_both m = p_A m * p_B m <->
+      conditional_B_given_A m = p_B m).
+Proof.
+  intros m Hpositive.
+  split.
+  - apply independent_conditional_B_equals_marginal; exact Hpositive.
+  - intro Hconditional.
+    pose proof (conditional_B_numerator m Hpositive) as Hnumerator.
+    rewrite Hconditional in Hnumerator.
+    symmetry; exact Hnumerator.
+Qed.
+
+Theorem independence_iff_conditional_A_equals_marginal :
+  forall m,
+    0 < p_B m ->
+    (p_both m = p_A m * p_B m <->
+      conditional_A_given_B m = p_A m).
+Proof.
+  intros m Hpositive.
+  split.
+  - apply independent_conditional_A_equals_marginal; exact Hpositive.
+  - intro Hconditional.
+    pose proof (conditional_A_numerator m Hpositive) as Hnumerator.
+    rewrite Hconditional in Hnumerator.
+    rewrite Rmult_comm in Hnumerator.
+    symmetry; exact Hnumerator.
+Qed.
