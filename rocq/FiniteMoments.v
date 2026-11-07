@@ -34,7 +34,7 @@ Section FiniteProbabilityMoments.
       (forall x, f x = g x) ->
       sum_finite f xs = sum_finite g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g Hfg; simpl.
+    induction xs as [|x xs IH]; intros f g Hfg; unfold sum_finite in *; simpl.
     - reflexivity.
     - rewrite (Hfg x), (IH f g Hfg); reflexivity.
   Qed.
@@ -44,7 +44,7 @@ Section FiniteProbabilityMoments.
       sum_finite (fun x => f x + g x) xs =
         sum_finite f xs + sum_finite g xs.
   Proof.
-    induction xs as [|x xs IH]; intros f g; simpl.
+    induction xs as [|x xs IH]; intros f g; unfold sum_finite in *; simpl.
     - ring.
     - rewrite IH; ring.
   Qed.
@@ -54,7 +54,7 @@ Section FiniteProbabilityMoments.
       sum_finite (fun x => a * f x) xs =
         a * sum_finite f xs.
   Proof.
-    induction xs as [|x xs IH]; intros a f; simpl.
+    induction xs as [|x xs IH]; intros a f; unfold sum_finite in *; simpl.
     - ring.
     - rewrite IH; ring.
   Qed.
@@ -64,7 +64,7 @@ Section FiniteProbabilityMoments.
       (forall x, In x xs -> 0 <= f x) ->
       0 <= sum_finite f xs.
   Proof.
-    induction xs as [|x xs IH]; intros f Hf; simpl.
+    induction xs as [|x xs IH]; intros f Hf; unfold sum_finite in *; simpl.
     - lra.
     - assert (Hx : 0 <= f x) by (apply Hf; simpl; auto).
       assert (Htail : forall y, In y xs -> 0 <= f y).
@@ -109,7 +109,7 @@ Section FiniteProbabilityMoments.
   Theorem expectation_zero :
     expect (fun _ => 0) = 0.
   Proof.
-    unfold expect.
+    unfold expect, sum_finite.
     induction samples as [|x xs IH]; simpl.
     - reflexivity.
     - rewrite IH; ring.
@@ -934,7 +934,7 @@ Section FiniteProbabilityMoments.
       covariance_row f components.
   Proof.
     intros f components.
-    induction components as [|[a g] rest IH]; simpl.
+    induction components as [|[a g] rest IH]; unfold vector_dot in *; simpl.
     - reflexivity.
     - rewrite IH; ring.
   Qed.
