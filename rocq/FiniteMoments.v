@@ -947,9 +947,20 @@ Section FiniteProbabilityMoments.
   Proof.
     intros left right.
     unfold matrix_bilinear_form, covariance_cross_matrix.
-    induction left as [|[a f] rest IH]; simpl; fold vector_dot.
+    induction left as [|[a f] rest IH]; simpl.
     - reflexivity.
-    - rewrite covariance_row_as_vector_dot, IH; ring.
+    - change
+        (a * vector_dot (map fst right)
+             (map (fun d => covariance f (snd d)) right) +
+         vector_dot (map fst rest)
+           (map (vector_dot (map fst right))
+             (map (fun c =>
+               map (fun d => covariance (snd c) (snd d)) right)
+               rest)) =
+         a * covariance_row f right +
+           covariance_quadratic_form rest right).
+      rewrite (covariance_row_as_vector_dot f right), IH.
+      ring.
   Qed.
 
   Theorem covariance_matrix_quadratic_form_identity :
