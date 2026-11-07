@@ -19,6 +19,39 @@ The previous library refactoring also replaced recursive `sum_finite`,
 `List.combine`. Preserve the public names as thin wrappers so downstream
 proof statements and report mappings do not change.
 
+## Verified continuation: direct library-based proof reuse
+
+The following additional results compile with Rocq 9.2 and preserve the
+previous public theorem types:
+
+- **FiniteUnion.v:** event-family union probability is insensitive to
+  reordering or duplicate routes. These results use
+  `Stdlib.List.existsb_exists`,
+  `Stdlib.Sorting.Permutation.Permutation_in` and
+  `Permutation_sym`, rather than a custom permutation induction.
+- **Hoeflin.v:** two fixed-correlation epsilon bounds follow from the
+  existing exact variance-gap identity and Stdlib real inverse/product
+  inequality lemmas. Neither result imports a separate asymptotic analysis
+  library to prove a purely algebraic threshold implication.
+- **FiniteMoments.v:** affine variance and covariance results reuse
+  `variance_of_shifted_score`, `variance_of_scaled_score`,
+  `covariance_invariant_under_first_shift`, and
+  `covariance_invariant_under_second_shift`. The mean of a centered
+  standardized score now reuses
+  `centered_score_has_zero_expectation` instead of duplicating the finite
+  expectation calculation. Four matrix shape lemmas use
+  `Stdlib.List.map_length` and `in_map_iff`.
+- **Admissions.v:** conditional event probabilities are bounded by
+  0 and 1 using existing four-cell probability identities together
+  with `Stdlib.Reals.Rmult_le_pos`,
+  `Rmult_le_compat_r`, and `Rinv_0_lt_compat`.
+  Every conditioning denominator is required to be positive.
+
+**Important:** A standard-library proof refactor is not the same as a
+migration of all report-specific definitions to abstract measure theory.
+The latter requires a chosen library version, import interoperability,
+explicit equivalence theorems, and separate build/test validation.
+
 ## Deliberately retained project-specific definitions
 
 - **Four-cell admissions model:** `TwoEventModel` defines the actual
