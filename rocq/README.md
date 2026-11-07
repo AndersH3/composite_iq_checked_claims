@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **226 theorem, lemma and example declarations** in four
+for the two reports. **244 theorem, lemma and example declarations** in four
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -41,6 +41,11 @@ For elementary calculations, the proof modules now reuse Rocq 9.2's
   `sqrt_lt_R0`, `sqrt_le_1`, `sqrt_lt_1`, and `sqrt_1`
   supply the square-root definition, fundamental properties, and
   order comparisons in the composite standard-deviation results.
+- **`Stdlib.Sorting.Permutation`**: `Permutation_in` and
+  `Permutation_sym` establish finite union probability invariance under
+  reordering; `Stdlib.List.existsb_exists` handles event-family membership.
+- **`Stdlib.List`**: `map_length` and `in_map_iff` establish covariance-matrix
+  dimensions without project-specific list-indexing recursion.
 - **`Stdlib.Lra` / `Stdlib.Psatz`** and the standard `ring` /
   `field` tactics handle ordinary real arithmetic.
 
@@ -65,6 +70,7 @@ mathematics libraries before introducing new foundational code.
 | Positive variance, variance between \(\rho\) and 1, sensitivity to average correlation | `variance_strictly_positive`, `variance_at_least_correlation`, `variance_at_most_one`, `variance_nondecreasing_in_correlation`, `variance_gap_to_limiting_correlation` | Explicit \(n\ge 1\), \(0\le\rho\le1\) or weaker hypotheses; does not validate observed correlations |
 | Equal-weight variance sensitivity to battery size and population correlation | `variance_decreases_with_test_count`, `variance_strictly_decreases_with_test_count`, `variance_correlation_sensitivity`, `variance_of_two_equicorrelated_tests`, `variance_of_three_equicorrelated_tests` | These are exact algebraic monotonicity formulas at fixed correlation; they are not a claim that adding real-world tests leaves correlation fixed |
 | Common-factor reliability and posterior-variance monotonicity | `latent_variance_denominator_positive`, `latent_variance_decreases_with_test_count`, `latent_reliability_increases_with_test_count` | Algebra conditional on the report's common-factor expressions, not their Gaussian derivation |
+| Explicit epsilon threshold for fixed average correlation | `fixed_correlation_variance_epsilon_bound`, `fixed_correlation_variance_epsilon_after_threshold` | If n > (1−rho)/epsilon with rho ≤ 1 and epsilon > 0, proves 0 ≤ V(n,rho)−rho < epsilon; this is a conditional real-arithmetic bound at **fixed** rho, not a claim about changing correlations in observed test batteries |
 | Quantitative variance stabilization and factor decomposition | `doubling_battery_halves_variance_excess`, `nonnegative_correlation_variance_at_least_independent`, `variance_excess_bound_by_inverse_battery_size`, `latent_reliability_times_composite_variance`, `latent_posterior_times_composite_variance` | Exact at fixed average correlation; the latent reliability identities assume the report's specified factor expressions |
 | Composite standard deviation: standard-library square root and boundaries | `composite_standard_deviation_nonnegative`, `composite_standard_deviation_squared`, `composite_standard_deviation_at_zero_correlation`, `composite_standard_deviation_at_perfect_correlation`, `composite_standard_deviation_positive` | Uses Rocq's `sqrt` and its library lemmas; requires a feasible positive-variance parameter range where stated |
 | Composite SD comparison under fixed average correlation | `composite_standard_deviation_nondecreasing_in_correlation`, `composite_standard_deviation_nonincreasing_in_test_count`, `composite_standard_deviation_strictly_decreases_with_test_count`, `composite_standard_deviation_strictly_increases_in_correlation` | Exact algebra followed by monotonicity of `sqrt`; the changes are conditional on keeping the parameter rho fixed as test count changes |
@@ -75,11 +81,13 @@ mathematics libraries before introducing new foundational code.
 | Normalized variance and threshold rescaling | `normalized_variance_is_one`, `threshold_recovered_after_normalization` | Uses an **assumed** variance and its nonzero squared divisor; not a distribution theorem |
 | Latent-factor squared correlation and conditional-variance expressions | `latent_reliability_plus_posterior_variance`, `latent_reliability_nonnegative`, `latent_posterior_variance_nonnegative`, `latent_reliability_at_most_one`, and boundary cases | Algebra for the report's *given* expressions; **does not prove the Gaussian conditional-distribution derivation** |
 | Finite expectation: linearity, constants, centering, and nonnegative means | `expectation_add`, `expectation_scale`, `expectation_affine`, `centered_score_has_zero_expectation`, `expectation_nonnegative` | Finite sums with explicit masses; normalization and nonnegativity required where stated |
+| Affine finite-score variance and covariance | `variance_of_affine_score`, `covariance_of_affine_scores` | Reuses already verified shift invariance and covariance bilinearity, requiring a normalized finite probability mass rather than introducing new integration algebra |
 | Finite covariance and variance laws | `covariance_symmetric`, `covariance_add_first`, `covariance_scale_second`, `variance_nonnegative`, `variance_of_two_score_sum` | Derived from definitions, not covariance axioms; variance nonnegativity requires nonnegative normalized weights |
 | Weighted two-score variance and variance of the average | `variance_of_two_weighted_scores`, `variance_of_two_score_average`, `variance_of_two_unit_variance_average` | Exact, no normality; the unit-variance result requires unit component variances |
 | Arbitrary finite weighted composite: variance is the quadratic form \(\sum_{i,j} w_i w_j\operatorname{Cov}(X_i,X_j)\) | `variance_of_general_weighted_sum`, `covariance_of_general_weighted_sums`, `expectation_of_general_weighted_sum` | Derived for any finite list of component functions on a *normalized finite probability space*; no Gaussian assumption |
 | Concrete covariance-matrix representation and bilinear form | `covariance_row_as_vector_dot`, `covariance_double_sum_as_matrix_product`, `covariance_matrix_quadratic_form_identity`, `covariance_cross_matrix_bilinear_identity`, `covariance_matrix_quadratic_form_is_variance`, `covariance_matrix_is_positive_semidefinite` | Covariance entries are computed from finite expectations and expressed as real-valued row lists, proving the matrix-vector representation rather than postulating it |
 | Cauchy–Schwarz derived from finite variance nonnegativity | `nonnegative_quadratic_discriminant`, `finite_covariance_cauchy_schwarz_squared`, `zero_variance_implies_zero_covariance_first`, `zero_variance_implies_zero_covariance_second`, `nonzero_covariance_implies_positive_variances` | Proves Cov(X,Y)² ≤ Var(X)Var(Y) by examining Var(X+tY) ≥ 0 for all real t, including the degenerate zero-variance case; normalized nonnegative finite weights are required |
+| Covariance-matrix shape from the standard library | `basis_covariance_matrix_row_count`, `basis_covariance_matrix_column_count`, `basis_cross_covariance_matrix_row_count`, `basis_cross_covariance_matrix_column_count` | Uses `map_length` and `in_map_iff` to prove square and rectangular list-matrix dimensions |
 | Fixed score basis and arbitrary real coefficient vectors | `weighted_basis_sum_as_combination`, `coefficients_of_combine`, `basis_of_combine`, `covariance_matrix_uses_only_basis`, `covariance_cross_matrix_uses_only_bases`, `fixed_basis_covariance_matrix_representation`, `fixed_basis_weighted_variance_identity`, `fixed_basis_covariance_matrix_positive_semidefinite` | The covariance matrix is defined **solely by the fixed score basis**, independently of the coefficient vector; proves Var(wᵀX)=wᵀΣw and wᵀΣw≥0 for every **matching-length** real coefficient list |
 | Standardized finite-score covariance and perfect-correlation equality | `normalized_covariance_is_between_minus_one_and_one`, `centered_standardized_covariance_in_unit_interval`, `unit_covariance_one_iff_difference_has_zero_variance`, `unit_covariance_minus_one_iff_sum_has_zero_variance` | Correlation is within [−1,1] for provided strictly positive standard deviations whose squares equal the corresponding finite variances; the ±1 equality cases require both variances equal one |
 | Finite covariance matrix positive semidefiniteness | `covariance_quadratic_form_nonnegative` | Follows from nonnegative variance for normalized nonnegative weights |
@@ -92,12 +100,14 @@ mathematics libraries before introducing new foundational code.
 | [Towers event identity](../analyses/towers-multiple-test-admissions/analysis.md): union \(=p_A+p_B-J\) | `inclusion_exclusion`, `union_complement` | Derived from a four-cell finite probability space |
 | Union and joint Fréchet bounds | `union_bound`, `union_at_most_one`, `union_at_least_first`, `union_at_least_second`, `both_at_most_first`, `both_at_most_second`, `frechet_lower_bound` | Any events, without a Gaussian model or independence |
 | Distribution-free admission refinements | `exactly_one_nonnegative`, `exactly_one_at_most_either`, `union_equal_marginal_lower_bound`, `union_equal_marginal_upper_bound`, `excess_marginal_mass_forces_overlap`, `independent_equal_marginal_union` | Bounds and special-case identities require only explicit four-cell probabilities, with independence stated when used |
+| Complete conditional probability interval bounds | `conditional_B_given_A_nonnegative`, `conditional_A_given_B_nonnegative`, `conditional_B_given_A_unit_interval`, `conditional_A_given_B_unit_interval`, `overlap_at_most_either`, `conditional_both_given_either_unit_interval`, `conditional_not_A_given_B_unit_interval` | All bounds require positive probability for the conditioning event; follow from four-cell nonnegativity and existing identities, not an independence assumption |
 | Independence and conditional probabilities; zero-overlap cases | `independent_either_as_complement_product`, `independent_equal_marginals_as_complement_square`, `independent_conditional_B_equals_marginal`, `independent_conditional_A_equals_marginal`, `independent_exactly_one_formula`, `disjointness_iff_union_is_sum`, `complete_coverage_iff_no_failures`, and marginal/overlap bounds | Independence and nonzero conditioning-event masses are explicit hypotheses; no real-world independence is claimed |
 | Exactly one pass versus either pass | `exactly_one_formula`, `exactly_one_vs_union`, `equal_marginal_union`, `equal_marginal_exactly_one` | Exact |
 | Conditional denominators and failure complements | `conditional_B_numerator`, `conditional_A_numerator`, `both_conditional_denominators_agree`, `conditional_either_numerator`, `conditional_failure_complement`, and conditional bounds | Require strictly positive conditioning-event masses |
 | Distinguish binary phi numerator and continuous Pearson correlation | `binary_indicator_covariance_numerator`, `binary_independence_criterion` | Proves the binary covariance numerator and independence criterion; **not** the numerical continuous/discrete correlation discrepancy |
 | Published mixed-case 2.11% figure is impossible from marginals of 2% and 0.1% | `original_mixed_union_impossible` | Exact rational contradiction from the union bound |
 | Marginal rates do not determine overlap or OR admission fraction | `same_marginals_different_joint`, `same_marginals_different_union` | Constructive four-cell counterexamples |
+| Finite union invariant under route order or repetition | `union_prob_membership_extensional`, `union_prob_permutation_invariant`, `union_prob_duplicate_route` | Proofs reuse `existsb_exists` and `Sorting.Permutation`; probability depends on event membership, not route-list order or duplicate entries |
 | Arbitrary number of admission routes: every marginal <= union <= sum of marginals and union <= 1 | `arbitrary_union_bound`, `arbitrary_union_contains_every_member`, `normalized_arbitrary_union_at_most_one`, and supporting lemmas in `FiniteUnion.v` | Explicit finite sample outcomes with nonnegative weights; no normality or independence |
 | Repeated independent-attempt formula \(1-(1-p)^m\) | `independent_union_formula`, `independent_union_one`, `independent_union_two` | Induction on the independent-union recurrence; **not** an assertion that real retests are independent |
 | BASIC grid node count, constant factors, quarter-point boundary shift | `grid_node_count`, `grid_scale_factors_cancel`, `half_point_grid_midpoint_shift` | Exact arithmetic only; does **not** certify numerical quadrature error |
@@ -130,13 +140,13 @@ with checked arithmetic proofs. No data are imported into the kernel.
 
 ## Research extensions
 
-The next valuable targets are: (1) finite-battery reporting-score
-threshold transformations (without claiming tail probabilities),
-(2) covariance-matrix rank and equality properties for indexed score bases,
-(3) extending finite event and moment identities to abstract probability
-measures using an established library, (4) library-based bivariate Gaussian
-density normalization and certified tail enclosures, and (5) Gaussian
-common-factor conditional-moment theorems. Numerical tables must remain labeled numerical until certified
+The next valuable targets are: (1) equality and rank properties for
+fixed-basis covariance matrices, (2) concrete links between finite events
+and the existing finite moment model using library Boolean indicators,
+(3) extending event and moment identities to abstract probability measures
+with a maintained library and checked equivalence bridges, (4) bivariate
+Gaussian density normalization and certified tail enclosures, and
+(5) Gaussian common-factor conditional-moment theorems. Numerical tables must remain labeled numerical until certified
 interval arithmetic is available.
 
 This work is AI-generated and requires independent review of the
