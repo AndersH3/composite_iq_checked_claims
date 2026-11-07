@@ -300,12 +300,8 @@ Section FiniteProbabilityMoments.
     apply expectation_nonnegative.
     - exact Hw.
     - intros x Hx.
-      set (d := f x - expect f).
-      destruct (Rle_dec 0 d) as [Hd | Hd].
-      + apply Rmult_le_pos; assumption.
-      + assert (Hle : d <= 0) by lra.
-        replace (d * d) with ((-d) * (-d)) by ring.
-        apply Rmult_le_pos; lra.
+      change (0 <= Rsqr (f x - expect f)).
+      apply Rle_0_sqr.
   Qed.
 
   Theorem covariance_with_constant_first :
@@ -1669,6 +1665,86 @@ Section FiniteProbabilityMoments.
     destruct Hin as [f [Hrow _]].
     subst row.
     apply map_length.
+  Qed.
+
+
+  (* A zero sum of nonnegative real contributions has only zero
+     contributions.  This uses the existing finite fold and its nonnegative
+     induction; the scalar zero-product step is Stdlib.Reals.Rmult_integral. *)
+
+  Lemma sum_finite_zero_implies_zero_terms :
+    forall xs h,
+      (forall x, In x xs -> 0 <= h x) ->
+      sum_finite h xs = 0 ->
+      forall x, In x xs -> h x = 0.
+  Proof.
+    induction xs as [|a xs IH]; intros h Hnonnegative Hsum x Hin.
+    - inversion Hin.
+    - change (h a + sum_finite h xs = 0) in Hsum.
+      assert (Ha : 0 <= h a).
+      { apply Hnonnegative; simpl; auto. }
+      assert (Htail : forall y, In y xs -> 0 <= h y).
+      { intros y Hy; apply Hnonnegative; simpl; auto. }
+      pose proof (sum_finite_nonnegative xs h Htail) as Hrest.
+      simpl in Hin.
+      destruct Hin as [Heq | Hin].
+      + subst x; lra.
+      + apply (IH h Htail); [lra | exact Hin].
+  Qed.
+
+  Theorem zero_variance_is_constant_on_positive_mass :
+    forall f x,
+      total_mass = 1 ->
+      (forall y, In y samples -> 0 <= weight y) ->
+      variance f = 0 ->
+      In x samples -> 0 < weight x ->
+      f x = expect f.
+  Proof.
+    intros f x Hmass Hw Hzero Hin Hpositive.
+    pose proof (centered_second_moment_identity f Hmass) as Hmom.
+    change
+      (sum_finite
+        (fun y => weight y *
+           ((f y - expect f) * (f y - expect f)))
+         samples = variance f) in Hmom.
+    rewrite Hzero in Hmom.
+    assert (Hnonnegative : forall y, In y samples ->
+      0 <= weight y * ((f y - expect f) * (f y - expect f))).
+    { intros y Hy.
+      apply Rmult_le_pos.
+      - apply Hw; exact Hy.
+      - change (0 <= Rsqr (f y - expect f)).
+        apply Rle_0_sqr. }
+    pose proof
+      (sum_finite_zero_implies_zero_terms
+         samples
+         (fun y => weight y *
+           ((f y - expect f) * (f y - expect f)))
+         Hnonnegative Hmom x Hin) as Hterm.
+    apply Rmult_integral in Hterm.
+    destruct Hterm as [Hweight0 | Hsquare0].
+    - lra.
+    - apply Rmult_integral in Hsquare0.
+      destruct Hsquare0 as [Hcenter0 | Hcenter0]; lra.
+  Qed.
+
+  Theorem null_covariance_direction_constant_on_positive_mass :
+    forall coefficients basis x,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall y, In y samples -> 0 <= weight y) ->
+      In x samples -> 0 < weight x ->
+      matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 ->
+      weighted_basis_sum coefficients basis x =
+        expect (weighted_basis_sum coefficients basis).
+  Proof.
+    intros coefficients basis x Hlength Hmass Hw Hin Hpositive Hquadratic.
+    apply zero_variance_is_constant_on_positive_mass;
+      try assumption.
+    rewrite (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    exact Hquadratic.
   Qed.
 
 End FiniteProbabilityMoments.
