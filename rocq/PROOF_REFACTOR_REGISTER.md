@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 422 public theorem/lemma/example declarations,
+The current branch has 424 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**425 proof scripts**, including the generic
+**427 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -384,6 +384,22 @@ new general non-positive-definiteness witness theorem, using
 Stdlib.List.In and repeat. They introduce no new row iteration,
 vector-space structure, numerical procedure or proof axiom.
 
+### Exact row-kernel/support equivalence and refined core documentation
+
+A new iff combines the checked quadratic-null iff row-dot-kernel
+and quadratic-null iff supported-constant results, characterizing
+finite covariance row nullity directly by a composite score
+constant on positive-weight support. A second iff characterizes
+positive definiteness by excluding any nonzero compatible
+coefficient direction with such a supported constant. The proofs
+are compositions of previously checked lemmas and Stdlib.List.repeat.
+Five foundational declarations were also documented more precisely:
+matrix_bilinear_form, matrix_quadratic_form, weighted_basis_sum,
+fixed_basis_weighted_variance_identity, and
+zero_variance_is_constant_on_positive_mass. Their comments now
+specify exact shapes, coefficient lengths, weight normalization
+and sign assumptions, proof dependencies and scope limitations.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -659,7 +675,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 165 proof scripts
+## FiniteMoments.v — 167 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -828,6 +844,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_positive_definite_iff_no_nonzero_covariance_row_kernel` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot, Stdlib.List.repeat | **New:** covariance positive definiteness iff row-dot kernel contains no nonzero compatible list |
 | `fixed_basis_constant_support_implies_zero_covariance_row_dots` (theorem) | Lemma application, support-constant witness | fixed_basis_null_iff_exists_constant_on_positive_weight_support, fixed_basis_null_iff_zero_dot_with_every_covariance_row | **New:** a supported constant composite score yields zero dot product with every matrix row |
 | `fixed_basis_not_positive_definite_of_nonzero_covariance_row_kernel` (theorem) | Lemma application, nullity iff | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_not_positive_definite_of_nonzero_null_direction | **New:** a nonzero row-dot kernel vector disproves covariance positive definiteness |
+| `fixed_basis_zero_covariance_row_dots_iff_supported_constant` (theorem) | Iff composition, lemma application | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_null_iff_exists_constant_on_positive_weight_support | **New:** zero dot against every covariance row iff composite score equals some positive-support constant |
+| `fixed_basis_positive_definite_iff_no_nonzero_supported_constant` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support, Stdlib.List.repeat | **New:** covariance positive definite iff no nonzero coefficient direction yields any supported constant |
 
 ## FiniteBridge.v — 16 proof scripts
 

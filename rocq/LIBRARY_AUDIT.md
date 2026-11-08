@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 422 public theorem/lemma/example
+**Current audited inventory:** 424 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **425 proof scripts**. There are **480 named
+constructors, for **427 proof scripts**. There are **482 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -929,6 +929,23 @@ via the reusable general quadratic-null obstruction. Neither
 result implements a matrix multiply, nullspace basis, rank,
 determinant or new list traversal. Current inventory:
 422 claims, 425 scripts and 480 documented declarations.
+
+## Covariance row-nullity iff support constancy and core documentation audit
+
+A checked two-way bridge now identifies zero dot product
+against every row of the finite covariance matrix with
+constant positive-weight composite-score support. The finite
+covariance matrix is positive definite exactly when no
+nonzero compatible coefficient vector has this property.
+Both results reuse prior iff theorems, without introducing
+matrix multiplication, rank, determinants, index loops or
+new proof axioms. Detailed declaration comments were also
+revised for matrix_bilinear_form, matrix_quadratic_form,
+weighted_basis_sum, fixed_basis_weighted_variance_identity
+and zero_variance_is_constant_on_positive_mass, recording
+their exact representations, length and weight assumptions,
+and dependency reuse. Totals: 424 claims, 427 scripts,
+482 documented declarations.
 
 ## Deliberately retained project-specific definitions
 

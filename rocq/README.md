@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **422 theorem, lemma and example declarations** in seven
+for the two reports. **424 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1165,8 +1165,28 @@ reuse of the general quadratic-null obstruction lemma.
 The proof introduces no matrix product, kernel basis, rank
 or numerical algorithm.
 
-Current audited inventory: **422 public claims, 425 proof scripts,
+Earlier audited inventory: **422 public claims, 425 proof scripts,
 480 documented named declarations** in seven Rocq modules.
+
+## Exact covariance row-kernel and support-constant equivalence
+
+The row-dot kernel of the finite covariance matrix is exactly
+the set of compatible coefficient vectors whose composite
+scores equal some constant on every positive-weight sampled
+outcome, under unit total mass and nonnegative sampled weights.
+Positive definiteness is equivalently the absence of such a
+nonzero compatible direction. Both iff results use existing
+covariance nullity and strict positivity lemmas without a new
+matrix operation or rank computation.
+
+Five core declarations were also redocumented with detailed
+mathematical definitions and precise Stdlib/FiniteSum reuse:
+matrix_bilinear_form, matrix_quadratic_form,
+weighted_basis_sum, fixed_basis_weighted_variance_identity,
+and zero_variance_is_constant_on_positive_mass.
+
+Current audited totals: **424 public claims, 427 proof scripts,
+482 documented declarations** across seven Rocq modules.
 
 ## Research extensions
 
