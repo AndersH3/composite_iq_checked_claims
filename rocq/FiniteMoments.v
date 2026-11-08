@@ -2311,8 +2311,8 @@ Section FiniteProbabilityMoments.
    components) = covariance_row f components.
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses structural induction, rewriting of
-   equalities, ring/field normalization, definitional reduction.
+   Proof/definition method: Use FiniteSum.finite_sum_zip_map to eliminate the
+   aligned List.combine of two List.map projections; then extensionality.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -2340,9 +2340,8 @@ Section FiniteProbabilityMoments.
    (covariance_cross_matrix left right) = covariance_quadratic_form left right.
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses structural induction, rewriting of
-   equalities, ring/field normalization, definitional reduction; references include
-   matrix_bilinear_form, covariance_row_as_vector_dot.
+   Proof/definition method: Flatten the nested Stdlib.List.map with map_map,
+   use the generic FiniteSum.finite_sum_zip_map and covariance_row_as_vector_dot.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
