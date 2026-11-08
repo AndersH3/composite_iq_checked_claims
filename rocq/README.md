@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **378 theorem, lemma and example declarations** in seven
+for the two reports. **381 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -934,8 +934,21 @@ The proof reuses `fixed_basis_weighted_variance_identity`,
 finite-sum implementation. This supplies a concrete degeneracy
 witness but does **not** certify an arbitrary rank or eigenvalue.
 
-Inventory: **378 public claims**, **381 proof scripts**,
+At that earlier stage: **378 public claims**, **381 proof scripts**,
 **436 fully documented named declarations** across seven Rocq files.
+
+## Finite-moment extensionality on enumerated support
+
+New `expectation_extensional_on_samples`,
+`covariance_extensional_on_samples`, and
+`variance_extensional_on_samples` results replace global
+pointwise equality with equality only at sampled outcomes. They
+reuse `FiniteSum.finite_sum_ext_in` and Stdlib.List.map_ext_in
+rather than building new finite sums, and preserve the original
+finite-list multiplicities without extra hypotheses.
+
+Current inventory: **381 public claims**, **384 proof scripts**,
+and **439 documented named declarations** in seven modules.
 
 ## Research extensions
 

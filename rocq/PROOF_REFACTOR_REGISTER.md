@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 378 public theorem/lemma/example declarations,
+The current branch has 381 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**381 proof scripts**, including the generic
+**384 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -189,6 +189,15 @@ and the genuinely nonzero coefficient list `[1; -1]` constructs a
 kernel-checked zero-quadratic-form witness. The list basis and
 combination are the existing Stdlib and FiniteSum constructs; there
 is no bespoke determinant, eigenvalue or rank implementation.
+
+### Three new support-aware finite-moment extensionality lemmas
+
+The generic `FiniteSum.finite_sum_ext_in` already relies on
+Stdlib.List.map_ext_in, and now establishes on-sample equality of
+expectations directly. Covariance and variance support-extensionality
+follow using the existing finite-moment definitions, with no second
+list recursion. Previously proven global-extensionality statements
+are retained for source compatibility.
 
 ### Current structural-induction inventory
 
@@ -465,7 +474,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 121 proof scripts
+## FiniteMoments.v — 124 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -473,6 +482,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `sum_finite_add` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `sum_finite_scale` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `sum_finite_nonnegative` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `expectation_extensional_on_samples` (theorem) | Lemma application | FiniteSum.finite_sum_ext_in, Stdlib.List.map_ext_in | **New:** expectation support extensionality |
 | `expectation_ext` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `expectation_add` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `expectation_scale` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
@@ -494,7 +504,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `variance_nonnegative` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `covariance_with_constant_first` (theorem) | Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `variance_of_shifted_score` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_extensional_on_samples` (theorem) | Rewriting, Lemma application | expectation_extensional_on_samples | **New:** covariance support extensionality |
 | `covariance_extensional` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `variance_extensional_on_samples` (theorem) | Lemma application | covariance_extensional_on_samples | **New:** variance support extensionality |
 | `variance_extensional` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `centered_score_has_zero_expectation` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `covariance_with_constant_second` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |

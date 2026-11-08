@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 378 public theorem/lemma/example
+**Current audited inventory:** 381 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **381 proof scripts**. There are **436 named
+constructors, for **384 proof scripts**. There are **439 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -737,8 +737,16 @@ variance representation, `Stdlib.List.combine`, shared finite sums,
 variance extensionality and ring/Lra to exhibit an explicit nonzero
 zero-quadratic-form coefficient vector [1,-1]. It makes no unsupported
 claim about a general rank implementation or numerical matrix rank.
-Current inventory: 378 publicly checked claims, 381 proof scripts and
+At the earlier stage: 378 publicly checked claims, 381 proof scripts and
 436 fully documented declarations.
+
+## Enumerated-support extensionality reuse
+
+Three additional finite-moment results reuse the canonical
+`FiniteSum.finite_sum_ext_in` (Stdlib.List.map_ext_in) for equality of
+expectation, covariance and variance from on-sample equality, with
+unchanged weight multiplicity. The current source inventory covers
+381 public proofs, 384 scripts and 439 documented declarations.
 
 ## Deliberately retained project-specific definitions
 

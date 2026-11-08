@@ -249,6 +249,28 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [expectation_extensional_on_samples] (theorem) — Enumerated support extensionality of finite moments.
+   Mathematical meaning: Two scores that agree at every enumerated outcome have exactly equal weighted finite expectations, regardless of their values on outcomes outside the sample.
+   Exact checked proposition: For all f g, equality at every x with In x samples implies expect f = expect g.
+   Premises and side conditions: No weight normalization, sign restrictions, independence, or distinctness of enumerated outcomes is assumed. Each sample occurrence retains its original multiplicity.
+   Proof/definition method: Unfold the project aliases for expectation and finite summation, then directly apply FiniteSum.finite_sum_ext_in to the weighted score integrands; rewrite the pointwise agreement at each listed outcome.
+   Library reuse: FiniteSum.finite_sum_ext_in, Stdlib.List.map_ext_in and Stdlib.List.In.
+   Boundary: The result is extensionality for an explicit finite list, not an almost-everywhere result for a general measure.
+   *)
+  Theorem expectation_extensional_on_samples :
+    forall f g,
+      (forall x, In x samples -> f x = g x) ->
+      expect f = expect g.
+  Proof.
+    intros f g Hfg.
+    unfold expect, sum_finite.
+    apply FiniteSum.finite_sum_ext_in.
+    intros x Hx.
+    rewrite (Hfg x Hx).
+    reflexivity.
+  Qed.
+
+  (**
    [expectation_ext] (theorem) — Finite weighted score expectations, variances and
    covariance matrices.
    Mathematical meaning: Derives a sum or expectation identity for the explicitly
@@ -851,6 +873,36 @@ Section FiniteProbabilityMoments.
      a normalized finite probability mass. *)
 
   (**
+   [covariance_extensional_on_samples] (theorem) — Enumerated support extensionality of finite moments.
+   Mathematical meaning: Covariance of finite real scores depends only on the values of both score functions at enumerated outcome occurrences; changes elsewhere do not affect the two marginals or their product expectation.
+   Exact checked proposition: For all f f' g g', equalities f x = f' x and g x = g' x on every x in samples imply covariance f g = covariance f' g'.
+   Premises and side conditions: The sample list and weights can be arbitrary, including repeated outcomes and signed weights. Equality is algebraic and does not assume independence, normalization or nonnegative variances.
+   Proof/definition method: Unfold covariance into the expected product and product of expectations, reuse expectation_extensional_on_samples on all three terms, and conclude by rewriting the pointwise products.
+   Library reuse: expectation_extensional_on_samples, FiniteSum.finite_sum_ext_in, Stdlib.List.In and real-number algebra.
+   Boundary: Finite weighted-list semantics only; no claims about equality of continuous distributions or empirical covariance.
+   *)
+  Theorem covariance_extensional_on_samples :
+    forall f f' g g',
+      (forall x, In x samples -> f x = f' x) ->
+      (forall x, In x samples -> g x = g' x) ->
+      covariance f g = covariance f' g'.
+  Proof.
+    intros f f' g g' Hf Hg.
+    unfold covariance.
+    rewrite (expectation_extensional_on_samples f f' Hf).
+    rewrite (expectation_extensional_on_samples g g' Hg).
+    assert (Hprod :
+      expect (fun x => f x * g x) =
+      expect (fun x => f' x * g' x)).
+    { apply expectation_extensional_on_samples.
+      intros x Hx.
+      rewrite (Hf x Hx), (Hg x Hx).
+      reflexivity. }
+    rewrite Hprod.
+    reflexivity.
+  Qed.
+
+  (**
    [covariance_extensional] (theorem) — Finite weighted score expectations, variances
    and covariance matrices.
    Mathematical meaning: Derives a covariance identity or inequality from finite
@@ -883,6 +935,25 @@ Section FiniteProbabilityMoments.
     { apply expectation_ext; intro x.
       rewrite Hf, Hg; reflexivity. }
     rewrite Hprod; reflexivity.
+  Qed.
+
+  (**
+   [variance_extensional_on_samples] (theorem) — Enumerated support extensionality of finite moments.
+   Mathematical meaning: Finite variance is unchanged when one score function is replaced with another that agrees at every enumerated sample outcome, even if they disagree on unobserved outcomes.
+   Exact checked proposition: For any f g, on-sample equality implies variance f = variance g.
+   Premises and side conditions: There are no hypotheses about nonnegative weights, total mass, outcome uniqueness or the statistical relationship of the score functions; this is equality of finite algebraic variance expressions.
+   Proof/definition method: Unfold variance as self-covariance and invoke the shared covariance_extensional_on_samples theorem with the same sampled equality on both arguments.
+   Library reuse: covariance_extensional_on_samples, FiniteMoments.variance, Stdlib.List.In and FiniteSum.
+   Boundary: This theorem does not assert variance positivity for signed or unnormalized weights and does not establish global functional equality.
+   *)
+  Theorem variance_extensional_on_samples :
+    forall f g,
+      (forall x, In x samples -> f x = g x) ->
+      variance f = variance g.
+  Proof.
+    intros f g Hfg.
+    unfold variance.
+    apply covariance_extensional_on_samples; exact Hfg.
   Qed.
 
   (**
