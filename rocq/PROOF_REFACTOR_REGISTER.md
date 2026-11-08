@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 445 public theorem/lemma/example declarations,
+The current branch has 448 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**448 proof scripts**, including the generic
+**451 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 85 proof scripts
+## FiniteUnion.v — 88 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -691,6 +691,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_independent_false_first` (theorem) | Extensionality to false, zero product via Stdlib ring | finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_false | **New:** impossible-event first target is independent |
 | `finite_conditional_independent_false_second` (theorem) | Project symmetry iff, apply existing theorem | finite_conditional_independent_symmetric, finite_conditional_independent_false_first | **New:** impossible-event second target via symmetry |
 | `finite_conditional_independent_iff_cross_product_mass` (theorem) | Positive-denominator cancellation via field and Lra, two-way iff | finite_conditional_independent, finite_conditional_prob, finite_prob, Stdlib.Reals field | **New:** conditional product factorization iff unnormalized four-mass cross product |
+| `finite_conditional_independent_conditioning_first` (theorem) | Conditioned-support target extensionality, unit conditional mass, ring | finite_conditional_prob_event_ext_on_conditioned_samples, finite_conditional_prob_self, Stdlib.Reals | **New:** given is independent of any second target conditional on itself |
+| `finite_conditional_independent_conditioning_second` (theorem) | Iff symmetry projection and lemma application | finite_conditional_independent_symmetric, finite_conditional_independent_conditioning_first | **New:** other target independent of conditioning event given itself |
+| `finite_conditional_independent_union_formula` (theorem) | Conditional inclusion-exclusion and factor rewrite | finite_conditional_prob_inclusion_exclusion, finite_conditional_independent, Stdlib.Lra | **New:** two-event conditional independent union formula |
 
 ## FiniteMoments.v — 167 proof scripts
 

@@ -2880,6 +2880,80 @@ Section FiniteOutcomeSpace.
       exact Hcross.
   Qed.
 
+
+  (**
+   [finite_conditional_independent_conditioning_first] (theorem) — An event is conditionally independent of every event when conditioned on itself.
+   Mathematical meaning: Inside the conditioning event G, the first target G is necessarily true, so G and an arbitrary second target factor conditionally when G has positive finite mass.
+   Exact checked proposition: For any weights, samples, second Boolean event and conditioning Boolean event given of strictly positive finite mass, finite_conditional_independent weights samples given second given.
+   Premises and side conditions: Positive mass of given is required. All other equalities are valid for arbitrary signed or repeated finite weights; nonnegative weights are additionally necessary for a probabilistic interpretation.
+   Proof/definition method: Apply the checked conditional-event extensionality theorem on the selected conditioning support to identify G∩second with second; reuse finite_conditional_prob_self to give the first target unit conditional mass and finish with Stdlib's ring tactic.
+   Library reuse: finite_conditional_prob_event_ext_on_conditioned_samples, finite_conditional_prob_self, Stdlib.Bool.andb and Stdlib.Reals ring.
+   Boundary: This is a conditioning tautology, not a claim that the unconditioned events are independent or that an event is independent of its own complement.
+   *)
+  Theorem finite_conditional_independent_conditioning_first :
+    forall weights samples second given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples given second given.
+  Proof.
+    intros weights samples second given Hgiven.
+    unfold finite_conditional_independent.
+    split; [exact Hgiven |].
+    rewrite (finite_conditional_prob_event_ext_on_conditioned_samples
+      weights samples (fun x => andb (given x) (second x))
+      second given).
+    2: { intros x _ Hx; rewrite Hx; reflexivity. }
+    rewrite (finite_conditional_prob_self weights samples given Hgiven).
+    ring.
+  Qed.
+
+  (**
+   [finite_conditional_independent_conditioning_second] (theorem) — Conditioning-event independence with the second target fixed to the conditioning event.
+   Mathematical meaning: If one target is identical to the positive-mass conditioning event, it has conditional mass one, and the conditional independence factorization is valid in either target order.
+   Exact checked proposition: For every weights and samples, first Boolean target and conditioning event given with positive finite mass, finite_conditional_independent weights samples first given given.
+   Premises and side conditions: Only positive conditioning mass is required for the exact finite algebraic statement; the weights may be signed, and the same repeated sample occurrences are preserved.
+   Proof/definition method: Project the already checked symmetry biconditional and invoke finite_conditional_independent_conditioning_first instead of duplicating conditional support extensionality or quotient calculations.
+   Library reuse: finite_conditional_independent_symmetric and finite_conditional_independent_conditioning_first.
+   Boundary: This is a finite Boolean conditioning identity, not general causal independence or a continuous conditional probability theorem.
+   *)
+  Theorem finite_conditional_independent_conditioning_second :
+    forall weights samples first given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples first given given.
+  Proof.
+    intros weights samples first given Hgiven.
+    apply (proj2 (finite_conditional_independent_symmetric
+      weights samples first given given)).
+    apply finite_conditional_independent_conditioning_first.
+    exact Hgiven.
+  Qed.
+
+  (**
+   [finite_conditional_independent_union_formula] (theorem) — Conditional two-event union under independence.
+   Mathematical meaning: If two finite Boolean targets are conditionally independent given G, their conditional union mass is the sum of their conditional marginals minus the product of those marginals, just as in the elementary independent-event formula.
+   Exact checked proposition: finite_conditional_independent weights samples first second given implies finite_conditional_prob weights samples (fun x => orb (first x) (second x)) given = finite_conditional_prob first given + finite_conditional_prob second given - finite_conditional_prob first given * finite_conditional_prob second given.
+   Premises and side conditions: Positive mass of G follows from the independence predicate. No total-mass normalization, target-marginal positivity or weight-sign condition is needed for the algebraic formula; interpreting it as probability requires nonnegative weights.
+   Proof/definition method: Instantiate the previously checked conditional inclusion–exclusion theorem; rewrite its intersection term using the factored conditional mass in the independence predicate, then rearrange the resulting real equality with Stdlib.Lra.
+   Library reuse: finite_conditional_prob_inclusion_exclusion, finite_conditional_independent, Stdlib.Bool.orb/andb, Stdlib.Lra. No new enumeration, inclusion–exclusion proof or independent-union recursion is introduced.
+   Boundary: This is a two-target union formula under an explicit finite conditional-independence premise; it does not imply that arbitrary families of events are mutually independent.
+   *)
+  Theorem finite_conditional_independent_union_formula :
+    forall weights samples first second given,
+      finite_conditional_independent weights samples first second given ->
+      finite_conditional_prob weights samples
+        (fun x => orb (first x) (second x)) given =
+      finite_conditional_prob weights samples first given +
+      finite_conditional_prob weights samples second given -
+      finite_conditional_prob weights samples first given *
+      finite_conditional_prob weights samples second given.
+  Proof.
+    intros weights samples first second given Hindependent.
+    destruct Hindependent as [_ Hfactor].
+    pose proof (finite_conditional_prob_inclusion_exclusion
+      weights samples first second given) as Hinclusion.
+    rewrite Hfactor in Hinclusion.
+    lra.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

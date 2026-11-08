@@ -1048,6 +1048,18 @@ representation. The criterion can be reused in future filtered
 four-cell independence statements without expanding conditional
 fractions or introducing an external probability library.
 
+## Conditioning-event identity and union formula
+
+The generic conditional independence predicate has two new
+conditioning-event identity instances, using the previously checked
+`finite_conditional_prob_event_ext_on_conditioned_samples`,
+`finite_conditional_prob_self` and independence symmetry.
+The independent-union theorem delegates to
+`finite_conditional_prob_inclusion_exclusion` and substitutes
+the established product factorization with Stdlib.Lra.
+None of these proofs introduces another event summation, manual
+union recursion, quotient implementation or external library.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
