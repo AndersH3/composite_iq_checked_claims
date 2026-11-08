@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **402 theorem, lemma and example declarations** in seven
+for the two reports. **406 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1035,8 +1035,23 @@ converse proof now delegates to the generic covariance-zero
 lemma. These changes reuse Stdlib, existing support-extensional
 moment lemmas, and symmetry rather than implementing new sums.
 
-**Current inventory: 402 public claims, 405 proof scripts,
+**Earlier inventory: 402 public claims, 405 proof scripts,
 460 fully documented named declarations** across seven modules.
+
+## Existential finite covariance nullity and duplicate-score obstruction
+
+Four further `FiniteMoments.v` theorems use the established
+support-constant variance criteria and fixed-basis variance
+bridge to characterize strict variance positivity and matrix
+null/positive quadratic forms through the existence of an
+arbitrary common positive-support score value. The concrete
+duplicate-basis covariance result rules out positive definiteness
+from the existing nonzero [1;-1] null direction using
+Stdlib.List.repeat. No new list, matrix, rank or eigenvalue
+implementation has been introduced.
+
+**Latest source totals: 406 public claims, 409 proof scripts,
+464 documented named declarations** across seven Rocq modules.
 
 ## Research extensions
 

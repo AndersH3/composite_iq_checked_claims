@@ -4904,6 +4904,39 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [variance_positive_iff_no_constant_on_positive_weight_support] (theorem) — Finite positive-support covariance degeneracy.
+   Mathematical meaning: A finite normalized nonnegative weighted score has strictly positive variance precisely when there exists no real value at which the score is constant throughout all positively weighted sampled outcomes.
+   Exact checked proposition: For any f, total_mass=1 and nonnegative weights on samples imply 0 < variance f iff not (exists c:R, forall x in samples with positive weight, f x=c).
+   Premises and side conditions: Individual sample weights may equal zero and repeated sample entries retain their list multiplicity. The statement is exact and requires only a normalized finite nonnegative weighting, not independence or a Gaussian model.
+   Proof/definition method: If variance is positive then any supported constant would force zero variance by variance_zero_of_constant_on_positive_weight_support, a contradiction. Conversely use variance_positive_iff_not_constant_on_positive_weight_support: constancy at the expectation would produce the forbidden existential witness.
+   Library reuse: variance_zero_of_constant_on_positive_weight_support, variance_positive_iff_not_constant_on_positive_weight_support, Stdlib.Reals.Lra and existing finite moments.
+   Boundary: The result does not compute a statistical estimate, prove any sample-size bound, or extend to signed or continuous measures.
+   *)
+  Theorem variance_positive_iff_no_constant_on_positive_weight_support :
+    forall f,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < variance f <->
+       ~ (exists c : R,
+           forall x, In x samples -> 0 < weight x -> f x = c)).
+  Proof.
+    intros f Hmass Hw.
+    split.
+    - intros Hpositive [c Hconstant].
+      pose proof (variance_zero_of_constant_on_positive_weight_support
+        f c Hmass Hw Hconstant) as Hzero.
+      lra.
+    - intro Hno_constant.
+      apply (proj2
+        (variance_positive_iff_not_constant_on_positive_weight_support
+          f Hmass Hw)).
+      intro Hconstant.
+      apply Hno_constant.
+      exists (expect f).
+      exact Hconstant.
+  Qed.
+
+  (**
    [fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support] (theorem) — Finite positive variance and covariance curvature.
    Mathematical meaning: A finite fixed-basis covariance quadratic form is strictly positive exactly when the coefficient-weighted basis score is not constant on its positive-mass sample support.
    Exact checked proposition: For all coefficient and basis lists of equal length, unit total mass and nonnegative sampled weights imply 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis) iff the weighted_basis_sum is not everywhere equal to its expectation on positive-weight sampled outcomes.
@@ -5197,6 +5230,89 @@ Section FiniteProbabilityMoments.
         (fixed_basis_null_iff_constant_on_positive_weight_support
           coefficients basis Hlength Hmass Hw)).
       exact Hconstant.
+  Qed.
+
+  (**
+   [fixed_basis_null_iff_exists_constant_on_positive_weight_support] (theorem) — Finite positive-support covariance degeneracy.
+   Mathematical meaning: The exact finite covariance quadratic null directions are those coefficient lists whose weighted basis score equals some real constant at every positive-weight enumerated outcome.
+   Exact checked proposition: For coefficient and basis lists of equal length under normalized nonnegative sampled weights, matrix_quadratic_form coefficients (basis_covariance_matrix basis)=0 iff exists c:R, forall positive-weight x in samples, weighted_basis_sum coefficients basis x=c.
+   Premises and side conditions: Length equality, unit sample mass and nonnegative sampled weights are explicit. Zero-weight list entries need not agree with the constant, and the coefficient direction may be zero or nonzero.
+   Proof/definition method: Use the existing fixed_basis_weighted_variance_identity to replace the quadratic form by the exact variance of the weighted basis score, then reuse variance_zero_iff_exists_constant_on_positive_weight_support without constructing new matrix operations.
+   Library reuse: fixed_basis_weighted_variance_identity, variance_zero_iff_exists_constant_on_positive_weight_support, Stdlib.List and FiniteSum.
+   Boundary: This equivalence characterizes null directions in the project's finite list covariance model; it is not an eigenvector or rank-nullity algorithm.
+   *)
+  Theorem fixed_basis_null_iff_exists_constant_on_positive_weight_support :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           weighted_basis_sum coefficients basis x = c).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    rewrite <- (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    apply variance_zero_iff_exists_constant_on_positive_weight_support;
+      assumption.
+  Qed.
+
+  (**
+   [fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support] (theorem) — Finite positive-support covariance degeneracy.
+   Mathematical meaning: Strictly positive finite covariance quadratic curvature in a compatible coefficient direction is equivalent to the impossibility of any single real constant matching its composite score on the entire positive-weight sampled support.
+   Exact checked proposition: For matching coefficient/basis lengths, unit total mass and nonnegative sampled weights, 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis) iff not exists c:R constant for weighted_basis_sum coefficients basis on all positive-weight listed outcomes.
+   Premises and side conditions: Normalization, sampled-weight nonnegativity and matching dimensions are required. Individual weights may vanish; no basis independence is assumed because this is a criterion for a particular direction.
+   Proof/definition method: Apply the fixed_basis_weighted_variance_identity to rewrite the quadratic form into the variance of weighted_basis_sum, then invoke the generic variance_positive_iff_no_constant_on_positive_weight_support theorem.
+   Library reuse: fixed_basis_weighted_variance_identity, variance_positive_iff_no_constant_on_positive_weight_support, Stdlib.Reals and shared FiniteSum.
+   Boundary: The result does not imply an arbitrary covariance matrix is positive definite, nor does it provide a spectral rank calculation.
+   *)
+  Theorem fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) <->
+       ~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             weighted_basis_sum coefficients basis x = c)).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    rewrite <- (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    apply variance_positive_iff_no_constant_on_positive_weight_support;
+      assumption.
+  Qed.
+
+  (**
+   [duplicate_basis_covariance_not_positive_definite] (theorem) — Finite positive-support covariance degeneracy.
+   Mathematical meaning: Two identical basis scores yield a finite covariance matrix that is never strictly positive in every nonzero coefficient direction under normalized sample weights: the nonzero difference vector [1,-1] has zero quadratic form.
+   Exact checked proposition: For every f with total_mass=1, it is not the case that all compatible coefficient lists unequal to repeat 0 (length [f;f]) have strictly positive matrix_quadratic_form coefficients (basis_covariance_matrix [f;f]).
+   Premises and side conditions: Only normalized finite total mass is assumed; even nonnegative sampled weights are unnecessary for this exact duplicated-score degeneracy. The zero vector uses Stdlib.List.repeat and the concrete two-component witness has matching dimensions.
+   Proof/definition method: Reuse the earlier duplicate_basis_nontrivial_null_direction theorem to obtain the nonzero [1,-1] witness and zero quadratic form, convert the zero-list equality by standard list simplification, then contradict the proposed strict positive-definiteness condition with Lra.
+   Library reuse: duplicate_basis_nontrivial_null_direction, Stdlib.List.repeat/length, Stdlib.Reals and Stdlib.Lra.
+   Boundary: This proves an explicit duplicate-basis obstruction, not a general dimension or spectral rank theorem and not a claim about empirically near-duplicate tests.
+   *)
+  Theorem duplicate_basis_covariance_not_positive_definite :
+    forall f,
+      total_mass = 1 ->
+      ~ (forall coefficients,
+          length coefficients = length [f; f] ->
+          coefficients <> repeat 0 (length [f; f]) ->
+          0 < matrix_quadratic_form coefficients
+            (basis_covariance_matrix [f; f])).
+  Proof.
+    intros f Hmass Hpositive_definite.
+    destruct (duplicate_basis_nontrivial_null_direction f Hmass)
+      as [Hnonzero Hnull].
+    assert (Hnonzero_repeat :
+      ([1; -1] : list R) <> repeat 0 (length [f; f])).
+    { simpl. exact Hnonzero. }
+    pose proof (Hpositive_definite [1; -1] eq_refl
+      Hnonzero_repeat) as Hpositive.
+    lra.
   Qed.
 
 End FiniteProbabilityMoments.
