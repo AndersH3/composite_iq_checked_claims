@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 406 public theorem/lemma/example
+**Current audited inventory:** 408 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **409 proof scripts**. There are **464 named
+constructors, for **411 proof scripts**. There are **466 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -833,7 +833,20 @@ variance bridge. Duplicate-basis non-positive-definiteness
 uses the previously proved [1;-1] quadratic null witness,
 Stdlib.List.repeat and Lra. No covariance summation or
 new rank/determinant implementation is introduced.
-Current inventory: 406 claims, 409 scripts, 464 declarations.
+Earlier inventory: 406 claims, 409 scripts, 464 declarations.
+
+## Matrix-level affine covariance transformations
+
+The cross-covariance affine theorem is now a direct entrywise
+application of the previously checked covariance_of_affine_scores,
+using Stdlib.List.map_map and map_ext rather than custom recursion.
+The fixed-basis covariance specialization reuses the cross-matrix
+theorem and the already defined list-of-list matrix representation.
+This establishes the exact slope-product/slope-square behavior
+for unit-mass finite weights without constructing a new
+linear-algebra library, or assuming positivity for signed weights.
+The latest audit covers 408 claims, 411 proof scripts and
+466 fully documented named declarations.
 
 ## Deliberately retained project-specific definitions
 

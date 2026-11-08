@@ -5315,4 +5315,57 @@ Section FiniteProbabilityMoments.
     lra.
   Qed.
 
+  (**
+   [basis_cross_covariance_matrix_affine] (theorem) — Matrix-level affine covariance laws.
+   Mathematical meaning: Applying the same affine score transformation to every score in a left finite basis and another affine transformation to each score in a right basis multiplies every cross-covariance matrix entry by the product of the two slopes; additive offsets disappear.
+   Exact checked proposition: For any lists left right of real outcome scores, slopes a,c, offsets b,d and total_mass=1, basis_cross_covariance_matrix (map (fun f => fun x => a*f x+b) left) (map (fun g => fun x => c*g x+d) right) equals map (map (fun v => a*c*v)) (basis_cross_covariance_matrix left right).
+   Premises and side conditions: Only the finite sample normalization total_mass = 1 is required; the result holds for signed weights, zero slopes, any real offsets, empty or repeated score lists, and rectangular matrices. No positive-weight, nonnegative-weight, or independence hypothesis is added.
+   Proof/definition method: Unfold the cross-covariance list-of-list representation, use Stdlib.List.map_map to fuse nested maps, apply Stdlib.List.map_ext at both list levels, and invoke the previously checked covariance_of_affine_scores equality at each entry.
+   Library reuse: Stdlib.List.map_map, Stdlib.List.map_ext, covariance_of_affine_scores and the existing basis_cross_covariance_matrix definition.
+   Boundary: This is exact finite-list entrywise covariance algebra; it is not a transformation of arbitrary matrices or a spectral rank theorem.
+   *)
+  Theorem basis_cross_covariance_matrix_affine :
+    forall left right a b c d,
+      total_mass = 1 ->
+      basis_cross_covariance_matrix
+        (map (fun f => fun x => a * f x + b) left)
+        (map (fun g => fun x => c * g x + d) right) =
+      map (map (fun v => a * c * v))
+        (basis_cross_covariance_matrix left right).
+  Proof.
+    intros left right a b c d Hmass.
+    unfold basis_cross_covariance_matrix.
+    repeat rewrite map_map.
+    apply map_ext; intro f.
+    apply map_ext; intro g.
+    apply (covariance_of_affine_scores f g a b c d Hmass).
+  Qed.
+
+  (**
+   [basis_covariance_matrix_affine] (theorem) — Matrix-level affine covariance laws.
+   Mathematical meaning: The covariance matrix of a finite score basis transformed with a common slope and offset equals the original basis covariance matrix with every entry multiplied by the square of that slope, so a common offset cannot influence covariance.
+   Exact checked proposition: For all finite score bases basis, real a b and total_mass=1, basis_covariance_matrix (map (fun f => fun x => a*f x+b) basis) = map (map (fun v => a*a*v)) (basis_covariance_matrix basis).
+   Premises and side conditions: Unit total sampled mass is required for affine offset cancellation; otherwise weights may be signed, and the score list may be empty or contain duplicates. The same affine transformation applies to all basis scores.
+   Proof/definition method: Regard the fixed-basis covariance matrix definitionally as the cross-covariance matrix with equal left and right score lists; apply basis_cross_covariance_matrix_affine with identical slopes and offsets. Avoid repeating either matrix-map proof or covariance algebra.
+   Library reuse: basis_cross_covariance_matrix_affine, basis_covariance_matrix, basis_cross_covariance_matrix, Stdlib.List.map and Stdlib.Reals.
+   Boundary: This proves entrywise finite covariance transformation, not positivity for signed weights or a general matrix spectral theorem.
+   *)
+  Theorem basis_covariance_matrix_affine :
+    forall basis a b,
+      total_mass = 1 ->
+      basis_covariance_matrix
+        (map (fun f => fun x => a * f x + b) basis) =
+      map (map (fun v => a * a * v))
+        (basis_covariance_matrix basis).
+  Proof.
+    intros basis a b Hmass.
+    change
+      (basis_cross_covariance_matrix
+         (map (fun f => fun x => a * f x + b) basis)
+         (map (fun f => fun x => a * f x + b) basis) =
+       map (map (fun v => a * a * v))
+         (basis_cross_covariance_matrix basis basis)).
+    apply basis_cross_covariance_matrix_affine; exact Hmass.
+  Qed.
+
 End FiniteProbabilityMoments.

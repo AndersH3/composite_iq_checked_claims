@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **406 theorem, lemma and example declarations** in seven
+for the two reports. **408 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1050,8 +1050,24 @@ from the existing nonzero [1;-1] null direction using
 Stdlib.List.repeat. No new list, matrix, rank or eigenvalue
 implementation has been introduced.
 
-**Latest source totals: 406 public claims, 409 proof scripts,
+**Earlier source totals: 406 public claims, 409 proof scripts,
 464 documented named declarations** across seven Rocq modules.
+
+## Affine transformations of finite covariance matrices
+
+Two newly verified finite-moment matrix theorems lift the
+pre-existing scalar `covariance_of_affine_scores` law to
+rectangular cross-covariance matrices and square fixed-basis
+covariance matrices. The former scales entries by the product
+of the two affine slopes; the latter scales entries by the
+square of a common slope. Additive score offsets cancel
+under unit total mass. The proof uses Stdlib.List.map_map
+and map_ext at both levels, then reuses the established
+cross-matrix representation; there is no new matrix
+library, recursive list traversal or custom linear algebra.
+
+**Current source totals: 408 public claims, 411 proof scripts,
+466 documented named declarations** in seven Rocq files.
 
 ## Research extensions
 

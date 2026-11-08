@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 406 public theorem/lemma/example declarations,
+The current branch has 408 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**409 proof scripts**, including the generic
+**411 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -288,6 +288,18 @@ for the duplicate-score basis [f;f] using the existing
 [1;-1] null witness and Stdlib.List.repeat. No custom
 determinant, rank, list fold or vector-space implementation.
 
+### Matrix-level affine covariance transformations via Stdlib maps
+
+The existing covariance_of_affine_scores identity is now lifted
+to the rectangular basis_cross_covariance_matrix using only
+Stdlib.List.map_map and map_ext, and then to the square
+basis_covariance_matrix by the definitional cross-matrix bridge.
+The transformations require unit total mass but no positivity
+of the weights. Both theorem signatures have extensive
+mathematical and implementation comments. No new row iterator,
+matrix representation, index arithmetic or determinant code
+has been added.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -563,7 +575,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 149 proof scripts
+## FiniteMoments.v — 151 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -716,6 +728,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_null_iff_exists_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_zero_iff_exists_constant_on_positive_weight_support | **New:** matrix nullity iff composite score equals some real support constant |
 | `fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_positive_iff_no_constant_on_positive_weight_support | **New:** strictly positive matrix curvature iff no supported constant exists |
 | `duplicate_basis_covariance_not_positive_definite` (theorem) | Witness instantiation, Stdlib simplification, Lra | duplicate_basis_nontrivial_null_direction, Stdlib.List.repeat | **New:** duplicated score basis contradicts strict positive definiteness |
+| `basis_cross_covariance_matrix_affine` (theorem) | Map fusion, extensionality, lemma reuse | Stdlib.List.map_map, Stdlib.List.map_ext, covariance_of_affine_scores | **New:** cross-covariance of affine-transformed bases scales entrywise by the product of slopes |
+| `basis_covariance_matrix_affine` (theorem) | Definitional bridge, lemma reuse | basis_cross_covariance_matrix_affine, existing basis covariance definitions | **New:** fixed-basis covariance scales by the square of a common affine slope |
 
 ## FiniteBridge.v — 16 proof scripts
 
