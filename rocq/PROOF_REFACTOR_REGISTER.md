@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 340 public theorem/lemma/example declarations,
+The current branch has 342 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**343 proof scripts**, including the generic
+**345 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -58,6 +58,17 @@ are direct applications of the preexisting
 All sample-list multiplicities and arbitrary real weights are
 preserved; no additional recursive proof or list implementation
 is needed. No structural induction was introduced.
+
+### Further bridge reuse: selected samples as score moments
+
+Two new `FiniteBridge` theorems express filtered-event mass and
+filtered-event-family union mass as an indicator-score expectation
+over the original sample. They directly compose already checked
+`FiniteUnion.finite_prob_on_filtered_samples` or
+`union_prob_on_filtered_samples` with the existing
+`finite_event_probability_is_indicator_expectation` bridge.
+They introduce no probability-measure object, new expectation
+implementation, or induction.
 
 ### Current structural-induction inventory
 
@@ -433,13 +444,15 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `variance_of_permuted_score_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `equal_weight_variance_permutation_invariant` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteBridge.v — 14 proof scripts
+## FiniteBridge.v — 16 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
 | `finite_sum_models_agree` (theorem) | Computation | Definitional reduction | Earlier library refactor retained |
 | `finite_total_mass_models_agree` (theorem) | Computation | Definitional reduction | Reviewed: minimal definitional proof |
 | `finite_event_probability_is_indicator_expectation` (theorem) | Computation | Definitional reduction | Reviewed: minimal definitional proof |
+| `filtered_event_mass_is_indicator_expectation` (theorem) | Rewriting, Lemma application | FiniteUnion.finite_prob_on_filtered_samples; finite_event_probability_is_indicator_expectation; Stdlib.List.filter | **New:** bridge event mass on filtered samples to the conjunction-indicator moment |
+| `filtered_union_mass_is_indicator_expectation` (theorem) | Rewriting, Lemma application | FiniteUnion.union_prob_on_filtered_samples; finite_event_probability_is_indicator_expectation; Stdlib.List.existsb | **New:** bridge filtered family-union mass to a single indicator-score expectation |
 | `indicator_square` (lemma) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `indicator_product_and` (lemma) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `finite_event_indicator_variance` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
