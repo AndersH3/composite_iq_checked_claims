@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **430 theorem, lemma and example declarations** in seven
+for the two reports. **434 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1185,8 +1185,8 @@ matrix_bilinear_form, matrix_quadratic_form,
 weighted_basis_sum, fixed_basis_weighted_variance_identity,
 and zero_variance_is_constant_on_positive_mass.
 
-Current audited totals: **430 public claims, 433 proof scripts,
-489 documented declarations** across seven Rocq modules.
+Current audited totals: **434 public claims, 437 proof scripts,
+493 documented declarations** across seven Rocq modules.
 
 
 ## Generic finite conditional-independence interface
@@ -1194,12 +1194,15 @@ Current audited totals: **430 public claims, 433 proof scripts,
 The finite Boolean-event model now exposes the transparent
 `finite_conditional_independent` predicate: the conditioning event must
 have strictly positive mass and the conditional intersection mass must equal
-the product of the two conditional marginals. Six new checked theorems
+the product of the two conditional marginals. Ten new checked theorems
 establish that conditional intersection is symmetric, conditional independence
 is symmetric, and that the independence predicate is invariant under changes
 to either target event or the conditioning predicate outside the
 enumerated finite sample. Reordering the same weighted sample multiset also
 preserves the independence predicate by Stdlib permutation invariance.
+A conditional event-partition identity further proves independence is
+preserved by complementing the first target, the second target, or both,
+using only the existing conditional inclusion–exclusion and complement laws.
 
 These results reuse `Stdlib.Bool.andb_comm`, the already checked
 conditional-event extensionality lemmas, and real multiplication
@@ -1208,15 +1211,15 @@ finite-list traversal, Gaussian assumption, or external measure-theory axiom.
 Signed weights remain algebraically meaningful but require nonnegativity for
 probability interpretation; no unit-mass normalization is assumed.
 The interface is a starting point for future conditional-independence
-factorization and complement rules, not a certified stochastic process model.
+cross-product factorization and stronger four-cell bridge rules, not a certified stochastic process model.
 
-Current audited totals: **430 public claims, 433 proof scripts,
-489 documented declarations** across seven Rocq modules.
+Current audited totals: **434 public claims, 437 proof scripts,
+493 documented declarations** across seven Rocq modules.
 
 ## Research extensions
 
-The next valuable targets are: (1) extending finite conditional independence with complement-stability and
-four-cell `TwoEventModel` equivalences, (2) certified covariance-matrix rank statements beyond the
+The next valuable targets are: (1) connecting generic finite conditional independence to the verified
+four-cell `TwoEventModel` parameterization, (2) certified covariance-matrix rank statements beyond the
 zero-quadratic-form support result, (3) using a maintained measure-theory
 library with checked finite-to-continuous interpretation lemmas,
 (4) bivariate Gaussian density normalization and certified tail

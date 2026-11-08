@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 430 public theorem/lemma/example declarations,
+The current branch has 434 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**433 proof scripts**, including the generic
+**437 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 74 proof scripts
+## FiniteUnion.v — 78 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -680,6 +680,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_independent_conditioning_ext_on_samples` (theorem) | Rewriting both conditioning marginal and quotients | finite_prob_event_ext_on_samples, finite_conditional_prob_conditioning_ext_on_samples | **New:** conditioning-support invariance of the independence predicate |
 | `finite_conditional_independent_second_event_ext_on_samples` (theorem) | Iff rewriting and lemma application | finite_conditional_independent_symmetric, finite_conditional_independent_event_ext_on_samples | **New:** second-target support extensionality without duplicating the first-target proof |
 | `finite_conditional_independent_sample_permutation` (theorem) | Rewriting finite event masses; no list recursion | finite_prob_sample_permutation, FiniteSum.finite_sum_permutation, Stdlib.Sorting.Permutation | **New:** independence is invariant under reordering all sampled weighted outcomes |
+| `finite_conditional_prob_partition_by_event` (theorem) | Conditional inclusion–exclusion, Boolean extensionality and Lra | finite_conditional_prob_inclusion_exclusion, finite_conditional_prob_false, Stdlib.Bool | **New:** conditional event partition into target∧part and target∧¬part |
+| `finite_conditional_independent_complement_first` (theorem) | Conditional partition and complement, polynomial equality | finite_conditional_prob_partition_by_event, finite_conditional_prob_complement, finite_conditional_prob_intersection_symmetric, Stdlib.Psatz.nra | **New:** conditional independence preserved under first-target complement |
+| `finite_conditional_independent_complement_second` (theorem) | Symmetry and existing complement theorem | finite_conditional_independent_symmetric, finite_conditional_independent_complement_first | **New:** second-target complement without duplicate event algebra |
+| `finite_conditional_independent_complement_both` (theorem) | Two theorem applications | finite_conditional_independent_complement_first, finite_conditional_independent_complement_second | **New:** simultaneous complement closure of finite conditional independence |
 
 ## FiniteMoments.v — 167 proof scripts
 

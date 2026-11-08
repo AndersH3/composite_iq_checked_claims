@@ -975,9 +975,10 @@ and dependency reuse. Totals: 424 claims, 427 scripts,
 `FiniteUnion.finite_conditional_independent` is an explicit conjunction:
 positive finite conditioning-event mass and product factorization of two
 conditional event masses. It is not a new probability calculation.
-The six companion theorems derive joint-event commutativity,
+The ten companion theorems derive joint-event commutativity,
 conditional-independence symmetry, support extensionality for either target
-event and the conditioning event, and weighted sample permutation invariance. The proofs reuse the pre-existing
+event and the conditioning event, weighted sample permutation invariance,
+conditional event partition, and complement closure for one or both targets. The proofs reuse the pre-existing
 `finite_conditional_prob_event_ext_on_samples`,
 `finite_conditional_prob_conditioning_ext_on_samples`,
 `finite_prob_event_ext_on_samples`, `Stdlib.Bool.andb_comm` and
@@ -989,7 +990,7 @@ The explicit `0 < finite_prob ... given` guard rejects undefined
 zero-conditioning interpretations. Nonnegative sampled weights are not needed
 for the symmetry and extensionality *algebra*, but are needed to interpret
 the quotient as a bona fide conditional probability. The formalized interface
-does not yet give conditional complement closure, general conditional
+does not yet give generic eventwise conditional cross-product criteria, general conditional
 random-variable independence, or continuous disintegration.
 
 ## Dependencies to evaluate before deeper migration

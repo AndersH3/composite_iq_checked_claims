@@ -2538,6 +2538,136 @@ Section FiniteOutcomeSpace.
     reflexivity.
   Qed.
 
+
+  (**
+   [finite_conditional_prob_partition_by_event] (theorem) — Finite conditional event partition.
+   Mathematical meaning: Every target event splits into disjoint parts according to whether another Boolean event holds; the two conditional masses sum to the original target's conditional mass.
+   Exact checked proposition: For any finite weights, samples, target, partition and given, conditional(target AND partition | given) + conditional(target AND NOT partition | given) = conditional(target | given).
+   Premises and side conditions: Neither normalization nor nonnegative weights nor positive conditioning mass is needed for this algebraic identity of real quotients. Probability semantics still require a positive conditioning marginal and nonnegative sampled weights.
+   Proof/definition method: Specialize the previously checked conditional inclusion–exclusion theorem to the two partition components, show by exhaustive standard Boolean evaluation that their union is target and their intersection is false, and use the existing conditional-false theorem.
+   Library reuse: finite_conditional_prob_inclusion_exclusion, finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_false, Stdlib.Bool.andb/orb/negb and Stdlib.Lra.
+   Boundary: The result handles the exact enumerated weighted multiset; it does not construct conditional distributions on infinite sample spaces.
+   *)
+  Theorem finite_conditional_prob_partition_by_event :
+    forall weights samples target partition given,
+      finite_conditional_prob weights samples
+        (fun x => andb (target x) (partition x)) given +
+      finite_conditional_prob weights samples
+        (fun x => andb (target x) (negb (partition x))) given =
+      finite_conditional_prob weights samples target given.
+  Proof.
+    intros weights samples target partition given.
+    pose proof (finite_conditional_prob_inclusion_exclusion
+      weights samples
+      (fun x => andb (target x) (partition x))
+      (fun x => andb (target x) (negb (partition x)))
+      given) as Hinclusion.
+    assert (Hunion :
+      finite_conditional_prob weights samples
+        (fun x => orb
+          (andb (target x) (partition x))
+          (andb (target x) (negb (partition x)))) given =
+      finite_conditional_prob weights samples target given).
+    { apply finite_conditional_prob_event_ext_on_samples.
+      intros x _.
+      destruct (target x), (partition x); reflexivity. }
+    assert (Hintersection :
+      finite_conditional_prob weights samples
+        (fun x => andb
+          (andb (target x) (partition x))
+          (andb (target x) (negb (partition x)))) given = 0).
+    { rewrite (finite_conditional_prob_event_ext_on_samples
+        weights samples
+        (fun x => andb
+          (andb (target x) (partition x))
+          (andb (target x) (negb (partition x))))
+        (fun _ => false) given).
+      - apply finite_conditional_prob_false.
+      - intros x _.
+        destruct (target x), (partition x); reflexivity. }
+    rewrite Hunion, Hintersection in Hinclusion.
+    lra.
+  Qed.
+
+  (**
+   [finite_conditional_independent_complement_first] (theorem) — Conditional independence is closed under complementing the first target.
+   Mathematical meaning: If two finite Boolean events are conditionally independent, replacing the first event by its Boolean complement preserves conditional independence with the same second event and conditioning event.
+   Exact checked proposition: finite_conditional_independent first second given implies finite_conditional_independent (NOT first) second given for any weighted finite sample.
+   Premises and side conditions: The given event's positive mass is part of the assumed independence predicate. The argument is algebraic for arbitrary real weights; interpreting independence probabilistically additionally requires nonnegative sample weights.
+   Proof/definition method: Partition the second target into its intersections with first and NOT first, use the existing conditional complement identity and joint-event symmetry, then combine the supplied product factorization by nonlinear real polynomial arithmetic.
+   Library reuse: finite_conditional_prob_partition_by_event, finite_conditional_prob_complement, finite_conditional_prob_intersection_symmetric, Stdlib.Psatz.nra.
+   Boundary: This is Boolean-event complement closure for the specified finite weighted model, not conditional independence of arbitrary measurable random variables.
+   *)
+  Theorem finite_conditional_independent_complement_first :
+    forall weights samples first second given,
+      finite_conditional_independent weights samples first second given ->
+      finite_conditional_independent weights samples
+        (fun x => negb (first x)) second given.
+  Proof.
+    intros weights samples first second given Hindependent.
+    unfold finite_conditional_independent in *.
+    destruct Hindependent as [Hpositive Hfactor].
+    split; [exact Hpositive |].
+    pose proof (finite_conditional_prob_partition_by_event
+      weights samples second first given) as Hpartition.
+    pose proof (finite_conditional_prob_complement
+      weights samples first given Hpositive) as Hcomplement.
+    rewrite (finite_conditional_prob_intersection_symmetric
+      weights samples (fun x => negb (first x)) second given).
+    rewrite <- (finite_conditional_prob_intersection_symmetric
+      weights samples first second given) in Hpartition.
+    nra.
+  Qed.
+
+  (**
+   [finite_conditional_independent_complement_second] (theorem) — Conditional independence is closed under complementing the second target.
+   Mathematical meaning: Complementing the second Boolean target has the same independence-preserving property as complementing the first, without repeating the finite conditional partition arithmetic.
+   Exact checked proposition: finite_conditional_independent first second given implies finite_conditional_independent first (NOT second) given, with all weights and the finite outcome list preserved.
+   Premises and side conditions: Positive conditioning mass remains implicit in the source and destination predicates; individual weights may be signed for the algebraic implication, though nonnegative weights are needed for probability semantics.
+   Proof/definition method: Swap targets by the already proved symmetry equivalence, apply the first-target complement theorem, and swap back. No new Boolean case split, sample induction or polynomial manipulation is introduced.
+   Library reuse: finite_conditional_independent_symmetric and finite_conditional_independent_complement_first.
+   Boundary: The result concerns finite conditional factorization only; it is not a Gaussian or continuous independence theorem.
+   *)
+  Theorem finite_conditional_independent_complement_second :
+    forall weights samples first second given,
+      finite_conditional_independent weights samples first second given ->
+      finite_conditional_independent weights samples first
+        (fun x => negb (second x)) given.
+  Proof.
+    intros weights samples first second given Hindependent.
+    apply (proj2 (finite_conditional_independent_symmetric
+      weights samples first (fun x => negb (second x)) given)).
+    apply (finite_conditional_independent_complement_first
+      weights samples second first given).
+    apply (proj1 (finite_conditional_independent_symmetric
+      weights samples first second given)).
+    exact Hindependent.
+  Qed.
+
+  (**
+   [finite_conditional_independent_complement_both] (theorem) — Closure under simultaneous complementation.
+   Mathematical meaning: If a pair of events conditionally factorizes, then the pair of complementary events also conditionally factorizes under the same strictly positive conditioning event.
+   Exact checked proposition: finite_conditional_independent first second given implies finite_conditional_independent (NOT first) (NOT second) given for arbitrary finite weights and samples.
+   Premises and side conditions: The same positivity condition for the given event is preserved in all steps, and the weighted sample multiset is unchanged. No unconditional independence, normalization or distinct-outcome hypothesis is silently supplied.
+   Proof/definition method: Compose the two one-sided conditional complement closure lemmas, applying each exactly once and leaving the already verified probability algebra untouched.
+   Library reuse: finite_conditional_independent_complement_first and finite_conditional_independent_complement_second.
+   Boundary: This is a discrete Boolean factorization law and does not automatically extend to arbitrary transformations of random variables.
+   *)
+  Theorem finite_conditional_independent_complement_both :
+    forall weights samples first second given,
+      finite_conditional_independent weights samples first second given ->
+      finite_conditional_independent weights samples
+        (fun x => negb (first x))
+        (fun x => negb (second x)) given.
+  Proof.
+    intros weights samples first second given Hindependent.
+    apply (finite_conditional_independent_complement_first
+      weights samples first (fun x => negb (second x)) given).
+    apply (finite_conditional_independent_complement_second
+      weights samples first second given).
+    exact Hindependent.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
