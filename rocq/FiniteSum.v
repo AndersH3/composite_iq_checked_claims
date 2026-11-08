@@ -434,6 +434,45 @@ Proof.
   rewrite map_map.
   reflexivity.
 Qed.
+ 
+(* The standard pairwise zip truncates only when input lengths differ.
+   Here both lists are maps of the very same source list, so they have
+   identical lengths and represent a per-element pair map. The single
+   generic list-shape induction below replaces domain-specific matrix
+   zip inductions, while the actual sum still uses Stdlib.List.map. *)
+(**
+   [finite_sum_zip_map] (lemma) — Shared real-valued list sums and their
+   algebraic/order laws.
+   Mathematical meaning: Combining two maps of one list is pointwise
+   pairing, so a finite real sum over their zip is a mapped finite sum.
+   Exact checked proposition: forall xs f g h, finite_sum h
+   (combine (map f xs) (map g xs)) =
+   finite_sum (fun x => h (f x, g x)) xs.
+   Premises and side conditions: The two mapped lists share their source,
+   hence have equal length; there is no probability or positivity premise.
+   Proof/definition method: A single structural list induction identifies
+   Stdlib.List.combine with pointwise pairing, followed by finite_sum_map.
+   Library reuse: Stdlib.List.combine, Stdlib.List.map,
+   FiniteSum.finite_sum_map, and definitional equality.
+   Boundary: Only applies to equally aligned pairwise list maps;
+   arbitrary differently sized zip inputs are excluded.
+ *)
+Lemma finite_sum_zip_map {A B C : Type} :
+  forall (xs : list A) (f : A -> B) (g : A -> C) (h : B * C -> R),
+    finite_sum h (combine (map f xs) (map g xs)) =
+      finite_sum (fun x => h (f x, g x)) xs.
+Proof.
+  intros xs f g h.
+  assert (Hcombine :
+    combine (map f xs) (map g xs) =
+      map (fun x => (f x, g x)) xs).
+  { induction xs as [|x xs IH]; simpl.
+    - reflexivity.
+    - now rewrite IH. }
+  rewrite Hcombine, finite_sum_map.
+  reflexivity.
+Qed.
+
 
 (* Finite Fubini/interchange law for an explicit product of two
    lists, proved once using the existing sum-additivity laws.
