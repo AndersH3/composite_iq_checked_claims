@@ -1491,19 +1491,28 @@ Section FiniteProbabilityMoments.
   (**
    [variance_of_general_weighted_sum] (theorem) — Finite weighted score expectations,
    variances and covariance matrices.
-   Mathematical meaning: Identifies the precise variance, scaling behavior, or
-   variance bound for the stated score construction.
+   Mathematical meaning: For a finite composite score with arbitrary component
+   coefficients, its variance equals the finite double weighted
+   covariance sum, the quadratic-form identity Var(sum a_i X_i)
+   = sum_i sum_j a_i a_j Cov(X_i,X_j).
    Exact checked proposition: Theorem variance_of_general_weighted_sum : forall
    components, total_mass = 1 -> variance (linear_combination components) =
    covariance_quadratic_form components components.
-   Premises and side conditions: The displayed hypotheses include unit total sample
-   mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
-   references include variance., covariance_of_general_weighted_sums, Hmass..
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
-   *)
+   Premises and side conditions: The checked public statement explicitly assumes
+   total_mass=1 over sample occurrences. The score coefficients
+   may be signed, component scores need not be independent, and
+   the component list may repeat scores. Weight nonnegativity is
+   not used for this algebraic equality.
+   Proof/definition method: Expand variance as self-covariance and
+   specialize the previously checked
+   covariance_of_general_weighted_sums theorem with identical
+   left and right component lists, preserving the original API.
+   Library reuse: FiniteSum.finite_sum, covariance_of_general_weighted_sums,
+   linear_combination, covariance_quadratic_form and Stdlib.Reals.
+   Boundary: A finite weighted outcome model, not an assertion
+   about a continuum distribution or actual IQ test covariance;
+   empirical covariance values and model fit are not proved.
+*)
   Theorem variance_of_general_weighted_sum :
     forall components,
       total_mass = 1 ->
@@ -2585,21 +2594,28 @@ Section FiniteProbabilityMoments.
   (**
    [covariance_matrix_is_positive_semidefinite] (theorem) — Finite weighted score
    expectations, variances and covariance matrices.
-   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
-   quadratic-form expression.
+   Mathematical meaning: The covariance-matrix quadratic form evaluated at
+   the coefficients of the given component list is nonnegative:
+   it agrees with the variance of their weighted composite.
    Exact checked proposition: Theorem covariance_matrix_is_positive_semidefinite :
    forall components, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
    0 <= matrix_quadratic_form (map fst components) (covariance_matrix components).
-   Premises and side conditions: The displayed hypotheses include unit total sample
-   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
-   conditions; sample or list membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas; references include
-   covariance_matrix_quadratic_form_is_variance, variance_nonnegative.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
-   *)
+   Premises and side conditions: Requires total_mass=1 and nonnegative outcome
+   weights on every enumerated sample occurrence. Coefficients
+   can be signed and the component list can contain duplicates.
+   This particular statement evaluates one supplied coefficient
+   vector; related basis lemmas address arbitrary coefficient vectors.
+   Proof/definition method: Rewrite the matrix quadratic expression as the
+   variance of the weighted score using
+   covariance_matrix_quadratic_form_is_variance, then invoke
+   variance_nonnegative with the explicit mass hypotheses.
+   Library reuse: Stdlib.List.map, FiniteSum, covariance matrix identities,
+   covariance_matrix_quadratic_form_is_variance and variance_nonnegative.
+   Boundary: Nonnegative real quadratic form for the finite
+   sample representation, not an empirical estimated matrix
+   certificate or positive definiteness (strictly positive for
+   nonzero coefficient vectors).
+*)
   Theorem covariance_matrix_is_positive_semidefinite :
     forall components,
       total_mass = 1 ->
@@ -3051,22 +3067,28 @@ Section FiniteProbabilityMoments.
   (**
    [finite_covariance_cauchy_schwarz_squared] (theorem) — Finite weighted score
    expectations, variances and covariance matrices.
-   Mathematical meaning: Derives a covariance identity or inequality from finite
-   weighted expectations.
+   Mathematical meaning: Establishes the finite probabilistic covariance
+   Cauchy-Schwarz bound Cov(f,g)^2 <= Var(f) Var(g), including
+   the degenerate case of one or both zero variances.
    Exact checked proposition: Theorem finite_covariance_cauchy_schwarz_squared :
    forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
    covariance f g * covariance f g <= variance f * variance g.
-   Premises and side conditions: The displayed hypotheses include unit total sample
-   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
-   conditions; sample or list membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, ring/field normalization; references include
-   nonnegative_quadratic_discriminant., variance_nonnegative,
-   variance_of_two_score_sum.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
-   *)
+   Premises and side conditions: The sample mass is normalized to one and each
+   enumerated weight is nonnegative; no strict variance
+   positivity or score independence is needed. Score values
+   and outcomes are otherwise unrestricted real-valued data.
+   Proof/definition method: Use nonnegativity of every variance to establish
+   positivity of the quadratic variance of f + t*g; expand
+   using variance_of_two_score_sum and covariance_scale_second,
+   and apply the already proved nonnegative_quadratic_discriminant.
+   Library reuse: Stdlib.Reals ring normalization, Lra/Psatz,
+   variance_nonnegative, nonnegative_quadratic_discriminant,
+   variance_of_two_score_sum and covariance_scale_second.
+   Boundary: Squared covariance inequality for a finite
+   weighted distribution. The bound alone does not estimate a
+   correlation or assert Gaussianity; normalized correlations
+   require nonzero standard deviations.
+*)
   Theorem finite_covariance_cauchy_schwarz_squared :
     forall f g,
       total_mass = 1 ->
