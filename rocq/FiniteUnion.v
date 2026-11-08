@@ -1040,6 +1040,102 @@ Section FiniteOutcomeSpace.
     apply FiniteSum.finite_sum_app.
   Qed.
 
+  (* Appending sample lists is additive even for signed masses.
+     Reuse the existing event-mass append law when the event is a
+     union encoded by Stdlib.List.existsb; no event-specific fold. *)
+  (**
+   [union_prob_sample_append] (theorem) — Additivity over outcome lists.
+   Mathematical meaning: For a fixed family of Boolean events,
+   the union mass on concatenated outcome lists equals the sum
+   of union masses on both lists. Duplicated outcome occurrences
+   contribute once for each position, including across the join.
+   Exact checked proposition: forall weights left right events,
+   union_prob weights (left ++ right) events =
+   union_prob weights left events + union_prob weights right events.
+   Premises and side conditions: Works with arbitrary real weights,
+   overlapping or repeated events, and duplicated outcomes. No
+   independence, nonnegativity or mass normalization is assumed.
+   Proof/definition method: Unfold the existing union_prob alias
+   and apply finite_prob_sample_append directly; no new induction.
+   Library reuse: Stdlib.List.app and existsb,
+   finite_prob_sample_append and the existing union_prob definition.
+   Boundary: Concatenation is a multiset/list operation rather than
+   an assertion of disjoint measurable probability events.
+   *)
+  Theorem union_prob_sample_append :
+    forall weights left right events,
+      union_prob weights (left ++ right) events =
+        union_prob weights left events +
+        union_prob weights right events.
+  Proof.
+    intros weights left right events.
+    unfold union_prob.
+    apply finite_prob_sample_append.
+  Qed.
+
+  (* Filtering distributes over list concatenation by Stdlib.List;
+     use the library law instead of proving another list recursion. *)
+  (**
+   [finite_prob_filtered_append] (theorem) — Event mass after filtering.
+   Mathematical meaning: Filtering a concatenated outcome list and
+   measuring a fixed event is additive across the two independently
+   filtered input lists, preserving duplicate contributions.
+   Exact checked proposition: forall weights left right p e,
+   finite_prob weights (filter p (left ++ right)) e =
+   finite_prob weights (filter p left) e +
+   finite_prob weights (filter p right) e.
+   Premises and side conditions: The filter p and event e are Boolean
+   predicates. The real outcome weights are arbitrary; no positivity,
+   normalization, event independence, or distinctness is assumed.
+   Proof/definition method: Rewrite the sample using
+   Stdlib.List.filter_app and invoke finite_prob_sample_append.
+   Library reuse: Stdlib.List.filter_app, List.app,
+   and the existing finite_prob_sample_append theorem.
+   Boundary: This is exact finite sample-list algebra; it does not
+   define conditional probabilities or continuous filtering.
+   *)
+  Theorem finite_prob_filtered_append :
+    forall weights left right p e,
+      finite_prob weights (filter p (left ++ right)) e =
+        finite_prob weights (filter p left) e +
+        finite_prob weights (filter p right) e.
+  Proof.
+    intros weights left right p e.
+    rewrite filter_app.
+    apply finite_prob_sample_append.
+  Qed.
+
+  (**
+   [union_prob_filtered_append] (theorem) — Finite union sample additivity.
+   Mathematical meaning: The union mass of any finite event family
+   after filtering concatenated outcome lists is the sum of that
+   union mass on each separately filtered list.
+   Exact checked proposition: forall weights left right p events,
+   union_prob weights (filter p (left ++ right)) events =
+   union_prob weights (filter p left) events +
+   union_prob weights (filter p right) events.
+   Premises and side conditions: Any finite event family and sample
+   lists are allowed, including duplicates. Sample weights can be
+   negative, since the result is an algebraic equality rather than
+   an inequality or a distributional interpretation.
+   Proof/definition method: Apply Stdlib.List.filter_app to the
+   concatenation, then reuse union_prob_sample_append directly.
+   Library reuse: Stdlib.List.filter_app and the existing
+   union_prob_sample_append finite-union law.
+   Boundary: A finite enumeration identity; no assumption about
+   empirical admission routes or probabilistic independence.
+   *)
+  Theorem union_prob_filtered_append :
+    forall weights left right p events,
+      union_prob weights (filter p (left ++ right)) events =
+        union_prob weights (filter p left) events +
+        union_prob weights (filter p right) events.
+  Proof.
+    intros weights left right p events.
+    rewrite filter_app.
+    apply union_prob_sample_append.
+  Qed.
+
   (**
    [finite_prob_sample_permutation] (theorem) — Finite Boolean event mass and
    union/intersection inequalities.
