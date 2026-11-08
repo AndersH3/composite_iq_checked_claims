@@ -22,10 +22,11 @@ proof statements and report mappings do not change.
 ## Consolidated finite real sums and verified model bridge
 
 The shared `FiniteSum.v` module implements one definition using
-`Stdlib.List.map` and `fold_right`, and proves **twelve reusable
+`Stdlib.List.map` and `fold_right`, and proves **sixteen reusable
 lemmas**: extensionality, addition, scalar multiplication, positivity,
 monotonicity, zero sums, append, permutation invariance, map composition,
-negation, subtraction, and reversal. In
+negation, subtraction, reversal, support-aware extensionality,
+member bounds, termwise-zero characterization, and double-sum interchange. In
 `FiniteMoments.v` and `FiniteUnion.v`, public `sum_finite` and
 `finite_sum` remain transparent aliases. Existing theorem signatures
 are preserved, while the previous duplicate inductions now delegate
@@ -165,7 +166,7 @@ The empty-event-family proof now delegates to its false-event result.
 There is one new shared projection lemma; all previous theorem
 statements are unchanged.
 
-The seven source files now contain **311 declarations**:
+At the four-cell bridge milestone, the seven source files contained **311 declarations**:
 64 (`Hoeflin`), 67 (`Admissions`), 38 (`FiniteUnion`),
 103 (`FiniteMoments`), 12 (`FiniteSum`), 14 (`FiniteBridge`)
 and 13 (`FourCellBridge`). The first six were checked for
@@ -175,6 +176,38 @@ This remains an incremental refactor. No wholesale migration to
 MathComp, Coquelicot, abstract measure theory or a separate matrix
 library has been performed; such a migration needs checked
 interpretation/compatibility proofs.
+
+## Library-consolidation milestone: 320 checked declarations
+
+This continuation verifies four generic finite-sum laws and five
+finite-event laws, retaining all 311 prior named proof statements:
+
+| Module | Reused library or theorem | Replaced/added proof responsibility |
+|---|---|---|
+| `FiniteSum.v` | `Stdlib.List.map_ext_in` | `finite_sum_ext_in` weakens the extensionality premise to support membership; the pre-existing `finite_sum_ext` is now a wrapper |
+| `FiniteSum.v` | Existing `finite_sum_nonnegative` and real linear order | `finite_sum_member_le` and `finite_sum_nonnegative_zero` centralize nonnegative-weight member bounds and the zero-sum criterion |
+| `FiniteSum.v` | Existing `finite_sum_add`, `finite_sum_zero`, Rocq Stdlib list folds | `finite_sum_swap` establishes the reusable finite Fubini identity, without introducing another recursion or requiring a general measure theory |
+| `FiniteMoments.v` | `FiniteSum.finite_sum_nonnegative_zero` | `sum_finite_zero_implies_zero_terms` preserves its public theorem statement while removing its separate list induction |
+| `FiniteUnion.v` | `Stdlib.List.existsb_exists`, `FiniteSum.finite_sum_member_le` | `union_indicator_bound` no longer performs bespoke Boolean-event list induction |
+| `FiniteUnion.v` | `FiniteSum.finite_sum_scale` and `finite_sum_swap` | `interchange_finite_sums` delegates to generic finite-sum laws, eliminating another event-list induction |
+| `FiniteUnion.v` | Support-aware extensionality and nonnegative member/zero theorems | Characterizes when event probability is zero and when an observed positive-weight event forces positive mass |
+| `FiniteUnion.v` | `finite_prob_event_monotone`, `finite_prob_inclusion_exclusion`, `normalized_finite_prob_unit_interval` | Derives arbitrary finite-event Fréchet overlap bounds rather than repeating four-cell algebra |
+
+**Actual source inventory:** `FiniteSum` 16; `Hoeflin` 64;
+`Admissions` 67; `FiniteUnion` 43; `FiniteMoments` 103;
+`FiniteBridge` 14; `FourCellBridge` 13. **Total: 320**.
+
+The complete seven-module proof source at commit
+`f7425656ff7b2f82ed96f5b6348020aec7c6aee1`
+passed the pinned Rocq 9.2 kernel check. No previously named
+theorem, lemma, or example statement was modified. The root README,
+original report sources/PDFs and historical Ada/SPARK proof evidence
+remain unchanged.
+
+A complete replacement with MathComp matrices or a continuous
+measure library is not claimed. Both would require pinned additional
+dependencies and kernel-checked translation/equivalence theorems
+that preserve the existing finite interpretations.
 
 ## Deliberately retained project-specific definitions
 
