@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **386 theorem, lemma and example declarations** in seven
+for the two reports. **389 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -962,8 +962,21 @@ outcome of positive weight. All claims allow zero-weight
 outcomes and use Stdlib real order plus FiniteSum extensionality,
 the existing variance identity, and prior nullity theorems.
 
-The current seven-module inventory contains **386 public claims**,
+At that preceding stage there were **386 public claims**,
 **389 registered proof scripts** and **444 documented declarations**.
+
+## Null-direction equivalences and a proof refactor
+
+Generic finite variance is now proved zero iff the score is constant
+on positive-weight sampled outcomes, and also iff it has zero
+covariance with every comparison score. The fixed-basis covariance
+null/constant iff proof is refactored to reuse the first theorem;
+a second fixed-basis iff uses the covariance-orthogonality theorem.
+This is a strictly algebraic finite-outcome characterization,
+not an arbitrary matrix rank function or spectral algorithm.
+
+Latest seven-module totals: **389 public theorem/lemma/example
+declarations**, **392 proof scripts**, **447 documented names**.
 
 ## Research extensions
 

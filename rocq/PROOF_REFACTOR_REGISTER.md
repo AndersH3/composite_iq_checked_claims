@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 386 public theorem/lemma/example declarations,
+The current branch has 389 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**389 proof scripts**, including the generic
+**392 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -216,6 +216,16 @@ using standard real-order case analysis. An exact equivalence
 then identifies zero fixed-basis covariance quadratic form with
 weighted scores constant on the positive-weight sample support.
 This does not add an unverified matrix rank or determinant routine.
+
+### Generic variance equivalences reused by fixed-basis null proofs
+
+Two general equivalences now characterize zero variance by constancy
+on positive-weight sampled support and by vanishing covariance with
+all comparison scores. The existing fixed-basis null/constant theorem
+is refactored to apply the generic variance equivalence directly.
+A further fixed-basis iff theorem characterizes every null direction
+by orthogonality to all finite comparison scores. This uses only
+previously checked moment and matrix-variance bridge lemmas.
 
 ### Current structural-induction inventory
 
@@ -492,7 +502,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 129 proof scripts
+## FiniteMoments.v — 132 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -624,7 +634,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `covariance_extensional_on_positive_weight_support` (theorem) | Rewriting, lemma application | expectation_extensional_on_positive_weight_support | **New:** covariance invariance under changes off positive support |
 | `variance_extensional_on_positive_weight_support` (theorem) | Lemma application | covariance_extensional_on_positive_weight_support | **New:** variance invariance on positive support |
 | `variance_zero_of_constant_on_positive_weight_support` (theorem) | Lemma application, equality transitivity | variance_extensional_on_positive_weight_support, variance_of_constant_score_zero | **New:** constant positive support entails zero finite variance |
-| `fixed_basis_null_iff_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | null_covariance_direction_constant_on_positive_mass, fixed_basis_weighted_variance_identity, variance_zero_of_constant_on_positive_weight_support | **New:** exact iff between finite covariance quadratic nullity and constant positive-support score |
+| `variance_zero_iff_constant_on_positive_weight_support` (theorem) | Lemma application, iff split | zero_variance_is_constant_on_positive_mass, variance_zero_of_constant_on_positive_weight_support | **New:** zero variance iff constant score on positive-mass outcomes |
+| `variance_zero_iff_covariance_zero_with_every_score` (theorem) | Lemma application, definitional reduction | zero_variance_implies_zero_covariance_first, variance | **New:** zero variance iff zero covariance with every comparison score |
+| `fixed_basis_null_iff_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_zero_iff_constant_on_positive_weight_support | **Refactored:** complete fixed-basis null iff delegates to generic variance equivalence |
+| `fixed_basis_null_iff_orthogonal_to_every_score` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_zero_iff_covariance_zero_with_every_score | **New:** fixed-basis null directions iff orthogonal to all finite scores |
 
 ## FiniteBridge.v — 16 proof scripts
 

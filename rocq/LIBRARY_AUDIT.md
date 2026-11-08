@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 386 public theorem/lemma/example
+**Current audited inventory:** 389 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **389 proof scripts**. There are **444 named
+constructors, for **392 proof scripts**. There are **447 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -759,6 +759,18 @@ The resulting zero-variance converse combines with existing
 fixed-basis covariance quadratic form exactly. No new data
 structure, recursive finite sum, determinant or eigenvalue solver
 is implemented. Inventory: 386 claims, 389 scripts, 444 declarations.
+
+## Generic zero-variance equivalences and fixed-basis reuse
+
+The equivalence between zero variance and constant positive-weight
+support reuses checked forward/backward implications. Zero variance
+is additionally equivalent to zero covariance with every comparison
+score, by the finite Cauchy–Schwarz-derived covariance-zero lemma.
+The previously added fixed-basis null/constant result now delegates
+to the general equivalence, while a new fixed-basis orthogonality
+iff follows from the existing variance/matrix identity.
+No determinant, eigenvalue, or rank implementation is added.
+Current inventory: 389 claims, 392 scripts and 447 declarations.
 
 ## Deliberately retained project-specific definitions
 

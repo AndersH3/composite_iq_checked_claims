@@ -4687,12 +4687,65 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [variance_zero_iff_constant_on_positive_weight_support] (theorem) — Equivalences for exact finite covariance nullity.
+   Mathematical meaning: Under normalized nonnegative finite weights, a score has zero variance exactly when it is equal to its own expectation on each sampled outcome carrying positive weight; zero-mass sample values are irrelevant.
+   Exact checked proposition: For all f, total_mass = 1 and nonnegative sampled weights imply variance f = 0 iff every x in samples with 0 < weight x satisfies f x = expect f.
+   Premises and side conditions: Unit total mass and nonnegative weight at every listed outcome are required. No individual strictly-positive weight, unique outcome, event independence or Gaussian assumption is imposed.
+   Proof/definition method: The forward implication delegates to zero_variance_is_constant_on_positive_mass, while the converse is precisely variance_zero_of_constant_on_positive_weight_support with the constant chosen as expect f.
+   Library reuse: zero_variance_is_constant_on_positive_mass, variance_zero_of_constant_on_positive_weight_support, FiniteSum and Stdlib.Reals.
+   Boundary: The equivalence is exact for finite enumerated outcomes only; it is not a general spectral theorem or empirical statement about test scores.
+   *)
+  Theorem variance_zero_iff_constant_on_positive_weight_support :
+    forall f,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (variance f = 0 <->
+       forall x, In x samples -> 0 < weight x ->
+         f x = expect f).
+  Proof.
+    intros f Hmass Hw.
+    split.
+    - intros Hzero x Hx Hpositive.
+      apply (zero_variance_is_constant_on_positive_mass
+        f x Hmass Hw Hzero Hx Hpositive).
+    - intros Hconstant.
+      apply (variance_zero_of_constant_on_positive_weight_support
+        f (expect f) Hmass Hw Hconstant).
+  Qed.
+
+  (**
+   [variance_zero_iff_covariance_zero_with_every_score] (theorem) — Equivalences for exact finite covariance nullity.
+   Mathematical meaning: With nonnegative normalized finite sample weights, a score has zero variance precisely when it is uncorrelated with every finite real-valued comparison score, including itself.
+   Exact checked proposition: For every f, total_mass = 1 and nonnegative sampled weights imply variance f = 0 iff forall g, covariance f g = 0.
+   Premises and side conditions: Normalization and nonnegative enumerated weights are essential for the forward direction via finite Cauchy–Schwarz. The reverse direction is purely definitional and does not require independence or positive individual variances.
+   Proof/definition method: Use zero_variance_implies_zero_covariance_first for the forward direction, and instantiate the universal covariance-zero statement at g=f, where variance is definitionally self-covariance, for the reverse.
+   Library reuse: zero_variance_implies_zero_covariance_first, FiniteMoments.variance and Stdlib.Reals.
+   Boundary: This equivalence is restricted to the finite weighted covariance model, not a general Hilbert-space or measure-theoretic result.
+   *)
+  Theorem variance_zero_iff_covariance_zero_with_every_score :
+    forall f,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (variance f = 0 <->
+       forall g, covariance f g = 0).
+  Proof.
+    intros f Hmass Hw.
+    split.
+    - intros Hzero g.
+      apply zero_variance_implies_zero_covariance_first;
+        assumption.
+    - intros Hall.
+      unfold variance.
+      apply Hall.
+  Qed.
+
+  (**
    [fixed_basis_null_iff_constant_on_positive_weight_support] (theorem) — Nonnegative weighted finite support and covariance nullity.
    Mathematical meaning: A real coefficient vector is a zero direction of the finite fixed-basis covariance quadratic form precisely when its weighted score is equal to its own expected value on every positive-mass enumerated outcome.
    Exact checked proposition: For any coefficients basis of equal length, with total_mass = 1 and nonnegative sampled weights, matrix_quadratic_form coefficients (basis_covariance_matrix basis) = 0 iff every sampled x with 0 < weight x satisfies weighted_basis_sum coefficients basis x = expect (weighted_basis_sum coefficients basis).
    Premises and side conditions: The coefficient and basis list lengths must agree. The total sample weight is one and every listed weight is nonnegative, but individual weights may equal zero; those outcomes impose no equality constraint on the score.
-   Proof/definition method: For the forward direction apply the existing null_covariance_direction_constant_on_positive_mass theorem. For the converse, identify the quadratic form with variance by fixed_basis_weighted_variance_identity and reuse variance_zero_of_constant_on_positive_weight_support.
-   Library reuse: null_covariance_direction_constant_on_positive_mass, variance_zero_of_constant_on_positive_weight_support, fixed_basis_weighted_variance_identity, FiniteSum and Stdlib.Reals.
+   Proof/definition method: Rewrite the covariance-matrix quadratic form as the weighted-score variance with fixed_basis_weighted_variance_identity, then apply the generic variance_zero_iff_constant_on_positive_weight_support theorem. Both directions now reuse one checked equivalence rather than duplicating the support proof.
+   Library reuse: fixed_basis_weighted_variance_identity, variance_zero_iff_constant_on_positive_weight_support, FiniteSum and Stdlib.Reals.
    Boundary: This is a complete finite positive-support characterization of zero quadratic form, not a spectral matrix rank computation or an inference about empirical IQ factors.
    *)
   Theorem fixed_basis_null_iff_constant_on_positive_weight_support :
@@ -4707,18 +4760,36 @@ Section FiniteProbabilityMoments.
            expect (weighted_basis_sum coefficients basis)).
   Proof.
     intros coefficients basis Hlength Hmass Hw.
-    split.
-    - intros Hnull x Hx Hpositive.
-      apply (null_covariance_direction_constant_on_positive_mass
-        coefficients basis x Hlength Hmass Hw Hx Hpositive Hnull).
-    - intros Hconstant.
-      rewrite <- (fixed_basis_weighted_variance_identity
-        coefficients basis Hlength Hmass).
-      apply (variance_zero_of_constant_on_positive_weight_support
-        (weighted_basis_sum coefficients basis)
-        (expect (weighted_basis_sum coefficients basis))
-        Hmass Hw).
-      exact Hconstant.
+    rewrite <- (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    apply variance_zero_iff_constant_on_positive_weight_support;
+      assumption.
+  Qed.
+
+
+  (**
+   [fixed_basis_null_iff_orthogonal_to_every_score] (theorem) — Equivalences for exact finite covariance nullity.
+   Mathematical meaning: A finite fixed-basis covariance quadratic form vanishes exactly when the corresponding weighted basis score has zero covariance with every real-valued comparison score on the same finite weighted outcome space.
+   Exact checked proposition: For all coefficients basis of equal length, total_mass=1 and nonnegative sampled weights imply matrix_quadratic_form coefficients (basis_covariance_matrix basis) = 0 iff forall g, covariance (weighted_basis_sum coefficients basis) g = 0.
+   Premises and side conditions: The coefficient/basis list lengths must agree; sample weights are nonnegative and sum to one. No basis independence, nonsingular covariance matrix, or nonzero comparison variance is assumed.
+   Proof/definition method: Rewrite the fixed-basis quadratic form as the variance of the same weighted score via fixed_basis_weighted_variance_identity and apply the fully general variance_zero_iff_covariance_zero_with_every_score theorem without reconstructing any matrix rows.
+   Library reuse: fixed_basis_weighted_variance_identity, variance_zero_iff_covariance_zero_with_every_score, FiniteSum and Stdlib.Reals.
+   Boundary: This exact finite null/orthogonality correspondence does not implement rank, characteristic polynomials, eigenvectors, or Gaussian score analysis.
+   *)
+  Theorem fixed_basis_null_iff_orthogonal_to_every_score :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 <->
+       forall g, covariance (weighted_basis_sum coefficients basis) g = 0).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    rewrite <- (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    apply variance_zero_iff_covariance_zero_with_every_score;
+      assumption.
   Qed.
 
 
