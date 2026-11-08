@@ -5,10 +5,12 @@ on:
     paths:
       - 'rocq/**'
       - '.github/workflows/rocq-proofs.yml'
+      - 'scripts/check_rocq_documentation.py'
   pull_request:
     paths:
       - 'rocq/**'
       - '.github/workflows/rocq-proofs.yml'
+      - 'scripts/check_rocq_documentation.py'
   workflow_dispatch:
 
 jobs:
@@ -17,6 +19,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Check module headers and per-declaration proof documentation
+        shell: bash
+        run: python3 scripts/check_rocq_documentation.py
 
       - name: Reject unfinished proof placeholders and new axioms
         shell: bash
