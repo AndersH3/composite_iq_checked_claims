@@ -26,15 +26,14 @@ The GitHub Actions workflow at
 whole proof scripts with a pinned `rocq/rocq-prover:9.2.0` image.
 Compilation performs kernel checking, not merely parsing or syntax linting.
 The workflow also runs
-[`scripts/check_rocq_documentation.py`](../scripts/check_rocq_documentation.py)
+[`scripts/check_rocq_documentation.sh`](../scripts/check_rocq_documentation.sh)
 to require an explanatory header in each module and a declaration-specific
 proof comment with mathematical meaning, explicit statement, assumptions,
-proof method, library reuse and scope. The checker uses the existing
-`deal` contracts and can be run from the repository root after installing
-`requirements-dev.txt`:
+proof method, library reuse and scope. The checker is a shell CI utility using Python's standard library and can
+be run from the repository root without extra dependencies:
 
 ```sh
-python3 scripts/check_rocq_documentation.py
+bash scripts/check_rocq_documentation.sh
 ```
 
 The workflow also rejects the syntactic use of `Admitted`, `Axiom`,
@@ -290,8 +289,9 @@ purpose, mathematical model, imports, trust boundaries, and reproduction
 information. No proof terms or previously declared proposition types were
 changed by the documentation-only commits. The separate static
 documentation-checking script is enforced in GitHub Actions **before**
-Rocq kernel checking. The script itself follows the repository's
-five-Deal-contracts-per-function policy.
+Rocq kernel checking. The checker is implemented as a shell utility rather than adding a new
+Python source module, preserving the historical source-pinned Python
+Deal/SPARK inventory and all existing contract quality gates.
 
 Three small library-backed proof additions precede the documentation
 pass: `FiniteSum.finite_sum_filter` proves that summing over
