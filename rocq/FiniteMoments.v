@@ -780,22 +780,18 @@ Section FiniteProbabilityMoments.
       covariance_double_sum fs (f :: gs) =
         covariance_row_sum f fs + covariance_double_sum fs gs.
   Proof.
-    intros fs; induction fs as [|g fs IH]; intros f gs.
-    - change (0 = 0 + 0); ring.
-    - change
-        (covariance_row_sum g (f :: gs) +
-         covariance_double_sum fs (f :: gs) =
-         covariance_row_sum f (g :: fs) +
-           (covariance_row_sum g gs +
-            covariance_double_sum fs gs)).
-      rewrite IH.
-      change
-        ((covariance g f + covariance_row_sum g gs) +
-          (covariance_row_sum f fs + covariance_double_sum fs gs) =
-         (covariance f g + covariance_row_sum f fs) +
-          (covariance_row_sum g gs + covariance_double_sum fs gs)).
-      rewrite (covariance_symmetric g f).
-      ring.
+    intros fs f gs.
+    unfold covariance_double_sum, covariance_row_sum.
+    change (FiniteSum.finite_sum
+      (fun g => covariance g f +
+        FiniteSum.finite_sum (covariance g) gs) fs =
+      FiniteSum.finite_sum (covariance f) fs +
+      FiniteSum.finite_sum
+        (fun g => FiniteSum.finite_sum (covariance g) gs) fs).
+    rewrite FiniteSum.finite_sum_add.
+    f_equal.
+    apply FiniteSum.finite_sum_ext; intro g.
+    apply covariance_symmetric.
   Qed.
 
   Lemma double_sum_diagonal_off_diagonal :
