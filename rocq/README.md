@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **328 theorem, lemma and example declarations** in seven
+for the two reports. **329 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -266,7 +266,7 @@ measure-theoretic results.
 
 ## November 8 continuation: complete theorem documentation and standard list filtering
 
-**Current kernel-checked proof inventory: 328 named theorem, lemma and
+**At that milestone, the kernel-checked proof inventory was 328 named theorem, lemma and
 example declarations** in seven modules (`Hoeflin` 64,
 `Admissions` 67, `FiniteUnion` 45, `FiniteMoments` 107,
 `FiniteSum` 18, `FiniteBridge` 14, and `FourCellBridge` 13).
@@ -274,7 +274,7 @@ One additional `Local Lemma` in `Hoeflin.v` is kernel-checked but
 excluded from the conventional top-level inventory, bringing the total
 number of proof declarations including that helper to **329**.
 
-**All 385 named declarations** (including definitions, records and
+**At that milestone, all 385 named declarations** (including definitions, records and
 helper declarations) across the seven `.v` files now have
 declaration-local Rocq `(** ... *)` comments. Each comment records:
 
@@ -308,6 +308,63 @@ All **325** previously named public theorem/lemma/example propositions
 remain intact. The previously checked Rocq 9.2 math source was
 extended only by the three stated theorems. The current formalization
 remains finite and algebraic.
+
+## Complete proof-script refactor review and shared zip/map consolidation
+
+The current seven-module source has **329 public theorem/lemma/example
+declarations** (Hoeflin 64; Admissions 67; FiniteUnion 45;
+FiniteMoments 107; FiniteSum 19; FiniteBridge 14; FourCellBridge 13).
+One existing `Local Lemma` in `Hoeflin.v` is also kernel-checked:
+**330 proof declarations**, or **332 actual `Proof.` scripts** when
+the two `Admissions.TwoEventModel` record constructors proved with
+`Defined.` are included. **All 386 named declarations** have
+individual Rocq documentation comments and each `.v` file has a
+detailed explanatory header.
+
+The exhaustive [proof-refactor register](PROOF_REFACTOR_REGISTER.md)
+accounts for every one of those **332 scripts** across seven modules.
+It records the used proof methods, Stdlib and shared-lemma
+dependencies, and the disposition of scripts already optimal with
+respect to library reuse. It distinguishes proof scripts that have
+actually been rewritten from scripts inspected and retained because
+they already use appropriate library laws. The CI documentation gate
+now checks the register **name by name and in source order**; merely
+claiming a complete review does not satisfy that gate.
+
+Additional proof-level consolidations, preserving all previous
+proposition types:
+
+- `finite_sum_monotone`: the previous list induction is replaced with
+  `finite_sum_nonnegative`, pointwise difference, `finite_sum_sub`
+  and `Lra`.
+- `finite_sum_zero`: the previous list induction is replaced by
+  specializing the general `finite_sum_const` lemma at zero.
+- `FiniteSum.finite_sum_zip_map`: one new generic identity
+  connects `List.combine (map f xs) (map g xs)` with
+  `map (fun x => (f x,g x)) xs` at the level of shared finite sums.
+  It is implemented using **Stdlib.List** operations rather than a
+  parallel custom recursive zip or score-sum algorithm.
+- `covariance_row_as_vector_dot` and
+  `covariance_double_sum_as_matrix_product`: both previously had
+  separate inductions over weighted-score component lists; they now
+  delegate to the generic `finite_sum_zip_map` and the existing
+  `covariance_row_as_vector_dot` correspondence, respectively.
+
+After these replacements, only **15 explicitly structural induction
+scripts** remain. They implement basic fold algebra in
+`FiniteSum.v`, the `Nat.iter` independence recurrence in
+`Admissions.v`, and genuinely list/suffix-dependent covariance
+arguments in `FiniteMoments.v`. Replacing those with a new bespoke
+library would add code rather than reuse established functionality.
+The full list is in the refactor register.
+
+A complete *inspection and refactor-decision pass* of every proof
+script has been performed, but **this does not mean that every script
+was rewritten**: exact `reflexivity` proofs and direct uses of
+`Stdlib.Reals`, `Lra`, `Psatz`, `ring`, `field`, and the checked
+bridges have been retained deliberately. No new project axiom,
+`Admitted`, continuous probability construction, or unpinned package
+is involved. Kernel checking remains the decisive verification.
 
 ## Claims and exact theorem correspondences
 
