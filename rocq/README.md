@@ -537,6 +537,32 @@ All theorem hypotheses remain explicit. These identities are
 finite list-weight statements, not claims about empirical
 psychometrics, continuous distributions or inferred Gaussianity.
 
+### Theorem-by-theorem semantic commentary audit
+
+In addition to full documentation for the five new identities,
+this iteration rewrites the descriptions of **eight existing
+foundational theorems** whose earlier comments were syntactically
+complete but too generic: three in `FiniteBridge`,
+three in `FiniteMoments`, and two in `FiniteUnion`.
+
+The revisions specify (a) which identities hold for arbitrary
+signed real weights, (b) when nonnegative normalized weights
+are required to interpret a mass as probability or assert
+variance nonnegativity, (c) why Boolean independence is
+equivalent to zero *indicator* covariance but not generally
+to zero covariance of arbitrary scores, (d) how the
+Cauchy–Schwarz inequality follows from finite variance
+nonnegativity, and (e) that the stated finite covariance
+matrix nonnegativity result concerns the supplied coefficient
+vector, rather than an unstated strict positive-definiteness
+claim. They also distinguish **appending sample lists** from
+**appending event-family lists**, preserving the meaning of
+duplicate elements in each.
+
+These are comment-only changes: the theorem definitions,
+parameters, assumptions, proof bodies and kernel-checked
+conclusions are unchanged.
+
 ## Latest continuation: filtered sample concatenation and indicator-score bridges
 
 **Current Rocq inventory:** 342 public theorem/lemma/example declarations
