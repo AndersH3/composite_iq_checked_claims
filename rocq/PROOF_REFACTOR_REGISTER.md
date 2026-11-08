@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 337 public theorem/lemma/example declarations,
+The current branch has 340 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**340 proof scripts**, including the generic
+**343 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -48,6 +48,16 @@ same shared partition theorem instead of redoing indicator algebra.
 Two nonnegative-mass monotonicity theorems reuse Boolean conjunction
 and the pre-existing `finite_prob_event_monotone` lemma; neither
 needs a new list induction or a normalized probability model.
+
+### Further Stdlib.List refactoring: filtered sample concatenation
+
+The three new additivity theorems `union_prob_sample_append`,
+`finite_prob_filtered_append` and `union_prob_filtered_append`
+are direct applications of the preexisting
+`finite_prob_sample_append` and `Stdlib.List.filter_app`.
+All sample-list multiplicities and arbitrary real weights are
+preserved; no additional recursive proof or list implementation
+is needed. No structural induction was introduced.
 
 ### Current structural-induction inventory
 
@@ -251,7 +261,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 51 proof scripts
+## FiniteUnion.v — 54 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -281,6 +291,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_prob_filtered_partition` (theorem) | Lemma application | FiniteSum.finite_sum_filter_partition | **Refactored:** replaces event-specific Boolean case analysis with shared generic finite-sum partition lemma |
 | `union_prob_filtered_partition` (theorem) | Lemma application | finite_prob_filtered_partition, Stdlib.List.existsb | **New:** finite event-family unions partition by sample selection |
 | `finite_prob_sample_append` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `union_prob_sample_append` (theorem) | Lemma application | finite_prob_sample_append, Stdlib.List.existsb | **New:** union mass additive over concatenated outcome lists, no event-specific list induction |
+| `finite_prob_filtered_append` (theorem) | Rewriting, Lemma application | Stdlib.List.filter_app, finite_prob_sample_append | **New:** filtered event mass additive over concatenated outcome lists |
+| `union_prob_filtered_append` (theorem) | Rewriting, Lemma application | Stdlib.List.filter_app, union_prob_sample_append | **New:** union mass after filtering distributes over sample concatenation |
 | `finite_prob_sample_permutation` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `union_prob_sample_permutation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `sum_marginal_probs_event_permutation` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
