@@ -426,6 +426,38 @@ moment algebra. The stronger identity does not turn arbitrary signed
 weights into probabilities, establish a Gaussian joint distribution,
 or infer actual psychometric performance from a data set.
 
+## Definition-level documentation audit: 19 foundational constructions
+
+All 394 declarations have the required adjacent `(** ... *)`
+comments, and seven module headers document representation,
+assumptions, Stdlib dependency order, limitations and reproduction.
+This additional pass replaces generic explanations for **19
+foundational definitions**, without changing their terms:
+
+- Shared sums: `FiniteSum.finite_sum`, with exact map/fold semantics,
+  duplicate occurrences, sign freedom and permutation behavior.
+- Finite Boolean events: eight definitions including `Event`,
+  `indicator`, `any_event`, `sum_event_indicators`,
+  `finite_prob`, `sum_marginal_probs` and `union_prob`.
+  Their comments distinguish sums of overlapping marginals from
+  union mass and identify `Stdlib.List.existsb` and filtering.
+- Finite moments: ten definitions, including `sum_finite`,
+  `total_mass`, `expect`, `covariance`, `variance`,
+  `centered_second_moment`, `linear_combination`,
+  `linear_expectation`, `covariance_row`, and
+  `covariance_quadratic_form`.
+
+The comments distinguish **a finite algebraic expression over
+signed real weights** from a probability interpretation that
+requires nonnegative sample mass and normalization. In particular,
+centered second moment and variance coincide under explicit unit
+mass, while the underlying definitions do not silently assume that
+premise. This is important for assessing formal theorem claims:
+correct kernel proofs over an unsuitable model would not be
+evidence for empirical psychometric conclusions. Every new proof
+and definition remains subject to the same source-order
+documentation check and Rocq 9.2 kernel verification.
+
 ## Current partition-library consolidation and proof coverage
 
 The seven Rocq modules now contain **337 public theorem, lemma and
