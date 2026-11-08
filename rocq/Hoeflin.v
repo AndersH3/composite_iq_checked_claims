@@ -23,17 +23,19 @@ Open Scope R_scope.
    Rmult_le_pos and Rinv_0_lt_compat are from Stdlib.Reals; strictly
    positive quotients use Stdlib.RIneq.Rdiv_lt_0_compat directly. *)
 (**
-   [nonnegative_quotient] (lemma).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: 0 <= numerator / denominator.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably Rmult_le_pos..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [nonnegative_quotient] (lemma) — Real score scaling, reliability and correlation
+   formulas.
+   Mathematical meaning: Expresses a checked identity or bound within the real score
+   scaling, reliability and correlation formulas.
+   Exact checked proposition: Local Lemma nonnegative_quotient : forall numerator
+   denominator, 0 <= numerator -> 0 < denominator -> 0 <= numerator / denominator.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include Rmult_le_pos., Rlt_le.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Local Lemma nonnegative_quotient :
   forall numerator denominator,
@@ -49,103 +51,109 @@ Qed.
 
 
 (**
-   [equal_weight_variance] (definition).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal construction: (n rho : R) : R := rho + (1 - rho) / n.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [equal_weight_variance] (definition) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Defines equal weight variance using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition equal_weight_variance (n rho : R) : R := rho + (1 -
+   rho) / n.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Definition equal_weight_variance (n rho : R) : R :=
   rho + (1 - rho) / n.
 
 (**
-   [latent_reliability] (definition).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal construction: (n rho : R) : R := n * rho / (1 + (n - 1) * rho).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_reliability] (definition) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Defines latent reliability using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition latent_reliability (n rho : R) : R := n * rho / (1 +
+   (n - 1) * rho).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Definition latent_reliability (n rho : R) : R :=
   n * rho / (1 + (n - 1) * rho).
 
 (**
-   [latent_posterior_variance] (definition).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal construction: (n rho : R) : R := (1 - rho) / (1 + (n - 1) * rho).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_posterior_variance] (definition) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Defines latent posterior variance using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition latent_posterior_variance (n rho : R) : R := (1 -
+   rho) / (1 + (n - 1) * rho).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Definition latent_posterior_variance (n rho : R) : R :=
   (1 - rho) / (1 + (n - 1) * rho).
 
 (**
-   [standardize] (definition).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal construction: (x mu sigma : R) : R := (x - mu) / sigma.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [standardize] (definition) — Real score scaling, reliability and correlation
+   formulas.
+   Mathematical meaning: Defines standardize using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition standardize (x mu sigma : R) : R := (x - mu) /
+   sigma.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Definition standardize (x mu sigma : R) : R := (x - mu) / sigma.
 (**
-   [iq_report] (definition).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal construction: (z scale : R) : R := 100 + scale * z.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [iq_report] (definition) — Real score scaling, reliability and correlation
+   formulas.
+   Mathematical meaning: Defines iq report using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition iq_report (z scale : R) : R := 100 + scale * z.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Definition iq_report (z scale : R) : R := 100 + scale * z.
 
 (* The identity holds for the average correlation of distinct pairs:
    identical pairwise correlations are NOT required. *)
 (**
-   [pair_average_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: (n + 2 * pair_sum) / (n * n) = equal_weight_variance n
-   rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [pair_average_variance] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem pair_average_variance : forall n pair_sum rho,
+   1 < n -> 2 * pair_sum = n * (n - 1) * rho -> (n + 2 * pair_sum) / (n * n) =
+   equal_weight_variance n rho.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra), ring/field normalization; references include
+   equal_weight_variance..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem pair_average_variance :
   forall n pair_sum rho,
@@ -160,19 +168,19 @@ Proof.
 Qed.
 
 (**
-   [equicorrelation_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: (n + n * (n - 1) * rho) / (n * n) = equal_weight_variance
-   n rho.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [equicorrelation_variance] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem equicorrelation_variance : forall n rho, n <> 0
+   -> (n + n * (n - 1) * rho) / (n * n) = equal_weight_variance n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include equal_weight_variance..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem equicorrelation_variance :
   forall n rho, n <> 0 ->
@@ -185,18 +193,19 @@ Proof.
 Qed.
 
 (**
-   [variance_alternative_form] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n rho = (1 + (n - 1) * rho) / n.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_alternative_form] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_alternative_form : forall n rho, n <>
+   0 -> equal_weight_variance n rho = (1 + (n - 1) * rho) / n.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include equal_weight_variance..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_alternative_form :
   forall n rho, n <> 0 ->
@@ -208,17 +217,19 @@ Proof.
 Qed.
 
 (**
-   [one_test_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall rho, equal_weight_variance 1 rho = 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [one_test_variance] (theorem) — Real score scaling, reliability and correlation
+   formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem one_test_variance : forall rho,
+   equal_weight_variance 1 rho = 1.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem one_test_variance :
   forall rho, equal_weight_variance 1 rho = 1.
@@ -227,18 +238,20 @@ Proof.
 Qed.
 
 (**
-   [independent_tests_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n 0 = 1 / n.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [independent_tests_variance] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem independent_tests_variance : forall n, n <> 0
+   -> equal_weight_variance n 0 = 1 / n.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem independent_tests_variance :
   forall n, n <> 0 -> equal_weight_variance n 0 = 1 / n.
@@ -247,18 +260,20 @@ Proof.
 Qed.
 
 (**
-   [perfectly_correlated_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n 1 = 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [perfectly_correlated_variance] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem perfectly_correlated_variance : forall n, n <>
+   0 -> equal_weight_variance n 1 = 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem perfectly_correlated_variance :
   forall n, n <> 0 -> equal_weight_variance n 1 = 1.
@@ -267,19 +282,21 @@ Proof.
 Qed.
 
 (**
-   [variance_strictly_positive] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 0 < equal_weight_variance n rho.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, Stdlib Psatz nonlinear arithmetic; notably
-   variance_alternative_form, Rdiv_lt_0_compat.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_strictly_positive] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_strictly_positive : forall n rho, 1 <=
+   n -> 0 <= rho -> rho <= 1 -> 0 < equal_weight_variance n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), polynomial real
+   arithmetic (Psatz); references include variance_alternative_form,
+   Rdiv_lt_0_compat.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_strictly_positive :
   forall n rho,
@@ -292,18 +309,20 @@ Proof.
 Qed.
 
 (**
-   [variance_at_least_correlation] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: rho <= equal_weight_variance n rho.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably equal_weight_variance., nonnegative_quotient.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_at_least_correlation] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_at_least_correlation : forall n rho, 0
+   < n -> rho <= 1 -> rho <= equal_weight_variance n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include equal_weight_variance.,
+   nonnegative_quotient.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_at_least_correlation :
   forall n rho,
@@ -318,19 +337,20 @@ Proof.
 Qed.
 
 (**
-   [variance_at_most_one] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n rho <= 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably nonnegative_quotient, equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_at_most_one] (theorem) — Real score scaling, reliability and correlation
+   formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_at_most_one : forall n rho, 1 <= n ->
+   rho <= 1 -> equal_weight_variance n rho <= 1.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), polynomial real arithmetic (Psatz), ring/field
+   normalization; references include nonnegative_quotient, equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_at_most_one :
   forall n rho,
@@ -348,20 +368,21 @@ Proof.
 Qed.
 
 (**
-   [variance_nondecreasing_in_correlation] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n rho1 <= equal_weight_variance n
-   rho2.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably nonnegative_quotient, equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_nondecreasing_in_correlation] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_nondecreasing_in_correlation : forall
+   n rho1 rho2, 1 <= n -> rho1 <= rho2 -> equal_weight_variance n rho1 <=
+   equal_weight_variance n rho2.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), polynomial real arithmetic (Psatz), ring/field
+   normalization; references include nonnegative_quotient, equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_nondecreasing_in_correlation :
   forall n rho1 rho2,
@@ -379,17 +400,19 @@ Proof.
 Qed.
 
 (**
-   [variance_gap_to_limiting_correlation] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n rho - rho = (1 - rho) / n.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: ring/field normalization; notably equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_gap_to_limiting_correlation] (theorem) — Real score scaling, reliability
+   and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_gap_to_limiting_correlation : forall n
+   rho, n <> 0 -> equal_weight_variance n rho - rho = (1 - rho) / n.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_gap_to_limiting_correlation :
   forall n rho, n <> 0 ->
@@ -399,18 +422,19 @@ Proof.
 Qed.
 
 (**
-   [iq_standardization_inversion] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: mu + sigma * standardize x mu sigma = x.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably standardize.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [iq_standardization_inversion] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem iq_standardization_inversion : forall x mu
+   sigma, sigma <> 0 -> mu + sigma * standardize x mu sigma = x.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include standardize.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem iq_standardization_inversion :
   forall x mu sigma,
@@ -422,18 +446,19 @@ Proof.
 Qed.
 
 (**
-   [iq_report_standardization] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: iq_report (standardize x 100 scale) scale = x.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably iq_report.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [iq_report_standardization] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem iq_report_standardization : forall x scale,
+   scale <> 0 -> iq_report (standardize x 100 scale) scale = x.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include iq_report.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem iq_report_standardization :
   forall x scale,
@@ -445,19 +470,20 @@ Proof.
 Qed.
 
 (**
-   [equal_sd_composite_scale] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: iq_report (standardize average_iq 100 scale / divisor)
-   scale = 100 + (average_iq - 100) / divisor.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably iq_report.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [equal_sd_composite_scale] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem equal_sd_composite_scale : forall average_iq
+   scale divisor, scale <> 0 -> divisor <> 0 -> iq_report (standardize average_iq 100
+   scale / divisor) scale = 100 + (average_iq - 100) / divisor.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include iq_report.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem equal_sd_composite_scale :
   forall average_iq scale divisor,
@@ -470,17 +496,19 @@ Proof.
 Qed.
 
 (**
-   [threshold_recovered_after_normalization] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: (q * positive_sd) / positive_sd = q.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [threshold_recovered_after_normalization] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem threshold_recovered_after_normalization :
+   forall q positive_sd, positive_sd <> 0 -> (q * positive_sd) / positive_sd = q.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem threshold_recovered_after_normalization :
   forall q positive_sd,
@@ -491,18 +519,20 @@ Proof.
 Qed.
 
 (**
-   [normalized_variance_is_one] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance / (sd * sd) = 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale;
-   unit-variance or stated moment hypotheses where shown in the statement; all
-   other constraints remain explicit.
-   Proof outline: Stdlib Psatz nonlinear arithmetic, ring/field normalization.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [normalized_variance_is_one] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem normalized_variance_is_one : forall variance
+   sd, sd <> 0 -> sd * sd = variance -> variance / (sd * sd) = 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses polynomial real arithmetic (Psatz),
+   ring/field normalization.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem normalized_variance_is_one :
   forall variance sd,
@@ -514,17 +544,19 @@ Proof.
 Qed.
 
 (**
-   [standardized_160_sd15] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: standardize 160 100 15 = 4.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably standardize.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [standardized_160_sd15] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem standardized_160_sd15 : standardize 160 100 15
+   = 4.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include standardize.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem standardized_160_sd15 :
   standardize 160 100 15 = 4.
@@ -533,17 +565,19 @@ Proof.
 Qed.
 
 (**
-   [standardized_160_sd16] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: standardize 160 100 16 = 15 / 4.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably standardize.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [standardized_160_sd16] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem standardized_160_sd16 : standardize 160 100 16
+   = 15 / 4.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include standardize.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem standardized_160_sd16 :
   standardize 160 100 16 = 15 / 4.
@@ -552,19 +586,21 @@ Proof.
 Qed.
 
 (**
-   [latent_reliability_plus_posterior_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: latent_reliability n rho + latent_posterior_variance n
-   rho = 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably latent_reliability.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_reliability_plus_posterior_variance] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_reliability_plus_posterior_variance :
+   forall n rho, 1 <= n -> 0 <= rho -> latent_reliability n rho +
+   latent_posterior_variance n rho = 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses polynomial real arithmetic (Psatz),
+   ring/field normalization; references include latent_reliability.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_reliability_plus_posterior_variance :
   forall n rho,
@@ -578,18 +614,20 @@ Proof.
 Qed.
 
 (**
-   [latent_reliability_nonnegative] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: 0 <= latent_reliability n rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic; notably latent_reliability., nonnegative_quotient.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_reliability_nonnegative] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem latent_reliability_nonnegative : forall n rho,
+   1 <= n -> 0 <= rho -> 0 <= latent_reliability n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz); references include latent_reliability.,
+   nonnegative_quotient.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_reliability_nonnegative :
   forall n rho,
@@ -602,18 +640,20 @@ Proof.
 Qed.
 
 (**
-   [latent_posterior_variance_nonnegative] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 0 <= latent_posterior_variance n rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic; notably latent_posterior_variance., nonnegative_quotient.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_posterior_variance_nonnegative] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_posterior_variance_nonnegative : forall
+   n rho, 1 <= n -> 0 <= rho -> rho <= 1 -> 0 <= latent_posterior_variance n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz); references include latent_posterior_variance.,
+   nonnegative_quotient.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_posterior_variance_nonnegative :
   forall n rho,
@@ -626,19 +666,20 @@ Proof.
 Qed.
 
 (**
-   [latent_reliability_at_most_one] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: latent_reliability n rho <= 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably latent_reliability_plus_posterior_variance,
-   latent_posterior_variance_nonnegative.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_reliability_at_most_one] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem latent_reliability_at_most_one : forall n rho,
+   1 <= n -> 0 <= rho -> rho <= 1 -> latent_reliability n rho <= 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include
+   latent_reliability_plus_posterior_variance, latent_posterior_variance_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_reliability_at_most_one :
   forall n rho,
@@ -654,17 +695,19 @@ Proof.
 Qed.
 
 (**
-   [latent_reliability_for_one_test] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: forall rho, latent_reliability 1 rho = rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably latent_reliability.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_reliability_for_one_test] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem latent_reliability_for_one_test : forall rho,
+   latent_reliability 1 rho = rho.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include latent_reliability.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_reliability_for_one_test :
   forall rho, latent_reliability 1 rho = rho.
@@ -673,17 +716,19 @@ Proof.
 Qed.
 
 (**
-   [latent_reliability_at_zero] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: forall n, latent_reliability n 0 = 0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably latent_reliability.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_reliability_at_zero] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem latent_reliability_at_zero : forall n,
+   latent_reliability n 0 = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include latent_reliability.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_reliability_at_zero :
   forall n, latent_reliability n 0 = 0.
@@ -692,17 +737,19 @@ Proof.
 Qed.
 
 (**
-   [latent_variance_at_zero] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall n, latent_posterior_variance n 0 = 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably latent_posterior_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_variance_at_zero] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_variance_at_zero : forall n,
+   latent_posterior_variance n 0 = 1.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include latent_posterior_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_variance_at_zero :
   forall n, latent_posterior_variance n 0 = 1.
@@ -711,18 +758,19 @@ Proof.
 Qed.
 
 (**
-   [latent_variance_at_perfect_correlation] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: latent_posterior_variance n 1 = 0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably latent_posterior_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_variance_at_perfect_correlation] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_variance_at_perfect_correlation : forall
+   n, 1 <= n -> latent_posterior_variance n 1 = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include latent_posterior_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_variance_at_perfect_correlation :
   forall n, 1 <= n -> latent_posterior_variance n 1 = 0.
@@ -740,20 +788,21 @@ Qed.
    increase this model variance. No distributional assumption is used. *)
 
 (**
-   [variance_decreases_with_test_count] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n2 rho <= equal_weight_variance n1
-   rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably nonnegative_quotient, equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_decreases_with_test_count] (theorem) — Real score scaling, reliability
+   and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_decreases_with_test_count : forall n1
+   n2 rho, 1 <= n1 -> n1 <= n2 -> rho <= 1 -> equal_weight_variance n2 rho <=
+   equal_weight_variance n1 rho.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), polynomial real arithmetic (Psatz), ring/field
+   normalization; references include nonnegative_quotient, equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_decreases_with_test_count :
   forall n1 n2 rho,
@@ -773,20 +822,21 @@ Proof.
 Qed.
 
 (**
-   [variance_strictly_decreases_with_test_count] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n2 rho < equal_weight_variance n1
-   rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably Rdiv_lt_0_compat, equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_strictly_decreases_with_test_count] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_strictly_decreases_with_test_count :
+   forall n1 n2 rho, 1 <= n1 -> n1 < n2 -> rho < 1 -> equal_weight_variance n2 rho <
+   equal_weight_variance n1 rho.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), polynomial real arithmetic (Psatz), ring/field
+   normalization; references include Rdiv_lt_0_compat, equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_strictly_decreases_with_test_count :
   forall n1 n2 rho,
@@ -806,19 +856,20 @@ Proof.
 Qed.
 
 (**
-   [variance_is_affine_in_correlation] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n rho = 1 / n + ((n - 1) / n) *
-   rho.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_is_affine_in_correlation] (theorem) — Real score scaling, reliability
+   and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_is_affine_in_correlation : forall n
+   rho, n <> 0 -> equal_weight_variance n rho = 1 / n + ((n - 1) / n) * rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include equal_weight_variance..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_is_affine_in_correlation :
   forall n rho,
@@ -832,19 +883,20 @@ Proof.
 Qed.
 
 (**
-   [variance_correlation_sensitivity] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance n rho2 - equal_weight_variance n
-   rho1 = ((n - 1) / n) * (rho2 - rho1).
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_correlation_sensitivity] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_correlation_sensitivity : forall n
+   rho1 rho2, n <> 0 -> equal_weight_variance n rho2 - equal_weight_variance n rho1 =
+   ((n - 1) / n) * (rho2 - rho1).
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include equal_weight_variance..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_correlation_sensitivity :
   forall n rho1 rho2,
@@ -859,17 +911,19 @@ Proof.
 Qed.
 
 (**
-   [variance_of_two_equicorrelated_tests] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall rho, equal_weight_variance 2 rho = (1 + rho) / 2.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_of_two_equicorrelated_tests] (theorem) — Real score scaling, reliability
+   and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_two_equicorrelated_tests : forall
+   rho, equal_weight_variance 2 rho = (1 + rho) / 2.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_of_two_equicorrelated_tests :
   forall rho, equal_weight_variance 2 rho = (1 + rho) / 2.
@@ -878,18 +932,19 @@ Proof.
 Qed.
 
 (**
-   [variance_of_three_equicorrelated_tests] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall rho, equal_weight_variance 3 rho = (1 + 2 * rho) /
-   3.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably equal_weight_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_of_three_equicorrelated_tests] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_three_equicorrelated_tests : forall
+   rho, equal_weight_variance 3 rho = (1 + 2 * rho) / 3.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include equal_weight_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_of_three_equicorrelated_tests :
   forall rho, equal_weight_variance 3 rho = (1 + 2 * rho) / 3.
@@ -898,17 +953,18 @@ Proof.
 Qed.
 
 (**
-   [latent_variance_denominator_positive] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 0 < 1 + (n - 1) * rho.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Psatz nonlinear arithmetic.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_variance_denominator_positive] (theorem) — Real score scaling, reliability
+   and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_variance_denominator_positive : forall n
+   rho, 1 <= n -> 0 <= rho -> 0 < 1 + (n - 1) * rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses polynomial real arithmetic (Psatz).
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_variance_denominator_positive :
   forall n rho,
@@ -919,21 +975,22 @@ Proof.
 Qed.
 
 (**
-   [latent_variance_decreases_with_test_count] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: latent_posterior_variance n2 rho <=
-   latent_posterior_variance n1 rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably latent_variance_denominator_positive, nonnegative_quotient.,
-   Rmult_le_pos..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [latent_variance_decreases_with_test_count] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_variance_decreases_with_test_count :
+   forall n1 n2 rho, 1 <= n1 -> n1 <= n2 -> 0 <= rho -> rho <= 1 ->
+   latent_posterior_variance n2 rho <= latent_posterior_variance n1 rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), polynomial real arithmetic (Psatz), ring/field
+   normalization; references include latent_variance_denominator_positive,
+   nonnegative_quotient., Rmult_le_pos..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_variance_decreases_with_test_count :
   forall n1 n2 rho,
@@ -965,19 +1022,22 @@ Proof.
 Qed.
 
 (**
-   [latent_reliability_increases_with_test_count] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: latent_reliability n1 rho <= latent_reliability n2 rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably latent_reliability_plus_posterior_variance,
+   [latent_reliability_increases_with_test_count] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem latent_reliability_increases_with_test_count :
+   forall n1 n2 rho, 1 <= n1 -> n1 <= n2 -> 0 <= rho -> rho <= 1 ->
+   latent_reliability n1 rho <= latent_reliability n2 rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include
+   latent_reliability_plus_posterior_variance,
    latent_variance_decreases_with_test_count.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_reliability_increases_with_test_count :
   forall n1 n2 rho,
@@ -1005,19 +1065,20 @@ Qed.
    correlation stability as the test battery grows. *)
 
 (**
-   [doubling_battery_halves_variance_excess] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: equal_weight_variance (2 * n) rho - rho =
+   [doubling_battery_halves_variance_excess] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem doubling_battery_halves_variance_excess :
+   forall n rho, 0 < n -> equal_weight_variance (2 * n) rho - rho =
    (equal_weight_variance n rho - rho) / 2.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably equal_weight_variance..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include equal_weight_variance..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem doubling_battery_halves_variance_excess :
   forall n rho,
@@ -1031,19 +1092,21 @@ Proof.
 Qed.
 
 (**
-   [nonnegative_correlation_variance_at_least_independent] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 1 / n <= equal_weight_variance n rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably equal_weight_variance, nonnegative_quotient.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [nonnegative_correlation_variance_at_least_independent] (theorem) — Real score
+   scaling, reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem
+   nonnegative_correlation_variance_at_least_independent : forall n rho, 1 <= n -> 0
+   <= rho -> 1 / n <= equal_weight_variance n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), polynomial real arithmetic (Psatz), ring/field
+   normalization; references include equal_weight_variance, nonnegative_quotient.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem nonnegative_correlation_variance_at_least_independent :
   forall n rho,
@@ -1060,20 +1123,23 @@ Proof.
 Qed.
 
 (**
-   [variance_excess_bound_by_inverse_battery_size] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 0 <= equal_weight_variance n rho - rho /\
-   equal_weight_variance n rho - rho <= 1 / n.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, ring/field normalization; notably
-   variance_gap_to_limiting_correlation, nonnegative_quotient.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [variance_excess_bound_by_inverse_battery_size] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_excess_bound_by_inverse_battery_size :
+   forall n rho, 0 < n -> 0 <= rho -> rho <= 1 -> 0 <= equal_weight_variance n rho -
+   rho /\ equal_weight_variance n rho - rho <= 1 / n.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include variance_gap_to_limiting_correlation,
+   nonnegative_quotient.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem variance_excess_bound_by_inverse_battery_size :
   forall n rho,
@@ -1093,20 +1159,21 @@ Proof.
 Qed.
 
 (**
-   [latent_reliability_times_composite_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: latent_reliability n rho * equal_weight_variance n rho =
-   rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic, ring/field normalization; notably
+   [latent_reliability_times_composite_variance] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_reliability_times_composite_variance :
+   forall n rho, 1 <= n -> 0 <= rho -> latent_reliability n rho *
+   equal_weight_variance n rho = rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz), ring/field normalization; references include
    latent_variance_denominator_positive, latent_reliability.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_reliability_times_composite_variance :
   forall n rho,
@@ -1121,20 +1188,21 @@ Proof.
 Qed.
 
 (**
-   [latent_posterior_times_composite_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: latent_posterior_variance n rho * equal_weight_variance n
-   rho = (1 - rho) / n.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic, ring/field normalization; notably
+   [latent_posterior_times_composite_variance] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem latent_posterior_times_composite_variance :
+   forall n rho, 1 <= n -> 0 <= rho -> latent_posterior_variance n rho *
+   equal_weight_variance n rho = (1 - rho) / n.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz), ring/field normalization; references include
    latent_variance_denominator_positive, latent_posterior_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem latent_posterior_times_composite_variance :
   forall n rho,
@@ -1155,35 +1223,37 @@ Qed.
    rather than supplying any bespoke square-root implementation. *)
 
 (**
-   [composite_standard_deviation] (definition).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal construction: (n rho : R) : R := sqrt (equal_weight_variance n rho).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas; notably
-   composite_standard_deviation., sqrt_pos..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation] (definition) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Defines composite standard deviation using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition composite_standard_deviation (n rho : R) : R := sqrt
+   (equal_weight_variance n rho).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Definition composite_standard_deviation (n rho : R) : R :=
   sqrt (equal_weight_variance n rho).
 
 (**
-   [composite_standard_deviation_nonnegative] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: forall n rho, 0 <= composite_standard_deviation n rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   composite_standard_deviation., sqrt_pos..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_nonnegative] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem composite_standard_deviation_nonnegative :
+   forall n rho, 0 <= composite_standard_deviation n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include composite_standard_deviation., sqrt_pos..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_nonnegative :
   forall n rho, 0 <= composite_standard_deviation n rho.
@@ -1194,20 +1264,21 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_squared] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n rho *
+   [composite_standard_deviation_squared] (theorem) — Real score scaling, reliability
+   and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem composite_standard_deviation_squared : forall n
+   rho, 1 <= n -> 0 <= rho -> rho <= 1 -> composite_standard_deviation n rho *
    composite_standard_deviation n rho = equal_weight_variance n rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably composite_standard_deviation., sqrt_sqrt.,
-   variance_strictly_positive.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include composite_standard_deviation.,
+   sqrt_sqrt., variance_strictly_positive.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_squared :
   forall n rho,
@@ -1223,19 +1294,21 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_at_zero_correlation] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n 0 = sqrt (1 / n).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic,
-   definitional computation; notably composite_standard_deviation.,
-   independent_tests_variance.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_at_zero_correlation] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_at_zero_correlation : forall n, 1 <= n ->
+   composite_standard_deviation n 0 = sqrt (1 / n).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra), definitional reduction; references include
+   composite_standard_deviation., independent_tests_variance.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_at_zero_correlation :
   forall n, 1 <= n ->
@@ -1248,19 +1321,21 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_at_perfect_correlation] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n 1 = 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably composite_standard_deviation.,
-   perfectly_correlated_variance, sqrt_1..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_at_perfect_correlation] (theorem) — Real score
+   scaling, reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_at_perfect_correlation : forall n, 1 <= n ->
+   composite_standard_deviation n 1 = 1.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   composite_standard_deviation., perfectly_correlated_variance, sqrt_1..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_at_perfect_correlation :
   forall n, 1 <= n ->
@@ -1273,20 +1348,22 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_nondecreasing_in_correlation] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n rho1 <=
-   composite_standard_deviation n rho2.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably variance_strictly_positive,
+   [composite_standard_deviation_nondecreasing_in_correlation] (theorem) — Real score
+   scaling, reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_nondecreasing_in_correlation : forall n rho1 rho2, 1
+   <= n -> 0 <= rho1 -> rho1 <= rho2 -> rho2 <= 1 -> composite_standard_deviation n
+   rho1 <= composite_standard_deviation n rho2.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include variance_strictly_positive,
    composite_standard_deviation., sqrt_le_1.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_nondecreasing_in_correlation :
   forall n rho1 rho2,
@@ -1307,20 +1384,22 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_nonincreasing_in_test_count] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n2 rho <=
+   [composite_standard_deviation_nonincreasing_in_test_count] (theorem) — Real score
+   scaling, reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_nonincreasing_in_test_count : forall n1 n2 rho, 1 <=
+   n1 -> n1 <= n2 -> 0 <= rho -> rho <= 1 -> composite_standard_deviation n2 rho <=
    composite_standard_deviation n1 rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably variance_strictly_positive,
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include variance_strictly_positive,
    composite_standard_deviation., sqrt_le_1.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_nonincreasing_in_test_count :
   forall n1 n2 rho,
@@ -1343,19 +1422,21 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_at_most_one] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n rho <= 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably composite_standard_deviation.,
-   sqrt_le_1., variance_strictly_positive.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_at_most_one] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem composite_standard_deviation_at_most_one :
+   forall n rho, 1 <= n -> 0 <= rho -> rho <= 1 -> composite_standard_deviation n rho
+   <= 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   composite_standard_deviation., sqrt_le_1., variance_strictly_positive.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_at_most_one :
   forall n rho,
@@ -1372,19 +1453,21 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_at_least_sqrt_correlation] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: sqrt rho <= composite_standard_deviation n rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably composite_standard_deviation., sqrt_le_1.,
-   variance_strictly_positive.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_at_least_sqrt_correlation] (theorem) — Real score
+   scaling, reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_at_least_sqrt_correlation : forall n rho, 1 <= n -> 0
+   <= rho -> rho <= 1 -> sqrt rho <= composite_standard_deviation n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include composite_standard_deviation.,
+   sqrt_le_1., variance_strictly_positive.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_at_least_sqrt_correlation :
   forall n rho,
@@ -1404,18 +1487,20 @@ Qed.
    standard-library monotonicity theorems for sqrt. *)
 
 (**
-   [composite_standard_deviation_positive] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: 0 < composite_standard_deviation n rho.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   composite_standard_deviation., sqrt_lt_R0., variance_strictly_positive.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_positive] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem composite_standard_deviation_positive : forall
+   n rho, 1 <= n -> 0 <= rho -> rho <= 1 -> 0 < composite_standard_deviation n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include composite_standard_deviation., sqrt_lt_R0.,
+   variance_strictly_positive.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_positive :
   forall n rho,
@@ -1429,20 +1514,22 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_strictly_decreases_with_test_count] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n2 rho <
-   composite_standard_deviation n1 rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably composite_standard_deviation., sqrt_lt_1.,
-   variance_strictly_positive.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_strictly_decreases_with_test_count] (theorem) — Real
+   score scaling, reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_strictly_decreases_with_test_count : forall n1 n2
+   rho, 1 <= n1 -> n1 < n2 -> 0 <= rho -> rho < 1 -> composite_standard_deviation n2
+   rho < composite_standard_deviation n1 rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include composite_standard_deviation.,
+   sqrt_lt_1., variance_strictly_positive.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_strictly_decreases_with_test_count :
   forall n1 n2 rho,
@@ -1464,21 +1551,23 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_strictly_increases_in_correlation] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n rho1 <
-   composite_standard_deviation n rho2.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, Stdlib Psatz nonlinear arithmetic; notably
-   Rdiv_lt_0_compat, variance_correlation_sensitivity,
-   composite_standard_deviation..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_strictly_increases_in_correlation] (theorem) — Real
+   score scaling, reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_strictly_increases_in_correlation : forall n rho1
+   rho2, 1 < n -> 0 <= rho1 -> rho1 < rho2 -> rho2 <= 1 ->
+   composite_standard_deviation n rho1 < composite_standard_deviation n rho2.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), polynomial real
+   arithmetic (Psatz); references include Rdiv_lt_0_compat,
+   variance_correlation_sensitivity, composite_standard_deviation..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_strictly_increases_in_correlation :
   forall n rho1 rho2,
@@ -1508,19 +1597,21 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_at_least_independent_baseline] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: sqrt (1 / n) <= composite_standard_deviation n rho.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably nonnegative_quotient, variance_strictly_positive,
-   composite_standard_deviation..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_at_least_independent_baseline] (theorem) — Real
+   score scaling, reliability and correlation formulas.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem
+   composite_standard_deviation_at_least_independent_baseline : forall n rho, 1 <= n
+   -> 0 <= rho -> rho <= 1 -> sqrt (1 / n) <= composite_standard_deviation n rho.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include nonnegative_quotient,
+   variance_strictly_positive, composite_standard_deviation..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_at_least_independent_baseline :
   forall n rho,
@@ -1542,20 +1633,22 @@ Proof.
 Qed.
 
 (**
-   [composite_standard_deviation_strictly_below_one] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: composite_standard_deviation n rho < 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field
-   normalization; notably Rdiv_lt_0_compat, equal_weight_variance,
-   composite_standard_deviation..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standard_deviation_strictly_below_one] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem composite_standard_deviation_strictly_below_one
+   : forall n rho, 1 < n -> 0 <= rho -> rho < 1 -> composite_standard_deviation n rho
+   < 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), polynomial real
+   arithmetic (Psatz), ring/field normalization; references include Rdiv_lt_0_compat,
+   equal_weight_variance, composite_standard_deviation..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standard_deviation_strictly_below_one :
   forall n rho,
@@ -1586,18 +1679,19 @@ Qed.
    not provide Gaussian quantiles, empirical cutoffs, or tail probabilities. *)
 
 (**
-   [standardized_affine_cutoff_round_trip] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: standardize (mu + sigma * z) mu sigma = z.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably standardize..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [standardized_affine_cutoff_round_trip] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem standardized_affine_cutoff_round_trip : forall
+   z mu sigma, 0 < sigma -> standardize (mu + sigma * z) mu sigma = z.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include standardize..
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem standardized_affine_cutoff_round_trip :
   forall z mu sigma,
@@ -1610,18 +1704,20 @@ Proof.
 Qed.
 
 (**
-   [positive_scale_preserves_cutoff_order] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: mu + sigma * z1 <= mu + sigma * z2.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably Rplus_le_compat_l., Rmult_le_compat_l.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [positive_scale_preserves_cutoff_order] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem positive_scale_preserves_cutoff_order : forall
+   z1 z2 mu sigma, 0 < sigma -> z1 <= z2 -> mu + sigma * z1 <= mu + sigma * z2.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include Rplus_le_compat_l.,
+   Rmult_le_compat_l, Horder.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem positive_scale_preserves_cutoff_order :
   forall z1 z2 mu sigma,
@@ -1634,20 +1730,22 @@ Proof.
 Qed.
 
 (**
-   [composite_standardized_cutoff_round_trip] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: standardize (mu + (scale * composite_standard_deviation n
-   rho) * z) mu (scale * composite_standard_deviation n rho) = z.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic; notably composite_standard_deviation_positive,
-   standardized_affine_cutoff_round_trip.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [composite_standardized_cutoff_round_trip] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem composite_standardized_cutoff_round_trip :
+   forall z mu scale n rho, 1 <= n -> 0 <= rho -> rho <= 1 -> 0 < scale ->
+   standardize (mu + (scale * composite_standard_deviation n rho) * z) mu (scale *
+   composite_standard_deviation n rho) = z.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz); references include
+   composite_standard_deviation_positive, standardized_affine_cutoff_round_trip.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem composite_standardized_cutoff_round_trip :
   forall z mu scale n rho,
@@ -1663,20 +1761,22 @@ Proof.
 Qed.
 
 (**
-   [positive_cutoff_nonincreasing_with_test_count] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: mu + (scale * composite_standard_deviation n2 rho) * z <=
-   mu + (scale * composite_standard_deviation n1 rho) * z.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   composite_standard_deviation_nonincreasing_in_test_count,
+   [positive_cutoff_nonincreasing_with_test_count] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Expresses a checked identity or bound within the real score
+   scaling, reliability and correlation formulas.
+   Exact checked proposition: Theorem positive_cutoff_nonincreasing_with_test_count :
+   forall n1 n2 rho mu scale z, 1 <= n1 -> n1 <= n2 -> 0 <= rho -> rho <= 1 -> 0 <=
+   scale -> 0 <= z -> mu + (scale * composite_standard_deviation n2 rho) * z <= mu +
+   (scale * composite_standard_deviation n1 rho) * z.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include composite_standard_deviation_nonincreasing_in_test_count,
    Rplus_le_compat_l., Rmult_le_compat_r.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem positive_cutoff_nonincreasing_with_test_count :
   forall n1 n2 rho mu scale z,
@@ -1701,18 +1801,20 @@ Qed.
    scaling and the established affine reporting definitions. *)
 
 (**
-   [standardize_preserves_order] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: standardize x mu sigma <= standardize y mu sigma.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably standardize, Rmult_le_compat_r., Hsigma..
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [standardize_preserves_order] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem standardize_preserves_order : forall x y mu
+   sigma, 0 < sigma -> x <= y -> standardize x mu sigma <= standardize y mu sigma.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include standardize, Rmult_le_compat_r.,
+   Rlt_le.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem standardize_preserves_order :
   forall x y mu sigma,
@@ -1727,18 +1829,19 @@ Proof.
 Qed.
 
 (**
-   [iq_report_preserves_order] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: iq_report x scale <= iq_report y scale.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably iq_report.,
-   Rplus_le_compat_l., Rmult_le_compat_l.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [iq_report_preserves_order] (theorem) — Real score scaling, reliability and
+   correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem iq_report_preserves_order : forall x y scale, 0
+   <= scale -> x <= y -> iq_report x scale <= iq_report y scale.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include iq_report., Rplus_le_compat_l., Rmult_le_compat_l.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem iq_report_preserves_order :
   forall x y scale,
@@ -1752,19 +1855,21 @@ Proof.
 Qed.
 
 (**
-   [standardized_iq_reporting_preserves_order] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: iq_report (standardize x mu sigma) scale <= iq_report
-   (standardize y mu sigma) scale.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   iq_report_preserves_order., Hscale., standardize_preserves_order.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [standardized_iq_reporting_preserves_order] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem standardized_iq_reporting_preserves_order :
+   forall x y mu sigma scale, 0 < sigma -> 0 <= scale -> x <= y -> iq_report
+   (standardize x mu sigma) scale <= iq_report (standardize y mu sigma) scale.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include iq_report_preserves_order., Hscale.,
+   standardize_preserves_order.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem standardized_iq_reporting_preserves_order :
   forall x y mu sigma scale,
@@ -1784,20 +1889,22 @@ Qed.
    standard ordered-field identities.  The parameter rho is held fixed. *)
 
 (**
-   [fixed_correlation_variance_epsilon_bound] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 0 <= equal_weight_variance n rho - rho /\
-   equal_weight_variance n rho - rho < eps.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, ring/field normalization; notably
-   variance_gap_to_limiting_correlation, Rinv_0_lt_compat, Rmult_lt_compat_r.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   [fixed_correlation_variance_epsilon_bound] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem fixed_correlation_variance_epsilon_bound :
+   forall n rho eps, 0 < n -> rho <= 1 -> 0 < eps -> 1 - rho < eps * n -> 0 <=
+   equal_weight_variance n rho - rho /\ equal_weight_variance n rho - rho < eps.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include variance_gap_to_limiting_correlation,
+   Rinv_0_lt_compat, Rmult_lt_compat_r.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem fixed_correlation_variance_epsilon_bound :
   forall n rho eps,
@@ -1821,21 +1928,23 @@ Proof.
 Qed.
 
 (**
-   [fixed_correlation_variance_epsilon_after_threshold] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 0 <= equal_weight_variance n rho - rho /\
+   [fixed_correlation_variance_epsilon_after_threshold] (theorem) — Real score
+   scaling, reliability and correlation formulas.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem
+   fixed_correlation_variance_epsilon_after_threshold : forall n rho eps, rho <= 1 ->
+   0 < eps -> (1 - rho) / eps < n -> 0 <= equal_weight_variance n rho - rho /\
    equal_weight_variance n rho - rho < eps.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field normalization;
-   notably nonnegative_quotient, Rmult_lt_compat_r,
-   fixed_correlation_variance_epsilon_bound.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), polynomial real
+   arithmetic (Psatz), ring/field normalization; references include
+   nonnegative_quotient, Rmult_lt_compat_r, fixed_correlation_variance_epsilon_bound.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem fixed_correlation_variance_epsilon_after_threshold :
   forall n rho eps,
@@ -1865,20 +1974,22 @@ Qed.
    ordered-field compatibility of positive scalar multiplication. *)
 
 (**
-   [positive_cutoff_nondecreasing_in_correlation] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: mu + (scale * composite_standard_deviation n rho1) * z <=
+   [positive_cutoff_nondecreasing_in_correlation] (theorem) — Real score scaling,
+   reliability and correlation formulas.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem positive_cutoff_nondecreasing_in_correlation :
+   forall n rho1 rho2 mu scale z, 1 <= n -> 0 <= rho1 -> rho1 <= rho2 -> rho2 <= 1 ->
+   0 <= scale -> 0 <= z -> mu + (scale * composite_standard_deviation n rho1) * z <=
    mu + (scale * composite_standard_deviation n rho2) * z.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   composite_standard_deviation_nondecreasing_in_correlation,
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include composite_standard_deviation_nondecreasing_in_correlation,
    Rplus_le_compat_l., Rmult_le_compat_r.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem positive_cutoff_nondecreasing_in_correlation :
   forall n rho1 rho2 mu scale z,
@@ -1897,20 +2008,23 @@ Proof.
 Qed.
 
 (**
-   [positive_cutoff_strictly_increases_in_correlation] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: mu + (scale * composite_standard_deviation n rho1) * z <
-   mu + (scale * composite_standard_deviation n rho2) * z.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   composite_standard_deviation_strictly_increases_in_correlation,
+   [positive_cutoff_strictly_increases_in_correlation] (theorem) — Real score
+   scaling, reliability and correlation formulas.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem
+   positive_cutoff_strictly_increases_in_correlation : forall n rho1 rho2 mu scale z,
+   1 < n -> 0 <= rho1 -> rho1 < rho2 -> rho2 <= 1 -> 0 < scale -> 0 < z -> mu +
+   (scale * composite_standard_deviation n rho1) * z < mu + (scale *
+   composite_standard_deviation n rho2) * z.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include composite_standard_deviation_strictly_increases_in_correlation,
    Rplus_lt_compat_l., Rmult_lt_compat_r.
-   Library discipline: Stdlib.Reals, Lra and Psatz (including ring and field
-   tactics).
-   Scope: No normal distribution, population correlation estimate, or
-   measurement reliability is inferred from the algebra.
+   Library reuse: Stdlib.Reals, Lra, Psatz, ring and field proofs.
+   Boundary: Real-algebraic composite score identities only; theorems do not estimate
+   correlations or assert normality.
  *)
 Theorem positive_cutoff_strictly_increases_in_correlation :
   forall n rho1 rho2 mu scale z,
