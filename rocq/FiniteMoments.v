@@ -1664,9 +1664,9 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
-  (* A zero sum of nonnegative real contributions has only zero
-     contributions.  This uses the existing finite fold and its nonnegative
-     induction; the scalar zero-product step is Stdlib.Reals.Rmult_integral. *)
+  (* Reuse the generic nonnegative-zero characterization from
+     FiniteSum. Keep the public theorem statement unchanged so existing
+     covariance null-direction proofs remain compatible. *)
 
   Lemma sum_finite_zero_implies_zero_terms :
     forall xs h,
@@ -1674,18 +1674,9 @@ Section FiniteProbabilityMoments.
       sum_finite h xs = 0 ->
       forall x, In x xs -> h x = 0.
   Proof.
-    induction xs as [|a xs IH]; intros h Hnonnegative Hsum x Hin.
-    - inversion Hin.
-    - change (h a + sum_finite h xs = 0) in Hsum.
-      assert (Ha : 0 <= h a).
-      { apply Hnonnegative; simpl; auto. }
-      assert (Htail : forall y, In y xs -> 0 <= h y).
-      { intros y Hy; apply Hnonnegative; simpl; auto. }
-      pose proof (sum_finite_nonnegative xs h Htail) as Hrest.
-      simpl in Hin.
-      destruct Hin as [Heq | Hin].
-      + subst x; lra.
-      + apply (IH h Htail); [lra | exact Hin].
+    intros xs h Hnonnegative Hsum x Hin.
+    exact (FiniteSum.finite_sum_nonnegative_zero
+      xs h Hnonnegative Hsum x Hin).
   Qed.
 
   Theorem zero_variance_is_constant_on_positive_mass :
