@@ -43,6 +43,8 @@ retained component-list inductions without adding a custom recursion.
 The generic `FiniteSum.finite_sum_filter_partition` identity
 reuses `Stdlib.List.filter` and the existing signed finite-sum
 algebra. The event-specific partition theorem now delegates to it.
+The existing finite_prob_complement theorem now also delegates to this
+same shared partition theorem instead of redoing indicator algebra.
 Two nonnegative-mass monotonicity theorems reuse Boolean conjunction
 and the pre-existing `finite_prob_event_monotone` lemma; neither
 needs a new list induction or a normalized probability model.
@@ -292,7 +294,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `union_prob_permutation_invariant` (theorem) | Lemma application | Stdlib.Permutation | Reviewed: keep established tactic/library proof |
 | `union_prob_duplicate_route` (theorem) | Lemma application, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `indicator_complement` (lemma) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
-| `finite_prob_complement` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_prob_complement` (theorem) | Lemma application, Rewriting | finite_prob_as_filtered_mass, FiniteSum.finite_sum_filter_partition, Stdlib.Reals.Rplus_comm | **Refactored:** replaces event-specific indicator arithmetic with generic Boolean partition of finite samples |
 | `normalized_finite_prob_complement` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `indicator_union_intersection` (lemma) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `finite_prob_inclusion_exclusion` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
