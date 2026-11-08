@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 333 public theorem/lemma/example declarations,
+The current branch has 334 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**336 proof scripts**, including the generic
+**337 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -31,9 +31,17 @@ proof obligations.
    or a checked lemma in one or two lines, **retain it**; rewriting
    solely to change its text is not a semantic refactor.
 
+### New generic covariance proof
+`covariance_of_general_weighted_second_unconditional` derives component
+covariance linearity from the already verified finite expectation/finite
+sum laws, with no list induction or normalization premise. The original
+`covariance_of_general_weighted_second` theorem remains unchanged and
+now delegates to the stronger result. This removes one of the previously
+retained component-list inductions without adding a custom recursion.
+
 ### Current structural-induction inventory
 
-Exactly **15 proof scripts** currently contain an
+Exactly **14 proof scripts** currently contain an
 `induction` tactic. These are implementation-shape arguments or proofs
 over `Nat.iter`; their retention is a conscious review outcome, not a
 missing documentation comment. Remaining candidates for further
@@ -51,7 +59,6 @@ enumeration and matrix-list semantics.
 - `FiniteSum.finite_sum_app`
 - `FiniteSum.finite_sum_permutation`
 - `Admissions.independent_union_formula`
-- `FiniteMoments.covariance_of_general_weighted_second`
 - `FiniteMoments.double_sum_diagonal_off_diagonal`
 - `FiniteMoments.unordered_covariance_sum_bounded_by_pair_count`
 - `FiniteMoments.split_as_projection_maps`
@@ -287,7 +294,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_intersection_at_most_second` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 
-## FiniteMoments.v — 107 proof scripts
+## FiniteMoments.v — 108 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -329,7 +336,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `variance_of_standardized_score` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `variance_of_iq_reporting_scale` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `expectation_of_general_weighted_sum` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Earlier library refactor retained |
-| `covariance_of_general_weighted_second` (lemma) | Structural induction, Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: structural induction retained |
+| `covariance_of_general_weighted_second_unconditional` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Stdlib.List.map, shared finite_sum_map/scale/sub/ext, expectation_of_general_weighted_sum | **New stronger algebraic lemma:** covariance distributes over weighted finite scores without normalized mass |
+| `covariance_of_general_weighted_second` (lemma) | Lemma application | covariance_of_general_weighted_second_unconditional | **Refactored:** removed component-list induction; retain original total_mass premise and proposition |
 | `covariance_of_general_weighted_sums` (theorem) | Lemma application, Rewriting, Computation | Shared finite sums | Earlier library refactor retained |
 | `variance_of_general_weighted_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `covariance_quadratic_form_nonnegative` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
