@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **320 theorem, lemma and example declarations** in seven
+for the two reports. **325 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -149,7 +149,7 @@ library-backed Boolean-product interpretation.
 
 ## November 8 continuation: support-aware finite sums and general event bounds
 
-The current seven-module source inventory is **320 kernel-checked theorem,
+At the preceding support-aware milestone, the seven modules contained **320 kernel-checked theorem,
 lemma and example declarations**: `Hoeflin` 64, `Admissions` 67,
 `FiniteUnion` 43, `FiniteMoments` 103, `FiniteSum` 16,
 `FiniteBridge` 14 and `FourCellBridge` 13. This is **nine additional
@@ -194,6 +194,65 @@ nonnegative and, where explicitly required, normalized weights
 support a probabilistic interpretation. Gaussianity and empirical
 IQ-test validity are not claimed.
 
+## November 8 continuation: reusing constant sums and weighted covariance proofs
+
+The seven-module source now contains **325 kernel-checked declarations**:
+`Hoeflin` 64, `Admissions` 67, `FiniteUnion` 43,
+`FiniteMoments` 107, `FiniteSum` 17,
+`FiniteBridge` 14 and `FourCellBridge` 13.
+There are **five new declarations** beyond the earlier 320-result
+milestone, and seven existing proofs were refactored without changing
+their statements.
+
+- **`FiniteSum.finite_sum_const`:** the sum of a constant over a
+  finite list equals its length times the constant. The generic proof
+  uses Rocq's list fold, `INR`, `S_INR`, and real ring arithmetic.
+  `diagonal_variance_sum_of_unit_scores` now reuses this theorem and
+  support-aware `finite_sum_ext_in`, replacing its unit-score induction.
+- **Covariance row bound:** `covariance_row_sum_bounded_by_count`
+  now follows from `FiniteSum.finite_sum_monotone`,
+  `finite_sum_const`, and the already checked pairwise unit-variance
+  covariance bound. Its list induction has been removed.
+- **Double covariance sum:** `covariance_double_sum_second_cons`
+  now uses finite-sum addition and scalar covariance symmetry,
+  rather than a list induction. The new
+  `covariance_double_sum_symmetric` theorem uses the shared finite
+  Fubini law (`finite_sum_swap`) and covariance symmetry.
+- **Expectation and both covariance batteries:**
+  `expectation_of_general_weighted_sum` now applies
+  `finite_sum_swap` and `finite_sum_scale`, without a separate
+  weighted-component induction.
+  `covariance_of_general_weighted_sums` uses the previously checked
+  covariance row theorem and symmetry.
+  `covariance_of_sum_scores` similarly reuses the single-battery
+  covariance theorem and symmetry.
+- **Unweighted–weighted bridge:** two new lemmas,
+  `unweighted_scores_as_linear_combination` and
+  `unweighted_covariance_row_as_weighted`, use
+  `Stdlib.List.map` and `FiniteSum.finite_sum_map`. They show that
+  a score battery is the existing weighted-composite model with every
+  coefficient equal to one. Thus `covariance_with_sum_scores`
+  delegates to `covariance_of_general_weighted_second` instead of
+  repeating another induction.
+- **Cross-matrix identity:** the new
+  `covariance_cross_matrix_bilinear_swap` derives symmetry under
+  exchanging the two bases and coefficient vectors from the existing
+  cross-matrix correspondence and covariance symmetry. No new
+  transpose implementation or matrix axioms are needed.
+
+In total, **seven domain-specific list induction proofs** were replaced
+with established shared lemmas and standard list operations. The
+existing `unordered_covariance_sum` recursion remains intentional:
+its terms depend on the progressively shortened list suffix, so it
+does not have the same semantics as a plain map/fold over the
+original list.
+
+All **320 previously named theorem, lemma and example statements** are
+preserved, with no new `Admitted` placeholders or axioms. These
+results establish finite algebraic identities only; they do not imply
+Gaussian tail bounds, empirical IQ-score reliability or continuous
+measure-theoretic results.
+
 ## Claims and exact theorem correspondences
 
 | Report claim | Rocq statement(s) | Scope and qualification |
@@ -216,6 +275,9 @@ IQ-test validity are not claimed.
 | Latent-factor squared correlation and conditional-variance expressions | `latent_reliability_plus_posterior_variance`, `latent_reliability_nonnegative`, `latent_posterior_variance_nonnegative`, `latent_reliability_at_most_one`, and boundary cases | Algebra for the report's *given* expressions; **does not prove the Gaussian conditional-distribution derivation** |
 | Shared finite real-sum infrastructure (technical bridge) | `FiniteSum.finite_sum_ext`, `finite_sum_add`, `finite_sum_scale`, `finite_sum_nonnegative`, `finite_sum_monotone`, `finite_sum_zero`, `finite_sum_app`, `finite_sum_permutation` | Exact `Stdlib.List` folds replace repeated finite-sum proofs in both domain models; no probability normalization is assumed by the generic library |
 | Four-cell admissions model interpreted as a standard Boolean-product probability space | `four_cell_total_mass`, `four_cell_first_marginal`, `four_cell_second_marginal`, `four_cell_intersection_mass`, `four_cell_union_mass`, `four_cell_exactly_one_mass`, `four_cell_indicator_covariance`, `four_cell_indicator_independence_criterion` | Explicit representation of all four outcomes and their normalized nonnegative weights; exact correspondence with the report's specialized joint, marginal and union expressions, using generic finite-probability and finite-moment library lemmas |
+| Constant finite sums and unit-score covariance bounds | `FiniteSum.finite_sum_const`, `diagonal_variance_sum_of_unit_scores`, `covariance_row_sum_bounded_by_count` | Uses the shared real-valued list fold, Rocq `INR`/`S_INR`, support-aware extensionality and finite-sum monotonicity, instead of duplicating unit-variance inductions |
+| Symmetric covariance double sums and cross-matrix bilinear forms | `covariance_double_sum_symmetric`, `covariance_double_sum_second_cons`, `covariance_cross_matrix_bilinear_swap` | Uses existing finite Fubini, covariance symmetry, finite sum addition and the proved fixed-basis bilinear identity; no independent matrix transpose implementation |
+| Unweighted score batteries as unit-weight composites | `unweighted_scores_as_linear_combination`, `unweighted_covariance_row_as_weighted`, `covariance_with_sum_scores`, `covariance_of_sum_scores` | Uses `Stdlib.List.map` and shared sum-map composition to reuse the already formalized weighted-composite covariance theorems |
 | Finite double-sum interchange and termwise zero criterion | `FiniteSum.finite_sum_ext_in`, `FiniteSum.finite_sum_member_le`, `FiniteSum.finite_sum_nonnegative_zero`, `FiniteSum.finite_sum_swap`, `interchange_finite_sums` | Reuses Stdlib `List.map_ext_in` and standard finite-sum linearity to centralize support-sensitive and double-sum proofs; no new finite iterator |
 | Event positive support, zero mass and generalized Fréchet bounds | `finite_prob_zero_iff_no_positive_mass_support`, `finite_prob_positive_of_positive_support`, `finite_intersection_at_most_first`, `finite_intersection_at_most_second`, `finite_frechet_lower_bound` | Holds for explicitly enumerated finite outcomes under nonnegative weights, plus normalization for the Fréchet lower bound; no independence or normality premise |
 | Finite event sample permutation and monotonicity | `finite_prob_sample_append`, `finite_prob_sample_permutation`, `union_prob_sample_permutation`, `finite_prob_event_monotone`, `normalized_finite_prob_unit_interval` | For finite lists and Boolean events, weighted sample order is irrelevant, monotone events have monotone mass under nonnegative weights, and unit-interval bounds require normalized nonnegative weights |
