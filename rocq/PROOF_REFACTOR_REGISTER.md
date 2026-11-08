@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 408 public theorem/lemma/example declarations,
+The current branch has 411 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**411 proof scripts**, including the generic
+**414 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -300,6 +300,19 @@ mathematical and implementation comments. No new row iterator,
 matrix representation, index arithmetic or determinant code
 has been added.
 
+### Affine dependency rather than duplicated score-specific proofs
+
+The duplicate-score null witness now delegates to the generic
+sampled affine-dependence theorem using only a unit slope and
+zero offset, eliminating repeated variance and finite-sum
+reductions. A second theorem proves that affine dependence
+restricted to positive-weight support produces the same
+nonzero covariance null direction, using the existing
+fixed_basis_null_iff_exists_constant_on_positive_weight_support.
+The corresponding two-score non-positive-definite criterion
+then reuses the witness and Stdlib.List.repeat. None of these
+introduces a matrix rank or determinant implementation.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -575,7 +588,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 151 proof scripts
+## FiniteMoments.v — 154 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -702,7 +715,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `null_covariance_direction_orthogonal_to_every_score` (theorem) | Rewriting, Lemma application | fixed_basis_weighted_variance_identity, zero_variance_implies_zero_covariance_first | **New:** matrix null direction is covariance-orthogonal to every finite score |
 | `null_covariance_direction_pairwise_constant_on_positive_mass` (theorem) | Lemma application, Transitivity | null_covariance_direction_constant_on_positive_mass | **New:** any two positive-support outcomes have equal scores in a null direction |
 | `variance_of_constant_score_zero` (theorem) | Lemma application | covariance_with_constant_first | **New:** reusable zero variance for constant score under total mass one |
-| `duplicate_basis_nontrivial_null_direction` (theorem) | Rewriting, Lemma application, ring and Lra | fixed_basis_weighted_variance_identity, variance_extensional, variance_of_constant_score_zero, Stdlib.List.combine and FiniteSum.finite_sum | **New:** explicit nonzero null coefficient vector for duplicated score basis |
+| `affine_dependent_pair_nontrivial_null_on_samples` (theorem) | Sample extensionality, fixed-basis variance identity, ring | variance_extensional_on_samples, variance_of_constant_score_zero, fixed_basis_weighted_variance_identity | **New:** sampled affine dependency produces a nonzero quadratic null witness |
+| `duplicate_basis_nontrivial_null_direction` (theorem) | Lemma application, ring | affine_dependent_pair_nontrivial_null_on_samples | **Refactored:** duplicate-score special case of affine dependence |
 | `expectation_extensional_on_positive_weight_support` (theorem) | Real-order case split, lemma application | FiniteSum.finite_sum_ext_in, Stdlib.Reals.Rle_lt_dec, Lra | **New:** ignore zero-mass score changes without signed-weight assumptions |
 | `covariance_extensional_on_positive_weight_support` (theorem) | Rewriting, lemma application | expectation_extensional_on_positive_weight_support | **New:** covariance invariance under changes off positive support |
 | `variance_extensional_on_positive_weight_support` (theorem) | Lemma application | covariance_extensional_on_positive_weight_support | **New:** variance invariance on positive support |
@@ -730,6 +744,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `duplicate_basis_covariance_not_positive_definite` (theorem) | Witness instantiation, Stdlib simplification, Lra | duplicate_basis_nontrivial_null_direction, Stdlib.List.repeat | **New:** duplicated score basis contradicts strict positive definiteness |
 | `basis_cross_covariance_matrix_affine` (theorem) | Map fusion, extensionality, lemma reuse | Stdlib.List.map_map, Stdlib.List.map_ext, covariance_of_affine_scores | **New:** cross-covariance of affine-transformed bases scales entrywise by the product of slopes |
 | `basis_covariance_matrix_affine` (theorem) | Definitional bridge, lemma reuse | basis_cross_covariance_matrix_affine, existing basis covariance definitions | **New:** fixed-basis covariance scales by the square of a common affine slope |
+| `affine_dependent_pair_nontrivial_null_on_positive_support` (theorem) | Support constant witness, ring, Lra | fixed_basis_null_iff_exists_constant_on_positive_weight_support, FiniteSum.finite_sum, Stdlib.List.combine | **New:** affine dependency on positive support provides nonzero null direction |
+| `affine_dependent_pair_covariance_not_positive_definite` (theorem) | Witness instantiation, Lra | affine_dependent_pair_nontrivial_null_on_positive_support, Stdlib.List.repeat | **New:** positive-support affine dependence obstructs positive definiteness |
 
 ## FiniteBridge.v — 16 proof scripts
 

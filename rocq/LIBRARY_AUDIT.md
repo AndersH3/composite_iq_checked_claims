@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 408 public theorem/lemma/example
+**Current audited inventory:** 411 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **411 proof scripts**. There are **466 named
+constructors, for **414 proof scripts**. There are **469 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -847,6 +847,18 @@ for unit-mass finite weights without constructing a new
 linear-algebra library, or assuming positivity for signed weights.
 The latest audit covers 408 claims, 411 proof scripts and
 466 fully documented named declarations.
+
+## Finite-score affine dependence and covariance null witnesses
+
+The original repeated-score null proof is a single use of the
+new sampled affine-dependence theorem, using the fixed-basis
+variance identity, variance_extensional_on_samples and existing
+constant-score variance. Positive-support affine dependency
+uses the previously checked supported-constant/null iff.
+Its obstruction to positive definiteness reuses the same
+nonzero vector and Stdlib.List.repeat. No new list fold,
+custom rank, eigenvalue or determinant algorithm was added.
+The audited totals are 411 claims, 414 scripts, 469 declarations.
 
 ## Deliberately retained project-specific definitions
 

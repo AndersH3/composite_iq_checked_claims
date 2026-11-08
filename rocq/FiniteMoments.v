@@ -4549,12 +4549,46 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [affine_dependent_pair_nontrivial_null_on_samples] (theorem) — Affine-dependent finite covariance directions.
+   Mathematical meaning: An exact affine relationship f=a*g+c on each enumerated outcome gives the two-score covariance matrix a nonzero quadratic-null direction [1;-a], even when some weights are negative.
+   Exact checked proposition: For all f g a c with total_mass=1 and f x=a*g x+c whenever In x samples, [1;-a]<>[0;0] and matrix_quadratic_form [1;-a] (basis_covariance_matrix [f;g])=0.
+   Premises and side conditions: Unit total sample mass and the affine relation on every listed outcome are required. Signed weights, repeated outcomes and zero-weight observations are permitted; no independence condition is assumed.
+   Proof/definition method: Prove nonzero coefficients by inversion/Lra. Rewrite the quadratic form via fixed_basis_weighted_variance_identity; transfer the composite-score variance to constant c via variance_extensional_on_samples; simplify Stdlib.List.combine and the existing FiniteSum fold, rewrite the affine equality and use ring, then use variance_of_constant_score_zero.
+   Library reuse: fixed_basis_weighted_variance_identity, variance_extensional_on_samples, variance_of_constant_score_zero, Stdlib.List.combine, FiniteSum.finite_sum, ring and Lra.
+   Boundary: An exact finite two-score quadratic null witness, not a full covariance-rank algorithm or empirical factor identification.
+   *)
+  Theorem affine_dependent_pair_nontrivial_null_on_samples :
+    forall f g a c,
+      total_mass = 1 ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      [1; -a] <> ([0; 0] : list R) /\
+      matrix_quadratic_form [1; -a]
+        (basis_covariance_matrix [f; g]) = 0.
+  Proof.
+    intros f g a c Hmass Haffine.
+    split.
+    - intro Hzero.
+      inversion Hzero; lra.
+    - rewrite <- (fixed_basis_weighted_variance_identity
+        [1; -a] [f; g] eq_refl Hmass).
+      transitivity (variance (fun _ => c)).
+      + apply variance_extensional_on_samples.
+        intros x Hx.
+        unfold weighted_basis_sum, linear_combination,
+          FiniteSum.finite_sum.
+        simpl.
+        rewrite (Haffine x Hx).
+        ring.
+      + apply variance_of_constant_score_zero; exact Hmass.
+  Qed.
+
+  (**
    [duplicate_basis_nontrivial_null_direction] (theorem) — Finite score variance and covariance-matrix degeneracy.
    Mathematical meaning: A covariance matrix formed from two identical basis scores has a genuinely nonzero coefficient vector [1,-1] whose quadratic form is zero: subtracting the same score from itself yields the constant zero score.
    Exact checked proposition: For all finite real-valued scores f with total_mass=1, [1;-1] differs from the zero coefficient vector [0;0], and matrix_quadratic_form [1;-1] (basis_covariance_matrix [f;f]) = 0.
    Premises and side conditions: Only the unit total-mass hypothesis is needed to use the already-verified fixed-basis weighted variance theorem. The duplicate score functions are exactly identical; no empirical equal-correlation or near-equality assumption is made.
-   Proof/definition method: Use fixed_basis_weighted_variance_identity to interpret the quadratic form as variance, simplify the standard list combination of [1,-1] with [f,f], invoke variance_extensional and the reusable variance_of_constant_score_zero theorem; separately establish coefficient nontriviality by linear real arithmetic.
-   Library reuse: Stdlib.List.combine, FiniteSum.finite_sum, fixed_basis_weighted_variance_identity, variance_extensional, variance_of_constant_score_zero, Stdlib.Reals ring and Lra.
+   Proof/definition method: Apply the more general affine_dependent_pair_nontrivial_null_on_samples theorem to the repeated score with slope 1 and offset 0. The score relation follows by ring, removing duplicated fixed-basis variance and list-sum reasoning.
+   Library reuse: affine_dependent_pair_nontrivial_null_on_samples and Stdlib.Reals.ring.
    Boundary: This is an explicit finite two-dimensional singularity witness. It does not calculate arbitrary matrix rank, prove the converse rank-nullity theorem, or infer any IQ-test covariance structure.
    *)
   Theorem duplicate_basis_nontrivial_null_direction :
@@ -4565,18 +4599,9 @@ Section FiniteProbabilityMoments.
         (basis_covariance_matrix [f; f]) = 0.
   Proof.
     intros f Hmass.
-    split.
-    - intro Hzero.
-      inversion Hzero; lra.
-    - rewrite <- (fixed_basis_weighted_variance_identity
-        [1; -1] [f; f] eq_refl Hmass).
-      transitivity (variance (fun _ => 0)).
-      + apply variance_extensional.
-        intro x.
-        unfold weighted_basis_sum, linear_combination,
-          FiniteSum.finite_sum.
-        simpl; ring.
-      + apply variance_of_constant_score_zero; exact Hmass.
+    apply (affine_dependent_pair_nontrivial_null_on_samples
+      f f 1 0 Hmass).
+    intros x _; ring.
   Qed.
 
   (**
@@ -5374,6 +5399,73 @@ Section FiniteProbabilityMoments.
        map (map (fun v => a * a * v))
          (basis_cross_covariance_matrix basis basis)).
     apply basis_cross_covariance_matrix_affine; exact Hmass.
+  Qed.
+
+  (**
+   [affine_dependent_pair_nontrivial_null_on_positive_support] (theorem) — Affine-dependent finite covariance directions.
+   Mathematical meaning: With nonnegative normalized sampled weights, the same nonzero coefficient direction [1;-a] is null even if f=a*g+c holds only where listed weights are strictly positive.
+   Exact checked proposition: For all f g a c under mass-one nonnegative weights and positive-support affine equality, [1;-a]<>[0;0] and matrix_quadratic_form [1;-a] (basis_covariance_matrix [f;g])=0.
+   Premises and side conditions: Each listed weight is nonnegative; the score equality need not hold at zero-weight outcomes. The slope may be zero and the basis may have repeated scores.
+   Proof/definition method: Prove nontriviality with inversion/Lra; apply fixed_basis_null_iff_exists_constant_on_positive_weight_support with witness c, simplify the shared list-based linear combination and use the assumed support equality followed by ring.
+   Library reuse: fixed_basis_null_iff_exists_constant_on_positive_weight_support, Stdlib.List.combine, FiniteSum.finite_sum, ring and Lra.
+   Boundary: This is an exact two-score support-null result, not a general matrix kernel computation or numerical approximation.
+   *)
+  Theorem affine_dependent_pair_nontrivial_null_on_positive_support :
+    forall f g a c,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x ->
+        f x = a * g x + c) ->
+      [1; -a] <> ([0; 0] : list R) /\
+      matrix_quadratic_form [1; -a]
+        (basis_covariance_matrix [f; g]) = 0.
+  Proof.
+    intros f g a c Hmass Hw Haffine.
+    split.
+    - intro Hzero.
+      inversion Hzero; lra.
+    - apply (proj2
+        (fixed_basis_null_iff_exists_constant_on_positive_weight_support
+          [1; -a] [f; g] eq_refl Hmass Hw)).
+      exists c.
+      intros x Hx Hpositive.
+      unfold weighted_basis_sum, linear_combination,
+        FiniteSum.finite_sum.
+      simpl.
+      rewrite (Haffine x Hx Hpositive).
+      ring.
+  Qed.
+
+  (**
+   [affine_dependent_pair_covariance_not_positive_definite] (theorem) — Affine-dependent finite covariance directions.
+   Mathematical meaning: A two-score covariance matrix cannot be strictly positive definite when the scores are affine-dependent on the positive-weight sampled support: the nonzero [1;-a] direction has zero quadratic form.
+   Exact checked proposition: For f g a c with normalized nonnegative sampled weights and f x=a*g x+c at positive-weight samples, not(all compatible coefficients differing from repeat 0 2 have strictly positive quadratic form in basis_covariance_matrix [f;g]).
+   Premises and side conditions: The pair basis has length two, its weights are nonnegative and normalized, and zero-weight outcomes need not obey the affine relation. Nonzero is expressed with the library's Stdlib.List.repeat.
+   Proof/definition method: Instantiate affine_dependent_pair_nontrivial_null_on_positive_support, simplify Stdlib.List.repeat, apply the hypothesized positive definiteness to [1;-a] and derive the inequality contradiction using Lra.
+   Library reuse: affine_dependent_pair_nontrivial_null_on_positive_support, Stdlib.List.repeat, Stdlib.Lra.
+   Boundary: Only an explicit finite two-dimensional obstruction is shown; general spectral matrix rank and empirical validity are outside the theorem.
+   *)
+  Theorem affine_dependent_pair_covariance_not_positive_definite :
+    forall f g a c,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x ->
+        f x = a * g x + c) ->
+      ~ (forall coefficients,
+          length coefficients = length [f; g] ->
+          coefficients <> repeat 0 (length [f; g]) ->
+          0 < matrix_quadratic_form coefficients
+            (basis_covariance_matrix [f; g])).
+  Proof.
+    intros f g a c Hmass Hw Haffine Hpositive_definite.
+    destruct (affine_dependent_pair_nontrivial_null_on_positive_support
+      f g a c Hmass Hw Haffine) as [Hnonzero Hnull].
+    assert (Hnonzero_repeat :
+      ([1; -a] : list R) <> repeat 0 (length [f; g])).
+    { simpl; exact Hnonzero. }
+    pose proof (Hpositive_definite [1; -a] eq_refl
+      Hnonzero_repeat) as Hpositive.
+    lra.
   Qed.
 
 End FiniteProbabilityMoments.
