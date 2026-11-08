@@ -71,21 +71,28 @@ Qed.
 (**
    [finite_event_probability_is_indicator_expectation] (theorem) — Correspondence
    between finite event probabilities and score moments.
-   Mathematical meaning: Derives a sum or expectation identity for the explicitly
-   enumerated terms.
+   Mathematical meaning: The weighted mass assigned to a Boolean event is literally
+   the finite expectation of the event's 0-1 indicator score. This
+   identifies the event and score-model representations of one
+   and the same list-fold quantity, with duplicate occurrences intact.
    Exact checked proposition: Theorem
    finite_event_probability_is_indicator_expectation : forall (A : Type) (samples :
    list A) (weight : A -> R) (event : A -> bool), @FiniteUnion.finite_prob A weight
    samples event = @FiniteMoments.expect A samples weight (fun x =>
    FiniteUnion.indicator (event x)).
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses definitional reduction.
-   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
-   Boundary: Boolean event indicator algebra in an explicit finite sample, with
-   normalized nonnegative weights when interpreting real expressions as
-   probabilities.
- *)
+   Premises and side conditions: Arbitrary finite outcome list, real weights and total
+   Boolean event predicates. No positivity, mass-one or independence
+   premise is used for the identity; a genuine probability
+   interpretation requires a nonnegative normalized sample mass.
+   Proof/definition method: Both module definitions expand to the same
+   FiniteSum.finite_sum of weight times indicator, so Rocq's
+   definitional equality establishes the theorem immediately.
+   Library reuse: FiniteUnion.finite_prob, FiniteMoments.expect,
+   FiniteSum.finite_sum, Stdlib.List.map/fold_right and Bool.
+   Boundary: Identity of finite weighted list representations, not a
+   construction of a conditional expectation, a countably additive
+   measure, or a proof of empirical psychometric quantities.
+*)
 Theorem finite_event_probability_is_indicator_expectation :
   forall (A : Type) (samples : list A) (weight : A -> R)
          (event : A -> bool),
@@ -278,24 +285,30 @@ Qed.
 (**
    [finite_event_indicator_covariance] (theorem) — Correspondence between finite
    event probabilities and score moments.
-   Mathematical meaning: Derives a covariance identity or inequality from finite
-   weighted expectations.
+   Mathematical meaning: The covariance of two Boolean indicator scores is
+   the mass of their conjunction minus the product of their
+   individual masses, the exact algebraic independence residual.
    Exact checked proposition: Theorem finite_event_indicator_covariance : forall (A :
    Type) (samples : list A) (weight : A -> R) (a b : A -> bool),
    @FiniteMoments.covariance A samples weight (fun x => FiniteUnion.indicator (a x))
    (fun x => FiniteUnion.indicator (b x)) = @FiniteUnion.finite_prob A weight samples
    (fun x => andb (a x) (b x)) - @FiniteUnion.finite_prob A weight samples a *
    @FiniteUnion.finite_prob A weight samples b.
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, definitional reduction; references include
-   FiniteMoments.covariance., FiniteMoments.expectation_ext., indicator_product_and..
-   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
-   Boundary: Boolean event indicator algebra in an explicit finite sample, with
-   normalized nonnegative weights when interpreting real expressions as
-   probabilities.
- *)
+   Premises and side conditions: No mass normalization, positive weights or independence
+   assumption is needed to establish the formula: all quantities
+   are finite real-valued list sums. If the weights do define a
+   probability measure, the residual has its conventional meaning.
+   Proof/definition method: Unfold the existing finite covariance definition,
+   rewrite each indicator expectation via the event-mass bridge,
+   and use indicator_product_and to identify the product score
+   with the conjunction indicator.
+   Library reuse: FiniteMoments.covariance and expectation_ext,
+   finite_event_probability_is_indicator_expectation,
+   indicator_product_and, Stdlib.Bool.andb, Stdlib.Reals.
+   Boundary: No inference about actual events in population data;
+   zero algebraic covariance only represents probabilistic
+   independence once a valid finite probability law is supplied.
+*)
 Theorem finite_event_indicator_covariance :
   forall (A : Type) (samples : list A) (weight : A -> R)
          (a b : A -> bool),
@@ -330,8 +343,9 @@ Qed.
 (**
    [finite_event_independence_iff_zero_indicator_covariance] (theorem) —
    Correspondence between finite event probabilities and score moments.
-   Mathematical meaning: Derives a covariance identity or inequality from finite
-   weighted expectations.
+   Mathematical meaning: The factorization equation P(a AND b) = P(a)P(b)
+   is equivalent to zero covariance between the two 0-1 indicator
+   scores in this finite weighted event model.
    Exact checked proposition: Theorem
    finite_event_independence_iff_zero_indicator_covariance : forall (A : Type)
    (samples : list A) (weight : A -> R) (a b : A -> bool), @FiniteMoments.covariance
@@ -339,15 +353,19 @@ Qed.
    FiniteUnion.indicator (b x)) = 0 <-> @FiniteUnion.finite_prob A weight samples
    (fun x => andb (a x) (b x)) = @FiniteUnion.finite_prob A weight samples a *
    @FiniteUnion.finite_prob A weight samples b.
-   Premises and side conditions: The displayed hypotheses include explicit nonzero or
-   strict-positive numerical conditions. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
-   arithmetic (Lra); references include finite_event_indicator_covariance..
-   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
-   Boundary: Boolean event indicator algebra in an explicit finite sample, with
-   normalized nonnegative weights when interpreting real expressions as
-   probabilities.
- *)
+   Premises and side conditions: Holds algebraically for arbitrary real weights,
+   even if the weighted lists do not define probabilities. For
+   the biconditional to be read as stochastic independence, the
+   weights must be nonnegative and normalized over the sample.
+   Proof/definition method: Rewrite covariance via
+   finite_event_indicator_covariance and solve the resulting
+   exact real equality with Rocq's Stdlib.Lra tactic.
+   Library reuse: finite_event_indicator_covariance, Stdlib.Bool.andb,
+   Stdlib.Reals and Stdlib.Lra; no independence axiom is invoked.
+   Boundary: Only independence of the two finite Boolean events
+   is characterized. Zero covariance of arbitrary real-valued
+   scores does not generally imply their statistical independence.
+*)
 Theorem finite_event_independence_iff_zero_indicator_covariance :
   forall (A : Type) (samples : list A) (weight : A -> R)
          (a b : A -> bool),
