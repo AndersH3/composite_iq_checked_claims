@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 364 public theorem/lemma/example
+**Current audited inventory:** 368 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **367 proof scripts**. There are **422 named
+constructors, for **371 proof scripts**. There are **426 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -689,10 +689,23 @@ operator to both-given-either and not-A-given-B, reusing
 `two_event_union_probability`, `Stdlib.Bool.andb_comm` and the
 previously checked four-cell conditional ratios. Four of four report
 conditional expressions now have exact generic finite-event
-interpretations. The current audited totals are 364 public proofs,
+interpretations. The totals at that earlier stage were 364 public proofs,
 367 proof scripts, and 422 documented declarations. All prior
 statements remain unchanged and no alternate event/mass implementations
 are introduced.
+
+## Stronger conditional support and monotonicity results
+
+Four new FiniteUnion proofs reuse Stdlib.Bool and existing
+finite-event extensionality/monotonicity to prove target equality
+on selected conditioning support, conditional monotonicity, the
+true-event conditional identity and conditioning-event support
+extensionality. An existing weaker support theorem has been
+refactored to apply the new stronger result, rather than repeat
+pointwise conjunction reasoning. No new recursions, unpinned
+libraries, axioms or altered public claims are introduced.
+Current inventory: 368 publicly named proofs, 371 scripts and
+426 fully documented declarations.
 
 ## Deliberately retained project-specific definitions
 

@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 364 public theorem/lemma/example declarations,
+The current branch has 368 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**367 proof scripts**, including the generic
+**371 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -145,6 +145,20 @@ union, support extensionality, and report-specific ratio theorems;
 no second event implementation or matrix recursion is introduced.
 All four original conditional report expressions are now covered by
 the same general finite conditional model, with positive denominators.
+
+### Stronger conditional support reasoning and reviewed refactor
+
+Four additional generic conditional results establish target-event
+extensionality *only on enumerated conditioning support*, event
+monotonicity under a fixed positive conditioning marginal, conditional
+mass one for the true event, and support extensionality of the
+conditioning predicate itself. The existing
+`finite_conditional_prob_event_ext_on_samples` proof delegates to
+the stronger conditional-support lemma, eliminating a repeated
+Boolean-conjunction equality proof. All new results reuse
+Stdlib.Bool, finite_prob_event_ext_on_samples,
+finite_prob_event_monotone and real inverse order lemmas; none adds
+custom list recursion or external probability infrastructure.
 
 ### Current structural-induction inventory
 
@@ -348,7 +362,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 59 proof scripts
+## FiniteUnion.v — 63 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -409,8 +423,12 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_filtered` (theorem) | Rewriting, Computation | finite_prob_on_filtered_samples, Stdlib.List.filter | **New:** generic quotient interpretation of selected outcome lists |
 | `finite_conditional_prob_self` (theorem) | Finite cases, Rewriting, Lemma application | finite_prob_event_ext_on_samples; Stdlib.Reals field tactic | **New:** positive-mass event conditional on itself equals one |
 | `finite_conditional_prob_unit_interval` (theorem) | Lemma application, Rewriting, Real inequalities | finite_prob_event_monotone, finite_intersection_at_most_first, Stdlib.Reals | **New:** nonnegative bounded conditional mass for positive conditioning mass |
-| `finite_conditional_prob_event_ext_on_samples` (theorem) | Rewriting, Lemma application | finite_prob_event_ext_on_samples, Stdlib.Bool.andb | **New:** target-event extensionality over sample support |
+| `finite_conditional_prob_event_ext_on_conditioned_samples` (theorem) | Finite cases, Lemma application | finite_prob_event_ext_on_samples, Stdlib.Bool.andb | **New:** weaker event agreement only where conditioning event holds |
+| `finite_conditional_prob_event_ext_on_samples` (theorem) | Lemma application | finite_conditional_prob_event_ext_on_conditioned_samples | **Refactored:** delegate to stronger support theorem without duplicated conjunction proof |
 | `finite_conditional_prob_complement` (theorem) | Rewriting, Stdlib inverse cancellation | finite_conditional_prob_filtered, finite_prob_complement, finite_prob_as_filtered_mass, Stdlib.Reals.Rinv_r | **New:** conditional complement mass sums to one |
+| `finite_conditional_prob_monotone` (theorem) | Lemma application, Boolean conjunction | finite_prob_event_monotone, Stdlib.Bool.andb_true_iff, Stdlib.Reals inverse/order | **New:** conditional event implication monotonicity |
+| `finite_conditional_prob_true` (theorem) | Lemma application | finite_conditional_prob_event_ext_on_conditioned_samples, finite_conditional_prob_self | **New:** true target conditionally has mass one |
+| `finite_conditional_prob_conditioning_ext_on_samples` (theorem) | Rewriting, Lemma application | finite_prob_event_ext_on_samples | **New:** conditioning event support extensionality |
 
 ## FiniteMoments.v — 116 proof scripts
 

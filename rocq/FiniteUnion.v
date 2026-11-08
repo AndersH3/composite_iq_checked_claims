@@ -2058,17 +2058,18 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_conditional_prob_event_ext_on_samples] (theorem) — Generic finite conditional probability.
-   Mathematical meaning: Replacing a conditioned target event with another Boolean predicate that agrees on each enumerated sample occurrence does not affect the conditional quotient.
-   Exact checked proposition: For all weights samples event1 event2 given, event1 and event2 agreeing on In x samples implies the two finite_conditional_prob values are equal.
-   Premises and side conditions: Arbitrary real weights and duplicate outcomes are allowed; no sign, normalization or positive-conditioning hypothesis is necessary for this real expression equality.
-   Proof/definition method: Unfold only the conditional quotient and directly apply finite_prob_event_ext_on_samples to the two conjunction predicates, rewriting the pointwise event equality.
-   Library reuse: finite_prob_event_ext_on_samples, Stdlib.List.In, Stdlib.Bool.andb and Stdlib.Reals.
-   Boundary: Agreement is needed only on explicitly enumerated finite support; there is no claim about a general measurable event space.
+   [finite_conditional_prob_event_ext_on_conditioned_samples] (theorem) — Generic finite conditional-event laws.
+   Mathematical meaning: Two target events have equal finite conditional mass whenever they agree on sampled outcomes where the conditioning event is true; they need not agree elsewhere, even inside the original sample.
+   Exact checked proposition: For all weights samples event1 event2 given, agreement of event1 and event2 on every sampled x satisfying given x = true implies finite_conditional_prob weights samples event1 given = finite_conditional_prob weights samples event2 given.
+   Premises and side conditions: Outcome weights may be signed and the sample may contain repetitions; no unit-mass or strictly positive conditioning requirement is needed for equality of the algebraic quotient expressions.
+   Proof/definition method: Use the established finite_prob_event_ext_on_samples on the conjunction indicators and reduce the two standard Boolean cases for the conditioning event, with no list recursion.
+   Library reuse: finite_prob_event_ext_on_samples, Stdlib.Bool.andb, Stdlib.List.In, Stdlib.Reals.
+   Boundary: Support-sensitive extensionality is only over the enumerated conditioning sample, not a construction of a conditional measure on an arbitrary measurable space.
    *)
-  Theorem finite_conditional_prob_event_ext_on_samples :
+  Theorem finite_conditional_prob_event_ext_on_conditioned_samples :
     forall weights samples event1 event2 given,
-      (forall x, In x samples -> event1 x = event2 x) ->
+      (forall x, In x samples -> given x = true ->
+        event1 x = event2 x) ->
       finite_conditional_prob weights samples event1 given =
       finite_conditional_prob weights samples event2 given.
   Proof.
@@ -2080,8 +2081,30 @@ Section FiniteOutcomeSpace.
       (fun x => andb (given x) (event2 x))).
     - reflexivity.
     - intros x Hx.
-      rewrite (Hevents x Hx).
-      reflexivity.
+      destruct (given x) eqn:Hgiven; simpl.
+      + rewrite (Hevents x Hx Hgiven); reflexivity.
+      + reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_prob_event_ext_on_samples] (theorem) — Generic finite conditional probability.
+   Mathematical meaning: Replacing a conditioned target event with another Boolean predicate that agrees on each enumerated sample occurrence does not affect the conditional quotient.
+   Exact checked proposition: For all weights samples event1 event2 given, event1 and event2 agreeing on In x samples implies the two finite_conditional_prob values are equal.
+   Premises and side conditions: Arbitrary real weights and duplicate outcomes are allowed; no sign, normalization or positive-conditioning hypothesis is necessary for this real expression equality.
+   Proof/definition method: Delegate to the stronger finite_conditional_prob_event_ext_on_conditioned_samples theorem and weaken the target-agreement premise to the conditioning support, without repeating the original Boolean case proof.
+   Library reuse: finite_conditional_prob_event_ext_on_conditioned_samples, finite_prob_event_ext_on_samples, Stdlib.List.In and Stdlib.Bool.andb.
+   Boundary: Agreement is needed only on explicitly enumerated finite support; there is no claim about a general measurable event space.
+   *)
+  Theorem finite_conditional_prob_event_ext_on_samples :
+    forall weights samples event1 event2 given,
+      (forall x, In x samples -> event1 x = event2 x) ->
+      finite_conditional_prob weights samples event1 given =
+      finite_conditional_prob weights samples event2 given.
+  Proof.
+    intros weights samples event1 event2 given Hevents.
+    apply finite_conditional_prob_event_ext_on_conditioned_samples.
+    intros x Hx _.
+    apply Hevents; exact Hx.
   Qed.
 
   (**
@@ -2114,6 +2137,87 @@ Section FiniteOutcomeSpace.
         (fun x => negb (event x)))).
     rewrite finite_prob_complement.
     apply Rinv_r; lra.
+  Qed.
+
+  (**
+   [finite_conditional_prob_monotone] (theorem) — Generic finite conditional-event laws.
+   Mathematical meaning: For a fixed positive-mass conditioning event and nonnegative sampled weights, strengthening the target event by implication cannot decrease its conditional mass.
+   Exact checked proposition: For all weights samples event1 event2 given, nonnegative sampled weights, positive mass of given and pointwise sampled event1 implies event2 entail finite_conditional_prob weights samples event1 given <= finite_conditional_prob weights samples event2 given.
+   Premises and side conditions: Nonnegativity on every enumerated outcome and a positive conditioning marginal are explicit; sample normalization, event independence and distinct outcomes are not required.
+   Proof/definition method: Apply the existing finite_prob_event_monotone to the two conjunction predicates via Stdlib.Bool.andb_true_iff, then multiply by the nonnegative inverse of the common conditioning mass.
+   Library reuse: finite_prob_event_monotone, Stdlib.Bool.andb_true_iff, Stdlib.Reals.Rinv_0_lt_compat/Rmult_le_compat_r, Lra.
+   Boundary: The result concerns exact finite weighted event mass and does not imply conditional probabilities for signed measures or a Gaussian model.
+   *)
+  Theorem finite_conditional_prob_monotone :
+    forall weights samples event1 event2 given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      (forall x, In x samples -> event1 x = true ->
+        event2 x = true) ->
+      finite_conditional_prob weights samples event1 given <=
+      finite_conditional_prob weights samples event2 given.
+  Proof.
+    intros weights samples event1 event2 given Hw Hpositive Hsubset.
+    unfold finite_conditional_prob, Rdiv.
+    apply Rmult_le_compat_r.
+    - apply Rlt_le, Rinv_0_lt_compat; exact Hpositive.
+    - apply finite_prob_event_monotone; [exact Hw|].
+      intros x Hx Hboth.
+      apply andb_true_iff in Hboth.
+      apply andb_true_iff.
+      destruct Hboth as [Hgiven Hfirst].
+      split; [exact Hgiven|].
+      apply Hsubset with (x := x); assumption.
+  Qed.
+
+  (**
+   [finite_conditional_prob_true] (theorem) — Generic finite conditional-event laws.
+   Mathematical meaning: When conditioning on a positive-mass event, the always-true event has conditional mass exactly one.
+   Exact checked proposition: For all weights samples given, positive finite_prob weights samples given implies finite_conditional_prob weights samples (fun _ => true) given = 1.
+   Premises and side conditions: Only strictly positive conditioning mass is needed for this algebraic identity; interpreting all conditional event values probabilistically separately requires nonnegative outcome weights.
+   Proof/definition method: Use the stronger conditioned-support extensionality theorem to identify the always-true target with the conditioning event on accepted outcomes, then reuse finite_conditional_prob_self; no new division algebra is performed.
+   Library reuse: finite_conditional_prob_event_ext_on_conditioned_samples, finite_conditional_prob_self and Stdlib.Bool.
+   Boundary: The conclusion is an exact finite-event identity, not normalization of an entire continuous or empirical distribution.
+   *)
+  Theorem finite_conditional_prob_true :
+    forall weights samples given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples (fun _ => true) given = 1.
+  Proof.
+    intros weights samples given Hpositive.
+    transitivity (finite_conditional_prob weights samples given given).
+    - apply finite_conditional_prob_event_ext_on_conditioned_samples.
+      intros x _ Hgiven.
+      symmetry; exact Hgiven.
+    - apply finite_conditional_prob_self; exact Hpositive.
+  Qed.
+
+  (**
+   [finite_conditional_prob_conditioning_ext_on_samples] (theorem) — Generic finite conditional-event laws.
+   Mathematical meaning: Changing the conditioning Boolean event outside the enumerated sample does not change either its finite mass or the numerator of a finite conditional probability.
+   Exact checked proposition: For all weights samples event given1 given2, equality of the two conditioning predicates on every sampled outcome implies finite_conditional_prob weights samples event given1 = finite_conditional_prob weights samples event given2.
+   Premises and side conditions: The weights are arbitrary real numbers and sample repetitions remain significant; the algebraic quotient identity needs no positivity or normalized-mass hypothesis.
+   Proof/definition method: Unfold the generic quotient, then reuse finite_prob_event_ext_on_samples once on the numerators and once on the conditioning marginals; no new Boolean folding or list induction is used.
+   Library reuse: finite_prob_event_ext_on_samples, Stdlib.Bool.andb, Stdlib.List.In and Stdlib.Reals division.
+   Boundary: This is finite-support equality of expressions and does not establish uniqueness of conditional probability outside the sampled support.
+   *)
+  Theorem finite_conditional_prob_conditioning_ext_on_samples :
+    forall weights samples event given1 given2,
+      (forall x, In x samples -> given1 x = given2 x) ->
+      finite_conditional_prob weights samples event given1 =
+      finite_conditional_prob weights samples event given2.
+  Proof.
+    intros weights samples event given1 given2 Hevents.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb (given1 x) (event x))
+      (fun x => andb (given2 x) (event x))).
+    2: { intros x Hx; rewrite (Hevents x Hx); reflexivity. }
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples given1 given2).
+    - reflexivity.
+    - exact Hevents.
   Qed.
 
 End FiniteOutcomeSpace.

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **364 theorem, lemma and example declarations** in seven
+for the two reports. **368 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -869,10 +869,24 @@ identify both-given-either and not-A-given-B as specializations of the
 shared `FiniteUnion.finite_conditional_prob` operator. These complement
 the two existing A|B and B|A generic conditional results.
 
-The seven-file source inventory now contains **364 public claims**,
+That earlier stage contained **364 public claims**,
 **367 proof scripts** and **422 fully documented declarations**. All
 existing named theorem propositions are unchanged. Nothing here proves
 empirical event independence or Gaussian admission tail estimates.
+
+## Stronger conditional-support properties and a proof refactor
+
+Four further generic conditional theorems strengthen target-event
+extensionality to the outcomes actually accepted by the conditioning
+event, prove monotonicity under Boolean implication, show that a true
+target event has conditional mass one when conditioning is positive,
+and establish conditioning-event extensionality on the sampled support.
+The previous whole-sample target-extensionality proof now delegates
+to the stronger result. All use existing `FiniteUnion` identities,
+`Stdlib.Bool` and real order lemmas, not new finite sum recursions.
+
+Updated seven-module inventory: **368 public claims**,
+**371 audited proof scripts**, **426 documented named declarations**.
 
 ## Research extensions
 
