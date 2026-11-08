@@ -8,15 +8,27 @@ Open Scope R_scope.
 Definition finite_sum {A : Type} (f : A -> R) (xs : list A) : R :=
   fold_right Rplus 0 (map f xs).
 
+(* Stdlib.List.map_ext_in only needs equality on the enumerated
+   support; this is stronger than requiring a global function equality. *)
+Lemma finite_sum_ext_in {A : Type} :
+  forall (xs : list A) (f g : A -> R),
+    (forall x, In x xs -> f x = g x) ->
+    finite_sum f xs = finite_sum g xs.
+Proof.
+  intros xs f g Heq.
+  unfold finite_sum.
+  f_equal.
+  apply map_ext_in; exact Heq.
+Qed.
+
 Lemma finite_sum_ext {A : Type} :
   forall (xs : list A) (f g : A -> R),
     (forall x, f x = g x) ->
     finite_sum f xs = finite_sum g xs.
 Proof.
   intros xs f g Heq.
-  unfold finite_sum.
-  f_equal.
-  apply map_ext; exact Heq.
+  apply finite_sum_ext_in.
+  intros x _; apply Heq.
 Qed.
 
 Lemma finite_sum_add {A : Type} :
@@ -53,6 +65,47 @@ Proof.
     assert (Htail : forall y, In y xs -> 0 <= f y).
     { intros y Hy; apply Hf; simpl; auto. }
     specialize (IH f Htail); lra.
+Qed.
+
+(* A nonnegative contribution is no larger than the whole sum.
+   Unlike the report-specific union proof, the induction is generic. *)
+Lemma finite_sum_member_le {A : Type} :
+  forall (xs : list A) (f : A -> R) (x : A),
+    (forall y, In y xs -> 0 <= f y) ->
+    In x xs ->
+    f x <= finite_sum f xs.
+Proof.
+  intros xs f x.
+  induction xs as [|a xs IH]; intros Hnonnegative Hin.
+  - contradiction.
+  - assert (Ha : 0 <= f a).
+    { apply Hnonnegative; simpl; auto. }
+    assert (Htail : forall y, In y xs -> 0 <= f y).
+    { intros y Hy; apply Hnonnegative; simpl; auto. }
+    simpl in Hin.
+    destruct Hin as [Heq | Hin].
+    + subst a.
+      assert (Hrest : 0 <= finite_sum f xs).
+      { apply finite_sum_nonnegative; exact Htail. }
+      change (f x <= f x + finite_sum f xs).
+      lra.
+    + specialize (IH Htail Hin).
+      change (f x <= f a + finite_sum f xs).
+      lra.
+Qed.
+
+(* Zero aggregate mass plus nonnegative contributions forces each
+   supported contribution to vanish. Reuse the member bound. *)
+Lemma finite_sum_nonnegative_zero {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    (forall x, In x xs -> 0 <= f x) ->
+    finite_sum f xs = 0 ->
+    forall x, In x xs -> f x = 0.
+Proof.
+  intros xs f Hnonnegative Hsum x Hin.
+  pose proof (Hnonnegative x Hin) as Hlow.
+  pose proof (finite_sum_member_le xs f x Hnonnegative Hin) as Hhigh.
+  lra.
 Qed.
 
 Lemma finite_sum_monotone {A : Type} :
