@@ -859,16 +859,12 @@ Section FiniteProbabilityMoments.
         covariance_double_sum fs gs.
   Proof.
     intros fs gs Hmass.
-    induction fs as [|f fs IH].
-    - change (covariance (fun _ => 0) (sum_scores gs) = 0).
-      apply covariance_with_constant_first; exact Hmass.
-    - change
-        (covariance (fun x => f x + sum_scores fs x)
-          (sum_scores gs) =
-          covariance_row_sum f gs + covariance_double_sum fs gs).
-      rewrite covariance_add_first.
-      rewrite (covariance_with_sum_scores f gs Hmass).
-      rewrite IH; ring.
+    rewrite (covariance_symmetric (sum_scores fs) (sum_scores gs)).
+    rewrite (covariance_with_sum_scores (sum_scores gs) fs Hmass).
+    unfold covariance_row_sum, covariance_double_sum.
+    apply FiniteSum.finite_sum_ext; intro f.
+    rewrite (covariance_symmetric (sum_scores gs) f).
+    apply covariance_with_sum_scores; exact Hmass.
   Qed.
 
   Theorem variance_of_unweighted_sum :
