@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import re
 import sys
+
+import deal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,6 +45,14 @@ REQUIRED_HEADER_FIELDS = (
 )
 
 
+# Repository-wide policy: named Python functions have at least five Deal
+# contracts. These guard module selection, output shape, and count consistency.
+@deal.pre(lambda module: isinstance(module, str))
+@deal.pre(lambda module: module in MODULES)
+@deal.pre(lambda module: bool(module))
+@deal.post(lambda result: isinstance(result, tuple))
+@deal.post(lambda result: len(result) == 3)
+@deal.post(lambda result: 0 <= result[1] <= result[2])
 def check_module(module: str) -> tuple[list[str], int, int]:
     path = PROOF_DIR / f"{module}.v"
     failures: list[str] = []
@@ -87,11 +97,18 @@ def check_module(module: str) -> tuple[list[str], int, int]:
     return failures, proof_count, declaration_count
 
 
-def main() -> int:
+# The entrypoint is explicitly parameterized to give non-vacuous input
+# preconditions rather than inventing tautological contracts for a no-arg main.
+@deal.pre(lambda modules: len(modules) > 0)
+@deal.pre(lambda modules: all(isinstance(module, str) for module in modules))
+@deal.pre(lambda modules: len(set(modules)) == len(modules))
+@deal.pre(lambda modules: all(module in MODULES for module in modules))
+@deal.post(lambda result: result in (0, 1))
+def main(modules: tuple[str, ...]) -> int:
     errors: list[str] = []
     proofs = 0
     declarations = 0
-    for module in MODULES:
+    for module in modules:
         issues, proof_count, declaration_count = check_module(module)
         errors.extend(issues)
         proofs += proof_count
@@ -103,9 +120,9 @@ def main() -> int:
         return 1
     print(f"Documented all {declarations} declarations "
           f"({proofs} theorem/lemma/example-like proofs) "
-          f"across {len(MODULES)} Rocq modules.")
+          f"across {len(modules)} Rocq modules.")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(MODULES))
