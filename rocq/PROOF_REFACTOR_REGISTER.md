@@ -1,0 +1,431 @@
+# Complete proof-script refactoring register
+
+This register inventories **every `Proof. ... Qed.` or `Proof. ... Defined.`
+script**, including local helpers and two explicit record constructors.
+It is a proof-by-proof review of source structure, dependency reuse, and
+whether an additional rewrite is justified; it is **not** a replacement for
+Rocq 9.2 kernel checking or a claim that all scripts needed modification.
+
+The branch starts from 328 public theorem/lemma/example declarations,
+one local helper, two constructed `Admissions.TwoEventModel` values,
+and the new generic `FiniteSum.finite_sum_zip_map`: **332 proof scripts**.
+The record was created after the current generic list-fold and covariance
+matrix refactoring and counts explicit proof blocks, not definitions lacking
+proof obligations.
+
+### Refactor criteria
+
+1. Preserve each existing theorem's exact proposition and every assumption.
+2. Prefer `Stdlib.List`, `Stdlib.Sorting.Permutation`, `Stdlib.Bool`,
+   `Stdlib.Reals`, `Lra`, `Psatz`, and the shared `FiniteSum` laws.
+3. Remove repeated finite-list inductions only when an already-checked
+   general theorem expresses the **same** finite list semantics.
+4. Retain structural induction for genuinely recursive `fold_right`
+   algebra, `Nat.iter`, and the suffix-dependent unordered-pair sum.
+5. Do not introduce a new project-specific axiom, `Admitted`, or unpinned
+   matrix/measure library. Review all changes with the pinned Rocq 9.2
+   kernel check and existing Python/Deal/SPARK workflows.
+6. Where the existing proof already delegates to a Stdlib theorem
+   or a checked lemma in one or two lines, **retain it**; rewriting
+   solely to change its text is not a semantic refactor.
+
+### Current structural-induction inventory
+
+Exactly **15 proof scripts** currently contain an
+`induction` tactic. These are implementation-shape arguments or proofs
+over `Nat.iter`; their retention is a conscious review outcome, not a
+missing documentation comment. Remaining candidates for further
+generalization must be judged against preservation of the exact
+enumeration and matrix-list semantics.
+
+- `FiniteSum.finite_sum_add`
+- `FiniteSum.finite_sum_scale`
+- `FiniteSum.finite_sum_nonnegative`
+- `FiniteSum.finite_sum_member_le`
+- `FiniteSum.finite_sum_const`
+- `FiniteSum.finite_sum_zip_map`
+- `FiniteSum.finite_sum_swap`
+- `FiniteSum.finite_sum_filter`
+- `FiniteSum.finite_sum_app`
+- `FiniteSum.finite_sum_permutation`
+- `Admissions.independent_union_formula`
+- `FiniteMoments.covariance_of_general_weighted_second`
+- `FiniteMoments.double_sum_diagonal_off_diagonal`
+- `FiniteMoments.unordered_covariance_sum_bounded_by_pair_count`
+- `FiniteMoments.split_as_projection_maps`
+
+### Per-module proof review
+
+This table records the currently used proof method and known library
+dependencies. Status **Reviewed** means the script has been inspected
+for straightforward library substitutions and intentionally left
+unchanged, *not* that every proof term was rewritten. The dependency
+column is a tactic-level heuristic; consult the actual source for
+full dependencies and the theorem-specific doc comment for hypotheses.
+
+## FiniteSum.v — 19 proof scripts
+
+| Named declaration | Proof strategy | Library reuse | Refactor disposition |
+|---|---|---|---|
+| `finite_sum_ext_in` (lemma) | Lemma application | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `finite_sum_ext` (lemma) | Lemma application | Prior named lemmas | Earlier library refactor retained |
+| `finite_sum_add` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `finite_sum_scale` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `finite_sum_nonnegative` (lemma) | Structural induction, Lemma application, Lra/Psatz, Computation | Stdlib.Lra/Psatz | Reviewed: structural induction retained |
+| `finite_sum_neg` (lemma) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_sum_sub` (lemma) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_sum_member_le` (lemma) | Structural induction, Finite cases, Lemma application, Lra/Psatz, Computation | Stdlib.Lra/Psatz | Reviewed: structural induction retained |
+| `finite_sum_nonnegative_zero` (lemma) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `finite_sum_monotone` (lemma) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | **Rewritten**: duplicated list induction removed |
+| `finite_sum_const` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `finite_sum_zero` (lemma) | Rewriting, Ring/field | Stdlib ring/field | **Rewritten**: duplicated list induction removed |
+| `finite_sum_map` (lemma) | Rewriting, Computation | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `finite_sum_zip_map` (lemma) | Structural induction, Rewriting, Computation | Stdlib.List | Reviewed: structural induction retained |
+| `finite_sum_swap` (lemma) | Structural induction, Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: structural induction retained |
+| `finite_sum_filter` (lemma) | Structural induction, Finite cases, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `finite_sum_app` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `finite_sum_permutation` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `finite_sum_rev` (lemma) | Lemma application | Stdlib.Permutation | Reviewed: keep established tactic/library proof |
+
+## Hoeflin.v — 65 proof scripts
+
+| Named declaration | Proof strategy | Library reuse | Refactor disposition |
+|---|---|---|---|
+| `nonnegative_quotient` (lemma) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `pair_average_variance` (theorem) | Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `equicorrelation_variance` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_alternative_form` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `one_test_variance` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `independent_tests_variance` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `perfectly_correlated_variance` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_strictly_positive` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `variance_at_least_correlation` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `variance_at_most_one` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_nondecreasing_in_correlation` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_gap_to_limiting_correlation` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `iq_standardization_inversion` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `iq_report_standardization` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `equal_sd_composite_scale` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `threshold_recovered_after_normalization` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `normalized_variance_is_one` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `standardized_160_sd15` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `standardized_160_sd16` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_reliability_plus_posterior_variance` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_reliability_nonnegative` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `latent_posterior_variance_nonnegative` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `latent_reliability_at_most_one` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `latent_reliability_for_one_test` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_reliability_at_zero` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_variance_at_zero` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_variance_at_perfect_correlation` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_decreases_with_test_count` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_strictly_decreases_with_test_count` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_is_affine_in_correlation` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_correlation_sensitivity` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_two_equicorrelated_tests` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_three_equicorrelated_tests` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_variance_denominator_positive` (theorem) | Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `latent_variance_decreases_with_test_count` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_reliability_increases_with_test_count` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `doubling_battery_halves_variance_excess` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `nonnegative_correlation_variance_at_least_independent` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_excess_bound_by_inverse_battery_size` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_reliability_times_composite_variance` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `latent_posterior_times_composite_variance` (theorem) | Lemma application, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_nonnegative` (theorem) | Lemma application | Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_squared` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_at_zero_correlation` (theorem) | Rewriting, Lra/Psatz, Computation | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_at_perfect_correlation` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_nondecreasing_in_correlation` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_nonincreasing_in_test_count` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_at_most_one` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_at_least_sqrt_correlation` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_positive` (theorem) | Lemma application | Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_strictly_decreases_with_test_count` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_strictly_increases_in_correlation` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_at_least_independent_baseline` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `composite_standard_deviation_strictly_below_one` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field, Stdlib.sqrt | Reviewed: keep established tactic/library proof |
+| `standardized_affine_cutoff_round_trip` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `positive_scale_preserves_cutoff_order` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `composite_standardized_cutoff_round_trip` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `positive_cutoff_nonincreasing_with_test_count` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `standardize_preserves_order` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `iq_report_preserves_order` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `standardized_iq_reporting_preserves_order` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `fixed_correlation_variance_epsilon_bound` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `fixed_correlation_variance_epsilon_after_threshold` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `positive_cutoff_nondecreasing_in_correlation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `positive_cutoff_strictly_increases_in_correlation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+
+## Admissions.v — 69 proof scripts
+
+| Named declaration | Proof strategy | Library reuse | Refactor disposition |
+|---|---|---|---|
+| `first_marginal_nonnegative` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `second_marginal_nonnegative` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `union_nonnegative` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `union_at_most_one` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `both_at_most_first` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `both_at_most_second` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `union_at_least_first` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `union_at_least_second` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `inclusion_exclusion` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `union_bound` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `overlap_nonnegative` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `union_complement` (theorem) | Lemma application | Definitional reduction | Reviewed: keep established tactic/library proof |
+| `exactly_one_formula` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `exactly_one_vs_union` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `equal_marginal_union` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `equal_marginal_exactly_one` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `conditional_B_numerator` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `conditional_A_numerator` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `conditional_either_numerator` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `both_conditional_denominators_agree` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `conditional_failure_complement` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `conditional_second_le_one` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `conditional_first_le_one` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `conditional_failure_nonnegative` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `binary_indicator_covariance_numerator` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `binary_independence_criterion` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `original_mixed_union_impossible` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `equal_marginal_overlap_from_union` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `independent_union_formula` (theorem) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `independent_union_one` (theorem) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `independent_union_two` (theorem) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `identical_half_events` (definition) | Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `independent_half_events` (definition) | Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `same_marginals_different_joint` (theorem) | Lra/Psatz, Computation | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `same_marginals_different_union` (theorem) | Lra/Psatz, Computation | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `grid_node_count` (example) | Computation | Definitional reduction | Reviewed: minimal definitional proof |
+| `grid_scale_factors_cancel` (theorem) | Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `half_point_grid_midpoint_shift` (theorem) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `exactly_one_nonnegative` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `exactly_one_at_most_either` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `intersection_at_most_minimum_marginal` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `union_equal_marginal_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `union_equal_marginal_upper_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `disjoint_events_union_is_sum` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `independent_events_union_formula` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `independent_equal_marginal_union` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `all_first_passers_also_second_union` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `excess_marginal_mass_forces_overlap` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `lower_bound_on_overlap_from_union` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `independent_either_as_complement_product` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `independent_equal_marginals_as_complement_square` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `independent_conditional_B_equals_marginal` (theorem) | Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `independent_conditional_A_equals_marginal` (theorem) | Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `independent_exactly_one_formula` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `disjointness_iff_union_is_sum` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `complete_coverage_iff_no_failures` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `equal_marginals_overlap_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `zero_first_marginal_forces_zero_overlap` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `zero_second_marginal_forces_zero_overlap` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `conditional_B_given_A_nonnegative` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `conditional_A_given_B_nonnegative` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `conditional_B_given_A_unit_interval` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `conditional_A_given_B_unit_interval` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `overlap_at_most_either` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `conditional_both_given_either_unit_interval` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `conditional_not_A_given_B_unit_interval` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+
+## FiniteUnion.v — 45 proof scripts
+
+| Named declaration | Proof strategy | Library reuse | Refactor disposition |
+|---|---|---|---|
+| `indicator_nonnegative` (lemma) | Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `indicator_at_most_one` (lemma) | Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `sum_indicators_nonnegative` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `union_indicator_bound` (lemma) | Finite cases, Lemma application, Rewriting, Computation | Shared finite sums, Stdlib.List | Earlier library refactor retained |
+| `event_member_implies_union` (lemma) | Lemma application | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `indicator_implication_bound` (lemma) | Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `finite_sum_monotone` (lemma) | Lemma application | Shared finite sums | **Rewritten**: duplicated list induction removed |
+| `finite_sum_extensional` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `finite_sum_addition` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `interchange_finite_sums` (lemma) | Lemma application, Rewriting | Shared finite sums | Earlier library refactor retained |
+| `arbitrary_union_bound` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `arbitrary_union_contains_every_member` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `arbitrary_union_at_most_total_mass` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `normalized_arbitrary_union_at_most_one` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `arbitrary_union_nonnegative` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `finite_prob_true` (theorem) | Lemma application, Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_prob_false` (theorem) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_prob_zero_iff_no_positive_mass_support` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field, Lra/Psatz, Computation | Shared finite sums, Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_prob_positive_of_positive_support` (theorem) | Lemma application, Rewriting, Lra/Psatz, Computation | Shared finite sums, Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `finite_prob_as_filtered_mass` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_prob_event_ext_on_samples` (theorem) | Lemma application, Rewriting, Computation | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `finite_prob_sample_append` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `finite_prob_sample_permutation` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `union_prob_sample_permutation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `sum_marginal_probs_event_permutation` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `finite_prob_event_monotone` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `normalized_finite_prob_unit_interval` (theorem) | Lemma application, Lra/Psatz | Shared finite sums, Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `empty_family_probability_zero` (theorem) | Lemma application | Prior named lemmas | Earlier library refactor retained |
+| `singleton_family_probability` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `union_prob_membership_extensional` (theorem) | Finite cases, Lemma application, Rewriting, Computation | Stdlib.List | Earlier library refactor retained |
+| `union_prob_permutation_invariant` (theorem) | Lemma application | Stdlib.Permutation | Reviewed: keep established tactic/library proof |
+| `union_prob_duplicate_route` (theorem) | Lemma application, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `indicator_complement` (lemma) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_prob_complement` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `normalized_finite_prob_complement` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `indicator_union_intersection` (lemma) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_prob_inclusion_exclusion` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `two_event_union_probability` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `two_event_union_inclusion_exclusion` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `any_event_append` (lemma) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `union_prob_append` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `sum_marginal_probs_append` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `finite_intersection_at_most_first` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `finite_intersection_at_most_second` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `finite_frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+
+## FiniteMoments.v — 107 proof scripts
+
+| Named declaration | Proof strategy | Library reuse | Refactor disposition |
+|---|---|---|---|
+| `sum_finite_ext` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `sum_finite_add` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `sum_finite_scale` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `sum_finite_nonnegative` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `expectation_ext` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `expectation_add` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `expectation_scale` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `expectation_zero` (theorem) | Lemma application, Rewriting, Ring/field | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `expectation_constant` (theorem) | Lemma application, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `expectation_constant_normalized` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `expectation_sub` (theorem) | Lemma application, Rewriting, Ring/field | Shared finite sums, Stdlib ring/field | Earlier library refactor retained |
+| `expectation_affine` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `expectation_nonnegative` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `covariance_symmetric` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_scale_first` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_add_first` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_scale_second` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_add_second` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `variance_second_moment` (theorem) | Computation | Definitional reduction | Reviewed: keep established tactic/library proof |
+| `variance_of_scaled_score` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_two_score_sum` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `centered_second_moment_identity` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_nonnegative` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_with_constant_first` (theorem) | Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_shifted_score` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_extensional` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `variance_extensional` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `centered_score_has_zero_expectation` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_with_constant_second` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_invariant_under_first_shift` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_invariant_under_second_shift` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_two_weighted_scores` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_of_two_weighted_pairs` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_two_score_average` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_two_unit_variance_average` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_standardized_score` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_iq_reporting_scale` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `expectation_of_general_weighted_sum` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Earlier library refactor retained |
+| `covariance_of_general_weighted_second` (lemma) | Structural induction, Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: structural induction retained |
+| `covariance_of_general_weighted_sums` (theorem) | Lemma application, Rewriting, Computation | Shared finite sums | Earlier library refactor retained |
+| `variance_of_general_weighted_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_quadratic_form_nonnegative` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `mean_of_centered_standardized_score` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `mean_of_iq_reporting_scale` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_invariant_under_both_shifts` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_of_centered_standardized_scores` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `self_covariance_of_standardized_score` (theorem) | Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_three_score_average` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_three_standardized_score_average` (theorem) | Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `variance_of_two_standardized_score_average` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_double_sum_second_cons` (lemma) | Lemma application, Rewriting | Shared finite sums | Earlier library refactor retained |
+| `covariance_double_sum_symmetric` (lemma) | Lemma application, Rewriting | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `double_sum_diagonal_off_diagonal` (lemma) | Structural induction, Rewriting, Ring/field | Stdlib ring/field | Reviewed: structural induction retained |
+| `unweighted_scores_as_linear_combination` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `unweighted_covariance_row_as_weighted` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_with_sum_scores` (lemma) | Lemma application, Rewriting, Computation | Prior named lemmas | Earlier library refactor retained |
+| `covariance_of_sum_scores` (lemma) | Lemma application, Rewriting | Shared finite sums | Earlier library refactor retained |
+| `variance_of_unweighted_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `variance_of_rescaled_unweighted_sum` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `diagonal_variance_sum_of_unit_scores` (lemma) | Lemma application, Rewriting, Ring/field | Shared finite sums, Stdlib ring/field | Earlier library refactor retained |
+| `equal_weight_variance_from_finite_covariances` (theorem) | Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_row_as_vector_dot` (lemma) | Lemma application, Rewriting, Computation | Shared finite sums | **Rewritten**: duplicated list induction removed |
+| `covariance_double_sum_as_matrix_product` (lemma) | Lemma application, Rewriting, Computation | Shared finite sums, Stdlib.List | **Rewritten**: duplicated list induction removed |
+| `covariance_matrix_quadratic_form_identity` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_cross_matrix_bilinear_identity` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_cross_matrix_bilinear_swap` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_matrix_quadratic_form_is_variance` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_matrix_is_positive_semidefinite` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_at_most_half_sum_of_variances` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_at_least_negative_half_sum_of_variances` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `covariance_of_unit_variance_scores_bounded` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `average_of_two_unit_variance_scores_bounded` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `feasible_average_pair_correlation_lower_bound` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `covariance_row_sum_bounded_by_count` (lemma) | Lemma application, Rewriting, Ring/field | Shared finite sums, Stdlib ring/field | Earlier library refactor retained |
+| `unordered_covariance_sum_bounded_by_pair_count` (lemma) | Structural induction, Lemma application, Rewriting, Lra/Psatz, Computation | Stdlib.Lra/Psatz | Reviewed: structural induction retained |
+| `feasible_average_pair_correlation_upper_bound` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `feasible_average_pair_correlation_interval` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `nonnegative_quadratic_discriminant` (lemma) | Finite cases, Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_covariance_cauchy_schwarz_squared` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `zero_variance_implies_zero_covariance_first` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `zero_variance_implies_zero_covariance_second` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `nonzero_covariance_implies_positive_variances` (theorem) | Finite cases, Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `weighted_basis_sum_as_combination` (lemma) | Computation | Definitional reduction | Reviewed: minimal definitional proof |
+| `split_as_projection_maps` (lemma) | Structural induction, Rewriting, Computation | Prior named lemmas | Reviewed: structural induction retained |
+| `coefficients_of_combine` (lemma) | Lemma application, Rewriting | Prior named lemmas | Earlier library refactor retained |
+| `basis_of_combine` (lemma) | Lemma application, Rewriting | Prior named lemmas | Earlier library refactor retained |
+| `covariance_matrix_uses_only_basis` (lemma) | Lemma application, Rewriting, Computation | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `covariance_cross_matrix_uses_only_bases` (lemma) | Lemma application, Rewriting, Computation | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `fixed_basis_covariance_matrix_representation` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `fixed_basis_weighted_variance_identity` (theorem) | Lemma application, Rewriting | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `fixed_basis_covariance_matrix_positive_semidefinite` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `normalized_covariance_is_between_minus_one_and_one` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `centered_standardized_covariance_in_unit_interval` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `unit_covariance_one_iff_difference_has_zero_variance` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `unit_covariance_minus_one_iff_sum_has_zero_variance` (theorem) | Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `variance_of_affine_score` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_of_affine_scores` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `basis_covariance_matrix_row_count` (lemma) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `basis_covariance_matrix_column_count` (lemma) | Finite cases, Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `basis_cross_covariance_matrix_row_count` (lemma) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `basis_cross_covariance_matrix_column_count` (lemma) | Finite cases, Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `sum_finite_zero_implies_zero_terms` (lemma) | Lemma application | Shared finite sums | Earlier library refactor retained |
+| `zero_variance_is_constant_on_positive_mass` (theorem) | Finite cases, Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `null_covariance_direction_constant_on_positive_mass` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `sum_scores_permutation_invariant` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `variance_of_permuted_score_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `equal_weight_variance_permutation_invariant` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+
+## FiniteBridge.v — 14 proof scripts
+
+| Named declaration | Proof strategy | Library reuse | Refactor disposition |
+|---|---|---|---|
+| `finite_sum_models_agree` (theorem) | Computation | Definitional reduction | Earlier library refactor retained |
+| `finite_total_mass_models_agree` (theorem) | Computation | Definitional reduction | Reviewed: minimal definitional proof |
+| `finite_event_probability_is_indicator_expectation` (theorem) | Computation | Definitional reduction | Reviewed: minimal definitional proof |
+| `indicator_square` (lemma) | Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `indicator_product_and` (lemma) | Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_variance` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_covariance` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `finite_event_independence_iff_zero_indicator_covariance` (theorem) | Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_zero_variance_iff_extreme_mass` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_variance_at_most_quarter` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_complement_variance` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_covariance_complement_second` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_covariance_complement_first` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `finite_event_indicator_covariance_complement_both` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
+
+## FourCellBridge.v — 13 proof scripts
+
+| Named declaration | Proof strategy | Library reuse | Refactor disposition |
+|---|---|---|---|
+| `four_cell_samples_complete` (theorem) | Finite cases, Lemma application, Computation | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `four_cell_samples_length` (theorem) | Rewriting, Computation | Stdlib.List | Reviewed: keep established tactic/library proof |
+| `four_cell_weight_nonnegative` (theorem) | Finite cases, Lemma application, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `four_cell_total_mass` (theorem) | Lemma application, Lra/Psatz, Computation | Shared finite sums, Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `four_cell_first_marginal` (theorem) | Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `four_cell_second_marginal` (theorem) | Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `four_cell_intersection_mass` (theorem) | Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `four_cell_union_mass` (theorem) | Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `four_cell_exactly_one_mass` (theorem) | Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
+| `four_cell_indicator_covariance` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `four_cell_indicator_independence_criterion` (theorem) | Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `four_cell_first_indicator_variance` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `four_cell_second_indicator_variance` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
