@@ -199,6 +199,20 @@ Proof.
     reflexivity.
 Qed.
 
+(* Event restriction is Stdlib.List.filter, not a second event-specific
+   summation.  This is a generic list-fold identity with no assumptions on
+   the predicate or the (possibly signed) real-valued integrand. *)
+Lemma finite_sum_filter {A : Type} :
+  forall (xs : list A) (p : A -> bool) (f : A -> R),
+    finite_sum f (filter p xs) =
+      finite_sum (fun x => if p x then f x else 0) xs.
+Proof.
+  intros xs p f.
+  induction xs as [|x xs IH]; unfold finite_sum in *; simpl.
+  - reflexivity.
+  - destruct (p x); simpl; rewrite IH; ring.
+Qed.
+
 Lemma finite_sum_app {A : Type} :
   forall (f : A -> R) (xs ys : list A),
     finite_sum f (xs ++ ys) = finite_sum f xs + finite_sum f ys.
