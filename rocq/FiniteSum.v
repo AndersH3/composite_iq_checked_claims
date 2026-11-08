@@ -165,6 +165,28 @@ Proof.
   - rewrite finite_sum_add, finite_sum_neg; ring.
 Qed.
 
+(* Finite Fubini/interchange law for an explicit product of two
+   lists, proved once using the existing sum-additivity laws.
+   This introduces no new iterator, measure, or summation recursion. *)
+Lemma finite_sum_swap {A B : Type} :
+  forall (xs : list A) (ys : list B) (f : A -> B -> R),
+    finite_sum (fun x => finite_sum (f x) ys) xs =
+    finite_sum (fun y => finite_sum (fun x => f x y) xs) ys.
+Proof.
+  intros xs ys f.
+  induction ys as [|y ys IH].
+  - change (finite_sum (fun _ => 0) xs = 0).
+    apply finite_sum_zero.
+  - change
+      (finite_sum
+         (fun x => f x y + finite_sum (f x) ys) xs =
+       finite_sum (fun x => f x y) xs +
+         finite_sum (fun z => finite_sum (fun x => f x z) xs) ys).
+    rewrite finite_sum_add.
+    rewrite IH.
+    reflexivity.
+Qed.
+
 Lemma finite_sum_app {A : Type} :
   forall (f : A -> R) (xs ys : list A),
     finite_sum f (xs ++ ys) = finite_sum f xs + finite_sum f ys.
