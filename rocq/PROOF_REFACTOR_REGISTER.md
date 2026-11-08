@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 334 public theorem/lemma/example declarations,
+The current branch has 337 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**337 proof scripts**, including the generic
+**340 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -38,6 +38,14 @@ sum laws, with no list induction or normalization premise. The original
 `covariance_of_general_weighted_second` theorem remains unchanged and
 now delegates to the stronger result. This removes one of the previously
 retained component-list inductions without adding a custom recursion.
+
+### Additional Stdlib-backed filtering refactor
+The generic `FiniteSum.finite_sum_filter_partition` identity
+reuses `Stdlib.List.filter` and the existing signed finite-sum
+algebra. The event-specific partition theorem now delegates to it.
+Two nonnegative-mass monotonicity theorems reuse Boolean conjunction
+and the pre-existing `finite_prob_event_monotone` lemma; neither
+needs a new list induction or a normalized probability model.
 
 ### Current structural-induction inventory
 
@@ -72,7 +80,7 @@ unchanged, *not* that every proof term was rewritten. The dependency
 column is a tactic-level heuristic; consult the actual source for
 full dependencies and the theorem-specific doc comment for hypotheses.
 
-## FiniteSum.v — 19 proof scripts
+## FiniteSum.v — 20 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -92,6 +100,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_sum_zip_map` (lemma) | Structural induction, Rewriting, Computation | Stdlib.List | Reviewed: structural induction retained |
 | `finite_sum_swap` (lemma) | Structural induction, Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: structural induction retained |
 | `finite_sum_filter` (lemma) | Structural induction, Finite cases, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
+| `finite_sum_filter_partition` (lemma) | Rewriting, Lemma application, Finite cases, Ring/field | Stdlib.List.filter, Stdlib.Bool.negb, finite_sum_filter/add/ext | **New generic lemma:** additive partition of arbitrary real-weighted finite lists without induction |
 | `finite_sum_app` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
 | `finite_sum_permutation` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
 | `finite_sum_rev` (lemma) | Lemma application | Stdlib.Permutation | Reviewed: keep established tactic/library proof |
@@ -240,7 +249,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 49 proof scripts
+## FiniteUnion.v — 51 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -267,13 +276,15 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_prob_event_ext_on_samples` (theorem) | Rewriting, Lemma application, Computation | Stdlib.List.filter_ext_in, finite_prob_as_filtered_mass | **Refactored:** direct library filter extensionality rather than pointwise sum algebra |
 | `finite_prob_on_filtered_samples` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field | Stdlib.List.filter, Stdlib.Bool.andb, FiniteSum.finite_sum_filter, finite_sum_ext | **New:** formalized event intersection under filtered samples |
 | `union_prob_on_filtered_samples` (theorem) | Lemma application | Prior checked finite_prob_on_filtered_samples, Stdlib.List.existsb | **New:** formalized union of events restricted to filtered outcomes |
-| `finite_prob_filtered_partition` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field | finite_prob_on_filtered_samples, finite_sum_addition, Stdlib.List.filter, Stdlib.Bool.negb/andb | **New:** additivity across Boolean-selected and rejected samples |
+| `finite_prob_filtered_partition` (theorem) | Lemma application | FiniteSum.finite_sum_filter_partition | **Refactored:** replaces event-specific Boolean case analysis with shared generic finite-sum partition lemma |
 | `union_prob_filtered_partition` (theorem) | Lemma application | finite_prob_filtered_partition, Stdlib.List.existsb | **New:** finite event-family unions partition by sample selection |
 | `finite_prob_sample_append` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `finite_prob_sample_permutation` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `union_prob_sample_permutation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `sum_marginal_probs_event_permutation` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `finite_prob_event_monotone` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
+| `finite_prob_filtered_mass_le` (theorem) | Rewriting, Lemma application | Stdlib.Bool.andb_true_iff, finite_prob_on_filtered_samples, finite_prob_event_monotone | **New:** nonnegative sample mass cannot increase under Boolean sample selection |
+| `union_prob_filtered_mass_le` (theorem) | Lemma application | finite_prob_filtered_mass_le and existing union_prob definition | **New:** union-mass counterpart without additional event-list induction |
 | `normalized_finite_prob_unit_interval` (theorem) | Lemma application, Lra/Psatz | Shared finite sums, Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `empty_family_probability_zero` (theorem) | Lemma application | Prior named lemmas | Earlier library refactor retained |
 | `singleton_family_probability` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
