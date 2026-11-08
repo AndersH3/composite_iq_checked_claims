@@ -279,10 +279,8 @@ Section FiniteProbabilityMoments.
    g x) -> expect f = expect g.
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, definitional reduction; references include expect.,
-   sum_finite_ext..
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Proof/definition method: Apply the stronger expectation_extensional_on_samples theorem, since equality on all outcomes entails equality on the enumerated sample.
+   Library reuse: expectation_extensional_on_samples, FiniteSum.finite_sum_ext_in and Stdlib.List.In.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
    *)
@@ -290,9 +288,8 @@ Section FiniteProbabilityMoments.
     forall f g, (forall x, f x = g x) -> expect f = expect g.
   Proof.
     intros f g Hfg.
-    unfold expect.
-    apply sum_finite_ext.
-    intro x; rewrite Hfg; reflexivity.
+    apply expectation_extensional_on_samples.
+    intros x _; apply Hfg.
   Qed.
 
   (**
@@ -912,10 +909,8 @@ Section FiniteProbabilityMoments.
    g'.
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, definitional reduction; references include
-   covariance., expectation_ext.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Proof/definition method: Apply covariance_extensional_on_samples instead of duplicating three expectation and product rewrites.
+   Library reuse: covariance_extensional_on_samples, expectation_extensional_on_samples and Stdlib.List.In.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
    *)
@@ -926,15 +921,9 @@ Section FiniteProbabilityMoments.
       covariance f g = covariance f' g'.
   Proof.
     intros f f' g g' Hf Hg.
-    unfold covariance.
-    rewrite (expectation_ext f f' Hf).
-    rewrite (expectation_ext g g' Hg).
-    assert (Hprod :
-      expect (fun x => f x * g x) =
-      expect (fun x => f' x * g' x)).
-    { apply expectation_ext; intro x.
-      rewrite Hf, Hg; reflexivity. }
-    rewrite Hprod; reflexivity.
+    apply covariance_extensional_on_samples.
+    - intros x _; apply Hf.
+    - intros x _; apply Hg.
   Qed.
 
   (**
@@ -965,9 +954,8 @@ Section FiniteProbabilityMoments.
    x = g x) -> variance f = variance g.
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
-   references include variance., covariance_extensional.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Proof/definition method: Delegate directly to variance_extensional_on_samples rather than unfold covariance again.
+   Library reuse: variance_extensional_on_samples, covariance_extensional_on_samples and the shared FiniteSum model.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
    *)
@@ -976,8 +964,8 @@ Section FiniteProbabilityMoments.
       variance f = variance g.
   Proof.
     intros f g Hfg.
-    unfold variance.
-    apply covariance_extensional; exact Hfg.
+    apply variance_extensional_on_samples.
+    intros x _; apply Hfg.
   Qed.
 
   (**

@@ -199,6 +199,13 @@ follow using the existing finite-moment definitions, with no second
 list recursion. Previously proven global-extensionality statements
 are retained for source compatibility.
 
+### Refactored global moment extensionality
+
+The original globally quantified expectation, covariance and variance
+extensionality proofs are now direct instances of the stronger
+on-sample versions. Their exact original propositions are retained,
+while duplicate finite expectation rewrites were removed.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -483,7 +490,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `sum_finite_scale` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `sum_finite_nonnegative` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `expectation_extensional_on_samples` (theorem) | Lemma application | FiniteSum.finite_sum_ext_in, Stdlib.List.map_ext_in | **New:** expectation support extensionality |
-| `expectation_ext` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `expectation_ext` (theorem) | Lemma application | expectation_extensional_on_samples | **Refactored:** delegate to on-sample equality |
 | `expectation_add` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `expectation_scale` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `expectation_zero` (theorem) | Lemma application, Rewriting, Ring/field | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
@@ -505,9 +512,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `covariance_with_constant_first` (theorem) | Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `variance_of_shifted_score` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `covariance_extensional_on_samples` (theorem) | Rewriting, Lemma application | expectation_extensional_on_samples | **New:** covariance support extensionality |
-| `covariance_extensional` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_extensional` (theorem) | Lemma application | covariance_extensional_on_samples | **Refactored:** remove duplicated expectation/product rewrites |
 | `variance_extensional_on_samples` (theorem) | Lemma application | covariance_extensional_on_samples | **New:** variance support extensionality |
-| `variance_extensional` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `variance_extensional` (theorem) | Lemma application | variance_extensional_on_samples | **Refactored:** direct stronger-lemma reuse |
 | `centered_score_has_zero_expectation` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `covariance_with_constant_second` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `covariance_invariant_under_first_shift` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
