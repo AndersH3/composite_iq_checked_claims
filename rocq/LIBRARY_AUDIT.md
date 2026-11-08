@@ -352,7 +352,7 @@ public theorem statements and their hypotheses are unchanged.
 No `Admitted`, project-specific axiom, external oracle, new recursive
 matrix implementation, or unpinned library dependency has been added.
 
-## Latest library consolidation: Boolean selection and sample partition
+## Previous library consolidation: Boolean selection and sample partition
 
 The current seven-module source inventory contains **333 public
 theorem/lemma/example declarations**, plus one checked local helper,
@@ -392,6 +392,39 @@ establish generic fold laws, `Nat.iter` behavior or suffix-sensitive
 covariance identities. They are not replaced with gratuitous duplicate
 recursions. All existing theorem statements and mathematical
 assumptions remain unchanged.
+
+## Latest covariance consolidation: finite-sum linearity without normalizing mass
+
+**Current inventory:** 334 public theorem/lemma/example declarations
+across seven modules, one additional local helper, two explicitly
+proved record constructors, **337 total proof scripts** and **391
+named declarations**, all with declaration-level documentation.
+Each Rocq file begins with an explanatory header.
+
+The new theorem
+`FiniteMoments.covariance_of_general_weighted_second_unconditional`
+proves that covariance against a finite weighted component sum
+equals the sum of the component covariances, with **no normalization
+assumption** on sample weights. It follows purely from the definition
+of covariance, expectation linearity and finite-sum algebra.
+
+| Refactored proof | Standard/checked library reuse | Removed duplication |
+|---|---|---|
+| `covariance_of_general_weighted_second_unconditional` (new, stronger algebraic theorem) | `Stdlib.List.map`, `expectation_of_general_weighted_sum`, `FiniteSum.finite_sum_map`, `finite_sum_scale`, `finite_sum_sub`, `finite_sum_ext` | Combines finite covariance components without manually recursing through score batteries |
+| `covariance_of_general_weighted_second` (original theorem preserved) | New unconditional identity | Removes the earlier repeated structural induction while preserving the exact `total_mass = 1` premise for API compatibility |
+
+This removes one of the remaining report-specific component-list
+inductions: **14 structural inductions** remain in the 337-script
+[proof register](PROOF_REFACTOR_REGISTER.md). Generic fold algebra,
+`Nat.iter` recurrence and suffix-sensitive unordered-pair covariance
+still use structural induction where there is no equivalent direct
+standard-library theorem. No additional recursion, custom algebra,
+new axiom, `Admitted`, or unpinned package was introduced.
+
+The mathematical interpretation is exact *finite real-weighted*
+moment algebra. The stronger identity does not turn arbitrary signed
+weights into probabilities, establish a Gaussian joint distribution,
+or infer actual psychometric performance from a data set.
 
 ## Deliberately retained project-specific definitions
 
