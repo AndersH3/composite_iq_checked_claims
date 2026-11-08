@@ -1024,6 +1024,26 @@ Section FiniteProbabilityMoments.
     apply covariance_of_general_weighted_sums; exact Hmass.
   Qed.
 
+  (* The coefficient-vector bilinear form of a cross-covariance
+     matrix is symmetric under exchanging both score bases.
+     The proof reuses the checked finite-basis representation and
+     covariance symmetry instead of implementing a matrix transpose. *)
+  Theorem covariance_cross_matrix_bilinear_swap :
+    forall left right,
+      total_mass = 1 ->
+      matrix_bilinear_form (map fst left) (map fst right)
+        (covariance_cross_matrix left right) =
+      matrix_bilinear_form (map fst right) (map fst left)
+        (covariance_cross_matrix right left).
+  Proof.
+    intros left right Hmass.
+    rewrite (covariance_cross_matrix_bilinear_identity
+      left right Hmass).
+    rewrite (covariance_cross_matrix_bilinear_identity
+      right left Hmass).
+    apply covariance_symmetric.
+  Qed.
+
   Theorem covariance_matrix_quadratic_form_is_variance :
     forall components,
       total_mass = 1 ->
