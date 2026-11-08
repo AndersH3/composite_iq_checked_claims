@@ -1324,6 +1324,73 @@ Section FiniteProbabilityMoments.
       + rewrite FiniteSum.finite_sum_scale; reflexivity.
   Qed.
 
+  (* Covariance is linear in the second score argument because both
+     finite expectations distribute over finite linear combinations.
+     We prove this once with the generic finite-sum interchange laws,
+     instead of repeating an induction over weighted score components.
+     Unlike covariance with a nonzero constant, covariance with the
+     zero-score linear combination needs no total-mass normalization. *)
+  (**
+   [covariance_of_general_weighted_second_unconditional] (lemma) — Finite
+   weighted covariance over explicitly enumerated outcomes.
+   Mathematical meaning: An arbitrary finite real-weighted composite
+   has covariance equal to the corresponding weighted sum of component
+   covariances. This bilinearity identity is algebraic and does not
+   require the sample weights to total one.
+   Exact checked proposition: forall f components,
+   covariance f (linear_combination components) =
+   covariance_row f components.
+   Premises and side conditions: Outcome, samples and weight are the
+   module's explicit parameters. The equality holds for arbitrary real
+   weights, possibly negative or unnormalized; it does not interpret
+   them as a probability distribution.
+   Proof/definition method: Represent the product f times the linear
+   combination as another mapped linear combination, use
+   expectation_of_general_weighted_sum and finite_sum_map, then
+   distribute the scalar expectation using finite_sum_scale and
+   rewrite the difference using finite_sum_sub and real ring algebra.
+   Library reuse: Stdlib.List.map, FiniteSum.finite_sum_map,
+   finite_sum_scale, finite_sum_sub, finite_sum_ext,
+   and the checked expectation_of_general_weighted_sum.
+   Boundary: Exact finite algebra, not continuous covariance or
+   empirical psychometric measurement assumptions.
+   *)
+  Lemma covariance_of_general_weighted_second_unconditional :
+    forall f components,
+      covariance f (linear_combination components) =
+        covariance_row f components.
+  Proof.
+    intros f components.
+    unfold covariance, covariance_row.
+    rewrite expectation_of_general_weighted_sum.
+    assert (Hproduct :
+      expect (fun x => f x * linear_combination components x) =
+        FiniteSum.finite_sum
+          (fun c => fst c * expect (fun x => f x * snd c x))
+          components).
+    {
+      transitivity (expect (linear_combination
+        (map (fun c => (fst c, fun x => f x * snd c x)) components))).
+      - apply expectation_ext; intro x.
+        unfold linear_combination.
+        rewrite FiniteSum.finite_sum_map.
+        transitivity (FiniteSum.finite_sum
+          (fun c => f x * (fst c * snd c x)) components).
+        + rewrite FiniteSum.finite_sum_scale; reflexivity.
+        + apply FiniteSum.finite_sum_ext; intro c; ring.
+      - rewrite expectation_of_general_weighted_sum.
+        unfold linear_expectation.
+        rewrite FiniteSum.finite_sum_map.
+        apply FiniteSum.finite_sum_ext; intro c; reflexivity.
+    }
+    rewrite Hproduct.
+    unfold linear_expectation.
+    rewrite <- FiniteSum.finite_sum_scale.
+    rewrite <- FiniteSum.finite_sum_sub.
+    apply FiniteSum.finite_sum_ext; intro c.
+    unfold covariance; ring.
+  Qed.
+
   (**
    [covariance_of_general_weighted_second] (lemma) — Finite weighted score
    expectations, variances and covariance matrices.
@@ -1334,9 +1401,9 @@ Section FiniteProbabilityMoments.
    covariance_row f components.
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses structural induction, rewriting of
-   equalities, reuse of previously established lemmas, definitional reduction;
-   references include covariance_with_constant_second, Hmass., covariance_add_second.
+   Proof/definition method: Specialize the stronger checked
+   covariance_of_general_weighted_second_unconditional lemma; the
+   inherited total_mass = 1 premise is retained for theorem compatibility.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -1347,20 +1414,8 @@ Section FiniteProbabilityMoments.
       covariance f (linear_combination components) =
         covariance_row f components.
   Proof.
-    intros f components Hmass.
-    induction components as [|[b g] tail IH].
-    - change (covariance f (fun _ => 0) = 0).
-      apply covariance_with_constant_second; exact Hmass.
-    - change
-        (covariance f
-          (fun x => b * g x + linear_combination tail x) =
-         b * covariance f g + covariance_row f tail).
-      rewrite covariance_add_second, covariance_scale_second.
-      replace (covariance f
-         (fun x => linear_combination tail x))
-        with (covariance f (linear_combination tail)).
-      + rewrite IH; reflexivity.
-      + apply covariance_extensional; intro x; reflexivity.
+    intros f components _.
+    apply covariance_of_general_weighted_second_unconditional.
   Qed.
 
   (**
