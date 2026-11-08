@@ -939,11 +939,12 @@ Section FiniteOutcomeSpace.
    Premises and side conditions: Holds for any real weights, sample
    multiplicities and Boolean event predicates. No disjointness,
    nonnegativity, normality or probability normalization is assumed.
-   Proof/definition method: Use finite_prob_on_filtered_samples
-   twice, combine sums via finite_sum_addition, then perform the
-   four Boolean cases with the standard ring tactic.
+   Proof/definition method: Unfold the shared finite sum representation
+   of event mass, then instantiate the fully generic and checked
+   FiniteSum.finite_sum_filter_partition lemma. No local Boolean case
+   analysis or event-specific recursion is necessary.
    Library reuse: Stdlib.List.filter, Stdlib.Bool.negb/andb,
-   existing finite_prob_on_filtered_samples, finite_sum_addition.
+   FiniteSum.finite_sum_filter_partition.
    Boundary: This is sample-list additivity; it does not assert
    conditional independence or probabilities over a continuum.
    *)
@@ -955,11 +956,8 @@ Section FiniteOutcomeSpace.
       finite_prob weights samples e.
   Proof.
     intros weights samples p e.
-    rewrite !finite_prob_on_filtered_samples.
-    unfold finite_prob.
-    rewrite <- finite_sum_addition.
-    apply finite_sum_extensional; intro x.
-    destruct (p x), (e x); unfold indicator; simpl; ring.
+    unfold finite_prob, finite_sum.
+    apply FiniteSum.finite_sum_filter_partition.
   Qed.
 
   (* The same partition identity applies to a whole event family
@@ -1138,6 +1136,74 @@ Section FiniteOutcomeSpace.
     pose proof (indicator_implication_bound
       (e x) (f x) (Hsub x Hx)).
     nra.
+  Qed.
+
+  (* Selecting a subset of sample positions cannot increase the
+     weight of any fixed event when sample weights are nonnegative.
+     This is a direct instance of event inclusion, not a new sum proof. *)
+  (**
+   [finite_prob_filtered_mass_le] (theorem) — Monotonicity under
+   restriction of a finite list of outcomes.
+   Mathematical meaning: The weighted mass assigned to an event on
+   selected outcomes does not exceed its mass on all outcomes.
+   Exact checked proposition: forall weights samples p e,
+   (forall x, In x samples -> 0 <= weights x) ->
+   finite_prob weights (filter p samples) e <=
+   finite_prob weights samples e.
+   Premises and side conditions: All weights at enumerated outcomes
+   must be nonnegative. The list may contain duplicates; neither
+   normalization nor event independence is required.
+   Proof/definition method: Identify the filtered event with the
+   conjunction using finite_prob_on_filtered_samples, then apply
+   finite_prob_event_monotone and Bool.andb_true_iff.
+   Library reuse: Stdlib.List.filter/In, Stdlib.Bool.andb_true_iff,
+   finite_prob_on_filtered_samples and finite_prob_event_monotone.
+   Boundary: Finite enumerated-outcome monotonicity only; no
+   claim is made for signed weights or continuous measures.
+   *)
+  Theorem finite_prob_filtered_mass_le :
+    forall weights samples p e,
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights (filter p samples) e <=
+        finite_prob weights samples e.
+  Proof.
+    intros weights samples p e Hw.
+    rewrite finite_prob_on_filtered_samples.
+    apply finite_prob_event_monotone; [exact Hw|].
+    intros x _ Hand.
+    apply andb_true_iff in Hand.
+    exact (proj2 Hand).
+  Qed.
+
+  (* The event-family version is an immediate specialization, since
+     union_prob is the mass of Stdlib.List.existsb over the family. *)
+  (**
+   [union_prob_filtered_mass_le] (theorem) — Monotonicity for unions.
+   Mathematical meaning: Restricting the sample cannot increase
+   the weighted union mass of any finite family of Boolean events.
+   Exact checked proposition: forall weights samples p events,
+   (forall x, In x samples -> 0 <= weights x) ->
+   union_prob weights (filter p samples) events <=
+   union_prob weights samples events.
+   Premises and side conditions: Weights are nonnegative at sample
+   occurrences. No total-mass equality, independence or disjointness
+   is assumed, and duplicates retain their original multiplicity.
+   Proof/definition method: Unfold union_prob to expose the shared
+   probability of any_event; directly invoke the already established
+   finite_prob_filtered_mass_le result.
+   Library reuse: Stdlib.List.existsb/filter, finite_prob_filtered_mass_le.
+   Boundary: Finite event-family list semantics, not a statistical
+   statement about actual test validity or conditional probabilities.
+   *)
+  Theorem union_prob_filtered_mass_le :
+    forall weights samples p events,
+      (forall x, In x samples -> 0 <= weights x) ->
+      union_prob weights (filter p samples) events <=
+        union_prob weights samples events.
+  Proof.
+    intros weights samples p events Hw.
+    unfold union_prob.
+    apply finite_prob_filtered_mass_le; exact Hw.
   Qed.
 
   (**
