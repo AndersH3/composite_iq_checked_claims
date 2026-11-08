@@ -23,7 +23,7 @@ Proof.
 Qed.
 
 Theorem four_cell_samples_length :
-  length four_cell_samples = 4.
+  length four_cell_samples = 4%nat.
 Proof.
   unfold four_cell_samples.
   rewrite length_prod.
