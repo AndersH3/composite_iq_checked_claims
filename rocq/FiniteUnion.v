@@ -1785,9 +1785,10 @@ Section FiniteOutcomeSpace.
    (fun x => orb (any_event left x) (any_event right x)).
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, definitional reduction; references include
-   union_prob, finite_sum_extensional, any_event_append..
+   Proof/definition method: Unfold the already defined union_prob
+   alias and reuse finite_prob_event_ext_on_samples, then discharge
+   the pointwise Boolean event equality using any_event_append.
+   No second finite-sum extensionality argument is necessary.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -1800,10 +1801,10 @@ Section FiniteOutcomeSpace.
           (fun x => orb (any_event left x) (any_event right x)).
   Proof.
     intros weights samples left right.
-    unfold union_prob, finite_prob.
-    apply finite_sum_extensional; intro x.
-    rewrite any_event_append.
-    reflexivity.
+    unfold union_prob.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    apply any_event_append.
   Qed.
 
   (**
