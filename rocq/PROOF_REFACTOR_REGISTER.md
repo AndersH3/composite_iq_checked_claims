@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 342 public theorem/lemma/example declarations,
+The current branch has 344 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**345 proof scripts**, including the generic
+**347 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -69,6 +69,17 @@ over the original sample. They directly compose already checked
 `finite_event_probability_is_indicator_expectation` bridge.
 They introduce no probability-measure object, new expectation
 implementation, or induction.
+
+### Stronger covariance and variance algebra without sample normalization
+
+The new `covariance_of_general_weighted_sums_unconditional` and
+`variance_of_general_weighted_sum_unconditional` reuse the
+already-checked unconditional covariance-in-one-argument lemma,
+covariance symmetry and `FiniteSum.finite_sum_ext`.
+The existing mass-normalized versions retain **unchanged statements**
+and now apply the stronger results directly. No additional induction
+or external distribution/matrix library is introduced; a signed
+real-weighted list expression is **not** automatically a probability.
 
 ### Current structural-induction inventory
 
@@ -331,7 +342,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_intersection_at_most_second` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 
-## FiniteMoments.v — 108 proof scripts
+## FiniteMoments.v — 110 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -375,8 +386,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `expectation_of_general_weighted_sum` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Earlier library refactor retained |
 | `covariance_of_general_weighted_second_unconditional` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Stdlib.List.map, shared finite_sum_map/scale/sub/ext, expectation_of_general_weighted_sum | **New stronger algebraic lemma:** covariance distributes over weighted finite scores without normalized mass |
 | `covariance_of_general_weighted_second` (lemma) | Lemma application | covariance_of_general_weighted_second_unconditional | **Refactored:** removed component-list induction; retain original total_mass premise and proposition |
-| `covariance_of_general_weighted_sums` (theorem) | Lemma application, Rewriting, Computation | Shared finite sums | Earlier library refactor retained |
-| `variance_of_general_weighted_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_of_general_weighted_sums_unconditional` (theorem) | Lemma application, Rewriting, Computation | covariance_of_general_weighted_second_unconditional, covariance_symmetric, FiniteSum.finite_sum_ext | **New stronger theorem:** arbitrary finite weighted composite covariance needs no normalization premise |
+| `covariance_of_general_weighted_sums` (theorem) | Lemma application | covariance_of_general_weighted_sums_unconditional | **Refactored:** original statement retained, direct reuse of unconditional theorem |
+| `variance_of_general_weighted_sum_unconditional` (theorem) | Lemma application | covariance_of_general_weighted_sums_unconditional, existing variance definition | **New stronger theorem:** finite weighted variance quadratic form valid algebraically without unit mass |
+| `variance_of_general_weighted_sum` (theorem) | Lemma application | variance_of_general_weighted_sum_unconditional | **Refactored:** original mass-one statement preserved and derived from stronger lemma |
 | `covariance_quadratic_form_nonnegative` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `mean_of_centered_standardized_score` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `mean_of_iq_reporting_scale` (theorem) | Lemma application, Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
