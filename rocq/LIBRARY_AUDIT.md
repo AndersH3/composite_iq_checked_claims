@@ -458,7 +458,7 @@ evidence for empirical psychometric conclusions. Every new proof
 and definition remains subject to the same source-order
 documentation check and Rocq 9.2 kernel verification.
 
-## Current partition-library consolidation and proof coverage
+## Previous partition-library consolidation and proof coverage
 
 The seven Rocq modules now contain **337 public theorem, lemma and
 example declarations**, one additional local helper and two explicit
@@ -491,6 +491,49 @@ in the proof register. The previous public theorem statements
 and hypotheses remain unchanged. No new axioms, `Admitted`,
 parameters, oracle, unpinned library or changes to the
 historical Python/SPARK evidence were introduced.
+
+## Current Stdlib reuse: concatenated samples and indicator expectations
+
+Seven Rocq modules now contain **342 public theorem/lemma/example
+declarations**, one checked local helper and two constructed records
+with explicit proofs, for **345 proof scripts** in total. All
+**399 named declarations**, including definitions, have substantive
+per-declaration comments, with explanatory module headers in each
+`.v` file. The [proof register](PROOF_REFACTOR_REGISTER.md)
+accounts for each proof in exact source order, enforced by CI.
+
+Five new results make established finite enumeration operations
+available across the event and moment layers, without adding new
+recursive definitions:
+
+| New proof | Existing checked/Stdlib law used | Purpose |
+|---|---|---|
+| `union_prob_sample_append` | `finite_prob_sample_append`, `union_prob` alias, `Stdlib.List.existsb` | Concatenate outcome lists while preserving union mass additivity |
+| `finite_prob_filtered_append` | **`Stdlib.List.filter_app`**, `finite_prob_sample_append` | Distribute filtering of a sample append through finite event-mass sums |
+| `union_prob_filtered_append` | **`Stdlib.List.filter_app`**, `union_prob_sample_append` | Obtain the corresponding result for a finite event family |
+| `filtered_event_mass_is_indicator_expectation` | `finite_prob_on_filtered_samples`, `finite_event_probability_is_indicator_expectation` | Interpret filtered event mass as a Boolean conjunction indicator score |
+| `filtered_union_mass_is_indicator_expectation` | `union_prob_on_filtered_samples`, `finite_event_probability_is_indicator_expectation` | Interpret filtered finite union mass through the existing finite-moment functional |
+
+The preexisting `union_prob_append` proof was also refactored:
+it now directly applies `finite_prob_event_ext_on_samples`
+and `any_event_append` (which itself uses
+**`Stdlib.List.existsb_app`**) rather than unfolding
+and repeating a separate finite-sum extensionality calculation.
+
+All new equalities are valid for **arbitrary real sample weights**,
+including negative values, and **duplicate sample occurrences**.
+Nonnegativity and normalization belong to separate probability
+bounds and must not be inferred from these identities. Event
+independence is neither assumed nor established. The new bridge
+theorems do not construct conditional expectations, continuous
+measures or empirical estimates.
+
+The 14 structural-induction scripts remain justified by the
+underlying generic fold, natural-number recurrence and
+suffix-dependent covariance definitions. No extra fold, event
+union, filter, matrix representation, custom axiom, `Admitted`
+or unpinned library was added. Previous named theorem
+statements and historical Python/SPARK evidence are unchanged.
 
 ## Deliberately retained project-specific definitions
 
