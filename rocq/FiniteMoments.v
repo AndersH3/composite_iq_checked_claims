@@ -577,26 +577,15 @@ Section FiniteProbabilityMoments.
         covariance_quadratic_form left right.
   Proof.
     intros left right Hmass.
-    induction left as [|[a f] tail IH].
-    - change
-        (covariance (fun _ => 0) (linear_combination right) = 0).
-      apply covariance_with_constant_first; exact Hmass.
-    - change
-        (covariance
-          (fun x => a * f x + linear_combination tail x)
-          (linear_combination right) =
-         a * covariance_row f right +
-           covariance_quadratic_form tail right).
-      rewrite covariance_add_first, covariance_scale_first.
-      replace (covariance
-        (fun x => linear_combination tail x)
-        (linear_combination right))
-      with (covariance (linear_combination tail)
-                       (linear_combination right)).
-      + rewrite IH.
-        rewrite (covariance_of_general_weighted_second f right Hmass).
-        reflexivity.
-      + apply covariance_extensional; intro x; reflexivity.
+    rewrite (covariance_symmetric
+      (linear_combination left) (linear_combination right)).
+    rewrite (covariance_of_general_weighted_second
+      (linear_combination right) left Hmass).
+    unfold covariance_row, covariance_quadratic_form.
+    apply FiniteSum.finite_sum_ext; intro c.
+    rewrite (covariance_symmetric (linear_combination right) (snd c)).
+    rewrite (covariance_of_general_weighted_second (snd c) right Hmass).
+    reflexivity.
   Qed.
 
   Theorem variance_of_general_weighted_sum :
