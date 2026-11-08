@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 396 public theorem/lemma/example declarations,
+The current branch has 399 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**399 proof scripts**, including the generic
+**402 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -249,6 +249,20 @@ The zero coefficient list is represented by Stdlib.List.repeat.
 Two prior strict-variance proofs now delegate to the new generic
 equivalence, eliminating duplicated real-order case splits.
 There is no custom rank, determinant or vector indexing routine.
+
+### Verified criteria for finite covariance positive definiteness
+
+Three results reuse the previously checked strict-positive
+quadratic-form witnesses and covariance nullity equivalences.
+If every compatible nonzero coefficient list separates two
+positive-weight outcomes, or deviates from its own expected
+score at some positive-weight outcome, then the fixed-basis
+covariance matrix is positive definite. A complementary iff
+theorem characterizes positive definiteness as the absence
+of nonzero coefficient directions having zero covariance
+with every comparison score. The zero vector is represented
+with Stdlib.List.repeat; no custom rank or matrix algorithm
+is needed.
 
 ### Current structural-induction inventory
 
@@ -525,7 +539,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 139 proof scripts
+## FiniteMoments.v — 142 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -668,6 +682,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `positive_fixed_basis_quadratic_of_positive_support_deviation` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, positive_variance_of_positive_support_deviation | **New:** positive deviation witnesses strict quadratic curvature |
 | `positive_fixed_basis_quadratic_of_two_distinct_support_values` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, positive_variance_of_two_distinct_positive_support_values | **New:** two positive outcomes witness a strictly positive quadratic form |
 | `fixed_basis_positive_definite_iff_no_nonzero_constant_direction` (theorem) | Iff splitting, contradiction, lemma application | Stdlib.List.repeat, fixed_basis_null_iff_constant_on_positive_weight_support, fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support | **New:** positive definiteness iff no nontrivial constant-score direction |
+| `fixed_basis_positive_definite_of_separating_positive_support_pairs` (theorem) | Existential witness elimination, lemma application | positive_fixed_basis_quadratic_of_two_distinct_support_values, Stdlib.List.repeat | **New:** positive-weight pair-separation suffices for matrix positive definiteness |
+| `fixed_basis_positive_definite_of_positive_support_mean_deviations` (theorem) | Existential witness elimination, lemma application | positive_fixed_basis_quadratic_of_positive_support_deviation, Stdlib.List.repeat | **New:** every nonzero direction has mean-deviation witness implies positive definiteness |
+| `fixed_basis_positive_definite_iff_no_nonzero_orthogonal_direction` (theorem) | Iff splitting, contradiction, lemma application | fixed_basis_null_iff_orthogonal_to_every_score, fixed_basis_null_iff_constant_on_positive_weight_support, fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support, Stdlib.Lra | **New:** positive definiteness iff no nonzero direction is orthogonal to every finite score |
 
 ## FiniteBridge.v — 16 proof scripts
 

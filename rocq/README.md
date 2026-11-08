@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **396 theorem, lemma and example declarations** in seven
+for the two reports. **399 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1005,8 +1005,24 @@ This is a finite-list positive-definiteness characterization;
 spectral matrix rank and determinant algorithms are deliberately
 not implemented.
 
-Current inventory: **396 public claims**, **399 proof scripts**,
+At the preceding stage: **396 public claims**, **399 proof scripts**,
 **454 documented named declarations** across seven Rocq modules.
+
+## Positive-definiteness witnesses and zero-covariance characterization
+
+The newest `FiniteMoments.v` theorems provide two sufficient
+conditions for positive definiteness of a finite fixed-basis
+covariance matrix: every nonzero coefficient vector must
+separate two positive-weight sampled outcomes, or differ
+from its expected score at a positive-weight outcome.
+A further iff theorem characterizes strict positive
+definiteness as the absence of a nonzero direction
+uncorrelated with every finite comparison score. These
+are direct applications of existing null/strict-variance
+theorems, without new rank, determinant or list recursion.
+
+Current seven-module source inventory: **399 public claims**,
+**402 proof scripts**, **457 fully documented named declarations**.
 
 ## Research extensions
 

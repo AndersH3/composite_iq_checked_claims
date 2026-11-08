@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 396 public theorem/lemma/example
+**Current audited inventory:** 399 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **399 proof scripts**. There are **454 named
+constructors, for **402 proof scripts**. There are **457 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -794,7 +794,20 @@ the existing fixed-basis variance identity. Two old proofs now
 delegate to those shared results, eliminating their duplicated
 real-order case distinctions. No new recursion, rank function,
 spectral library emulation or unproved axioms are introduced.
-Current inventory: 396 public claims, 399 scripts, 454 declarations.
+At the preceding stage: 396 public claims, 399 scripts, 454 declarations.
+
+## Finite covariance positive-definiteness witnesses
+
+Two new results apply the existing positive quadratic-form
+witness lemmas to each nonzero compatible coefficient list.
+A third reuses the fully checked fixed-basis covariance
+orthogonality/nullity and strict-positivity equivalences,
+establishing positive definiteness iff no nonzero
+direction is uncorrelated with every comparison score.
+Stdlib.List.repeat expresses the zero coefficient list;
+no new matrix rank, determinant or kernel algorithm is added.
+The latest audit covers 399 claims, 402 scripts and
+457 fully documented declarations.
 
 ## Deliberately retained project-specific definitions
 

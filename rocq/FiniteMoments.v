@@ -5009,4 +5009,118 @@ Section FiniteProbabilityMoments.
       apply Hcriterion; assumption.
   Qed.
 
+  (**
+   [fixed_basis_positive_definite_of_separating_positive_support_pairs] (theorem) — Finite positive-definite covariance criteria.
+   Mathematical meaning: If every compatible nonzero coefficient vector separates two positive-weight sampled outcomes by their composite score values, then the fixed-basis finite covariance matrix has strictly positive quadratic form in every nonzero compatible direction.
+   Exact checked proposition: For any basis with normalized nonnegative finite sample weights, if each coefficients list of matching length unequal to repeat 0 (length basis) admits sampled x,y of positive weight with different weighted_basis_sum values, then every such nonzero coefficients list has 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis).
+   Premises and side conditions: Unit total mass, nonnegative sampled weights, matching coefficient/basis dimensions and an explicit pair of positive-weight support outcomes for each nonzero direction are required. Repeated outcomes and zero-weight observations are allowed; independence of basis scores is not assumed.
+   Proof/definition method: Apply the supplied positive-support separation witness to a fixed nonzero direction, destruct the existential/and conjunctions, and invoke positive_fixed_basis_quadratic_of_two_distinct_support_values. This avoids constructing a separate rank or vector-space implementation.
+   Library reuse: Stdlib.List.repeat, Stdlib.List.In, positive_fixed_basis_quadratic_of_two_distinct_support_values and the previously verified fixed-basis covariance representation.
+   Boundary: This is a sufficient finite support separation condition for positive definiteness, not an algorithm for finding independent scores or assessing real-world IQ test validity.
+   *)
+  Theorem fixed_basis_positive_definite_of_separating_positive_support_pairs :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall coefficients,
+        length coefficients = length basis ->
+        coefficients <> repeat 0 (length basis) ->
+        exists x y,
+          In x samples /\ 0 < weight x /\
+          In y samples /\ 0 < weight y /\
+          weighted_basis_sum coefficients basis x <>
+            weighted_basis_sum coefficients basis y) ->
+      forall coefficients,
+        length coefficients = length basis ->
+        coefficients <> repeat 0 (length basis) ->
+        0 < matrix_quadratic_form coefficients
+          (basis_covariance_matrix basis).
+  Proof.
+    intros basis Hmass Hw Hseparates coefficients Hlength Hnonzero.
+    destruct (Hseparates coefficients Hlength Hnonzero)
+      as [x [y [Hx [Hposx [Hy [Hposy Hdistinct]]]]]].
+    apply (positive_fixed_basis_quadratic_of_two_distinct_support_values
+      coefficients basis x y Hlength Hmass Hw Hx Hposx
+      Hy Hposy Hdistinct).
+  Qed.
+
+  (**
+   [fixed_basis_positive_definite_of_positive_support_mean_deviations] (theorem) — Finite positive-definite covariance criteria.
+   Mathematical meaning: If each compatible nonzero coefficient vector yields at least one positive-weight sampled score differing from its own finite expectation, the finite fixed-basis covariance matrix is positive definite.
+   Exact checked proposition: For any basis with normalized nonnegative sampled weights, assume that for every compatible nonzero coefficients list there exists a sampled x with positive weight and weighted_basis_sum coefficients basis x <> expect (weighted_basis_sum coefficients basis); then every such coefficients list satisfies 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis).
+   Premises and side conditions: Total mass must equal one, all sampled weights must be nonnegative and the coefficient vector must have the same length as the basis and differ from repeat 0. A positive-weight deviation witness is explicitly quantified for each nonzero direction.
+   Proof/definition method: Instantiate the supplied witness at the desired coefficient list, and directly apply positive_fixed_basis_quadratic_of_positive_support_deviation. No new weighted expectation or matrix multiplication logic is introduced.
+   Library reuse: positive_fixed_basis_quadratic_of_positive_support_deviation, Stdlib.List.repeat, Stdlib.List.In and the established FiniteMoments expected-value operator.
+   Boundary: The condition guarantees strict curvature only in the finite covariance model. The theorem does not estimate a spectral gap, rank, or sample-based statistical uncertainty.
+   *)
+  Theorem fixed_basis_positive_definite_of_positive_support_mean_deviations :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall coefficients,
+        length coefficients = length basis ->
+        coefficients <> repeat 0 (length basis) ->
+        exists x,
+          In x samples /\ 0 < weight x /\
+          weighted_basis_sum coefficients basis x <>
+            expect (weighted_basis_sum coefficients basis)) ->
+      forall coefficients,
+        length coefficients = length basis ->
+        coefficients <> repeat 0 (length basis) ->
+        0 < matrix_quadratic_form coefficients
+          (basis_covariance_matrix basis).
+  Proof.
+    intros basis Hmass Hw Hdeviations coefficients Hlength Hnonzero.
+    destruct (Hdeviations coefficients Hlength Hnonzero)
+      as [x [Hx [Hpositive Hdeviation]]].
+    apply (positive_fixed_basis_quadratic_of_positive_support_deviation
+      coefficients basis x Hlength Hmass Hw Hx Hpositive Hdeviation).
+  Qed.
+
+  (**
+   [fixed_basis_positive_definite_iff_no_nonzero_orthogonal_direction] (theorem) — Finite positive-definite covariance criteria.
+   Mathematical meaning: A fixed-basis finite covariance matrix is positive definite precisely when no compatible nonzero coefficient vector yields a composite score uncorrelated with every comparison score.
+   Exact checked proposition: Under normalized nonnegative finite weights, (forall nonzero compatible coefficients, 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis)) iff (forall nonzero compatible coefficients, not(forall g, covariance (weighted_basis_sum coefficients basis) g = 0)).
+   Premises and side conditions: Coefficients are nonzero by inequality with Stdlib.List.repeat 0 (length basis) and must match the finite basis length. Sampled weights are nonnegative and total mass equals one. No independence, eigenvalue, or full-support assumption is built into the theorem.
+   Proof/definition method: The forward direction uses fixed_basis_null_iff_orthogonal_to_every_score to derive a contradiction between zero and strictly positive quadratic form. In the reverse direction, reduce strict quadratic positivity to support nonconstancy with fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support; if support were constant, the existing two nullity iff theorems would imply zero covariance with every comparison score, contradicting the hypothesis.
+   Library reuse: fixed_basis_null_iff_orthogonal_to_every_score, fixed_basis_null_iff_constant_on_positive_weight_support, fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support, Stdlib.List.repeat and Stdlib.Lra.
+   Boundary: This is a proposition-level characterization in the finite weighted covariance model and does not construct or calculate a matrix kernel basis, dimension, determinant, or spectral rank.
+   *)
+  Theorem fixed_basis_positive_definite_iff_no_nonzero_orthogonal_direction :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall coefficients,
+          length coefficients = length basis ->
+          coefficients <> repeat 0 (length basis) ->
+          0 < matrix_quadratic_form coefficients
+            (basis_covariance_matrix basis)) <->
+       (forall coefficients,
+          length coefficients = length basis ->
+          coefficients <> repeat 0 (length basis) ->
+          ~ (forall g,
+              covariance (weighted_basis_sum coefficients basis) g = 0))).
+  Proof.
+    intros basis Hmass Hw.
+    split; intros Hcriterion coefficients Hlength Hnonzero.
+    - intro Hall.
+      pose proof (Hcriterion coefficients Hlength Hnonzero) as Hpositive.
+      pose proof (proj2
+        (fixed_basis_null_iff_orthogonal_to_every_score
+          coefficients basis Hlength Hmass Hw) Hall) as Hzero.
+      lra.
+    - apply (proj2
+        (fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support
+          coefficients basis Hlength Hmass Hw)).
+      intro Hconstant.
+      apply (Hcriterion coefficients Hlength Hnonzero).
+      apply (proj1
+        (fixed_basis_null_iff_orthogonal_to_every_score
+          coefficients basis Hlength Hmass Hw)).
+      apply (proj2
+        (fixed_basis_null_iff_constant_on_positive_weight_support
+          coefficients basis Hlength Hmass Hw)).
+      exact Hconstant.
+  Qed.
+
 End FiniteProbabilityMoments.
