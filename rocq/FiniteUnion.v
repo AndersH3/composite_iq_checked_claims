@@ -2544,7 +2544,7 @@ Section FiniteOutcomeSpace.
    Mathematical meaning: Every target event splits into disjoint parts according to whether another Boolean event holds; the two conditional masses sum to the original target's conditional mass.
    Exact checked proposition: For any finite weights, samples, target, partition and given, conditional(target AND partition | given) + conditional(target AND NOT partition | given) = conditional(target | given).
    Premises and side conditions: Neither normalization nor nonnegative weights nor positive conditioning mass is needed for this algebraic identity of real quotients. Probability semantics still require a positive conditioning marginal and nonnegative sampled weights.
-   Proof/definition method: Specialize the previously checked conditional inclusion–exclusion theorem to the two partition components, show by exhaustive standard Boolean evaluation that their union is target and their intersection is false, and use the existing conditional-false theorem.
+   Proof/definition method: Specialize the previously checked conditional inclusion–exclusion theorem to the two partition components, show by exhaustive standard Boolean evaluation that their union is target and their intersection is false, beta-normalize the specialized event lambdas before rewriting, and use the existing conditional-false theorem.
    Library reuse: finite_conditional_prob_inclusion_exclusion, finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_false, Stdlib.Bool.andb/orb/negb and Stdlib.Lra.
    Boundary: The result handles the exact enumerated weighted multiset; it does not construct conditional distributions on infinite sample spaces.
    *)
@@ -2585,6 +2585,7 @@ Section FiniteOutcomeSpace.
       - apply finite_conditional_prob_false.
       - intros x _.
         destruct (target x), (partition x); reflexivity. }
+    cbn beta in Hinclusion.
     rewrite Hunion, Hintersection in Hinclusion.
     lra.
   Qed.
