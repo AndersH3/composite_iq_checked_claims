@@ -4388,4 +4388,86 @@ Section FiniteProbabilityMoments.
     reflexivity.
   Qed.
 
+  (**
+   [fixed_basis_covariance_cauchy_schwarz_squared] (theorem) — Finite covariance matrix null-direction analysis.
+   Mathematical meaning: Any weighted combination of a finite score basis obeys the Cauchy–Schwarz covariance bound with an arbitrary comparison score, where the first variance is expressed as a covariance-matrix quadratic form.
+   Exact checked proposition: For all coefficients basis g, matching coefficient and basis lengths, normalized mass and nonnegative sample weights imply covariance(weighted_basis_sum coefficients basis,g)^2 <= matrix_quadratic_form(coefficients,basis_covariance_matrix basis)*variance(g).
+   Premises and side conditions: Length equality makes the fixed-basis matrix representation valid. Weights must be nonnegative on sampled outcomes and total mass must equal one; the comparison score g need not be part of the basis.
+   Proof/definition method: Rewrite the quadratic form into the proven variance of the corresponding weighted basis sum and apply the existing finite Cauchy–Schwarz squared theorem, with no new matrix multiplication or finite-sum induction.
+   Library reuse: fixed_basis_weighted_variance_identity, finite_covariance_cauchy_schwarz_squared, Stdlib.Reals.
+   Boundary: Finite-list covariance matrices only; this is not a spectral rank computation or an empirical correlation bound.
+   *)
+  Theorem fixed_basis_covariance_cauchy_schwarz_squared :
+    forall coefficients basis g,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      covariance (weighted_basis_sum coefficients basis) g *
+        covariance (weighted_basis_sum coefficients basis) g <=
+      matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) * variance g.
+  Proof.
+    intros coefficients basis g Hlength Hmass Hw.
+    rewrite <- (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    apply finite_covariance_cauchy_schwarz_squared; assumption.
+  Qed.
+
+  (**
+   [null_covariance_direction_orthogonal_to_every_score] (theorem) — Finite covariance matrix null-direction analysis.
+   Mathematical meaning: If a coefficient vector has zero quadratic form in the finite basis covariance matrix, then its associated weighted score sum has zero covariance with every comparison score, including scores outside the basis.
+   Exact checked proposition: For all coefficients basis g, matching lengths, normalized nonnegative sampled weights and a zero basis-covariance quadratic form imply covariance(weighted_basis_sum coefficients basis,g) = 0.
+   Premises and side conditions: The matrix-vector dimensions must match; total mass is one and every sampled outcome weight is nonnegative. The zero-quadratic-form premise is exact, not a numerical near-zero tolerance.
+   Proof/definition method: Reuse the fixed-basis variance identity to convert zero quadratic form into zero variance, then invoke the previously checked zero_variance_implies_zero_covariance_first theorem.
+   Library reuse: fixed_basis_weighted_variance_identity, zero_variance_implies_zero_covariance_first, FiniteSum and Stdlib.Reals.
+   Boundary: This is an exact null-direction orthogonality result in the finite covariance model; it does not compute matrix rank or assert positive definiteness.
+   *)
+  Theorem null_covariance_direction_orthogonal_to_every_score :
+    forall coefficients basis g,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 ->
+      covariance (weighted_basis_sum coefficients basis) g = 0.
+  Proof.
+    intros coefficients basis g Hlength Hmass Hw Hquadratic.
+    apply zero_variance_implies_zero_covariance_first;
+      [exact Hmass|exact Hw|].
+    rewrite (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    exact Hquadratic.
+  Qed.
+
+  (**
+   [null_covariance_direction_pairwise_constant_on_positive_mass] (theorem) — Finite covariance matrix null-direction analysis.
+   Mathematical meaning: A zero quadratic-form coefficient direction produces identical weighted-score totals at any two enumerated outcomes having strictly positive mass; both values are the same verified finite expectation.
+   Exact checked proposition: For all coefficients basis x y, equal coefficient and basis lengths, normalized nonnegative sampled weights, positive weights at two listed outcomes, and zero quadratic form entail weighted_basis_sum coefficients basis x = weighted_basis_sum coefficients basis y.
+   Premises and side conditions: Both x and y must occur in samples with strictly positive individual weights. Zero-weight outcomes are excluded; no assumptions about the distinctness of x and y or statistical independence are made.
+   Proof/definition method: Apply the established null_covariance_direction_constant_on_positive_mass theorem separately to both outcomes and use the transitivity of real equality; no new covariance or matrix algebra is implemented.
+   Library reuse: null_covariance_direction_constant_on_positive_mass, Stdlib.List.In and real equality transitivity.
+   Boundary: This is a finite positive-support consequence of matrix nullity, not a certified general rank-nullity formula or an identification of empirical dimensions.
+   *)
+  Theorem null_covariance_direction_pairwise_constant_on_positive_mass :
+    forall coefficients basis x y,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      In x samples -> 0 < weight x ->
+      In y samples -> 0 < weight y ->
+      matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 ->
+      weighted_basis_sum coefficients basis x =
+        weighted_basis_sum coefficients basis y.
+  Proof.
+    intros coefficients basis x y Hlength Hmass Hw Hinx Hposx
+      Hiny Hposy Hquadratic.
+    transitivity (expect (weighted_basis_sum coefficients basis)).
+    - apply null_covariance_direction_constant_on_positive_mass;
+        assumption.
+    - symmetry.
+      apply null_covariance_direction_constant_on_positive_mass;
+        assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

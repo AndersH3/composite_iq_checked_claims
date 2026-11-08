@@ -2326,6 +2326,37 @@ Section FiniteOutcomeSpace.
   Qed.
 
 
+  (**
+   [finite_conditional_prob_chain_rule] (theorem) — Generic conditional Boolean-event algebra.
+   Mathematical meaning: A finite conditional intersection factors into the probability of its first component given the conditioning event multiplied by the second component conditional on the first component and the conditioning event.
+   Exact checked proposition: For all weights samples event1 event2 given, positive given mass and positive mass of given AND event1 imply conditional(event1 AND event2 | given) = conditional(event1 | given) * conditional(event2 | given AND event1).
+   Premises and side conditions: Both the original conditioning event and its intersection with the first target event have strictly positive finite mass. Neither total-mass normalization nor individual nonnegative weights are needed for the equality as real algebra.
+   Proof/definition method: Unfold the existing conditional quotient, use the pointwise standard Boolean conjunction associativity theorem to align intersection numerators, then apply Rocq's real-field normalization with explicit denominator positivity.
+   Library reuse: Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals field and Stdlib.Lra.
+   Boundary: Finite enumerated mass with two explicit nonzero denominators only; no continuous disintegration or conditional independence is inferred.
+   *)
+  Theorem finite_conditional_prob_chain_rule :
+    forall weights samples event1 event2 given,
+      0 < finite_prob weights samples given ->
+      0 < finite_prob weights samples
+        (fun x => andb (given x) (event1 x)) ->
+      finite_conditional_prob weights samples
+        (fun x => andb (event1 x) (event2 x)) given =
+      finite_conditional_prob weights samples event1 given *
+      finite_conditional_prob weights samples event2
+        (fun x => andb (given x) (event1 x)).
+  Proof.
+    intros weights samples event1 event2 given Hgiven Hcombined.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb (given x)
+        (andb (event1 x) (event2 x)))
+      (fun x => andb (andb (given x) (event1 x)) (event2 x))).
+    2: { intros x _; symmetry; apply andb_assoc. }
+    field; lra.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

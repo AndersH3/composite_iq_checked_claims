@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 372 public theorem/lemma/example declarations,
+The current branch has 376 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**375 proof scripts**, including the generic
+**379 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -169,6 +169,16 @@ events, conditional inclusion–exclusion, Bayes balance under two positive
 marginals, and the law of total probability under a two-cell positive
 partition. All proofs preserve the exact weighted-list and division
 semantics, including arbitrary sample multiplicities.
+
+### Conditional chain rule and stronger covariance-matrix null directions
+
+The finite conditional chain rule now reduces directly to Boolean
+conjunction associativity and standard field cancellation, without
+additional finite sums. The fixed-basis Cauchy–Schwarz extension and
+null-direction covariance-orthogonality and positive-support equality
+theorems reuse existing matrix/variance bridge lemmas instead of
+implementing new indexed matrix operations. Full eigenvalue and
+rank-nullity theorems remain outside the current finite-list API.
 
 ### Current structural-induction inventory
 
@@ -372,7 +382,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 67 proof scripts
+## FiniteUnion.v — 68 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -443,8 +453,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_inclusion_exclusion` (theorem) | Rewriting, shared inverse factoring | finite_conditional_prob_filtered, finite_prob_inclusion_exclusion, Stdlib.List.filter | **New:** conditional two-event inclusion-exclusion |
 | `finite_conditional_prob_bayes_balance` (theorem) | Rewriting, field algebra | finite_prob_event_ext_on_samples, Stdlib.Bool.andb_comm, Stdlib.Reals | **New:** positive-marginal Bayes balance |
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
+| `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 116 proof scripts
+## FiniteMoments.v — 119 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -564,6 +575,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `sum_scores_permutation_invariant` (lemma) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `variance_of_permuted_score_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `equal_weight_variance_permutation_invariant` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `fixed_basis_covariance_cauchy_schwarz_squared` (theorem) | Rewriting, Lemma application | fixed_basis_weighted_variance_identity, finite_covariance_cauchy_schwarz_squared | **New:** compare basis-matrix quadratic form against covariance with arbitrary score |
+| `null_covariance_direction_orthogonal_to_every_score` (theorem) | Rewriting, Lemma application | fixed_basis_weighted_variance_identity, zero_variance_implies_zero_covariance_first | **New:** matrix null direction is covariance-orthogonal to every finite score |
+| `null_covariance_direction_pairwise_constant_on_positive_mass` (theorem) | Lemma application, Transitivity | null_covariance_direction_constant_on_positive_mass | **New:** any two positive-support outcomes have equal scores in a null direction |
 
 ## FiniteBridge.v — 16 proof scripts
 

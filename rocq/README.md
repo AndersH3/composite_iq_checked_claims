@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **372 theorem, lemma and example declarations** in seven
+for the two reports. **376 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -901,8 +901,26 @@ checked `finite_prob_inclusion_exclusion`,
 `finite_prob_filtered_partition` and `finite_prob_event_ext_on_samples`
 plus Rocq Stdlib Boolean/real algebra; no new recursions were added.
 
-Source inventory: **372 public theorem/lemma/example declarations**,
+At the previous stage: **372 public theorem/lemma/example declarations**,
 **375 registered proof scripts** and **430 documented named declarations**.
+
+## Conditional chain rule and covariance-matrix null consequences
+
+A generic finite conditional chain rule reduces nested intersections to
+the existing `finite_prob` identities, `Stdlib.Bool.andb_assoc`
+and real-field cancellation with two strictly positive marginals.
+
+Three `FiniteMoments.v` results extend the already checked fixed-basis
+covariance matrix: a Cauchy–Schwarz bound against any comparison score,
+zero covariance with every score in a zero-quadratic-form direction,
+and equality of the weighted score totals at any pair of positive-mass
+sampled outcomes in that direction. These reuse
+`fixed_basis_weighted_variance_identity`, finite Cauchy–Schwarz,
+and the established zero-variance and support theorems without
+reimplementing matrix-vector arithmetic or assuming a spectral basis.
+
+The current seven-module inventory is **376 public claims**,
+**379 registered proofs** and **434 documented named declarations**.
 
 ## Research extensions
 

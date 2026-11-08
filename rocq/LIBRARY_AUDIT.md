@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 372 public theorem/lemma/example
+**Current audited inventory:** 376 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **375 proof scripts**. There are **430 named
+constructors, for **379 proof scripts**. There are **434 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -715,8 +715,18 @@ inclusion–exclusion, Bayes balance and total probability to the shared
 reuse is explicit: Stdlib.Bool.andb_comm, Stdlib.Reals field/ring,
 `finite_prob_inclusion_exclusion`, `finite_prob_filtered_partition`,
 `finite_prob_event_ext_on_samples`, and `Stdlib.List.filter`.
-The source inventory is now 372 public proofs, 375 proof blocks and
+That preceding stage contained 372 public proofs, 375 proof blocks and
 430 documented declarations. No new measure axioms are introduced.
+
+## Chain rule and matrix null-direction consequences
+
+The conditional chain rule invokes finite_prob_event_ext_on_samples,
+Stdlib.Bool.andb_assoc and Rocq's real-field tactic. Three new finite
+matrix results invoke existing fixed-basis variance identification,
+finite Cauchy–Schwarz, zero-variance covariance, and positive-support
+constant-score theorems. No separate matrix implementation or unverified
+rank function is introduced. The present audit covers 376 public
+claims, 379 proof scripts and 434 documented declarations.
 
 ## Deliberately retained project-specific definitions
 
