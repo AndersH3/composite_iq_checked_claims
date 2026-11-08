@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **334 theorem, lemma and example declarations** in seven
+for the two reports. **337 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -420,7 +420,7 @@ adjacent commentary of `finite_prob_event_ext_on_samples`. The report
 data, historical evidence and previously verified SPARK/Python sources
 are unaffected.
 
-## Latest continuation: remove weighted covariance induction by finite-sum laws
+## Previous continuation: remove weighted covariance induction by finite-sum laws
 
 A new theorem, `covariance_of_general_weighted_second_unconditional`,
 proves
@@ -460,6 +460,58 @@ folds, the natural-number recurrence and unordered-pair covariance.
 The prior theorem statements and their hypotheses remain unchanged.
 As throughout this project, the results concern finite algebraic
 moments and do not establish empirical validity or Gaussianity.
+
+## Latest continuation: general finite-sum partition and filtered-event bounds
+
+The current source adds one general and two event-specific results.
+**There are now 337 publicly named theorem/lemma/example declarations,
+one local helper and two explicitly proved record constructors:
+340 proof scripts in all**. The seven Rocq modules contain
+**394 named declarations**, each with a detailed declaration-specific
+`(** ... *)` comment. Every module begins with a substantive
+explanatory header. A
+[proof-by-proof register](PROOF_REFACTOR_REGISTER.md) records the
+source order, standard-library dependencies and proof methods for all
+340 scripts. GitHub Actions checks the register for completeness.
+
+The new `FiniteSum.finite_sum_filter_partition` is the reusable
+finite-list identity
+
+\[
+\sum_{x\in\operatorname{filter}(p,L)} f(x)
++ \sum_{x\in\operatorname{filter}(\neg p,L)} f(x)
+= \sum_{x\in L} f(x).
+\]
+
+Here summation means the explicit list fold, so any repeated elements
+retain their multiplicity and the real-valued integrand may have
+either sign. The proof directly invokes the previously checked
+`finite_sum_filter`, `finite_sum_add`, `finite_sum_ext`,
+`Stdlib.List.filter` and standard Boolean/ring operations, without
+introducing another recursive summation implementation.
+
+Two new distribution-free consequences are
+`finite_prob_filtered_mass_le` and
+`union_prob_filtered_mass_le`. They assert that restricting
+enumerated outcomes cannot increase an event's or union's mass
+when the original sample weights are nonnegative. They use
+`Stdlib.Bool.andb_true_iff`, the existing
+`finite_prob_event_monotone` and the checked finite event family
+abstraction. **No independence or unit-total-mass premise** is needed
+for these inequalities.
+
+Two older proofs were simplified in this continuation:
+`finite_prob_filtered_partition` now delegates to the new
+generic list-sum theorem; `finite_prob_complement` derives the
+event-complement identity from that same theorem and the
+established event-mass-as-filtered-sum equivalence instead of
+repeating indicator arithmetic. Their exact statements are preserved.
+
+**Structural induction count remains 14**, restricted to basic
+generic folds, the recurrence and suffix-dependent covariance.
+All theorem hypotheses remain explicit. These identities are
+finite list-weight statements, not claims about empirical
+psychometrics, continuous distributions or inferred Gaussianity.
 
 ## Claims and exact theorem correspondences
 
