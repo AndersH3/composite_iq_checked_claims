@@ -1377,7 +1377,8 @@ Section FiniteProbabilityMoments.
         transitivity (FiniteSum.finite_sum
           (fun c => f x * (fst c * snd c x)) components).
         + rewrite FiniteSum.finite_sum_scale; reflexivity.
-        + apply FiniteSum.finite_sum_ext; intro c; ring.
+        + apply FiniteSum.finite_sum_ext; intro c.
+          cbn [fst snd]; ring.
       - rewrite expectation_of_general_weighted_sum.
         unfold linear_expectation.
         rewrite FiniteSum.finite_sum_map.
