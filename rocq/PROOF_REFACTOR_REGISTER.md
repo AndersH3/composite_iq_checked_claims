@@ -386,7 +386,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_intersection_at_most_second` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `finite_conditional_prob_filtered` (theorem) | Rewriting, Computation | finite_prob_on_filtered_samples, Stdlib.List.filter | **New:** generic quotient interpretation of selected outcome lists |
-| `finite_conditional_prob_self` (theorem) | Finite cases, Rewriting, Lemma application | finite_prob_event_ext_on_samples; Stdlib.Reals.Rdiv_self | **New:** positive-mass event conditional on itself equals one |
+| `finite_conditional_prob_self` (theorem) | Finite cases, Rewriting, Lemma application | finite_prob_event_ext_on_samples; Stdlib.Reals field tactic | **New:** positive-mass event conditional on itself equals one |
 
 ## FiniteMoments.v — 116 proof scripts
 

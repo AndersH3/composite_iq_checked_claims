@@ -663,7 +663,7 @@ No new recursion, probability axiom or empirical claim is introduced.
 pre-existing indicator-event intersection mass and conditioning mass
 using standard real division. Its filtering theorem delegates to
 `finite_prob_on_filtered_samples`; positive-mass self-conditioning
-uses `finite_prob_event_ext_on_samples` and `Rdiv_self`. Two
+uses `finite_prob_event_ext_on_samples` and the standard `field` tactic with an explicit nonzero denominator. Two
 four-cell corollaries reuse the preceding conditional bridge proofs,
 with unchanged side conditions. The total source inventory rises to
 359 publicly named claims, 362 proof blocks, and 417 declarations.

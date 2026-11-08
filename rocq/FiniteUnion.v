@@ -1999,7 +1999,7 @@ Section FiniteOutcomeSpace.
    Exact checked proposition: For all weights, samples, given, if 0 < finite_prob weights samples given then finite_conditional_prob weights samples given given = 1.
    Premises and side conditions: The conditioning mass is strictly positive, making division by itself valid. Probability normalization and weight signs are not required for this algebraic identity, but are needed for general probability semantics.
    Proof/definition method: Use finite_prob_event_ext_on_samples to identify the idempotent Boolean conjunction with the original event on the enumerated support, then apply the standard real-division self-identity.
-   Library reuse: Stdlib.Bool.andb, finite_prob_event_ext_on_samples, Stdlib.Reals.Rdiv_self and Lra.
+   Library reuse: Stdlib.Bool.andb, finite_prob_event_ext_on_samples, Stdlib.Reals field tactic and Lra.
    Boundary: This does not prove that arbitrary signed finite weights define a valid probability distribution.
  *)
   Theorem finite_conditional_prob_self :
@@ -2017,7 +2017,7 @@ Section FiniteOutcomeSpace.
       intros x Hx.
       destruct (given x); reflexivity. }
     rewrite Hsame.
-    apply Rdiv_self; lra.
+    field; lra.
   Qed.
 
 End FiniteOutcomeSpace.
