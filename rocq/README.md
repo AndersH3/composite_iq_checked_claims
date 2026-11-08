@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **311 theorem, lemma and example declarations** in seven
+for the two reports. **320 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -107,7 +107,7 @@ probability measures.
 
 ## November 8 continuation: concrete four-cell interpretation
 
-The seven modules contain **311 named theorem, lemma and example
+At the four-cell bridge milestone, the seven modules contained **311 named theorem, lemma and example
 declarations** (64 Hoeflin, 67 Admissions, 38 FiniteUnion,
 103 FiniteMoments, 12 FiniteSum, 14 FiniteBridge, 13 FourCellBridge).
 These are source-counted declarations, not a count of independent
@@ -147,6 +147,53 @@ not require a MathComp or measure-theory dependency. The
 report-specific four-cell declarations remain separate from the
 library-backed Boolean-product interpretation.
 
+## November 8 continuation: support-aware finite sums and general event bounds
+
+The current seven-module source inventory is **320 kernel-checked theorem,
+lemma and example declarations**: `Hoeflin` 64, `Admissions` 67,
+`FiniteUnion` 43, `FiniteMoments` 103, `FiniteSum` 16,
+`FiniteBridge` 14 and `FourCellBridge` 13. This is **nine additional
+declarations** compared with the preceding 311-declaration milestone.
+
+**Refactoring to established Rocq library facilities:**
+
+- `finite_sum_ext_in` uses Rocq Stdlib `List.map_ext_in` to establish
+  equality of finite sums when integrands agree **only on enumerated
+  outcomes**. The old global `finite_sum_ext` remains as a wrapper;
+  its original type is unchanged.
+- `finite_sum_member_le` proves that a nonnegative supported
+  contribution cannot exceed its containing finite sum.
+  `finite_sum_nonnegative_zero` derives the termwise zero implication
+  from this bound. The corresponding `FiniteMoments` theorem now
+  delegates to it rather than duplicating a list induction.
+- `finite_sum_swap` is a reusable finite double-sum interchange identity,
+  derived from the existing addition/zero laws. The report-specific
+  `interchange_finite_sums` now delegates to the generic theorem,
+  replacing a separate induction over event routes.
+
+**New distribution-free finite-event consequences:**
+
+- `finite_prob_zero_iff_no_positive_mass_support`: for nonnegative
+  outcome weights, an event has mass zero precisely when every
+  enumerated outcome satisfying the event has zero weight.
+- `finite_prob_positive_of_positive_support`: positive-weight
+  support for the event implies positive event mass.
+- `finite_intersection_at_most_first`,
+  `finite_intersection_at_most_second`, and
+  `finite_frechet_lower_bound`: the intersection probability is
+  bounded by both marginals, and by the Fréchet lower bound
+  `P(A) + P(B) - 1`. These results reuse Boolean conjunction,
+  generic monotonicity, inclusion-exclusion and normalized
+  unit-interval bounds.
+
+All **311 previously named declarations retain their exact statements**;
+their source signatures were compared with the prior milestone commit
+`82c2806`. No new axioms or `Admitted` proofs were introduced.
+The mathematical scope remains finite weighted samples; only
+nonnegative and, where explicitly required, normalized weights
+support a probabilistic interpretation. Gaussianity and empirical
+IQ-test validity are not claimed.
+
 ## Claims and exact theorem correspondences
 
 | Report claim | Rocq statement(s) | Scope and qualification |
@@ -169,6 +216,8 @@ library-backed Boolean-product interpretation.
 | Latent-factor squared correlation and conditional-variance expressions | `latent_reliability_plus_posterior_variance`, `latent_reliability_nonnegative`, `latent_posterior_variance_nonnegative`, `latent_reliability_at_most_one`, and boundary cases | Algebra for the report's *given* expressions; **does not prove the Gaussian conditional-distribution derivation** |
 | Shared finite real-sum infrastructure (technical bridge) | `FiniteSum.finite_sum_ext`, `finite_sum_add`, `finite_sum_scale`, `finite_sum_nonnegative`, `finite_sum_monotone`, `finite_sum_zero`, `finite_sum_app`, `finite_sum_permutation` | Exact `Stdlib.List` folds replace repeated finite-sum proofs in both domain models; no probability normalization is assumed by the generic library |
 | Four-cell admissions model interpreted as a standard Boolean-product probability space | `four_cell_total_mass`, `four_cell_first_marginal`, `four_cell_second_marginal`, `four_cell_intersection_mass`, `four_cell_union_mass`, `four_cell_exactly_one_mass`, `four_cell_indicator_covariance`, `four_cell_indicator_independence_criterion` | Explicit representation of all four outcomes and their normalized nonnegative weights; exact correspondence with the report's specialized joint, marginal and union expressions, using generic finite-probability and finite-moment library lemmas |
+| Finite double-sum interchange and termwise zero criterion | `FiniteSum.finite_sum_ext_in`, `FiniteSum.finite_sum_member_le`, `FiniteSum.finite_sum_nonnegative_zero`, `FiniteSum.finite_sum_swap`, `interchange_finite_sums` | Reuses Stdlib `List.map_ext_in` and standard finite-sum linearity to centralize support-sensitive and double-sum proofs; no new finite iterator |
+| Event positive support, zero mass and generalized Fréchet bounds | `finite_prob_zero_iff_no_positive_mass_support`, `finite_prob_positive_of_positive_support`, `finite_intersection_at_most_first`, `finite_intersection_at_most_second`, `finite_frechet_lower_bound` | Holds for explicitly enumerated finite outcomes under nonnegative weights, plus normalization for the Fréchet lower bound; no independence or normality premise |
 | Finite event sample permutation and monotonicity | `finite_prob_sample_append`, `finite_prob_sample_permutation`, `union_prob_sample_permutation`, `finite_prob_event_monotone`, `normalized_finite_prob_unit_interval` | For finite lists and Boolean events, weighted sample order is irrelevant, monotone events have monotone mass under nonnegative weights, and unit-interval bounds require normalized nonnegative weights |
 | Finite Boolean event and moment models agree | `finite_sum_models_agree`, `finite_total_mass_models_agree`, `finite_event_probability_is_indicator_expectation` | Certified equality between the original finite-event sum/probability and finite-moment sum/indicator expectation for arbitrary real weights |
 | Event-indicator Bernoulli variance, covariance and independence | `indicator_square`, `indicator_product_and`, `finite_event_indicator_variance`, `finite_event_indicator_covariance`, `finite_event_independence_iff_zero_indicator_covariance`, `finite_event_indicator_zero_variance_iff_extreme_mass` | Algebraically proves Var(1_A)=p_A(1−p_A), Cov(1_A,1_B)=p_(A∩B)−p_A p_B and zero covariance iff the finite product identity; to interpret the masses as probabilities, nonnegative normalized weights are required |
