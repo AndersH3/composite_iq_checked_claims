@@ -40,9 +40,9 @@ theorems = 0
 total_scripts = 0
 refactor_register = Path("rocq/PROOF_REFACTOR_REGISTER.md").read_text(encoding="utf-8")
 proof_decl = re.compile(
-    r"^[ \\t]*(?:(?:Local|Global)\\s+)?"
-    r"(?:Theorem|Lemma|Example|Definition|Fixpoint|Record)\\s+"
-    r"([A-Za-z_][\\w']*)",
+    r"^[ \t]*(?:(?:Local|Global)\s+)?"
+    r"(?:Theorem|Lemma|Example|Definition|Fixpoint|Record)\s+"
+    r"([A-Za-z_][\w']*)",
     re.MULTILINE,
 )
 
@@ -89,10 +89,10 @@ for module in modules:
 
     # The review register must account for every proof block, including
     # the two four-cell record constructors using Proof/Defined.
-    code = re.sub(r"\\(\\*[\\s\\S]*?\\*\\)", "", source)
+    code = re.sub(r"\(\*[\s\S]*?\*\)", "", source)
     declarations = list(proof_decl.finditer(code))
     expected = []
-    for block in re.finditer(r"\\bProof\\.", code):
+    for block in re.finditer(r"\bProof\.", code):
         preceding = [item for item in declarations if item.start() < block.start()]
         if not preceding:
             issues.append(f"{path}: proof block without named declaration")
@@ -100,7 +100,7 @@ for module in modules:
         expected.append(preceding[-1].group(1))
 
     section_match = re.search(
-        r"^## " + re.escape(module) + r"\\.v — [0-9]+ proof scripts$",
+        r"^## " + re.escape(module) + r"\.v — [0-9]+ proof scripts$",
         refactor_register,
         re.MULTILINE,
     )
@@ -110,7 +110,7 @@ for module in modules:
         section_tail = refactor_register[section_match.end():]
         next_heading = re.search(r"^## ", section_tail, re.MULTILINE)
         section = section_tail[:next_heading.start()] if next_heading else section_tail
-        recorded = re.findall(r"^\\| \`([A-Za-z_][\\w']*)\` \\(", section, re.MULTILINE)
+        recorded = re.findall(r"^\| `([A-Za-z_][\w']*)` \(", section, re.MULTILINE)
         if recorded != expected:
             issues.append(
                 f"{path}: proof-refactor register differs "
