@@ -22,21 +22,20 @@ Open Scope R_scope.
 (* Reuse Stdlib.Reals quotient, inverse, and product sign lemmas. *)
 
 (**
-   [TwoEventModel] (record).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: Type := { joint : R; only_A : R; only_B : R; neither :
-   R; joint_nonnegative : 0 <= joint; only_A_nonnegative : 0 <= only_A;
-   only_B_nonnegative : 0 <= only_B; neither_nonnegative : 0 <= neither;
-   cells_sum_to_one : joint + only_A + only_B + neither = 1 }. Definition p_A
-   (m : TwoEventModel) : R := joint m + only_A m. D...
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [TwoEventModel] (record) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Defines the named structured data representation and its
+   fields, with mathematical invariants encoded in the field types.
+   Exact declaration: Record TwoEventModel : Type := { joint : R; only_A : R; only_B
+   : R; neither : R; joint_nonnegative : 0 <= joint; only_A_nonnegative : 0 <=
+   only_A; only_B_nonnegative : 0 <= only_B; neither_nonnegative : 0 <= neither;
+   cells_sum_to_one : joint + only_A + only_B + neither = 1 }.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Record TwoEventModel : Type := {
   joint : R;
@@ -51,152 +50,163 @@ Record TwoEventModel : Type := {
 }.
 
 (**
-   [p_A] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: (m : TwoEventModel) : R := joint m + only_A m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [p_A] (definition) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Defines p A using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition p_A (m : TwoEventModel) : R := joint m + only_A m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition p_A (m : TwoEventModel) : R := joint m + only_A m.
 (**
-   [p_B] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: (m : TwoEventModel) : R := joint m + only_B m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [p_B] (definition) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Defines p B using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition p_B (m : TwoEventModel) : R := joint m + only_B m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition p_B (m : TwoEventModel) : R := joint m + only_B m.
 (**
-   [p_both] (definition).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal construction: (m : TwoEventModel) : R := joint m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [p_both] (definition) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Defines p both using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition p_both (m : TwoEventModel) : R := joint m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition p_both (m : TwoEventModel) : R := joint m.
 (**
-   [p_either] (definition).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal construction: (m : TwoEventModel) : R := joint m + only_A m + only_B
-   m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [p_either] (definition) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Defines p either using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition p_either (m : TwoEventModel) : R := joint m + only_A
+   m + only_B m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition p_either (m : TwoEventModel) : R :=
   joint m + only_A m + only_B m.
 (**
-   [p_exactly_one] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: (m : TwoEventModel) : R := only_A m + only_B m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [p_exactly_one] (definition) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Defines p exactly one using explicit Rocq operations, so
+   later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition p_exactly_one (m : TwoEventModel) : R := only_A m +
+   only_B m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition p_exactly_one (m : TwoEventModel) : R :=
   only_A m + only_B m.
 
 (**
-   [conditional_B_given_A] (definition).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal construction: (m : TwoEventModel) : R := joint m / p_A m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_B_given_A] (definition) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Defines conditional B given A using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition conditional_B_given_A (m : TwoEventModel) : R :=
+   joint m / p_A m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition conditional_B_given_A (m : TwoEventModel) : R :=
   joint m / p_A m.
 (**
-   [conditional_A_given_B] (definition).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal construction: (m : TwoEventModel) : R := joint m / p_B m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_A_given_B] (definition) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Defines conditional A given B using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition conditional_A_given_B (m : TwoEventModel) : R :=
+   joint m / p_B m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition conditional_A_given_B (m : TwoEventModel) : R :=
   joint m / p_B m.
 (**
-   [conditional_both_given_either] (definition).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal construction: (m : TwoEventModel) : R := joint m / p_either m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_both_given_either] (definition) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Defines conditional both given either using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition conditional_both_given_either (m : TwoEventModel) :
+   R := joint m / p_either m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition conditional_both_given_either (m : TwoEventModel) : R :=
   joint m / p_either m.
 (**
-   [conditional_not_A_given_B] (definition).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal construction: (m : TwoEventModel) : R := only_B m / p_B m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_not_A_given_B] (definition) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Defines conditional not A given B using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition conditional_not_A_given_B (m : TwoEventModel) : R :=
+   only_B m / p_B m.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition conditional_not_A_given_B (m : TwoEventModel) : R :=
   only_B m / p_B m.
 
 (**
-   [first_marginal_nonnegative] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall m, 0 <= p_A m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [first_marginal_nonnegative] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem first_marginal_nonnegative : forall m, 0 <= p_A
+   m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include Rplus_le_le_0_compat., joint_nonnegative., only_A_nonnegative..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem first_marginal_nonnegative :
   forall m, 0 <= p_A m.
@@ -208,17 +218,19 @@ Proof.
 Qed.
 
 (**
-   [second_marginal_nonnegative] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall m, 0 <= p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   Rplus_le_le_0_compat., joint_nonnegative., only_B_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [second_marginal_nonnegative] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem second_marginal_nonnegative : forall m, 0 <=
+   p_B m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include Rplus_le_le_0_compat., joint_nonnegative., only_B_nonnegative..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem second_marginal_nonnegative :
   forall m, 0 <= p_B m.
@@ -230,17 +242,17 @@ Proof.
 Qed.
 
 (**
-   [union_nonnegative] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, 0 <= p_either m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably p_either.,
-   Rplus_le_le_0_compat., joint_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_nonnegative] (theorem) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_nonnegative : forall m, 0 <= p_either m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include p_either., Rplus_le_le_0_compat., joint_nonnegative..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_nonnegative :
   forall m, 0 <= p_either m.
@@ -254,17 +266,18 @@ Proof.
 Qed.
 
 (**
-   [union_at_most_one] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_either m <= 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably p_either., cells_sum_to_one, neither_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_at_most_one] (theorem) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_at_most_one : forall m, p_either m <= 1.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include p_either., cells_sum_to_one,
+   neither_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_at_most_one :
   forall m, p_either m <= 1.
@@ -276,17 +289,18 @@ Proof.
 Qed.
 
 (**
-   [both_at_most_first] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_both m <= p_A m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably only_A_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [both_at_most_first] (theorem) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem both_at_most_first : forall m, p_both m <= p_A
+   m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include p_both, only_A_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem both_at_most_first :
   forall m, p_both m <= p_A m.
@@ -296,17 +310,19 @@ Proof.
 Qed.
 
 (**
-   [both_at_most_second] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_both m <= p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably only_B_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [both_at_most_second] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem both_at_most_second : forall m, p_both m <= p_B
+   m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include p_both, only_B_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem both_at_most_second :
   forall m, p_both m <= p_B m.
@@ -316,17 +332,19 @@ Proof.
 Qed.
 
 (**
-   [union_at_least_first] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_A m <= p_either m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably only_B_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_at_least_first] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_at_least_first : forall m, p_A m <=
+   p_either m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include only_B_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_at_least_first :
   forall m, p_A m <= p_either m.
@@ -336,17 +354,19 @@ Proof.
 Qed.
 
 (**
-   [union_at_least_second] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_B m <= p_either m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably only_A_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_at_least_second] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_at_least_second : forall m, p_B m <=
+   p_either m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include only_A_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_at_least_second :
   forall m, p_B m <= p_either m.
@@ -357,16 +377,19 @@ Qed.
 
 (* Inclusion-exclusion is exact for arbitrary dependence. *)
 (**
-   [inclusion_exclusion] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall m, p_either m = p_A m + p_B m - p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably p_either.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [inclusion_exclusion] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Expresses a checked identity or bound within the four-cell
+   event algebra, unions and conditionals.
+   Exact checked proposition: Theorem inclusion_exclusion : forall m, p_either m =
+   p_A m + p_B m - p_both m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include p_either.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem inclusion_exclusion :
   forall m, p_either m = p_A m + p_B m - p_both m.
@@ -375,18 +398,19 @@ Proof.
 Qed.
 
 (**
-   [union_bound] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_either m <= p_A m + p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably inclusion_exclusion., p_both.,
-   joint_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_bound] (theorem) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_bound : forall m, p_either m <= p_A m +
+   p_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   inclusion_exclusion., p_both., joint_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_bound :
   forall m, p_either m <= p_A m + p_B m.
@@ -398,17 +422,20 @@ Proof.
 Qed.
 
 (**
-   [frechet_lower_bound] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_A m + p_B m - 1 <= p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably cells_sum_to_one, neither_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [frechet_lower_bound] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem frechet_lower_bound : forall m, p_A m + p_B m -
+   1 <= p_both m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include cells_sum_to_one,
+   neither_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem frechet_lower_bound :
   forall m, p_A m + p_B m - 1 <= p_both m.
@@ -421,17 +448,18 @@ Proof.
 Qed.
 
 (**
-   [overlap_nonnegative] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, 0 <= p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably p_both.,
-   joint_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [overlap_nonnegative] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem overlap_nonnegative : forall m, 0 <= p_both m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include p_both., joint_nonnegative..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem overlap_nonnegative :
   forall m, 0 <= p_both m.
@@ -441,17 +469,18 @@ Proof.
 Qed.
 
 (**
-   [union_complement] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_either m + neither m = 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably p_either.,
-   cells_sum_to_one.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_complement] (theorem) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_complement : forall m, p_either m +
+   neither m = 1.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include p_either., cells_sum_to_one.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_complement :
   forall m, p_either m + neither m = 1.
@@ -461,16 +490,19 @@ Proof.
 Qed.
 
 (**
-   [exactly_one_formula] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall m, p_exactly_one m = p_A m + p_B m - 2 * p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably p_exactly_one.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [exactly_one_formula] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Expresses a checked identity or bound within the four-cell
+   event algebra, unions and conditionals.
+   Exact checked proposition: Theorem exactly_one_formula : forall m, p_exactly_one m
+   = p_A m + p_B m - 2 * p_both m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include p_exactly_one.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem exactly_one_formula :
   forall m, p_exactly_one m = p_A m + p_B m - 2 * p_both m.
@@ -480,16 +512,19 @@ Proof.
 Qed.
 
 (**
-   [exactly_one_vs_union] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_either m = p_exactly_one m + p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably p_either.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [exactly_one_vs_union] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem exactly_one_vs_union : forall m, p_either m =
+   p_exactly_one m + p_both m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include p_either.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem exactly_one_vs_union :
   forall m, p_either m = p_exactly_one m + p_both m.
@@ -498,17 +533,19 @@ Proof.
 Qed.
 
 (**
-   [equal_marginal_union] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_either m = 2 * p - p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [equal_marginal_union] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem equal_marginal_union : forall m p, p_A m = p ->
+   p_B m = p -> p_either m = 2 * p - p_both m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem equal_marginal_union :
   forall m p, p_A m = p -> p_B m = p ->
@@ -520,17 +557,19 @@ Proof.
 Qed.
 
 (**
-   [equal_marginal_exactly_one] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: p_exactly_one m = 2 * (p - p_both m).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   exactly_one_formula.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [equal_marginal_exactly_one] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem equal_marginal_exactly_one : forall m p, p_A m
+   = p -> p_B m = p -> p_exactly_one m = 2 * (p - p_both m).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include exactly_one_formula.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem equal_marginal_exactly_one :
   forall m p, p_A m = p -> p_B m = p ->
@@ -542,17 +581,19 @@ Proof.
 Qed.
 
 (**
-   [conditional_B_numerator] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_A m * conditional_B_given_A m = p_both m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably conditional_B_given_A.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_B_numerator] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_B_numerator : forall m, 0 < p_A m
+   -> p_A m * conditional_B_given_A m = p_both m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include conditional_B_given_A.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_B_numerator :
   forall m, 0 < p_A m ->
@@ -564,17 +605,19 @@ Proof.
 Qed.
 
 (**
-   [conditional_A_numerator] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_B m * conditional_A_given_B m = p_both m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably conditional_A_given_B.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_A_numerator] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_A_numerator : forall m, 0 < p_B m
+   -> p_B m * conditional_A_given_B m = p_both m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include conditional_A_given_B.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_A_numerator :
   forall m, 0 < p_B m ->
@@ -586,17 +629,19 @@ Proof.
 Qed.
 
 (**
-   [conditional_either_numerator] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_either m * conditional_both_given_either m = p_both m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably conditional_both_given_either.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_either_numerator] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_either_numerator : forall m, 0 <
+   p_either m -> p_either m * conditional_both_given_either m = p_both m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include conditional_both_given_either.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_either_numerator :
   forall m, 0 < p_either m ->
@@ -608,18 +653,20 @@ Proof.
 Qed.
 
 (**
-   [both_conditional_denominators_agree] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_A m * conditional_B_given_A m = p_B m *
+   [both_conditional_denominators_agree] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem both_conditional_denominators_agree : forall m,
+   0 < p_A m -> 0 < p_B m -> p_A m * conditional_B_given_A m = p_B m *
    conditional_A_given_B m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, definitional computation; notably
-   conditional_B_numerator, conditional_A_numerator.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include conditional_B_numerator, conditional_A_numerator.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem both_conditional_denominators_agree :
   forall m, 0 < p_A m -> 0 < p_B m ->
@@ -633,18 +680,19 @@ Proof.
 Qed.
 
 (**
-   [conditional_failure_complement] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: conditional_not_A_given_B m + conditional_A_given_B m =
-   1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Lra linear arithmetic, ring/field normalization;
-   notably conditional_not_A_given_B.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_failure_complement] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_failure_complement : forall m, 0 <
+   p_B m -> conditional_not_A_given_B m + conditional_A_given_B m = 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   ring/field normalization; references include conditional_not_A_given_B.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_failure_complement :
   forall m, 0 < p_B m ->
@@ -658,18 +706,21 @@ Proof.
 Qed.
 
 (**
-   [conditional_second_le_one] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: conditional_B_given_A m <= 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, ring/field normalization; notably Rinv_0_lt_compat,
-   conditional_B_given_A, Rmult_le_compat_r..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_second_le_one] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_second_le_one : forall m, 0 < p_A m
+   -> conditional_B_given_A m <= 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include Rinv_0_lt_compat, conditional_B_given_A,
+   Rmult_le_compat_r..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_second_le_one :
   forall m, 0 < p_A m ->
@@ -686,18 +737,21 @@ Proof.
 Qed.
 
 (**
-   [conditional_first_le_one] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: conditional_A_given_B m <= 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, ring/field normalization; notably Rinv_0_lt_compat,
-   conditional_A_given_B, Rmult_le_compat_r..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_first_le_one] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_first_le_one : forall m, 0 < p_B m
+   -> conditional_A_given_B m <= 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include Rinv_0_lt_compat, conditional_A_given_B,
+   Rmult_le_compat_r..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_first_le_one :
   forall m, 0 < p_B m ->
@@ -714,17 +768,19 @@ Proof.
 Qed.
 
 (**
-   [conditional_failure_nonnegative] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: 0 <= conditional_not_A_given_B m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   conditional_not_A_given_B, Rmult_le_pos., only_B_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_failure_nonnegative] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_failure_nonnegative : forall m, 0 <
+   p_B m -> 0 <= conditional_not_A_given_B m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include conditional_not_A_given_B, Rmult_le_pos., only_B_nonnegative..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_failure_nonnegative :
   forall m, 0 < p_B m ->
@@ -737,19 +793,20 @@ Proof.
 Qed.
 
 (**
-   [binary_indicator_covariance_numerator] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall m, p_both m - p_A m * p_B m = joint m * neither m
-   - only_A m * only_B m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, ring/field normalization; notably
-   cells_sum_to_one, Hneither..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [binary_indicator_covariance_numerator] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem binary_indicator_covariance_numerator : forall
+   m, p_both m - p_A m * p_B m = joint m * neither m - only_A m * only_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include cells_sum_to_one, Hneither., p_both.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem binary_indicator_covariance_numerator :
   forall m,
@@ -766,18 +823,20 @@ Proof.
 Qed.
 
 (**
-   [binary_independence_criterion] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: forall m, p_both m = p_A m * p_B m <-> joint m * neither
-   m = only_A m * only_B m.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably binary_indicator_covariance_numerator.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [binary_independence_criterion] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem binary_independence_criterion : forall m,
+   p_both m = p_A m * p_B m <-> joint m * neither m = only_A m * only_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include
+   binary_indicator_covariance_numerator.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem binary_independence_criterion :
   forall m,
@@ -792,17 +851,20 @@ Qed.
 (* Exact incompatibility with the 2.11% union quoted in the old letter,
    assuming the specified 2% and 0.1% marginal frequencies. *)
 (**
-   [original_mixed_union_impossible] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_either m <> 211 / 10000.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably union_bound.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [original_mixed_union_impossible] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem original_mixed_union_impossible : forall m, p_A
+   m = 2 / 100 -> p_B m = 1 / 1000 -> p_either m <> 211 / 10000.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   union_bound.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem original_mixed_union_impossible :
   forall m,
@@ -817,17 +879,20 @@ Proof.
 Qed.
 
 (**
-   [equal_marginal_overlap_from_union] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_both m = 2 * p - u.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [equal_marginal_overlap_from_union] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem equal_marginal_overlap_from_union : forall m p
+   u, p_A m = p -> p_B m = p -> p_either m = u -> p_both m = 2 * p - u.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem equal_marginal_overlap_from_union :
   forall m p u,
@@ -846,36 +911,38 @@ Qed.
 (* Stdlib Nat.iter encodes the independence recurrence without an extra
    recursive function. The closed form remains a theorem, not a definition. *)
 (**
-   [independent_union] (definition).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal construction: (p : R) (n : nat) : R := Nat.iter n (fun u => u + p - u
-   * p) 0.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization; notably independent_union,
-   Nat.iter_succ..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_union] (definition) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Defines independent union using explicit Rocq operations, so
+   later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition independent_union (p : R) (n : nat) : R := Nat.iter
+   n (fun u => u + p - u * p) 0.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition independent_union (p : R) (n : nat) : R :=
   Nat.iter n (fun u => u + p - u * p) 0.
 
 (**
-   [independent_union_formula] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: forall p n, independent_union p n = 1 - (1 - p) ^ n.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization; notably independent_union,
-   Nat.iter_succ..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_union_formula] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_union_formula : forall p n,
+   independent_union p n = 1 - (1 - p) ^ n.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, ring/field normalization, definitional reduction; references include
+   independent_union, Nat.iter_succ..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_union_formula :
   forall p n, independent_union p n = 1 - (1 - p) ^ n.
@@ -888,16 +955,19 @@ Proof.
 Qed.
 
 (**
-   [independent_union_one] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: forall p, independent_union p 1%nat = p.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably independent_union.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_union_one] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_union_one : forall p,
+   independent_union p 1%nat = p.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include independent_union.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_union_one :
   forall p, independent_union p 1%nat = p.
@@ -906,16 +976,19 @@ Proof.
 Qed.
 
 (**
-   [independent_union_two] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: forall p, independent_union p 2%nat = 2 * p - p * p.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably independent_union.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_union_two] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_union_two : forall p,
+   independent_union p 2%nat = 2 * p - p * p.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include independent_union.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_union_two :
   forall p, independent_union p 2%nat = 2 * p - p * p.
@@ -926,16 +999,17 @@ Qed.
 (* Two explicit probability models with equal marginals but different overlap.
    Thus marginal pass rates alone cannot fix the OR eligibility fraction. *)
 (**
-   [identical_half_events] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: TwoEventModel.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: Stdlib Lra linear arithmetic.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [identical_half_events] (definition) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Defines identical half events using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition identical_half_events : TwoEventModel.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Construction checking uses linear real arithmetic (Lra).
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition identical_half_events : TwoEventModel.
 Proof.
@@ -944,16 +1018,17 @@ Proof.
 Defined.
 
 (**
-   [independent_half_events] (definition).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal construction: TwoEventModel.
-   Hypotheses: Requires the normalized nonnegative four-cell record where shown
-   in the statement; all other constraints remain explicit.
-   Implementation: Stdlib Lra linear arithmetic.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_half_events] (definition) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Defines independent half events using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition independent_half_events : TwoEventModel.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Construction checking uses linear real arithmetic (Lra).
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Definition independent_half_events : TwoEventModel.
 Proof.
@@ -962,18 +1037,21 @@ Proof.
 Defined.
 
 (**
-   [same_marginals_different_joint] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: p_A identical_half_events = p_A independent_half_events
-   /\ p_B identical_half_events = p_B independent_half_events /\ p_both
-   identical_half_events <> p_both independent_half_events.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Lra linear arithmetic.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [same_marginals_different_joint] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem same_marginals_different_joint : p_A
+   identical_half_events = p_A independent_half_events /\ p_B identical_half_events =
+   p_B independent_half_events /\ p_both identical_half_events <> p_both
+   independent_half_events.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   definitional reduction.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem same_marginals_different_joint :
   p_A identical_half_events = p_A independent_half_events /\
@@ -986,18 +1064,21 @@ Proof.
 Qed.
 
 (**
-   [same_marginals_different_union] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_A identical_half_events = p_A independent_half_events
-   /\ p_B identical_half_events = p_B independent_half_events /\ p_either
-   identical_half_events <> p_either independent_half_events.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Lra linear arithmetic.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [same_marginals_different_union] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem same_marginals_different_union : p_A
+   identical_half_events = p_A independent_half_events /\ p_B identical_half_events =
+   p_B independent_half_events /\ p_either identical_half_events <> p_either
+   independent_half_events.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra),
+   definitional reduction.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem same_marginals_different_union :
   p_A identical_half_events = p_A independent_half_events /\
@@ -1011,34 +1092,36 @@ Qed.
 
 (* The BASIC grid had 397 nodes on each axis. *)
 (**
-   [grid_node_count] (example).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: (397 * 397)%nat = 157609%nat.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Psatz nonlinear arithmetic, ring/field normalization,
-   definitional computation.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [grid_node_count] (example) — Four-cell event algebra, unions and conditionals.
+   Mathematical meaning: Expresses a checked identity or bound within the four-cell
+   event algebra, unions and conditionals.
+   Exact checked proposition: Example grid_node_count : (397 * 397)%nat = 157609%nat.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses definitional reduction.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Example grid_node_count :
   (397 * 397)%nat = 157609%nat.
 Proof. reflexivity. Qed.
 
 (**
-   [grid_scale_factors_cancel] (theorem).
-   Meaning: Justifies a score conversion or standardization formula by exact
-   real arithmetic.
-   Formal conclusion: (scale * numerator) / (scale * denominator) = numerator /
-   denominator.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: Stdlib Psatz nonlinear arithmetic, ring/field normalization.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [grid_scale_factors_cancel] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Justifies the exact score/reporting-scale transformation
+   under its stated numerical conditions.
+   Exact checked proposition: Theorem grid_scale_factors_cancel : forall scale
+   numerator denominator, 0 < scale -> 0 < denominator -> (scale * numerator) /
+   (scale * denominator) = numerator / denominator.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses polynomial real arithmetic (Psatz),
+   ring/field normalization.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem grid_scale_factors_cancel :
   forall scale numerator denominator,
@@ -1050,16 +1133,18 @@ Proof.
 Qed.
 
 (**
-   [half_point_grid_midpoint_shift] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall cutoff, cutoff - (1/2) / 2 = cutoff - 1/4.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [half_point_grid_midpoint_shift] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Expresses a checked identity or bound within the four-cell
+   event algebra, unions and conditionals.
+   Exact checked proposition: Theorem half_point_grid_midpoint_shift : forall cutoff,
+   cutoff - (1/2) / 2 = cutoff - 1/4.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem half_point_grid_midpoint_shift :
   forall cutoff,
@@ -1077,17 +1162,20 @@ Qed.
    in particular, they do not depend on a bivariate-normal assumption. *)
 
 (**
-   [exactly_one_nonnegative] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall m, 0 <= p_exactly_one m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably p_exactly_one., only_A_nonnegative, only_B_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [exactly_one_nonnegative] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Expresses a checked identity or bound within the four-cell
+   event algebra, unions and conditionals.
+   Exact checked proposition: Theorem exactly_one_nonnegative : forall m, 0 <=
+   p_exactly_one m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include p_exactly_one.,
+   only_A_nonnegative, only_B_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem exactly_one_nonnegative :
   forall m, 0 <= p_exactly_one m.
@@ -1100,17 +1188,19 @@ Proof.
 Qed.
 
 (**
-   [exactly_one_at_most_either] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_exactly_one m <= p_either m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably p_exactly_one, joint_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [exactly_one_at_most_either] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem exactly_one_at_most_either : forall m,
+   p_exactly_one m <= p_either m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include p_exactly_one, joint_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem exactly_one_at_most_either :
   forall m, p_exactly_one m <= p_either m.
@@ -1122,17 +1212,19 @@ Proof.
 Qed.
 
 (**
-   [intersection_at_most_minimum_marginal] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m p, p_A m <= p -> p_B m <= p -> p_both m <= p.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably both_at_most_first.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [intersection_at_most_minimum_marginal] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem intersection_at_most_minimum_marginal : forall
+   m p, p_A m <= p -> p_B m <= p -> p_both m <= p.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include both_at_most_first.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem intersection_at_most_minimum_marginal :
   forall m p, p_A m <= p -> p_B m <= p -> p_both m <= p.
@@ -1143,17 +1235,19 @@ Proof.
 Qed.
 
 (**
-   [union_equal_marginal_lower_bound] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m p, p_A m = p -> p_B m = p -> p <= p_either m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably union_at_least_first.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_equal_marginal_lower_bound] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_equal_marginal_lower_bound : forall m p,
+   p_A m = p -> p_B m = p -> p <= p_either m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include union_at_least_first.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_equal_marginal_lower_bound :
   forall m p, p_A m = p -> p_B m = p -> p <= p_either m.
@@ -1164,17 +1258,19 @@ Proof.
 Qed.
 
 (**
-   [union_equal_marginal_upper_bound] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_either m <= 2 * p.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably union_bound.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [union_equal_marginal_upper_bound] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_equal_marginal_upper_bound : forall m p,
+   p_A m = p -> p_B m = p -> p_either m <= 2 * p.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include union_bound.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem union_equal_marginal_upper_bound :
   forall m p, p_A m = p -> p_B m = p -> p_either m <= 2 * p.
@@ -1185,17 +1281,19 @@ Proof.
 Qed.
 
 (**
-   [disjoint_events_union_is_sum] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_either m = p_A m + p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [disjoint_events_union_is_sum] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem disjoint_events_union_is_sum : forall m, p_both
+   m = 0 -> p_either m = p_A m + p_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem disjoint_events_union_is_sum :
   forall m, p_both m = 0 ->
@@ -1206,17 +1304,19 @@ Proof.
 Qed.
 
 (**
-   [independent_events_union_formula] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_either m = p_A m + p_B m - p_A m * p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, definitional computation; notably
-   inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_events_union_formula] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_events_union_formula : forall m,
+   p_both m = p_A m * p_B m -> p_either m = p_A m + p_B m - p_A m * p_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_events_union_formula :
   forall m, p_both m = p_A m * p_B m ->
@@ -1227,17 +1327,19 @@ Proof.
 Qed.
 
 (**
-   [independent_equal_marginal_union] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_either m = 2 * p - p * p.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_equal_marginal_union] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_equal_marginal_union : forall m p,
+   p_A m = p -> p_B m = p -> p_both m = p * p -> p_either m = 2 * p - p * p.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_equal_marginal_union :
   forall m p,
@@ -1250,17 +1352,20 @@ Proof.
 Qed.
 
 (**
-   [all_first_passers_also_second_union] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_either m = p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [all_first_passers_also_second_union] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem all_first_passers_also_second_union : forall m,
+   p_both m = p_A m -> p_either m = p_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem all_first_passers_also_second_union :
   forall m, p_both m = p_A m -> p_either m = p_B m.
@@ -1271,17 +1376,19 @@ Proof.
 Qed.
 
 (**
-   [excess_marginal_mass_forces_overlap] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, 1 < p_A m + p_B m -> 0 < p_both m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably frechet_lower_bound.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [excess_marginal_mass_forces_overlap] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem excess_marginal_mass_forces_overlap : forall m,
+   1 < p_A m + p_B m -> 0 < p_both m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include frechet_lower_bound.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem excess_marginal_mass_forces_overlap :
   forall m, 1 < p_A m + p_B m -> 0 < p_both m.
@@ -1292,17 +1399,19 @@ Proof.
 Qed.
 
 (**
-   [lower_bound_on_overlap_from_union] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: p_both m = pA + pB - u.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [lower_bound_on_overlap_from_union] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem lower_bound_on_overlap_from_union : forall m pA
+   pB u, p_A m = pA -> p_B m = pB -> p_either m = u -> p_both m = pA + pB - u.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem lower_bound_on_overlap_from_union :
   forall m pA pB u,
@@ -1320,17 +1429,19 @@ Qed.
    admissions tests need not satisfy independence. *)
 
 (**
-   [independent_either_as_complement_product] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_either m = 1 - (1 - p_A m) * (1 - p_B m).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   independent_events_union_formula.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_either_as_complement_product] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_either_as_complement_product :
+   forall m, p_both m = p_A m * p_B m -> p_either m = 1 - (1 - p_A m) * (1 - p_B m).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include independent_events_union_formula.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_either_as_complement_product :
   forall m,
@@ -1343,17 +1454,20 @@ Proof.
 Qed.
 
 (**
-   [independent_equal_marginals_as_complement_square] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_either m = 1 - (1 - p) * (1 - p).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   independent_equal_marginal_union.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_equal_marginals_as_complement_square] (theorem) — Four-cell event
+   algebra, unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem
+   independent_equal_marginals_as_complement_square : forall m p, p_A m = p -> p_B m
+   = p -> p_both m = p * p -> p_either m = 1 - (1 - p) * (1 - p).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include independent_equal_marginal_union.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_equal_marginals_as_complement_square :
   forall m p,
@@ -1367,17 +1481,21 @@ Proof.
 Qed.
 
 (**
-   [independent_conditional_B_equals_marginal] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: conditional_B_given_A m = p_B m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably conditional_B_given_A..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_conditional_B_equals_marginal] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_conditional_B_equals_marginal :
+   forall m, 0 < p_A m -> p_both m = p_A m * p_B m -> conditional_B_given_A m = p_B
+   m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra), ring/field normalization; references include p_both,
+   conditional_B_given_A..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_conditional_B_equals_marginal :
   forall m,
@@ -1393,17 +1511,21 @@ Proof.
 Qed.
 
 (**
-   [independent_conditional_A_equals_marginal] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: conditional_A_given_B m = p_A m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic,
-   ring/field normalization; notably conditional_A_given_B..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_conditional_A_equals_marginal] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_conditional_A_equals_marginal :
+   forall m, 0 < p_B m -> p_both m = p_A m * p_B m -> conditional_A_given_B m = p_A
+   m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra), ring/field normalization; references include p_both,
+   conditional_A_given_B..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_conditional_A_equals_marginal :
   forall m,
@@ -1419,18 +1541,20 @@ Proof.
 Qed.
 
 (**
-   [independent_exactly_one_formula] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: p_exactly_one m = p_A m * (1 - p_B m) + p_B m * (1 - p_A
-   m).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   exactly_one_formula.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [independent_exactly_one_formula] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independent_exactly_one_formula : forall m,
+   p_both m = p_A m * p_B m -> p_exactly_one m = p_A m * (1 - p_B m) + p_B m * (1 -
+   p_A m).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include exactly_one_formula.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independent_exactly_one_formula :
   forall m,
@@ -1444,17 +1568,20 @@ Proof.
 Qed.
 
 (**
-   [disjointness_iff_union_is_sum] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_both m = 0 <-> p_either m = p_A m + p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably disjoint_events_union_is_sum., inclusion_exclusion.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [disjointness_iff_union_is_sum] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem disjointness_iff_union_is_sum : forall m,
+   p_both m = 0 <-> p_either m = p_A m + p_B m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include disjoint_events_union_is_sum.,
+   inclusion_exclusion.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem disjointness_iff_union_is_sum :
   forall m,
@@ -1469,17 +1596,19 @@ Proof.
 Qed.
 
 (**
-   [complete_coverage_iff_no_failures] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall m, p_either m = 1 <-> neither m = 0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably union_complement.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [complete_coverage_iff_no_failures] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Expresses a checked identity or bound within the four-cell
+   event algebra, unions and conditionals.
+   Exact checked proposition: Theorem complete_coverage_iff_no_failures : forall m,
+   p_either m = 1 <-> neither m = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include union_complement.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem complete_coverage_iff_no_failures :
   forall m,
@@ -1491,17 +1620,19 @@ Proof.
 Qed.
 
 (**
-   [equal_marginals_overlap_lower_bound] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: 2 * p - 1 <= p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably frechet_lower_bound.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [equal_marginals_overlap_lower_bound] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem equal_marginals_overlap_lower_bound : forall m
+   p, p_A m = p -> p_B m = p -> 2 * p - 1 <= p_both m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include frechet_lower_bound.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem equal_marginals_overlap_lower_bound :
   forall m p,
@@ -1514,17 +1645,20 @@ Proof.
 Qed.
 
 (**
-   [zero_first_marginal_forces_zero_overlap] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_A m = 0 -> p_both m = 0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably overlap_nonnegative, both_at_most_first.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [zero_first_marginal_forces_zero_overlap] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem zero_first_marginal_forces_zero_overlap :
+   forall m, p_A m = 0 -> p_both m = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include overlap_nonnegative,
+   both_at_most_first.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem zero_first_marginal_forces_zero_overlap :
   forall m,
@@ -1537,17 +1671,20 @@ Proof.
 Qed.
 
 (**
-   [zero_second_marginal_forces_zero_overlap] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_B m = 0 -> p_both m = 0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably overlap_nonnegative, both_at_most_second.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [zero_second_marginal_forces_zero_overlap] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem zero_second_marginal_forces_zero_overlap :
+   forall m, p_B m = 0 -> p_both m = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include overlap_nonnegative,
+   both_at_most_second.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem zero_second_marginal_forces_zero_overlap :
   forall m,
@@ -1566,17 +1703,19 @@ Qed.
    finite-cell nonnegativity is explicit in TwoEventModel. *)
 
 (**
-   [conditional_B_given_A_nonnegative] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: 0 <= conditional_B_given_A m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   conditional_B_given_A, Rmult_le_pos., overlap_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_B_given_A_nonnegative] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_B_given_A_nonnegative : forall m, 0
+   < p_A m -> 0 <= conditional_B_given_A m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include conditional_B_given_A, Rmult_le_pos., overlap_nonnegative..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_B_given_A_nonnegative :
   forall m, 0 < p_A m ->
@@ -1590,17 +1729,19 @@ Proof.
 Qed.
 
 (**
-   [conditional_A_given_B_nonnegative] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: 0 <= conditional_A_given_B m.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   conditional_A_given_B, Rmult_le_pos., overlap_nonnegative..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_A_given_B_nonnegative] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_A_given_B_nonnegative : forall m, 0
+   < p_B m -> 0 <= conditional_A_given_B m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include conditional_A_given_B, Rmult_le_pos., overlap_nonnegative..
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_A_given_B_nonnegative :
   forall m, 0 < p_B m ->
@@ -1614,18 +1755,20 @@ Proof.
 Qed.
 
 (**
-   [conditional_B_given_A_unit_interval] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: 0 <= conditional_B_given_A m /\ conditional_B_given_A m
-   <= 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   conditional_B_given_A_nonnegative, Hpositive., conditional_second_le_one.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_B_given_A_unit_interval] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_B_given_A_unit_interval : forall m,
+   0 < p_A m -> 0 <= conditional_B_given_A m /\ conditional_B_given_A m <= 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include conditional_B_given_A_nonnegative, Hpositive.,
+   conditional_second_le_one.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_B_given_A_unit_interval :
   forall m, 0 < p_A m ->
@@ -1639,18 +1782,20 @@ Proof.
 Qed.
 
 (**
-   [conditional_A_given_B_unit_interval] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: 0 <= conditional_A_given_B m /\ conditional_A_given_B m
-   <= 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   conditional_A_given_B_nonnegative, Hpositive., conditional_first_le_one.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [conditional_A_given_B_unit_interval] (theorem) — Four-cell event algebra, unions
+   and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_A_given_B_unit_interval : forall m,
+   0 < p_B m -> 0 <= conditional_A_given_B m /\ conditional_A_given_B m <= 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include conditional_A_given_B_nonnegative, Hpositive.,
+   conditional_first_le_one.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_A_given_B_unit_interval :
   forall m, 0 < p_B m ->
@@ -1665,18 +1810,20 @@ Qed.
 
 
 (**
-   [overlap_at_most_either] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, p_both m <= p_either m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably exactly_one_vs_union.,
-   exactly_one_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   [overlap_at_most_either] (theorem) — Four-cell event algebra, unions and
+   conditionals.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem overlap_at_most_either : forall m, p_both m <=
+   p_either m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   exactly_one_vs_union., exactly_one_nonnegative.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem overlap_at_most_either :
   forall m, p_both m <= p_either m.
@@ -1688,19 +1835,22 @@ Proof.
 Qed.
 
 (**
-   [conditional_both_given_either_unit_interval] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: 0 <= conditional_both_given_either m /\
+   [conditional_both_given_either_unit_interval] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_both_given_either_unit_interval :
+   forall m, 0 < p_either m -> 0 <= conditional_both_given_either m /\
    conditional_both_given_either m <= 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, ring/field normalization; notably Hpositive.,
-   conditional_both_given_either, Rmult_le_pos..
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include Rlt_le, Hpositive.,
+   conditional_both_given_either.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_both_given_either_unit_interval :
   forall m, 0 < p_either m ->
@@ -1723,19 +1873,21 @@ Proof.
 Qed.
 
 (**
-   [conditional_not_A_given_B_unit_interval] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: 0 <= conditional_not_A_given_B m /\
+   [conditional_not_A_given_B_unit_interval] (theorem) — Four-cell event algebra,
+   unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem conditional_not_A_given_B_unit_interval :
+   forall m, 0 < p_B m -> 0 <= conditional_not_A_given_B m /\
    conditional_not_A_given_B m <= 1.
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably conditional_failure_complement,
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include conditional_failure_complement,
    conditional_A_given_B_nonnegative, conditional_failure_nonnegative.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem conditional_not_A_given_B_unit_interval :
   forall m, 0 < p_B m ->
@@ -1757,19 +1909,21 @@ Qed.
    conditional numerators rather than manipulate divisions again. *)
 
 (**
-   [independence_iff_conditional_B_equals_marginal] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: (p_both m = p_A m * p_B m <-> conditional_B_given_A m =
+   [independence_iff_conditional_B_equals_marginal] (theorem) — Four-cell event
+   algebra, unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independence_iff_conditional_B_equals_marginal
+   : forall m, 0 < p_A m -> (p_both m = p_A m * p_B m <-> conditional_B_given_A m =
    p_B m).
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably independent_conditional_B_equals_marginal, Hpositive.,
-   conditional_B_numerator.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   independent_conditional_B_equals_marginal, Hpositive., conditional_B_numerator.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independence_iff_conditional_B_equals_marginal :
   forall m,
@@ -1787,19 +1941,21 @@ Proof.
 Qed.
 
 (**
-   [independence_iff_conditional_A_equals_marginal] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: (p_both m = p_A m * p_B m <-> conditional_A_given_B m =
+   [independence_iff_conditional_A_equals_marginal] (theorem) — Four-cell event
+   algebra, unions and conditionals.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem independence_iff_conditional_A_equals_marginal
+   : forall m, 0 < p_B m -> (p_both m = p_A m * p_B m <-> conditional_A_given_B m =
    p_A m).
-   Hypotheses: Requires explicit nonzero/strict-positive denominator or scale
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably independent_conditional_A_equals_marginal, Hpositive.,
-   conditional_A_numerator.
-   Library discipline: Stdlib.Reals, Lra, Psatz and PeanoNat.
-   Scope: Results are exact finite event algebra, not Gaussian admission models
-   or estimates from empirical samples.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   independent_conditional_A_equals_marginal, Hpositive., conditional_A_numerator.
+   Library reuse: Stdlib.Reals, Lra, Psatz and PeanoNat.
+   Boundary: The four cells are explicitly nonnegative and sum to one; independence
+   or empirical Gaussianity is never inferred.
  *)
 Theorem independence_iff_conditional_A_equals_marginal :
   forall m,
