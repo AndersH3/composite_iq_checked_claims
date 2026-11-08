@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **416 theorem, lemma and example declarations** in seven
+for the two reports. **418 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1115,8 +1115,28 @@ using Stdlib.List.in_map_iff and the existing coordinate-level
 nullity result. No new matrix product or rank implementation
 is needed.
 
-**Current totals: 416 public claims, 419 proof scripts,
+**Earlier totals: 416 public claims, 419 proof scripts,
 474 fully documented named declarations** in seven Rocq files.
+
+## Matrix-row positive-definiteness equivalence and comment audit
+
+Two additional theorems identify strict positive covariance
+quadratic curvature with a nonzero dot product against at least
+one covariance matrix row, expressed constructively as the
+negation of zero for all rows, and identify positive definiteness
+with the absence of nonzero vectors in the row-dot kernel.
+They reuse the rowwise nullity iff and checked positive
+semidefiniteness rather than implementing matrix operations.
+
+Detailed declaration comments were rewritten on the six core
+dependencies vector_dot, basis_covariance_matrix,
+basis_cross_covariance_matrix, covariance_row_as_vector_dot,
+basis_of_combine, and fixed_basis_covariance_matrix_positive_semidefinite,
+including exact truncation/length/weight assumptions and the
+actual Stdlib/FiniteSum proof dependencies.
+
+**Current counts: 418 public claims, 421 proof scripts and
+476 documented named declarations** across seven Rocq modules.
 
 ## Research extensions
 

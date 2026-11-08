@@ -2522,19 +2522,13 @@ Section FiniteProbabilityMoments.
   (* List.combine gives the library's standard zip/truncate semantics;
      map and fold_right perform the inner product without bespoke recursion. *)
   (**
-   [vector_dot] (definition) — Finite weighted score expectations, variances and
-   covariance matrices.
-   Mathematical meaning: Defines vector dot using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
-   Exact declaration: Definition vector_dot (xs ys : list R) : R :=
-   FiniteSum.finite_sum (fun p => fst p * snd p) (combine xs ys).
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
+   [vector_dot] (definition) — Finite coefficient dot product.
+   Mathematical meaning: Multiply aligned entries of two real coefficient lists and sum those products. The shared List.combine operation pairs corresponding entries in their original order.
+   Exact declaration: vector_dot xs ys := FiniteSum.finite_sum (fun p => fst p * snd p) (combine xs ys).
+   Premises and side conditions: No vector-length equality is required by the definition. If the lengths differ, Stdlib.List.combine truncates to the shorter list; all theorems interpreting a full matrix row impose matching dimensions where necessary. All entries may be signed.
+   Proof/definition method: This is a transparent alias of the shared generic real finite sum over Stdlib.List.combine, not a custom recursive dot product or matrix operation.
+   Library reuse: Stdlib.List.combine and FiniteSum.finite_sum.
+   Boundary: Defines a finite real-list operation, not a general finite-dimensional vector space or a norm.
    *)
   Definition vector_dot (xs ys : list R) : R :=
     FiniteSum.finite_sum
@@ -2621,20 +2615,13 @@ Section FiniteProbabilityMoments.
     matrix_bilinear_form coeffs coeffs matrix.
 
   (**
-   [covariance_row_as_vector_dot] (lemma) — Finite weighted score expectations,
-   variances and covariance matrices.
-   Mathematical meaning: Derives a covariance identity or inequality from finite
-   weighted expectations.
-   Exact checked proposition: Lemma covariance_row_as_vector_dot : forall f
-   components, vector_dot (map fst components) (map (fun c => covariance f (snd c))
-   components) = covariance_row f components.
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Use FiniteSum.finite_sum_zip_map to eliminate the
-   aligned List.combine of two List.map projections; then extensionality.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
+   [covariance_row_as_vector_dot] (lemma) — Reuse the shared dot product for a weighted covariance row.
+   Mathematical meaning: The finite sum of component coefficients times their covariance with a comparison score equals the dot product between the coefficient projection and covariance projection of the same component list.
+   Exact checked proposition: forall f components, vector_dot (map fst components) (map (fun c => covariance f (snd c)) components) = covariance_row f components.
+   Premises and side conditions: Both vectors are derived from the same component list, so lengths agree automatically even for an empty list. Coefficients, covariances, and outcome weights may all be signed; normalization is unnecessary.
+   Proof/definition method: Unfold vector_dot and covariance_row, apply FiniteSum.finite_sum_zip_map to collapse Stdlib.List.combine of two matching maps, and finish by finite_sum_ext.
+   Library reuse: FiniteSum.finite_sum_zip_map, FiniteSum.finite_sum_ext, Stdlib.List.map/combine.
+   Boundary: Exact finite algebra only; not a claim about generic matrices or empirical covariance estimates.
    *)
   Lemma covariance_row_as_vector_dot :
     forall f components,
@@ -3575,39 +3562,26 @@ Section FiniteProbabilityMoments.
     linear_combination (combine coefficients basis) x.
 
   (**
-   [basis_covariance_matrix] (definition) — Finite weighted score expectations,
-   variances and covariance matrices.
-   Mathematical meaning: Defines basis covariance matrix using explicit Rocq
-   operations, so later theorems can refer to one stable mathematical object.
-   Exact declaration: Definition basis_covariance_matrix (basis : list (Outcome ->
-   R)) : list (list R) := map (fun f => map (fun g => covariance f g) basis) basis.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
+   [basis_covariance_matrix] (definition) — Covariance matrix of a finite score basis.
+   Mathematical meaning: For basis = [f1,...,fn], construct the n-by-n list of lists whose row i and column j contains covariance fi fj. All basis occurrences, including duplicates, retain their position.
+   Exact declaration: basis_covariance_matrix basis := map (fun f => map (fun g => covariance f g) basis) basis.
+   Premises and side conditions: The definition works with empty or repeated bases and signed, unnormalized sample weights; nonnegative unit-mass hypotheses are required only in positivity and probability theorems.
+   Proof/definition method: Uses two levels of Stdlib.List.map, with scalar covariance supplied by the existing finite expectation model; no recursive matrix builder, indexing routine or copied sum is introduced.
+   Library reuse: Stdlib.List.map, FiniteMoments.covariance, FiniteSum.finite_sum.
+   Boundary: This constructs a square finite list-of-lists matrix and does not assert positive definiteness, eigenvalues or observed IQ covariance.
    *)
   Definition basis_covariance_matrix
     (basis : list (Outcome -> R)) : list (list R) :=
     map (fun f => map (fun g => covariance f g) basis) basis.
 
   (**
-   [basis_cross_covariance_matrix] (definition) — Finite weighted score expectations,
-   variances and covariance matrices.
-   Mathematical meaning: Defines basis cross covariance matrix using explicit Rocq
-   operations, so later theorems can refer to one stable mathematical object.
-   Exact declaration: Definition basis_cross_covariance_matrix (left right : list
-   (Outcome -> R)) : list (list R) := map (fun f => map (fun g => covariance f g)
-   right) left.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
+   [basis_cross_covariance_matrix] (definition) — Rectangular covariance between two score lists.
+   Mathematical meaning: Build one covariance row for every score in left, with a column for each score in right; the resulting matrix has length left rows and length right entries per row.
+   Exact declaration: basis_cross_covariance_matrix left right := map (fun f => map (fun g => covariance f g) right) left.
+   Premises and side conditions: Lists can differ in length and may be empty or repeat scores. No weight sign or total-mass condition is necessary to construct the list; statistical positivity assumptions belong to individual theorems.
+   Proof/definition method: Compose existing scalar covariance with nested Stdlib.List.map; the square basis_covariance_matrix is definitionally the equal-left-and-right case.
+   Library reuse: Stdlib.List.map, FiniteMoments.covariance and shared FiniteSum.
+   Boundary: A finite rectangular covariance representation, not a generic matrix transpose, multiplication or rank API.
    *)
   Definition basis_cross_covariance_matrix
     (left right : list (Outcome -> R)) : list (list R) :=
@@ -3692,21 +3666,13 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [basis_of_combine] (lemma) — Finite weighted score expectations, variances and
-   covariance matrices.
-   Mathematical meaning: Proves a list-structural invariant without custom sorting or
-   indexing.
-   Exact checked proposition: Lemma basis_of_combine : forall (coefficients : list R)
-   (basis : list (Outcome -> R)), length coefficients = length basis -> map snd
-   (combine coefficients basis) = basis.
-   Premises and side conditions: The displayed hypotheses include dimension/length
-   compatibility where required. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas; references include combine_split,
-   split_as_projection_maps, f_equal.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
+   [basis_of_combine] (lemma) — Standard-library projection of paired coefficient and basis lists.
+   Mathematical meaning: Combining equally long coefficient and score-basis lists and selecting each pair's second component recovers the original basis with the same ordering and multiplicity.
+   Exact checked proposition: forall coefficients basis, length coefficients=length basis -> map snd (combine coefficients basis)=basis.
+   Premises and side conditions: Length equality is required because Stdlib.List.combine otherwise truncates. No assumption on the numerical coefficients or score functions is made.
+   Proof/definition method: Apply the already-checked combine_split inverse of List.combine, rewrite split_as_projection_maps and use f_equal snd to select the second list; no additional list induction is introduced.
+   Library reuse: Stdlib.List.combine_split, split_as_projection_maps and f_equal.
+   Boundary: A list-structural identity used to bridge covariance rows, not an arbitrary matrix-indexing result.
    *)
   Lemma basis_of_combine :
     forall (coefficients : list R) (basis : list (Outcome -> R)),
@@ -3855,24 +3821,13 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [fixed_basis_covariance_matrix_positive_semidefinite] (theorem) — Finite weighted
-   score expectations, variances and covariance matrices.
-   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
-   quadratic-form expression.
-   Exact checked proposition: Theorem
-   fixed_basis_covariance_matrix_positive_semidefinite : forall basis coefficients,
-   length coefficients = length basis -> total_mass = 1 -> (forall x, In x samples ->
-   0 <= weight x) -> 0 <= matrix_quadratic_form coefficients (basis_covariance_matrix
-   basis).
-   Premises and side conditions: The displayed hypotheses include unit total sample
-   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
-   conditions; dimension/length compatibility where required; sample or list
-   membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas; references include variance_nonnegative.
-   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
-   Boundary: Exact finite outcome weights and list score bases, not continuous random
-   variables or empirical IQ covariance.
+   [fixed_basis_covariance_matrix_positive_semidefinite] (theorem) — Nonnegative finite covariance quadratic forms.
+   Mathematical meaning: For a normalized nonnegative weighted sample, every compatible real coefficient list has a nonnegative quadratic form against the covariance matrix of the chosen score basis.
+   Exact checked proposition: forall basis coefficients, length coefficients=length basis -> total_mass=1 -> (forall x, In x samples -> 0<=weight x) -> 0<=matrix_quadratic_form coefficients (basis_covariance_matrix basis).
+   Premises and side conditions: Coefficients and basis lengths must match. Sample weights sum to one and are individually nonnegative on enumerated outcomes. The result permits zero variance, repeated scores, and singular covariance matrices.
+   Proof/definition method: Rewrite the matrix quadratic form as the variance of weighted_basis_sum using fixed_basis_weighted_variance_identity, then directly apply the prior variance_nonnegative theorem.
+   Library reuse: fixed_basis_weighted_variance_identity, variance_nonnegative, FiniteSum and Stdlib.List.
+   Boundary: Positive semidefiniteness does not imply positive definiteness; it supplies no numerical eigenvalue bounds or general rank statements.
    *)
   Theorem fixed_basis_covariance_matrix_positive_semidefinite :
     forall basis coefficients,
@@ -5675,6 +5630,83 @@ Section FiniteProbabilityMoments.
       split.
       + reflexivity.
       + exact Hg.
+  Qed.
+
+  (**
+   [fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot] (theorem) — Positive finite covariance matrix row criteria.
+   Mathematical meaning: Strict positivity of a compatible finite covariance quadratic form is equivalent to the coefficient vector not being orthogonal to every row of its actual list-of-lists covariance matrix.
+   Exact checked proposition: Under coefficient/basis length equality, unit sample mass and nonnegative sampled weights, 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis) iff not(forall row in basis_covariance_matrix basis, vector_dot coefficients row=0).
+   Premises and side conditions: No nonzero-vector assumption is needed: the statement applies to each compatible coefficient vector, including zero. The sample can contain repeated or zero-weight outcomes, and matrix rows can duplicate scores.
+   Proof/definition method: Combine fixed_basis_covariance_matrix_positive_semidefinite with fixed_basis_null_iff_zero_dot_with_every_covariance_row. In the forward direction, a zero-dot property contradicts strict positivity; in the reverse, Rle_dec and Lra show a nonnegative but nonpositive quadratic value must vanish, contradicting the rowwise negation.
+   Library reuse: fixed_basis_covariance_matrix_positive_semidefinite, fixed_basis_null_iff_zero_dot_with_every_covariance_row, Stdlib.Reals.Rle_dec and Stdlib.Lra.
+   Boundary: An exact finite rowwise criterion, not a numerical spectral gap, determinant or general matrix-rank computation.
+   *)
+  Theorem fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) <->
+       ~ (forall row, In row (basis_covariance_matrix basis) ->
+            vector_dot coefficients row = 0)).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    pose proof (fixed_basis_covariance_matrix_positive_semidefinite
+      basis coefficients Hlength Hmass Hw) as Hnonnegative.
+    pose proof (fixed_basis_null_iff_zero_dot_with_every_covariance_row
+      coefficients basis Hlength Hmass Hw) as Hnull_iff.
+    split.
+    - intros Hpositive Hall.
+      pose proof (proj2 Hnull_iff Hall) as Hzero.
+      lra.
+    - intro Hnot_all.
+      destruct (Rle_dec
+        (matrix_quadratic_form coefficients
+          (basis_covariance_matrix basis)) 0) as [Hle | Hgt].
+      + assert (Hzero :
+          matrix_quadratic_form coefficients
+            (basis_covariance_matrix basis) = 0) by lra.
+        exfalso.
+        apply Hnot_all.
+        apply (proj1 Hnull_iff); exact Hzero.
+      + lra.
+  Qed.
+
+  (**
+   [fixed_basis_positive_definite_iff_no_nonzero_covariance_row_kernel] (theorem) — Positive finite covariance matrix row criteria.
+   Mathematical meaning: A finite covariance matrix is positive definite exactly when no nonzero coefficient vector of the appropriate length is orthogonal to all rows of that matrix, expressed using its existing list-based dot product.
+   Exact checked proposition: For normalized nonnegative finite weights and any basis, forall coefficients of length equal to basis different from repeat 0 (length basis), matrix_quadratic_form coefficients (basis_covariance_matrix basis) is positive iff every such vector fails to have vector_dot coefficients row=0 for all matrix rows.
+   Premises and side conditions: Compatibility and nonzero vectors are explicit, with zero represented by Stdlib.List.repeat. Nonnegative weights and total_mass=1 are assumed; a basis need not be linearly independent for the equivalence to hold as a conditional proposition.
+   Proof/definition method: Fix an arbitrary nonzero compatible coefficient list in both directions of the iff and apply the rowwise fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot equivalence directly, without computing a nullspace or adding another matrix operation.
+   Library reuse: fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot, Stdlib.List.repeat/length and the shared finite covariance matrix definitions.
+   Boundary: This proves logical equivalence of positive definiteness and a trivial matrix-row kernel in this finite representation; it does not provide a rank, eigenvalue or kernel-basis algorithm.
+   *)
+  Theorem fixed_basis_positive_definite_iff_no_nonzero_covariance_row_kernel :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall coefficients,
+          length coefficients = length basis ->
+          coefficients <> repeat 0 (length basis) ->
+          0 < matrix_quadratic_form coefficients
+            (basis_covariance_matrix basis)) <->
+       (forall coefficients,
+          length coefficients = length basis ->
+          coefficients <> repeat 0 (length basis) ->
+          ~ (forall row, In row (basis_covariance_matrix basis) ->
+               vector_dot coefficients row = 0))).
+  Proof.
+    intros basis Hmass Hw.
+    split; intros Hproperty coefficients Hlength Hnonzero.
+    - apply (proj1
+        (fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot
+          coefficients basis Hlength Hmass Hw)).
+      apply Hproperty; assumption.
+    - apply (proj2
+        (fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot
+          coefficients basis Hlength Hmass Hw)).
+      apply Hproperty; assumption.
   Qed.
 
 End FiniteProbabilityMoments.

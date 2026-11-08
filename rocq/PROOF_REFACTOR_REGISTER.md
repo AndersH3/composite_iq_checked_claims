@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 416 public theorem/lemma/example declarations,
+The current branch has 418 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**419 proof scripts**, including the generic
+**421 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -342,6 +342,22 @@ list-of-lists covariance-matrix row to its originating basis score.
 No rank, determinant, matrix multiplication, eigenvector or
 nullspace-basis implementation is added.
 
+### Strict covariance row conditions and precision audit
+
+Two results apply existing covariance positive semidefiniteness and
+rowwise quadratic-null iff to characterize strictly positive
+quadratic values as failure of all-zero covariance row dot
+products, then positive definiteness as the absence of a nonzero
+compatible vector in that row-dot kernel. Only Stdlib.List.repeat,
+Stdlib.Reals.Rle_dec and Lra are needed beyond previous lemmas.
+Separately, the comments on vector_dot, basis_covariance_matrix,
+basis_cross_covariance_matrix, covariance_row_as_vector_dot,
+basis_of_combine and fixed_basis_covariance_matrix_positive_semidefinite
+now explicitly explain their list-shape behavior, normalization
+and sign assumptions, exact checked statements, the reused list
+algebra, and why the positive-semidefinite and positive-definite
+notions must not be conflated.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -617,7 +633,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 159 proof scripts
+## FiniteMoments.v — 161 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -780,6 +796,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_positive_definite_iff_no_nonzero_basis_orthogonal_direction` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis, Stdlib.List.repeat | **New:** positive definite iff no nonzero vector is covariance-orthogonal to the finite basis |
 | `covariance_with_weighted_basis_as_row_dot` (theorem) | Weighted covariance row rewriting, Stdlib list-map fusion | covariance_of_general_weighted_second_unconditional, covariance_row_as_vector_dot, coefficients_of_combine, basis_of_combine, Stdlib.List.map_map | **New:** covariance with a composite score equals a coefficient-dot-covariance-row |
 | `fixed_basis_null_iff_zero_dot_with_every_covariance_row` (theorem) | Iff projection, Stdlib.List.in_map_iff, covariance symmetry | fixed_basis_null_iff_uncorrelated_with_basis, covariance_with_weighted_basis_as_row_dot, Stdlib.List.in_map_iff | **New:** zero covariance quadratic iff every actual matrix row is orthogonal to coefficients |
+| `fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot` (theorem) | Iff splitting, real-order comparison, Lra | fixed_basis_covariance_matrix_positive_semidefinite, fixed_basis_null_iff_zero_dot_with_every_covariance_row, Stdlib.Rle_dec | **New:** strictly positive covariance quadratic iff not orthogonal to every row |
+| `fixed_basis_positive_definite_iff_no_nonzero_covariance_row_kernel` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot, Stdlib.List.repeat | **New:** covariance positive definiteness iff row-dot kernel contains no nonzero compatible list |
 
 ## FiniteBridge.v — 16 proof scripts
 

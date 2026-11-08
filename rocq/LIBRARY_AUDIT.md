@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 416 public theorem/lemma/example
+**Current audited inventory:** 418 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **419 proof scripts**. There are **474 named
+constructors, for **421 proof scripts**. There are **476 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -887,6 +887,21 @@ using Stdlib.List.in_map_iff and the previously checked
 basis-coordinate nullity theorem. No custom nullspace basis,
 matrix multiply, determinant or rank algorithm was introduced.
 The audit now covers 416 claims, 419 scripts, 474 declarations.
+
+## Rowwise strict covariance positivity and precise core comments
+
+The row-dot nullity equivalence combines with finite covariance
+positive semidefiniteness to characterize strict quadratic
+positivity and, consequently, positive definiteness by the
+absence of nonzero compatible row-dot kernel vectors. No
+additional matrix multiplication, rank, determinant or list
+fold is constructed. Six foundational matrix and list-bridge
+declarations were documented afresh with their exact list
+truncation, finite weight, dimensionality, and reuse conditions:
+vector_dot, basis_covariance_matrix, basis_cross_covariance_matrix,
+covariance_row_as_vector_dot, basis_of_combine, and the
+fixed-basis PSD theorem. Inventory: 418 public claims, 421
+proof scripts and 476 fully documented declarations.
 
 ## Deliberately retained project-specific definitions
 
