@@ -37,6 +37,14 @@ header_fields = (
 issues = []
 total = 0
 theorems = 0
+total_scripts = 0
+refactor_register = Path("rocq/PROOF_REFACTOR_REGISTER.md").read_text(encoding="utf-8")
+proof_decl = re.compile(
+    r"^[ \\t]*(?:(?:Local|Global)\\s+)?"
+    r"(?:Theorem|Lemma|Example|Definition|Fixpoint|Record)\\s+"
+    r"([A-Za-z_][\\w']*)",
+    re.MULTILINE,
+)
 
 for module in modules:
     path = Path("rocq") / (module + ".v")
@@ -78,13 +86,48 @@ for module in modules:
                 issues.append(f"{path}:{line}: {name} missing {field}")
     if not module_decls:
         issues.append(f"{path}: no declarations identified")
-    print(f"{path}: {module_decls} declarations; {module_proofs} proofs")
+
+    # The review register must account for every proof block, including
+    # the two four-cell record constructors using Proof/Defined.
+    code = re.sub(r"\\(\\*[\\s\\S]*?\\*\\)", "", source)
+    declarations = list(proof_decl.finditer(code))
+    expected = []
+    for block in re.finditer(r"\\bProof\\.", code):
+        preceding = [item for item in declarations if item.start() < block.start()]
+        if not preceding:
+            issues.append(f"{path}: proof block without named declaration")
+            continue
+        expected.append(preceding[-1].group(1))
+
+    section_match = re.search(
+        r"^## " + re.escape(module) + r"\\.v — [0-9]+ proof scripts$",
+        refactor_register,
+        re.MULTILINE,
+    )
+    if section_match is None:
+        issues.append(f"{path}: missing proof-by-proof review section")
+    else:
+        section_tail = refactor_register[section_match.end():]
+        next_heading = re.search(r"^## ", section_tail, re.MULTILINE)
+        section = section_tail[:next_heading.start()] if next_heading else section_tail
+        recorded = re.findall(r"^\\| \`([A-Za-z_][\\w']*)\` \\(", section, re.MULTILINE)
+        if recorded != expected:
+            issues.append(
+                f"{path}: proof-refactor register differs "
+                f"({len(recorded)} recorded, {len(expected)} in source)"
+            )
+    total_scripts += len(expected)
+    print(
+        f"{path}: {module_decls} declarations; {module_proofs} theorem proofs; "
+        f"{len(expected)} registered proof scripts"
+    )
 
 if issues:
     print("\n".join(issues), file=sys.stderr)
     sys.exit(1)
 print(
     f"Documented all {total} declarations and {theorems} proofs "
-    "(including local helper lemmas) in seven Rocq files."
+    f"(including local helper lemmas), and audited all {total_scripts} "
+    "Proof./Qed. or Proof./Defined. scripts in seven Rocq files."
 )
 PY
