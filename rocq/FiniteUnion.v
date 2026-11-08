@@ -314,6 +314,37 @@ Section FiniteOutcomeSpace.
     lra.
   Qed.
 
+  (* A Boolean event restricts the sample list using the standard
+     List.filter operation. This equivalence is valid for arbitrary real
+     weights; normalization and positivity are not needed for equality. *)
+  Theorem finite_prob_as_filtered_mass :
+    forall weights samples e,
+      finite_prob weights samples e =
+        FiniteSum.finite_sum weights (filter e samples).
+  Proof.
+    intros weights samples e.
+    unfold finite_prob, finite_sum.
+    rewrite FiniteSum.finite_sum_filter.
+    apply FiniteSum.finite_sum_ext; intro x.
+    destruct (e x); unfold indicator; simpl; ring.
+  Qed.
+
+  (* Two event predicates only need to agree on enumerated outcomes.
+     Their values outside the finite sample have no bearing on mass. *)
+  Theorem finite_prob_event_ext_on_samples :
+    forall weights samples e f,
+      (forall x, In x samples -> e x = f x) ->
+      finite_prob weights samples e =
+        finite_prob weights samples f.
+  Proof.
+    intros weights samples e f Heq.
+    unfold finite_prob, finite_sum.
+    apply FiniteSum.finite_sum_ext_in.
+    intros x Hin.
+    rewrite (Heq x Hin).
+    reflexivity.
+  Qed.
+
   Theorem finite_prob_sample_append :
     forall weights left right e,
       finite_prob weights (left ++ right) e =
