@@ -332,9 +332,8 @@ Qed.
    finite_sum g xs.
    Premises and side conditions: The displayed hypotheses include sample or list
    membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses structural induction, reuse of
-   previously established lemmas, linear real arithmetic (Lra), definitional
-   reduction; references include finite_sum.
+   Proof/definition method: Establish nonnegativity of the pointwise difference
+   using finite_sum_nonnegative; rewrite with finite_sum_sub and finish by Lra.
    Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
    Sorting.Permutation and Reals.
    Boundary: An arbitrary finite list and real integrand; this is not a continuous
@@ -390,9 +389,8 @@ Qed.
    A), finite_sum (fun _ => 0) xs = 0.
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses structural induction, rewriting of
-   equalities, ring/field normalization, definitional reduction; references include
-   finite_sum.
+   Proof/definition method: Instantiate the shared finite_sum_const identity
+   at zero; finish by Rocq's standard ring normalization, no list induction.
    Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
    Sorting.Permutation and Reals.
    Boundary: An arbitrary finite list and real integrand; this is not a continuous
