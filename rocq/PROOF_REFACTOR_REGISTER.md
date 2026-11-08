@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 344 public theorem/lemma/example declarations,
+The current branch has 347 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**347 proof scripts**, including the generic
+**350 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -80,6 +80,18 @@ The existing mass-normalized versions retain **unchanged statements**
 and now apply the stronger results directly. No additional induction
 or external distribution/matrix library is introduced; a signed
 real-weighted list expression is **not** automatically a probability.
+
+### Unconditional matrix and variance identities
+
+Three new covariance-matrix results reuse the unconditional composite
+variance/covariance identities: cross-matrix bilinear representation,
+cross-matrix swap symmetry, and self-covariance quadratic-form equality.
+All three older mass-normalized theorems now delegate to these results
+while retaining their original theorem propositions. The resulting
+representations are real-weighted finite algebra; positive
+semidefiniteness still requires nonnegative normalized sample weights.
+No additional structural induction, custom matrix library, or axiom
+is introduced.
 
 ### Current structural-induction inventory
 
@@ -342,7 +354,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_intersection_at_most_second` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 
-## FiniteMoments.v — 110 proof scripts
+## FiniteMoments.v — 113 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -413,9 +425,12 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `covariance_row_as_vector_dot` (lemma) | Lemma application, Rewriting, Computation | Shared finite sums | **Rewritten**: duplicated list induction removed |
 | `covariance_double_sum_as_matrix_product` (lemma) | Lemma application, Rewriting, Computation | Shared finite sums, Stdlib.List | **Rewritten**: duplicated list induction removed |
 | `covariance_matrix_quadratic_form_identity` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
-| `covariance_cross_matrix_bilinear_identity` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
-| `covariance_cross_matrix_bilinear_swap` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
-| `covariance_matrix_quadratic_form_is_variance` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_cross_matrix_bilinear_identity_unconditional` (theorem) | Lemma application, Rewriting | covariance_double_sum_as_matrix_product and unconditional weighted composite covariance | **New unconditional matrix theorem:** no mass normalization, induction, or new matrix implementation |
+| `covariance_cross_matrix_bilinear_identity` (theorem) | Lemma application | `covariance_cross_matrix_bilinear_identity_unconditional` | **Refactored:** original theorem and mass-one premise preserved, direct reuse of stronger checked result |
+| `covariance_cross_matrix_bilinear_swap_unconditional` (theorem) | Lemma application, Rewriting | covariance_symmetric and unconditional matrix bilinearity | **New unconditional matrix theorem:** no mass normalization, induction, or new matrix implementation |
+| `covariance_cross_matrix_bilinear_swap` (theorem) | Lemma application | `covariance_cross_matrix_bilinear_swap_unconditional` | **Refactored:** original theorem and mass-one premise preserved, direct reuse of stronger checked result |
+| `covariance_matrix_quadratic_form_is_variance_unconditional` (theorem) | Lemma application, Rewriting | covariance_matrix_quadratic_form_identity and unconditional weighted variance | **New unconditional matrix theorem:** no mass normalization, induction, or new matrix implementation |
+| `covariance_matrix_quadratic_form_is_variance` (theorem) | Lemma application | `covariance_matrix_quadratic_form_is_variance_unconditional` | **Refactored:** original theorem and mass-one premise preserved, direct reuse of stronger checked result |
 | `covariance_matrix_is_positive_semidefinite` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `covariance_at_most_half_sum_of_variances` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `covariance_at_least_negative_half_sum_of_variances` (theorem) | Lemma application, Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
