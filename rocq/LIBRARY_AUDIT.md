@@ -1060,6 +1060,18 @@ the established product factorization with Stdlib.Lra.
 None of these proofs introduces another event summation, manual
 union recursion, quotient implementation or external library.
 
+## Explicit three-target conditional factorization
+
+The `finite_conditional_three_event_product` theorem combines
+two existing conditional-independence factorization equations
+after a `Stdlib.Bool.andb_assoc` rewrite through the checked
+conditional target-extensionality API. The second premise
+requires independence of A∩B from C, rather than only C's
+pairwise independence from A and B. This distinction prevents
+accidentally elevating pairwise independence to mutual
+independence. No new multievent operator, real-sum recursion,
+measure-theory dependency or conditional quotient is added.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

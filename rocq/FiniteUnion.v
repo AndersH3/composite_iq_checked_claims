@@ -2954,6 +2954,42 @@ Section FiniteOutcomeSpace.
     lra.
   Qed.
 
+
+  (**
+   [finite_conditional_three_event_product] (theorem) — A three-target conditional product rule under explicit independence premises.
+   Mathematical meaning: A conditional joint mass of three Boolean events factors into the product of their three conditional marginals when A and B are conditionally independent given G and the conjunction A∩B is conditionally independent of C given that same G.
+   Exact checked proposition: If finite_conditional_independent first second given and finite_conditional_independent (fun x => andb (first x) (second x)) third given, then finite_conditional_prob (fun x => andb (first x) (andb (second x) (third x))) given = finite_conditional_prob first given * finite_conditional_prob second given * finite_conditional_prob third given.
+   Premises and side conditions: Both explicit conditional-independence predicates include positive conditioning mass. The second premise is independence of the combined first two targets from the third; merely assuming three pairwise independence statements would not suffice. Real signed weights support the algebra, while nonnegative weights are needed for the probability interpretation.
+   Proof/definition method: Use the standard Boolean conjunction associativity lemma and the established conditional target extensionality theorem to regroup the triple intersection. Rewrite by the second factorization and then by the first, finishing with Stdlib's ring tactic.
+   Library reuse: finite_conditional_prob_event_ext_on_samples, finite_conditional_independent, Stdlib.Bool.andb_assoc and Stdlib.Reals ring; no custom list recursion, multievent probability operator, conditional quotient or independence axiom is introduced.
+   Boundary: This checks a finite three-target factorization under two specified independence hypotheses; it does not assert that pairwise independence implies mutual independence, nor does it construct an arbitrary-event joint distribution.
+   *)
+  Theorem finite_conditional_three_event_product :
+    forall weights samples first second third given,
+      finite_conditional_independent weights samples
+        first second given ->
+      finite_conditional_independent weights samples
+        (fun x => andb (first x) (second x)) third given ->
+      finite_conditional_prob weights samples
+        (fun x => andb (first x) (andb (second x) (third x))) given =
+      finite_conditional_prob weights samples first given *
+      finite_conditional_prob weights samples second given *
+      finite_conditional_prob weights samples third given.
+  Proof.
+    intros weights samples first second third given Hind12 Hindpair.
+    destruct Hind12 as [_ H12].
+    destruct Hindpair as [_ Hpair].
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb (first x) (andb (second x) (third x)))
+      (fun x => andb (andb (first x) (second x)) (third x))
+      given).
+    2: { intros x _; apply andb_assoc. }
+    rewrite Hpair.
+    rewrite H12.
+    ring.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

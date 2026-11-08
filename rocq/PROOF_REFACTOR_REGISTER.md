@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 448 public theorem/lemma/example declarations,
+The current branch has 449 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**451 proof scripts**, including the generic
+**452 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 88 proof scripts
+## FiniteUnion.v — 89 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -694,6 +694,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_independent_conditioning_first` (theorem) | Conditioned-support target extensionality, unit conditional mass, ring | finite_conditional_prob_event_ext_on_conditioned_samples, finite_conditional_prob_self, Stdlib.Reals | **New:** given is independent of any second target conditional on itself |
 | `finite_conditional_independent_conditioning_second` (theorem) | Iff symmetry projection and lemma application | finite_conditional_independent_symmetric, finite_conditional_independent_conditioning_first | **New:** other target independent of conditioning event given itself |
 | `finite_conditional_independent_union_formula` (theorem) | Conditional inclusion-exclusion and factor rewrite | finite_conditional_prob_inclusion_exclusion, finite_conditional_independent, Stdlib.Lra | **New:** two-event conditional independent union formula |
+| `finite_conditional_three_event_product` (theorem) | Boolean associativity, conditioned target extensionality, two independence factorizations | finite_conditional_prob_event_ext_on_samples, Stdlib.Bool.andb_assoc, Stdlib.Reals ring | **New:** triple conditional joint factors given independence of A,B and of A∩B,C (not merely pairwise independence) |
 
 ## FiniteMoments.v — 167 proof scripts
 

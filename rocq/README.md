@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **448 theorem, lemma and example declarations** in seven
+for the two reports. **449 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1185,8 +1185,8 @@ matrix_bilinear_form, matrix_quadratic_form,
 weighted_basis_sum, fixed_basis_weighted_variance_identity,
 and zero_variance_is_constant_on_positive_mass.
 
-Current audited totals: **448 public claims, 451 proof scripts,
-507 documented declarations** across seven Rocq modules.
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** across seven Rocq modules.
 
 
 ## Generic finite conditional-independence interface
@@ -1213,8 +1213,8 @@ probability interpretation; no unit-mass normalization is assumed.
 The interface is a starting point for future conditional-independence
 cross-product factorization and stronger four-cell bridge rules, not a certified stochastic process model.
 
-Current audited totals: **448 public claims, 451 proof scripts,
-507 documented declarations** across seven Rocq modules.
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** across seven Rocq modules.
 
 ## Generic conditional independence specialized to the four-cell model
 
@@ -1234,8 +1234,8 @@ no new four-cell enumeration, cross-product calculation, or assumption
 of observed independence. All results retain the existing normalized,
 nonnegative four-cell interpretation.
 
-Current audited totals: **448 public claims, 451 proof scripts,
-507 documented declarations** in seven Rocq modules.
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** in seven Rocq modules.
 
 ## Degenerate Boolean-event independence laws
 
@@ -1249,8 +1249,8 @@ conditional-mass laws; their reverse-order partners use only
 the already checked symmetry theorem. No new list recursion, event
 sum, or conditional quotient is introduced.
 
-Current audited totals: **448 public claims, 451 proof scripts,
-507 documented declarations** in seven Rocq files.
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** in seven Rocq files.
 
 ## True-conditioning independence and zero indicator covariance
 
@@ -1265,8 +1265,8 @@ The formalization does not assume that observed admissions are
 independent and does not generalize zero covariance to independence
 of arbitrary real-valued scores.
 
-Current audited totals: **448 public claims, 451 proof scripts,
-507 documented declarations** in seven Rocq modules.
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** in seven Rocq modules.
 
 ## Finite conditional independence as a cross-product equation
 
@@ -1286,8 +1286,8 @@ for signed weights; interpreting it probabilistically requires
 nonnegative sample weights. No additional conditional probability
 operator or finite-sum implementation is introduced.
 
-Current audited totals: **448 public claims, 451 proof scripts,
-507 documented declarations** across seven Rocq modules.
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** across seven Rocq modules.
 
 ## Conditioning-event independence and finite union factorization
 
@@ -1303,8 +1303,27 @@ the already checked conditional-independence factorization:
 This is a two-event finite algebraic identity, not an extension
 to mutually independent families of events.
 
-Current audited totals: **448 public claims, 451 proof scripts,
-507 documented declarations** in seven Rocq modules.
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** in seven Rocq modules.
+
+## Three-event conditional factorization
+
+A new checked finite Boolean-event theorem proves
+
+```text
+P(A and B and C | G) = P(A | G) * P(B | G) * P(C | G)
+```
+
+under the **two explicit hypotheses** that A is conditionally
+independent of B given G and that (A and B) is conditionally
+independent of C given G. Three merely pairwise conditional
+independence premises are deliberately **not** treated as sufficient.
+The proof delegates to the existing two-event conditional
+factorization and Stdlib.Boolean conjunction associativity, without
+introducing a new list fold or general mutual-independence axiom.
+
+Current audited totals: **449 public claims, 452 proof scripts,
+508 documented declarations** in seven Rocq modules.
 
 ## Research extensions
 
