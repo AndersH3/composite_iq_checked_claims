@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 381 public theorem/lemma/example declarations,
+The current branch has 386 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**384 proof scripts**, including the generic
+**389 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -205,6 +205,17 @@ The original globally quantified expectation, covariance and variance
 extensionality proofs are now direct instances of the stronger
 on-sample versions. Their exact original propositions are retained,
 while duplicate finite expectation rewrites were removed.
+
+### Full finite covariance null-direction support characterization
+
+The earlier one-way zero-variance and positive-support theorems
+now have a converse without imposing strict positivity on every
+sample occurrence. Nonnegative weights permit zero-weight scores
+to be ignored via the shared FiniteSum.finite_sum_ext_in lemma,
+using standard real-order case analysis. An exact equivalence
+then identifies zero fixed-basis covariance quadratic form with
+weighted scores constant on the positive-weight sample support.
+This does not add an unverified matrix rank or determinant routine.
 
 ### Current structural-induction inventory
 
@@ -481,7 +492,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 124 proof scripts
+## FiniteMoments.v — 129 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -609,6 +620,11 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `null_covariance_direction_pairwise_constant_on_positive_mass` (theorem) | Lemma application, Transitivity | null_covariance_direction_constant_on_positive_mass | **New:** any two positive-support outcomes have equal scores in a null direction |
 | `variance_of_constant_score_zero` (theorem) | Lemma application | covariance_with_constant_first | **New:** reusable zero variance for constant score under total mass one |
 | `duplicate_basis_nontrivial_null_direction` (theorem) | Rewriting, Lemma application, ring and Lra | fixed_basis_weighted_variance_identity, variance_extensional, variance_of_constant_score_zero, Stdlib.List.combine and FiniteSum.finite_sum | **New:** explicit nonzero null coefficient vector for duplicated score basis |
+| `expectation_extensional_on_positive_weight_support` (theorem) | Real-order case split, lemma application | FiniteSum.finite_sum_ext_in, Stdlib.Reals.Rle_lt_dec, Lra | **New:** ignore zero-mass score changes without signed-weight assumptions |
+| `covariance_extensional_on_positive_weight_support` (theorem) | Rewriting, lemma application | expectation_extensional_on_positive_weight_support | **New:** covariance invariance under changes off positive support |
+| `variance_extensional_on_positive_weight_support` (theorem) | Lemma application | covariance_extensional_on_positive_weight_support | **New:** variance invariance on positive support |
+| `variance_zero_of_constant_on_positive_weight_support` (theorem) | Lemma application, equality transitivity | variance_extensional_on_positive_weight_support, variance_of_constant_score_zero | **New:** constant positive support entails zero finite variance |
+| `fixed_basis_null_iff_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | null_covariance_direction_constant_on_positive_mass, fixed_basis_weighted_variance_identity, variance_zero_of_constant_on_positive_weight_support | **New:** exact iff between finite covariance quadratic nullity and constant positive-support score |
 
 ## FiniteBridge.v — 16 proof scripts
 

@@ -4579,4 +4579,147 @@ Section FiniteProbabilityMoments.
       + apply variance_of_constant_score_zero; exact Hmass.
   Qed.
 
+  (**
+   [expectation_extensional_on_positive_weight_support] (theorem) — Nonnegative weighted finite support and covariance nullity.
+   Mathematical meaning: For nonnegative sampled weights, changing a real-valued score on a zero-weight outcome cannot affect its weighted expectation. Agreement is only required on the positive-weight portion of the finite list.
+   Exact checked proposition: For all f g, nonnegative sampled weights and f x = g x at all enumerated x with 0 < weight x imply expect f = expect g.
+   Premises and side conditions: The weight function must be nonnegative on every listed outcome. The total finite mass may be unnormalized; repeated list occurrences remain counted and zero-weight samples contribute zero even when their score values differ.
+   Proof/definition method: Unfold the existing expected-value and FiniteSum aliases, invoke the previously proved finite_sum_ext_in extensionality, and split into zero-weight and positive-weight cases using the standard real-order decision lemma Rle_lt_dec.
+   Library reuse: FiniteSum.finite_sum_ext_in, Stdlib.List.map_ext_in, Stdlib.Reals.Rle_lt_dec, Stdlib.Lra, existing expect and sum_finite definitions.
+   Boundary: Equality is only on positive-weight listed support; no abstract null-set, continuous measure, or independence hypothesis is introduced.
+   *)
+  Theorem expectation_extensional_on_positive_weight_support :
+    forall f g,
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x -> f x = g x) ->
+      expect f = expect g.
+  Proof.
+    intros f g Hw Hfg.
+    unfold expect, sum_finite.
+    apply FiniteSum.finite_sum_ext_in.
+    intros x Hx.
+    destruct (Rle_lt_dec (weight x) 0) as [Hnonpos|Hpositive].
+    - assert (Hzero : weight x = 0).
+      { pose proof (Hw x Hx); lra. }
+      rewrite Hzero; ring.
+    - rewrite (Hfg x Hx Hpositive).
+      reflexivity.
+  Qed.
+
+  (**
+   [covariance_extensional_on_positive_weight_support] (theorem) — Nonnegative weighted finite support and covariance nullity.
+   Mathematical meaning: For a nonnegative weighted sample, the two marginal expectations and their product expectation are unchanged when each score is modified only at zero-mass outcomes or outside the enumerated support.
+   Exact checked proposition: For all f f' g g', nonnegative sampled weights and positive-weight support equality of each score pair imply covariance f g = covariance f' g'.
+   Premises and side conditions: Every listed outcome weight must be nonnegative. The sample may repeat outcomes, total mass need not equal one, and the covariance expressions are compared algebraically without independent-score assumptions.
+   Proof/definition method: Expand covariance, then apply the checked expectation_extensional_on_positive_weight_support theorem to each marginal and to the pointwise product of the two scores. No new finite induction or matrix algorithm is used.
+   Library reuse: expectation_extensional_on_positive_weight_support, FiniteSum.finite_sum_ext_in, Stdlib.List.In, Stdlib.Reals and ordered-field arithmetic.
+   Boundary: Valid for an explicitly enumerated nonnegative weighted list; not a generic conditional expectation or almost-sure covariance result.
+   *)
+  Theorem covariance_extensional_on_positive_weight_support :
+    forall f f' g g',
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x -> f x = f' x) ->
+      (forall x, In x samples -> 0 < weight x -> g x = g' x) ->
+      covariance f g = covariance f' g'.
+  Proof.
+    intros f f' g g' Hw Hf Hg.
+    unfold covariance.
+    rewrite (expectation_extensional_on_positive_weight_support
+      f f' Hw Hf).
+    rewrite (expectation_extensional_on_positive_weight_support
+      g g' Hw Hg).
+    assert (Hprod :
+      expect (fun x => f x * g x) =
+      expect (fun x => f' x * g' x)).
+    { apply expectation_extensional_on_positive_weight_support.
+      - exact Hw.
+      - intros x Hx Hpositive.
+        rewrite (Hf x Hx Hpositive), (Hg x Hx Hpositive).
+        reflexivity. }
+    rewrite Hprod.
+    reflexivity.
+  Qed.
+
+  (**
+   [variance_extensional_on_positive_weight_support] (theorem) — Nonnegative weighted finite support and covariance nullity.
+   Mathematical meaning: A finite variance computed from nonnegative weights depends only on the score at positive-mass sample outcomes; changing values at zero-weight observations leaves its self-covariance unchanged.
+   Exact checked proposition: For all f g, nonnegative sampled weights and equality on positive-weight sampled support imply variance f = variance g.
+   Premises and side conditions: Nonnegative weights on the list are explicit, and no normalization, distinctness, or distributional model is assumed. Values of functions at zero-weight outcomes are unrestricted.
+   Proof/definition method: Unfold variance as covariance of each score with itself and apply covariance_extensional_on_positive_weight_support with the same support equality for both arguments.
+   Library reuse: covariance_extensional_on_positive_weight_support, FiniteMoments.variance, shared FiniteSum and Stdlib.List.In.
+   Boundary: Signed weights are not supported by this positive-support extensionality criterion; no claim about continuous almost-sure equality is made.
+   *)
+  Theorem variance_extensional_on_positive_weight_support :
+    forall f g,
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x -> f x = g x) ->
+      variance f = variance g.
+  Proof.
+    intros f g Hw Hfg.
+    unfold variance.
+    apply covariance_extensional_on_positive_weight_support.
+    - exact Hw.
+    - exact Hfg.
+    - exact Hfg.
+  Qed.
+
+  (**
+   [variance_zero_of_constant_on_positive_weight_support] (theorem) — Nonnegative weighted finite support and covariance nullity.
+   Mathematical meaning: A score that is constant at every outcome with positive sampled weight has variance zero under nonnegative normalized finite weights, regardless of arbitrary values at zero-weight outcomes.
+   Exact checked proposition: For all f c, normalized total mass, nonnegative sampled weights and f x = c at every listed x with 0 < weight x entail variance f = 0.
+   Premises and side conditions: The sample weights must sum to one and be nonnegative. The constant c may be any real number, and no assumption on the number of zero-weight outcomes or score independence is required.
+   Proof/definition method: Transfer variance from the score to the constant score using variance_extensional_on_positive_weight_support, then directly reuse variance_of_constant_score_zero, which itself delegates to standard covariance-with-constant algebra.
+   Library reuse: variance_extensional_on_positive_weight_support, variance_of_constant_score_zero, covariance_with_constant_first and Stdlib.Reals.
+   Boundary: This finite constant-support criterion does not assert an empirical factor model or variance positivity for signed measures.
+   *)
+  Theorem variance_zero_of_constant_on_positive_weight_support :
+    forall f c,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x -> f x = c) ->
+      variance f = 0.
+  Proof.
+    intros f c Hmass Hw Hconstant.
+    transitivity (variance (fun _ => c)).
+    - apply variance_extensional_on_positive_weight_support;
+        assumption.
+    - apply variance_of_constant_score_zero; exact Hmass.
+  Qed.
+
+  (**
+   [fixed_basis_null_iff_constant_on_positive_weight_support] (theorem) — Nonnegative weighted finite support and covariance nullity.
+   Mathematical meaning: A real coefficient vector is a zero direction of the finite fixed-basis covariance quadratic form precisely when its weighted score is equal to its own expected value on every positive-mass enumerated outcome.
+   Exact checked proposition: For any coefficients basis of equal length, with total_mass = 1 and nonnegative sampled weights, matrix_quadratic_form coefficients (basis_covariance_matrix basis) = 0 iff every sampled x with 0 < weight x satisfies weighted_basis_sum coefficients basis x = expect (weighted_basis_sum coefficients basis).
+   Premises and side conditions: The coefficient and basis list lengths must agree. The total sample weight is one and every listed weight is nonnegative, but individual weights may equal zero; those outcomes impose no equality constraint on the score.
+   Proof/definition method: For the forward direction apply the existing null_covariance_direction_constant_on_positive_mass theorem. For the converse, identify the quadratic form with variance by fixed_basis_weighted_variance_identity and reuse variance_zero_of_constant_on_positive_weight_support.
+   Library reuse: null_covariance_direction_constant_on_positive_mass, variance_zero_of_constant_on_positive_weight_support, fixed_basis_weighted_variance_identity, FiniteSum and Stdlib.Reals.
+   Boundary: This is a complete finite positive-support characterization of zero quadratic form, not a spectral matrix rank computation or an inference about empirical IQ factors.
+   *)
+  Theorem fixed_basis_null_iff_constant_on_positive_weight_support :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 <->
+       forall x, In x samples -> 0 < weight x ->
+         weighted_basis_sum coefficients basis x =
+           expect (weighted_basis_sum coefficients basis)).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    split.
+    - intros Hnull x Hx Hpositive.
+      apply (null_covariance_direction_constant_on_positive_mass
+        coefficients basis x Hlength Hmass Hw Hx Hpositive Hnull).
+    - intros Hconstant.
+      rewrite <- (fixed_basis_weighted_variance_identity
+        coefficients basis Hlength Hmass).
+      apply (variance_zero_of_constant_on_positive_weight_support
+        (weighted_basis_sum coefficients basis)
+        (expect (weighted_basis_sum coefficients basis))
+        Hmass Hw).
+      exact Hconstant.
+  Qed.
+
+
 End FiniteProbabilityMoments.

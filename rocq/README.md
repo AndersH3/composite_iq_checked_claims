@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **381 theorem, lemma and example declarations** in seven
+for the two reports. **386 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -947,8 +947,23 @@ reuse `FiniteSum.finite_sum_ext_in` and Stdlib.List.map_ext_in
 rather than building new finite sums, and preserve the original
 finite-list multiplicities without extra hypotheses.
 
-Current inventory: **381 public claims**, **384 proof scripts**,
+At the preceding stage: **381 public claims**, **384 proof scripts**,
 and **439 documented named declarations** in seven modules.
+
+## Exact positive-support characterization of covariance null directions
+
+Five `FiniteMoments.v` results prove positive-weight-support
+extensionality for expectation, covariance and variance, and
+derive zero variance when the score is constant on that support.
+The final iff theorem proves that the fixed-basis covariance
+quadratic form vanishes **exactly when** the corresponding
+weighted score equals its expected value on every sampled
+outcome of positive weight. All claims allow zero-weight
+outcomes and use Stdlib real order plus FiniteSum extensionality,
+the existing variance identity, and prior nullity theorems.
+
+The current seven-module inventory contains **386 public claims**,
+**389 registered proof scripts** and **444 documented declarations**.
 
 ## Research extensions
 

@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 381 public theorem/lemma/example
+**Current audited inventory:** 386 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **384 proof scripts**. There are **439 named
+constructors, for **389 proof scripts**. There are **444 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -747,6 +747,18 @@ Three additional finite-moment results reuse the canonical
 expectation, covariance and variance from on-sample equality, with
 unchanged weight multiplicity. The current source inventory covers
 381 public proofs, 384 scripts and 439 documented declarations.
+
+## Exact finite covariance null support equivalence
+
+Positive-weight support extensionality for moments is derived from
+FiniteSum.finite_sum_ext_in and Stdlib.Reals.Rle_lt_dec, with
+zero-weight outcomes contributing no weighted integrand.
+The resulting zero-variance converse combines with existing
+`null_covariance_direction_constant_on_positive_mass` and
+`fixed_basis_weighted_variance_identity` to characterize zero
+fixed-basis covariance quadratic form exactly. No new data
+structure, recursive finite sum, determinant or eigenvalue solver
+is implemented. Inventory: 386 claims, 389 scripts, 444 declarations.
 
 ## Deliberately retained project-specific definitions
 
