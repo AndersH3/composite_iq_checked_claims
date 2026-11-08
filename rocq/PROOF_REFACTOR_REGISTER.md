@@ -410,7 +410,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_self` (theorem) | Finite cases, Rewriting, Lemma application | finite_prob_event_ext_on_samples; Stdlib.Reals field tactic | **New:** positive-mass event conditional on itself equals one |
 | `finite_conditional_prob_unit_interval` (theorem) | Lemma application, Rewriting, Real inequalities | finite_prob_event_monotone, finite_intersection_at_most_first, Stdlib.Reals | **New:** nonnegative bounded conditional mass for positive conditioning mass |
 | `finite_conditional_prob_event_ext_on_samples` (theorem) | Rewriting, Lemma application | finite_prob_event_ext_on_samples, Stdlib.Bool.andb | **New:** target-event extensionality over sample support |
-| `finite_conditional_prob_complement` (theorem) | Rewriting, Field algebra | finite_conditional_prob_filtered, finite_prob_complement, finite_prob_as_filtered_mass | **New:** conditional complement mass sums to one |
+| `finite_conditional_prob_complement` (theorem) | Rewriting, Stdlib inverse cancellation | finite_conditional_prob_filtered, finite_prob_complement, finite_prob_as_filtered_mass, Stdlib.Reals.Rinv_r | **New:** conditional complement mass sums to one |
 
 ## FiniteMoments.v — 116 proof scripts
 

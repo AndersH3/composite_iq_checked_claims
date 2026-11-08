@@ -2089,8 +2089,8 @@ Section FiniteOutcomeSpace.
    Mathematical meaning: An event and its complement partition the conditioning event, so their finite conditional probabilities sum to one when the conditioning event has positive mass.
    Exact checked proposition: forall weights samples event given, strictly positive finite_prob weights samples given implies finite_conditional_prob weights samples event given + finite_conditional_prob weights samples (fun x => negb (event x)) given = 1.
    Premises and side conditions: The conditioning mass must be strictly positive for the quotient identity. Neither weight nonnegativity nor unit total mass is required for this algebraic equality, but probability interpretation additionally requires nonnegative weights.
-   Proof/definition method: Rewrite with the existing filtered-sample conditional equality, invoke finite_prob_complement for selected outcomes, and cancel the positive selected total mass using Stdlib field algebra.
-   Library reuse: Stdlib.List.filter, Bool.negb, finite_conditional_prob_filtered, finite_prob_complement, finite_prob_as_filtered_mass, Stdlib.Reals field.
+   Proof/definition method: Rewrite with the existing filtered-sample conditional equality, invoke finite_prob_complement for selected outcomes, and cancel the positive selected total mass using the standard real inverse-right identity Rinv_r.
+   Library reuse: Stdlib.List.filter, Bool.negb, finite_conditional_prob_filtered, finite_prob_complement, finite_prob_as_filtered_mass, Stdlib.Reals.Rinv_r.
    Boundary: The identity is about finite weighted enumeration, not a construction of a regular conditional probability or empirical independence.
    *)
   Theorem finite_conditional_prob_complement :
@@ -2113,7 +2113,7 @@ Section FiniteOutcomeSpace.
       (finite_prob weights (filter given samples)
         (fun x => negb (event x)))).
     rewrite finite_prob_complement.
-    field; lra.
+    apply Rinv_r; lra.
   Qed.
 
 End FiniteOutcomeSpace.
