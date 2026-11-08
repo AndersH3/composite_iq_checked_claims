@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 368 public theorem/lemma/example
+**Current audited inventory:** 372 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **371 proof scripts**. There are **426 named
+constructors, for **375 proof scripts**. There are **430 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -704,8 +704,19 @@ extensionality. An existing weaker support theorem has been
 refactored to apply the new stronger result, rather than repeat
 pointwise conjunction reasoning. No new recursions, unpinned
 libraries, axioms or altered public claims are introduced.
-Current inventory: 368 publicly named proofs, 371 scripts and
+At the preceding stage: 368 publicly named proofs, 371 scripts and
 426 fully documented declarations.
+
+## Conditional algebra, Bayes balance and finite partition
+
+Four new FiniteUnion proofs reduce conditional false mass, two-event
+inclusion–exclusion, Bayes balance and total probability to the shared
+`finite_prob` and `finite_conditional_prob` definitions. Library
+reuse is explicit: Stdlib.Bool.andb_comm, Stdlib.Reals field/ring,
+`finite_prob_inclusion_exclusion`, `finite_prob_filtered_partition`,
+`finite_prob_event_ext_on_samples`, and `Stdlib.List.filter`.
+The source inventory is now 372 public proofs, 375 proof blocks and
+430 documented declarations. No new measure axioms are introduced.
 
 ## Deliberately retained project-specific definitions
 

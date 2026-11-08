@@ -2220,6 +2220,112 @@ Section FiniteOutcomeSpace.
     - exact Hevents.
   Qed.
 
+  (**
+   [finite_conditional_prob_false] (theorem) — Finite conditional-event probability algebra.
+   Mathematical meaning: The impossible Boolean target event has zero conditional mass for any conditioning predicate, including the algebraic zero-mass case.
+   Exact checked proposition: For all weights samples given, finite_conditional_prob weights samples (fun _ => false) given = 0.
+   Premises and side conditions: This is an equality of real expressions and does not need a positive conditioning denominator or nonnegative weights. A probability interpretation of conditioning itself still requires positive marginal mass.
+   Proof/definition method: Reduce the conjunction with the false target by finite_prob_event_ext_on_samples, reuse the existing finite_prob_false theorem, then simplify real multiplication by zero.
+   Library reuse: finite_prob_event_ext_on_samples, finite_prob_false, Stdlib.Bool.andb, Stdlib.Reals field/ring algebra.
+   Boundary: The theorem concerns the totalized real-division expression on finite weighted outcomes and makes no claim that zero-mass conditioning has probabilistic semantics.
+   *)
+  Theorem finite_conditional_prob_false :
+    forall weights samples given,
+      finite_conditional_prob weights samples (fun _ => false) given = 0.
+  Proof.
+    intros weights samples given.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb (given x) false)
+      (fun _ => false)).
+    2: { intros x _; destruct (given x); reflexivity. }
+    rewrite finite_prob_false.
+    unfold Rdiv; ring.
+  Qed.
+
+  (**
+   [finite_conditional_prob_inclusion_exclusion] (theorem) — Finite conditional-event probability algebra.
+   Mathematical meaning: For a fixed conditioning event, conditional mass satisfies the ordinary two-event inclusion–exclusion equality for arbitrary Boolean targets.
+   Exact checked proposition: For all weights samples event1 event2 given, conditional(event1 OR event2|given) + conditional(event1 AND event2|given) = conditional(event1|given) + conditional(event2|given).
+   Premises and side conditions: No normalization, weight-sign assumption, or conditioning-mass positivity is needed for this algebraic equality. The usual probability interpretation requires nonnegative weights and positive conditioning mass.
+   Proof/definition method: Use finite_conditional_prob_filtered for all four terms, factor out their shared inverse conditioning marginal, and apply the pre-existing finite_prob_inclusion_exclusion theorem to Stdlib.List.filter given samples.
+   Library reuse: finite_conditional_prob_filtered, finite_prob_inclusion_exclusion, Stdlib.List.filter, Stdlib.Bool.orb/andb, Stdlib.Reals.Rmult_plus_distr_r.
+   Boundary: Only the explicitly enumerated finite sample is covered; the theorem does not introduce a new conditional-event summation or any abstract sigma algebra.
+   *)
+  Theorem finite_conditional_prob_inclusion_exclusion :
+    forall weights samples event1 event2 given,
+      finite_conditional_prob weights samples
+        (fun x => orb (event1 x) (event2 x)) given +
+      finite_conditional_prob weights samples
+        (fun x => andb (event1 x) (event2 x)) given =
+      finite_conditional_prob weights samples event1 given +
+      finite_conditional_prob weights samples event2 given.
+  Proof.
+    intros weights samples event1 event2 given.
+    rewrite !finite_conditional_prob_filtered.
+    unfold Rdiv.
+    rewrite <- !Rmult_plus_distr_r.
+    rewrite finite_prob_inclusion_exclusion.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_prob_bayes_balance] (theorem) — Finite conditional-event probability algebra.
+   Mathematical meaning: The intersection mass can be reconstructed in either direction: the conditional event mass times the corresponding conditioning marginal is invariant under swapping the two events.
+   Exact checked proposition: For any weights samples event1 event2, positive masses of both events imply conditional(event1|event2) * finite_prob(event2) = conditional(event2|event1) * finite_prob(event1).
+   Premises and side conditions: Both conditioning event marginals must be strictly positive for cancellation. The algebraic equality does not need unit total mass or independence, and nonnegative sampled weights are only needed to interpret every quantity as a probability.
+   Proof/definition method: Use finite_prob_event_ext_on_samples and Stdlib.Bool.andb_comm to identify the two intersection numerators, then cancel positive denominators with the standard Reals field tactic.
+   Library reuse: finite_prob_event_ext_on_samples, Stdlib.Bool.andb_comm, Stdlib.Reals field, Stdlib.Lra.
+   Boundary: This is finite-event Bayes balance, not an assumption of independence or a certified continuous conditional-density formula.
+   *)
+  Theorem finite_conditional_prob_bayes_balance :
+    forall weights samples event1 event2,
+      0 < finite_prob weights samples event1 ->
+      0 < finite_prob weights samples event2 ->
+      finite_conditional_prob weights samples event1 event2 *
+        finite_prob weights samples event2 =
+      finite_conditional_prob weights samples event2 event1 *
+        finite_prob weights samples event1.
+  Proof.
+    intros weights samples event1 event2 Hfirst Hsecond.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb (event2 x) (event1 x))
+      (fun x => andb (event1 x) (event2 x))).
+    2: { intros x _; apply andb_comm. }
+    field; lra.
+  Qed.
+
+  (**
+   [finite_conditional_prob_total_probability] (theorem) — Finite conditional-event probability algebra.
+   Mathematical meaning: The unconditioned mass of a target event equals the sum of its conditional masses across a Boolean partition, each weighted by its conditioning-event mass.
+   Exact checked proposition: For all weights samples event given with both given and its Boolean complement of strictly positive finite mass, finite_prob(event) equals conditional(event|given)*finite_prob(given) + conditional(event|not given)*finite_prob(not given).
+   Premises and side conditions: Strict positivity is required for both conditional denominators; neither unit normalization of the original sample nor nonnegative individual weights is required for the displayed algebraic identity.
+   Proof/definition method: Rewrite each quotient using finite_conditional_prob_filtered, use the already proven finite_prob_filtered_partition decomposition of the original event mass, and cancel the two strictly positive denominators with the standard Reals field tactic.
+   Library reuse: finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter, Stdlib.Bool.negb, Stdlib.Reals field, Stdlib.Lra.
+   Boundary: The identity refers to an explicit finite weighted sample and does not establish existence or uniqueness of general conditional distributions.
+   *)
+  Theorem finite_conditional_prob_total_probability :
+    forall weights samples event given,
+      0 < finite_prob weights samples given ->
+      0 < finite_prob weights samples (fun x => negb (given x)) ->
+      finite_prob weights samples event =
+        finite_conditional_prob weights samples event given *
+          finite_prob weights samples given +
+        finite_conditional_prob weights samples event
+          (fun x => negb (given x)) *
+          finite_prob weights samples (fun x => negb (given x)).
+  Proof.
+    intros weights samples event given Hgiven Hnot.
+    rewrite !finite_conditional_prob_filtered.
+    rewrite <- (finite_prob_filtered_partition
+      weights samples given event).
+    field; lra.
+  Qed.
+
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

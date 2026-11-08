@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **368 theorem, lemma and example declarations** in seven
+for the two reports. **372 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -885,8 +885,24 @@ The previous whole-sample target-extensionality proof now delegates
 to the stronger result. All use existing `FiniteUnion` identities,
 `Stdlib.Bool` and real order lemmas, not new finite sum recursions.
 
-Updated seven-module inventory: **368 public claims**,
+At the previous stage the inventory comprised **368 public claims**,
 **371 audited proof scripts**, **426 documented named declarations**.
+
+## Finite conditional-event algebra and total probability
+
+Additional `FiniteUnion.v` theorems show that the impossible event has
+zero conditional mass, that conditional Boolean events satisfy the
+same inclusion–exclusion identity as their original finite masses,
+that conditional probabilities satisfy the symmetric Bayes balance
+identity under strictly positive conditioning marginals, and that
+partitioning by an event and its complement proves the finite law
+of total probability. The proofs are direct applications of already
+checked `finite_prob_inclusion_exclusion`,
+`finite_prob_filtered_partition` and `finite_prob_event_ext_on_samples`
+plus Rocq Stdlib Boolean/real algebra; no new recursions were added.
+
+Source inventory: **372 public theorem/lemma/example declarations**,
+**375 registered proof scripts** and **430 documented named declarations**.
 
 ## Research extensions
 

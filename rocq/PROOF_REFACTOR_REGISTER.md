@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 368 public theorem/lemma/example declarations,
+The current branch has 372 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**371 proof scripts**, including the generic
+**375 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -159,6 +159,16 @@ Boolean-conjunction equality proof. All new results reuse
 Stdlib.Bool, finite_prob_event_ext_on_samples,
 finite_prob_event_monotone and real inverse order lemmas; none adds
 custom list recursion or external probability infrastructure.
+
+### Conditional event algebra and Bayes identities
+
+Four further results reuse existing standard-library Boolean operations,
+finite event-mass filtering, inclusion–exclusion and partition identities
+instead of implementing a new event algebra: impossible conditional
+events, conditional inclusion–exclusion, Bayes balance under two positive
+marginals, and the law of total probability under a two-cell positive
+partition. All proofs preserve the exact weighted-list and division
+semantics, including arbitrary sample multiplicities.
 
 ### Current structural-induction inventory
 
@@ -362,7 +372,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 63 proof scripts
+## FiniteUnion.v — 67 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -429,6 +439,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_monotone` (theorem) | Lemma application, Boolean conjunction | finite_prob_event_monotone, Stdlib.Bool.andb_true_iff, Stdlib.Reals inverse/order | **New:** conditional event implication monotonicity |
 | `finite_conditional_prob_true` (theorem) | Lemma application | finite_conditional_prob_event_ext_on_conditioned_samples, finite_conditional_prob_self | **New:** true target conditionally has mass one |
 | `finite_conditional_prob_conditioning_ext_on_samples` (theorem) | Rewriting, Lemma application | finite_prob_event_ext_on_samples | **New:** conditioning event support extensionality |
+| `finite_conditional_prob_false` (theorem) | Lemma application, ring algebra | finite_prob_event_ext_on_samples, finite_prob_false, Stdlib.Bool | **New:** conditional false-event mass is zero |
+| `finite_conditional_prob_inclusion_exclusion` (theorem) | Rewriting, shared inverse factoring | finite_conditional_prob_filtered, finite_prob_inclusion_exclusion, Stdlib.List.filter | **New:** conditional two-event inclusion-exclusion |
+| `finite_conditional_prob_bayes_balance` (theorem) | Rewriting, field algebra | finite_prob_event_ext_on_samples, Stdlib.Bool.andb_comm, Stdlib.Reals | **New:** positive-marginal Bayes balance |
+| `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 
 ## FiniteMoments.v — 116 proof scripts
 
