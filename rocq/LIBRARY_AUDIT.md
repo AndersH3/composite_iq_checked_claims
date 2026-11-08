@@ -310,7 +310,7 @@ using MathComp or an arbitrary-measure library. Any such migration
 would need independently checked correspondence lemmas preserving
 the finite semantics and theorem hypotheses.
 
-## Proof-by-proof consolidation register: all 332 scripts accounted for
+## Previous proof-by-proof consolidation milestone: 332 scripts
 
 The latest source now contains **329 public theorem/lemma/example
 declarations** (FiniteSum 19, Hoeflin 64, Admissions 67,
@@ -351,6 +351,47 @@ previously formalized bridges should remain simple. The previous
 public theorem statements and their hypotheses are unchanged.
 No `Admitted`, project-specific axiom, external oracle, new recursive
 matrix implementation, or unpinned library dependency has been added.
+
+## Latest library consolidation: Boolean selection and sample partition
+
+The current seven-module source inventory contains **333 public
+theorem/lemma/example declarations**, plus one checked local helper,
+and two proof-bearing four-cell record constructors, for **336 total
+proof scripts**. All **390 named declarations** have their own
+mathematical documentation comments, and the seven modules have
+substantive explanatory opening headers.
+
+This iteration reuses the native Rocq list and Boolean facilities
+rather than creating a specialized event-selection implementation:
+
+| New or revised proof | Reused checked library | Proof responsibility |
+|---|---|---|
+| `finite_prob_event_ext_on_samples` (refactor) | `Stdlib.List.filter_ext_in`, `finite_prob_as_filtered_mass` | Event predicates need agree only on the explicitly enumerated support |
+| `finite_prob_on_filtered_samples` | `Stdlib.List.filter`, `Stdlib.Bool.andb`, `FiniteSum.finite_sum_filter` | Equate restriction of sample outcomes with Boolean intersection of events |
+| `union_prob_on_filtered_samples` | Existing `finite_prob_on_filtered_samples`, `Stdlib.List.existsb` | Derive filtered union mass without custom event-family recursion |
+| `finite_prob_filtered_partition` | Existing `finite_prob_on_filtered_samples`, `finite_sum_addition`, Bool case split | Recover full event mass by adding selected and rejected sample contributions |
+| `union_prob_filtered_partition` | `finite_prob_filtered_partition`, existing `union_prob` abstraction | Lift the partition identity to an arbitrary finite union of routes |
+
+**Hypothesis discipline:** identities are valid for arbitrary real
+sample weights and support multiplicities. No nonnegative weights,
+normalization or event independence is assumed just to prove an
+equality. The separate distribution-free probability inequalities
+retain their explicit sign and normalization hypotheses.
+
+The [full proof-by-proof register](PROOF_REFACTOR_REGISTER.md)
+now lists all 336 scripts and records a decision on each.
+The [CI documentation checker](../scripts/check_rocq_documentation.sh)
+compares register names in source order, verifies every declaration's
+extensive `(** ... *)` comment and the module-level headers, and then
+runs the pinned Rocq 9.2 kernel verification. No `Axiom`,
+`Admitted`, `Parameter`, untrusted oracle, or new third-party Rocq
+library was introduced.
+
+As before, substantive structural inductions remain where they
+establish generic fold laws, `Nat.iter` behavior or suffix-sensitive
+covariance identities. They are not replaced with gratuitous duplicate
+recursions. All existing theorem statements and mathematical
+assumptions remain unchanged.
 
 ## Deliberately retained project-specific definitions
 
