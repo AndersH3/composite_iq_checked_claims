@@ -2732,6 +2732,103 @@ Section FiniteOutcomeSpace.
       split; [lra | exact Hfactor].
   Qed.
 
+
+  (**
+   [finite_conditional_independent_true_first] (theorem) — The certain Boolean event is conditionally independent of every event.
+   Mathematical meaning: The always-true target contributes conditional mass one, and its intersection with an arbitrary target coincides with that target. Consequently the product factorization required by conditional independence holds identically.
+   Exact checked proposition: For any finite real weights, samples, second target and given event, positive finite mass of given implies finite_conditional_independent weights samples (fun _ => true) second given.
+   Premises and side conditions: Strict positivity of the conditioning mass is explicit; no unit normalization or weight-sign restriction is necessary for this algebraic statement. Repeated samples retain multiplicity.
+   Proof/definition method: Reduce the intersection through the existing finite conditional target-event extensionality theorem, rewrite the certain-event conditional mass to one, and close the real product identity with the standard ring tactic.
+   Library reuse: finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_true and Stdlib.Reals ring; no new event sum, Boolean recursion or quotient is introduced.
+   Boundary: This is exact factorization for the certain Boolean event, not evidence that two nontrivial admissions events are independent.
+   *)
+  Theorem finite_conditional_independent_true_first :
+    forall weights samples second given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples
+        (fun _ => true) second given.
+  Proof.
+    intros weights samples second given Hgiven.
+    unfold finite_conditional_independent.
+    split; [exact Hgiven |].
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb true (second x)) second given).
+    2: { intros x _; reflexivity. }
+    rewrite (finite_conditional_prob_true weights samples given Hgiven).
+    ring.
+  Qed.
+
+  (**
+   [finite_conditional_independent_true_second] (theorem) — The certain event in the second target position.
+   Mathematical meaning: A finite Boolean target remains conditionally independent of the always-true event, irrespective of which target appears first in the factorization equation.
+   Exact checked proposition: For any finite real weights, samples, first target and given event with strictly positive conditioning mass, finite_conditional_independent weights samples first (fun _ => true) given.
+   Premises and side conditions: The same strictly positive conditioning mass is assumed. Arbitrary signed weights are accepted for algebraic equality, but nonnegative weights are required for probability semantics.
+   Proof/definition method: Reuse the previously proved target symmetry biconditional and finite_conditional_independent_true_first, with no further computation or Boolean case split.
+   Library reuse: finite_conditional_independent_symmetric and finite_conditional_independent_true_first; no duplicated quotient or proof of certain-event mass.
+   Boundary: Only exact finite conditional Boolean-event algebra is asserted.
+   *)
+  Theorem finite_conditional_independent_true_second :
+    forall weights samples first given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples
+        first (fun _ => true) given.
+  Proof.
+    intros weights samples first given Hgiven.
+    apply (proj2 (finite_conditional_independent_symmetric
+      weights samples first (fun _ => true) given)).
+    apply finite_conditional_independent_true_first.
+    exact Hgiven.
+  Qed.
+
+  (**
+   [finite_conditional_independent_false_first] (theorem) — The impossible Boolean event is conditionally independent of every event.
+   Mathematical meaning: The always-false target has zero conditional mass and zero intersection with every second target, making the required conditional product factorization identically zero.
+   Exact checked proposition: Given any weighted finite list and Boolean target second, positive mass of given implies finite_conditional_independent weights samples (fun _ => false) second given.
+   Premises and side conditions: Positive conditioning mass is required by the independence predicate. The algebraic cancellation itself is valid for arbitrary weights, without normalization, distinct samples or nonnegative-weight assumptions.
+   Proof/definition method: Use existing conditional target-event extensionality to replace the intersection with false, reuse the general conditional-false theorem on both the joint and first marginal, then normalize zero products by the Stdlib ring tactic.
+   Library reuse: finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_false, Stdlib.Bool.andb and Stdlib.Reals ring.
+   Boundary: An impossible target is a degenerate example; no independence of nontrivial events is established.
+   *)
+  Theorem finite_conditional_independent_false_first :
+    forall weights samples second given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples
+        (fun _ => false) second given.
+  Proof.
+    intros weights samples second given Hgiven.
+    unfold finite_conditional_independent.
+    split; [exact Hgiven |].
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb false (second x)) (fun _ => false) given).
+    2: { intros x _; reflexivity. }
+    rewrite (finite_conditional_prob_false weights samples given).
+    ring.
+  Qed.
+
+  (**
+   [finite_conditional_independent_false_second] (theorem) — The impossible event in the second target position.
+   Mathematical meaning: Conditional independence of the impossible Boolean event with an arbitrary target remains valid after swapping the two event positions.
+   Exact checked proposition: For all weights, sample lists, first targets and positive-mass conditioning events, finite_conditional_independent weights samples first (fun _ => false) given.
+   Premises and side conditions: Only positive mass of the conditioning event is needed to satisfy the definition; arbitrary real weights and repeated sample occurrences are accepted algebraically.
+   Proof/definition method: Apply the checked independence-symmetry biconditional to the existing impossible-first theorem, rather than repeating Boolean simplification or zero-product algebra.
+   Library reuse: finite_conditional_independent_symmetric and finite_conditional_independent_false_first.
+   Boundary: This verifies a degenerate finite-event independence property, not a statistical hypothesis about observed data.
+   *)
+  Theorem finite_conditional_independent_false_second :
+    forall weights samples first given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples
+        first (fun _ => false) given.
+  Proof.
+    intros weights samples first given Hgiven.
+    apply (proj2 (finite_conditional_independent_symmetric
+      weights samples first (fun _ => false) given)).
+    apply finite_conditional_independent_false_first.
+    exact Hgiven.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 438 public theorem/lemma/example declarations,
+The current branch has 442 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**441 proof scripts**, including the generic
+**445 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 80 proof scripts
+## FiniteUnion.v — 84 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -686,6 +686,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_independent_complement_both` (theorem) | Two theorem applications | finite_conditional_independent_complement_first, finite_conditional_independent_complement_second | **New:** simultaneous complement closure of finite conditional independence |
 | `finite_conditional_prob_given_true_normalized` (theorem) | Rewriting by finite mass, unit division | finite_prob_event_ext_on_samples, finite_prob_true, Stdlib.Reals field/Lra | **New:** normalized conditioning on true leaves event mass unchanged |
 | `finite_conditional_independent_given_true_iff_marginal_product` (theorem) | Existing theorem rewrites, iff splitting and Lra | finite_conditional_prob_given_true_normalized, finite_prob_true | **New:** unconditioned joint factorization coincides with generic independence under true conditioning |
+| `finite_conditional_independent_true_first` (theorem) | Conditional target extensionality, unit product via Stdlib ring | finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_true | **New:** trivial first target gives independence under positive conditioning mass |
+| `finite_conditional_independent_true_second` (theorem) | Project symmetry iff, apply existing theorem | finite_conditional_independent_symmetric, finite_conditional_independent_true_first | **New:** certain-event second target via symmetry |
+| `finite_conditional_independent_false_first` (theorem) | Extensionality to false, zero product via Stdlib ring | finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_false | **New:** impossible-event first target is independent |
+| `finite_conditional_independent_false_second` (theorem) | Project symmetry iff, apply existing theorem | finite_conditional_independent_symmetric, finite_conditional_independent_false_first | **New:** impossible-event second target via symmetry |
 
 ## FiniteMoments.v — 167 proof scripts
 

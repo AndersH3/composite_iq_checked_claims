@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **438 theorem, lemma and example declarations** in seven
+for the two reports. **442 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1185,8 +1185,8 @@ matrix_bilinear_form, matrix_quadratic_form,
 weighted_basis_sum, fixed_basis_weighted_variance_identity,
 and zero_variance_is_constant_on_positive_mass.
 
-Current audited totals: **438 public claims, 441 proof scripts,
-497 documented declarations** across seven Rocq modules.
+Current audited totals: **442 public claims, 445 proof scripts,
+501 documented declarations** across seven Rocq modules.
 
 
 ## Generic finite conditional-independence interface
@@ -1213,8 +1213,8 @@ probability interpretation; no unit-mass normalization is assumed.
 The interface is a starting point for future conditional-independence
 cross-product factorization and stronger four-cell bridge rules, not a certified stochastic process model.
 
-Current audited totals: **438 public claims, 441 proof scripts,
-497 documented declarations** across seven Rocq modules.
+Current audited totals: **442 public claims, 445 proof scripts,
+501 documented declarations** across seven Rocq modules.
 
 ## Generic conditional independence specialized to the four-cell model
 
@@ -1234,8 +1234,23 @@ no new four-cell enumeration, cross-product calculation, or assumption
 of observed independence. All results retain the existing normalized,
 nonnegative four-cell interpretation.
 
-Current audited totals: **438 public claims, 441 proof scripts,
-497 documented declarations** in seven Rocq modules.
+Current audited totals: **442 public claims, 445 proof scripts,
+501 documented declarations** in seven Rocq modules.
+
+## Degenerate Boolean-event independence laws
+
+Four new kernel-checkable consequences of the generic finite
+conditional-independence interface show that the always-true and
+always-false events are each conditionally independent of any other
+Boolean event in either target position, whenever the conditioning
+event has strictly positive finite mass. The first-target results
+reuse conditional event extensionality and the checked unit/zero
+conditional-mass laws; their reverse-order partners use only
+the already checked symmetry theorem. No new list recursion, event
+sum, or conditional quotient is introduced.
+
+Current audited totals: **442 public claims, 445 proof scripts,
+501 documented declarations** in seven Rocq files.
 
 ## Research extensions
 

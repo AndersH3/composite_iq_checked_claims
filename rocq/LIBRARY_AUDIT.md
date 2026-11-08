@@ -1010,6 +1010,19 @@ The four-cell weights are nonnegative and sum to one by record
 construction; no distributional independence or Gaussian conclusion
 is added, and the pinned Rocq Stdlib is sufficient.
 
+## Certain and impossible conditional targets
+
+Four degenerate but useful baseline independence laws in `FiniteUnion`
+prove that the always-true and always-false target events factor with
+every other target when conditioning mass is positive. They reuse
+`finite_conditional_prob_true`, `finite_conditional_prob_false`,
+`finite_conditional_prob_event_ext_on_samples` and the previously checked
+`finite_conditional_independent_symmetric` rather than implementing
+another finite summation, Boolean enumeration, or quotient. No
+normalization or nonnegative-weight assumption is introduced into
+these algebraic claims; both conditions are relevant when interpreting
+arbitrary finite weights as actual probabilities.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
