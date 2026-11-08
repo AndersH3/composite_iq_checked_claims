@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **350 theorem, lemma and example declarations** in seven
+for the two reports. **355 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -819,11 +819,24 @@ a trusted abstract probability axiom. Its nonnegativity and total-mass-equals-on
 properties are carried in the record, and examples construct those records
 with checked arithmetic proofs. No data are imported into the kernel.
 
+## Four-cell conditional event interpretation (November 8)
+
+Five new declarations in `FourCellBridge.v` equate all four report
+conditionals with their finite Boolean event-mass ratios, relying on
+existing normalized marginal, intersection and union theorems. The
+additional B-only event theorem is a direct Boolean-product calculation.
+Each conditional ratio has an explicit positive conditioning-mass premise;
+none assumes route independence or claims empirical validity. They add
+no new event summation, matrix operation, or mathematical axioms.
+
+Current source totals: **355 public checked claims**, **358 explicit proof
+scripts**, **412 named declarations**, with full documentation and an
+ordered proof-refactor register.
+
 ## Research extensions
 
-The next valuable targets are: (1) a checked connection from the
-four-cell `TwoEventModel` to the now-verified Boolean-event/moment
-bridge, (2) certified covariance-matrix rank statements beyond the
+The next valuable targets are: (1) a generic conditional-event API extending beyond the verified
+four-cell `TwoEventModel` bridges, (2) certified covariance-matrix rank statements beyond the
 zero-quadratic-form support result, (3) using a maintained measure-theory
 library with checked finite-to-continuous interpretation lemmas,
 (4) bivariate Gaussian density normalization and certified tail

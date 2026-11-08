@@ -518,3 +518,133 @@ Proof.
   rewrite four_cell_second_marginal.
   reflexivity.
 Qed.
+
+(* The report's conditional ratios are interpreted using generic Boolean
+   events; positive conditioning mass is explicit in each statement. *)
+
+(**
+   [four_cell_second_without_first_mass] (theorem) — Four-cell event and conditional probability bridge.
+   Mathematical meaning: The B-only cell equals the mass of the Boolean event B and not A over the four explicitly enumerated outcomes.
+   Exact checked proposition: For any TwoEventModel m, finite_prob weights samples (fun x => andb (negb (A x)) (B x)) = only_B m.
+   Premises and side conditions: The record provides four nonnegative cells totaling one; no conditional denominator or independence assumption is needed.
+   Proof/definition method: Expand the existing finite_prob/finite_sum folds and standard Boolean-product enumeration; simpl and ring close the exact identity.
+   Library reuse: Stdlib.List.list_prod, Stdlib.Bool.andb/negb, FiniteUnion.finite_prob, FiniteSum.finite_sum, Stdlib.Reals ring.
+   Boundary: A four-outcome probability identity, not an estimate of observed admission rates.
+ *)
+Theorem four_cell_second_without_first_mass :
+  forall m,
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      (fun x => andb (negb (four_cell_A x)) (four_cell_B x)) =
+    only_B m.
+Proof.
+  intro m.
+  unfold FiniteUnion.finite_prob, FiniteUnion.finite_sum,
+    FiniteSum.finite_sum, four_cell_samples, four_cell_weight,
+    four_cell_A, four_cell_B, FiniteUnion.indicator.
+  simpl; ring.
+Qed.
+
+(**
+   [four_cell_conditional_B_given_A] (theorem) — Four-cell event and conditional probability bridge.
+   Mathematical meaning: The generic Boolean-event ratio P(A and B)/P(A) matches the report's B-given-A conditional.
+   Exact checked proposition: For positive p_A m, intersection-event mass divided by A-event mass equals conditional_B_given_A m.
+   Premises and side conditions: The strict-positive A-marginal premise ensures conditional probability is meaningful; normalization and nonnegativity are carried in TwoEventModel.
+   Proof/definition method: Rewrite the numerator by four_cell_intersection_mass and the denominator by four_cell_first_marginal, then reduce the original conditional definition.
+   Library reuse: Existing FourCellBridge marginal/intersection lemmas; Admissions.conditional_B_given_A; Stdlib.Reals division.
+   Boundary: No statistical independence or empirical admissions rate is assumed.
+ *)
+Theorem four_cell_conditional_B_given_A :
+  forall m,
+    0 < p_A m ->
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      (fun x => andb (four_cell_A x) (four_cell_B x)) /
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples four_cell_A =
+    conditional_B_given_A m.
+Proof.
+  intros m Hpositive.
+  rewrite four_cell_intersection_mass.
+  rewrite four_cell_first_marginal.
+  unfold conditional_B_given_A, p_both.
+  reflexivity.
+Qed.
+
+(**
+   [four_cell_conditional_A_given_B] (theorem) — Four-cell event and conditional probability bridge.
+   Mathematical meaning: The reverse Boolean conditional P(A and B)/P(B) matches the four-cell admissions expression.
+   Exact checked proposition: For positive p_B m, intersection-event mass divided by B-event mass equals conditional_A_given_B m.
+   Premises and side conditions: The strict-positive B marginal is explicit; normalized nonnegative cell weights are inherited from the record.
+   Proof/definition method: Compose the established finite-event intersection and B-marginal bridges and unfold the report's existing conditional.
+   Library reuse: four_cell_intersection_mass; four_cell_second_marginal; Admissions.conditional_A_given_B; Stdlib.Reals.
+   Boundary: A finite exact correspondence; no independence or Gaussian distribution is implied.
+ *)
+Theorem four_cell_conditional_A_given_B :
+  forall m,
+    0 < p_B m ->
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      (fun x => andb (four_cell_A x) (four_cell_B x)) /
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples four_cell_B =
+    conditional_A_given_B m.
+Proof.
+  intros m Hpositive.
+  rewrite four_cell_intersection_mass.
+  rewrite four_cell_second_marginal.
+  unfold conditional_A_given_B, p_both.
+  reflexivity.
+Qed.
+
+(**
+   [four_cell_conditional_both_given_either] (theorem) — Four-cell event and conditional probability bridge.
+   Mathematical meaning: The intersection mass divided by the union mass is the report's both-given-either conditional.
+   Exact checked proposition: For positive p_either m, P(A and B)/P(A or B) as finite-event masses equals conditional_both_given_either m.
+   Premises and side conditions: Positive union mass is required; neither equal marginals nor route independence is assumed.
+   Proof/definition method: Rewrite using the established intersection mass and finite union-of-event-list lemmas, then unfold the admissions conditional.
+   Library reuse: four_cell_intersection_mass; four_cell_union_mass; FiniteUnion.union_prob; Admissions.conditional_both_given_either.
+   Boundary: The result concerns only the constructed normalized Boolean pair space.
+ *)
+Theorem four_cell_conditional_both_given_either :
+  forall m,
+    0 < p_either m ->
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      (fun x => andb (four_cell_A x) (four_cell_B x)) /
+    @FiniteUnion.union_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples [four_cell_A; four_cell_B] =
+    conditional_both_given_either m.
+Proof.
+  intros m Hpositive.
+  rewrite four_cell_intersection_mass.
+  rewrite four_cell_union_mass.
+  unfold conditional_both_given_either, p_both.
+  reflexivity.
+Qed.
+
+(**
+   [four_cell_conditional_not_A_given_B] (theorem) — Four-cell event and conditional probability bridge.
+   Mathematical meaning: The Boolean B-and-not-A event mass divided by the B marginal equals the report's failure conditional.
+   Exact checked proposition: For positive p_B m, P(not A and B)/P(B) as finite-event masses equals conditional_not_A_given_B m.
+   Premises and side conditions: B must have positive mass to interpret the division conditionally; no independence is assumed.
+   Proof/definition method: Reuse the new B-only finite mass identity and the established B-marginal bridge and unfold the original conditional definition.
+   Library reuse: four_cell_second_without_first_mass; four_cell_second_marginal; Admissions.conditional_not_A_given_B; Stdlib.Bool.
+   Boundary: The exact four-cell algebra does not characterize real admissions or cognitive-test correlations.
+ *)
+Theorem four_cell_conditional_not_A_given_B :
+  forall m,
+    0 < p_B m ->
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      (fun x => andb (negb (four_cell_A x)) (four_cell_B x)) /
+    @FiniteUnion.finite_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples four_cell_B =
+    conditional_not_A_given_B m.
+Proof.
+  intros m Hpositive.
+  rewrite four_cell_second_without_first_mass.
+  rewrite four_cell_second_marginal.
+  unfold conditional_not_A_given_B.
+  reflexivity.
+Qed.

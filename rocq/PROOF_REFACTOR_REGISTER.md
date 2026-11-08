@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 350 public theorem/lemma/example declarations,
+The current branch has 355 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**353 proof scripts**, including the generic
+**358 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -106,6 +106,14 @@ Their original three mass-one theorem signatures are preserved,
 but the proof bodies now directly reuse the stronger laws.
 This work adds no structural induction, new finite-sum recursion,
 or external matrix library.
+
+### Further FourCellBridge conditional interpretations
+
+Five additional standard-library-backed proofs connect B-only event mass
+and the four report-specific conditional ratios to generic Boolean-event
+probabilities. The B-only mass uses one fixed Boolean-product calculation;
+all conditional ratios reuse already checked marginal/intersection/union
+lemmas and make strictly positive denominators explicit.
 
 ### Current structural-induction inventory
 
@@ -510,7 +518,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_event_indicator_covariance_complement_first` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_event_indicator_covariance_complement_both` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 
-## FourCellBridge.v — 13 proof scripts
+## FourCellBridge.v — 18 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -527,3 +535,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `four_cell_indicator_independence_criterion` (theorem) | Rewriting, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `four_cell_first_indicator_variance` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `four_cell_second_indicator_variance` (theorem) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `four_cell_second_without_first_mass` (theorem) | Computation, Ring/field | Stdlib.List.list_prod, FiniteUnion.finite_prob, Stdlib.Bool | **New:** Exact B-only event interpretation; reuse of verified event results |
+| `four_cell_conditional_B_given_A` (theorem) | Rewriting, Computation | four_cell_intersection_mass; four_cell_first_marginal | **New:** Positive-A conditional bridge; reuse of verified event results |
+| `four_cell_conditional_A_given_B` (theorem) | Rewriting, Computation | four_cell_intersection_mass; four_cell_second_marginal | **New:** Positive-B conditional bridge; reuse of verified event results |
+| `four_cell_conditional_both_given_either` (theorem) | Rewriting, Computation | four_cell_intersection_mass; four_cell_union_mass | **New:** Positive-union conditional bridge; reuse of verified event results |
+| `four_cell_conditional_not_A_given_B` (theorem) | Rewriting, Computation | four_cell_second_without_first_mass; four_cell_second_marginal | **New:** Positive-B failure conditional bridge; reuse of verified event results |

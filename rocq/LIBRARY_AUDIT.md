@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 350 public theorem/lemma/example
+**Current audited inventory:** 355 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **353 proof scripts**. There are **407 named
+constructors, for **358 proof scripts**. There are **412 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -645,6 +645,17 @@ documented core fold/recurrence/suffix-dependent proofs.
 No new untrusted axiom, `Admitted`, custom matrix or fold
 implementation, unpinned library, or change to historical
 Python/SPARK verification evidence has been introduced.
+
+## Four-cell conditional probability bridges (November 8)
+
+Five further theorems interpret the B-only event and all four existing
+Admissions conditionals as generic finite-event masses and ratios.
+The only enumerated proof is a direct standard-library Boolean pair
+calculation; the ratio proofs reuse established event mass bridges.
+Each denominator is explicitly positive. All prior statements remain
+unchanged, and the audited inventory is 355 public claims, 358 scripts,
+412 fully documented declarations across the original seven files.
+No new recursion, probability axiom or empirical claim is introduced.
 
 ## Deliberately retained project-specific definitions
 
