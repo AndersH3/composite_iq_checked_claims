@@ -975,9 +975,9 @@ and dependency reuse. Totals: 424 claims, 427 scripts,
 `FiniteUnion.finite_conditional_independent` is an explicit conjunction:
 positive finite conditioning-event mass and product factorization of two
 conditional event masses. It is not a new probability calculation.
-The four companion theorems derive joint-event commutativity,
-conditional-independence symmetry, and support extensionality for a target
-event and the conditioning event. The proofs reuse the pre-existing
+The six companion theorems derive joint-event commutativity,
+conditional-independence symmetry, support extensionality for either target
+event and the conditioning event, and weighted sample permutation invariance. The proofs reuse the pre-existing
 `finite_conditional_prob_event_ext_on_samples`,
 `finite_conditional_prob_conditioning_ext_on_samples`,
 `finite_prob_event_ext_on_samples`, `Stdlib.Bool.andb_comm` and

@@ -2485,6 +2485,59 @@ Section FiniteOutcomeSpace.
     reflexivity.
   Qed.
 
+
+  (**
+   [finite_conditional_independent_second_event_ext_on_samples] (theorem) — Support extensionality of the second independence target.
+   Mathematical meaning: Replacing the second target event by one agreeing at every enumerated sample preserves conditional independence with the first event. The property follows from symmetry instead of duplicating the first-event proof.
+   Exact checked proposition: For every weights and samples and first, second, replacement and given Boolean events, agreement of second and replacement on every sampled outcome gives an iff between independence of first with second and first with replacement given the same conditioning predicate.
+   Premises and side conditions: The conditioning mass is required to be positive by the definition of conditional independence. Signed weights and repeated samples do not obstruct this purely algebraic extensionality result, although nonnegative weights are needed for probabilistic interpretation.
+   Proof/definition method: Rewrite both sides using the already checked symmetry equivalence, then apply first-event support extensionality. This avoids another conjunction case analysis and another finite-sum proof.
+   Library reuse: finite_conditional_independent_symmetric and finite_conditional_independent_event_ext_on_samples, with no additional mathematical infrastructure.
+   Boundary: Equality is only required on sampled outcomes; this does not establish measure-theoretic almost-everywhere independence.
+   *)
+  Theorem finite_conditional_independent_second_event_ext_on_samples :
+    forall weights samples first second replacement given,
+      (forall x, In x samples -> second x = replacement x) ->
+      (finite_conditional_independent weights samples first second given <->
+       finite_conditional_independent weights samples first replacement given).
+  Proof.
+    intros weights samples first second replacement given Hagree.
+    rewrite (finite_conditional_independent_symmetric
+      weights samples first second given).
+    rewrite (finite_conditional_independent_symmetric
+      weights samples first replacement given).
+    apply finite_conditional_independent_event_ext_on_samples.
+    exact Hagree.
+  Qed.
+
+  (**
+   [finite_conditional_independent_sample_permutation] (theorem) — Permutation invariance of finite conditional independence.
+   Mathematical meaning: Reordering the finite list of weighted outcomes cannot change the strictly positive conditioning mass or any of the three finite conditional event masses defining conditional independence.
+   Exact checked proposition: For arbitrary weights, sample lists left and right, two target events and a conditioning event, Stdlib.Permutation left right implies conditional independence on left iff conditional independence on right.
+   Premises and side conditions: The two lists contain the same occurrences including multiplicity; they need not be duplicate-free or normalized. The result is algebraic for signed weights, with conditional-probability semantics depending on the usual nonnegative-weight assumption.
+   Proof/definition method: Unfold the independence and conditional quotient wrappers, rewrite the conditioning marginal and the three conditional intersection numerators with finite_prob_sample_permutation, then discharge both sides by reflexivity.
+   Library reuse: finite_prob_sample_permutation and FiniteSum.finite_sum_permutation via Stdlib.Sorting.Permutation. No additional list induction, sum or probability construction is introduced.
+   Boundary: A permutation only reorders the existing weighted multiset; it does not justify arbitrary reweighting or dropping sample occurrences.
+   *)
+  Theorem finite_conditional_independent_sample_permutation :
+    forall weights left right first second given,
+      Permutation left right ->
+      (finite_conditional_independent weights left first second given <->
+       finite_conditional_independent weights right first second given).
+  Proof.
+    intros weights left right first second given Hperm.
+    unfold finite_conditional_independent, finite_conditional_prob.
+    repeat rewrite (finite_prob_sample_permutation
+      weights left right given Hperm).
+    rewrite (finite_prob_sample_permutation weights left right
+      (fun x => andb (given x) (andb (first x) (second x))) Hperm).
+    rewrite (finite_prob_sample_permutation weights left right
+      (fun x => andb (given x) (first x)) Hperm).
+    rewrite (finite_prob_sample_permutation weights left right
+      (fun x => andb (given x) (second x)) Hperm).
+    reflexivity.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
