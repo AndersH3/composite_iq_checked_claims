@@ -69,16 +69,22 @@ Section FiniteOutcomeSpace.
     forall events x,
       indicator (any_event events x) <= sum_event_indicators events x.
   Proof.
-    intros events; induction events as [|e es IH]; intro x.
-    - change (0 <= 0); lra.
-    - change
-        (indicator (orb (e x) (any_event es x)) <=
-         indicator (e x) + sum_event_indicators es x).
-      destruct (e x) eqn:He; simpl.
-      + pose proof (sum_indicators_nonnegative es x) as Hpos.
-        unfold sum_event_indicators in *; lra.
-      + specialize (IH x).
-        unfold sum_event_indicators in *; lra.
+    intros events x.
+    unfold sum_event_indicators.
+    destruct (any_event events x) eqn:Hunion; simpl.
+    - (* Stdlib.List.existsb_exists gives an event in the union.
+         The shared finite-sum member bound replaces this module's
+         separate induction over every Boolean event. *)
+      unfold any_event in Hunion.
+      apply existsb_exists in Hunion.
+      destruct Hunion as [e [Hin He]].
+      pose proof (FiniteSum.finite_sum_member_le
+        events (fun y => indicator (y x)) e
+        (fun y _ => indicator_nonnegative (y x)) Hin) as Hbound.
+      rewrite He in Hbound; simpl in Hbound.
+      exact Hbound.
+    - apply FiniteSum.finite_sum_nonnegative.
+      intros e Hin; apply indicator_nonnegative.
   Qed.
 
   Lemma event_member_implies_union :
@@ -249,6 +255,60 @@ Section FiniteOutcomeSpace.
     transitivity (finite_sum (fun _ => 0) samples).
     - apply finite_sum_extensional; intro x; simpl; ring.
     - apply FiniteSum.finite_sum_zero.
+  Qed.
+
+  (* Zero event mass is exactly absence of positive weighted support.
+     No assumption about globally distinct sample entries is needed. *)
+  Theorem finite_prob_zero_iff_no_positive_mass_support :
+    forall weights samples e,
+      (forall x, In x samples -> 0 <= weights x) ->
+      (finite_prob weights samples e = 0 <->
+       forall x, In x samples -> e x = true -> weights x = 0).
+  Proof.
+    intros weights samples e Hw; split.
+    - intros Hzero x Hin He.
+      unfold finite_prob, finite_sum in Hzero.
+      assert (Hnonnegative : forall y, In y samples ->
+        0 <= weights y * indicator (e y)).
+      { intros y Hy; apply Rmult_le_pos.
+        - apply Hw; exact Hy.
+        - apply indicator_nonnegative. }
+      pose proof (FiniteSum.finite_sum_nonnegative_zero
+        samples (fun y => weights y * indicator (e y))
+        Hnonnegative Hzero x Hin) as Hterm.
+      rewrite He in Hterm.
+      unfold indicator in Hterm.
+      nra.
+    - intros Hsupport.
+      unfold finite_prob, finite_sum.
+      transitivity (FiniteSum.finite_sum (fun _ => 0) samples).
+      + apply FiniteSum.finite_sum_ext_in.
+        intros x Hin.
+        destruct (e x) eqn:He; simpl.
+        * rewrite (Hsupport x Hin He); ring.
+        * ring.
+      + apply FiniteSum.finite_sum_zero.
+  Qed.
+
+  Theorem finite_prob_positive_of_positive_support :
+    forall weights samples e x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In x samples -> e x = true -> 0 < weights x ->
+      0 < finite_prob weights samples e.
+  Proof.
+    intros weights samples e x Hw Hin He Hpositive.
+    unfold finite_prob, finite_sum.
+    assert (Hnonnegative : forall y, In y samples ->
+      0 <= weights y * indicator (e y)).
+    { intros y Hy; apply Rmult_le_pos.
+      - apply Hw; exact Hy.
+      - apply indicator_nonnegative. }
+    pose proof (FiniteSum.finite_sum_member_le
+      samples (fun y => weights y * indicator (e y))
+      x Hnonnegative Hin) as Hbound.
+    rewrite He in Hbound.
+    unfold indicator in Hbound.
+    nra.
   Qed.
 
   Theorem finite_prob_sample_append :
