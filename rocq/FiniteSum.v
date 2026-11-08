@@ -131,6 +131,18 @@ Proof.
   - rewrite IH; ring.
 Qed.
 
+(* A constant list sum is its length times the constant.
+   This general list-fold identity replaces report-specific recursions. *)
+Lemma finite_sum_const {A : Type} :
+  forall (xs : list A) (c : R),
+    finite_sum (fun _ => c) xs = INR (length xs) * c.
+Proof.
+  induction xs as [|x xs IH]; intro c.
+  - unfold finite_sum; simpl; ring.
+  - change (c + finite_sum (fun _ => c) xs = INR (S (length xs)) * c).
+    rewrite IH, S_INR; ring.
+Qed.
+
 (* Map composition and signed sums reuse Stdlib.List and existing
    finite-sum linearity instead of introducing new recursions. *)
 Lemma finite_sum_map {A B : Type} :
