@@ -2829,6 +2829,57 @@ Section FiniteOutcomeSpace.
     exact Hgiven.
   Qed.
 
+
+  (**
+   [finite_conditional_independent_iff_cross_product_mass] (theorem) — A denominator-free criterion for finite conditional independence.
+   Mathematical meaning: For a strictly positive conditioning mass, the product factorization of conditional event probabilities is equivalent to a cross-product equality of four unnormalized finite event masses: the mass of G∩A∩B times the mass of G equals the product of the masses of G∩A and G∩B.
+   Exact checked proposition: For arbitrary real weights, sample list, first, second and given Boolean events with finite_prob given positive, finite_conditional_independent first second given iff finite_prob(G AND (A AND B))*finite_prob(G)=finite_prob(G AND A)*finite_prob(G AND B).
+   Premises and side conditions: The conditioning mass must be strictly positive to cancel denominators; total sample mass need not equal one. Individual weights may be signed for this exact real-algebra equivalence, but require nonnegativity for probabilistic meaning. Duplicate outcomes retain their contributions.
+   Proof/definition method: Unfold the already defined conditional quotient and independence predicate, abbreviate the four event masses, and multiply or divide each side by the square of the positive conditioning mass. Use Stdlib.Reals field algebra to cancel the nonzero denominator rather than introducing a new conditional-probability operator.
+   Library reuse: finite_prob, finite_conditional_prob, finite_conditional_independent, Stdlib.Bool.andb, Stdlib.Reals field and Stdlib.Lra; there is no new finite sum, enumeration or recursive event construction.
+   Boundary: The result characterizes a single finite Boolean conditional-independence assertion; it does not prove Gaussian conditional independence, a causal relationship, or conditional random-variable disintegration.
+   *)
+  Theorem finite_conditional_independent_iff_cross_product_mass :
+    forall weights samples first second given,
+      0 < finite_prob weights samples given ->
+      (finite_conditional_independent weights samples
+         first second given <->
+       finite_prob weights samples
+         (fun x => andb (given x) (andb (first x) (second x))) *
+         finite_prob weights samples given =
+       finite_prob weights samples
+         (fun x => andb (given x) (first x)) *
+       finite_prob weights samples
+         (fun x => andb (given x) (second x))).
+  Proof.
+    intros weights samples first second given Hgiven.
+    unfold finite_conditional_independent, finite_conditional_prob.
+    cbn beta.
+    set (d := finite_prob weights samples given) in *.
+    set (j := finite_prob weights samples
+      (fun x => andb (given x) (andb (first x) (second x)))) in *.
+    set (a := finite_prob weights samples
+      (fun x => andb (given x) (first x))) in *.
+    set (b := finite_prob weights samples
+      (fun x => andb (given x) (second x))) in *.
+    split.
+    - intros [_ Hfactor].
+      apply (f_equal (fun z : R => z * d * d)) in Hfactor.
+      replace (j / d * d * d) with (j * d) in Hfactor
+        by (field; lra).
+      replace ((a / d * (b / d)) * d * d) with (a * b)
+        in Hfactor by (field; lra).
+      exact Hfactor.
+    - intro Hcross.
+      split; [exact Hgiven |].
+      apply (f_equal (fun z : R => z / (d * d))) in Hcross.
+      replace (j * d / (d * d)) with (j / d)
+        in Hcross by (field; lra).
+      replace (a * b / (d * d)) with (a / d * (b / d))
+        in Hcross by (field; lra).
+      exact Hcross.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

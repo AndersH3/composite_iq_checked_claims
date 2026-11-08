@@ -1036,6 +1036,18 @@ then instantiates this theorem with the existing four-cell weight
 normalization. These exact finite results do not equate zero
 covariance with independence of arbitrary real-valued scores.
 
+## Cross-product criterion for conditioned finite events
+
+A denominator-free cross-product characterization of
+`finite_conditional_independent` under positive conditioning mass
+follows by multiplying the existing conditional quotient equation
+through by the square of its nonzero denominator. The proof uses only
+`Stdlib.Reals` field cancellation and `Lra`. It neither duplicates
+the shared `FiniteSum` fold nor creates a separate conditional event
+representation. The criterion can be reused in future filtered
+four-cell independence statements without expanding conditional
+fractions or introducing an external probability library.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
