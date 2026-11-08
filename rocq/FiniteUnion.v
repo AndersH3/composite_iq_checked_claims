@@ -835,9 +835,9 @@ Section FiniteOutcomeSpace.
    samples e = finite_prob weights samples f.
    Premises and side conditions: The displayed hypotheses include sample or list
    membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, definitional reduction; references include
-   finite_prob, FiniteSum.finite_sum_ext_in..
+   Proof/definition method: Rewrite event probability as the sum of weights
+   over a standard filtered sample, then use Stdlib.List.filter_ext_in.
+   The premise only requires agreement on the enumerated sample.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -850,11 +850,77 @@ Section FiniteOutcomeSpace.
         finite_prob weights samples f.
   Proof.
     intros weights samples e f Heq.
-    unfold finite_prob, finite_sum.
-    apply FiniteSum.finite_sum_ext_in.
-    intros x Hin.
-    rewrite (Heq x Hin).
+    rewrite !finite_prob_as_filtered_mass.
+    rewrite (filter_ext_in e f samples Heq).
     reflexivity.
+  Qed.
+
+  (* Restricting the outcomes by a Boolean predicate is exactly the
+     same finite mass as intersecting the original event with it.
+     Stdlib.List.filter performs the restriction; no custom selection
+     recursion or normalization hypothesis is introduced. *)
+  (**
+   [finite_prob_on_filtered_samples] (theorem) — Finite Boolean-event mass.
+   Mathematical meaning: The event mass computed from a filtered outcome
+   list is the mass of the intersection with the filtering predicate on
+   the original outcome list, including repeated outcomes with their
+   original multiplicity.
+   Exact checked proposition: forall weights samples p e,
+   finite_prob weights (filter p samples) e =
+   finite_prob weights samples (fun x => andb (p x) (e x)).
+   Premises and side conditions: No positivity, independence or unit
+   total mass is required; the identity holds for arbitrary real weights.
+   Proof/definition method: Reuse the generic FiniteSum.finite_sum_filter
+   theorem and finite_sum_ext; reduce the four Bool cases and normalize
+   real arithmetic using the standard ring tactic.
+   Library reuse: Stdlib.List.filter, Stdlib.Bool.andb,
+   FiniteSum.finite_sum_filter, FiniteSum.finite_sum_ext, ring.
+   Boundary: The equality is for explicitly enumerated finite samples;
+   it makes no assertion about a continuous conditional distribution.
+   *)
+  Theorem finite_prob_on_filtered_samples :
+    forall weights samples p e,
+      finite_prob weights (filter p samples) e =
+        finite_prob weights samples (fun x => andb (p x) (e x)).
+  Proof.
+    intros weights samples p e.
+    unfold finite_prob, finite_sum.
+    rewrite FiniteSum.finite_sum_filter.
+    apply FiniteSum.finite_sum_ext; intro x.
+    destruct (p x), (e x); unfold indicator; simpl; ring.
+  Qed.
+
+  (* Event families are represented by Stdlib.List.existsb; applying
+     a filter to the outcome list restricts their union without any
+     need to construct a bespoke intersection-of-events family. *)
+  (**
+   [union_prob_on_filtered_samples] (theorem) — Finite union mass.
+   Mathematical meaning: Filtering outcomes before computing a finite
+   event-family union equals intersecting the union indicator with
+   the filter event in the original finite sample.
+   Exact checked proposition: forall weights samples p events,
+   union_prob weights (filter p samples) events =
+   finite_prob weights samples
+   (fun x => andb (p x) (any_event events x)).
+   Premises and side conditions: Arbitrary finite event lists and real
+   weights are supported, including duplicated outcomes; no independence
+   or normalization assumption is needed for the algebraic equality.
+   Proof/definition method: Unfold union_prob and apply the checked
+   finite_prob_on_filtered_samples theorem directly.
+   Library reuse: Stdlib.List.existsb and filter; the preceding
+   finite_prob_on_filtered_samples correspondence.
+   Boundary: This proves a finite counting/weighted-sum identity,
+   not empirical admission probabilities or Gaussian assumptions.
+   *)
+  Theorem union_prob_on_filtered_samples :
+    forall weights samples p events,
+      union_prob weights (filter p samples) events =
+        finite_prob weights samples
+          (fun x => andb (p x) (any_event events x)).
+  Proof.
+    intros weights samples p events.
+    unfold union_prob.
+    apply finite_prob_on_filtered_samples.
   Qed.
 
   (**
