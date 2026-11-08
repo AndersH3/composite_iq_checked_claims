@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 420 public theorem/lemma/example
+**Current audited inventory:** 422 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **423 proof scripts**. There are **478 named
+constructors, for **425 proof scripts**. There are **480 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -917,6 +917,18 @@ positivity contradictions. No new finite summation, matrix
 rank, determinant or nullspace algorithm is introduced.
 Current audited totals: 420 claims, 423 scripts and
 478 documented declarations.
+
+## Supported constants and the covariance row-dot kernel
+
+An exact finite support-constant composite score implies zero
+dot product against each list-of-lists covariance matrix row,
+using the existing quadratic-null iff supported-constant and
+quadratic-null iff row-kernel theorems. In turn, a compatible
+nonzero row-kernel vector rules out strict positive definiteness
+via the reusable general quadratic-null obstruction. Neither
+result implements a matrix multiply, nullspace basis, rank,
+determinant or new list traversal. Current inventory:
+422 claims, 425 scripts and 480 documented declarations.
 
 ## Deliberately retained project-specific definitions
 

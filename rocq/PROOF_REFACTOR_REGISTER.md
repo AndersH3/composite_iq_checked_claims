@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 420 public theorem/lemma/example declarations,
+The current branch has 422 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**423 proof scripts**, including the generic
+**425 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -373,6 +373,17 @@ strict-positivity proofs. Only Stdlib.List.repeat, Lra and
 previously checked lemmas are used; no rank/determinant solver
 or matrix library was reimplemented.
 
+### General finite row-kernel witnesses without new matrix arithmetic
+
+Two results connect the existing positive-support constant-score
+characterization to every actual row of the list-based covariance
+matrix, and turn a compatible nonzero row-dot kernel vector into
+a formal obstruction to strict positive definiteness. Both are
+direct compositions of checked nullity iff statements and the
+new general non-positive-definiteness witness theorem, using
+Stdlib.List.In and repeat. They introduce no new row iteration,
+vector-space structure, numerical procedure or proof axiom.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -648,7 +659,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 163 proof scripts
+## FiniteMoments.v — 165 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -815,6 +826,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_null_iff_zero_dot_with_every_covariance_row` (theorem) | Iff projection, Stdlib.List.in_map_iff, covariance symmetry | fixed_basis_null_iff_uncorrelated_with_basis, covariance_with_weighted_basis_as_row_dot, Stdlib.List.in_map_iff | **New:** zero covariance quadratic iff every actual matrix row is orthogonal to coefficients |
 | `fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot` (theorem) | Iff splitting, real-order comparison, Lra | fixed_basis_covariance_matrix_positive_semidefinite, fixed_basis_null_iff_zero_dot_with_every_covariance_row, Stdlib.Rle_dec | **New:** strictly positive covariance quadratic iff not orthogonal to every row |
 | `fixed_basis_positive_definite_iff_no_nonzero_covariance_row_kernel` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot, Stdlib.List.repeat | **New:** covariance positive definiteness iff row-dot kernel contains no nonzero compatible list |
+| `fixed_basis_constant_support_implies_zero_covariance_row_dots` (theorem) | Lemma application, support-constant witness | fixed_basis_null_iff_exists_constant_on_positive_weight_support, fixed_basis_null_iff_zero_dot_with_every_covariance_row | **New:** a supported constant composite score yields zero dot product with every matrix row |
+| `fixed_basis_not_positive_definite_of_nonzero_covariance_row_kernel` (theorem) | Lemma application, nullity iff | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_not_positive_definite_of_nonzero_null_direction | **New:** a nonzero row-dot kernel vector disproves covariance positive definiteness |
 
 ## FiniteBridge.v — 16 proof scripts
 

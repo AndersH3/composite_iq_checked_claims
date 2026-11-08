@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **420 theorem, lemma and example declarations** in seven
+for the two reports. **422 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1150,8 +1150,23 @@ nonnegative sampled weights. The existing duplicate-score
 and affine-dependent pair proofs now reuse the general theorem,
 eliminating duplicated strict-positivity reasoning.
 
-Latest source inventory: **420 public claims, 423 proof scripts,
+Earlier source inventory: **420 public claims, 423 proof scripts,
 478 documented named declarations** across seven Rocq modules.
+
+## Positive-support constants and covariance row-kernel witnesses
+
+Two additional results use the previously established null
+quadratic-form equivalences. A composite score constant on
+positive-weight sampled outcomes yields a coefficient vector
+whose dot product with every row of its finite covariance
+matrix is zero. A compatible nonzero vector with this rowwise
+property prevents strict positive definiteness, by direct
+reuse of the general quadratic-null obstruction lemma.
+The proof introduces no matrix product, kernel basis, rank
+or numerical algorithm.
+
+Current audited inventory: **422 public claims, 425 proof scripts,
+480 documented named declarations** in seven Rocq modules.
 
 ## Research extensions
 

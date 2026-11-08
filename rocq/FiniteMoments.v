@@ -5765,4 +5765,66 @@ Section FiniteProbabilityMoments.
       apply Hproperty; assumption.
   Qed.
 
+  (**
+   [fixed_basis_constant_support_implies_zero_covariance_row_dots] (theorem) — Exact covariance row-kernel witnesses.
+   Mathematical meaning: If a coefficient-weighted basis score is constant on every positive-weight sampled outcome, then that coefficient vector is orthogonal to every actual row of its finite list-of-lists covariance matrix.
+   Exact checked proposition: For any coefficients and basis of the same length under normalized nonnegative weights, if weighted_basis_sum coefficients basis x equals some c at every listed outcome with positive weight, then for all rows in basis_covariance_matrix basis, vector_dot coefficients row = 0.
+   Premises and side conditions: Total sample mass equals one, sampled weights are nonnegative, and coefficient/basis lengths agree. Zero-weight samples may violate the equality; the vector may be zero or nonzero, and the matrix may include repeated rows.
+   Proof/definition method: Apply the previously checked fixed_basis_null_iff_exists_constant_on_positive_weight_support using the supplied constant witness c, then apply fixed_basis_null_iff_zero_dot_with_every_covariance_row in the forward direction. No matrix multiplication, row recursion or new covariance expansion is needed.
+   Library reuse: fixed_basis_null_iff_exists_constant_on_positive_weight_support, fixed_basis_null_iff_zero_dot_with_every_covariance_row, Stdlib.List.In.
+   Boundary: This verifies exact finite covariance row constraints; it does not compute a kernel basis or establish empirical factor dependence.
+   *)
+  Theorem fixed_basis_constant_support_implies_zero_covariance_row_dots :
+    forall coefficients basis c,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x ->
+        weighted_basis_sum coefficients basis x = c) ->
+      forall row, In row (basis_covariance_matrix basis) ->
+        vector_dot coefficients row = 0.
+  Proof.
+    intros coefficients basis c Hlength Hmass Hw Hconstant row Hrow.
+    apply (proj1
+      (fixed_basis_null_iff_zero_dot_with_every_covariance_row
+        coefficients basis Hlength Hmass Hw)).
+    - apply (proj2
+        (fixed_basis_null_iff_exists_constant_on_positive_weight_support
+          coefficients basis Hlength Hmass Hw)).
+      exists c; exact Hconstant.
+    - exact Hrow.
+  Qed.
+
+  (**
+   [fixed_basis_not_positive_definite_of_nonzero_covariance_row_kernel] (theorem) — Exact covariance row-kernel witnesses.
+   Mathematical meaning: A compatible nonzero coefficient vector that has zero dot product with every covariance-matrix row prevents the matrix from being positive definite. The proof promotes rowwise nullity to quadratic nullity using the previously checked finite covariance result.
+   Exact checked proposition: For any coefficients and basis with equal lengths, total_mass=1 and nonnegative sampled weights, if coefficients differ from repeat 0 (length basis) and vector_dot coefficients row=0 for all rows of basis_covariance_matrix basis, the universal positive-definiteness property is false.
+   Premises and side conditions: Nonnegative normalized weights are required for the row-nullity equivalence, while the final strict-positivity contradiction is purely algebraic. Repeated basis scores and zero-weight outcomes are allowed.
+   Proof/definition method: Use the reverse direction of fixed_basis_null_iff_zero_dot_with_every_covariance_row to obtain a quadratic-null witness; apply fixed_basis_not_positive_definite_of_nonzero_null_direction to discharge the strict positive-definiteness negation. There is no independent list induction or real-order case analysis.
+   Library reuse: fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_not_positive_definite_of_nonzero_null_direction, Stdlib.List.repeat.
+   Boundary: The theorem exposes the finite covariance row-kernel obstruction but does not compute its dimension or imply a spectral rank theorem.
+   *)
+  Theorem fixed_basis_not_positive_definite_of_nonzero_covariance_row_kernel :
+    forall basis coefficients,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      coefficients <> repeat 0 (length basis) ->
+      (forall row, In row (basis_covariance_matrix basis) ->
+        vector_dot coefficients row = 0) ->
+      ~ (forall other,
+          length other = length basis ->
+          other <> repeat 0 (length basis) ->
+          0 < matrix_quadratic_form other
+            (basis_covariance_matrix basis)).
+  Proof.
+    intros basis coefficients Hlength Hmass Hw Hnonzero Hrows.
+    apply (fixed_basis_not_positive_definite_of_nonzero_null_direction
+      basis coefficients Hlength Hnonzero).
+    apply (proj2
+      (fixed_basis_null_iff_zero_dot_with_every_covariance_row
+        coefficients basis Hlength Hmass Hw)).
+    exact Hrows.
+  Qed.
+
 End FiniteProbabilityMoments.
