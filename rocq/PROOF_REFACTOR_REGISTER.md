@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 359 public theorem/lemma/example declarations,
+The current branch has 362 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**362 proof scripts**, including the generic
+**365 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -124,6 +124,16 @@ and the four report-specific conditional ratios to generic Boolean-event
 probabilities. The B-only mass uses one fixed Boolean-product calculation;
 all conditional ratios reuse already checked marginal/intersection/union
 lemmas and make strictly positive denominators explicit.
+
+### Generic conditional-event bounds and standard-library reuse
+
+Three conditional lemmas reuse the existing finite event monotonicity,
+Fréchet intersection bounds, finite Boolean sample filtering and
+complement identities. No new iterator, measure object, list induction
+or probability normalization assumption is introduced. The quotient
+bound requires nonnegative weights and positive conditioning mass,
+while event extensionality and the complement identity preserve their
+exact weaker premises.
 
 ### Current structural-induction inventory
 
@@ -327,7 +337,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 56 proof scripts
+## FiniteUnion.v — 59 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -387,6 +397,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `finite_conditional_prob_filtered` (theorem) | Rewriting, Computation | finite_prob_on_filtered_samples, Stdlib.List.filter | **New:** generic quotient interpretation of selected outcome lists |
 | `finite_conditional_prob_self` (theorem) | Finite cases, Rewriting, Lemma application | finite_prob_event_ext_on_samples; Stdlib.Reals field tactic | **New:** positive-mass event conditional on itself equals one |
+| `finite_conditional_prob_unit_interval` (theorem) | Lemma application, Rewriting, Real inequalities | finite_prob_event_monotone, finite_intersection_at_most_first, Stdlib.Reals | **New:** nonnegative bounded conditional mass for positive conditioning mass |
+| `finite_conditional_prob_event_ext_on_samples` (theorem) | Rewriting, Lemma application | finite_prob_event_ext_on_samples, Stdlib.Bool.andb | **New:** target-event extensionality over sample support |
+| `finite_conditional_prob_complement` (theorem) | Rewriting, Field algebra | finite_conditional_prob_filtered, finite_prob_complement, finite_prob_as_filtered_mass | **New:** conditional complement mass sums to one |
 
 ## FiniteMoments.v — 116 proof scripts
 

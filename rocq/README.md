@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **359 theorem, lemma and example declarations** in seven
+for the two reports. **362 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -846,6 +846,20 @@ without altering the earlier four-cell statements.
 The complete seven-module declaration inventory is now 417 named
 items, 359 public theorem/lemma/example declarations, and 362
 proof scripts including the local helper and two record constructors.
+
+## Generic conditional-event bounds (November 8 continuation)
+
+Three new `FiniteUnion.v` theorems prove the conditional [0,1]
+interval for nonnegative weights and positive conditioning mass,
+insensitivity to changes of the target event outside the enumerated
+samples, and the event/complement conditional partition identity.
+The proofs reuse existing finite Boolean event laws,
+`Stdlib.List.filter`, real order and field lemmas, without adding
+any probability-measure implementation or custom recursion.
+
+Current source: **362 public theorem/lemma/example declarations**,
+**365 explicit proof scripts** and **420 fully documented named
+declarations**, all within seven original Rocq modules.
 
 ## Research extensions
 

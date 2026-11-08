@@ -2020,6 +2020,102 @@ Section FiniteOutcomeSpace.
     field; lra.
   Qed.
 
+  (**
+   [finite_conditional_prob_unit_interval] (theorem) — Generic finite conditional probability.
+   Mathematical meaning: With nonnegative sample weights and a strictly positive conditioning mass, the finite conditional event mass lies between zero and one; prior normalization of the finite sample is unnecessary.
+   Exact checked proposition: For all weights samples event given, nonnegative sampled weights and strictly positive finite_prob weights samples given imply 0 <= finite_conditional_prob weights samples event given <= 1.
+   Premises and side conditions: Every sampled weight must be nonnegative and the conditioning event must have positive mass. The total mass need not be one because both numerator and denominator share the same unnormalized weights.
+   Proof/definition method: Use finite_prob_false and finite_prob_event_monotone to bound the intersection below by zero; reuse finite_intersection_at_most_first for the upper bound, and multiply by the nonnegative inverse using standard real-number lemmas.
+   Library reuse: finite_prob_false, finite_prob_event_monotone, finite_intersection_at_most_first, Stdlib.Reals.Rinv_0_lt_compat/Rmult_le_compat_r, Lra.
+   Boundary: This proves a finite weighted event inequality, not abstract conditional probability for signed weights or zero-mass conditioning sets.
+   *)
+  Theorem finite_conditional_prob_unit_interval :
+    forall weights samples event given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      0 <= finite_conditional_prob weights samples event given /\
+      finite_conditional_prob weights samples event given <= 1.
+  Proof.
+    intros weights samples event given Hw Hpositive.
+    assert (Hlower :
+      0 <= finite_prob weights samples
+        (fun x => andb (given x) (event x))).
+    { rewrite <- (finite_prob_false weights samples).
+      apply finite_prob_event_monotone; [exact Hw|].
+      intros x _ Hfalse; discriminate Hfalse. }
+    pose proof (finite_intersection_at_most_first
+      weights samples given event Hw) as Hupper.
+    assert (Hinv : 0 <= / finite_prob weights samples given).
+    { apply Rlt_le, Rinv_0_lt_compat; exact Hpositive. }
+    unfold finite_conditional_prob, Rdiv.
+    split.
+    - apply Rmult_le_pos; assumption.
+    - replace 1 with
+        (finite_prob weights samples given *
+          / finite_prob weights samples given)
+        by (field; lra).
+      apply Rmult_le_compat_r; assumption.
+  Qed.
+
+  (**
+   [finite_conditional_prob_event_ext_on_samples] (theorem) — Generic finite conditional probability.
+   Mathematical meaning: Replacing a conditioned target event with another Boolean predicate that agrees on each enumerated sample occurrence does not affect the conditional quotient.
+   Exact checked proposition: For all weights samples event1 event2 given, event1 and event2 agreeing on In x samples implies the two finite_conditional_prob values are equal.
+   Premises and side conditions: Arbitrary real weights and duplicate outcomes are allowed; no sign, normalization or positive-conditioning hypothesis is necessary for this real expression equality.
+   Proof/definition method: Unfold only the conditional quotient and directly apply finite_prob_event_ext_on_samples to the two conjunction predicates, rewriting the pointwise event equality.
+   Library reuse: finite_prob_event_ext_on_samples, Stdlib.List.In, Stdlib.Bool.andb and Stdlib.Reals.
+   Boundary: Agreement is needed only on explicitly enumerated finite support; there is no claim about a general measurable event space.
+   *)
+  Theorem finite_conditional_prob_event_ext_on_samples :
+    forall weights samples event1 event2 given,
+      (forall x, In x samples -> event1 x = event2 x) ->
+      finite_conditional_prob weights samples event1 given =
+      finite_conditional_prob weights samples event2 given.
+  Proof.
+    intros weights samples event1 event2 given Hevents.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb (given x) (event1 x))
+      (fun x => andb (given x) (event2 x))).
+    - reflexivity.
+    - intros x Hx.
+      rewrite (Hevents x Hx).
+      reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_prob_complement] (theorem) — Generic finite conditional probability.
+   Mathematical meaning: An event and its complement partition the conditioning event, so their finite conditional probabilities sum to one when the conditioning event has positive mass.
+   Exact checked proposition: forall weights samples event given, strictly positive finite_prob weights samples given implies finite_conditional_prob weights samples event given + finite_conditional_prob weights samples (fun x => negb (event x)) given = 1.
+   Premises and side conditions: The conditioning mass must be strictly positive for the quotient identity. Neither weight nonnegativity nor unit total mass is required for this algebraic equality, but probability interpretation additionally requires nonnegative weights.
+   Proof/definition method: Rewrite with the existing filtered-sample conditional equality, invoke finite_prob_complement for selected outcomes, and cancel the positive selected total mass using Stdlib field algebra.
+   Library reuse: Stdlib.List.filter, Bool.negb, finite_conditional_prob_filtered, finite_prob_complement, finite_prob_as_filtered_mass, Stdlib.Reals field.
+   Boundary: The identity is about finite weighted enumeration, not a construction of a regular conditional probability or empirical independence.
+   *)
+  Theorem finite_conditional_prob_complement :
+    forall weights samples event given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples event given +
+      finite_conditional_prob weights samples
+        (fun x => negb (event x)) given = 1.
+  Proof.
+    intros weights samples event given Hpositive.
+    rewrite !finite_conditional_prob_filtered.
+    pose proof (finite_prob_as_filtered_mass weights samples given)
+      as Hfiltered.
+    rewrite Hfiltered in Hpositive.
+    rewrite Hfiltered.
+    unfold Rdiv.
+    rewrite <- Rmult_plus_distr_r.
+    rewrite (Rplus_comm
+      (finite_prob weights (filter given samples) event)
+      (finite_prob weights (filter given samples)
+        (fun x => negb (event x)))).
+    rewrite finite_prob_complement.
+    field; lra.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
