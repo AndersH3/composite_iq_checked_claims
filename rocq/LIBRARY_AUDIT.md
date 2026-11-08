@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 418 public theorem/lemma/example
+**Current audited inventory:** 420 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **421 proof scripts**. There are **476 named
+constructors, for **423 proof scripts**. There are **478 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -902,6 +902,21 @@ vector_dot, basis_covariance_matrix, basis_cross_covariance_matrix,
 covariance_row_as_vector_dot, basis_of_combine, and the
 fixed-basis PSD theorem. Inventory: 418 public claims, 421
 proof scripts and 476 fully documented declarations.
+
+## General covariance null-witness obstruction and reuse
+
+Any compatible nonzero covariance quadratic-null vector prevents
+positive definiteness by direct Lra, irrespective of the sign or
+normalization of sampled weights. A second theorem uses the
+existing positive-support constant-score iff nullity to give
+the corresponding arbitrary-basis degeneracy criterion under
+normalized nonnegative weights. The duplicate-score and
+affine-dependent pair obstructions now reuse this generic
+null-witness lemma, rather than repeating their own strict
+positivity contradictions. No new finite summation, matrix
+rank, determinant or nullspace algorithm is introduced.
+Current audited totals: 420 claims, 423 scripts and
+478 documented declarations.
 
 ## Deliberately retained project-specific definitions
 

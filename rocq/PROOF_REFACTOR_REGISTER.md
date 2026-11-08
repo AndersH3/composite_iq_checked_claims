@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 418 public theorem/lemma/example declarations,
+The current branch has 420 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**421 proof scripts**, including the generic
+**423 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -358,6 +358,21 @@ and sign assumptions, exact checked statements, the reused list
 algebra, and why the positive-semidefinite and positive-definite
 notions must not be conflated.
 
+### General quadratic-null obstructions and refactored special cases
+
+A purely algebraic lemma shows that any nonzero compatible
+quadratic-null coefficient vector rules out strict positive
+definiteness, without assuming nonnegative or unit sample
+weights. A positive-support specialization reuses the existing
+fixed_basis_null_iff_exists_constant_on_positive_weight_support
+to cover any finite basis with a constant composite score.
+The duplicated-score and affine-dependent two-score
+non-positive-definiteness proofs now delegate to the generic
+null-witness contradiction and no longer repeat local
+strict-positivity proofs. Only Stdlib.List.repeat, Lra and
+previously checked lemmas are used; no rank/determinant solver
+or matrix library was reimplemented.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -633,7 +648,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 161 proof scripts
+## FiniteMoments.v — 163 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -786,11 +801,13 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_positive_definite_iff_no_nonzero_orthogonal_direction` (theorem) | Iff splitting, contradiction, lemma application | fixed_basis_null_iff_orthogonal_to_every_score, fixed_basis_null_iff_constant_on_positive_weight_support, fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support, Stdlib.Lra | **New:** positive definiteness iff no nonzero direction is orthogonal to every finite score |
 | `fixed_basis_null_iff_exists_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_zero_iff_exists_constant_on_positive_weight_support | **New:** matrix nullity iff composite score equals some real support constant |
 | `fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_positive_iff_no_constant_on_positive_weight_support | **New:** strictly positive matrix curvature iff no supported constant exists |
-| `duplicate_basis_covariance_not_positive_definite` (theorem) | Witness instantiation, Stdlib simplification, Lra | duplicate_basis_nontrivial_null_direction, Stdlib.List.repeat | **New:** duplicated score basis contradicts strict positive definiteness |
+| `fixed_basis_not_positive_definite_of_nonzero_null_direction` (theorem) | Witness instantiation and Lra | Stdlib.List.repeat and Lra | **New:** arbitrary nonzero quadratic null witness rules out strict positive definiteness even for signed weights |
+| `fixed_basis_not_positive_definite_of_nonzero_constant_support_direction` (theorem) | Lemma application, existential constant | fixed_basis_null_iff_exists_constant_on_positive_weight_support, fixed_basis_not_positive_definite_of_nonzero_null_direction | **New:** any nontrivial positive-support-constant composite direction obstructs positive definiteness |
+| `duplicate_basis_covariance_not_positive_definite` (theorem) | Witness simplification and lemma application | duplicate_basis_nontrivial_null_direction, fixed_basis_not_positive_definite_of_nonzero_null_direction, Stdlib.List.repeat | **Refactored:** delegate general strict-positivity contradiction to a shared null-witness lemma |
 | `basis_cross_covariance_matrix_affine` (theorem) | Map fusion, extensionality, lemma reuse | Stdlib.List.map_map, Stdlib.List.map_ext, covariance_of_affine_scores | **New:** cross-covariance of affine-transformed bases scales entrywise by the product of slopes |
 | `basis_covariance_matrix_affine` (theorem) | Definitional bridge, lemma reuse | basis_cross_covariance_matrix_affine, existing basis covariance definitions | **New:** fixed-basis covariance scales by the square of a common affine slope |
 | `affine_dependent_pair_nontrivial_null_on_positive_support` (theorem) | Support constant witness, ring, Lra | fixed_basis_null_iff_exists_constant_on_positive_weight_support, FiniteSum.finite_sum, Stdlib.List.combine | **New:** affine dependency on positive support provides nonzero null direction |
-| `affine_dependent_pair_covariance_not_positive_definite` (theorem) | Witness instantiation, Lra | affine_dependent_pair_nontrivial_null_on_positive_support, Stdlib.List.repeat | **New:** positive-support affine dependence obstructs positive definiteness |
+| `affine_dependent_pair_covariance_not_positive_definite` (theorem) | Witness simplification and lemma application | affine_dependent_pair_nontrivial_null_on_positive_support, fixed_basis_not_positive_definite_of_nonzero_null_direction, Stdlib.List.repeat | **Refactored:** use the common nonzero quadratic-null obstruction |
 | `fixed_basis_null_iff_uncorrelated_with_basis` (theorem) | Existing covariance linear-combination identity, finite-sum extensionality, null iff | covariance_of_general_weighted_second_unconditional, basis_of_combine, FiniteSum.finite_sum_ext_in, FiniteSum.finite_sum_zero, Stdlib.List.in_map | **New:** quadratic null iff composite score uncorrelated with every basis element |
 | `fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis` (theorem) | Real order cases, null iff, positive semidefiniteness | fixed_basis_covariance_matrix_positive_semidefinite, fixed_basis_null_iff_uncorrelated_with_basis, Stdlib.Reals.Rle_dec and Lra | **New:** strict quadratic positivity iff not orthogonal to the finite basis |
 | `fixed_basis_positive_definite_iff_no_nonzero_basis_orthogonal_direction` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis, Stdlib.List.repeat | **New:** positive definite iff no nonzero vector is covariance-orthogonal to the finite basis |

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **418 theorem, lemma and example declarations** in seven
+for the two reports. **420 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1135,8 +1135,23 @@ basis_of_combine, and fixed_basis_covariance_matrix_positive_semidefinite,
 including exact truncation/length/weight assumptions and the
 actual Stdlib/FiniteSum proof dependencies.
 
-**Current counts: 418 public claims, 421 proof scripts and
+**Earlier counts: 418 public claims, 421 proof scripts and
 476 documented named declarations** across seven Rocq modules.
+
+## General quadratic-null obstruction to positive definiteness
+
+Two new theorems formalize a finite arbitrary-basis obstruction:
+any nonzero compatible coefficient vector whose covariance
+quadratic form is zero prevents strict positive definiteness;
+no normalization or sign constraint is necessary for this
+algebraic contradiction. A stronger model-specific corollary
+uses the supported-constant nullity equivalence for normalized
+nonnegative sampled weights. The existing duplicate-score
+and affine-dependent pair proofs now reuse the general theorem,
+eliminating duplicated strict-positivity reasoning.
+
+Latest source inventory: **420 public claims, 423 proof scripts,
+478 documented named declarations** across seven Rocq modules.
 
 ## Research extensions
 

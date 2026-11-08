@@ -5267,12 +5267,72 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [fixed_basis_not_positive_definite_of_nonzero_null_direction] (theorem) — Finite covariance non-positive-definiteness.
+   Mathematical meaning: Any compatible nonzero coefficient vector whose covariance quadratic form is zero disproves positive definiteness of the corresponding finite score-basis covariance matrix. This does not require nonnegative or normalized sample weights, because it is a direct contradiction with the strict inequality defining positive definiteness.
+   Exact checked proposition: For any basis and coefficients with matching list lengths, coefficients <> repeat 0 (length basis), and matrix_quadratic_form coefficients (basis_covariance_matrix basis)=0, the universal strict positivity condition over all compatible nonzero coefficient lists is false.
+   Premises and side conditions: Only list-length equality, the explicit nonzero witness, and quadratic nullity are assumed. Sample weights may be signed or unnormalized; the basis can be empty or contain repeated scores. Zero coefficient lists are represented with the standard Stdlib.List.repeat.
+   Proof/definition method: Assume positive definiteness, instantiate it at the supplied coefficient list, and use Stdlib.Lra to contradict the checked equality between the quadratic value and zero. This factors out an identical argument previously repeated in the duplicate-score and affine-dependent-score obstructions.
+   Library reuse: Stdlib.List.repeat/length, Stdlib.Reals.Lra, and the existing matrix_quadratic_form and basis_covariance_matrix definitions.
+   Boundary: This is a logical obstruction, not a computed rank, determinant, eigenvalue or kernel basis; it does not assert any empirical score relation.
+   *)
+  Theorem fixed_basis_not_positive_definite_of_nonzero_null_direction :
+    forall basis coefficients,
+      length coefficients = length basis ->
+      coefficients <> repeat 0 (length basis) ->
+      matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 ->
+      ~ (forall other,
+          length other = length basis ->
+          other <> repeat 0 (length basis) ->
+          0 < matrix_quadratic_form other
+            (basis_covariance_matrix basis)).
+  Proof.
+    intros basis coefficients Hlength Hnonzero Hnull Hpositive_definite.
+    pose proof (Hpositive_definite coefficients Hlength Hnonzero)
+      as Hpositive.
+    lra.
+  Qed.
+
+  (**
+   [fixed_basis_not_positive_definite_of_nonzero_constant_support_direction] (theorem) — Finite covariance non-positive-definiteness.
+   Mathematical meaning: For normalized nonnegative sampled weights, any nonzero compatible coefficient vector yielding a constant composite score on the positive-weight support prevents the covariance matrix from being positive definite. The basis can have arbitrary finite length.
+   Exact checked proposition: For any basis, coefficients and real constant c, matching list lengths, total_mass=1, nonnegative sampled weights, coefficients <> repeat 0 (length basis), and weighted_basis_sum coefficients basis x=c at every positive-weight listed x imply failure of strict positive definiteness.
+   Premises and side conditions: Requires unit total sampled weight and nonnegative weights for the positive-support null-direction equivalence, but does not require positive weight at every sample. The nonzero vector is a supplied witness, not a computed vector.
+   Proof/definition method: Use fixed_basis_null_iff_exists_constant_on_positive_weight_support to derive zero quadratic form from the supported constant c, then invoke fixed_basis_not_positive_definite_of_nonzero_null_direction. No independent covariance expansion or finite sum induction is needed.
+   Library reuse: fixed_basis_null_iff_exists_constant_on_positive_weight_support, fixed_basis_not_positive_definite_of_nonzero_null_direction, Stdlib.List.repeat.
+   Boundary: This is an exact finite support-degeneracy result without a general spectral rank calculation or any empirical inference.
+   *)
+  Theorem fixed_basis_not_positive_definite_of_nonzero_constant_support_direction :
+    forall basis coefficients c,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      coefficients <> repeat 0 (length basis) ->
+      (forall x, In x samples -> 0 < weight x ->
+        weighted_basis_sum coefficients basis x = c) ->
+      ~ (forall other,
+          length other = length basis ->
+          other <> repeat 0 (length basis) ->
+          0 < matrix_quadratic_form other
+            (basis_covariance_matrix basis)).
+  Proof.
+    intros basis coefficients c Hlength Hmass Hw Hnonzero Hconstant.
+    apply (fixed_basis_not_positive_definite_of_nonzero_null_direction
+      basis coefficients Hlength Hnonzero).
+    apply (proj2
+      (fixed_basis_null_iff_exists_constant_on_positive_weight_support
+        coefficients basis Hlength Hmass Hw)).
+    exists c.
+    exact Hconstant.
+  Qed.
+
+  (**
    [duplicate_basis_covariance_not_positive_definite] (theorem) — Finite positive-support covariance degeneracy.
    Mathematical meaning: Two identical basis scores yield a finite covariance matrix that is never strictly positive in every nonzero coefficient direction under normalized sample weights: the nonzero difference vector [1,-1] has zero quadratic form.
    Exact checked proposition: For every f with total_mass=1, it is not the case that all compatible coefficient lists unequal to repeat 0 (length [f;f]) have strictly positive matrix_quadratic_form coefficients (basis_covariance_matrix [f;f]).
    Premises and side conditions: Only normalized finite total mass is assumed; even nonnegative sampled weights are unnecessary for this exact duplicated-score degeneracy. The zero vector uses Stdlib.List.repeat and the concrete two-component witness has matching dimensions.
-   Proof/definition method: Reuse the earlier duplicate_basis_nontrivial_null_direction theorem to obtain the nonzero [1,-1] witness and zero quadratic form, convert the zero-list equality by standard list simplification, then contradict the proposed strict positive-definiteness condition with Lra.
-   Library reuse: duplicate_basis_nontrivial_null_direction, Stdlib.List.repeat/length, Stdlib.Reals and Stdlib.Lra.
+   Proof/definition method: Obtain the nonzero coefficient list and zero quadratic form from duplicate_basis_nontrivial_null_direction, then apply the general fixed_basis_not_positive_definite_of_nonzero_null_direction theorem directly after Stdlib.List.repeat simplification. No locally duplicated strict-positivity contradiction is necessary.
+   Library reuse: duplicate_basis_nontrivial_null_direction, fixed_basis_not_positive_definite_of_nonzero_null_direction, Stdlib.List.repeat.
    Boundary: This proves an explicit duplicate-basis obstruction, not a general dimension or spectral rank theorem and not a claim about empirically near-duplicate tests.
    *)
   Theorem duplicate_basis_covariance_not_positive_definite :
@@ -5284,15 +5344,13 @@ Section FiniteProbabilityMoments.
           0 < matrix_quadratic_form coefficients
             (basis_covariance_matrix [f; f])).
   Proof.
-    intros f Hmass Hpositive_definite.
+    intros f Hmass.
     destruct (duplicate_basis_nontrivial_null_direction f Hmass)
       as [Hnonzero Hnull].
-    assert (Hnonzero_repeat :
-      ([1; -1] : list R) <> repeat 0 (length [f; f])).
-    { simpl. exact Hnonzero. }
-    pose proof (Hpositive_definite [1; -1] eq_refl
-      Hnonzero_repeat) as Hpositive.
-    lra.
+    apply (fixed_basis_not_positive_definite_of_nonzero_null_direction
+      [f; f] [1; -1] eq_refl).
+    - simpl; exact Hnonzero.
+    - exact Hnull.
   Qed.
 
   (**
@@ -5396,8 +5454,8 @@ Section FiniteProbabilityMoments.
    Mathematical meaning: A two-score covariance matrix cannot be strictly positive definite when the scores are affine-dependent on the positive-weight sampled support: the nonzero [1;-a] direction has zero quadratic form.
    Exact checked proposition: For f g a c with normalized nonnegative sampled weights and f x=a*g x+c at positive-weight samples, not(all compatible coefficients differing from repeat 0 2 have strictly positive quadratic form in basis_covariance_matrix [f;g]).
    Premises and side conditions: The pair basis has length two, its weights are nonnegative and normalized, and zero-weight outcomes need not obey the affine relation. Nonzero is expressed with the library's Stdlib.List.repeat.
-   Proof/definition method: Instantiate affine_dependent_pair_nontrivial_null_on_positive_support, simplify Stdlib.List.repeat, apply the hypothesized positive definiteness to [1;-a] and derive the inequality contradiction using Lra.
-   Library reuse: affine_dependent_pair_nontrivial_null_on_positive_support, Stdlib.List.repeat, Stdlib.Lra.
+   Proof/definition method: Reuse the previously checked positive-support affine-dependent null witness and directly instantiate fixed_basis_not_positive_definite_of_nonzero_null_direction with [1;-a]. Stdlib.List.repeat simplification reconciles the explicit nonzero witness; the generic lemma handles the strict-positivity contradiction.
+   Library reuse: affine_dependent_pair_nontrivial_null_on_positive_support, fixed_basis_not_positive_definite_of_nonzero_null_direction, Stdlib.List.repeat.
    Boundary: Only an explicit finite two-dimensional obstruction is shown; general spectral matrix rank and empirical validity are outside the theorem.
    *)
   Theorem affine_dependent_pair_covariance_not_positive_definite :
@@ -5412,15 +5470,13 @@ Section FiniteProbabilityMoments.
           0 < matrix_quadratic_form coefficients
             (basis_covariance_matrix [f; g])).
   Proof.
-    intros f g a c Hmass Hw Haffine Hpositive_definite.
+    intros f g a c Hmass Hw Haffine.
     destruct (affine_dependent_pair_nontrivial_null_on_positive_support
       f g a c Hmass Hw Haffine) as [Hnonzero Hnull].
-    assert (Hnonzero_repeat :
-      ([1; -a] : list R) <> repeat 0 (length [f; g])).
-    { simpl; exact Hnonzero. }
-    pose proof (Hpositive_definite [1; -a] eq_refl
-      Hnonzero_repeat) as Hpositive.
-    lra.
+    apply (fixed_basis_not_positive_definite_of_nonzero_null_direction
+      [f; g] [1; -a] eq_refl).
+    - simpl; exact Hnonzero.
+    - exact Hnull.
   Qed.
 
   (**
