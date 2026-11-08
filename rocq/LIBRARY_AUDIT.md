@@ -211,7 +211,7 @@ that preserve the existing finite interpretations.
 
 ## Continued covariance and finite-sum consolidation: 325 checked declarations
 
-The latest seven-module source inventory is **325**:
+At that covariance-refactoring milestone, the seven-module source inventory was **325**:
 64 `Hoeflin`, 67 `Admissions`, 43 `FiniteUnion`,
 107 `FiniteMoments`, 17 `FiniteSum`, 14 `FiniteBridge`,
 and 13 `FourCellBridge`.
@@ -252,6 +252,62 @@ representations. Replacing the report-specific finite semantics with
 MathComp matrices or arbitrary probability measures would require
 additional *proved* interpretations and compatibility results, not
 merely imports of new packages.
+
+## Complete Rocq declaration documentation and Stdlib filter reuse
+
+**Current public proof inventory:** 328 named theorem, lemma and example
+declarations across seven modules: `Hoeflin.v` 64, `Admissions.v` 67,
+`FiniteUnion.v` 45, `FiniteMoments.v` 107,
+`FiniteSum.v` 18, `FiniteBridge.v` 14,
+`FourCellBridge.v` 13. The extra `Local Lemma` in
+`Hoeflin.v` is also checked, making 329 proof declarations when
+internal scoped proof helpers are counted.
+
+**Documentation coverage:** all 385 declarations, including definitions,
+record types, local helper lemmas and theorems, now have explicit adjacent
+`(** ... *)` comments. Each module begins with a multi-paragraph
+header describing mathematical purpose, the explicit finite model,
+required hypotheses, existing library dependencies, reproduction steps
+and boundaries of the claims. Each declaration's comment identifies:
+
+1. The precise formal statement/definition and mathematical interpretation.
+2. Explicit normalization, positivity, dimension or nonzero hypotheses
+   (where present), rather than an unexplained "probability" assumption.
+3. The actual proof route, including uses of `rewrite`, `lra`,
+   `nra`, `ring`, induction, and reused generic finite-sum lemmas.
+4. The standard library imports and limitations on interpretation.
+
+The **Rocq theorem statements and proof bodies were not modified**
+during the documentation pass. Changes are purely comments apart from
+three small mathematical library-backed proofs committed beforehand.
+
+| New proof | Stdlib/earlier lemma reuse | Why this is preferable |
+|---|---|---|
+| `FiniteSum.finite_sum_filter` | `Stdlib.List.filter`, the existing `finite_sum` wrapper | One generic characterization of filtering, not new event-specific summation recursion |
+| `FiniteUnion.finite_prob_as_filtered_mass` | `FiniteSum.finite_sum_filter`, `finite_sum_ext` | Event mass equals the sum of weights on outcomes selected by `List.filter`, with no extra normalization assumptions |
+| `FiniteUnion.finite_prob_event_ext_on_samples` | `FiniteSum.finite_sum_ext_in` | Event predicates need agree only on the finite sample's support |
+
+The new [`scripts/check_rocq_documentation.py`](../scripts/check_rocq_documentation.py)
+is a reproducible *static documentation policy check*, not a proof
+checker. It verifies the explanatory header and the adjacent,
+declaration-named, sufficiently substantive doc comments for all
+seven modules. GitHub Actions executes it before pinned Rocq 9.2
+kernel checking. Because this repository requires five Deal contracts
+per named Python function, the checker itself is contract annotated
+and the Rocq workflow installs the **existing pinned Deal 4.24.6**
+dependency. The original `Python contracts` workflow is not weakened.
+
+**Source count distinction:** the README's 328 public theorem/lemma/example
+declarations exclude the existing `Local Lemma`, whereas the checker
+counts all 329 proof declarations and also 56 non-proof declarations
+for a total of 385. This is a counting convention, not missing proof
+coverage or new axioms.
+
+The root README, source reports, and historical SPARK proof evidence
+remain unchanged. This pass does not constitute a complete rewrite
+using MathComp or an arbitrary-measure library. Any such migration
+would need independently checked correspondence lemmas preserving
+the finite semantics and theorem hypotheses.
 
 ## Deliberately retained project-specific definitions
 
