@@ -279,6 +279,7 @@ Section FiniteOutcomeSpace.
       pose proof (FiniteSum.finite_sum_nonnegative_zero
         samples (fun y => weights y * indicator (e y))
         Hnonnegative Hzero x Hin) as Hterm.
+      change (weights x * indicator (e x) = 0) in Hterm.
       rewrite He in Hterm.
       unfold indicator in Hterm.
       nra.
@@ -309,6 +310,10 @@ Section FiniteOutcomeSpace.
     pose proof (FiniteSum.finite_sum_member_le
       samples (fun y => weights y * indicator (e y))
       x Hnonnegative Hin) as Hbound.
+    change (weights x * indicator (e x) <=
+      FiniteSum.finite_sum
+        (fun y => weights y * indicator (e y)) samples)
+      in Hbound.
     rewrite He in Hbound.
     unfold indicator in Hbound.
     nra.
