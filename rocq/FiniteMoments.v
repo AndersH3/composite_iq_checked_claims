@@ -2561,6 +2561,43 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [covariance_cross_matrix_bilinear_identity_unconditional] (theorem) —
+   Matrix representation of covariance between two finite composites.
+   Mathematical meaning: The cross-covariance matrix evaluated against
+   both coefficient lists equals the covariance of the corresponding
+   composite score functions, even for unnormalized sample weights.
+   Exact checked proposition: forall left right,
+   matrix_bilinear_form (map fst left) (map fst right)
+     (covariance_cross_matrix left right) =
+   covariance (linear_combination left) (linear_combination right).
+   Premises and side conditions: Only the finite outcome enumeration
+   and arbitrary real-valued weight and score functions are used.
+   The component lists may differ in length and contain repeats;
+   sample weights and coefficients may be signed. No probability,
+   independence or total_mass = 1 hypothesis is assumed.
+   Proof/definition method: Rewrite the matrix product with the
+   existing covariance_double_sum_as_matrix_product theorem, then
+   apply covariance_of_general_weighted_sums_unconditional.
+   Library reuse: Stdlib.List.map and combine, shared finite sums,
+   covariance_double_sum_as_matrix_product, and the generic
+   unconditional weighted-composite covariance identity.
+   Boundary: A finite algebraic matrix representation; without
+   nonnegative normalized sample weights, covariance matrices
+   need not be positive semidefinite in a probabilistic sense.
+   *)
+  Theorem covariance_cross_matrix_bilinear_identity_unconditional :
+    forall left right,
+      matrix_bilinear_form (map fst left) (map fst right)
+        (covariance_cross_matrix left right) =
+      covariance (linear_combination left) (linear_combination right).
+  Proof.
+    intros left right.
+    rewrite covariance_double_sum_as_matrix_product.
+    symmetry.
+    apply covariance_of_general_weighted_sums_unconditional.
+  Qed.
+
+  (**
    [covariance_cross_matrix_bilinear_identity] (theorem) — Finite weighted score
    expectations, variances and covariance matrices.
    Mathematical meaning: Connects score covariances with a finite matrix, vector, or
@@ -2571,10 +2608,10 @@ Section FiniteProbabilityMoments.
    (linear_combination right).
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas; references include
-   covariance_double_sum_as_matrix_product., covariance_of_general_weighted_sums,
-   Hmass..
+   Proof/definition method: Apply the unconditional
+   covariance_cross_matrix_bilinear_identity_unconditional theorem.
+   The original total_mass = 1 premise is retained verbatim for
+   compatibility but is not needed for this algebraic equality.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -2586,16 +2623,53 @@ Section FiniteProbabilityMoments.
         (covariance_cross_matrix left right) =
       covariance (linear_combination left) (linear_combination right).
   Proof.
-    intros left right Hmass.
-    rewrite covariance_double_sum_as_matrix_product.
-    symmetry.
-    apply covariance_of_general_weighted_sums; exact Hmass.
+    intros left right _.
+    apply covariance_cross_matrix_bilinear_identity_unconditional.
   Qed.
 
   (* The coefficient-vector bilinear form of a cross-covariance
      matrix is symmetric under exchanging both score bases.
      The proof reuses the checked finite-basis representation and
      covariance symmetry instead of implementing a matrix transpose. *)
+  (**
+   [covariance_cross_matrix_bilinear_swap_unconditional] (theorem) —
+   Swap invariance of a real cross-covariance bilinear form.
+   Mathematical meaning: Swapping the component lists while
+   transposing which covariance cross-matrix is constructed leaves
+   the evaluated bilinear form unchanged.
+   Exact checked proposition: forall left right,
+   matrix_bilinear_form (map fst left) (map fst right)
+     (covariance_cross_matrix left right) =
+   matrix_bilinear_form (map fst right) (map fst left)
+     (covariance_cross_matrix right left).
+   Premises and side conditions: Arbitrary finite lists of real
+   coefficient-score pairs, signed or unnormalized outcome weights,
+   and duplicated scores are allowed. No mass normalization,
+   independence, positivity or matrix symmetry is assumed.
+   Proof/definition method: Apply the unconditional matrix-to-
+   covariance identity in both orientations and then invoke
+   covariance_symmetric. No matrix transpose implementation or
+   specialized list induction is needed.
+   Library reuse: covariance_cross_matrix_bilinear_identity_unconditional,
+   covariance_symmetric, and Stdlib.Reals.
+   Boundary: Equality of explicitly evaluated real bilinear forms,
+   not an assertion of strict matrix positive definiteness.
+   *)
+  Theorem covariance_cross_matrix_bilinear_swap_unconditional :
+    forall left right,
+      matrix_bilinear_form (map fst left) (map fst right)
+        (covariance_cross_matrix left right) =
+      matrix_bilinear_form (map fst right) (map fst left)
+        (covariance_cross_matrix right left).
+  Proof.
+    intros left right.
+    rewrite (covariance_cross_matrix_bilinear_identity_unconditional
+      left right).
+    rewrite (covariance_cross_matrix_bilinear_identity_unconditional
+      right left).
+    apply covariance_symmetric.
+  Qed.
+
   (**
    [covariance_cross_matrix_bilinear_swap] (theorem) — Finite weighted score
    expectations, variances and covariance matrices.
@@ -2607,9 +2681,10 @@ Section FiniteProbabilityMoments.
    fst left) (covariance_cross_matrix right left).
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas; references include
-   covariance_cross_matrix_bilinear_identity, covariance_symmetric..
+   Proof/definition method: Apply the stronger
+   covariance_cross_matrix_bilinear_swap_unconditional theorem.
+   The original normalization hypothesis remains part of the theorem
+   statement; no extra symmetry or matrix transpose proof is needed.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -2622,12 +2697,43 @@ Section FiniteProbabilityMoments.
       matrix_bilinear_form (map fst right) (map fst left)
         (covariance_cross_matrix right left).
   Proof.
-    intros left right Hmass.
-    rewrite (covariance_cross_matrix_bilinear_identity
-      left right Hmass).
-    rewrite (covariance_cross_matrix_bilinear_identity
-      right left Hmass).
-    apply covariance_symmetric.
+    intros left right _.
+    apply covariance_cross_matrix_bilinear_swap_unconditional.
+  Qed.
+
+  (**
+   [covariance_matrix_quadratic_form_is_variance_unconditional] (theorem) —
+   Matrix quadratic-form equality for a finite weighted score.
+   Mathematical meaning: Evaluating a composite's covariance matrix
+   against its coefficient list yields exactly that composite's
+   variance expression, without needing normalized sample weights.
+   Exact checked proposition: forall components,
+   matrix_quadratic_form (map fst components)
+     (covariance_matrix components) =
+   variance (linear_combination components).
+   Premises and side conditions: Finite component lists and outcome
+   lists, with arbitrary real coefficients and sample weights.
+   Duplicates are counted. Nonnegative weights and total_mass = 1
+   are not required for this identity, but matter for proving
+   nonnegativity of the resulting variance or matrix form.
+   Proof/definition method: Rewrite through the previously checked
+   covariance_matrix_quadratic_form_identity and reuse
+   variance_of_general_weighted_sum_unconditional.
+   Library reuse: Stdlib.List.map, the generic finite-sum-backed
+   covariance matrix identity and unconditional composite variance.
+   Boundary: Exact algebra in a finite weighted model, not
+   an empirical covariance estimate or a PSD result for signed mass.
+   *)
+  Theorem covariance_matrix_quadratic_form_is_variance_unconditional :
+    forall components,
+      matrix_quadratic_form (map fst components)
+        (covariance_matrix components) =
+      variance (linear_combination components).
+  Proof.
+    intro components.
+    rewrite covariance_matrix_quadratic_form_identity.
+    symmetry.
+    apply variance_of_general_weighted_sum_unconditional.
   Qed.
 
   (**
@@ -2640,10 +2746,10 @@ Section FiniteProbabilityMoments.
    (covariance_matrix components) = variance (linear_combination components).
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas; references include
-   covariance_matrix_quadratic_form_identity., variance_of_general_weighted_sum,
-   Hmass..
+   Proof/definition method: Apply the stronger
+   covariance_matrix_quadratic_form_is_variance_unconditional theorem.
+   The original mass normalization hypothesis is deliberately kept
+   in the public statement without being used in this derivation.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -2655,10 +2761,8 @@ Section FiniteProbabilityMoments.
         (covariance_matrix components) =
       variance (linear_combination components).
   Proof.
-    intros components Hmass.
-    rewrite covariance_matrix_quadratic_form_identity.
-    symmetry.
-    apply variance_of_general_weighted_sum; exact Hmass.
+    intros components _.
+    apply covariance_matrix_quadratic_form_is_variance_unconditional.
   Qed.
 
   (**
