@@ -96,6 +96,91 @@ Proof.
   reflexivity.
 Qed.
 
+(* A Boolean selection of sample occurrences is encoded by a
+   conjunction in the indicator score.  The event-to-moment bridge and
+   filtered-sample identity already establish this without constructing
+   a new weighted expectation or a conditional probability measure. *)
+(**
+   [filtered_event_mass_is_indicator_expectation] (theorem) — A filtered
+   finite event mass as a score expectation on the original sample.
+   Mathematical meaning: Selecting occurrences with a Boolean
+   predicate and measuring an event gives exactly the original
+   sample's expectation of the indicator of their intersection.
+   Exact checked proposition: forall A samples weight selection event,
+   FiniteUnion.finite_prob weight (filter selection samples) event =
+   FiniteMoments.expect samples weight
+   (fun x => FiniteUnion.indicator (andb (selection x) (event x))).
+   Premises and side conditions: The sample is an arbitrary finite
+   list, with multiplicities and arbitrary real weights preserved.
+   No normalization or independence hypothesis is needed for this
+   algebraic identity, though such assumptions are needed to
+   interpret the mass as a probability distribution.
+   Proof/definition method: Apply the existing
+   FiniteUnion.finite_prob_on_filtered_samples theorem, then the
+   already checked event-to-indicator-expectation bridge.
+   Library reuse: Stdlib.List.filter, Stdlib.Bool.andb,
+   FiniteUnion.finite_prob_on_filtered_samples and
+   finite_event_probability_is_indicator_expectation.
+   Boundary: Exact finite-list identity, not a definition of
+   continuous conditional expectation or empirical score validity.
+ *)
+Theorem filtered_event_mass_is_indicator_expectation :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (selection event : A -> bool),
+    @FiniteUnion.finite_prob A weight
+      (filter selection samples) event =
+    @FiniteMoments.expect A samples weight
+      (fun x => FiniteUnion.indicator
+        (andb (selection x) (event x))).
+Proof.
+  intros A samples weight selection event.
+  rewrite (@FiniteUnion.finite_prob_on_filtered_samples
+    A weight samples selection event).
+  apply finite_event_probability_is_indicator_expectation.
+Qed.
+
+(* Finite families of events use Stdlib.List.existsb.  Applying the
+   same established indicator bridge avoids a second event-family
+   induction or a parallel finite-moment representation. *)
+(**
+   [filtered_union_mass_is_indicator_expectation] (theorem) — A finite
+   event-family union after sample selection as an indicator moment.
+   Mathematical meaning: The union mass after selecting sample
+   occurrences equals the original finite expected indicator of
+   selection AND membership in at least one listed event.
+   Exact checked proposition: forall A samples weight selection events,
+   FiniteUnion.union_prob weight (filter selection samples) events =
+   FiniteMoments.expect samples weight
+   (fun x => FiniteUnion.indicator
+     (andb (selection x) (FiniteUnion.any_event events x))).
+   Premises and side conditions: Event families are finite Boolean
+   predicate lists and may overlap or contain duplicates. Weights
+   can be signed and need not sum to one; no event independence or
+   distinctness is required for equality.
+   Proof/definition method: Rewrite with the previously checked
+   union_prob_on_filtered_samples identity and then invoke the
+   finite_event_probability_is_indicator_expectation bridge.
+   Library reuse: Stdlib.List.existsb and filter,
+   Stdlib.Bool.andb, FiniteUnion.union_prob_on_filtered_samples,
+   and the previously proven indicator-expectation correspondence.
+   Boundary: No empirical admission data, Gaussian assumptions,
+   continuous measure construction or normalized conditioning.
+ *)
+Theorem filtered_union_mass_is_indicator_expectation :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (selection : A -> bool) (events : list (A -> bool)),
+    @FiniteUnion.union_prob A weight
+      (filter selection samples) events =
+    @FiniteMoments.expect A samples weight
+      (fun x => FiniteUnion.indicator
+        (andb (selection x) (@FiniteUnion.any_event A events x))).
+Proof.
+  intros A samples weight selection events.
+  rewrite (@FiniteUnion.union_prob_on_filtered_samples
+    A weight samples selection events).
+  apply finite_event_probability_is_indicator_expectation.
+Qed.
+
 (**
    [indicator_square] (lemma) — Correspondence between finite event probabilities and
    score moments.
