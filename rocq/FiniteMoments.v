@@ -2324,14 +2324,10 @@ Section FiniteProbabilityMoments.
       covariance_row f components.
   Proof.
     intros f components.
-    induction components as [|[a g] rest IH].
-    - reflexivity.
-    - change
-        (a * covariance f g +
-         vector_dot (map fst rest)
-           (map (fun c => covariance f (snd c)) rest) =
-         a * covariance f g + covariance_row f rest).
-      rewrite IH; ring.
+    unfold vector_dot, covariance_row.
+    rewrite FiniteSum.finite_sum_zip_map.
+    apply FiniteSum.finite_sum_ext.
+    intro c; reflexivity.
   Qed.
 
   (**
@@ -2358,21 +2354,15 @@ Section FiniteProbabilityMoments.
       covariance_quadratic_form left right.
   Proof.
     intros left right.
-    unfold matrix_bilinear_form, covariance_cross_matrix.
-    induction left as [|[a f] rest IH]; simpl.
-    - reflexivity.
-    - change
-        (a * vector_dot (map fst right)
-             (map (fun d => covariance f (snd d)) right) +
-         vector_dot (map fst rest)
-           (map (vector_dot (map fst right))
-             (map (fun c =>
-               map (fun d => covariance (snd c) (snd d)) right)
-               rest)) =
-         a * covariance_row f right +
-           covariance_quadratic_form rest right).
-      rewrite (covariance_row_as_vector_dot f right), IH.
-      ring.
+    unfold matrix_bilinear_form, covariance_cross_matrix,
+      covariance_quadratic_form.
+    rewrite map_map.
+    unfold vector_dot at 1.
+    rewrite FiniteSum.finite_sum_zip_map.
+    apply FiniteSum.finite_sum_ext.
+    intro c; simpl.
+    rewrite (covariance_row_as_vector_dot (snd c) right).
+    reflexivity.
   Qed.
 
   (**
