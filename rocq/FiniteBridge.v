@@ -637,3 +637,33 @@ Proof.
     A samples weight a b Hmass).
   ring.
 Qed.
+
+
+(**
+   [finite_normalized_conditional_independence_iff_zero_indicator_covariance] (theorem) — The same finite independence assertion in event and moment form.
+   Mathematical meaning: Under unit total sample weight, conditional independence of two finite Boolean events given the certain event is equivalent to zero covariance of their two real-valued 0–1 indicator scores. This is a bridge between the established finite event and finite moment representations.
+   Exact checked proposition: For any type A, sample list, real weight function and Boolean events a and b, FiniteUnion.finite_sum weight samples=1 implies finite_conditional_independent weight samples a b (fun _ => true) iff FiniteMoments.covariance of the a and b indicator scores is zero.
+   Premises and side conditions: Total enumerated weight must be exactly one, so that conditioning on true has positive mass and reduces to unconditioned finite event mass. Nonnegative weights are required for probability interpretation, but not for the purely algebraic equivalence. Duplicate sample occurrences count separately.
+   Proof/definition method: Apply the previously verified normalized true-conditioning product equivalence, followed by the established finite indicator covariance/product equivalence; merely reverse the iff orientation, with no new variance algebra or list traversal.
+   Library reuse: FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product, finite_event_independence_iff_zero_indicator_covariance and Stdlib.Logic. Reuse the common FiniteSum fold indirectly through existing model bridges.
+   Boundary: Zero covariance characterizes factorization only for these Boolean indicator scores; it is not a general zero-covariance-implies-independence theorem for arbitrary scores or continuous distributions.
+ *)
+Theorem finite_normalized_conditional_independence_iff_zero_indicator_covariance :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (a b : A -> bool),
+    @FiniteUnion.finite_sum A weight samples = 1 ->
+    (@FiniteUnion.finite_conditional_independent A
+       weight samples a b (fun _ => true) <->
+     @FiniteMoments.covariance A samples weight
+       (fun x => FiniteUnion.indicator (a x))
+       (fun x => FiniteUnion.indicator (b x)) = 0).
+Proof.
+  intros A samples weight a b Hmass.
+  rewrite (@FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product
+    A weight samples a b Hmass).
+  pose proof (finite_event_independence_iff_zero_indicator_covariance
+    A samples weight a b) as Hcriterion.
+  split; intro H.
+  - apply (proj2 Hcriterion); exact H.
+  - apply (proj1 Hcriterion); exact H.
+Qed.

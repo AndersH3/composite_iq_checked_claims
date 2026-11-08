@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **442 theorem, lemma and example declarations** in seven
+for the two reports. **444 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1185,8 +1185,8 @@ matrix_bilinear_form, matrix_quadratic_form,
 weighted_basis_sum, fixed_basis_weighted_variance_identity,
 and zero_variance_is_constant_on_positive_mass.
 
-Current audited totals: **442 public claims, 445 proof scripts,
-501 documented declarations** across seven Rocq modules.
+Current audited totals: **444 public claims, 447 proof scripts,
+503 documented declarations** across seven Rocq modules.
 
 
 ## Generic finite conditional-independence interface
@@ -1213,8 +1213,8 @@ probability interpretation; no unit-mass normalization is assumed.
 The interface is a starting point for future conditional-independence
 cross-product factorization and stronger four-cell bridge rules, not a certified stochastic process model.
 
-Current audited totals: **442 public claims, 445 proof scripts,
-501 documented declarations** across seven Rocq modules.
+Current audited totals: **444 public claims, 447 proof scripts,
+503 documented declarations** across seven Rocq modules.
 
 ## Generic conditional independence specialized to the four-cell model
 
@@ -1234,8 +1234,8 @@ no new four-cell enumeration, cross-product calculation, or assumption
 of observed independence. All results retain the existing normalized,
 nonnegative four-cell interpretation.
 
-Current audited totals: **442 public claims, 445 proof scripts,
-501 documented declarations** in seven Rocq modules.
+Current audited totals: **444 public claims, 447 proof scripts,
+503 documented declarations** in seven Rocq modules.
 
 ## Degenerate Boolean-event independence laws
 
@@ -1249,8 +1249,24 @@ conditional-mass laws; their reverse-order partners use only
 the already checked symmetry theorem. No new list recursion, event
 sum, or conditional quotient is introduced.
 
-Current audited totals: **442 public claims, 445 proof scripts,
-501 documented declarations** in seven Rocq files.
+Current audited totals: **444 public claims, 447 proof scripts,
+503 documented declarations** in seven Rocq files.
+
+## True-conditioning independence and zero indicator covariance
+
+Two new bridge theorems compose previously checked propositions
+without expanding event sums or covariance polynomials. In `FiniteBridge`,
+unit finite total mass makes conditional independence given the certain
+event equivalent to zero finite covariance of the two event-indicator
+scores. In `FourCellBridge`, the same equivalence holds for the
+normalized, nonnegative four-cell admissions model by direct
+instantiation of the general result and `four_cell_total_mass`.
+The formalization does not assume that observed admissions are
+independent and does not generalize zero covariance to independence
+of arbitrary real-valued scores.
+
+Current audited totals: **444 public claims, 447 proof scripts,
+503 documented declarations** in seven Rocq modules.
 
 ## Research extensions
 

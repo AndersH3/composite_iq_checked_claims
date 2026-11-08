@@ -1023,6 +1023,19 @@ normalization or nonnegative-weight assumption is introduced into
 these algebraic claims; both conditions are relevant when interpreting
 arbitrary finite weights as actual probabilities.
 
+## Normalized independence and zero-indicator-covariance bridges
+
+`FiniteBridge.finite_normalized_conditional_independence_iff_zero_indicator_covariance`
+derives equivalence between finite conditional independence given
+the certain event and zero indicator covariance. It **only composes**
+the existing normalized true-conditioning product criterion and
+indicator covariance/product identity; there is no new finite
+integration, indicator-product calculation, or covariance expansion.
+`FourCellBridge.four_cell_generic_independence_iff_zero_indicator_covariance`
+then instantiates this theorem with the existing four-cell weight
+normalization. These exact finite results do not equate zero
+covariance with independence of arbitrary real-valued scores.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
