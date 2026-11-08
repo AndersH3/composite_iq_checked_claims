@@ -566,7 +566,7 @@ union, filter, matrix representation, custom axiom, `Admitted`
 or unpinned library was added. Previous named theorem
 statements and historical Python/SPARK evidence are unchanged.
 
-## Current library consolidation: unnormalized composite covariance/matrices
+## Previous library consolidation: unnormalized composite covariance/matrices
 
 The [ordered proof-refactor register](PROOF_REFACTOR_REGISTER.md)
 now records **350 proofs**, including five new, stronger finite
@@ -609,6 +609,42 @@ Gaussian distributions, or empirical IQ validity.
 No new `Axiom`, `Parameter`, `Admitted`, unpinned dependency,
 recursively reimplemented list/matrix primitive, or change to the
 archived source-pinned SPARK/Python evidence is introduced.
+
+## Current Stdlib consolidation: finite unweighted score-list moments
+
+The existing Rocq code already uses `Stdlib.List.map` to represent
+an unweighted list of score functions as unit-coefficient pairs
+inside the shared `linear_combination` abstraction.
+This is enough to generalize three score-list moment results
+without adding a recursive list sum or a separate unweighted
+covariance implementation.
+
+| New unconditional theorem | Exact checked library reuse | Original theorem refactored |
+|---|---|---|
+| `covariance_with_sum_scores_unconditional` | `Stdlib.List.map`, `unweighted_scores_as_linear_combination`, `covariance_of_general_weighted_second_unconditional`, `unweighted_covariance_row_as_weighted` | `covariance_with_sum_scores` |
+| `covariance_of_sum_scores_unconditional` | `covariance_with_sum_scores_unconditional`, `covariance_symmetric`, `FiniteSum.finite_sum_ext` | `covariance_of_sum_scores` |
+| `variance_of_unweighted_sum_unconditional` | `covariance_of_sum_scores_unconditional`, the existing `variance` alias | `variance_of_unweighted_sum` |
+
+The three original theorem statements, each including
+`total_mass = 1`, remain unchanged; their bodies now apply
+the stronger unconditional results. This continues the
+algebraic generalization of finite composite covariance.
+It does **not** infer nonnegative variance or PSD covariance
+matrices for signed, unnormalized sample weights.
+
+**Current audited inventory:** 350 public theorem/lemma/example
+declarations, one local helper and two proof-bearing record
+constructors, for **353 proof scripts**. There are **407 named
+declarations** across seven Rocq modules, all with adjacent
+mathematical comments; every module retains an explanatory header.
+The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
+the exact ordered source inventory checked by CI.
+
+The 14 remaining list/natural-number inductions stay in their
+documented core fold/recurrence/suffix-dependent proofs.
+No new untrusted axiom, `Admitted`, custom matrix or fold
+implementation, unpinned library, or change to historical
+Python/SPARK verification evidence has been introduced.
 
 ## Deliberately retained project-specific definitions
 
