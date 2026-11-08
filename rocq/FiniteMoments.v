@@ -5320,7 +5320,7 @@ Section FiniteProbabilityMoments.
    Mathematical meaning: Applying the same affine score transformation to every score in a left finite basis and another affine transformation to each score in a right basis multiplies every cross-covariance matrix entry by the product of the two slopes; additive offsets disappear.
    Exact checked proposition: For any lists left right of real outcome scores, slopes a,c, offsets b,d and total_mass=1, basis_cross_covariance_matrix (map (fun f => fun x => a*f x+b) left) (map (fun g => fun x => c*g x+d) right) equals map (map (fun v => a*c*v)) (basis_cross_covariance_matrix left right).
    Premises and side conditions: Only the finite sample normalization total_mass = 1 is required; the result holds for signed weights, zero slopes, any real offsets, empty or repeated score lists, and rectangular matrices. No positive-weight, nonnegative-weight, or independence hypothesis is added.
-   Proof/definition method: Unfold the cross-covariance list-of-list representation, use Stdlib.List.map_map to fuse nested maps, apply Stdlib.List.map_ext at both list levels, and invoke the previously checked covariance_of_affine_scores equality at each entry.
+   Proof/definition method: Introduce the entrywise scaled covariance matrix as an explicit intermediate list, use Stdlib.List.map_map to fuse each outer and inner mapping in a controlled order, then apply Stdlib.List.map_ext and the checked covariance_of_affine_scores equality to each entry.
    Library reuse: Stdlib.List.map_map, Stdlib.List.map_ext, covariance_of_affine_scores and the existing basis_cross_covariance_matrix definition.
    Boundary: This is exact finite-list entrywise covariance algebra; it is not a transformation of arbitrary matrices or a spectral rank theorem.
    *)
@@ -5335,10 +5335,18 @@ Section FiniteProbabilityMoments.
   Proof.
     intros left right a b c d Hmass.
     unfold basis_cross_covariance_matrix.
-    repeat rewrite map_map.
-    apply map_ext; intro f.
-    apply map_ext; intro g.
-    apply (covariance_of_affine_scores f g a b c d Hmass).
+    transitivity
+      (map (fun f => map (fun g => a * c * covariance f g) right)
+        left).
+    - rewrite map_map.
+      apply map_ext; intro f.
+      rewrite map_map.
+      apply map_ext; intro g.
+      apply (covariance_of_affine_scores f g a b c d Hmass).
+    - rewrite map_map.
+      apply map_ext; intro f.
+      rewrite map_map.
+      reflexivity.
   Qed.
 
   (**
