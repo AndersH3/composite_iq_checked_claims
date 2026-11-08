@@ -25,68 +25,76 @@ Open Scope R_scope.
 Section FiniteOutcomeSpace.
   Variable Outcome : Type.
   (**
-   [Event] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: = Outcome -> bool.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [Event] (definition) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Defines Event using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition Event := Outcome -> bool.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition Event := Outcome -> bool.
 
   (**
-   [indicator] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: (b : bool) : R := if b then 1 else 0.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [indicator] (definition) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Defines indicator using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition indicator (b : bool) : R := if b then 1 else 0.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition indicator (b : bool) : R := if b then 1 else 0.
 
   (* Stdlib.List.existsb is the finite Boolean OR over event membership;
      no project-specific Boolean recursion is required. *)
   (**
-   [any_event] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: (events : list Event) (x : Outcome) : bool := existsb
-   (fun e => e x) events.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [any_event] (definition) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Defines any event using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition any_event (events : list Event) (x : Outcome) : bool
+   := existsb (fun e => e x) events.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition any_event (events : list Event) (x : Outcome) : bool :=
     existsb (fun e => e x) events.
 
   (* Count event indicators using the standard list fold. *)
   (**
-   [sum_event_indicators] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: (events : list Event) (x : Outcome) : R :=
-   FiniteSum.finite_sum (fun e => indicator (e x)) events.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [sum_event_indicators] (definition) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Defines sum event indicators using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition sum_event_indicators (events : list Event) (x :
+   Outcome) : R := FiniteSum.finite_sum (fun e => indicator (e x)) events.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition sum_event_indicators (events : list Event)
     (x : Outcome) : R :=
@@ -95,35 +103,40 @@ Section FiniteOutcomeSpace.
   (* Retain the original public name as a transparent wrapper around
      the same shared finite-sum implementation used in FiniteMoments. *)
   (**
-   [finite_sum] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: R) (xs : list Outcome) : R := FiniteSum.finite_sum f
-   xs.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_sum] (definition) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Defines finite sum using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition finite_sum (f : Outcome -> R) (xs : list Outcome) :
+   R := FiniteSum.finite_sum f xs.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition finite_sum (f : Outcome -> R) (xs : list Outcome) : R :=
     FiniteSum.finite_sum f xs.
 
   (**
-   [finite_prob] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: R) (samples : list Outcome) (event : Event) : R :=
-   finite_sum (fun x => weights x * indicator (event x)) samples.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob] (definition) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Defines finite prob using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition finite_prob (weights : Outcome -> R) (samples : list
+   Outcome) (event : Event) : R := finite_sum (fun x => weights x * indicator (event
+   x)) samples.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition finite_prob (weights : Outcome -> R)
     (samples : list Outcome) (event : Event) : R :=
@@ -131,18 +144,21 @@ Section FiniteOutcomeSpace.
 
   (* The same list fold computes the marginal union-bound total. *)
   (**
-   [sum_marginal_probs] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: R) (samples : list Outcome) (events : list Event) : R
-   := FiniteSum.finite_sum (finite_prob weights samples) events.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [sum_marginal_probs] (definition) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Defines sum marginal probs using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition sum_marginal_probs (weights : Outcome -> R) (samples
+   : list Outcome) (events : list Event) : R := FiniteSum.finite_sum (finite_prob
+   weights samples) events.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition sum_marginal_probs
     (weights : Outcome -> R) (samples : list Outcome)
@@ -150,35 +166,41 @@ Section FiniteOutcomeSpace.
     FiniteSum.finite_sum (finite_prob weights samples) events.
 
   (**
-   [union_prob] (definition).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal construction: R) (samples : list Outcome) (events : list Event) : R
-   := finite_prob weights samples (any_event events).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [union_prob] (definition) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Defines union prob using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition union_prob (weights : Outcome -> R) (samples : list
+   Outcome) (events : list Event) : R := finite_prob weights samples (any_event
+   events).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Definition union_prob (weights : Outcome -> R)
     (samples : list Outcome) (events : list Event) : R :=
     finite_prob weights samples (any_event events).
 
   (**
-   [indicator_nonnegative] (lemma).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall b, 0 <= indicator b.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [indicator_nonnegative] (lemma) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Lemma indicator_nonnegative : forall b, 0 <= indicator
+   b.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra);
+   references include indicator.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma indicator_nonnegative :
     forall b, 0 <= indicator b.
@@ -187,17 +209,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [indicator_at_most_one] (lemma).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall b, indicator b <= 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [indicator_at_most_one] (lemma) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Lemma indicator_at_most_one : forall b, indicator b <=
+   1.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra);
+   references include indicator.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma indicator_at_most_one :
     forall b, indicator b <= 1.
@@ -206,18 +231,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [sum_indicators_nonnegative] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall events x, 0 <= sum_event_indicators events x.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_nonnegative., indicator_nonnegative..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [sum_indicators_nonnegative] (lemma) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma sum_indicators_nonnegative : forall events x, 0
+   <= sum_event_indicators events x.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_nonnegative., indicator_nonnegative..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma sum_indicators_nonnegative :
     forall events x, 0 <= sum_event_indicators events x.
@@ -230,20 +257,21 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [union_indicator_bound] (lemma).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall events x, indicator (any_event events x) <=
-   sum_event_indicators events x.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, application of already-proved lemmas, explicit case
-   analysis; notably sum_event_indicators., any_event, existsb_exists.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [union_indicator_bound] (lemma) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Lemma union_indicator_bound : forall events x,
+   indicator (any_event events x) <= sum_event_indicators events x.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, case analysis,
+   rewriting of equalities, reuse of previously established lemmas, definitional
+   reduction; references include sum_event_indicators., any_event, existsb_exists.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma union_indicator_bound :
     forall events x,
@@ -271,18 +299,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [event_member_implies_union] (lemma).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: any_event events x = true.
-   Hypotheses: Requires enumerated-list membership where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably any_event.,
-   existsb_exists..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [event_member_implies_union] (lemma) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Lemma event_member_implies_union : forall events e x,
+   In e events -> e x = true -> any_event events x = true.
+   Premises and side conditions: The displayed hypotheses include sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include any_event., existsb_exists..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma event_member_implies_union :
     forall events e x, In e events ->
@@ -295,17 +325,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [indicator_implication_bound] (lemma).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: indicator b <= indicator c.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: Stdlib Lra linear arithmetic; notably indicator.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [indicator_implication_bound] (lemma) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Lemma indicator_implication_bound : forall b c, (b =
+   true -> c = true) -> indicator b <= indicator c.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses linear real arithmetic (Lra);
+   references include indicator.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma indicator_implication_bound :
     forall b c,
@@ -316,18 +349,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_sum_monotone] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: finite_sum f xs <= finite_sum g xs.
-   Hypotheses: Requires enumerated-list membership where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_monotone.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_sum_monotone] (lemma) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma finite_sum_monotone : forall xs f g, (forall x,
+   In x xs -> f x <= g x) -> finite_sum f xs <= finite_sum g xs.
+   Premises and side conditions: The displayed hypotheses include sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_monotone.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma finite_sum_monotone :
     forall xs f g,
@@ -339,18 +374,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_sum_extensional] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: finite_sum f xs = finite_sum g xs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_sum_extensional] (lemma) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma finite_sum_extensional : forall xs f g, (forall
+   x, f x = g x) -> finite_sum f xs = finite_sum g xs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_ext.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma finite_sum_extensional :
     forall xs f g, (forall x, f x = g x) ->
@@ -361,19 +398,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_sum_addition] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall xs f g, finite_sum (fun x => f x + g x) xs =
-   finite_sum f xs + finite_sum g xs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_add..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_sum_addition] (lemma) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma finite_sum_addition : forall xs f g, finite_sum
+   (fun x => f x + g x) xs = finite_sum f xs + finite_sum g xs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_add..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma finite_sum_addition :
     forall xs f g,
@@ -385,21 +423,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [interchange_finite_sums] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall weights samples events, finite_sum (fun x =>
-   weights x * sum_event_indicators events x) samples = sum_marginal_probs
-   weights samples events.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext, FiniteSum.finite_sum_scale.,
-   FiniteSum.finite_sum_swap..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [interchange_finite_sums] (lemma) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma interchange_finite_sums : forall weights samples
+   events, finite_sum (fun x => weights x * sum_event_indicators events x) samples =
+   sum_marginal_probs weights samples events.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include FiniteSum.finite_sum_ext,
+   FiniteSum.finite_sum_scale., FiniteSum.finite_sum_swap..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma interchange_finite_sums :
     forall weights samples events,
@@ -424,20 +463,23 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [arbitrary_union_bound] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: union_prob weights samples events <= sum_marginal_probs
-   weights samples events.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Psatz nonlinear arithmetic; notably union_prob, finite_sum_monotone.,
-   union_indicator_bound.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [arbitrary_union_bound] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem arbitrary_union_bound : forall weights samples
+   events, (forall x, In x samples -> 0 <= weights x) -> union_prob weights samples
+   events <= sum_marginal_probs weights samples events.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, polynomial real arithmetic (Psatz); references
+   include union_prob, finite_sum_monotone., union_indicator_bound.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem arbitrary_union_bound :
     forall weights samples events,
@@ -456,20 +498,23 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [arbitrary_union_contains_every_member] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: finite_prob weights samples e <= union_prob weights
-   samples events.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic; notably finite_prob, finite_sum_monotone.,
-   indicator_implication_bound..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [arbitrary_union_contains_every_member] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem arbitrary_union_contains_every_member : forall
+   weights samples events e, In e events -> (forall x, In x samples -> 0 <= weights
+   x) -> finite_prob weights samples e <= union_prob weights samples events.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz); references include finite_prob,
+   finite_sum_monotone., Hweights.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem arbitrary_union_contains_every_member :
     forall weights samples events e,
@@ -491,19 +536,23 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [arbitrary_union_at_most_total_mass] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: union_prob weights samples events <= finite_sum weights
-   samples.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic; notably union_prob, finite_sum_monotone., indicator_at_most_one.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [arbitrary_union_at_most_total_mass] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem arbitrary_union_at_most_total_mass : forall
+   weights samples events, (forall x, In x samples -> 0 <= weights x) -> union_prob
+   weights samples events <= finite_sum weights samples.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz); references include union_prob,
+   finite_sum_monotone., Hweights.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem arbitrary_union_at_most_total_mass :
     forall weights samples events,
@@ -520,19 +569,23 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [normalized_arbitrary_union_at_most_one] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: union_prob weights samples events <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership where shown in the statement; all other
-   constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably arbitrary_union_at_most_total_mass.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [normalized_arbitrary_union_at_most_one] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem normalized_arbitrary_union_at_most_one : forall
+   weights samples events, (forall x, In x samples -> 0 <= weights x) -> finite_sum
+   weights samples = 1 -> union_prob weights samples events <= 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include
+   arbitrary_union_at_most_total_mass.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem normalized_arbitrary_union_at_most_one :
     forall weights samples events,
@@ -547,18 +600,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [arbitrary_union_nonnegative] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: 0 <= union_prob weights samples events.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably union_prob,
-   FiniteSum.finite_sum_nonnegative., Rmult_le_pos..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [arbitrary_union_nonnegative] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem arbitrary_union_nonnegative : forall weights
+   samples events, (forall x, In x samples -> 0 <= weights x) -> 0 <= union_prob
+   weights samples events.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include union_prob, FiniteSum.finite_sum_nonnegative., Rmult_le_pos..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem arbitrary_union_nonnegative :
     forall weights samples events,
@@ -578,19 +635,21 @@ Section FiniteOutcomeSpace.
      Probability mass is functorial in the sample list; no new
      traversal or duplicated arithmetic is introduced. *)
   (**
-   [finite_prob_true] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples, finite_prob weights samples (fun
-   _ => true) = finite_sum weights samples.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, ring/field
-   normalization; notably finite_prob., finite_sum_extensional.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_true] (theorem) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_true : forall weights samples,
+   finite_prob weights samples (fun _ => true) = finite_sum weights samples.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   ring/field normalization, definitional reduction; references include finite_prob.,
+   finite_sum_extensional.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_true :
     forall weights samples,
@@ -603,20 +662,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_prob_false] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples, finite_prob weights samples (fun
-   _ => false) = 0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, ring/field
-   normalization; notably finite_prob., finite_sum_extensional,
+   [finite_prob_false] (theorem) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_false : forall weights samples,
+   finite_prob weights samples (fun _ => false) = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization, definitional reduction;
+   references include finite_prob., finite_sum_extensional,
    FiniteSum.finite_sum_zero..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_false :
     forall weights samples,
@@ -632,21 +693,25 @@ Section FiniteOutcomeSpace.
   (* Zero event mass is exactly absence of positive weighted support.
      No assumption about globally distinct sample entries is needed. *)
   (**
-   [finite_prob_zero_iff_no_positive_mass_support] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples e, (forall x, In x samples -> 0 <=
-   weights x) -> (finite_prob weights samples e = 0 <-> forall x, In x samples
-   -> e x = true -> weights x = 0).
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, Stdlib Psatz nonlinear arithmetic, ring/field
-   normalization; notably finite_prob, Rmult_le_pos., indicator_nonnegative..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_zero_iff_no_positive_mass_support] (theorem) — Finite Boolean event
+   mass and union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_zero_iff_no_positive_mass_support :
+   forall weights samples e, (forall x, In x samples -> 0 <= weights x) ->
+   (finite_prob weights samples e = 0 <-> forall x, In x samples -> e x = true ->
+   weights x = 0).
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, polynomial real arithmetic (Psatz),
+   ring/field normalization, definitional reduction; references include finite_prob,
+   Rmult_le_pos., indicator_nonnegative..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_zero_iff_no_positive_mass_support :
     forall weights samples e,
@@ -681,20 +746,23 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_prob_positive_of_positive_support] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: 0 < finite_prob weights samples e.
-   Hypotheses: Requires nonnegative outcome weights; explicit
-   nonzero/strict-positive denominator or scale; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably finite_prob, Rmult_le_pos.,
-   indicator_nonnegative..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_positive_of_positive_support] (theorem) — Finite Boolean event mass
+   and union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_positive_of_positive_support :
+   forall weights samples e x, (forall y, In y samples -> 0 <= weights y) -> In x
+   samples -> e x = true -> 0 < weights x -> 0 < finite_prob weights samples e.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), definitional
+   reduction; references include finite_prob, Rmult_le_pos., indicator_nonnegative..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_positive_of_positive_support :
     forall weights samples e x,
@@ -725,20 +793,23 @@ Section FiniteOutcomeSpace.
      List.filter operation. This equivalence is valid for arbitrary real
      weights; normalization and positivity are not needed for equality. *)
   (**
-   [finite_prob_as_filtered_mass] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples e, finite_prob weights samples e =
-   FiniteSum.finite_sum weights (filter e samples).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, ring/field normalization; notably finite_prob,
-   FiniteSum.finite_sum_filter., FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_as_filtered_mass] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_as_filtered_mass : forall weights
+   samples e, finite_prob weights samples e = FiniteSum.finite_sum weights (filter e
+   samples).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, ring/field normalization, definitional
+   reduction; references include finite_prob, FiniteSum.finite_sum_filter.,
+   FiniteSum.finite_sum_ext.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_as_filtered_mass :
     forall weights samples e,
@@ -755,19 +826,22 @@ Section FiniteOutcomeSpace.
   (* Two event predicates only need to agree on enumerated outcomes.
      Their values outside the finite sample have no bearing on mass. *)
   (**
-   [finite_prob_event_ext_on_samples] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: finite_prob weights samples e = finite_prob weights
-   samples f.
-   Hypotheses: Requires enumerated-list membership where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably finite_prob, FiniteSum.finite_sum_ext_in..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_event_ext_on_samples] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem finite_prob_event_ext_on_samples : forall
+   weights samples e f, (forall x, In x samples -> e x = f x) -> finite_prob weights
+   samples e = finite_prob weights samples f.
+   Premises and side conditions: The displayed hypotheses include sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   finite_prob, FiniteSum.finite_sum_ext_in..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_event_ext_on_samples :
     forall weights samples e f,
@@ -784,19 +858,21 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_prob_sample_append] (theorem).
-   Meaning: Proves a structural list identity using Rocq's standard list
-   operations.
-   Formal conclusion: forall weights left right e, finite_prob weights (left ++
-   right) e = finite_prob weights left e + finite_prob weights right e.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably finite_prob,
-   FiniteSum.finite_sum_app..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_sample_append] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a list-structural invariant without custom sorting or
+   indexing.
+   Exact checked proposition: Theorem finite_prob_sample_append : forall weights left
+   right e, finite_prob weights (left ++ right) e = finite_prob weights left e +
+   finite_prob weights right e.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include finite_prob, FiniteSum.finite_sum_app..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_sample_append :
     forall weights left right e,
@@ -809,18 +885,21 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_prob_sample_permutation] (theorem).
-   Meaning: Proves a structural list identity using Rocq's standard list
-   operations.
-   Formal conclusion: finite_prob weights left e = finite_prob weights right e.
-   Hypotheses: Requires Stdlib list-permutation premise where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably finite_prob,
-   FiniteSum.finite_sum_permutation.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_sample_permutation] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a list-structural invariant without custom sorting or
+   indexing.
+   Exact checked proposition: Theorem finite_prob_sample_permutation : forall weights
+   left right e, Permutation left right -> finite_prob weights left e = finite_prob
+   weights right e.
+   Premises and side conditions: The displayed hypotheses include Stdlib permutation
+   relation. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include finite_prob, FiniteSum.finite_sum_permutation, Hperm..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_sample_permutation :
     forall weights left right e,
@@ -833,19 +912,21 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [union_prob_sample_permutation] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: union_prob weights left events = union_prob weights right
-   events.
-   Hypotheses: Requires Stdlib list-permutation premise where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably union_prob.,
-   finite_prob_sample_permutation.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [union_prob_sample_permutation] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_prob_sample_permutation : forall weights
+   left right events, Permutation left right -> union_prob weights left events =
+   union_prob weights right events.
+   Premises and side conditions: The displayed hypotheses include Stdlib permutation
+   relation. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include union_prob., finite_prob_sample_permutation, Hperm..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem union_prob_sample_permutation :
     forall weights left right events,
@@ -858,19 +939,21 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [sum_marginal_probs_event_permutation] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: sum_marginal_probs weights samples left =
-   sum_marginal_probs weights samples right.
-   Hypotheses: Requires Stdlib list-permutation premise where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   sum_marginal_probs., FiniteSum.finite_sum_permutation.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [sum_marginal_probs_event_permutation] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem sum_marginal_probs_event_permutation : forall
+   weights samples left right, Permutation left right -> sum_marginal_probs weights
+   samples left = sum_marginal_probs weights samples right.
+   Premises and side conditions: The displayed hypotheses include Stdlib permutation
+   relation. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include sum_marginal_probs., FiniteSum.finite_sum_permutation, Hperm..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem sum_marginal_probs_event_permutation :
     forall weights samples left right,
@@ -884,20 +967,24 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_prob_event_monotone] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: finite_prob weights samples e <= finite_prob weights
-   samples f.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic; notably finite_prob., finite_sum_monotone.,
-   indicator_implication_bound.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_event_monotone] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_event_monotone : forall weights
+   samples e f, (forall x, In x samples -> 0 <= weights x) -> (forall x, In x samples
+   -> e x = true -> f x = true) -> finite_prob weights samples e <= finite_prob
+   weights samples f.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz); references include finite_prob.,
+   finite_sum_monotone., indicator_implication_bound.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_event_monotone :
     forall weights samples e f,
@@ -916,21 +1003,24 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [normalized_finite_prob_unit_interval] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: 0 <= finite_prob weights samples e /\ finite_prob weights
+   [normalized_finite_prob_unit_interval] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem normalized_finite_prob_unit_interval : forall
+   weights samples e, (forall x, In x samples -> 0 <= weights x) -> finite_sum
+   weights samples = 1 -> 0 <= finite_prob weights samples e /\ finite_prob weights
    samples e <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership where shown in the statement; all other
-   constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic, Stdlib Psatz nonlinear arithmetic; notably finite_prob.,
-   FiniteSum.finite_sum_nonnegative., Rmult_le_pos..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), polynomial real arithmetic (Psatz); references
+   include finite_prob., FiniteSum.finite_sum_nonnegative., Rmult_le_pos..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem normalized_finite_prob_unit_interval :
     forall weights samples e,
@@ -960,19 +1050,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [empty_family_probability_zero] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples, union_prob weights samples [] =
-   0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   finite_prob_false..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [empty_family_probability_zero] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem empty_family_probability_zero : forall weights
+   samples, union_prob weights samples [] = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include finite_prob_false..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem empty_family_probability_zero :
     forall weights samples, union_prob weights samples [] = 0.
@@ -983,20 +1074,21 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [singleton_family_probability] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples e, union_prob weights samples [e]
-   = finite_prob weights samples e.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably union_prob, finite_sum_extensional,
-   any_event.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [singleton_family_probability] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem singleton_family_probability : forall weights
+   samples e, union_prob weights samples [e] = finite_prob weights samples e.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   union_prob, finite_sum_extensional, any_event.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem singleton_family_probability :
     forall weights samples e,
@@ -1017,20 +1109,22 @@ Section FiniteOutcomeSpace.
      replace a custom induction over list permutations. *)
 
   (**
-   [union_prob_membership_extensional] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: union_prob weights samples left = union_prob weights
-   samples right.
-   Hypotheses: Requires enumerated-list membership where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, definitional computation; notably union_prob,
-   finite_sum_extensional, any_event.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [union_prob_membership_extensional] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_prob_membership_extensional : forall
+   weights samples left right, (forall e, In e left <-> In e right) -> union_prob
+   weights samples left = union_prob weights samples right.
+   Premises and side conditions: The displayed hypotheses include sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, definitional reduction; references include
+   union_prob, finite_sum_extensional, any_event.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem union_prob_membership_extensional :
     forall weights samples left right,
@@ -1064,19 +1158,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [union_prob_permutation_invariant] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: union_prob weights samples left = union_prob weights
-   samples right.
-   Hypotheses: Requires Stdlib list-permutation premise where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   union_prob_membership_extensional., Permutation_sym.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [union_prob_permutation_invariant] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_prob_permutation_invariant : forall
+   weights samples left right, Permutation left right -> union_prob weights samples
+   left = union_prob weights samples right.
+   Premises and side conditions: The displayed hypotheses include Stdlib permutation
+   relation. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include union_prob_membership_extensional., Permutation_in,
+   Permutation_in..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem union_prob_permutation_invariant :
     forall weights samples left right,
@@ -1094,19 +1191,21 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [union_prob_duplicate_route] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall weights samples e events, union_prob weights
-   samples (e :: e :: events) = union_prob weights samples (e :: events).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   union_prob_membership_extensional..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [union_prob_duplicate_route] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_prob_duplicate_route : forall weights
+   samples e events, union_prob weights samples (e :: e :: events) = union_prob
+   weights samples (e :: events).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   definitional reduction; references include union_prob_membership_extensional..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem union_prob_duplicate_route :
     forall weights samples e events,
@@ -1125,17 +1224,20 @@ Section FiniteOutcomeSpace.
      normalization are required only for probability bounds. *)
 
   (**
-   [indicator_complement] (lemma).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall b, indicator (negb b) + indicator b = 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [indicator_complement] (lemma) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Lemma indicator_complement : forall b, indicator (negb
+   b) + indicator b = 1.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma indicator_complement :
     forall b, indicator (negb b) + indicator b = 1.
@@ -1144,21 +1246,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_prob_complement] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples e, finite_prob weights samples
-   (fun x => negb (e x)) + finite_prob weights samples e = finite_sum weights
-   samples.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably finite_prob., finite_sum_extensional,
-   indicator_complement..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_complement] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_complement : forall weights samples
+   e, finite_prob weights samples (fun x => negb (e x)) + finite_prob weights samples
+   e = finite_sum weights samples.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   finite_prob., finite_sum_extensional, indicator_complement..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_complement :
     forall weights samples e,
@@ -1176,19 +1279,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [normalized_finite_prob_complement] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: finite_prob weights samples (fun x => negb (e x)) = 1 -
-   finite_prob weights samples e.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably finite_prob_complement.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [normalized_finite_prob_complement] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem normalized_finite_prob_complement : forall
+   weights samples e, finite_sum weights samples = 1 -> finite_prob weights samples
+   (fun x => negb (e x)) = 1 - finite_prob weights samples e.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   finite_prob_complement, Htotal.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem normalized_finite_prob_complement :
     forall weights samples e,
@@ -1202,18 +1308,20 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [indicator_union_intersection] (lemma).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall b c, indicator (orb b c) + indicator (andb b c) =
-   indicator b + indicator c.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [indicator_union_intersection] (lemma) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Lemma indicator_union_intersection : forall b c,
+   indicator (orb b c) + indicator (andb b c) = indicator b + indicator c.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma indicator_union_intersection :
     forall b c,
@@ -1224,21 +1332,23 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_prob_inclusion_exclusion] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall weights samples e f, finite_prob weights samples
-   (fun x => orb (e x) (f x)) + finite_prob weights samples (fun x => andb (e
-   x) (f x)) = finite_prob weights samples e + finite_prob weights samples f.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably finite_prob., finite_sum_extensional,
-   indicator_union_intersection..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_prob_inclusion_exclusion] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   boolean event mass and union/intersection inequalities.
+   Exact checked proposition: Theorem finite_prob_inclusion_exclusion : forall
+   weights samples e f, finite_prob weights samples (fun x => orb (e x) (f x)) +
+   finite_prob weights samples (fun x => andb (e x) (f x)) = finite_prob weights
+   samples e + finite_prob weights samples f.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   finite_prob., finite_sum_extensional, indicator_union_intersection..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_prob_inclusion_exclusion :
     forall weights samples e f,
@@ -1256,20 +1366,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [two_event_union_probability] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall weights samples e f, union_prob weights samples
-   [e; f] = finite_prob weights samples (fun x => orb (e x) (f x)).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably union_prob, finite_sum_extensional,
-   any_event.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [two_event_union_probability] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem two_event_union_probability : forall weights
+   samples e f, union_prob weights samples [e; f] = finite_prob weights samples (fun
+   x => orb (e x) (f x)).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   union_prob, finite_sum_extensional, any_event.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem two_event_union_probability :
     forall weights samples e f,
@@ -1285,20 +1397,23 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [two_event_union_inclusion_exclusion] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall weights samples e f, union_prob weights samples
-   [e; f] + finite_prob weights samples (fun x => andb (e x) (f x)) =
-   finite_prob weights samples e + finite_prob weights samples f.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably two_event_union_probability., finite_prob_inclusion_exclusion..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [two_event_union_inclusion_exclusion] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem two_event_union_inclusion_exclusion : forall
+   weights samples e f, union_prob weights samples [e; f] + finite_prob weights
+   samples (fun x => andb (e x) (f x)) = finite_prob weights samples e + finite_prob
+   weights samples f.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include two_event_union_probability.,
+   finite_prob_inclusion_exclusion..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem two_event_union_inclusion_exclusion :
     forall weights samples e f,
@@ -1316,19 +1431,20 @@ Section FiniteOutcomeSpace.
      concatenating marginal sums uses map_app and fold_right_app. *)
 
   (**
-   [any_event_append] (lemma).
-   Meaning: Proves a structural list identity using Rocq's standard list
-   operations.
-   Formal conclusion: forall left right x, any_event (left ++ right) x = orb
-   (any_event left x) (any_event right x).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, definitional computation; notably
-   any_event., existsb_app..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [any_event_append] (lemma) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Proves a list-structural invariant without custom sorting or
+   indexing.
+   Exact checked proposition: Lemma any_event_append : forall left right x, any_event
+   (left ++ right) x = orb (any_event left x) (any_event right x).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include any_event., existsb_app..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Lemma any_event_append :
     forall left right x,
@@ -1342,21 +1458,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [union_prob_append] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall weights samples left right, union_prob weights
-   samples (left ++ right) = finite_prob weights samples (fun x => orb
-   (any_event left x) (any_event right x)).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably union_prob, finite_sum_extensional,
-   any_event_append..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [union_prob_append] (theorem) — Finite Boolean event mass and union/intersection
+   inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem union_prob_append : forall weights samples left
+   right, union_prob weights samples (left ++ right) = finite_prob weights samples
+   (fun x => orb (any_event left x) (any_event right x)).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   union_prob, finite_sum_extensional, any_event_append..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem union_prob_append :
     forall weights samples left right,
@@ -1372,20 +1489,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [sum_marginal_probs_append] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall weights samples left right, sum_marginal_probs
-   weights samples (left ++ right) = sum_marginal_probs weights samples left +
-   sum_marginal_probs weights samples right.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_app..
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [sum_marginal_probs_append] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem sum_marginal_probs_append : forall weights
+   samples left right, sum_marginal_probs weights samples (left ++ right) =
+   sum_marginal_probs weights samples left + sum_marginal_probs weights samples
+   right.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_app..
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem sum_marginal_probs_append :
     forall weights samples left right,
@@ -1405,19 +1524,22 @@ Section FiniteOutcomeSpace.
      inclusion-exclusion laws; the specialized four-cell calculation in
      Admissions need not be repeated here. *)
   (**
-   [finite_intersection_at_most_first] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: finite_prob weights samples (fun x => andb (e x) (f x))
-   <= finite_prob weights samples e.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   finite_prob_event_monotone., andb_true_iff.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_intersection_at_most_first] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem finite_intersection_at_most_first : forall
+   weights samples e f, (forall x, In x samples -> 0 <= weights x) -> finite_prob
+   weights samples (fun x => andb (e x) (f x)) <= finite_prob weights samples e.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include finite_prob_event_monotone., andb_true_iff.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_intersection_at_most_first :
     forall weights samples e f,
@@ -1434,19 +1556,22 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_intersection_at_most_second] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: finite_prob weights samples (fun x => andb (e x) (f x))
-   <= finite_prob weights samples f.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   finite_prob_event_monotone., andb_true_iff.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   [finite_intersection_at_most_second] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem finite_intersection_at_most_second : forall
+   weights samples e f, (forall x, In x samples -> 0 <= weights x) -> finite_prob
+   weights samples (fun x => andb (e x) (f x)) <= finite_prob weights samples f.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include finite_prob_event_monotone., andb_true_iff.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_intersection_at_most_second :
     forall weights samples e f,
@@ -1463,21 +1588,24 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_frechet_lower_bound] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: finite_prob weights samples e + finite_prob weights
-   samples f - 1 <= finite_prob weights samples (fun x => andb (e x) (f x)).
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership where shown in the statement; all other
-   constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably finite_prob_inclusion_exclusion,
+   [finite_frechet_lower_bound] (theorem) — Finite Boolean event mass and
+   union/intersection inequalities.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem finite_frechet_lower_bound : forall weights
+   samples e f, (forall x, In x samples -> 0 <= weights x) -> finite_sum weights
+   samples = 1 -> finite_prob weights samples e + finite_prob weights samples f - 1
+   <= finite_prob weights samples (fun x => andb (e x) (f x)).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra); references include finite_prob_inclusion_exclusion,
    normalized_finite_prob_unit_interval.
-   Library discipline: Stdlib.List.existsb, filter, Bool, Sorting.Permutation
-   and the shared FiniteSum lemmas.
-   Scope: Repeated sample entries contribute repeated weight; no measure axiom,
-   independence or distributional model is imported.
+   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
+   FiniteSum.
+   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
+   bounds need explicit nonnegative weights and possibly normalization.
    *)
   Theorem finite_frechet_lower_bound :
     forall weights samples e f,
