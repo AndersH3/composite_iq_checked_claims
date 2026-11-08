@@ -10,6 +10,26 @@ Open Scope R_scope.
 Definition four_cell_samples : list (bool * bool) :=
   list_prod [true; false] [true; false].
 
+(* Stdlib.List.in_prod and length_prod certify that the enumeration
+   covers every Boolean pair and has the expected four outcomes. *)
+Theorem four_cell_samples_complete :
+  forall outcome : bool * bool, In outcome four_cell_samples.
+Proof.
+  intros [a b].
+  unfold four_cell_samples.
+  apply in_prod.
+  - destruct a; simpl; auto.
+  - destruct b; simpl; auto.
+Qed.
+
+Theorem four_cell_samples_length :
+  length four_cell_samples = 4.
+Proof.
+  unfold four_cell_samples.
+  rewrite length_prod.
+  reflexivity.
+Qed.
+
 Definition four_cell_weight (m : TwoEventModel)
     (outcome : bool * bool) : R :=
   match outcome with
