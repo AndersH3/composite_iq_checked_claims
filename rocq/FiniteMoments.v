@@ -4846,6 +4846,7 @@ Section FiniteProbabilityMoments.
         f x Hmass Hw Hzero Hx Hposx) as Hfirst.
       pose proof (zero_variance_is_constant_on_positive_mass
         f y Hmass Hw Hzero Hy Hposy) as Hsecond.
+      exfalso.
       apply Hdistinct.
       rewrite Hfirst, Hsecond.
       reflexivity.
