@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **342 theorem, lemma and example declarations** in seven
+for the two reports. **347 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -563,7 +563,7 @@ These are comment-only changes: the theorem definitions,
 parameters, assumptions, proof bodies and kernel-checked
 conclusions are unchanged.
 
-## Latest continuation: filtered sample concatenation and indicator-score bridges
+## Previous continuation: filtered sample concatenation and indicator-score bridges
 
 **Current Rocq inventory:** 342 public theorem/lemma/example declarations
 across seven modules (Hoeflin 64; Admissions 67; FiniteUnion **54**;
@@ -622,6 +622,52 @@ recurrence and suffix-sensitive finite covariance properties.
 No preexisting theorem statement was changed, no new
 recursive filter/sum implementation was added, and historical
 Python/SPARK verification evidence remains untouched.
+
+## Current continuation: unconditional composite and covariance-matrix algebra
+
+This continuation proves five new Rocq theorem statements, all reusing
+established finite weighted-sum and covariance laws:
+
+| New theorem | Formal mathematical result | Reused checked theorem(s) |
+|---|---|---|
+| `covariance_of_general_weighted_sums_unconditional` | Covariance of two finite weighted score composites equals their double weighted component covariance sum, with no total-mass premise | `covariance_of_general_weighted_second_unconditional`, `covariance_symmetric`, `FiniteSum.finite_sum_ext` |
+| `variance_of_general_weighted_sum_unconditional` | Self-covariance/variance of a composite equals its coefficient covariance quadratic form | `covariance_of_general_weighted_sums_unconditional` |
+| `covariance_cross_matrix_bilinear_identity_unconditional` | Matrix bilinear form for two component lists is their composite covariance | `covariance_double_sum_as_matrix_product` and the unconditional composite covariance theorem |
+| `covariance_cross_matrix_bilinear_swap_unconditional` | Swapping both component lists leaves the evaluated cross-covariance bilinear form unchanged | Unconditional cross-matrix bilinear identity, `covariance_symmetric` |
+| `covariance_matrix_quadratic_form_is_variance_unconditional` | A composite's covariance-matrix quadratic form equals its variance | `covariance_matrix_quadratic_form_identity` and the unconditional composite variance theorem |
+
+The five existing total-mass-one versions of these identities preserve
+their **original propositions, including every premise**, but their
+proof bodies now delegate directly to the corresponding stronger
+unconditional theorems. Every newly added statement has a detailed
+adjacent `(** ... *)` comment explaining the mathematics, exact
+proposition, assumptions, proof method, library dependencies and scope.
+
+**Why removing the mass assumption is sound:** The finite algebraic
+definition `Cov(f,g) = E[fg] - E[f] E[g]` is bilinear for any real-valued
+linear functional `E`. It does not require `E[1]=1`.
+The matrix identities in this section are exact identities between
+finite real expressions. They do **not** imply nonnegative variance,
+matrix positive semidefiniteness or a valid probability distribution
+for arbitrary signed or unnormalized sample weights. The separate
+positive-semidefiniteness and covariance bounds continue to require
+their explicit nonnegative/normalized sample-weight hypotheses.
+
+The current seven Rocq modules have **347 public theorem/lemma/example
+declarations** (Hoeflin 64; Admissions 67; FiniteUnion 54;
+FiniteMoments **113**; FiniteSum 20; FiniteBridge 16;
+FourCellBridge 13), one local helper and two proof-bearing record
+constructors, for **350 proof scripts**. All **404 named declarations**
+have extensive adjacent documentation; each of the seven modules has
+its required explanatory header.
+
+The [complete proof register](PROOF_REFACTOR_REGISTER.md) is checked
+by CI for the exact order and names of all 350 scripts.
+**Fourteen structural inductions** remain, where the underlying
+generic fold, `Nat.iter` recurrence or suffix-dependent covariance
+model requires them. No new list fold, matrix construction, axiom,
+`Admitted`, external library or modification to historical
+Python/Deal/SPARK evidence was introduced.
 
 ## Claims and exact theorem correspondences
 
