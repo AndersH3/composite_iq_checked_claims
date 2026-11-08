@@ -314,7 +314,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `two_event_union_probability` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `two_event_union_inclusion_exclusion` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `any_event_append` (lemma) | Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
-| `union_prob_append` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `union_prob_append` (theorem) | Lemma application | finite_prob_event_ext_on_samples, any_event_append (Stdlib.List.existsb_app) | **Refactored:** reuse established Boolean-event extensionality instead of duplicating finite-sum extensionality |
 | `sum_marginal_probs_append` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `finite_intersection_at_most_first` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_intersection_at_most_second` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
