@@ -523,7 +523,7 @@ list expressions is not, by itself, a validated probabilistic
 or empirical model. The explanations make the scope of the
 checked claims explicit and auditable.
 
-## Current Stdlib reuse: concatenated samples and indicator expectations
+## Previous Stdlib reuse: concatenated samples and indicator expectations
 
 Seven Rocq modules now contain **342 public theorem/lemma/example
 declarations**, one checked local helper and two constructed records
@@ -565,6 +565,50 @@ suffix-dependent covariance definitions. No extra fold, event
 union, filter, matrix representation, custom axiom, `Admitted`
 or unpinned library was added. Previous named theorem
 statements and historical Python/SPARK evidence are unchanged.
+
+## Current library consolidation: unnormalized composite covariance/matrices
+
+The [ordered proof-refactor register](PROOF_REFACTOR_REGISTER.md)
+now records **350 proofs**, including five new, stronger finite
+real-weighted covariance/matrix theorems. The formalization contains
+**347 publicly named theorem/lemma/example declarations** and
+**404 named declarations in total**, all with extensive adjacent
+mathematical comments; the seven Rocq modules retain explanatory
+opening headers.
+
+The new statements deliberately avoid inventing any generic
+matrix or covariance implementation, delegating to existing
+checked algebra:
+
+| New theorem | Reused Stdlib or established shared lemmas | Refactored public theorem |
+|---|---|---|
+| `covariance_of_general_weighted_sums_unconditional` | `covariance_of_general_weighted_second_unconditional`, `covariance_symmetric`, `FiniteSum.finite_sum_ext` | `covariance_of_general_weighted_sums` |
+| `variance_of_general_weighted_sum_unconditional` | Generic unconditional composite covariance and the existing variance alias | `variance_of_general_weighted_sum` |
+| `covariance_cross_matrix_bilinear_identity_unconditional` | `covariance_double_sum_as_matrix_product` and unconditional composite covariance | `covariance_cross_matrix_bilinear_identity` |
+| `covariance_cross_matrix_bilinear_swap_unconditional` | Unconditional cross-matrix representation and `covariance_symmetric` | `covariance_cross_matrix_bilinear_swap` |
+| `covariance_matrix_quadratic_form_is_variance_unconditional` | `covariance_matrix_quadratic_form_identity` and unconditional weighted variance | `covariance_matrix_quadratic_form_is_variance` |
+
+The five pre-existing theorem signatures remain **unchanged**,
+including their normalized-mass premises; each old proof now
+specializes the more general algebraic theorem. No new induction
+is needed. The 14 remaining structural inductions implement
+generic list/fold algebra, the natural-index recurrence or
+suffix-sensitive covariance enumeration and remain explicitly
+justified in the register.
+
+**Logical distinction:** A real-valued finite linear functional
+does not need to satisfy `E[1] = 1` for covariance bilinearity.
+Therefore these matrix/composite identities also hold for
+unnormalized signed weights. However signed weights do **not**
+imply probability measures, nonnegative variance or positive
+semidefinite covariance matrices. The existing PSD/boundedness
+results retain the required nonnegative-weight and unit-mass
+premises. These results do not establish numerical correlations,
+Gaussian distributions, or empirical IQ validity.
+
+No new `Axiom`, `Parameter`, `Admitted`, unpinned dependency,
+recursively reimplemented list/matrix primitive, or change to the
+archived source-pinned SPARK/Python evidence is introduced.
 
 ## Deliberately retained project-specific definitions
 
