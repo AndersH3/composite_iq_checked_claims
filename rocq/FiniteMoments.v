@@ -5468,4 +5468,130 @@ Section FiniteProbabilityMoments.
     lra.
   Qed.
 
+  (**
+   [fixed_basis_null_iff_uncorrelated_with_basis] (theorem) — Finite covariance coordinate nullspace criteria.
+   Mathematical meaning: The quadratic form of a finite basis covariance matrix vanishes exactly when the corresponding coefficient-weighted score is uncorrelated with EACH member of that basis. Testing the coordinates suffices; testing all possible comparison scores is unnecessary.
+   Exact checked proposition: For any equally long coefficient and basis lists under normalized nonnegative weights, matrix_quadratic_form coefficients (basis_covariance_matrix basis)=0 iff forall g, In g basis -> covariance (weighted_basis_sum coefficients basis) g=0.
+   Premises and side conditions: Only matching lengths, unit total sample mass and nonnegative sampled weights are required. The basis can be empty or contain duplicates. For the converse, covariance linearity is purely algebraic; for the forward direction the existing finite covariance null theorem relies on nonnegative weights.
+   Proof/definition method: For null-to-orthogonality, specialize fixed_basis_null_iff_orthogonal_to_every_score. Conversely rewrite the quadratic form as variance, interpret self-covariance as covariance with the original list combination, apply covariance_of_general_weighted_second_unconditional, then show every term of the existing FiniteSum.finite_sum row is zero by on-list extensionality. Stdlib.List.in_map and basis_of_combine transfer component membership to the basis; finite_sum_zero closes the proof.
+   Library reuse: fixed_basis_null_iff_orthogonal_to_every_score, fixed_basis_weighted_variance_identity, covariance_of_general_weighted_second_unconditional, basis_of_combine, Stdlib.List.in_map, FiniteSum.finite_sum_ext_in, FiniteSum.finite_sum_zero, ring.
+   Boundary: This is an exact finite-coordinate covariance criterion, not a computed matrix nullspace, a matrix-rank theorem or evidence about empirical IQ factors.
+   *)
+  Theorem fixed_basis_null_iff_uncorrelated_with_basis :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) = 0 <->
+       forall g, In g basis ->
+         covariance (weighted_basis_sum coefficients basis) g = 0).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    split.
+    - intros Hnull g Hg.
+      exact ((proj1
+        (fixed_basis_null_iff_orthogonal_to_every_score
+          coefficients basis Hlength Hmass Hw) Hnull) g).
+    - intros Hbasis.
+      rewrite <- (fixed_basis_weighted_variance_identity
+        coefficients basis Hlength Hmass).
+      unfold variance.
+      change
+        (covariance (weighted_basis_sum coefficients basis)
+           (linear_combination (combine coefficients basis)) = 0).
+      rewrite covariance_of_general_weighted_second_unconditional.
+      unfold covariance_row.
+      transitivity
+        (FiniteSum.finite_sum
+          (fun _ : R * (Outcome -> R) => 0)
+          (combine coefficients basis)).
+      + apply FiniteSum.finite_sum_ext_in.
+        intros component Hcomponent.
+        assert (Hin : In (snd component) basis).
+        { rewrite <- (basis_of_combine coefficients basis Hlength).
+          apply in_map.
+          exact Hcomponent. }
+        rewrite (Hbasis (snd component) Hin).
+        ring.
+      + apply FiniteSum.finite_sum_zero.
+  Qed.
+
+  (**
+   [fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis] (theorem) — Finite covariance coordinate nullspace criteria.
+   Mathematical meaning: A compatible direction has strictly positive covariance quadratic form exactly when its weighted score is NOT covariance-orthogonal to every basis score. This turns an all-comparison-score criterion into a finite coordinate-level test.
+   Exact checked proposition: For matching coefficient/basis lengths, total_mass=1 and nonnegative sampled weights, 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis) iff not(forall g, In g basis -> covariance (weighted_basis_sum coefficients basis) g=0).
+   Premises and side conditions: Unit mass, nonnegative listed weights and coefficient/basis length equality are necessary for the existing positive-semidefinite and nullity facts. No basis independence or covariance invertibility is assumed.
+   Proof/definition method: Combine fixed_basis_covariance_matrix_positive_semidefinite with fixed_basis_null_iff_uncorrelated_with_basis. For strict positivity, use the decidable real comparison Rle_dec and Lra to rule out zero. The converse is a contradiction between positive and zero quadratic forms.
+   Library reuse: fixed_basis_covariance_matrix_positive_semidefinite, fixed_basis_null_iff_uncorrelated_with_basis, Stdlib.Reals.Rle_dec, Stdlib.Lra.
+   Boundary: The result is a logical characterization for a finite list covariance matrix; it does not calculate the entries' nullspace, rank or an eigenvalue lower bound.
+   *)
+  Theorem fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis) <->
+       ~ (forall g, In g basis ->
+             covariance (weighted_basis_sum coefficients basis) g = 0)).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    pose proof (fixed_basis_covariance_matrix_positive_semidefinite
+      basis coefficients Hlength Hmass Hw) as Hnonnegative.
+    pose proof (fixed_basis_null_iff_uncorrelated_with_basis
+      coefficients basis Hlength Hmass Hw) as Hnull_iff.
+    split.
+    - intros Hpositive Hall.
+      pose proof (proj2 Hnull_iff Hall) as Hzero.
+      lra.
+    - intro Hnot_all.
+      destruct (Rle_dec
+        (matrix_quadratic_form coefficients
+          (basis_covariance_matrix basis)) 0) as [Hle | Hgt].
+      + assert (Hzero :
+          matrix_quadratic_form coefficients
+            (basis_covariance_matrix basis) = 0) by lra.
+        exfalso.
+        apply Hnot_all.
+        apply (proj1 Hnull_iff); exact Hzero.
+      + lra.
+  Qed.
+
+  (**
+   [fixed_basis_positive_definite_iff_no_nonzero_basis_orthogonal_direction] (theorem) — Finite covariance coordinate nullspace criteria.
+   Mathematical meaning: The finite covariance matrix is positive definite precisely when no nonzero compatible coefficient vector yields a composite score that is uncorrelated with EVERY basis score. Covariance tests against the finitely listed basis suffice, not all outcome-to-real comparison functions.
+   Exact checked proposition: For any basis with unit total mass and nonnegative sampled weights, positive quadratic form for all coefficients of matching length distinct from repeat 0 (length basis) iff each such coefficient list fails the property forall g in basis, covariance (weighted_basis_sum coefficients basis) g=0.
+   Premises and side conditions: The zero coefficient vector is represented by Stdlib.List.repeat, and compatibility is stated by list-length equality. The sample list may be empty only if the explicit mass-one/nonnegative premises remain satisfiable, and individual sample entries can have zero weight.
+   Proof/definition method: Introduce an arbitrary nonzero compatible coefficient vector and apply the previously proved fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis in the appropriate direction of the iff, without constructing a new matrix multiplication or rank predicate.
+   Library reuse: fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis, Stdlib.List.repeat/length, Stdlib.Reals and existing finite covariance definitions.
+   Boundary: The characterization does not compute finite-dimensional rank or certify real-world score independence.
+   *)
+  Theorem fixed_basis_positive_definite_iff_no_nonzero_basis_orthogonal_direction :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall coefficients,
+          length coefficients = length basis ->
+          coefficients <> repeat 0 (length basis) ->
+          0 < matrix_quadratic_form coefficients
+            (basis_covariance_matrix basis)) <->
+       (forall coefficients,
+          length coefficients = length basis ->
+          coefficients <> repeat 0 (length basis) ->
+          ~ (forall g, In g basis ->
+               covariance (weighted_basis_sum coefficients basis) g = 0))).
+  Proof.
+    intros basis Hmass Hw.
+    split; intros Hproperty coefficients Hlength Hnonzero.
+    - apply (proj1
+        (fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis
+          coefficients basis Hlength Hmass Hw)).
+      apply Hproperty; assumption.
+    - apply (proj2
+        (fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis
+          coefficients basis Hlength Hmass Hw)).
+      apply Hproperty; assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

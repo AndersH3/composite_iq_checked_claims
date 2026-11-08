@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **411 theorem, lemma and example declarations** in seven
+for the two reports. **414 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1081,8 +1081,25 @@ under nonnegative normalized weights, and yields a concrete
 obstruction to covariance positive definiteness. These are exact
 two-score statements, not full spectral rank results.
 
-**Current source totals: 411 public claims, 414 proof scripts,
+**Earlier source totals: 411 public claims, 414 proof scripts,
 469 documented named declarations** in seven Rocq files.
+
+## Covariance nullity from finitely many basis coordinates
+
+Three results in `FiniteMoments.v` characterize quadratic-form
+nullity through zero covariance with each member of the finite
+score basis, rather than all possible comparison score functions.
+The converse folds individual zero covariance values with the
+existing `covariance_of_general_weighted_second_unconditional`
+and library-backed `FiniteSum.finite_sum_ext_in` and
+`finite_sum_zero` lemmas. A strict-positive quadratic iff
+and an all-nonzero-directions positive-definiteness iff
+follow from the existing positive-semidefinite theorem.
+No new matrix rank, nullspace, list sum or eigenvalue library
+is implemented.
+
+**Latest source totals: 414 public claims, 417 proof scripts,
+472 fully documented named declarations** across seven modules.
 
 ## Research extensions
 

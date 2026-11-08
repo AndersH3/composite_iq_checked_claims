@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 411 public theorem/lemma/example
+**Current audited inventory:** 414 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **414 proof scripts**. There are **469 named
+constructors, for **417 proof scripts**. There are **472 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -859,6 +859,20 @@ Its obstruction to positive definiteness reuses the same
 nonzero vector and Stdlib.List.repeat. No new list fold,
 custom rank, eigenvalue or determinant algorithm was added.
 The audited totals are 411 claims, 414 scripts, 469 declarations.
+
+## Finite-coordinate characterization of covariance nullity
+
+A compatible coefficient vector has zero covariance-matrix
+quadratic form iff its composite score is uncorrelated with
+every finitely listed basis score. The proof uses
+covariance_of_general_weighted_second_unconditional,
+basis_of_combine, Stdlib.List.in_map and the existing
+FiniteSum.finite_sum_ext_in/finite_sum_zero, rather than
+building a matrix kernel API. Existing finite PSD plus
+Stdlib.Rle_dec/Lra yields the corresponding strict
+positivity iff, and hence the positive-definite iff
+criterion over all nonzero compatible coefficient lists.
+Current audit: 414 claims, 417 scripts, 472 named declarations.
 
 ## Deliberately retained project-specific definitions
 
