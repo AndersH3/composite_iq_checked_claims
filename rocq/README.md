@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **329 theorem, lemma and example declarations** in seven
+for the two reports. **333 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -309,7 +309,7 @@ remain intact. The previously checked Rocq 9.2 math source was
 extended only by the three stated theorems. The current formalization
 remains finite and algebraic.
 
-## Complete proof-script refactor review and shared zip/map consolidation
+## Prior complete proof-script refactor review and shared zip/map consolidation
 
 The current seven-module source has **329 public theorem/lemma/example
 declarations** (Hoeflin 64; Admissions 67; FiniteUnion 45;
@@ -365,6 +365,60 @@ was rewritten**: exact `reflexivity` proofs and direct uses of
 bridges have been retained deliberately. No new project axiom,
 `Admitted`, continuous probability construction, or unpinned package
 is involved. Kernel checking remains the decisive verification.
+
+## Latest continuation: filtered-sample event algebra and direct Stdlib reuse
+
+**Current inventory:** 333 public theorem/lemma/example declarations across
+seven Rocq modules (64 Hoeflin; 67 Admissions; **49 FiniteUnion**;
+107 FiniteMoments; 19 FiniteSum; 14 FiniteBridge; 13 FourCellBridge).
+The one existing `Local Lemma` makes **334 checked proof
+declarations**; including the two `Admissions.TwoEventModel`
+constructors gives **336 `Proof.` scripts**. All **390 named
+declarations**, including records and definitions, have an explanatory
+`(** ... *)` comment. All seven Rocq files retain their comprehensive
+module header comments.
+
+The latest change replaces the project-specific pointwise weighted-sum
+argument in `finite_prob_event_ext_on_samples` with the directly
+applicable **`Stdlib.List.filter_ext_in`** lemma and the already checked
+`finite_prob_as_filtered_mass` identity.
+
+Four new results establish a reusable representation of event restriction
+and Boolean sample partition, without axiomatizing probability:
+
+- `finite_prob_on_filtered_samples`: probability mass on
+  `filter p samples` equals mass of the conjunction of `p` and
+  the event on the original sample. Uses
+  `FiniteSum.finite_sum_filter` and the common sum-extensionality law.
+- `union_prob_on_filtered_samples`: applies the same property to
+  arbitrary event families encoded by `Stdlib.List.existsb`.
+- `finite_prob_filtered_partition`: proves that mass in selected
+  outcomes plus rejected outcomes equals the original event mass,
+  through the shared sum-addition theorem.
+- `union_prob_filtered_partition`: extends this exact identity to
+  the union of any number of finite admission routes using the
+  preceding theorem, without a new induction.
+
+All these equalities hold for arbitrary real weights, including
+repeated outcomes. No assumption of independence, positive weights
+or normalized total mass is required to establish the identities.
+To interpret the resulting masses as genuine probabilities, the
+usual nonnegativity and normalization requirements still apply.
+
+The [proof-script register](PROOF_REFACTOR_REGISTER.md) now lists
+**336 scripts individually and in source order**, including these
+four additions and the refactored extensionality theorem. The
+[documentation and inventory checker](../scripts/check_rocq_documentation.sh)
+enforces the module headers, declaration-specific comments and
+register completeness before Rocq 9.2 compilation. The 15 remaining
+structural inductions are unchanged and have an explicit refactoring
+disposition.
+
+No previously named theorem statements were modified; this iteration
+adds four named propositions and rewrites only the proof body and
+adjacent commentary of `finite_prob_event_ext_on_samples`. The report
+data, historical evidence and previously verified SPARK/Python sources
+are unaffected.
 
 ## Claims and exact theorem correspondences
 
