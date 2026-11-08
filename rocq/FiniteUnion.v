@@ -81,6 +81,9 @@ Section FiniteOutcomeSpace.
       pose proof (FiniteSum.finite_sum_member_le
         events (fun y => indicator (y x)) e
         (fun y _ => indicator_nonnegative (y x)) Hin) as Hbound.
+      change (indicator (e x) <=
+        FiniteSum.finite_sum (fun y => indicator (y x)) events)
+        in Hbound.
       rewrite He in Hbound; simpl in Hbound.
       exact Hbound.
     - apply FiniteSum.finite_sum_nonnegative.
