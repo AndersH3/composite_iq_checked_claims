@@ -1453,6 +1453,50 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [covariance_of_general_weighted_sums_unconditional] (theorem) —
+   Covariance bilinearity for two arbitrary finite composite scores.
+   Mathematical meaning: For finite lists of coefficient-score pairs,
+   the covariance between their linear combinations equals the full
+   double weighted covariance sum. In particular, the identity is
+   algebraically valid even when the outcome weights do not sum to one.
+   Exact checked proposition: forall left right,
+   covariance (linear_combination left) (linear_combination right) =
+   covariance_quadratic_form left right.
+   Premises and side conditions: The ambient Outcome, samples and
+   weight are arbitrary, including signed or unnormalized real sample
+   weights. Composite coefficients can have either sign, and component
+   lists may contain duplicate scores. No independence is assumed.
+   Proof/definition method: Use covariance symmetry and the stronger
+   covariance_of_general_weighted_second_unconditional theorem for
+   each component list. Finish with the generic FiniteSum.finite_sum_ext
+   lemma rather than duplicating recursive list or matrix algebra.
+   Library reuse: Stdlib.Reals, FiniteSum.finite_sum_ext,
+   covariance_symmetric, and the already checked unconditional
+   linearity in the second covariance argument.
+   Boundary: This is a finite real-weighted algebraic covariance
+   identity; it does not make signed weights a probability measure,
+   establish nonnegative variances, or prove empirical correlations.
+   *)
+  Theorem covariance_of_general_weighted_sums_unconditional :
+    forall left right,
+      covariance (linear_combination left)
+                 (linear_combination right) =
+        covariance_quadratic_form left right.
+  Proof.
+    intros left right.
+    rewrite (covariance_symmetric
+      (linear_combination left) (linear_combination right)).
+    rewrite (covariance_of_general_weighted_second_unconditional
+      (linear_combination right) left).
+    unfold covariance_row, covariance_quadratic_form.
+    apply FiniteSum.finite_sum_ext; intro c.
+    rewrite (covariance_symmetric (linear_combination right) (snd c)).
+    rewrite (covariance_of_general_weighted_second_unconditional
+      (snd c) right).
+    reflexivity.
+  Qed.
+
+  (**
    [covariance_of_general_weighted_sums] (theorem) — Finite weighted score
    expectations, variances and covariance matrices.
    Mathematical meaning: Derives a covariance identity or inequality from finite
@@ -1462,9 +1506,10 @@ Section FiniteProbabilityMoments.
    (linear_combination right) = covariance_quadratic_form left right.
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, definitional reduction; references include
-   covariance_symmetric, covariance_of_general_weighted_second, covariance_row.
+   Proof/definition method: Apply the stronger
+   covariance_of_general_weighted_sums_unconditional theorem.
+   The original total_mass = 1 premise and theorem type are preserved
+   for compatibility with existing downstream proofs.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -1476,16 +1521,42 @@ Section FiniteProbabilityMoments.
                  (linear_combination right) =
         covariance_quadratic_form left right.
   Proof.
-    intros left right Hmass.
-    rewrite (covariance_symmetric
-      (linear_combination left) (linear_combination right)).
-    rewrite (covariance_of_general_weighted_second
-      (linear_combination right) left Hmass).
-    unfold covariance_row, covariance_quadratic_form.
-    apply FiniteSum.finite_sum_ext; intro c.
-    rewrite (covariance_symmetric (linear_combination right) (snd c)).
-    rewrite (covariance_of_general_weighted_second (snd c) right Hmass).
-    reflexivity.
+    intros left right _.
+    apply covariance_of_general_weighted_sums_unconditional.
+  Qed.
+
+  (**
+   [variance_of_general_weighted_sum_unconditional] (theorem) —
+   The finite variance quadratic-form identity without mass assumptions.
+   Mathematical meaning: A composite score's self-covariance is
+   exactly the coefficient-weighted double sum of all pairwise
+   component covariances, even for nonnormalized finite weights.
+   Exact checked proposition: forall components,
+   variance (linear_combination components) =
+   covariance_quadratic_form components components.
+   Premises and side conditions: No normalization or nonnegative
+   outcome-mass hypothesis is required for the exact polynomial
+   equality. Arbitrary real score coefficients and repeated entries
+   are admitted. Under signed weights the result need not be
+   nonnegative and should not be called a probabilistic variance.
+   Proof/definition method: Expand variance into covariance f f and
+   instantiate covariance_of_general_weighted_sums_unconditional
+   with the same list on both sides; no new sum induction or
+   specialized matrix manipulation.
+   Library reuse: covariance_of_general_weighted_sums_unconditional,
+   the existing variance and covariance_quadratic_form definitions,
+   Stdlib.Reals and shared FiniteSum algebra.
+   Boundary: An exact finite weighted sum-of-covariances identity,
+   not a distributional, Gaussian or empirical psychometric claim.
+   *)
+  Theorem variance_of_general_weighted_sum_unconditional :
+    forall components,
+      variance (linear_combination components) =
+        covariance_quadratic_form components components.
+  Proof.
+    intros components.
+    unfold variance.
+    apply covariance_of_general_weighted_sums_unconditional.
   Qed.
 
   (**
@@ -1503,10 +1574,10 @@ Section FiniteProbabilityMoments.
    may be signed, component scores need not be independent, and
    the component list may repeat scores. Weight nonnegativity is
    not used for this algebraic equality.
-   Proof/definition method: Expand variance as self-covariance and
-   specialize the previously checked
-   covariance_of_general_weighted_sums theorem with identical
-   left and right component lists, preserving the original API.
+   Proof/definition method: Apply the stronger
+   variance_of_general_weighted_sum_unconditional theorem.
+   The original total_mass = 1 premise remains in the public type
+   to avoid changing any previously checked statement.
    Library reuse: FiniteSum.finite_sum, covariance_of_general_weighted_sums,
    linear_combination, covariance_quadratic_form and Stdlib.Reals.
    Boundary: A finite weighted outcome model, not an assertion
@@ -1519,9 +1590,8 @@ Section FiniteProbabilityMoments.
       variance (linear_combination components) =
         covariance_quadratic_form components components.
   Proof.
-    intros components Hmass.
-    unfold variance.
-    apply covariance_of_general_weighted_sums; exact Hmass.
+    intros components _.
+    apply variance_of_general_weighted_sum_unconditional.
   Qed.
 
   (**
