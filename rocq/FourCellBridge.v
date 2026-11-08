@@ -22,19 +22,20 @@ Open Scope R_scope.
 
 (* The four outcomes are the complete Cartesian product of two Booleans. *)
 (**
-   [four_cell_samples] (definition).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal construction: list (bool * bool) := list_prod [true; false] [true;
-   false].
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas, explicit case
-   analysis; notably four_cell_samples., in_prod..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_samples] (definition) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Defines four cell samples using explicit Rocq operations, so
+   later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition four_cell_samples : list (bool * bool) := list_prod
+   [true; false] [true; false].
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Definition four_cell_samples : list (bool * bool) :=
   list_prod [true; false] [true; false].
@@ -42,19 +43,21 @@ Definition four_cell_samples : list (bool * bool) :=
 (* Stdlib.List.in_prod and length_prod certify that the enumeration
    covers every Boolean pair and has the expected four outcomes. *)
 (**
-   [four_cell_samples_complete] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall outcome : bool * bool, In outcome
-   four_cell_samples.
-   Hypotheses: Requires enumerated-list membership where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, explicit case analysis;
-   notably four_cell_samples., in_prod..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_samples_complete] (theorem) — Interpretation of the admissions
+   four-cell record as a finite Boolean product.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem four_cell_samples_complete : forall outcome :
+   bool * bool, In outcome four_cell_samples.
+   Premises and side conditions: The displayed hypotheses include sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, reuse of previously
+   established lemmas, definitional reduction; references include four_cell_samples.,
+   in_prod..
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_samples_complete :
   forall outcome : bool * bool, In outcome four_cell_samples.
@@ -67,18 +70,20 @@ Proof.
 Qed.
 
 (**
-   [four_cell_samples_length] (theorem).
-   Meaning: Proves a structural list identity using Rocq's standard list
-   operations.
-   Formal conclusion: length four_cell_samples = 4%nat.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, definitional computation; notably
-   four_cell_samples., length_prod..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_samples_length] (theorem) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Proves a list-structural invariant without custom sorting or
+   indexing.
+   Exact checked proposition: Theorem four_cell_samples_length : length
+   four_cell_samples = 4%nat.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include four_cell_samples., length_prod..
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_samples_length :
   length four_cell_samples = 4%nat.
@@ -89,21 +94,21 @@ Proof.
 Qed.
 
 (**
-   [four_cell_weight] (definition).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal construction: (m : TwoEventModel) (outcome : bool * bool) : R :=
-   match outcome with | (true, true) => joint m | (true, false) => only_A m |
-   (false, true) => only_B m | (false, false) => neither m end.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas, explicit case
-   analysis; notably joint_nonnegative., only_A_nonnegative.,
-   only_B_nonnegative..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_weight] (definition) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Defines four cell weight using explicit Rocq operations, so
+   later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition four_cell_weight (m : TwoEventModel) (outcome : bool
+   * bool) : R := match outcome with | (true, true) => joint m | (true, false) =>
+   only_A m | (false, true) => only_B m | (false, false) => neither m end.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Definition four_cell_weight (m : TwoEventModel)
     (outcome : bool * bool) : R :=
@@ -115,69 +120,74 @@ Definition four_cell_weight (m : TwoEventModel)
   end.
 
 (**
-   [four_cell_A] (definition).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal construction: (outcome : bool * bool) : bool := fst outcome.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas, explicit case
-   analysis; notably joint_nonnegative., only_A_nonnegative.,
-   only_B_nonnegative..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_A] (definition) — Interpretation of the admissions four-cell record as
+   a finite Boolean product.
+   Mathematical meaning: Defines four cell A using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition four_cell_A (outcome : bool * bool) : bool := fst
+   outcome.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Definition four_cell_A (outcome : bool * bool) : bool := fst outcome.
 (**
-   [four_cell_B] (definition).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal construction: (outcome : bool * bool) : bool := snd outcome.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas, explicit case
-   analysis; notably joint_nonnegative., only_A_nonnegative.,
-   only_B_nonnegative..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_B] (definition) — Interpretation of the admissions four-cell record as
+   a finite Boolean product.
+   Mathematical meaning: Defines four cell B using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition four_cell_B (outcome : bool * bool) : bool := snd
+   outcome.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Definition four_cell_B (outcome : bool * bool) : bool := snd outcome.
 (**
-   [four_cell_exactly_one] (definition).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal construction: (outcome : bool * bool) : bool := xorb (four_cell_A
-   outcome) (four_cell_B outcome).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas, explicit case
-   analysis; notably joint_nonnegative., only_A_nonnegative.,
-   only_B_nonnegative..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_exactly_one] (definition) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Defines four cell exactly one using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition four_cell_exactly_one (outcome : bool * bool) : bool
+   := xorb (four_cell_A outcome) (four_cell_B outcome).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Definition four_cell_exactly_one (outcome : bool * bool) : bool :=
   xorb (four_cell_A outcome) (four_cell_B outcome).
 
 (**
-   [four_cell_weight_nonnegative] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall m outcome, 0 <= four_cell_weight m outcome.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, explicit case analysis;
-   notably joint_nonnegative., only_A_nonnegative., only_B_nonnegative..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_weight_nonnegative] (theorem) — Interpretation of the admissions
+   four-cell record as a finite Boolean product.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem four_cell_weight_nonnegative : forall m
+   outcome, 0 <= four_cell_weight m outcome.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, reuse of previously
+   established lemmas, definitional reduction; references include joint_nonnegative.,
+   only_A_nonnegative., only_B_nonnegative..
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_weight_nonnegative :
   forall m outcome, 0 <= four_cell_weight m outcome.
@@ -191,19 +201,22 @@ Proof.
 Qed.
 
 (**
-   [four_cell_total_mass] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall m, @FiniteMoments.total_mass (bool * bool)
-   four_cell_samples (four_cell_weight m) = 1.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, Stdlib Lra linear
-   arithmetic; notably FiniteMoments.total_mass, cells_sum_to_one.
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_total_mass] (theorem) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem four_cell_total_mass : forall m,
+   @FiniteMoments.total_mass (bool * bool) four_cell_samples (four_cell_weight m) =
+   1.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   linear real arithmetic (Lra), definitional reduction; references include
+   FiniteMoments.total_mass, cells_sum_to_one.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_total_mass :
   forall m,
@@ -219,18 +232,21 @@ Proof.
 Qed.
 
 (**
-   [four_cell_first_marginal] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall m, @FiniteUnion.finite_prob (bool * bool)
-   (four_cell_weight m) four_cell_samples four_cell_A = p_A m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably FiniteUnion.finite_prob.
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_first_marginal] (theorem) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem four_cell_first_marginal : forall m,
+   @FiniteUnion.finite_prob (bool * bool) (four_cell_weight m) four_cell_samples
+   four_cell_A = p_A m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include FiniteUnion.finite_prob.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_first_marginal :
   forall m,
@@ -245,18 +261,21 @@ Proof.
 Qed.
 
 (**
-   [four_cell_second_marginal] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall m, @FiniteUnion.finite_prob (bool * bool)
-   (four_cell_weight m) four_cell_samples four_cell_B = p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably FiniteUnion.finite_prob.
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_second_marginal] (theorem) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem four_cell_second_marginal : forall m,
+   @FiniteUnion.finite_prob (bool * bool) (four_cell_weight m) four_cell_samples
+   four_cell_B = p_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include FiniteUnion.finite_prob.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_second_marginal :
   forall m,
@@ -271,19 +290,21 @@ Proof.
 Qed.
 
 (**
-   [four_cell_intersection_mass] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, @FiniteUnion.finite_prob (bool * bool)
-   (four_cell_weight m) four_cell_samples (fun x => andb (four_cell_A x)
-   (four_cell_B x)) = p_both m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably FiniteUnion.finite_prob.
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_intersection_mass] (theorem) — Interpretation of the admissions
+   four-cell record as a finite Boolean product.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem four_cell_intersection_mass : forall m,
+   @FiniteUnion.finite_prob (bool * bool) (four_cell_weight m) four_cell_samples (fun
+   x => andb (four_cell_A x) (four_cell_B x)) = p_both m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include FiniteUnion.finite_prob.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_intersection_mass :
   forall m,
@@ -299,19 +320,21 @@ Proof.
 Qed.
 
 (**
-   [four_cell_union_mass] (theorem).
-   Meaning: Controls union/intersection mass for Boolean events through finite
-   probability algebra.
-   Formal conclusion: forall m, @FiniteUnion.union_prob (bool * bool)
-   (four_cell_weight m) four_cell_samples [four_cell_A; four_cell_B] = p_either
-   m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably FiniteUnion.union_prob.
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_union_mass] (theorem) — Interpretation of the admissions four-cell
+   record as a finite Boolean product.
+   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
+   corresponding probability bound.
+   Exact checked proposition: Theorem four_cell_union_mass : forall m,
+   @FiniteUnion.union_prob (bool * bool) (four_cell_weight m) four_cell_samples
+   [four_cell_A; four_cell_B] = p_either m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include FiniteUnion.union_prob.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_union_mass :
   forall m,
@@ -328,19 +351,21 @@ Proof.
 Qed.
 
 (**
-   [four_cell_exactly_one_mass] (theorem).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall m, @FiniteUnion.finite_prob (bool * bool)
-   (four_cell_weight m) four_cell_samples four_cell_exactly_one = p_exactly_one
-   m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably FiniteUnion.finite_prob.
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_exactly_one_mass] (theorem) — Interpretation of the admissions
+   four-cell record as a finite Boolean product.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Theorem four_cell_exactly_one_mass : forall m,
+   @FiniteUnion.finite_prob (bool * bool) (four_cell_weight m) four_cell_samples
+   four_cell_exactly_one = p_exactly_one m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include FiniteUnion.finite_prob.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_exactly_one_mass :
   forall m,
@@ -359,21 +384,23 @@ Qed.
 (* Reuse the existing generic event-to-moment bridge, rather than
    recalculating covariance in the specialized four-cell structure. *)
 (**
-   [four_cell_indicator_covariance] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall m, @FiniteMoments.covariance (bool * bool)
-   four_cell_samples (four_cell_weight m) (fun x => FiniteUnion.indicator
-   (four_cell_A x)) (fun x => FiniteUnion.indicator (four_cell_B x)) = p_both m
-   - p_A m * p_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, definitional computation; notably
-   finite_event_indicator_covariance, four_cell_intersection_mass.
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_indicator_covariance] (theorem) — Interpretation of the admissions
+   four-cell record as a finite Boolean product.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem four_cell_indicator_covariance : forall m,
+   @FiniteMoments.covariance (bool * bool) four_cell_samples (four_cell_weight m)
+   (fun x => FiniteUnion.indicator (four_cell_A x)) (fun x => FiniteUnion.indicator
+   (four_cell_B x)) = p_both m - p_A m * p_B m.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include finite_event_indicator_covariance,
+   four_cell_intersection_mass.
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_indicator_covariance :
   forall m,
@@ -393,21 +420,24 @@ Proof.
 Qed.
 
 (**
-   [four_cell_indicator_independence_criterion] (theorem).
-   Meaning: Makes an event-independence or conditional-probability relationship
-   explicit, including necessary denominators.
-   Formal conclusion: forall m, @FiniteMoments.covariance (bool * bool)
-   four_cell_samples (four_cell_weight m) (fun x => FiniteUnion.indicator
-   (four_cell_A x)) (fun x => FiniteUnion.indicator (four_cell_B x)) = 0 <->
-   joint m * neither m = only_A m * only_B m.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic; notably
-   four_cell_indicator_covariance., binary_indicator_covariance_numerator..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_indicator_independence_criterion] (theorem) — Interpretation of the
+   admissions four-cell record as a finite Boolean product.
+   Mathematical meaning: Formalizes the indicated independence or conditional-mass
+   relationship, including explicit side conditions.
+   Exact checked proposition: Theorem four_cell_indicator_independence_criterion :
+   forall m, @FiniteMoments.covariance (bool * bool) four_cell_samples
+   (four_cell_weight m) (fun x => FiniteUnion.indicator (four_cell_A x)) (fun x =>
+   FiniteUnion.indicator (four_cell_B x)) = 0 <-> joint m * neither m = only_A m *
+   only_B m.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra); references include four_cell_indicator_covariance.,
+   binary_indicator_covariance_numerator..
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_indicator_independence_criterion :
   forall m,
@@ -424,20 +454,22 @@ Proof.
 Qed.
 
 (**
-   [four_cell_first_indicator_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall m, @FiniteMoments.variance (bool * bool)
-   four_cell_samples (four_cell_weight m) (fun x => FiniteUnion.indicator
-   (four_cell_A x)) = p_A m * (1 - p_A m).
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, definitional computation; notably
-   finite_event_indicator_variance, four_cell_first_marginal..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_first_indicator_variance] (theorem) — Interpretation of the admissions
+   four-cell record as a finite Boolean product.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem four_cell_first_indicator_variance : forall m,
+   @FiniteMoments.variance (bool * bool) four_cell_samples (four_cell_weight m) (fun
+   x => FiniteUnion.indicator (four_cell_A x)) = p_A m * (1 - p_A m).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include finite_event_indicator_variance,
+   four_cell_first_marginal..
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_first_indicator_variance :
   forall m,
@@ -455,20 +487,22 @@ Proof.
 Qed.
 
 (**
-   [four_cell_second_indicator_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall m, @FiniteMoments.variance (bool * bool)
-   four_cell_samples (four_cell_weight m) (fun x => FiniteUnion.indicator
-   (four_cell_B x)) = p_B m * (1 - p_B m).
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, definitional computation; notably
-   finite_event_indicator_variance, four_cell_second_marginal..
-   Library discipline: Stdlib.List.list_prod, in_prod and length_prod, plus
-   Admissions, FiniteUnion, FiniteMoments and FiniteBridge.
-   Scope: The model proves exact four-cell algebra; it does not introduce
-   independent events or an estimated admission-rate distribution.
+   [four_cell_second_indicator_variance] (theorem) — Interpretation of the admissions
+   four-cell record as a finite Boolean product.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem four_cell_second_indicator_variance : forall m,
+   @FiniteMoments.variance (bool * bool) four_cell_samples (four_cell_weight m) (fun
+   x => FiniteUnion.indicator (four_cell_B x)) = p_B m * (1 - p_B m).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include finite_event_indicator_variance,
+   four_cell_second_marginal..
+   Library reuse: Stdlib.List.list_prod/in_prod/length_prod and
+   Admissions/FiniteUnion/FiniteMoments.
+   Boundary: Exactly the four Boolean pairs and the record-defined cell weights; no
+   Gaussian model or independence is assumed.
  *)
 Theorem four_cell_second_indicator_variance :
   forall m,
