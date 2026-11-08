@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **393 theorem, lemma and example declarations** in seven
+for the two reports. **396 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -988,8 +988,25 @@ fixed_basis_weighted_variance_identity to transfer those
 strict inequalities to quadratic forms. No determinant, eigenvalue
 or matrix-rank routine was introduced.
 
-The current source has **393 public claims**, **396 proof scripts**
+At the previous stage there were **393 public claims**, **396 proof scripts**
 and **451 fully documented declarations** in seven Rocq modules.
+
+## Positive-definiteness and support-nonconstancy equivalences
+
+Three finite weighted-score results identify strictly positive
+variance and fixed-basis quadratic form with the absence of a
+constant positive-weight score. Using Stdlib.List.repeat for the
+zero coefficient vector, a general equivalence states that all
+nonzero compatible coefficient vectors yield strictly positive
+covariance quadratic form precisely when none yields a constant
+weighted score on positive-weight support. The two previous
+positive-variance witness proofs now reuse this generic lemma.
+This is a finite-list positive-definiteness characterization;
+spectral matrix rank and determinant algorithms are deliberately
+not implemented.
+
+Current inventory: **396 public claims**, **399 proof scripts**,
+**454 documented named declarations** across seven Rocq modules.
 
 ## Research extensions
 

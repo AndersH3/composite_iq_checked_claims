@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 393 public theorem/lemma/example declarations,
+The current branch has 396 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**396 proof scripts**, including the generic
+**399 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -236,6 +236,19 @@ positive-mass outcomes with distinct score values. The proofs
 reuse checked variance nonnegativity, the zero-variance support
 result, the fixed-basis variance identity, and Stdlib.Lra;
 there is no new quadratic-form or matrix summation algorithm.
+
+### Strict finite covariance positivity and positive-definiteness equivalence
+
+Three new declarations reuse the generic variance_zero_iff support
+characterization, variance_nonnegative and the fixed-basis moment
+bridge to establish strict variance positivity iff support
+nonconstancy, strict fixed-basis quadratic positivity iff support
+nonconstancy, and positive definiteness for all nonzero coefficient
+lists iff absence of any nonzero constant weighted-score direction.
+The zero coefficient list is represented by Stdlib.List.repeat.
+Two prior strict-variance proofs now delegate to the new generic
+equivalence, eliminating duplicated real-order case splits.
+There is no custom rank, determinant or vector indexing routine.
 
 ### Current structural-induction inventory
 
@@ -512,7 +525,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 136 proof scripts
+## FiniteMoments.v — 139 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -648,10 +661,13 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `variance_zero_iff_covariance_zero_with_every_score` (theorem) | Lemma application, definitional reduction | zero_variance_implies_zero_covariance_first, variance | **New:** zero variance iff zero covariance with every comparison score |
 | `fixed_basis_null_iff_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_zero_iff_constant_on_positive_weight_support | **Refactored:** complete fixed-basis null iff delegates to generic variance equivalence |
 | `fixed_basis_null_iff_orthogonal_to_every_score` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_zero_iff_covariance_zero_with_every_score | **New:** fixed-basis null directions iff orthogonal to all finite scores |
-| `positive_variance_of_positive_support_deviation` (theorem) | Real-order cases, lemma application | variance_nonnegative, zero_variance_is_constant_on_positive_mass, Stdlib.Lra | **New:** positive-support deviation certifies positive variance |
-| `positive_variance_of_two_distinct_positive_support_values` (theorem) | Real-order cases, lemma application | variance_nonnegative, zero_variance_is_constant_on_positive_mass | **New:** two distinct positive-support scores certify variance positivity |
+| `variance_positive_iff_not_constant_on_positive_weight_support` (theorem) | Real-order case split, lemma application | variance_nonnegative, variance_zero_iff_constant_on_positive_weight_support, Stdlib.Reals.Rle_dec | **New:** strict finite variance iff not constant on positive-mass support |
+| `fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, variance_positive_iff_not_constant_on_positive_weight_support | **New:** fixed-basis strict curvature iff support nonconstancy |
+| `positive_variance_of_positive_support_deviation` (theorem) | Lemma application, contradiction | variance_positive_iff_not_constant_on_positive_weight_support | **Refactored:** no repeated real-order case analysis |
+| `positive_variance_of_two_distinct_positive_support_values` (theorem) | Lemma application, equality transitivity | variance_positive_iff_not_constant_on_positive_weight_support | **Refactored:** reusable strict-variance equivalence instead of case split |
 | `positive_fixed_basis_quadratic_of_positive_support_deviation` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, positive_variance_of_positive_support_deviation | **New:** positive deviation witnesses strict quadratic curvature |
 | `positive_fixed_basis_quadratic_of_two_distinct_support_values` (theorem) | Rewriting, lemma application | fixed_basis_weighted_variance_identity, positive_variance_of_two_distinct_positive_support_values | **New:** two positive outcomes witness a strictly positive quadratic form |
+| `fixed_basis_positive_definite_iff_no_nonzero_constant_direction` (theorem) | Iff splitting, contradiction, lemma application | Stdlib.List.repeat, fixed_basis_null_iff_constant_on_positive_weight_support, fixed_basis_positive_quadratic_iff_not_constant_on_positive_weight_support | **New:** positive definiteness iff no nontrivial constant-score direction |
 
 ## FiniteBridge.v — 16 proof scripts
 

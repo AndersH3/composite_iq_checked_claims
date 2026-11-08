@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 393 public theorem/lemma/example
+**Current audited inventory:** 396 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **396 proof scripts**. There are **451 named
+constructors, for **399 proof scripts**. There are **454 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -781,7 +781,20 @@ deviates from its expectation, or two such outcomes differ.
 All proofs reuse variance_nonnegative, existing support lemmas,
 the fixed-basis variance identity, and Stdlib.Lra without
 implementing another covariance or matrix algebra.
-Current totals: 393 claims, 396 proofs, 451 named declarations.
+At the previous stage: 393 claims, 396 proofs, 451 named declarations.
+
+## Finite covariance positive definiteness without rank reinvention
+
+Three theorems derive positive variance and positive fixed-basis
+quadratic form from positive-weight support nonconstancy, and
+characterize positive definiteness in all nonzero coefficient
+directions using Stdlib.List.repeat as the zero list. They reuse
+variance_nonnegative, prior exact zero-variance iff facts and
+the existing fixed-basis variance identity. Two old proofs now
+delegate to those shared results, eliminating their duplicated
+real-order case distinctions. No new recursion, rank function,
+spectral library emulation or unproved axioms are introduced.
+Current inventory: 396 public claims, 399 scripts, 454 declarations.
 
 ## Deliberately retained project-specific definitions
 
