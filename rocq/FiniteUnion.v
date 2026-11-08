@@ -923,6 +923,78 @@ Section FiniteOutcomeSpace.
     apply finite_prob_on_filtered_samples.
   Qed.
 
+  (* A Boolean predicate partitions the enumerated outcomes into
+     selected and rejected lists. The equality is about weighted
+     enumeration, not conditional probabilities or an assumed measure. *)
+  (**
+   [finite_prob_filtered_partition] (theorem) — Finite sample partition.
+   Mathematical meaning: A finite event's mass splits additively into
+   its contributions from outcomes satisfying a filter predicate and
+   outcomes satisfying the Boolean complement, with multiplicities
+   preserved by the standard filter operation.
+   Exact checked proposition: forall weights samples p e,
+   finite_prob weights (filter p samples) e +
+   finite_prob weights (filter (fun x => negb (p x)) samples) e =
+   finite_prob weights samples e.
+   Premises and side conditions: Holds for any real weights, sample
+   multiplicities and Boolean event predicates. No disjointness,
+   nonnegativity, normality or probability normalization is assumed.
+   Proof/definition method: Use finite_prob_on_filtered_samples
+   twice, combine sums via finite_sum_addition, then perform the
+   four Boolean cases with the standard ring tactic.
+   Library reuse: Stdlib.List.filter, Stdlib.Bool.negb/andb,
+   existing finite_prob_on_filtered_samples, finite_sum_addition.
+   Boundary: This is sample-list additivity; it does not assert
+   conditional independence or probabilities over a continuum.
+   *)
+  Theorem finite_prob_filtered_partition :
+    forall weights samples p e,
+      finite_prob weights (filter p samples) e +
+      finite_prob weights
+        (filter (fun x => negb (p x)) samples) e =
+      finite_prob weights samples e.
+  Proof.
+    intros weights samples p e.
+    rewrite !finite_prob_on_filtered_samples.
+    unfold finite_prob.
+    rewrite <- finite_sum_addition.
+    apply finite_sum_extensional; intro x.
+    destruct (p x), (e x); unfold indicator; simpl; ring.
+  Qed.
+
+  (* The same partition identity applies to a whole event family
+     because union_prob is just finite_prob of Stdlib.List.existsb. *)
+  (**
+   [union_prob_filtered_partition] (theorem) — Finite union partition.
+   Mathematical meaning: The weighted probability of a union of
+   routes is additive across the selected and rejected portions of
+   an enumerated sample, without requiring independence of the routes.
+   Exact checked proposition: forall weights samples p events,
+   union_prob weights (filter p samples) events +
+   union_prob weights (filter (fun x => negb (p x)) samples) events =
+   union_prob weights samples events.
+   Premises and side conditions: Any finite family of Boolean events
+   and arbitrary real weights; normalization and independence are not
+   needed for this identity.
+   Proof/definition method: Reduce union_prob to finite_prob of
+   any_event, then invoke finite_prob_filtered_partition directly.
+   Library reuse: Stdlib.List.existsb/filter, Stdlib.Bool.negb,
+   finite_prob_filtered_partition.
+   Boundary: A finite weighted-sample identity, not an empirical
+   predictive-validity theorem.
+   *)
+  Theorem union_prob_filtered_partition :
+    forall weights samples p events,
+      union_prob weights (filter p samples) events +
+      union_prob weights
+        (filter (fun x => negb (p x)) samples) events =
+      union_prob weights samples events.
+  Proof.
+    intros weights samples p events.
+    unfold union_prob.
+    apply finite_prob_filtered_partition.
+  Qed.
+
   (**
    [finite_prob_sample_append] (theorem) — Finite Boolean event mass and
    union/intersection inequalities.
