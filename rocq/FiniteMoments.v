@@ -29,121 +29,123 @@ Section FiniteProbabilityMoments.
   (* Keep the original public name as a transparent alias.  Both this
      moment model and FiniteUnion now use the same shared Stdlib fold. *)
   (**
-   [sum_finite] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: R) (xs : list Outcome) : R := FiniteSum.finite_sum f
-   xs.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_finite] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines sum finite using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition sum_finite (f : Outcome -> R) (xs : list Outcome) :
+   R := FiniteSum.finite_sum f xs.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition sum_finite (f : Outcome -> R) (xs : list Outcome) : R :=
     FiniteSum.finite_sum f xs.
 
   (**
-   [total_mass] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: R := sum_finite weight samples.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [total_mass] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines total mass using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition total_mass : R := sum_finite weight samples.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition total_mass : R := sum_finite weight samples.
 
   (**
-   [expect] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: R) : R := sum_finite (fun x => weight x * f x) samples.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expect] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines expect using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition expect (f : Outcome -> R) : R := sum_finite (fun x
+   => weight x * f x) samples.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition expect (f : Outcome -> R) : R :=
     sum_finite (fun x => weight x * f x) samples.
 
   (**
-   [covariance] (definition).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal construction: R) : R := expect (fun x => f x * g x) - expect f *
-   expect g.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines covariance using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition covariance (f g : Outcome -> R) : R := expect (fun x
+   => f x * g x) - expect f * expect g.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition covariance (f g : Outcome -> R) : R :=
     expect (fun x => f x * g x) - expect f * expect g.
 
   (**
-   [variance] (definition).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal construction: R) : R := covariance f f.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines variance using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition variance (f : Outcome -> R) : R := covariance f f.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition variance (f : Outcome -> R) : R := covariance f f.
 
   (**
-   [centered_second_moment] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: R) : R := expect (fun x => (f x - expect f) * (f x -
-   expect f)).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [centered_second_moment] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines centered second moment using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition centered_second_moment (f : Outcome -> R) : R :=
+   expect (fun x => (f x - expect f) * (f x - expect f)).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition centered_second_moment (f : Outcome -> R) : R :=
     expect (fun x => (f x - expect f) * (f x - expect f)).
 
   (**
-   [sum_finite_ext] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: sum_finite f xs = sum_finite g xs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_finite_ext] (lemma) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma sum_finite_ext : forall xs f g, (forall x, f x =
+   g x) -> sum_finite f xs = sum_finite g xs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma sum_finite_ext :
     forall xs f g,
@@ -155,19 +157,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [sum_finite_add] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall xs f g, sum_finite (fun x => f x + g x) xs =
-   sum_finite f xs + sum_finite g xs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_add..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_finite_add] (lemma) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma sum_finite_add : forall xs f g, sum_finite (fun x
+   => f x + g x) xs = sum_finite f xs + sum_finite g xs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_add..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma sum_finite_add :
     forall xs f g,
@@ -179,19 +181,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [sum_finite_scale] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall xs a f, sum_finite (fun x => a * f x) xs = a *
-   sum_finite f xs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_scale..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_finite_scale] (lemma) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma sum_finite_scale : forall xs a f, sum_finite (fun
+   x => a * f x) xs = a * sum_finite f xs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_scale..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma sum_finite_scale :
     forall xs a f,
@@ -203,18 +205,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [sum_finite_nonnegative] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: 0 <= sum_finite f xs.
-   Hypotheses: Requires enumerated-list membership where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_nonnegative.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_finite_nonnegative] (lemma) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma sum_finite_nonnegative : forall xs f, (forall x,
+   In x xs -> 0 <= f x) -> 0 <= sum_finite f xs.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; sample or list membership. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_nonnegative.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma sum_finite_nonnegative :
     forall xs f,
@@ -226,18 +230,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_ext] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: expect f = expect g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably expect., sum_finite_ext..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_ext] (theorem) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_ext : forall f g, (forall x, f x =
+   g x) -> expect f = expect g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include expect.,
+   sum_finite_ext..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_ext :
     forall f g, (forall x, f x = g x) -> expect f = expect g.
@@ -249,19 +255,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_add] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall f g, expect (fun x => f x + g x) = expect f +
-   expect g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, ring/field
-   normalization; notably expect., sum_finite_ext, sum_finite_add..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_add] (theorem) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_add : forall f g, expect (fun x =>
+   f x + g x) = expect f + expect g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   expect., sum_finite_ext, sum_finite_add..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_add :
     forall f g,
@@ -277,18 +284,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_scale] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall a f, expect (fun x => a * f x) = a * expect f.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, ring/field
-   normalization; notably expect., sum_finite_ext, sum_finite_scale..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_scale] (theorem) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_scale : forall a f, expect (fun x
+   => a * f x) = a * expect f.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   expect., sum_finite_ext, sum_finite_scale..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_scale :
     forall a f,
@@ -303,18 +312,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_zero] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: expect (fun _ => 0) = 0.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, ring/field
-   normalization; notably expect., sum_finite_ext, FiniteSum.finite_sum_zero..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_zero] (theorem) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_zero : expect (fun _ => 0) = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   expect., sum_finite_ext, FiniteSum.finite_sum_zero..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_zero :
     expect (fun _ => 0) = 0.
@@ -326,19 +336,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_constant] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall c, expect (fun _ => c) = c * total_mass.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization, definitional computation; notably sum_finite_ext,
-   sum_finite_scale.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_constant] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_constant : forall c, expect (fun _
+   => c) = c * total_mass.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization, definitional reduction;
+   references include expect, sum_finite_ext, sum_finite_scale.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_constant :
     forall c, expect (fun _ => c) = c * total_mass.
@@ -351,18 +362,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_constant_normalized] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: expect (fun _ => c) = c.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   expectation_constant.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_constant_normalized] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_constant_normalized : forall c,
+   total_mass = 1 -> expect (fun _ => c) = c.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include expectation_constant.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_constant_normalized :
     forall c, total_mass = 1 -> expect (fun _ => c) = c.
@@ -372,19 +384,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_sub] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall f g, expect (fun x => f x - g x) = expect f -
-   expect g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas, ring/field
-   normalization; notably FiniteSum.finite_sum_ext, FiniteSum.finite_sum_sub..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_sub] (theorem) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_sub : forall f g, expect (fun x =>
+   f x - g x) = expect f - expect g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   expect, FiniteSum.finite_sum_ext, FiniteSum.finite_sum_sub..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_sub :
     forall f g,
@@ -399,18 +412,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_affine] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: expect (fun x => a * f x + b) = a * expect f + b.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably expectation_add.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_affine] (theorem) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_affine : forall f a b, total_mass =
+   1 -> expect (fun x => a * f x + b) = a * expect f + b.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   expectation_add, Hmass..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_affine :
     forall f a b,
@@ -424,19 +439,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [expectation_nonnegative] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall f, (forall x, In x samples -> 0 <= weight x) ->
-   (forall x, In x samples -> 0 <= f x) -> 0 <= expect f.
-   Hypotheses: Requires nonnegative outcome weights; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, Stdlib Psatz nonlinear
-   arithmetic; notably expect., sum_finite_nonnegative..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_nonnegative] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem expectation_nonnegative : forall f, (forall x,
+   In x samples -> 0 <= weight x) -> (forall x, In x samples -> 0 <= f x) -> 0 <=
+   expect f.
+   Premises and side conditions: The displayed hypotheses include nonnegative outcome
+   weights; explicit nonzero or strict-positive numerical conditions; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas,
+   polynomial real arithmetic (Psatz); references include expect.,
+   sum_finite_nonnegative..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem expectation_nonnegative :
     forall f,
@@ -454,18 +472,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_symmetric] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f g, covariance f g = covariance g f.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably covariance., expectation_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_symmetric] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_symmetric : forall f g, covariance f
+   g = covariance g f.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   covariance., expectation_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_symmetric :
     forall f g, covariance f g = covariance g f.
@@ -480,20 +500,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_scale_first] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f g a, covariance (fun x => a * f x) g = a *
-   covariance f g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably covariance., expectation_scale.,
-   Rminus_eq_compat_r..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_scale_first] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_scale_first : forall f g a,
+   covariance (fun x => a * f x) g = a * covariance f g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   covariance., expectation_scale., Rminus_eq_compat_r..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_scale_first :
     forall f g a,
@@ -511,20 +531,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_add_first] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f g h, covariance (fun x => f x + g x) h =
-   covariance f h + covariance g h.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably covariance., expectation_add.,
-   expectation_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_add_first] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_add_first : forall f g h, covariance
+   (fun x => f x + g x) h = covariance f h + covariance g h.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   covariance., expectation_add., expectation_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_add_first :
     forall f g h,
@@ -545,19 +565,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_scale_second] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f g a, covariance f (fun x => a * g x) = a *
-   covariance f g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, definitional computation; notably
-   covariance_symmetric., covariance_scale_first..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_scale_second] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_scale_second : forall f g a,
+   covariance f (fun x => a * g x) = a * covariance f g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include covariance_symmetric., covariance_scale_first..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_scale_second :
     forall f g a,
@@ -571,19 +591,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_add_second] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f g h, covariance f (fun x => g x + h x) =
-   covariance f g + covariance f h.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, definitional computation; notably
-   covariance_symmetric., covariance_add_first., covariance_symmetric.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_add_second] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_add_second : forall f g h,
+   covariance f (fun x => g x + h x) = covariance f g + covariance f h.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include covariance_symmetric., covariance_add_first.,
+   covariance_symmetric.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_add_second :
     forall f g h,
@@ -599,18 +620,18 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_second_moment] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f, variance f = expect (fun x => f x * f x) -
-   expect f * expect f.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_second_moment] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_second_moment : forall f, variance f =
+   expect (fun x => f x * f x) - expect f * expect f.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses definitional reduction.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_second_moment :
     forall f,
@@ -621,19 +642,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_scaled_score] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f a, variance (fun x => a * f x) = (a * a) *
-   variance f.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   variance., covariance_scale_first.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_scaled_score] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_scaled_score : forall f a, variance
+   (fun x => a * f x) = (a * a) * variance f.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include variance., covariance_scale_first.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_scaled_score :
     forall f a,
@@ -646,19 +667,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_two_score_sum] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f g, variance (fun x => f x + g x) = variance f +
-   variance g + 2 * covariance f g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   variance., covariance_add_first., covariance_add_second..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_two_score_sum] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_two_score_sum : forall f g,
+   variance (fun x => f x + g x) = variance f + variance g + 2 * covariance f g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include variance., covariance_add_first.,
+   covariance_add_second..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_two_score_sum :
     forall f g,
@@ -675,20 +697,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [centered_second_moment_identity] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: centered_second_moment f = variance f.
-   Hypotheses: Requires mass normalized to one; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably centered_second_moment., expectation_ext,
-   expectation_add.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [centered_second_moment_identity] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Expresses a checked identity or bound within the finite
+   weighted score expectations, variances and covariance matrices.
+   Exact checked proposition: Theorem centered_second_moment_identity : forall f,
+   total_mass = 1 -> centered_second_moment f = variance f.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   centered_second_moment., expectation_ext, expectation_add.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem centered_second_moment_identity :
     forall f,
@@ -709,20 +731,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_nonnegative] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f, total_mass = 1 -> (forall x, In x samples -> 0
-   <= weight x) -> 0 <= variance f.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably centered_second_moment., expectation_nonnegative., Rle_0_sqr..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_nonnegative] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_nonnegative : forall f, total_mass = 1
+   -> (forall x, In x samples -> 0 <= weight x) -> 0 <= variance f.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include centered_second_moment.,
+   expectation_nonnegative., Rle_0_sqr..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_nonnegative :
     forall f,
@@ -741,19 +764,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_with_constant_first] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (fun _ => c) f = 0.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization, definitional
-   computation; notably covariance., expectation_constant_normalized,
-   expectation_scale.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_with_constant_first] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_with_constant_first : forall f c,
+   total_mass = 1 -> covariance (fun _ => c) f = 0.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization, definitional reduction; references include covariance.,
+   expectation_constant_normalized, expectation_scale.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_with_constant_first :
     forall f c, total_mass = 1 ->
@@ -769,20 +793,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_shifted_score] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => f x + c) = variance f.
-   Hypotheses: Requires mass normalized to one; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably variance., covariance_add_first.,
-   covariance_add_second..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_shifted_score] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_shifted_score : forall f c,
+   total_mass = 1 -> variance (fun x => f x + c) = variance f.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   variance., covariance_add_first., covariance_add_second..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_shifted_score :
     forall f c, total_mass = 1 ->
@@ -808,18 +832,21 @@ Section FiniteProbabilityMoments.
      a normalized finite probability mass. *)
 
   (**
-   [covariance_extensional] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f g = covariance f' g'.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably covariance., expectation_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_extensional] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_extensional : forall f f' g g',
+   (forall x, f x = f' x) -> (forall x, g x = g' x) -> covariance f g = covariance f'
+   g'.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   covariance., expectation_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_extensional :
     forall f f' g g',
@@ -840,18 +867,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_extensional] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance f = variance g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably variance.,
-   covariance_extensional.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_extensional] (theorem) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_extensional : forall f g, (forall x, f
+   x = g x) -> variance f = variance g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include variance., covariance_extensional.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_extensional :
     forall f g, (forall x, f x = g x) ->
@@ -863,18 +891,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [centered_score_has_zero_expectation] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: expect (fun x => f x - expect f) = 0.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   expectation_sub.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [centered_score_has_zero_expectation] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem centered_score_has_zero_expectation : forall f,
+   total_mass = 1 -> expect (fun x => f x - expect f) = 0.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include expectation_sub.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem centered_score_has_zero_expectation :
     forall f, total_mass = 1 ->
@@ -886,18 +915,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_with_constant_second] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f (fun _ => c) = 0.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_symmetric., covariance_with_constant_first.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_with_constant_second] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_with_constant_second : forall f c,
+   total_mass = 1 -> covariance f (fun _ => c) = 0.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include covariance_symmetric.,
+   covariance_with_constant_first, Hmass..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_with_constant_second :
     forall f c, total_mass = 1 ->
@@ -909,18 +940,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_invariant_under_first_shift] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (fun x => f x + c) g = covariance f g.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   covariance_add_first., covariance_with_constant_first.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_invariant_under_first_shift] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_invariant_under_first_shift : forall
+   f g c, total_mass = 1 -> covariance (fun x => f x + c) g = covariance f g.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include covariance_add_first.,
+   covariance_with_constant_first.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_invariant_under_first_shift :
     forall f g c, total_mass = 1 ->
@@ -933,18 +966,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_invariant_under_second_shift] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f (fun x => g x + c) = covariance f g.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   covariance_add_second., covariance_with_constant_second.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_invariant_under_second_shift] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_invariant_under_second_shift :
+   forall f g c, total_mass = 1 -> covariance f (fun x => g x + c) = covariance f g.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include covariance_add_second.,
+   covariance_with_constant_second.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_invariant_under_second_shift :
     forall f g c, total_mass = 1 ->
@@ -957,19 +992,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_two_weighted_scores] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f g a b, variance (fun x => a * f x + b * g x) =
-   (a * a) * variance f + (b * b) * variance g + 2 * a * b * covariance f g.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   variance_of_two_score_sum., covariance_scale_first.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_two_weighted_scores] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_two_weighted_scores : forall f g a
+   b, variance (fun x => a * f x + b * g x) = (a * a) * variance f + (b * b) *
+   variance g + 2 * a * b * covariance f g.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include variance_of_two_score_sum.,
+   covariance_scale_first.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_two_weighted_scores :
     forall f g a b,
@@ -986,20 +1023,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_of_two_weighted_pairs] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f g h k a b c d, covariance (fun x => a * f x + b
-   * g x) (fun x => c * h x + d * k x) = a * c * covariance f h + a * d *
-   covariance f k + b * c * covariance g h + b * d * covariance g k.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   covariance_add_first., covariance_add_second., covariance_add_second.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_of_two_weighted_pairs] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_of_two_weighted_pairs : forall f g h
+   k a b c d, covariance (fun x => a * f x + b * g x) (fun x => c * h x + d * k x) =
+   a * c * covariance f h + a * d * covariance f k + b * c * covariance g h + b * d *
+   covariance g k.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include covariance_add_first., covariance_add_second.,
+   covariance_add_second.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_of_two_weighted_pairs :
     forall f g h k a b c d,
@@ -1022,20 +1061,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_two_score_average] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f g, variance (fun x => (f x + g x) / 2) =
-   (variance f + variance g + 2 * covariance f g) / 4.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably variance_extensional,
-   variance_of_scaled_score.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_two_score_average] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_two_score_average : forall f g,
+   variance (fun x => (f x + g x) / 2) = (variance f + variance g + 2 * covariance f
+   g) / 4.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   variance_extensional, variance_of_scaled_score.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_two_score_average :
     forall f g,
@@ -1052,19 +1092,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_two_unit_variance_average] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => (f x + g x) / 2) = (1 + covariance f
-   g) / 2.
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   variance_of_two_score_average..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_two_unit_variance_average] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_two_unit_variance_average : forall
+   f g, variance f = 1 -> variance g = 1 -> variance (fun x => (f x + g x) / 2) = (1
+   + covariance f g) / 2.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include variance_of_two_score_average..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_two_unit_variance_average :
     forall f g,
@@ -1078,21 +1119,23 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_standardized_score] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => (f x - mu) / sd) = 1.
-   Hypotheses: Requires mass normalized to one; explicit
-   nonzero/strict-positive denominator or scale; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, ring/field normalization; notably
-   variance_extensional, variance_of_scaled_score., variance_of_shifted_score.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_standardized_score] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_standardized_score : forall f mu
+   sd, total_mass = 1 -> sd <> 0 -> sd * sd = variance f -> variance (fun x => (f x -
+   mu) / sd) = 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; explicit nonzero or strict-positive numerical conditions; stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include variance_extensional, variance_of_scaled_score.,
+   variance_of_shifted_score.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_standardized_score :
     forall f mu sd,
@@ -1113,22 +1156,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_iq_reporting_scale] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => 100 + scale * ((f x - mu) / sd)) =
-   scale * scale.
-   Hypotheses: Requires mass normalized to one; explicit
-   nonzero/strict-positive denominator or scale; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably variance_extensional,
-   variance_of_shifted_score, variance_of_scaled_score..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_iq_reporting_scale] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_iq_reporting_scale : forall f mu sd
+   scale, total_mass = 1 -> sd <> 0 -> sd * sd = variance f -> variance (fun x => 100
+   + scale * ((f x - mu) / sd)) = scale * scale.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; explicit nonzero or strict-positive numerical conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   variance_extensional, variance_of_shifted_score, variance_of_scaled_score..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_iq_reporting_scale :
     forall f mu sd scale,
@@ -1157,20 +1200,20 @@ Section FiniteProbabilityMoments.
   (* Weighted scores are a standard finite fold over (coefficient,score)
      pairs; no separate recursive evaluator is needed. *)
   (**
-   [linear_combination] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: R))) (x : Outcome) : R := FiniteSum.finite_sum (fun c
-   => fst c * snd c x) components.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas,
-   ring/field normalization, definitional computation; notably
-   linear_combination, FiniteSum.finite_sum_ext, FiniteSum.finite_sum_scale..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [linear_combination] (definition) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Defines linear combination using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition linear_combination (components : list (R * (Outcome
+   -> R))) (x : Outcome) : R := FiniteSum.finite_sum (fun c => fst c * snd c x)
+   components.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition linear_combination
     (components : list (R * (Outcome -> R))) (x : Outcome) : R :=
@@ -1178,20 +1221,19 @@ Section FiniteProbabilityMoments.
 
   (* Apply the built-in list fold to weighted component expectations. *)
   (**
-   [linear_expectation] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: R))) : R := FiniteSum.finite_sum (fun c => fst c *
-   expect (snd c)) components.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas,
-   ring/field normalization, definitional computation; notably
-   linear_combination, FiniteSum.finite_sum_ext, FiniteSum.finite_sum_scale..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [linear_expectation] (definition) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Defines linear expectation using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition linear_expectation (components : list (R * (Outcome
+   -> R))) : R := FiniteSum.finite_sum (fun c => fst c * expect (snd c)) components.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition linear_expectation
     (components : list (R * (Outcome -> R))) : R :=
@@ -1199,20 +1241,20 @@ Section FiniteProbabilityMoments.
 
   (* The covariance coefficient row is an ordinary list fold. *)
   (**
-   [covariance_row] (definition).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal construction: R))) : R := FiniteSum.finite_sum (fun c => fst c *
-   covariance f (snd c)) components.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas,
-   ring/field normalization, definitional computation; notably
-   linear_combination, FiniteSum.finite_sum_ext, FiniteSum.finite_sum_scale..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_row] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines covariance row using explicit Rocq operations, so
+   later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition covariance_row (f : Outcome -> R) (components : list
+   (R * (Outcome -> R))) : R := FiniteSum.finite_sum (fun c => fst c * covariance f
+   (snd c)) components.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition covariance_row
     (f : Outcome -> R)
@@ -1223,20 +1265,20 @@ Section FiniteProbabilityMoments.
   (* The double covariance sum is a fold of coefficient-weighted
      covariance rows, reusing the row fold above. *)
   (**
-   [covariance_quadratic_form] (definition).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal construction: R))) : R := FiniteSum.finite_sum (fun c => fst c *
-   covariance_row (snd c) right) left.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas,
-   ring/field normalization, definitional computation; notably
-   linear_combination, FiniteSum.finite_sum_ext, FiniteSum.finite_sum_scale..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_quadratic_form] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines covariance quadratic form using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition covariance_quadratic_form (left right : list (R *
+   (Outcome -> R))) : R := FiniteSum.finite_sum (fun c => fst c * covariance_row (snd
+   c) right) left.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition covariance_quadratic_form
     (left right : list (R * (Outcome -> R))) : R :=
@@ -1244,20 +1286,22 @@ Section FiniteProbabilityMoments.
       (fun c => fst c * covariance_row (snd c) right) left.
 
   (**
-   [expectation_of_general_weighted_sum] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall components, expect (linear_combination components)
-   = linear_expectation components.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization, definitional computation; notably
-   linear_combination, FiniteSum.finite_sum_ext, FiniteSum.finite_sum_scale..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [expectation_of_general_weighted_sum] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma expectation_of_general_weighted_sum : forall
+   components, expect (linear_combination components) = linear_expectation
+   components.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization, definitional reduction;
+   references include linear_combination, FiniteSum.finite_sum_ext,
+   FiniteSum.finite_sum_scale..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma expectation_of_general_weighted_sum :
     forall components,
@@ -1281,21 +1325,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_of_general_weighted_second] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f (linear_combination components) =
+   [covariance_of_general_weighted_second] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma covariance_of_general_weighted_second : forall f
+   components, total_mass = 1 -> covariance f (linear_combination components) =
    covariance_row f components.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, application of already-proved lemmas, definitional
-   computation; notably covariance_with_constant_second, covariance_add_second,
-   covariance_extensional.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, reuse of previously established lemmas, definitional reduction;
+   references include covariance_with_constant_second, Hmass., covariance_add_second.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_of_general_weighted_second :
     forall f components,
@@ -1320,20 +1364,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_of_general_weighted_sums] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (linear_combination left) (linear_combination
-   right) = covariance_quadratic_form left right.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably covariance_symmetric,
-   covariance_of_general_weighted_second, covariance_row.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_of_general_weighted_sums] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_of_general_weighted_sums : forall
+   left right, total_mass = 1 -> covariance (linear_combination left)
+   (linear_combination right) = covariance_quadratic_form left right.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   covariance_symmetric, covariance_of_general_weighted_second, covariance_row.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_of_general_weighted_sums :
     forall left right,
@@ -1355,20 +1400,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_general_weighted_sum] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (linear_combination components) =
+   [variance_of_general_weighted_sum] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_general_weighted_sum : forall
+   components, total_mass = 1 -> variance (linear_combination components) =
    covariance_quadratic_form components components.
-   Hypotheses: Requires mass normalized to one; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: application of already-proved lemmas; notably variance.,
-   covariance_of_general_weighted_sums.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include variance., covariance_of_general_weighted_sums, Hmass..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_general_weighted_sum :
     forall components,
@@ -1382,19 +1427,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_quadratic_form_nonnegative] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: 0 <= covariance_quadratic_form components components.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership where shown in the statement; all other
-   constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably variance_nonnegative.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_quadratic_form_nonnegative] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem covariance_quadratic_form_nonnegative : forall
+   components, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> 0 <=
+   covariance_quadratic_form components components.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include variance_nonnegative.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_quadratic_form_nonnegative :
     forall components,
@@ -1413,20 +1460,21 @@ Section FiniteProbabilityMoments.
      refers to the same finite reference distribution. *)
 
   (**
-   [mean_of_centered_standardized_score] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: expect (fun x => (f x - expect f) / sd) = 0.
-   Hypotheses: Requires mass normalized to one; explicit
-   nonzero/strict-positive denominator or scale where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably expectation_ext, expectation_scale.,
-   centered_score_has_zero_expectation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [mean_of_centered_standardized_score] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem mean_of_centered_standardized_score : forall f
+   sd, total_mass = 1 -> sd <> 0 -> expect (fun x => (f x - expect f) / sd) = 0.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; explicit nonzero or strict-positive numerical conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   expectation_ext, expectation_scale., centered_score_has_zero_expectation.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem mean_of_centered_standardized_score :
     forall f sd,
@@ -1443,21 +1491,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [mean_of_iq_reporting_scale] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: expect (fun x => 100 + scale * ((f x - expect f) / sd)) =
-   100.
-   Hypotheses: Requires mass normalized to one; explicit
-   nonzero/strict-positive denominator or scale where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably expectation_ext, expectation_affine,
-   mean_of_centered_standardized_score.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [mean_of_iq_reporting_scale] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem mean_of_iq_reporting_scale : forall f sd scale,
+   total_mass = 1 -> sd <> 0 -> expect (fun x => 100 + scale * ((f x - expect f) /
+   sd)) = 100.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; explicit nonzero or strict-positive numerical conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   expectation_ext, expectation_affine, mean_of_centered_standardized_score.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem mean_of_iq_reporting_scale :
     forall f sd scale,
@@ -1475,20 +1524,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_invariant_under_both_shifts] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (fun x => f x + a) (fun x => g x + b) =
+   [covariance_invariant_under_both_shifts] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_invariant_under_both_shifts : forall
+   f g a b, total_mass = 1 -> covariance (fun x => f x + a) (fun x => g x + b) =
    covariance f g.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_invariant_under_first_shift,
-   covariance_invariant_under_second_shift.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   covariance_invariant_under_first_shift, covariance_invariant_under_second_shift,
+   Hmass..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_invariant_under_both_shifts :
     forall f g a b,
@@ -1503,22 +1554,24 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_of_centered_standardized_scores] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (fun x => (f x - expect f) / sd_f) (fun x =>
-   (g x - expect g) / sd_g) = covariance f g / (sd_f * sd_g).
-   Hypotheses: Requires mass normalized to one; explicit
-   nonzero/strict-positive denominator or scale where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Psatz nonlinear arithmetic, ring/field normalization; notably
-   covariance_extensional, covariance_scale_first,
+   [covariance_of_centered_standardized_scores] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_of_centered_standardized_scores :
+   forall f g sd_f sd_g, total_mass = 1 -> sd_f <> 0 -> sd_g <> 0 -> covariance (fun
+   x => (f x - expect f) / sd_f) (fun x => (g x - expect g) / sd_g) = covariance f g
+   / (sd_f * sd_g).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; explicit nonzero or strict-positive numerical conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, polynomial real arithmetic (Psatz), ring/field
+   normalization; references include covariance_extensional, covariance_scale_first,
    covariance_invariant_under_both_shifts.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_of_centered_standardized_scores :
     forall f g sd_f sd_g,
@@ -1543,22 +1596,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [self_covariance_of_standardized_score] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (fun x => (f x - expect f) / sd) (fun x => (f
-   x - expect f) / sd) = 1.
-   Hypotheses: Requires mass normalized to one; explicit
-   nonzero/strict-positive denominator or scale; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, Stdlib Psatz nonlinear arithmetic,
-   ring/field normalization; notably
+   [self_covariance_of_standardized_score] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem self_covariance_of_standardized_score : forall
+   f sd, total_mass = 1 -> sd <> 0 -> variance f = sd * sd -> covariance (fun x => (f
+   x - expect f) / sd) (fun x => (f x - expect f) / sd) = 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; explicit nonzero or strict-positive numerical conditions; stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, polynomial
+   real arithmetic (Psatz), ring/field normalization; references include
    covariance_of_centered_standardized_scores.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem self_covariance_of_standardized_score :
     forall f sd,
@@ -1576,21 +1629,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_three_score_average] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f g h, variance (fun x => (f x + g x + h x) / 3) =
-   (variance f + variance g + variance h + 2 * covariance f g + 2 * covariance
-   f h + 2 * covariance g h) / 9.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably variance_extensional,
-   variance_of_scaled_score., variance_of_two_score_sum..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_three_score_average] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_three_score_average : forall f g h,
+   variance (fun x => (f x + g x + h x) / 3) = (variance f + variance g + variance h
+   + 2 * covariance f g + 2 * covariance f h + 2 * covariance g h) / 9.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   variance_extensional, variance_of_scaled_score., variance_of_two_score_sum..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_three_score_average :
     forall f g h,
@@ -1611,19 +1664,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_three_standardized_score_average] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => (f x + g x + h x) / 3) = (1 + 2 * rho)
-   / 3.
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic; notably
+   [variance_of_three_standardized_score_average] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_three_standardized_score_average :
+   forall f g h rho, variance f = 1 -> variance g = 1 -> variance h = 1 -> covariance
+   f g + covariance f h + covariance g h = 3 * rho -> variance (fun x => (f x + g x +
+   h x) / 3) = (1 + 2 * rho) / 3.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra), ring/field normalization; references include
    variance_of_three_score_average.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_three_standardized_score_average :
     forall f g h rho,
@@ -1638,18 +1694,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_two_standardized_score_average] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => (f x + g x) / 2) = (1 + rho) / 2.
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, definitional computation; notably
-   variance_of_two_unit_variance_average.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_two_standardized_score_average] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_two_standardized_score_average :
+   forall f g rho, variance f = 1 -> variance g = 1 -> covariance f g = rho ->
+   variance (fun x => (f x + g x) / 2) = (1 + rho) / 2.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include variance_of_two_unit_variance_average.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_two_standardized_score_average :
     forall f g rho,
@@ -1670,39 +1728,38 @@ Section FiniteProbabilityMoments.
 
   (* Standard-library list fold for a sum of score functions. *)
   (**
-   [sum_scores] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: R)) (x : Outcome) : R := FiniteSum.finite_sum (fun f =>
-   f x) fs.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum, FiniteSum.finite_sum_add.,
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_scores] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines sum scores using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition sum_scores (fs : list (Outcome -> R)) (x : Outcome)
+   : R := FiniteSum.finite_sum (fun f => f x) fs.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition sum_scores (fs : list (Outcome -> R)) (x : Outcome) : R :=
     FiniteSum.finite_sum (fun f => f x) fs.
 
   (* Unweighted covariance matrix row: a standard list fold. *)
   (**
-   [covariance_row_sum] (definition).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal construction: R)) : R := FiniteSum.finite_sum (covariance f) fs.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum, FiniteSum.finite_sum_add.,
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_row_sum] (definition) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Defines covariance row sum using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition covariance_row_sum (f : Outcome -> R) (fs : list
+   (Outcome -> R)) : R := FiniteSum.finite_sum (covariance f) fs.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition covariance_row_sum
       (f : Outcome -> R) (fs : list (Outcome -> R)) : R :=
@@ -1710,20 +1767,19 @@ Section FiniteProbabilityMoments.
 
   (* Double covariance sum is a fold over the row-fold operator. *)
   (**
-   [covariance_double_sum] (definition).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal construction: R)) : R := FiniteSum.finite_sum (fun f =>
-   covariance_row_sum f gs) fs.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum, FiniteSum.finite_sum_add.,
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_double_sum] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines covariance double sum using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition covariance_double_sum (fs gs : list (Outcome -> R))
+   : R := FiniteSum.finite_sum (fun f => covariance_row_sum f gs) fs.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition covariance_double_sum
       (fs gs : list (Outcome -> R)) : R :=
@@ -1731,39 +1787,39 @@ Section FiniteProbabilityMoments.
 
   (* Sum the covariance-matrix diagonal using Stdlib.List. *)
   (**
-   [diagonal_variance_sum] (definition).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal construction: R)) : R := FiniteSum.finite_sum variance fs.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum, FiniteSum.finite_sum_add.,
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [diagonal_variance_sum] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines diagonal variance sum using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition diagonal_variance_sum (fs : list (Outcome -> R)) : R
+   := FiniteSum.finite_sum variance fs.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition diagonal_variance_sum
       (fs : list (Outcome -> R)) : R :=
     FiniteSum.finite_sum variance fs.
 
   (**
-   [unordered_covariance_sum] (fixpoint).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal construction: R)) : R := match fs with | [] => 0 | f :: tl =>
-   covariance_row_sum f tl + unordered_covariance_sum tl end.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum, FiniteSum.finite_sum_add.,
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [unordered_covariance_sum] (fixpoint) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines unordered covariance sum using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Fixpoint unordered_covariance_sum (fs : list (Outcome -> R)) :
+   R := match fs with | [] => 0 | f :: tl => covariance_row_sum f tl +
+   unordered_covariance_sum tl end.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Fixpoint unordered_covariance_sum
       (fs : list (Outcome -> R)) : R :=
@@ -1774,20 +1830,21 @@ Section FiniteProbabilityMoments.
     end.
 
   (**
-   [covariance_double_sum_second_cons] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall fs f gs, covariance_double_sum fs (f :: gs) =
-   covariance_row_sum f fs + covariance_double_sum fs gs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum, FiniteSum.finite_sum_add.,
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_double_sum_second_cons] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma covariance_double_sum_second_cons : forall fs f
+   gs, covariance_double_sum fs (f :: gs) = covariance_row_sum f fs +
+   covariance_double_sum fs gs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include covariance_double_sum,
+   FiniteSum.finite_sum_add., FiniteSum.finite_sum_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_double_sum_second_cons :
     forall fs f gs,
@@ -1812,20 +1869,20 @@ Section FiniteProbabilityMoments.
      of FiniteSum.finite_sum_swap and the already proved scalar
      covariance symmetry. No additional list induction is needed. *)
   (**
-   [covariance_double_sum_symmetric] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall fs gs, covariance_double_sum fs gs =
-   covariance_double_sum gs fs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum, FiniteSum.finite_sum_swap,
-   FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_double_sum_symmetric] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma covariance_double_sum_symmetric : forall fs gs,
+   covariance_double_sum fs gs = covariance_double_sum gs fs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include covariance_double_sum,
+   FiniteSum.finite_sum_swap, FiniteSum.finite_sum_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_double_sum_symmetric :
     forall fs gs,
@@ -1840,20 +1897,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [double_sum_diagonal_off_diagonal] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall fs, covariance_double_sum fs fs =
-   diagonal_variance_sum fs + 2 * unordered_covariance_sum fs.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization; notably
+   [double_sum_diagonal_off_diagonal] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma double_sum_diagonal_off_diagonal : forall fs,
+   covariance_double_sum fs fs = diagonal_variance_sum fs + 2 *
+   unordered_covariance_sum fs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, ring/field normalization; references include
    covariance_double_sum_second_cons, variance.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma double_sum_diagonal_off_diagonal :
     forall fs,
@@ -1885,20 +1943,21 @@ Section FiniteProbabilityMoments.
      components. Stdlib.List.map and shared finite_sum_map give the
      interpretation without a second recursive score evaluator. *)
   (**
-   [unweighted_scores_as_linear_combination] (lemma).
-   Meaning: Relates explicit finite outcomes and weights to the corresponding
-   marginal or joint quantity.
-   Formal conclusion: forall fs x, sum_scores fs x = linear_combination (map
-   (fun f => (1, f)) fs) x.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably sum_scores, FiniteSum.finite_sum_map.,
+   [unweighted_scores_as_linear_combination] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Relates finite outcome weights to the stated marginal,
+   joint, or enumerated-event quantity.
+   Exact checked proposition: Lemma unweighted_scores_as_linear_combination : forall
+   fs x, sum_scores fs x = linear_combination (map (fun f => (1, f)) fs) x.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization, definitional reduction;
+   references include sum_scores, FiniteSum.finite_sum_map.,
    FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma unweighted_scores_as_linear_combination :
     forall fs x,
@@ -1913,20 +1972,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [unweighted_covariance_row_as_weighted] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f fs, covariance_row_sum f fs = covariance_row f
-   (map (fun g => (1, g)) fs).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably covariance_row_sum,
-   FiniteSum.finite_sum_map., FiniteSum.finite_sum_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [unweighted_covariance_row_as_weighted] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma unweighted_covariance_row_as_weighted : forall f
+   fs, covariance_row_sum f fs = covariance_row f (map (fun g => (1, g)) fs).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization, definitional reduction;
+   references include covariance_row_sum, FiniteSum.finite_sum_map.,
+   FiniteSum.finite_sum_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma unweighted_covariance_row_as_weighted :
     forall f fs,
@@ -1941,20 +2001,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_with_sum_scores] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f (sum_scores fs) = covariance_row_sum f fs.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably covariance_extensional.,
-   unweighted_scores_as_linear_combination.,
+   [covariance_with_sum_scores] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma covariance_with_sum_scores : forall f fs,
+   total_mass = 1 -> covariance f (sum_scores fs) = covariance_row_sum f fs.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   covariance_extensional., unweighted_scores_as_linear_combination.,
    covariance_of_general_weighted_second.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_with_sum_scores :
     forall f fs, total_mass = 1 ->
@@ -1973,20 +2034,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_of_sum_scores] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (sum_scores fs) (sum_scores gs) =
+   [covariance_of_sum_scores] (lemma) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma covariance_of_sum_scores : forall fs gs,
+   total_mass = 1 -> covariance (sum_scores fs) (sum_scores gs) =
    covariance_double_sum fs gs.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_symmetric, covariance_with_sum_scores,
-   covariance_row_sum.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include covariance_symmetric,
+   covariance_with_sum_scores, covariance_row_sum.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_of_sum_scores :
     forall fs gs, total_mass = 1 ->
@@ -2003,19 +2065,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_unweighted_sum] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (sum_scores fs) = covariance_double_sum fs fs.
-   Hypotheses: Requires mass normalized to one; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: application of already-proved lemmas; notably variance.,
-   covariance_of_sum_scores.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_unweighted_sum] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_unweighted_sum : forall fs,
+   total_mass = 1 -> variance (sum_scores fs) = covariance_double_sum fs fs.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include variance., covariance_of_sum_scores, Hmass..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_unweighted_sum :
     forall fs, total_mass = 1 ->
@@ -2027,22 +2089,23 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_rescaled_unweighted_sum] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => sum_scores fs x / n) =
+   [variance_of_rescaled_unweighted_sum] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_rescaled_unweighted_sum : forall fs
+   n, total_mass = 1 -> n <> 0 -> variance (fun x => sum_scores fs x / n) =
    (diagonal_variance_sum fs + 2 * unordered_covariance_sum fs) / (n * n).
-   Hypotheses: Requires mass normalized to one; explicit
-   nonzero/strict-positive denominator or scale; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, ring/field normalization; notably
-   variance_extensional, variance_of_scaled_score., variance_of_unweighted_sum.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; explicit nonzero or strict-positive numerical conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include variance_extensional, variance_of_scaled_score.,
+   variance_of_unweighted_sum.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_rescaled_unweighted_sum :
     forall fs n,
@@ -2062,20 +2125,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [diagonal_variance_sum_of_unit_scores] (lemma).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: diagonal_variance_sum fs = INR (length fs).
-   Hypotheses: Requires list length or dimension constraints as stated;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably diagonal_variance_sum.,
-   FiniteSum.finite_sum_ext_in., FiniteSum.finite_sum_const.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [diagonal_variance_sum_of_unit_scores] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Lemma diagonal_variance_sum_of_unit_scores : forall fs,
+   (forall f, In f fs -> variance f = 1) -> diagonal_variance_sum fs = INR (length
+   fs).
+   Premises and side conditions: The displayed hypotheses include dimension/length
+   compatibility where required; sample or list membership; stated unit-variance
+   conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   diagonal_variance_sum., FiniteSum.finite_sum_ext_in., FiniteSum.finite_sum_const.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma diagonal_variance_sum_of_unit_scores :
     forall fs,
@@ -2091,23 +2156,24 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [equal_weight_variance_from_finite_covariances] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: variance (fun x => sum_scores fs x / n) = rho + (1 - rho)
-   / n.
-   Hypotheses: Requires mass normalized to one; list length or dimension
-   constraints as stated; enumerated-list membership; unit-variance or stated
-   moment hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic, Stdlib
-   Psatz nonlinear arithmetic, ring/field normalization; notably
-   variance_of_rescaled_unweighted_sum, diagonal_variance_sum_of_unit_scores,
-   Hpairs..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [equal_weight_variance_from_finite_covariances] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem equal_weight_variance_from_finite_covariances :
+   forall fs n rho, total_mass = 1 -> n = INR (length fs) -> 1 < n -> (forall f, In f
+   fs -> variance f = 1) -> 2 * unordered_covariance_sum fs = n * (n - 1) * rho ->
+   variance (fun x => sum_scores fs x / n) = rho + (1 - rho) / n.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; dimension/length compatibility where required; sample or list membership;
+   stated unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra), polynomial real arithmetic (Psatz), ring/field normalization;
+   references include variance_of_rescaled_unweighted_sum,
+   diagonal_variance_sum_of_unit_scores, Hpairs..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem equal_weight_variance_from_finite_covariances :
     forall fs n rho,
@@ -2137,38 +2203,39 @@ Section FiniteProbabilityMoments.
   (* List.combine gives the library's standard zip/truncate semantics;
      map and fold_right perform the inner product without bespoke recursion. *)
   (**
-   [vector_dot] (definition).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal construction: (xs ys : list R) : R := FiniteSum.finite_sum (fun p =>
-   fst p * snd p) (combine xs ys).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [vector_dot] (definition) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Defines vector dot using explicit Rocq operations, so later
+   theorems can refer to one stable mathematical object.
+   Exact declaration: Definition vector_dot (xs ys : list R) : R :=
+   FiniteSum.finite_sum (fun p => fst p * snd p) (combine xs ys).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition vector_dot (xs ys : list R) : R :=
     FiniteSum.finite_sum
       (fun p => fst p * snd p) (combine xs ys).
 
   (**
-   [covariance_cross_matrix] (definition).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal construction: R))) : list (list R) := map (fun c => map (fun d =>
-   covariance (snd c) (snd d)) right) left.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_cross_matrix] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines covariance cross matrix using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition covariance_cross_matrix (left right : list (R *
+   (Outcome -> R))) : list (list R) := map (fun c => map (fun d => covariance (snd c)
+   (snd d)) right) left.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition covariance_cross_matrix
     (left right : list (R * (Outcome -> R))) : list (list R) :=
@@ -2176,39 +2243,39 @@ Section FiniteProbabilityMoments.
       (fun d => covariance (snd c) (snd d)) right) left.
 
   (**
-   [covariance_matrix] (definition).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal construction: R))) : list (list R) := covariance_cross_matrix
-   components components.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_matrix] (definition) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Defines covariance matrix using explicit Rocq operations, so
+   later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition covariance_matrix (components : list (R * (Outcome
+   -> R))) : list (list R) := covariance_cross_matrix components components.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition covariance_matrix
     (components : list (R * (Outcome -> R))) : list (list R) :=
     covariance_cross_matrix components components.
 
   (**
-   [matrix_bilinear_form] (definition).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal construction: (left_coeffs right_coeffs : list R) (matrix : list
-   (list R)) : R := vector_dot left_coeffs (map (vector_dot right_coeffs)
-   matrix).
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [matrix_bilinear_form] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines matrix bilinear form using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition matrix_bilinear_form (left_coeffs right_coeffs :
+   list R) (matrix : list (list R)) : R := vector_dot left_coeffs (map (vector_dot
+   right_coeffs) matrix).
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition matrix_bilinear_form
     (left_coeffs right_coeffs : list R)
@@ -2216,38 +2283,39 @@ Section FiniteProbabilityMoments.
     vector_dot left_coeffs (map (vector_dot right_coeffs) matrix).
 
   (**
-   [matrix_quadratic_form] (definition).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal construction: (coeffs : list R) (matrix : list (list R)) : R :=
-   matrix_bilinear_form coeffs coeffs matrix.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [matrix_quadratic_form] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines matrix quadratic form using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition matrix_quadratic_form (coeffs : list R) (matrix :
+   list (list R)) : R := matrix_bilinear_form coeffs coeffs matrix.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition matrix_quadratic_form
     (coeffs : list R) (matrix : list (list R)) : R :=
     matrix_bilinear_form coeffs coeffs matrix.
 
   (**
-   [covariance_row_as_vector_dot] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: forall f components, vector_dot (map fst components) (map
-   (fun c => covariance f (snd c)) components) = covariance_row f components.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_row_as_vector_dot] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma covariance_row_as_vector_dot : forall f
+   components, vector_dot (map fst components) (map (fun c => covariance f (snd c))
+   components) = covariance_row f components.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, ring/field normalization, definitional reduction.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_row_as_vector_dot :
     forall f components,
@@ -2267,21 +2335,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_double_sum_as_matrix_product] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: forall left right, matrix_bilinear_form (map fst left)
-   (map fst right) (covariance_cross_matrix left right) =
-   covariance_quadratic_form left right.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, ring/field normalization, definitional computation;
-   notably matrix_bilinear_form, covariance_row_as_vector_dot.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_double_sum_as_matrix_product] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma covariance_double_sum_as_matrix_product : forall
+   left right, matrix_bilinear_form (map fst left) (map fst right)
+   (covariance_cross_matrix left right) = covariance_quadratic_form left right.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, ring/field normalization, definitional reduction; references include
+   matrix_bilinear_form, covariance_row_as_vector_dot.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_double_sum_as_matrix_product :
     forall left right,
@@ -2308,20 +2376,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_matrix_quadratic_form_identity] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: forall components, matrix_quadratic_form (map fst
-   components) (covariance_matrix components) = covariance_quadratic_form
-   components components.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   matrix_quadratic_form, covariance_double_sum_as_matrix_product..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_matrix_quadratic_form_identity] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem covariance_matrix_quadratic_form_identity :
+   forall components, matrix_quadratic_form (map fst components) (covariance_matrix
+   components) = covariance_quadratic_form components components.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include matrix_quadratic_form,
+   covariance_double_sum_as_matrix_product..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_matrix_quadratic_form_identity :
     forall components,
@@ -2335,21 +2404,23 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_cross_matrix_bilinear_identity] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: matrix_bilinear_form (map fst left) (map fst right)
-   (covariance_cross_matrix left right) = covariance (linear_combination left)
+   [covariance_cross_matrix_bilinear_identity] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem covariance_cross_matrix_bilinear_identity :
+   forall left right, total_mass = 1 -> matrix_bilinear_form (map fst left) (map fst
+   right) (covariance_cross_matrix left right) = covariance (linear_combination left)
    (linear_combination right).
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_double_sum_as_matrix_product.,
-   covariance_of_general_weighted_sums.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   covariance_double_sum_as_matrix_product., covariance_of_general_weighted_sums,
+   Hmass..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_cross_matrix_bilinear_identity :
     forall left right,
@@ -2369,20 +2440,22 @@ Section FiniteProbabilityMoments.
      The proof reuses the checked finite-basis representation and
      covariance symmetry instead of implementing a matrix transpose. *)
   (**
-   [covariance_cross_matrix_bilinear_swap] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: matrix_bilinear_form (map fst left) (map fst right)
-   (covariance_cross_matrix left right) = matrix_bilinear_form (map fst right)
-   (map fst left) (covariance_cross_matrix right left).
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_cross_matrix_bilinear_identity, covariance_symmetric..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_cross_matrix_bilinear_swap] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem covariance_cross_matrix_bilinear_swap : forall
+   left right, total_mass = 1 -> matrix_bilinear_form (map fst left) (map fst right)
+   (covariance_cross_matrix left right) = matrix_bilinear_form (map fst right) (map
+   fst left) (covariance_cross_matrix right left).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   covariance_cross_matrix_bilinear_identity, covariance_symmetric..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_cross_matrix_bilinear_swap :
     forall left right,
@@ -2401,21 +2474,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_matrix_quadratic_form_is_variance] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: matrix_quadratic_form (map fst components)
+   [covariance_matrix_quadratic_form_is_variance] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem covariance_matrix_quadratic_form_is_variance :
+   forall components, total_mass = 1 -> matrix_quadratic_form (map fst components)
    (covariance_matrix components) = variance (linear_combination components).
-   Hypotheses: Requires mass normalized to one; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_matrix_quadratic_form_identity.,
-   variance_of_general_weighted_sum.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   covariance_matrix_quadratic_form_identity., variance_of_general_weighted_sum,
+   Hmass..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_matrix_quadratic_form_is_variance :
     forall components,
@@ -2431,20 +2505,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_matrix_is_positive_semidefinite] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: 0 <= matrix_quadratic_form (map fst components)
-   (covariance_matrix components).
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership where shown in the statement; all other
-   constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_matrix_quadratic_form_is_variance, variance_nonnegative.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_matrix_is_positive_semidefinite] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem covariance_matrix_is_positive_semidefinite :
+   forall components, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
+   0 <= matrix_quadratic_form (map fst components) (covariance_matrix components).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   covariance_matrix_quadratic_form_is_variance, variance_nonnegative.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_matrix_is_positive_semidefinite :
     forall components,
@@ -2464,20 +2540,23 @@ Section FiniteProbabilityMoments.
      rather than assuming any covariance or Pearson coefficient bounds. *)
 
   (**
-   [covariance_at_most_half_sum_of_variances] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: 2 * covariance f g <= variance f + variance g.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, ring/field normalization; notably
-   variance_nonnegative, variance_extensional, variance_of_two_weighted_scores.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_at_most_half_sum_of_variances] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_at_most_half_sum_of_variances :
+   forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> 2 *
+   covariance f g <= variance f + variance g.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include variance_nonnegative, variance_extensional,
+   variance_of_two_weighted_scores.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_at_most_half_sum_of_variances :
     forall f g,
@@ -2500,20 +2579,23 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_at_least_negative_half_sum_of_variances] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: - (variance f + variance g) <= 2 * covariance f g.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably variance_nonnegative,
-   variance_of_two_score_sum.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_at_least_negative_half_sum_of_variances] (theorem) — Finite weighted
+   score expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   covariance_at_least_negative_half_sum_of_variances : forall f g, total_mass = 1 ->
+   (forall x, In x samples -> 0 <= weight x) -> - (variance f + variance g) <= 2 *
+   covariance f g.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   variance_nonnegative, variance_of_two_score_sum.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_at_least_negative_half_sum_of_variances :
     forall f g,
@@ -2529,21 +2611,24 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_of_unit_variance_scores_bounded] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: -1 <= covariance f g /\ covariance f g <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably
+   [covariance_of_unit_variance_scores_bounded] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_of_unit_variance_scores_bounded :
+   forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
+   variance f = 1 -> variance g = 1 -> -1 <= covariance f g /\ covariance f g <= 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
    covariance_at_most_half_sum_of_variances,
    covariance_at_least_negative_half_sum_of_variances.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_of_unit_variance_scores_bounded :
     forall f g,
@@ -2565,22 +2650,24 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [average_of_two_unit_variance_scores_bounded] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: 0 <= variance (fun x => (f x + g x) / 2) /\ variance (fun
-   x => (f x + g x) / 2) <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably
-   covariance_of_unit_variance_scores_bounded,
-   variance_of_two_unit_variance_average.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [average_of_two_unit_variance_scores_bounded] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem average_of_two_unit_variance_scores_bounded :
+   forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
+   variance f = 1 -> variance g = 1 -> 0 <= variance (fun x => (f x + g x) / 2) /\
+   variance (fun x => (f x + g x) / 2) <= 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
+   covariance_of_unit_variance_scores_bounded, variance_of_two_unit_variance_average.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem average_of_two_unit_variance_scores_bounded :
     forall f g,
@@ -2605,22 +2692,25 @@ Section FiniteProbabilityMoments.
      This gives rho >= -1/(n-1), without assuming equicorrelation. *)
 
   (**
-   [feasible_average_pair_correlation_lower_bound] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: -1 / (n - 1) <= rho.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   list length or dimension constraints as stated; enumerated-list membership;
-   unit-variance or stated moment hypotheses where shown in the statement; all
-   other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, Stdlib Psatz nonlinear arithmetic, ring/field
-   normalization; notably variance_nonnegative,
-   equal_weight_variance_from_finite_covariances, Rinv_0_lt_compat.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [feasible_average_pair_correlation_lower_bound] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem feasible_average_pair_correlation_lower_bound :
+   forall fs n rho, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> n
+   = INR (length fs) -> 1 < n -> (forall f, In f fs -> variance f = 1) -> 2 *
+   unordered_covariance_sum fs = n * (n - 1) * rho -> -1 / (n - 1) <= rho.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; dimension/length compatibility where required; sample or list
+   membership; stated unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), polynomial real
+   arithmetic (Psatz), ring/field normalization; references include
+   variance_nonnegative, equal_weight_variance_from_finite_covariances, Hidentity.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem feasible_average_pair_correlation_lower_bound :
     forall fs n rho,
@@ -2660,21 +2750,25 @@ Section FiniteProbabilityMoments.
 
 
   (**
-   [covariance_row_sum_bounded_by_count] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance_row_sum f fs <= INR (length fs).
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   list length or dimension constraints as stated; enumerated-list membership;
-   unit-variance or stated moment hypotheses where shown in the statement; all
-   other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably covariance_row_sum.,
-   FiniteSum.finite_sum_monotone., covariance_of_unit_variance_scores_bounded.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_row_sum_bounded_by_count] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma covariance_row_sum_bounded_by_count : forall f
+   fs, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> variance f = 1
+   -> (forall g, In g fs -> variance g = 1) -> covariance_row_sum f fs <= INR (length
+   fs).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; dimension/length compatibility where required; sample or list
+   membership; stated unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   covariance_row_sum., FiniteSum.finite_sum_monotone.,
+   covariance_of_unit_variance_scores_bounded.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_row_sum_bounded_by_count :
     forall f fs,
@@ -2697,23 +2791,25 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [unordered_covariance_sum_bounded_by_pair_count] (lemma).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: 2 * unordered_covariance_sum fs <= INR (length fs) * (INR
-   (length fs) - 1).
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   list length or dimension constraints as stated; enumerated-list membership;
-   unit-variance or stated moment hypotheses where shown in the statement; all
-   other constraints remain explicit.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, application of already-proved lemmas, Stdlib Lra
-   linear arithmetic, Stdlib Psatz nonlinear arithmetic; notably
-   covariance_row_sum_bounded_by_count.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [unordered_covariance_sum_bounded_by_pair_count] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Lemma unordered_covariance_sum_bounded_by_pair_count :
+   forall fs, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> (forall
+   f, In f fs -> variance f = 1) -> 2 * unordered_covariance_sum fs <= INR (length
+   fs) * (INR (length fs) - 1).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; dimension/length compatibility where required; sample or list
+   membership; stated unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, reuse of previously established lemmas, linear real arithmetic (Lra),
+   polynomial real arithmetic (Psatz), definitional reduction; references include
+   S_INR., covariance_row_sum_bounded_by_count.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma unordered_covariance_sum_bounded_by_pair_count :
     forall fs,
@@ -2739,24 +2835,24 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [feasible_average_pair_correlation_upper_bound] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: forall fs n rho, total_mass = 1 -> (forall x, In x
-   samples -> 0 <= weight x) -> n = INR (length fs) -> 1 < n -> (forall f, In f
-   fs -> variance f = 1) -> 2 * unordered_covariance_sum fs = n * (n - 1) * rho
-   -> rho <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   list length or dimension constraints as stated; enumerated-list membership;
-   unit-variance or stated moment hypotheses where shown in the statement; all
-   other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Psatz nonlinear arithmetic; notably
-   unordered_covariance_sum_bounded_by_pair_count.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [feasible_average_pair_correlation_upper_bound] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem feasible_average_pair_correlation_upper_bound :
+   forall fs n rho, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> n
+   = INR (length fs) -> 1 < n -> (forall f, In f fs -> variance f = 1) -> 2 *
+   unordered_covariance_sum fs = n * (n - 1) * rho -> rho <= 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; dimension/length compatibility where required; sample or list
+   membership; stated unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, polynomial real arithmetic (Psatz); references
+   include unordered_covariance_sum_bounded_by_pair_count.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem feasible_average_pair_correlation_upper_bound :
     forall fs n rho,
@@ -2780,21 +2876,25 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [feasible_average_pair_correlation_interval] (theorem).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: -1 / (n - 1) <= rho /\ rho <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   list length or dimension constraints as stated; enumerated-list membership;
-   unit-variance or stated moment hypotheses where shown in the statement; all
-   other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   feasible_average_pair_correlation_lower_bound,
+   [feasible_average_pair_correlation_interval] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Theorem feasible_average_pair_correlation_interval :
+   forall fs n rho, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> n
+   = INR (length fs) -> 1 < n -> (forall f, In f fs -> variance f = 1) -> 2 *
+   unordered_covariance_sum fs = n * (n - 1) * rho -> -1 / (n - 1) <= rho /\ rho <=
+   1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; dimension/length compatibility where required; sample or list
+   membership; stated unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include feasible_average_pair_correlation_lower_bound,
    feasible_average_pair_correlation_upper_bound.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem feasible_average_pair_correlation_interval :
     forall fs n rho,
@@ -2820,20 +2920,22 @@ Section FiniteProbabilityMoments.
      established arithmetic-mean bound on two covariance entries. *)
 
   (**
-   [nonnegative_quadratic_discriminant] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: forall A B C, 0 <= A -> 0 <= C -> (forall t, 0 <= A + 2 *
-   t * B + t * t * C) -> B * B <= A * C.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, Stdlib Lra linear arithmetic, Stdlib Psatz nonlinear
-   arithmetic, ring/field normalization; notably Rinv_0_lt_compat.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [nonnegative_quadratic_discriminant] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma nonnegative_quadratic_discriminant : forall A B
+   C, 0 <= A -> 0 <= C -> (forall t, 0 <= A + 2 * t * B + t * t * C) -> B * B <= A *
+   C.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, linear real arithmetic (Lra), polynomial
+   real arithmetic (Psatz), ring/field normalization; references include
+   Rinv_0_lt_compat, HCpos..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma nonnegative_quadratic_discriminant :
     forall A B C,
@@ -2869,21 +2971,23 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [finite_covariance_cauchy_schwarz_squared] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f g * covariance f g <= variance f * variance
-   g.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably nonnegative_quadratic_discriminant.,
-   variance_nonnegative, variance_of_two_score_sum.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [finite_covariance_cauchy_schwarz_squared] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem finite_covariance_cauchy_schwarz_squared :
+   forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
+   covariance f g * covariance f g <= variance f * variance g.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   nonnegative_quadratic_discriminant., variance_nonnegative,
+   variance_of_two_score_sum.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem finite_covariance_cauchy_schwarz_squared :
     forall f g,
@@ -2908,20 +3012,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [zero_variance_implies_zero_covariance_first] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f g = 0.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Psatz nonlinear arithmetic; notably
-   finite_covariance_cauchy_schwarz_squared.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [zero_variance_implies_zero_covariance_first] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem zero_variance_implies_zero_covariance_first :
+   forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
+   variance f = 0 -> covariance f g = 0.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, polynomial real arithmetic (Psatz); references
+   include finite_covariance_cauchy_schwarz_squared.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem zero_variance_implies_zero_covariance_first :
     forall f g,
@@ -2939,19 +3045,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [zero_variance_implies_zero_covariance_second] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f g = 0.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   enumerated-list membership; unit-variance or stated moment hypotheses where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably covariance_symmetric., zero_variance_implies_zero_covariance_first.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [zero_variance_implies_zero_covariance_second] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem zero_variance_implies_zero_covariance_second :
+   forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
+   variance g = 0 -> covariance f g = 0.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include covariance_symmetric.,
+   zero_variance_implies_zero_covariance_first.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem zero_variance_implies_zero_covariance_second :
     forall f g,
@@ -2967,22 +3076,23 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [nonzero_covariance_implies_positive_variances] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: 0 < variance f /\ 0 < variance g.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   explicit nonzero/strict-positive denominator or scale; enumerated-list
-   membership; unit-variance or stated moment hypotheses where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas, explicit case analysis,
-   Stdlib Lra linear arithmetic; notably variance_nonnegative,
-   zero_variance_implies_zero_covariance_first,
+   [nonzero_covariance_implies_positive_variances] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem nonzero_covariance_implies_positive_variances :
+   forall f g, total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) ->
+   covariance f g <> 0 -> 0 < variance f /\ 0 < variance g.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, reuse of previously
+   established lemmas, linear real arithmetic (Lra); references include
+   variance_nonnegative, zero_variance_implies_zero_covariance_first,
    zero_variance_implies_zero_covariance_second.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem nonzero_covariance_implies_positive_variances :
     forall f g,
@@ -3019,19 +3129,20 @@ Section FiniteProbabilityMoments.
   (* Reuse List.combine and the general weighted combination; the
      equal-length premise in subsequent theorems avoids truncation. *)
   (**
-   [weighted_basis_sum] (definition).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal construction: R)) (x : Outcome) : R := linear_combination (combine
-   coefficients basis) x.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [weighted_basis_sum] (definition) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Defines weighted basis sum using explicit Rocq operations,
+   so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition weighted_basis_sum (coefficients : list R) (basis :
+   list (Outcome -> R)) (x : Outcome) : R := linear_combination (combine coefficients
+   basis) x.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition weighted_basis_sum
     (coefficients : list R) (basis : list (Outcome -> R))
@@ -3039,57 +3150,59 @@ Section FiniteProbabilityMoments.
     linear_combination (combine coefficients basis) x.
 
   (**
-   [basis_covariance_matrix] (definition).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal construction: R)) : list (list R) := map (fun f => map (fun g =>
-   covariance f g) basis) basis.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [basis_covariance_matrix] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines basis covariance matrix using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition basis_covariance_matrix (basis : list (Outcome ->
+   R)) : list (list R) := map (fun f => map (fun g => covariance f g) basis) basis.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition basis_covariance_matrix
     (basis : list (Outcome -> R)) : list (list R) :=
     map (fun f => map (fun g => covariance f g) basis) basis.
 
   (**
-   [basis_cross_covariance_matrix] (definition).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal construction: R)) : list (list R) := map (fun f => map (fun g =>
-   covariance f g) right) left.
-   Hypotheses: A definition; its parameters and fields appear in the signature,
-   with no silent statistical assumptions.
-   Implementation: structural induction on a finite list or natural index,
-   equational rewriting, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [basis_cross_covariance_matrix] (definition) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Defines basis cross covariance matrix using explicit Rocq
+   operations, so later theorems can refer to one stable mathematical object.
+   Exact declaration: Definition basis_cross_covariance_matrix (left right : list
+   (Outcome -> R)) : list (list R) := map (fun f => map (fun g => covariance f g)
+   right) left.
+   Premises and side conditions: Only the declared parameters, data fields, and types
+   constrain this construction; no extraneous postulates are introduced.
+   Proof/definition method: Definitionally uses the shown expression/record
+   constructor; proof obligations, if any, are attached to this declaration alone.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Definition basis_cross_covariance_matrix
     (left right : list (Outcome -> R)) : list (list R) :=
     map (fun f => map (fun g => covariance f g) right) left.
 
   (**
-   [weighted_basis_sum_as_combination] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall coefficients basis x, weighted_basis_sum
-   coefficients basis x = linear_combination (combine coefficients basis) x.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [weighted_basis_sum_as_combination] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma weighted_basis_sum_as_combination : forall
+   coefficients basis x, weighted_basis_sum coefficients basis x = linear_combination
+   (combine coefficients basis) x.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, definitional
+   reduction.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma weighted_basis_sum_as_combination :
     forall coefficients basis x,
@@ -3101,19 +3214,20 @@ Section FiniteProbabilityMoments.
      List.combine for equal-length lists. A single projection bridge
      replaces two separate list-length induction proofs below. *)
   (**
-   [split_as_projection_maps] (lemma).
-   Meaning: Proves a structural list identity using Rocq's standard list
-   operations.
-   Formal conclusion: R))), split components = (map fst components, map snd
+   [split_as_projection_maps] (lemma) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Proves a list-structural invariant without custom sorting or
+   indexing.
+   Exact checked proposition: Lemma split_as_projection_maps : forall (components :
+   list (R * (Outcome -> R))), split components = (map fst components, map snd
    components).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: structural induction on a finite list or natural index,
-   equational rewriting, definitional computation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, definitional reduction.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma split_as_projection_maps :
     forall (components : list (R * (Outcome -> R))),
@@ -3125,18 +3239,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [coefficients_of_combine] (lemma).
-   Meaning: Proves a structural list identity using Rocq's standard list
-   operations.
-   Formal conclusion: map fst (combine coefficients basis) = coefficients.
-   Hypotheses: Requires list length or dimension constraints as stated where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably combine_split, split_as_projection_maps, f_equal.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [coefficients_of_combine] (lemma) — Finite weighted score expectations, variances
+   and covariance matrices.
+   Mathematical meaning: Proves a list-structural invariant without custom sorting or
+   indexing.
+   Exact checked proposition: Lemma coefficients_of_combine : forall (coefficients :
+   list R) (basis : list (Outcome -> R)), length coefficients = length basis -> map
+   fst (combine coefficients basis) = coefficients.
+   Premises and side conditions: The displayed hypotheses include dimension/length
+   compatibility where required. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include combine_split,
+   split_as_projection_maps, f_equal.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma coefficients_of_combine :
     forall (coefficients : list R) (basis : list (Outcome -> R)),
@@ -3150,18 +3267,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [basis_of_combine] (lemma).
-   Meaning: Proves a structural list identity using Rocq's standard list
-   operations.
-   Formal conclusion: map snd (combine coefficients basis) = basis.
-   Hypotheses: Requires list length or dimension constraints as stated where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably combine_split, split_as_projection_maps, f_equal.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [basis_of_combine] (lemma) — Finite weighted score expectations, variances and
+   covariance matrices.
+   Mathematical meaning: Proves a list-structural invariant without custom sorting or
+   indexing.
+   Exact checked proposition: Lemma basis_of_combine : forall (coefficients : list R)
+   (basis : list (Outcome -> R)), length coefficients = length basis -> map snd
+   (combine coefficients basis) = basis.
+   Premises and side conditions: The displayed hypotheses include dimension/length
+   compatibility where required. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include combine_split,
+   split_as_projection_maps, f_equal.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma basis_of_combine :
     forall (coefficients : list R) (basis : list (Outcome -> R)),
@@ -3175,19 +3295,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_matrix_uses_only_basis] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: forall components, covariance_matrix components =
-   basis_covariance_matrix (map snd components).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably covariance_matrix, map_map., map_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_matrix_uses_only_basis] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma covariance_matrix_uses_only_basis : forall
+   components, covariance_matrix components = basis_covariance_matrix (map snd
+   components).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   covariance_matrix, map_map., map_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_matrix_uses_only_basis :
     forall components,
@@ -3204,20 +3326,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_cross_matrix_uses_only_bases] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: forall left right, covariance_cross_matrix left right =
-   basis_cross_covariance_matrix (map snd left) (map snd right).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably covariance_cross_matrix, map_map.,
-   map_ext.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [covariance_cross_matrix_uses_only_bases] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma covariance_cross_matrix_uses_only_bases : forall
+   left right, covariance_cross_matrix left right = basis_cross_covariance_matrix
+   (map snd left) (map snd right).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   covariance_cross_matrix, map_map., map_ext.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma covariance_cross_matrix_uses_only_bases :
     forall left right,
@@ -3234,19 +3357,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [fixed_basis_covariance_matrix_representation] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: covariance_matrix (combine coefficients basis) =
-   basis_covariance_matrix basis.
-   Hypotheses: Requires list length or dimension constraints as stated where
-   shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, definitional computation; notably
-   covariance_matrix_uses_only_basis., basis_of_combine.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [fixed_basis_covariance_matrix_representation] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem fixed_basis_covariance_matrix_representation :
+   forall coefficients basis, length coefficients = length basis -> covariance_matrix
+   (combine coefficients basis) = basis_covariance_matrix basis.
+   Premises and side conditions: The displayed hypotheses include dimension/length
+   compatibility where required. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, definitional
+   reduction; references include covariance_matrix_uses_only_basis.,
+   basis_of_combine.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem fixed_basis_covariance_matrix_representation :
     forall coefficients basis,
@@ -3261,21 +3386,23 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [fixed_basis_weighted_variance_identity] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (weighted_basis_sum coefficients basis) =
-   matrix_quadratic_form coefficients (basis_covariance_matrix basis).
-   Hypotheses: Requires mass normalized to one; list length or dimension
-   constraints as stated; unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably variance_extensional, weighted_basis_sum_as_combination.,
-   covariance_matrix_quadratic_form_is_variance.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [fixed_basis_weighted_variance_identity] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem fixed_basis_weighted_variance_identity : forall
+   coefficients basis, length coefficients = length basis -> total_mass = 1 ->
+   variance (weighted_basis_sum coefficients basis) = matrix_quadratic_form
+   coefficients (basis_covariance_matrix basis).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; dimension/length compatibility where required. No further assumptions are
+   implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include variance_extensional,
+   weighted_basis_sum_as_combination., covariance_matrix_quadratic_form_is_variance.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem fixed_basis_weighted_variance_identity :
     forall coefficients basis,
@@ -3303,20 +3430,24 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [fixed_basis_covariance_matrix_positive_semidefinite] (theorem).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: 0 <= matrix_quadratic_form coefficients
-   (basis_covariance_matrix basis).
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   list length or dimension constraints as stated; enumerated-list membership
-   where shown in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably variance_nonnegative.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [fixed_basis_covariance_matrix_positive_semidefinite] (theorem) — Finite weighted
+   score expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Theorem
+   fixed_basis_covariance_matrix_positive_semidefinite : forall basis coefficients,
+   length coefficients = length basis -> total_mass = 1 -> (forall x, In x samples ->
+   0 <= weight x) -> 0 <= matrix_quadratic_form coefficients (basis_covariance_matrix
+   basis).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; dimension/length compatibility where required; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include variance_nonnegative.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem fixed_basis_covariance_matrix_positive_semidefinite :
     forall basis coefficients,
@@ -3338,23 +3469,26 @@ Section FiniteProbabilityMoments.
      provided with the proof that each squares to its finite variance. *)
 
   (**
-   [normalized_covariance_is_between_minus_one_and_one] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: -1 <= covariance f g / (sd_f * sd_g) /\ covariance f g /
-   (sd_f * sd_g) <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   explicit nonzero/strict-positive denominator or scale; enumerated-list
-   membership; unit-variance or stated moment hypotheses where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, Stdlib Lra linear arithmetic, Stdlib Psatz nonlinear
-   arithmetic, ring/field normalization; notably
+   [normalized_covariance_is_between_minus_one_and_one] (theorem) — Finite weighted
+   score expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   normalized_covariance_is_between_minus_one_and_one : forall f g sd_f sd_g,
+   total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> 0 < sd_f -> 0 <
+   sd_g -> variance f = sd_f * sd_f -> variance g = sd_g * sd_g -> -1 <= covariance f
+   g / (sd_f * sd_g) /\ covariance f g / (sd_f * sd_g) <= 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, linear real arithmetic (Lra), polynomial
+   real arithmetic (Psatz), ring/field normalization; references include
    finite_covariance_cauchy_schwarz_squared, Rinv_0_lt_compat.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem normalized_covariance_is_between_minus_one_and_one :
     forall f g sd_f sd_g,
@@ -3386,24 +3520,28 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [centered_standardized_covariance_in_unit_interval] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: -1 <= covariance (fun x => (f x - expect f) / sd_f) (fun
-   x => (g x - expect g) / sd_g) /\ covariance (fun x => (f x - expect f) /
-   sd_f) (fun x => (g x - expect g) / sd_g) <= 1.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   explicit nonzero/strict-positive denominator or scale; enumerated-list
-   membership; unit-variance or stated moment hypotheses where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic; notably
+   [centered_standardized_covariance_in_unit_interval] (theorem) — Finite weighted
+   score expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   centered_standardized_covariance_in_unit_interval : forall f g sd_f sd_g,
+   total_mass = 1 -> (forall x, In x samples -> 0 <= weight x) -> 0 < sd_f -> 0 <
+   sd_g -> variance f = sd_f * sd_f -> variance g = sd_g * sd_g -> -1 <= covariance
+   (fun x => (f x - expect f) / sd_f) (fun x => (g x - expect g) / sd_g) /\
+   covariance (fun x => (f x - expect f) / sd_f) (fun x => (g x - expect g) / sd_g)
+   <= 1.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra); references include
    covariance_of_centered_standardized_scores,
    normalized_covariance_is_between_minus_one_and_one.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem centered_standardized_covariance_in_unit_interval :
     forall f g sd_f sd_g,
@@ -3429,19 +3567,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [unit_covariance_one_iff_difference_has_zero_variance] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f g = 1 <-> variance (fun x => f x - g x) = 0.
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Lra linear arithmetic, ring/field normalization; notably
-   variance_extensional, variance_of_two_weighted_scores, Hidentity..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [unit_covariance_one_iff_difference_has_zero_variance] (theorem) — Finite weighted
+   score expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   unit_covariance_one_iff_difference_has_zero_variance : forall f g, variance f = 1
+   -> variance g = 1 -> covariance f g = 1 <-> variance (fun x => f x - g x) = 0.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include variance_extensional,
+   variance_of_two_weighted_scores, Hidentity..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem unit_covariance_one_iff_difference_has_zero_variance :
     forall f g,
@@ -3462,19 +3603,20 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [unit_covariance_minus_one_iff_sum_has_zero_variance] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance f g = -1 <-> variance (fun x => f x + g x) =
-   0.
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic; notably
-   variance_of_two_score_sum.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [unit_covariance_minus_one_iff_sum_has_zero_variance] (theorem) — Finite weighted
+   score expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   unit_covariance_minus_one_iff_sum_has_zero_variance : forall f g, variance f = 1
+   -> variance g = 1 -> covariance f g = -1 <-> variance (fun x => f x + g x) = 0.
+   Premises and side conditions: The displayed hypotheses include stated
+   unit-variance conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra); references include variance_of_two_score_sum.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem unit_covariance_minus_one_iff_sum_has_zero_variance :
     forall f g,
@@ -3492,19 +3634,20 @@ Section FiniteProbabilityMoments.
      rather than expanding finite expectations again. *)
 
   (**
-   [variance_of_affine_score] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => a * f x + b) = (a * a) * variance f.
-   Hypotheses: Requires mass normalized to one; unit-variance or stated moment
-   hypotheses where shown in the statement; all other constraints remain
-   explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably variance_of_shifted_score, variance_of_scaled_score..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_affine_score] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_affine_score : forall f a b,
+   total_mass = 1 -> variance (fun x => a * f x + b) = (a * a) * variance f.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include variance_of_shifted_score,
+   variance_of_scaled_score..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_affine_score :
     forall f a b,
@@ -3519,20 +3662,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [covariance_of_affine_scores] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: covariance (fun x => a * f x + b) (fun x => c * g x + d)
-   = a * c * covariance f g.
-   Hypotheses: Requires mass normalized to one where shown in the statement;
-   all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization; notably
-   covariance_invariant_under_first_shift,
+   [covariance_of_affine_scores] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem covariance_of_affine_scores : forall f g a b c
+   d, total_mass = 1 -> covariance (fun x => a * f x + b) (fun x => c * g x + d) = a
+   * c * covariance f g.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include covariance_invariant_under_first_shift,
    covariance_invariant_under_second_shift, covariance_scale_first.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem covariance_of_affine_scores :
     forall f g a b c d,
@@ -3554,19 +3698,19 @@ Section FiniteProbabilityMoments.
      in_map_iff, rather than new recursive matrix-size functions. *)
 
   (**
-   [basis_covariance_matrix_row_count] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: forall basis, length (basis_covariance_matrix basis) =
-   length basis.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   basis_covariance_matrix., length_map..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [basis_covariance_matrix_row_count] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma basis_covariance_matrix_row_count : forall basis,
+   length (basis_covariance_matrix basis) = length basis.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include basis_covariance_matrix., length_map..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma basis_covariance_matrix_row_count :
     forall basis,
@@ -3578,19 +3722,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [basis_covariance_matrix_column_count] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: length row = length basis.
-   Hypotheses: Requires list length or dimension constraints as stated;
-   enumerated-list membership where shown in the statement; all other
-   constraints remain explicit.
-   Proof outline: application of already-proved lemmas, explicit case analysis;
-   notably basis_covariance_matrix, in_map_iff, length_map..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [basis_covariance_matrix_column_count] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma basis_covariance_matrix_column_count : forall
+   basis row, In row (basis_covariance_matrix basis) -> length row = length basis.
+   Premises and side conditions: The displayed hypotheses include dimension/length
+   compatibility where required; sample or list membership. No further assumptions
+   are implicit.
+   Proof/definition method: Kernel proof uses case analysis, reuse of previously
+   established lemmas; references include basis_covariance_matrix, in_map_iff,
+   length_map..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma basis_covariance_matrix_column_count :
     forall basis row,
@@ -3606,19 +3752,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [basis_cross_covariance_matrix_row_count] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: forall left right, length (basis_cross_covariance_matrix
-   left right) = length left.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: application of already-proved lemmas; notably
-   basis_cross_covariance_matrix., length_map..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [basis_cross_covariance_matrix_row_count] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma basis_cross_covariance_matrix_row_count : forall
+   left right, length (basis_cross_covariance_matrix left right) = length left.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include basis_cross_covariance_matrix., length_map..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma basis_cross_covariance_matrix_row_count :
     forall left right,
@@ -3631,19 +3777,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [basis_cross_covariance_matrix_column_count] (lemma).
-   Meaning: Relates finite covariance entries and coefficient-weighted matrix
-   or quadratic-form expressions.
-   Formal conclusion: length row = length right.
-   Hypotheses: Requires list length or dimension constraints as stated;
-   enumerated-list membership where shown in the statement; all other
-   constraints remain explicit.
-   Proof outline: application of already-proved lemmas, explicit case analysis;
-   notably basis_cross_covariance_matrix, in_map_iff, length_map..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [basis_cross_covariance_matrix_column_count] (lemma) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Connects score covariances with a finite matrix, vector, or
+   quadratic-form expression.
+   Exact checked proposition: Lemma basis_cross_covariance_matrix_column_count :
+   forall left right row, In row (basis_cross_covariance_matrix left right) -> length
+   row = length right.
+   Premises and side conditions: The displayed hypotheses include dimension/length
+   compatibility where required; sample or list membership. No further assumptions
+   are implicit.
+   Proof/definition method: Kernel proof uses case analysis, reuse of previously
+   established lemmas; references include basis_cross_covariance_matrix, in_map_iff,
+   length_map..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma basis_cross_covariance_matrix_column_count :
     forall left right row,
@@ -3664,19 +3813,21 @@ Section FiniteProbabilityMoments.
      covariance null-direction proofs remain compatible. *)
 
   (**
-   [sum_finite_zero_implies_zero_terms] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall xs h, (forall x, In x xs -> 0 <= h x) ->
-   sum_finite h xs = 0 -> forall x, In x xs -> h x = 0.
-   Hypotheses: Requires enumerated-list membership where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_nonnegative_zero.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_finite_zero_implies_zero_terms] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma sum_finite_zero_implies_zero_terms : forall xs h,
+   (forall x, In x xs -> 0 <= h x) -> sum_finite h xs = 0 -> forall x, In x xs -> h x
+   = 0.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; sample or list membership. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_nonnegative_zero.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma sum_finite_zero_implies_zero_terms :
     forall xs h,
@@ -3690,23 +3841,22 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [zero_variance_is_constant_on_positive_mass] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: forall f x, total_mass = 1 -> (forall y, In y samples ->
-   0 <= weight y) -> variance f = 0 -> In x samples -> 0 < weight x -> f x =
-   expect f.
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   explicit nonzero/strict-positive denominator or scale; enumerated-list
-   membership; unit-variance or stated moment hypotheses where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, Stdlib Lra linear arithmetic; notably
-   centered_second_moment_identity, Rmult_le_pos., Rle_0_sqr..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [zero_variance_is_constant_on_positive_mass] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem zero_variance_is_constant_on_positive_mass :
+   forall f x, total_mass = 1 -> (forall y, In y samples -> 0 <= weight y) ->
+   variance f = 0 -> In x samples -> 0 < weight x -> f x = expect f.
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; sample or list membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, linear real arithmetic (Lra); references
+   include centered_second_moment_identity, Rmult_le_pos., Rle_0_sqr..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem zero_variance_is_constant_on_positive_mass :
     forall f x,
@@ -3745,22 +3895,27 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [null_covariance_direction_constant_on_positive_mass] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: weighted_basis_sum coefficients basis x = expect
-   (weighted_basis_sum coefficients basis).
-   Hypotheses: Requires mass normalized to one; nonnegative outcome weights;
-   explicit nonzero/strict-positive denominator or scale; list length or
-   dimension constraints as stated; enumerated-list membership where shown in
-   the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably zero_variance_is_constant_on_positive_mass,
+   [null_covariance_direction_constant_on_positive_mass] (theorem) — Finite weighted
+   score expectations, variances and covariance matrices.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   null_covariance_direction_constant_on_positive_mass : forall coefficients basis x,
+   length coefficients = length basis -> total_mass = 1 -> (forall y, In y samples ->
+   0 <= weight y) -> In x samples -> 0 < weight x -> matrix_quadratic_form
+   coefficients (basis_covariance_matrix basis) = 0 -> weighted_basis_sum
+   coefficients basis x = expect (weighted_basis_sum coefficients basis).
+   Premises and side conditions: The displayed hypotheses include unit total sample
+   mass; nonnegative outcome weights; explicit nonzero or strict-positive numerical
+   conditions; dimension/length compatibility where required; sample or list
+   membership. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   zero_variance_is_constant_on_positive_mass,
    fixed_basis_weighted_variance_identity, Hquadratic..
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem null_covariance_direction_constant_on_positive_mass :
     forall coefficients basis x,
@@ -3788,18 +3943,19 @@ Section FiniteProbabilityMoments.
      real addition, not a custom sorting or indexing implementation. *)
 
   (**
-   [sum_scores_permutation_invariant] (lemma).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: forall x, sum_scores fs x = sum_scores gs x.
-   Hypotheses: Requires Stdlib list-permutation premise where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   FiniteSum.finite_sum_permutation.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [sum_scores_permutation_invariant] (lemma) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma sum_scores_permutation_invariant : forall fs gs,
+   Permutation fs gs -> forall x, sum_scores fs x = sum_scores gs x.
+   Premises and side conditions: The displayed hypotheses include Stdlib permutation
+   relation. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include FiniteSum.finite_sum_permutation, Hperm..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Lemma sum_scores_permutation_invariant :
     forall fs gs,
@@ -3813,18 +3969,19 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [variance_of_permuted_score_sum] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (sum_scores fs) = variance (sum_scores gs).
-   Hypotheses: Requires Stdlib list-permutation premise where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: application of already-proved lemmas; notably
-   variance_extensional, sum_scores_permutation_invariant.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [variance_of_permuted_score_sum] (theorem) — Finite weighted score expectations,
+   variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem variance_of_permuted_score_sum : forall fs gs,
+   Permutation fs gs -> variance (sum_scores fs) = variance (sum_scores gs).
+   Premises and side conditions: The displayed hypotheses include Stdlib permutation
+   relation. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
+   references include variance_extensional, sum_scores_permutation_invariant, Hperm..
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem variance_of_permuted_score_sum :
     forall fs gs,
@@ -3837,20 +3994,21 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [equal_weight_variance_permutation_invariant] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: variance (fun x => sum_scores fs x / n) = variance (fun x
-   => sum_scores gs x / n).
-   Hypotheses: Requires Stdlib list-permutation premise where shown in the
-   statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably variance_extensional,
-   sum_scores_permutation_invariant.
-   Library discipline: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's
-   reusable fold, extensionality, monotonicity and Fubini lemmas.
-   Scope: No assertion about Gaussian covariance, continuous random variables
-   or observed IQ distributions follows from this finite model.
+   [equal_weight_variance_permutation_invariant] (theorem) — Finite weighted score
+   expectations, variances and covariance matrices.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem equal_weight_variance_permutation_invariant :
+   forall fs gs n, Permutation fs gs -> variance (fun x => sum_scores fs x / n) =
+   variance (fun x => sum_scores gs x / n).
+   Premises and side conditions: The displayed hypotheses include Stdlib permutation
+   relation. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   variance_extensional, sum_scores_permutation_invariant.
+   Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
+   Boundary: Exact finite outcome weights and list score bases, not continuous random
+   variables or empirical IQ covariance.
    *)
   Theorem equal_weight_variance_permutation_invariant :
     forall fs gs n,
