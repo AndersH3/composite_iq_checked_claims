@@ -544,6 +544,43 @@ Proof.
   - destruct (p x); simpl; rewrite IH; ring.
 Qed.
 
+(* Boolean selection and its complement partition each index occurrence
+   exactly once.  Reuse the existing generic filtered-sum and additive
+   sum laws rather than inducting over the sample in each application. *)
+(**
+   [finite_sum_filter_partition] (lemma) — Shared finite real-valued sums
+   and their behavior under Boolean partitions.
+   Mathematical meaning: Filtering a finite list into accepted and
+   rejected occurrences, then adding their weighted sums, recovers
+   the original weighted sum exactly, including duplicate elements.
+   Exact checked proposition: forall xs p f,
+   finite_sum f (filter p xs) +
+   finite_sum f (filter (fun x => negb (p x)) xs) =
+   finite_sum f xs.
+   Premises and side conditions: The finite list may repeat elements,
+   the predicate is Boolean and the integrand takes arbitrary real
+   values, including negatives. No sign or mass assumptions are needed.
+   Proof/definition method: Rewrite both filtered sums with the
+   previously checked finite_sum_filter, combine with finite_sum_add,
+   and use finite_sum_ext with exhaustive Boolean reduction and ring.
+   Library reuse: Stdlib.List.filter, Stdlib.Bool.negb,
+   finite_sum_filter, finite_sum_add, finite_sum_ext, and Stdlib.Reals.
+   Boundary: This establishes finite list-fold additivity, not
+   countably additive or continuous probability-measure properties.
+ *)
+Lemma finite_sum_filter_partition {A : Type} :
+  forall (xs : list A) (p : A -> bool) (f : A -> R),
+    finite_sum f (filter p xs) +
+    finite_sum f (filter (fun x => negb (p x)) xs) =
+    finite_sum f xs.
+Proof.
+  intros xs p f.
+  rewrite !finite_sum_filter.
+  rewrite <- finite_sum_add.
+  apply finite_sum_ext; intro x.
+  destruct (p x); simpl; ring.
+Qed.
+
 (**
    [finite_sum_app] (lemma) — Shared real-valued list sums and their algebraic/order
    laws.
