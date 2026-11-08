@@ -1,6 +1,6 @@
 # Rocq proof-library audit and refactoring plan
 
-This audit covers all **six Rocq modules** in the Hoeflin/Ferguson and Towers formalization, including the shared finite-sum and event-to-moment bridge modules.
+This audit covers all **seven Rocq modules** in the Hoeflin/Ferguson and Towers formalization, including the shared finite-sum, event-to-moment and four-cell interpretation bridge modules.
 It distinguishes **library functionality that should be reused** from
 **report-specific definitions that must remain explicit**.
 
@@ -137,6 +137,45 @@ The root README, historical Ada/SPARK evidence, and report PDFs
 were not modified. This remains a targeted refactor, not a claim of
 wholesale migration to MathComp, Coquelicot or general measure theory.
 
+## Checked four-cell product interpretation and additional library reuse (November 8)
+
+The `FourCellBridge.v` module interprets the four report-specific
+admission outcomes on the standard `bool * bool` product type using
+`Stdlib.List.list_prod [true; false] [true; false]`. Library
+`in_prod` and `length_prod` prove the four-cell enumeration covers
+every Boolean pair and has four entries. The model's weights use only
+the original `Admissions.TwoEventModel` field projections, with
+the original nonnegativity and normalization premises.
+
+It then proves **13 declarations**: outcome completeness and length,
+weight nonnegativity and normalized mass, marginal A/B mass, intersection
+and union mass, exactly-one mass, covariance, independence criterion,
+and Bernoulli variance of both indicators. Covariance and Bernoulli
+variance are obtained by reusing the existing `FiniteBridge` results.
+
+The `FiniteUnion` module adds **8** generic facts about finite event
+mass and reuses `FiniteSum.finite_sum_app`, `finite_sum_permutation`,
+`finite_sum_zero` and the established indicator order bounds.
+The empty-event-family proof now delegates to its false-event result.
+
+`FiniteMoments` removes two duplicate inductions over equal-length
+`List.combine` arguments. A shared projection lemma and the library's
+`List.combine_split` provide both public results. The existing
+`expectation_sub` proof now uses `FiniteSum.finite_sum_sub`.
+There is one new shared projection lemma; all previous theorem
+statements are unchanged.
+
+The seven source files now contain **311 declarations**:
+64 (`Hoeflin`), 67 (`Admissions`), 38 (`FiniteUnion`),
+103 (`FiniteMoments`), 12 (`FiniteSum`), 14 (`FiniteBridge`)
+and 13 (`FourCellBridge`). The first six were checked for
+named-statement preservation against `a2f6427`.
+
+This remains an incremental refactor. No wholesale migration to
+MathComp, Coquelicot, abstract measure theory or a separate matrix
+library has been performed; such a migration needs checked
+interpretation/compatibility proofs.
+
 ## Deliberately retained project-specific definitions
 
 - **Four-cell admissions model:** `TwoEventModel` defines the actual
@@ -191,7 +230,7 @@ wholesale migration to MathComp, Coquelicot or general measure theory.
 
 ## Scope limitation
 
-This audit covers all six proof modules; it does **not** claim that each
+This audit covers all seven proof modules; it does **not** claim that each
 proof has been rewritten, that general finite probability has been replaced
 by abstract measure theory, or that the report's empirical claims have been
 proved. The remaining migration is structural work requiring explicit
