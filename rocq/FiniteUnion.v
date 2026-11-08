@@ -2357,6 +2357,134 @@ Section FiniteOutcomeSpace.
     field; lra.
   Qed.
 
+
+  (**
+   [finite_conditional_prob_intersection_symmetric] (theorem) — Order invariance of conditioned event intersection.
+   Mathematical meaning: Exchanging the two target events does not change their conditional intersection mass. The conditioning event is unchanged, and the result is an equality of finite real-valued quotients.
+   Exact checked proposition: For arbitrary weights, samples, Boolean events first and second and conditioning event given, conditional(first AND second | given) equals conditional(second AND first | given).
+   Premises and side conditions: No positivity, normalization or nonnegative-weight premise is needed for this algebraic equality. If the conditioning mass vanishes, the quotient is Rocq's totalized real division and does not represent a probability.
+   Proof/definition method: Apply the previously checked finite conditional-event extensionality theorem on the sample support, discharging its pointwise Boolean goal by the standard conjunction commutativity lemma.
+   Library reuse: finite_conditional_prob_event_ext_on_samples and Stdlib.Bool.andb_comm; no new sample summation or case splitting is required.
+   Boundary: Only finite sampled Boolean events are covered; this supplies no conditional-independence assertion on its own.
+   *)
+  Theorem finite_conditional_prob_intersection_symmetric :
+    forall weights samples first second given,
+      finite_conditional_prob weights samples
+        (fun x => andb (first x) (second x)) given =
+      finite_conditional_prob weights samples
+        (fun x => andb (second x) (first x)) given.
+  Proof.
+    intros weights samples first second given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    apply andb_comm.
+  Qed.
+
+  (**
+   [finite_conditional_independent] (definition) — Independence of two Boolean events relative to a finite conditioning event.
+   Mathematical meaning: Conditional independence means that the joint conditional mass factors into the product of the two conditional marginals, with strictly positive conditioning mass required as part of the predicate rather than left implicit.
+   Exact declaration: finite_conditional_independent weights samples first second given is the conjunction of 0 < finite_prob weights samples given and conditional(first AND second | given) = conditional(first | given) * conditional(second | given).
+   Premises and side conditions: All finite weights are real and repeated samples are counted with multiplicity. Signed weights still satisfy algebraic expressions, but nonnegative weights are needed to interpret the predicate as probabilistic conditional independence. No unit-total-mass assumption is necessary.
+   Proof/definition method: Reuse the existing generic finite_prob and finite_conditional_prob operations, and the standard Boolean conjunction, as a transparent proposition without another event representation or quotient implementation.
+   Library reuse: finite_prob, finite_conditional_prob, Stdlib.Bool.andb and Stdlib.Reals; no custom probability or matrix library is introduced.
+   Boundary: This is exact finite conditioned factorization, not causal independence, Gaussian conditional independence, or a continuous regular conditional law.
+   *)
+  Definition finite_conditional_independent
+      (weights : Outcome -> R) (samples : list Outcome)
+      (first second given : Event) : Prop :=
+    0 < finite_prob weights samples given /\
+    finite_conditional_prob weights samples
+      (fun x => andb (first x) (second x)) given =
+    finite_conditional_prob weights samples first given *
+    finite_conditional_prob weights samples second given.
+
+  (**
+   [finite_conditional_independent_symmetric] (theorem) — Symmetry of conditional independence.
+   Mathematical meaning: Factorization of the joint finite conditional event mass does not privilege the order of the two events; the same strictly positive conditioning mass is retained in both directions.
+   Exact checked proposition: For any finite weights, sample list, first and second Boolean events and conditioning event, finite_conditional_independent first second given holds if and only if finite_conditional_independent second first given holds.
+   Premises and side conditions: Positivity of the conditioning marginal is built into the two predicates. The proof is an algebraic equivalence and does not require normalization, individual weight nonnegativity, or distinct sample elements.
+   Proof/definition method: Destructure the factorization and positivity conjuncts, use the previously established conditional-intersection symmetry in each direction and commute the real product on the right.
+   Library reuse: finite_conditional_prob_intersection_symmetric, Stdlib.Reals.Rmult_comm and ordinary propositional conjunction introduction.
+   Boundary: This establishes a structural law for the explicitly defined finite conditional factorization; it does not claim arbitrary random-variable conditional independence.
+   *)
+  Theorem finite_conditional_independent_symmetric :
+    forall weights samples first second given,
+      finite_conditional_independent weights samples first second given <->
+      finite_conditional_independent weights samples second first given.
+  Proof.
+    intros weights samples first second given.
+    unfold finite_conditional_independent.
+    split.
+    - intros [Hpositive Hfactor].
+      split; [exact Hpositive |].
+      rewrite <- (finite_conditional_prob_intersection_symmetric
+        weights samples first second given).
+      rewrite Rmult_comm.
+      exact Hfactor.
+    - intros [Hpositive Hfactor].
+      split; [exact Hpositive |].
+      rewrite (finite_conditional_prob_intersection_symmetric
+        weights samples first second given).
+      rewrite Rmult_comm.
+      exact Hfactor.
+  Qed.
+
+  (**
+   [finite_conditional_independent_event_ext_on_samples] (theorem) — Support extensionality of a conditional-independence target.
+   Mathematical meaning: Modifying the first target event away from the enumerated sample does not alter its conditional independence from the second event, because both its conditional marginal and their conditional intersection are unchanged.
+   Exact checked proposition: If first and replacement agree at every member of samples, then conditional independence of first and second given is logically equivalent to conditional independence of replacement and second given.
+   Premises and side conditions: The finite sample may repeat outcomes; positivity of the given marginal is internal to the predicate, and no further normalization or sign premise is imposed for the real algebraic equivalence.
+   Proof/definition method: Unfold only the independence predicate and rewrite its joint conditional mass using event agreement, then rewrite the first conditional marginal with the same existing conditional support-extensionality lemma.
+   Library reuse: finite_conditional_prob_event_ext_on_samples and Stdlib.Bool.andb; no induction on the sample or duplicate probability sum is used.
+   Boundary: This concerns agreement on the actual finite sample, not almost-everywhere equality for an external probability measure.
+   *)
+  Theorem finite_conditional_independent_event_ext_on_samples :
+    forall weights samples first replacement second given,
+      (forall x, In x samples -> first x = replacement x) ->
+      (finite_conditional_independent weights samples first second given <->
+       finite_conditional_independent weights samples replacement second given).
+  Proof.
+    intros weights samples first replacement second given Hagree.
+    unfold finite_conditional_independent.
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples
+      (fun x => andb (first x) (second x))
+      (fun x => andb (replacement x) (second x)) given).
+    2: { intros x Hx; rewrite (Hagree x Hx); reflexivity. }
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples first replacement given Hagree).
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_independent_conditioning_ext_on_samples] (theorem) — Support extensionality of the conditioning event.
+   Mathematical meaning: Two conditioning predicates that agree on the finite list of sampled outcomes yield the same positivity premise and conditional factorization, hence exactly the same conditional-independence assertion.
+   Exact checked proposition: If given1 and given2 agree at every sample occurrence, conditional independence of first and second given1 holds if and only if the corresponding conditional independence given2 holds.
+   Premises and side conditions: The positive-conditioning condition is preserved by support equality. This is an exact finite quotient identity for arbitrary signed weights; probability semantics additionally require nonnegative sample weights.
+   Proof/definition method: Unfold the independence predicate, rewrite the conditioning marginal with finite_prob_event_ext_on_samples and then rewrite the three conditional terms via the existing conditioning support-extensionality theorem.
+   Library reuse: finite_prob_event_ext_on_samples and finite_conditional_prob_conditioning_ext_on_samples, plus Stdlib.List.In and Stdlib.Bool.andb.
+   Boundary: The result is restricted to enumerated finite outcome lists and does not identify conditional measures outside their sampled support.
+   *)
+  Theorem finite_conditional_independent_conditioning_ext_on_samples :
+    forall weights samples first second given1 given2,
+      (forall x, In x samples -> given1 x = given2 x) ->
+      (finite_conditional_independent weights samples first second given1 <->
+       finite_conditional_independent weights samples first second given2).
+  Proof.
+    intros weights samples first second given1 given2 Hagree.
+    unfold finite_conditional_independent.
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples given1 given2 Hagree).
+    rewrite (finite_conditional_prob_conditioning_ext_on_samples
+      weights samples
+      (fun x => andb (first x) (second x)) given1 given2 Hagree).
+    rewrite (finite_conditional_prob_conditioning_ext_on_samples
+      weights samples first given1 given2 Hagree).
+    rewrite (finite_conditional_prob_conditioning_ext_on_samples
+      weights samples second given1 given2 Hagree).
+    reflexivity.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

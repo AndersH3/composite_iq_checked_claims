@@ -969,6 +969,29 @@ and dependency reuse. Totals: 424 claims, 427 scripts,
   library requires showing that this finite weighted space satisfies that
   library's hypotheses; a lemma with the same name is insufficient.
 
+
+## Finite conditional-independence reuse extension
+
+`FiniteUnion.finite_conditional_independent` is an explicit conjunction:
+positive finite conditioning-event mass and product factorization of two
+conditional event masses. It is not a new probability calculation.
+The four companion theorems derive joint-event commutativity,
+conditional-independence symmetry, and support extensionality for a target
+event and the conditioning event. The proofs reuse the pre-existing
+`finite_conditional_prob_event_ext_on_samples`,
+`finite_conditional_prob_conditioning_ext_on_samples`,
+`finite_prob_event_ext_on_samples`, `Stdlib.Bool.andb_comm` and
+`Stdlib.Reals.Rmult_comm`. No second `finite_sum`, case split over
+sample lists, finite-dimensional matrix algebra or external library dependency
+is added.
+
+The explicit `0 < finite_prob ... given` guard rejects undefined
+zero-conditioning interpretations. Nonnegative sampled weights are not needed
+for the symmetry and extensionality *algebra*, but are needed to interpret
+the quotient as a bona fide conditional probability. The formalized interface
+does not yet give conditional complement closure, general conditional
+random-variable independence, or continuous disintegration.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
