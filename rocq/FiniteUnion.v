@@ -227,14 +227,120 @@ Section FiniteOutcomeSpace.
     - apply indicator_nonnegative.
   Qed.
 
+  (* Generic Boolean events are interpreted by the same finite fold.
+     Probability mass is functorial in the sample list; no new
+     traversal or duplicated arithmetic is introduced. *)
+  Theorem finite_prob_true :
+    forall weights samples,
+      finite_prob weights samples (fun _ => true) =
+        finite_sum weights samples.
+  Proof.
+    intros weights samples.
+    unfold finite_prob.
+    apply finite_sum_extensional; intro x; simpl; ring.
+  Qed.
+
+  Theorem finite_prob_false :
+    forall weights samples,
+      finite_prob weights samples (fun _ => false) = 0.
+  Proof.
+    intros weights samples.
+    unfold finite_prob.
+    transitivity (finite_sum (fun _ => 0) samples).
+    - apply finite_sum_extensional; intro x; simpl; ring.
+    - apply FiniteSum.finite_sum_zero.
+  Qed.
+
+  Theorem finite_prob_sample_append :
+    forall weights left right e,
+      finite_prob weights (left ++ right) e =
+        finite_prob weights left e + finite_prob weights right e.
+  Proof.
+    intros weights left right e.
+    unfold finite_prob, finite_sum.
+    apply FiniteSum.finite_sum_app.
+  Qed.
+
+  Theorem finite_prob_sample_permutation :
+    forall weights left right e,
+      Permutation left right ->
+      finite_prob weights left e = finite_prob weights right e.
+  Proof.
+    intros weights left right e Hperm.
+    unfold finite_prob, finite_sum.
+    apply FiniteSum.finite_sum_permutation; exact Hperm.
+  Qed.
+
+  Theorem union_prob_sample_permutation :
+    forall weights left right events,
+      Permutation left right ->
+      union_prob weights left events = union_prob weights right events.
+  Proof.
+    intros weights left right events Hperm.
+    unfold union_prob.
+    apply finite_prob_sample_permutation; exact Hperm.
+  Qed.
+
+  Theorem sum_marginal_probs_event_permutation :
+    forall weights samples left right,
+      Permutation left right ->
+      sum_marginal_probs weights samples left =
+        sum_marginal_probs weights samples right.
+  Proof.
+    intros weights samples left right Hperm.
+    unfold sum_marginal_probs.
+    apply FiniteSum.finite_sum_permutation; exact Hperm.
+  Qed.
+
+  Theorem finite_prob_event_monotone :
+    forall weights samples e f,
+      (forall x, In x samples -> 0 <= weights x) ->
+      (forall x, In x samples -> e x = true -> f x = true) ->
+      finite_prob weights samples e <= finite_prob weights samples f.
+  Proof.
+    intros weights samples e f Hw Hsub.
+    unfold finite_prob.
+    apply finite_sum_monotone.
+    intros x Hx.
+    pose proof (Hw x Hx).
+    pose proof (indicator_implication_bound
+      (e x) (f x) (Hsub x Hx)).
+    nra.
+  Qed.
+
+  Theorem normalized_finite_prob_unit_interval :
+    forall weights samples e,
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_sum weights samples = 1 ->
+      0 <= finite_prob weights samples e /\
+        finite_prob weights samples e <= 1.
+  Proof.
+    intros weights samples e Hw Hmass.
+    split.
+    - unfold finite_prob.
+      apply FiniteSum.finite_sum_nonnegative.
+      intros x Hx.
+      apply Rmult_le_pos.
+      + apply Hw; exact Hx.
+      + apply indicator_nonnegative.
+    - unfold finite_prob.
+      assert (Hle :
+        finite_sum (fun x => weights x * indicator (e x)) samples <=
+        finite_sum weights samples).
+      { apply finite_sum_monotone.
+        intros x Hx.
+        pose proof (Hw x Hx).
+        pose proof (indicator_at_most_one (e x)).
+        nra. }
+      lra.
+  Qed.
+
   Theorem empty_family_probability_zero :
     forall weights samples, union_prob weights samples [] = 0.
   Proof.
     intros weights samples.
-    unfold union_prob, finite_prob.
-    transitivity (finite_sum (fun _ => 0) samples).
-    - apply finite_sum_extensional; intro x; simpl; ring.
-    - apply FiniteSum.finite_sum_zero.
+    change (finite_prob weights samples (fun _ => false) = 0).
+    apply finite_prob_false.
   Qed.
 
   Theorem singleton_family_probability :
