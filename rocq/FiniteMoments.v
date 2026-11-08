@@ -888,16 +888,12 @@ Section FiniteProbabilityMoments.
       (forall f, In f fs -> variance f = 1) ->
       diagonal_variance_sum fs = INR (length fs).
   Proof.
-    induction fs as [|f fs IH]; intros Hunit.
-    - reflexivity.
-    - change (variance f + diagonal_variance_sum fs =
-                INR (S (length fs))).
-      rewrite S_INR.
-      assert (Hhead : variance f = 1).
-      { apply Hunit; simpl; auto. }
-      assert (Htail : forall g, In g fs -> variance g = 1).
-      { intros g Hg. apply Hunit; simpl; auto. }
-      rewrite Hhead, (IH Htail); ring.
+    intros fs Hunit.
+    unfold diagonal_variance_sum.
+    transitivity (FiniteSum.finite_sum (fun _ => 1) fs).
+    - apply FiniteSum.finite_sum_ext_in.
+      intros f Hin; apply Hunit; exact Hin.
+    - rewrite FiniteSum.finite_sum_const; ring.
   Qed.
 
   Theorem equal_weight_variance_from_finite_covariances :
