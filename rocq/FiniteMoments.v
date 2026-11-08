@@ -31,14 +31,16 @@ Section FiniteProbabilityMoments.
   (**
    [sum_finite] (definition) — Finite weighted score expectations, variances and
    covariance matrices.
-   Mathematical meaning: Defines sum finite using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: The outcome-specialized alias of the generic
+   finite real list sum, summing an integrand once per listed
+   outcome occurrence with no deduplication.
    Exact declaration: Definition sum_finite (f : Outcome -> R) (xs : list Outcome) :
    R := FiniteSum.finite_sum f xs.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: The list is finite and its integrand may be signed.
+   Normalization and probability semantics are not assumed.
+   Proof/definition method: Uses FiniteSum.finite_sum directly,
+   reusing the checked shared fold, extensionality, arithmetic
+   and permutation results instead of implementing another sum.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -49,13 +51,16 @@ Section FiniteProbabilityMoments.
   (**
    [total_mass] (definition) — Finite weighted score expectations, variances and
    covariance matrices.
-   Mathematical meaning: Defines total mass using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: Sums the sample weight assigned to every
+   listed outcome occurrence. This number is the normalizing
+   mass for the module's finite weighted moment functional.
    Exact declaration: Definition total_mass : R := sum_finite weight samples.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: The weights need not be positive or normalized
+   in this definition. Theorems interpreting the functional
+   as probability require total_mass = 1 and nonnegative weights.
+   Proof/definition method: Delegates to sum_finite weight samples,
+   thereby inheriting exactly the same list-fold semantics,
+   including repeated outcome occurrences.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -65,14 +70,18 @@ Section FiniteProbabilityMoments.
   (**
    [expect] (definition) — Finite weighted score expectations, variances and
    covariance matrices.
-   Mathematical meaning: Defines expect using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: Applies the weighted linear functional
+   E[f] = sum over sample occurrences of weight(x)*f(x).
+   It is a true finite expected value when weights define a
+   nonnegative normalized mass on those occurrences.
    Exact declaration: Definition expect (f : Outcome -> R) : R := sum_finite (fun x
    => weight x * f x) samples.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Arbitrary real-valued scores and sample weights
+   are supported algebraically. Division by total_mass is not
+   performed; any normalization assumption is stated by the theorem.
+   Proof/definition method: Uses the shared sum_finite over the
+   pointwise product of weight and score; linearity follows
+   from the generic finite-sum addition and scaling laws.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -83,14 +92,17 @@ Section FiniteProbabilityMoments.
   (**
    [covariance] (definition) — Finite weighted score expectations, variances and
    covariance matrices.
-   Mathematical meaning: Defines covariance using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: Defines the finite algebraic bilinear expression
+   E[f*g] - E[f]*E[g]. With nonnegative normalized sample weights
+   this is the standard covariance of real score functions.
    Exact declaration: Definition covariance (f g : Outcome -> R) : R := expect (fun x
    => f x * g x) - expect f * expect g.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: For unnormalized or signed sample weights, the
+   expression is still well-defined, but standard positivity
+   or constant-shift covariance facts may require total_mass=1.
+   Proof/definition method: Uses the already defined expect twice
+   and Stdlib.Reals multiplication/subtraction; subsequent
+   bilinearity and symmetry are checked as separate theorems.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -101,13 +113,17 @@ Section FiniteProbabilityMoments.
   (**
    [variance] (definition) — Finite weighted score expectations, variances and
    covariance matrices.
-   Mathematical meaning: Defines variance using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: Defines the variance expression as self-covariance
+   Cov(f,f) rather than maintaining a second sum implementation.
+   For nonnegative weights and unit total mass it equals the
+   usual nonnegative centered second moment.
    Exact declaration: Definition variance (f : Outcome -> R) : R := covariance f f.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: No assumptions are built into the definition.
+   The proof of nonnegativity and its centered-moment
+   interpretation explicitly requires suitable weight hypotheses.
+   Proof/definition method: Reuses covariance f f by definition,
+   so all covariance identities and the generic finite-sum
+   algebra apply without a competing variance implementation.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -117,14 +133,17 @@ Section FiniteProbabilityMoments.
   (**
    [centered_second_moment] (definition) — Finite weighted score expectations,
    variances and covariance matrices.
-   Mathematical meaning: Defines centered second moment using explicit Rocq
-   operations, so later theorems can refer to one stable mathematical object.
+   Mathematical meaning: Computes E[(f-E[f])*(f-E[f])]
+   using the current weighted mean. When total_mass=1, it is
+   algebraically identical to variance f.
    Exact declaration: Definition centered_second_moment (f : Outcome -> R) : R :=
    expect (fun x => (f x - expect f) * (f x - expect f)).
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: This is a finite real-weighted expression.
+   Without unit mass the centered identity differs from
+   self-covariance; with signed weights it need not be nonnegative.
+   Proof/definition method: Uses the same expect function and
+   pointwise real subtraction/multiplication; the equality to
+   variance is established separately with explicit normalization.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -1202,15 +1221,18 @@ Section FiniteProbabilityMoments.
   (**
    [linear_combination] (definition) — Finite weighted score expectations, variances
    and covariance matrices.
-   Mathematical meaning: Defines linear combination using explicit Rocq operations,
-   so later theorems can refer to one stable mathematical object.
+   Mathematical meaning: Defines a finite composite score
+   x -> sum_i a_i*g_i(x) from a list of real coefficients
+   and outcome-to-real score functions, retaining duplicates.
    Exact declaration: Definition linear_combination (components : list (R * (Outcome
    -> R))) (x : Outcome) : R := FiniteSum.finite_sum (fun c => fst c * snd c x)
    components.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: The real coefficients need not be positive,
+   normalized or sum to one; they are score weights, distinct
+   from the module's outcome probability weights.
+   Proof/definition method: Uses FiniteSum.finite_sum over
+   coefficient-score products with Stdlib pair projections;
+   no custom recursive vector representation is introduced.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -1223,14 +1245,18 @@ Section FiniteProbabilityMoments.
   (**
    [linear_expectation] (definition) — Finite weighted score expectations, variances
    and covariance matrices.
-   Mathematical meaning: Defines linear expectation using explicit Rocq operations,
-   so later theorems can refer to one stable mathematical object.
+   Mathematical meaning: Computes the coefficient-weighted sum of the
+   expectations of each component score. The checked linearity
+   theorem equates this expression with the expectation of
+   the corresponding linear_combination.
    Exact declaration: Definition linear_expectation (components : list (R * (Outcome
    -> R))) : R := FiniteSum.finite_sum (fun c => fst c * expect (snd c)) components.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Coefficients are arbitrary real numbers, and
+   the expectation functional is finite even with signed
+   outcome weights; no component independence is assumed.
+   Proof/definition method: Applies FiniteSum.finite_sum to
+   coefficient times expect of each score, reusing the common
+   finite list fold and the module's expect function.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -1243,15 +1269,18 @@ Section FiniteProbabilityMoments.
   (**
    [covariance_row] (definition) — Finite weighted score expectations, variances and
    covariance matrices.
-   Mathematical meaning: Defines covariance row using explicit Rocq operations, so
-   later theorems can refer to one stable mathematical object.
+   Mathematical meaning: A row of the bilinear covariance form:
+   for fixed score f it sums each component coefficient
+   multiplied by Cov(f, component score).
    Exact declaration: Definition covariance_row (f : Outcome -> R) (components : list
    (R * (Outcome -> R))) : R := FiniteSum.finite_sum (fun c => fst c * covariance f
    (snd c)) components.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Coefficients and sample weights are real.
+   This algebraic form needs no independence or positive
+   semidefinite hypothesis to be defined.
+   Proof/definition method: Uses FiniteSum.finite_sum and the
+   already defined covariance, avoiding bespoke matrix-row
+   recursions and allowing generic sum lemmas to prove bilinearity.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -1267,15 +1296,19 @@ Section FiniteProbabilityMoments.
   (**
    [covariance_quadratic_form] (definition) — Finite weighted score expectations,
    variances and covariance matrices.
-   Mathematical meaning: Defines covariance quadratic form using explicit Rocq
-   operations, so later theorems can refer to one stable mathematical object.
+   Mathematical meaning: The finite bilinear composite-covariance form:
+   sum over left components of their coefficients times
+   the covariance row with the right component list.
    Exact declaration: Definition covariance_quadratic_form (left right : list (R *
    (Outcome -> R))) : R := FiniteSum.finite_sum (fun c => fst c * covariance_row (snd
    c) right) left.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Left and right lists can have different lengths;
+   coefficients are arbitrary real values and independence
+   is not assumed. Positive-semidefiniteness needs separate
+   nonnegative normalized sample-weight premises.
+   Proof/definition method: Reuses covariance_row and
+   FiniteSum.finite_sum for the outer fold, corresponding
+   to the standard weighted cross-covariance matrix product.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
