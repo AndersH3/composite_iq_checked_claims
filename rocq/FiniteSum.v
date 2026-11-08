@@ -186,6 +186,62 @@ Qed.
 (* A nonnegative contribution is no larger than the whole sum.
    Unlike the report-specific union proof, the induction is generic. *)
 (**
+   [finite_sum_neg] (lemma) — Shared real-valued list sums and their algebraic/order
+   laws.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma finite_sum_neg {A : Type} : forall (xs : list A)
+   (f : A -> R), finite_sum (fun x => - f x) xs = - finite_sum f xs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   finite_sum_ext, finite_sum_scale.
+   Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
+   Sorting.Permutation and Reals.
+   Boundary: An arbitrary finite list and real integrand; this is not a continuous
+   integral or axiomatic probability measure.
+ *)
+Lemma finite_sum_neg {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    finite_sum (fun x => - f x) xs = - finite_sum f xs.
+Proof.
+  intros xs f.
+  transitivity (finite_sum (fun x => (-1) * f x) xs).
+  - apply finite_sum_ext; intro x; ring.
+  - rewrite finite_sum_scale; ring.
+Qed.
+
+(**
+   [finite_sum_sub] (lemma) — Shared real-valued list sums and their algebraic/order
+   laws.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma finite_sum_sub {A : Type} : forall (xs : list A)
+   (f g : A -> R), finite_sum (fun x => f x - g x) xs = finite_sum f xs - finite_sum
+   g xs.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   finite_sum_ext, finite_sum_add.
+   Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
+   Sorting.Permutation and Reals.
+   Boundary: An arbitrary finite list and real integrand; this is not a continuous
+   integral or axiomatic probability measure.
+ *)
+Lemma finite_sum_sub {A : Type} :
+  forall (xs : list A) (f g : A -> R),
+    finite_sum (fun x => f x - g x) xs =
+      finite_sum f xs - finite_sum g xs.
+Proof.
+  intros xs f g.
+  transitivity (finite_sum (fun x => f x + - g x) xs).
+  - apply finite_sum_ext; intro x; ring.
+  - rewrite finite_sum_add, finite_sum_neg; ring.
+Qed.
+
+(**
    [finite_sum_member_le] (lemma) — Shared real-valued list sums and their
    algebraic/order laws.
    Mathematical meaning: Derives a sum or expectation identity for the explicitly
@@ -262,6 +318,10 @@ Proof.
   lra.
 Qed.
 
+(* A constant list sum is its length times the constant.
+   This general list-fold identity replaces report-specific recursions. *)
+(* Map composition and signed sums reuse Stdlib.List and existing
+   finite-sum linearity instead of introducing new recursions. *)
 (**
    [finite_sum_monotone] (lemma) — Shared real-valued list sums and their
    algebraic/order laws.
@@ -285,43 +345,15 @@ Lemma finite_sum_monotone {A : Type} :
     (forall x, In x xs -> f x <= g x) ->
     finite_sum f xs <= finite_sum g xs.
 Proof.
-  induction xs as [|x xs IH]; intros f g Hle;
-    unfold finite_sum in *; simpl.
-  - lra.
-  - assert (Hx : f x <= g x) by (apply Hle; simpl; auto).
-    assert (Htail : forall y, In y xs -> f y <= g y).
-    { intros y Hy; apply Hle; simpl; auto. }
-    specialize (IH f g Htail); lra.
+  intros xs f g Hle.
+  assert (Hnonnegative : 0 <= finite_sum (fun x => g x - f x) xs).
+  { apply finite_sum_nonnegative.
+    intros x Hin.
+    specialize (Hle x Hin); lra. }
+  rewrite finite_sum_sub in Hnonnegative.
+  lra.
 Qed.
 
-(**
-   [finite_sum_zero] (lemma) — Shared real-valued list sums and their algebraic/order
-   laws.
-   Mathematical meaning: Derives a sum or expectation identity for the explicitly
-   enumerated terms.
-   Exact checked proposition: Lemma finite_sum_zero {A : Type} : forall (xs : list
-   A), finite_sum (fun _ => 0) xs = 0.
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses structural induction, rewriting of
-   equalities, ring/field normalization, definitional reduction; references include
-   finite_sum.
-   Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
-   Sorting.Permutation and Reals.
-   Boundary: An arbitrary finite list and real integrand; this is not a continuous
-   integral or axiomatic probability measure.
- *)
-Lemma finite_sum_zero {A : Type} :
-  forall (xs : list A),
-    finite_sum (fun _ => 0) xs = 0.
-Proof.
-  induction xs as [|x xs IH]; unfold finite_sum in *; simpl.
-  - reflexivity.
-  - rewrite IH; ring.
-Qed.
-
-(* A constant list sum is its length times the constant.
-   This general list-fold identity replaces report-specific recursions. *)
 (**
    [finite_sum_const] (lemma) — Shared real-valued list sums and their
    algebraic/order laws.
@@ -349,8 +381,32 @@ Proof.
     rewrite IH, S_INR; ring.
 Qed.
 
-(* Map composition and signed sums reuse Stdlib.List and existing
-   finite-sum linearity instead of introducing new recursions. *)
+(**
+   [finite_sum_zero] (lemma) — Shared real-valued list sums and their algebraic/order
+   laws.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Lemma finite_sum_zero {A : Type} : forall (xs : list
+   A), finite_sum (fun _ => 0) xs = 0.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses structural induction, rewriting of
+   equalities, ring/field normalization, definitional reduction; references include
+   finite_sum.
+   Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
+   Sorting.Permutation and Reals.
+   Boundary: An arbitrary finite list and real integrand; this is not a continuous
+   integral or axiomatic probability measure.
+ *)
+Lemma finite_sum_zero {A : Type} :
+  forall (xs : list A),
+    finite_sum (fun _ => 0) xs = 0.
+Proof.
+  intro xs.
+  rewrite finite_sum_const.
+  ring.
+Qed.
+
 (**
    [finite_sum_map] (lemma) — Shared real-valued list sums and their algebraic/order
    laws.
@@ -377,62 +433,6 @@ Proof.
   unfold finite_sum.
   rewrite map_map.
   reflexivity.
-Qed.
-
-(**
-   [finite_sum_neg] (lemma) — Shared real-valued list sums and their algebraic/order
-   laws.
-   Mathematical meaning: Derives a sum or expectation identity for the explicitly
-   enumerated terms.
-   Exact checked proposition: Lemma finite_sum_neg {A : Type} : forall (xs : list A)
-   (f : A -> R), finite_sum (fun x => - f x) xs = - finite_sum f xs.
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, ring/field normalization; references include
-   finite_sum_ext, finite_sum_scale.
-   Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
-   Sorting.Permutation and Reals.
-   Boundary: An arbitrary finite list and real integrand; this is not a continuous
-   integral or axiomatic probability measure.
- *)
-Lemma finite_sum_neg {A : Type} :
-  forall (xs : list A) (f : A -> R),
-    finite_sum (fun x => - f x) xs = - finite_sum f xs.
-Proof.
-  intros xs f.
-  transitivity (finite_sum (fun x => (-1) * f x) xs).
-  - apply finite_sum_ext; intro x; ring.
-  - rewrite finite_sum_scale; ring.
-Qed.
-
-(**
-   [finite_sum_sub] (lemma) — Shared real-valued list sums and their algebraic/order
-   laws.
-   Mathematical meaning: Derives a sum or expectation identity for the explicitly
-   enumerated terms.
-   Exact checked proposition: Lemma finite_sum_sub {A : Type} : forall (xs : list A)
-   (f g : A -> R), finite_sum (fun x => f x - g x) xs = finite_sum f xs - finite_sum
-   g xs.
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, ring/field normalization; references include
-   finite_sum_ext, finite_sum_add.
-   Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
-   Sorting.Permutation and Reals.
-   Boundary: An arbitrary finite list and real integrand; this is not a continuous
-   integral or axiomatic probability measure.
- *)
-Lemma finite_sum_sub {A : Type} :
-  forall (xs : list A) (f g : A -> R),
-    finite_sum (fun x => f x - g x) xs =
-      finite_sum f xs - finite_sum g xs.
-Proof.
-  intros xs f g.
-  transitivity (finite_sum (fun x => f x + - g x) xs).
-  - apply finite_sum_ext; intro x; ring.
-  - rewrite finite_sum_add, finite_sum_neg; ring.
 Qed.
 
 (* Finite Fubini/interchange law for an explicit product of two
