@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 347 public theorem/lemma/example declarations,
+The current branch has 350 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**350 proof scripts**, including the generic
+**353 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -92,6 +92,20 @@ representations are real-weighted finite algebra; positive
 semidefiniteness still requires nonnegative normalized sample weights.
 No additional structural induction, custom matrix library, or axiom
 is introduced.
+
+### Generalized unweighted score-list covariance and variance
+
+Three new lemmas reuse `Stdlib.List.map` to represent unweighted
+score sums as unit-coefficient weighted composites. Together with
+`covariance_of_general_weighted_second_unconditional`,
+`covariance_symmetric` and `FiniteSum.finite_sum_ext`, they prove
+covariance of one score against a finite list sum, covariance
+between two list sums, and the unweighted score-list variance
+identity **without requiring sample mass normalization**.
+Their original three mass-one theorem signatures are preserved,
+but the proof bodies now directly reuse the stronger laws.
+This work adds no structural induction, new finite-sum recursion,
+or external matrix library.
 
 ### Current structural-induction inventory
 
@@ -354,7 +368,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_intersection_at_most_second` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_frechet_lower_bound` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 
-## FiniteMoments.v — 113 proof scripts
+## FiniteMoments.v — 116 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -416,9 +430,12 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `double_sum_diagonal_off_diagonal` (lemma) | Structural induction, Rewriting, Ring/field | Stdlib ring/field | Reviewed: structural induction retained |
 | `unweighted_scores_as_linear_combination` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `unweighted_covariance_row_as_weighted` (lemma) | Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
-| `covariance_with_sum_scores` (lemma) | Lemma application, Rewriting, Computation | Prior named lemmas | Earlier library refactor retained |
-| `covariance_of_sum_scores` (lemma) | Lemma application, Rewriting | Shared finite sums | Earlier library refactor retained |
-| `variance_of_unweighted_sum` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `covariance_with_sum_scores_unconditional` (lemma) | Lemma application, Rewriting, Computation | Stdlib.List.map, covariance_of_general_weighted_second_unconditional, unweighted_scores_as_linear_combination | **New unconditional score-sum covariance:** avoid mass assumptions without another list induction |
+| `covariance_with_sum_scores` (lemma) | Lemma application | covariance_with_sum_scores_unconditional | **Refactored:** retains original mass-one statement but delegates to more general covariance proof |
+| `covariance_of_sum_scores_unconditional` (lemma) | Lemma application, Rewriting | covariance_with_sum_scores_unconditional, covariance_symmetric, FiniteSum.finite_sum_ext | **New unconditional double covariance sum:** all sample weights and composite coefficients allowed |
+| `covariance_of_sum_scores` (lemma) | Lemma application | covariance_of_sum_scores_unconditional | **Refactored:** original mass-one statement preserved as direct specialization |
+| `variance_of_unweighted_sum_unconditional` (theorem) | Lemma application | covariance_of_sum_scores_unconditional | **New unconditional unweighted variance:** finite self-covariance double-sum identity |
+| `variance_of_unweighted_sum` (theorem) | Lemma application | variance_of_unweighted_sum_unconditional | **Refactored:** retains original mass normalization premise without duplicate algebra |
 | `variance_of_rescaled_unweighted_sum` (theorem) | Lemma application, Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `diagonal_variance_sum_of_unit_scores` (lemma) | Lemma application, Rewriting, Ring/field | Shared finite sums, Stdlib ring/field | Earlier library refactor retained |
 | `equal_weight_variance_from_finite_covariances` (theorem) | Rewriting, Ring/field, Lra/Psatz | Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
