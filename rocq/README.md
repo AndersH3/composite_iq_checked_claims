@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **347 theorem, lemma and example declarations** in seven
+for the two reports. **350 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -623,7 +623,7 @@ No preexisting theorem statement was changed, no new
 recursive filter/sum implementation was added, and historical
 Python/SPARK verification evidence remains untouched.
 
-## Current continuation: unconditional composite and covariance-matrix algebra
+## Previous continuation: unconditional composite and covariance-matrix algebra
 
 This continuation proves five new Rocq theorem statements, all reusing
 established finite weighted-sum and covariance laws:
@@ -668,6 +668,62 @@ generic fold, `Nat.iter` recurrence or suffix-dependent covariance
 model requires them. No new list fold, matrix construction, axiom,
 `Admitted`, external library or modification to historical
 Python/Deal/SPARK evidence was introduced.
+
+## Current continuation: normalization-free unweighted score-list algebra
+
+After the matrix and weighted composite refactors, the remaining
+unweighted score-list covariance lemmas could also be generalized
+**without introducing list induction or a new summation definition**.
+The original code already represents a list of unweighted scores
+using `Stdlib.List.map (fun g => (1,g))`; this converts each score
+to a unit-coefficient weighted composite and permits direct use
+of the stronger, already checked covariance theorems.
+
+Three new formal results are now available:
+
+- `covariance_with_sum_scores_unconditional`: for arbitrary score
+  `f` and score list `fs`, covariance of `f` against
+  `sum_scores fs` is the sum of pairwise covariances.
+  Uses `unweighted_scores_as_linear_combination`,
+  `unweighted_covariance_row_as_weighted`,
+  `covariance_extensional`, `Stdlib.List.map`,
+  and `covariance_of_general_weighted_second_unconditional`.
+- `covariance_of_sum_scores_unconditional`: covariance of two
+  arbitrary finite score-list sums equals the complete double
+  covariance sum, by the previous theorem, covariance symmetry
+  and `FiniteSum.finite_sum_ext`.
+- `variance_of_unweighted_sum_unconditional`: variance of a
+  finite score-list sum equals the self-covariance double sum,
+  as an immediate specialization of the preceding theorem.
+
+The original `covariance_with_sum_scores`,
+`covariance_of_sum_scores` and `variance_of_unweighted_sum`
+statements keep the exact `total_mass = 1` hypothesis for
+source compatibility; their proof bodies now delegate to the
+unconditional versions. Each new declaration has a complete
+theorem-level comment explaining meaning, exact type, premises,
+library use, proof method and finite-model boundaries.
+
+**Mathematical distinction:** The expressions remain exact real
+algebra even if the outcome weights are signed or unnormalized.
+Nonnegative variance, stochastic interpretation, or positive
+semidefiniteness must not be inferred from this extension.
+Those properties require the separately stated nonnegative and
+normalized distribution hypotheses. No new real-valued matrix,
+event, expectation or list-fold implementation was introduced.
+
+The seven Rocq modules contain **350 public theorem/lemma/example
+declarations** (Hoeflin 64; Admissions 67; FiniteUnion 54;
+FiniteMoments **116**; FiniteSum 20; FiniteBridge 16;
+FourCellBridge 13), one local helper and two explicit record
+constructions, for **353 complete proof scripts**. All **407
+named declarations** have adjacent detailed doc comments and all
+seven modules retain their explanatory file headers.
+The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) inventories
+every script in source order, checked by the documentation gate
+before Rocq 9.2 compilation. **Fourteen structural inductions**
+are retained where required by the underlying generic fold,
+`Nat.iter` or suffix-dependent covariance structure.
 
 ## Claims and exact theorem correspondences
 
