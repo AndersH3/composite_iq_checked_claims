@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **333 theorem, lemma and example declarations** in seven
+for the two reports. **334 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -366,7 +366,7 @@ bridges have been retained deliberately. No new project axiom,
 `Admitted`, continuous probability construction, or unpinned package
 is involved. Kernel checking remains the decisive verification.
 
-## Latest continuation: filtered-sample event algebra and direct Stdlib reuse
+## Previous continuation: filtered-sample event algebra and direct Stdlib reuse
 
 **Current inventory:** 333 public theorem/lemma/example declarations across
 seven Rocq modules (64 Hoeflin; 67 Admissions; **49 FiniteUnion**;
@@ -419,6 +419,47 @@ adds four named propositions and rewrites only the proof body and
 adjacent commentary of `finite_prob_event_ext_on_samples`. The report
 data, historical evidence and previously verified SPARK/Python sources
 are unaffected.
+
+## Latest continuation: remove weighted covariance induction by finite-sum laws
+
+A new theorem, `covariance_of_general_weighted_second_unconditional`,
+proves
+
+\[
+\operatorname{Cov}\!\left(f,\sum_{i} a_i g_i\right)
+=\sum_i a_i\operatorname{Cov}(f,g_i)
+\]
+
+for any finite component list, **without requiring total sample
+mass to equal one**. It follows from finite-sum interchange and
+linearity of the explicitly defined expectation; covariance is
+algebraically linear in its second argument even for unnormalized
+real weights. This does *not* claim that arbitrary signed weights
+define a probability distribution.
+
+The proof reuses the existing
+`expectation_of_general_weighted_sum` theorem,
+`FiniteSum.finite_sum_map`, `finite_sum_scale`,
+`finite_sum_sub`, `finite_sum_ext` and `Stdlib.List.map`.
+It introduces no extra recursion or covariance implementation.
+The existing theorem `covariance_of_general_weighted_second`
+preserves its original `total_mass = 1` hypothesis and its exact
+proposition while delegating the proof to the stronger result.
+**One domain-specific component-list induction is eliminated.**
+
+The current inventory has **334 public theorem/lemma/example
+declarations**, one additional checked local helper, and two proof-bearing
+record constructions: **337 proof scripts** across seven modules.
+Their source contains **391 named declarations**, all with mathematical
+doc comments and comprehensive explanatory module headers.
+The [proof-refactor register](PROOF_REFACTOR_REGISTER.md) accounts
+for every proof, including the new and replaced proofs.
+**14 structural induction scripts** remain, mostly for generic finite
+folds, the natural-number recurrence and unordered-pair covariance.
+
+The prior theorem statements and their hypotheses remain unchanged.
+As throughout this project, the results concern finite algebraic
+moments and do not establish empirical validity or Gaussianity.
 
 ## Claims and exact theorem correspondences
 
