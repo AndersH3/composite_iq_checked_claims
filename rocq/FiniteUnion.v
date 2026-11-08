@@ -2675,8 +2675,8 @@ Section FiniteOutcomeSpace.
    Mathematical meaning: When the total finite sample weight is exactly one, conditioning a target Boolean event on the universally true event leaves its finite mass unchanged.
    Exact checked proposition: For any real-valued weights, samples and target event, finite_sum weights samples=1 implies finite_conditional_prob weights samples event (fun _ => true)=finite_prob weights samples event.
    Premises and side conditions: Unit total mass is assumed explicitly. No nonnegative-weight premise is needed for the algebraic quotient identity, although such a premise is needed to interpret the finite weights as probabilities.
-   Proof/definition method: Unfold the existing conditional quotient, simplify conjunction with the true predicate using checked event extensionality, use finite_prob_true for its denominator, and cancel division by the unit mass.
-   Library reuse: finite_prob_event_ext_on_samples, finite_prob_true, Stdlib.Bool.andb and Stdlib.Reals.Rdiv_1. No new normalization routine or summation is defined.
+   Proof/definition method: Unfold the existing conditional quotient, simplify conjunction with the true predicate using checked event extensionality, use finite_prob_true for its denominator, and discharge division by the unit mass using the standard real field tactic.
+   Library reuse: finite_prob_event_ext_on_samples, finite_prob_true, Stdlib.Bool.andb and the Stdlib.Reals field tactic. No new normalization routine or summation is defined.
    Boundary: This concerns a weighted finite outcome list and does not provide a general measure-theoretic conditioning operator.
    *)
   Theorem finite_conditional_prob_given_true_normalized :
@@ -2692,8 +2692,7 @@ Section FiniteOutcomeSpace.
     2: { intros x _; reflexivity. }
     rewrite finite_prob_true.
     rewrite Hunit.
-    rewrite Rdiv_1.
-    reflexivity.
+    field; lra.
   Qed.
 
   (**
