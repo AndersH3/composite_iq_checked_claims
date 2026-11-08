@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 399 public theorem/lemma/example
+**Current audited inventory:** 402 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **402 proof scripts**. There are **457 named
+constructors, for **405 proof scripts**. There are **460 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -808,6 +808,20 @@ Stdlib.List.repeat expresses the zero coefficient list;
 no new matrix rank, determinant or kernel algorithm is added.
 The latest audit covers 399 claims, 402 scripts and
 457 fully documented declarations.
+
+## Stronger finite support covariance and variance reuse
+
+Zero covariance of a positive-support-constant score in either
+argument is now derived directly from
+covariance_extensional_on_positive_weight_support,
+covariance_with_constant_first, and covariance symmetry.
+The previous proof of zero variance for support-constant
+scores is shortened to its self-covariance corollary,
+and zero variance is characterized by existence of any
+positive-support constant. No new matrix or fold algorithms,
+axioms, or admitted statements are required.
+Updated inventory: 402 claims, 405 proof scripts and
+460 documented names.
 
 ## Deliberately retained project-specific definitions
 

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **399 theorem, lemma and example declarations** in seven
+for the two reports. **402 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1021,8 +1021,22 @@ uncorrelated with every finite comparison score. These
 are direct applications of existing null/strict-variance
 theorems, without new rank, determinant or list recursion.
 
-Current seven-module source inventory: **399 public claims**,
+At the preceding stage: **399 public claims**,
 **402 proof scripts**, **457 fully documented named declarations**.
+
+## Finite support-constant covariance and variance equivalences
+
+Three additional `FiniteMoments.v` theorems show that a score
+constant on positive-weight sampled support has zero covariance
+with any score in either argument, and characterize zero
+variance by the existence of a constant supported by all
+positive-weight observations. The prior zero-variance
+converse proof now delegates to the generic covariance-zero
+lemma. These changes reuse Stdlib, existing support-extensional
+moment lemmas, and symmetry rather than implementing new sums.
+
+**Current inventory: 402 public claims, 405 proof scripts,
+460 fully documented named declarations** across seven modules.
 
 ## Research extensions
 

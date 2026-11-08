@@ -4664,12 +4664,59 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [covariance_zero_of_constant_on_positive_weight_support_first] (theorem) — Positive-support covariance/variance reuse.
+   Mathematical meaning: If the first score agrees with a constant at every positively weighted sampled outcome, it has zero covariance with any comparison score, even if it differs from the constant outside the positive support.
+   Exact checked proposition: For all f g and real c, total_mass = 1, nonnegative sampled weights, and f x = c at every listed outcome of positive weight imply covariance f g = 0.
+   Premises and side conditions: No restriction on the comparison score or on zero-weight score values is imposed. The sample list may repeat outcomes; normalized nonnegative weights are explicitly required for the constant-score covariance law.
+   Proof/definition method: Use covariance_extensional_on_positive_weight_support to replace the first argument by its constant representative, leaving the comparison score unchanged on the list; then invoke the existing covariance_with_constant_first theorem.
+   Library reuse: covariance_extensional_on_positive_weight_support, covariance_with_constant_first, Stdlib.List.In and shared FiniteSum finite moments.
+   Boundary: This is an exact finite weighted-support covariance result, not a statement of independence or covariance for signed, unnormalized measures.
+   *)
+  Theorem covariance_zero_of_constant_on_positive_weight_support_first :
+    forall f g c,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x -> f x = c) ->
+      covariance f g = 0.
+  Proof.
+    intros f g c Hmass Hw Hconstant.
+    transitivity (covariance (fun _ => c) g).
+    - apply covariance_extensional_on_positive_weight_support.
+      + exact Hw.
+      + exact Hconstant.
+      + intros x Hx Hpositive; reflexivity.
+    - apply covariance_with_constant_first; exact Hmass.
+  Qed.
+
+  (**
+   [covariance_zero_of_constant_on_positive_weight_support_second] (theorem) — Positive-support covariance/variance reuse.
+   Mathematical meaning: If the second score equals a constant on all positive-weight enumerated outcomes, covariance with any first score vanishes even when the second function has arbitrary values off that support.
+   Exact checked proposition: For any f g c, under total_mass = 1 and nonnegative sampled weights, equality g x = c on positive-weight sampled outcomes entails covariance f g = 0.
+   Premises and side conditions: The finite list may contain repeated outcomes and zero-weight entries; only positive-weight sampled values of g are constrained. No statistical independence assumption is introduced.
+   Proof/definition method: Rewrite with the existing covariance_symmetric law to put the constant-on-support score first, then apply covariance_zero_of_constant_on_positive_weight_support_first.
+   Library reuse: covariance_symmetric, covariance_zero_of_constant_on_positive_weight_support_first, Stdlib.Reals and FiniteSum.
+   Boundary: Zero covariance alone is not an independence criterion; the conclusion holds in the finite weighted model only.
+   *)
+  Theorem covariance_zero_of_constant_on_positive_weight_support_second :
+    forall f g c,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 < weight x -> g x = c) ->
+      covariance f g = 0.
+  Proof.
+    intros f g c Hmass Hw Hconstant.
+    rewrite covariance_symmetric.
+    apply (covariance_zero_of_constant_on_positive_weight_support_first
+      g f c Hmass Hw Hconstant).
+  Qed.
+
+  (**
    [variance_zero_of_constant_on_positive_weight_support] (theorem) — Nonnegative weighted finite support and covariance nullity.
    Mathematical meaning: A score that is constant at every outcome with positive sampled weight has variance zero under nonnegative normalized finite weights, regardless of arbitrary values at zero-weight outcomes.
    Exact checked proposition: For all f c, normalized total mass, nonnegative sampled weights and f x = c at every listed x with 0 < weight x entail variance f = 0.
    Premises and side conditions: The sample weights must sum to one and be nonnegative. The constant c may be any real number, and no assumption on the number of zero-weight outcomes or score independence is required.
-   Proof/definition method: Transfer variance from the score to the constant score using variance_extensional_on_positive_weight_support, then directly reuse variance_of_constant_score_zero, which itself delegates to standard covariance-with-constant algebra.
-   Library reuse: variance_extensional_on_positive_weight_support, variance_of_constant_score_zero, covariance_with_constant_first and Stdlib.Reals.
+   Proof/definition method: Unfold variance as self-covariance and apply the general covariance_zero_of_constant_on_positive_weight_support_first theorem directly. The previously duplicated variance extensionality and constant-score calculation is no longer necessary.
+   Library reuse: covariance_zero_of_constant_on_positive_weight_support_first, FiniteMoments.variance, Stdlib.Reals and FiniteSum.
    Boundary: This finite constant-support criterion does not assert an empirical factor model or variance positivity for signed measures.
    *)
   Theorem variance_zero_of_constant_on_positive_weight_support :
@@ -4680,10 +4727,9 @@ Section FiniteProbabilityMoments.
       variance f = 0.
   Proof.
     intros f c Hmass Hw Hconstant.
-    transitivity (variance (fun _ => c)).
-    - apply variance_extensional_on_positive_weight_support;
-        assumption.
-    - apply variance_of_constant_score_zero; exact Hmass.
+    unfold variance.
+    apply (covariance_zero_of_constant_on_positive_weight_support_first
+      f f c Hmass Hw Hconstant).
   Qed.
 
   (**
@@ -4711,6 +4757,36 @@ Section FiniteProbabilityMoments.
     - intros Hconstant.
       apply (variance_zero_of_constant_on_positive_weight_support
         f (expect f) Hmass Hw Hconstant).
+  Qed.
+
+  (**
+   [variance_zero_iff_exists_constant_on_positive_weight_support] (theorem) — Positive-support covariance/variance reuse.
+   Mathematical meaning: Zero finite variance is equivalent to the existence of some real constant attained by the score on every positive-mass sampled outcome; the constant need not be supplied in advance.
+   Exact checked proposition: For all f, when sample weights sum to one and are nonnegative, variance f = 0 iff exists c:R, forall x, In x samples -> 0 < weight x -> f x = c.
+   Premises and side conditions: Strict positivity is only required for the outcomes on which score equality is asserted, not for every sample weight. Duplicated and zero-weight samples are permitted. Unit total mass ensures the existing zero-variance characterization applies.
+   Proof/definition method: For the forward direction choose c = expect f and apply variance_zero_iff_constant_on_positive_weight_support. Conversely destruct the constant witness and invoke variance_zero_of_constant_on_positive_weight_support.
+   Library reuse: variance_zero_iff_constant_on_positive_weight_support, variance_zero_of_constant_on_positive_weight_support, Stdlib.Logic and existing FiniteSum.
+   Boundary: An exact existential support characterization for finite weighted scores; it does not compute empirical variance or prove a general measure-theoretic almost-sure statement.
+   *)
+  Theorem variance_zero_iff_exists_constant_on_positive_weight_support :
+    forall f,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (variance f = 0 <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x -> f x = c).
+  Proof.
+    intros f Hmass Hw.
+    split.
+    - intros Hzero.
+      exists (expect f).
+      apply (proj1
+        (variance_zero_iff_constant_on_positive_weight_support
+          f Hmass Hw)).
+      exact Hzero.
+    - intros [c Hconstant].
+      apply (variance_zero_of_constant_on_positive_weight_support
+        f c Hmass Hw Hconstant).
   Qed.
 
   (**
