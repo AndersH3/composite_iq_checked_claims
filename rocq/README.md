@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **325 theorem, lemma and example declarations** in seven
+for the two reports. **328 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -25,6 +25,18 @@ The GitHub Actions workflow at
 [rocq-proofs.yml](../.github/workflows/rocq-proofs.yml) compiles the
 whole proof scripts with a pinned `rocq/rocq-prover:9.2.0` image.
 Compilation performs kernel checking, not merely parsing or syntax linting.
+The workflow also runs
+[`scripts/check_rocq_documentation.py`](../scripts/check_rocq_documentation.py)
+to require an explanatory header in each module and a declaration-specific
+proof comment with mathematical meaning, explicit statement, assumptions,
+proof method, library reuse and scope. The checker uses the existing
+`deal` contracts and can be run from the repository root after installing
+`requirements-dev.txt`:
+
+```sh
+python3 scripts/check_rocq_documentation.py
+```
+
 The workflow also rejects the syntactic use of `Admitted`, `Axiom`,
 `Parameter`, `Conjecture` and `Abort` in proof sources.
 
@@ -196,7 +208,7 @@ IQ-test validity are not claimed.
 
 ## November 8 continuation: reusing constant sums and weighted covariance proofs
 
-The seven-module source now contains **325 kernel-checked declarations**:
+At the preceding covariance-refactoring milestone, the seven-module source contained **325 kernel-checked declarations**:
 `Hoeflin` 64, `Admissions` 67, `FiniteUnion` 43,
 `FiniteMoments` 107, `FiniteSum` 17,
 `FiniteBridge` 14 and `FourCellBridge` 13.
@@ -253,6 +265,50 @@ results establish finite algebraic identities only; they do not imply
 Gaussian tail bounds, empirical IQ-score reliability or continuous
 measure-theoretic results.
 
+## November 8 continuation: complete theorem documentation and standard list filtering
+
+**Current kernel-checked proof inventory: 328 named theorem, lemma and
+example declarations** in seven modules (`Hoeflin` 64,
+`Admissions` 67, `FiniteUnion` 45, `FiniteMoments` 107,
+`FiniteSum` 18, `FiniteBridge` 14, and `FourCellBridge` 13).
+One additional `Local Lemma` in `Hoeflin.v` is kernel-checked but
+excluded from the conventional top-level inventory, bringing the total
+number of proof declarations including that helper to **329**.
+
+**All 385 named declarations** (including definitions, records and
+helper declarations) across the seven `.v` files now have
+declaration-local Rocq `(** ... *)` comments. Each comment records:
+
+- its mathematical role and the precise statement/construction;
+- hypotheses, positivity/normalization/dimension conditions, where used;
+- proof or implementation method and reused library facilities;
+- the limited mathematical interpretation (finite sums versus unproved
+  continuous distributions or empirical validity).
+
+Each proof source starts with a comprehensive module header giving its
+purpose, mathematical model, imports, trust boundaries, and reproduction
+information. No proof terms or previously declared proposition types were
+changed by the documentation-only commits. The separate static
+documentation-checking script is enforced in GitHub Actions **before**
+Rocq kernel checking. The script itself follows the repository's
+five-Deal-contracts-per-function policy.
+
+Three small library-backed proof additions precede the documentation
+pass: `FiniteSum.finite_sum_filter` proves that summing over
+`Stdlib.List.filter p xs` equals summing `if p x then f x else 0`
+over the original list. `FiniteUnion.finite_prob_as_filtered_mass`
+uses this result to identify event mass with the weight sum over
+filtered outcomes, without a nonnegativity or normalization
+assumption. `FiniteUnion.finite_prob_event_ext_on_samples` uses
+`FiniteSum.finite_sum_ext_in` to show event mass depends only on
+event membership at the sampled outcomes. These results add no
+recursive filter, measure, axiom, or `Admitted` proof.
+
+All **325** previously named public theorem/lemma/example propositions
+remain intact. The previously checked Rocq 9.2 math source was
+extended only by the three stated theorems. The current formalization
+remains finite and algebraic.
+
 ## Claims and exact theorem correspondences
 
 | Report claim | Rocq statement(s) | Scope and qualification |
@@ -278,6 +334,7 @@ measure-theoretic results.
 | Constant finite sums and unit-score covariance bounds | `FiniteSum.finite_sum_const`, `diagonal_variance_sum_of_unit_scores`, `covariance_row_sum_bounded_by_count` | Uses the shared real-valued list fold, Rocq `INR`/`S_INR`, support-aware extensionality and finite-sum monotonicity, instead of duplicating unit-variance inductions |
 | Symmetric covariance double sums and cross-matrix bilinear forms | `covariance_double_sum_symmetric`, `covariance_double_sum_second_cons`, `covariance_cross_matrix_bilinear_swap` | Uses existing finite Fubini, covariance symmetry, finite sum addition and the proved fixed-basis bilinear identity; no independent matrix transpose implementation |
 | Unweighted score batteries as unit-weight composites | `unweighted_scores_as_linear_combination`, `unweighted_covariance_row_as_weighted`, `covariance_with_sum_scores`, `covariance_of_sum_scores` | Uses `Stdlib.List.map` and shared sum-map composition to reuse the already formalized weighted-composite covariance theorems |
+| Filtering a finite sample by a Boolean event | `FiniteSum.finite_sum_filter`, `FiniteUnion.finite_prob_as_filtered_mass`, `FiniteUnion.finite_prob_event_ext_on_samples` | Reuses Rocq's standard `List.filter` and shared support-aware sum extensionality to interpret event probability as the sum of selected outcome weights, without new measure or recursion |
 | Finite double-sum interchange and termwise zero criterion | `FiniteSum.finite_sum_ext_in`, `FiniteSum.finite_sum_member_le`, `FiniteSum.finite_sum_nonnegative_zero`, `FiniteSum.finite_sum_swap`, `interchange_finite_sums` | Reuses Stdlib `List.map_ext_in` and standard finite-sum linearity to centralize support-sensitive and double-sum proofs; no new finite iterator |
 | Event positive support, zero mass and generalized Fréchet bounds | `finite_prob_zero_iff_no_positive_mass_support`, `finite_prob_positive_of_positive_support`, `finite_intersection_at_most_first`, `finite_intersection_at_most_second`, `finite_frechet_lower_bound` | Holds for explicitly enumerated finite outcomes under nonnegative weights, plus normalization for the Fréchet lower bound; no independence or normality premise |
 | Finite event sample permutation and monotonicity | `finite_prob_sample_append`, `finite_prob_sample_permutation`, `union_prob_sample_permutation`, `finite_prob_event_monotone`, `normalized_finite_prob_unit_interval` | For finite lists and Boolean events, weighted sample order is irrelevant, monotone events have monotone mass under nonnegative weights, and unit-interval bounds require normalized nonnegative weights |
