@@ -604,6 +604,53 @@ Section FiniteOutcomeSpace.
     apply FiniteSum.finite_sum_app.
   Qed.
 
+  (* Frechet bounds follow from the generic monotone event mass and
+     inclusion-exclusion laws; the specialized four-cell calculation in
+     Admissions need not be repeated here. *)
+  Theorem finite_intersection_at_most_first :
+    forall weights samples e f,
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples
+        (fun x => andb (e x) (f x)) <= finite_prob weights samples e.
+  Proof.
+    intros weights samples e f Hw.
+    apply finite_prob_event_monotone.
+    - exact Hw.
+    - intros x Hx Hboth.
+      apply andb_true_iff in Hboth.
+      exact (proj1 Hboth).
+  Qed.
+
+  Theorem finite_intersection_at_most_second :
+    forall weights samples e f,
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples
+        (fun x => andb (e x) (f x)) <= finite_prob weights samples f.
+  Proof.
+    intros weights samples e f Hw.
+    apply finite_prob_event_monotone.
+    - exact Hw.
+    - intros x Hx Hboth.
+      apply andb_true_iff in Hboth.
+      exact (proj2 Hboth).
+  Qed.
+
+  Theorem finite_frechet_lower_bound :
+    forall weights samples e f,
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_sum weights samples = 1 ->
+      finite_prob weights samples e + finite_prob weights samples f - 1 <=
+        finite_prob weights samples (fun x => andb (e x) (f x)).
+  Proof.
+    intros weights samples e f Hw Hmass.
+    pose proof (finite_prob_inclusion_exclusion weights samples e f)
+      as Hinclusion.
+    pose proof (normalized_finite_prob_unit_interval
+      weights samples (fun x => orb (e x) (f x)) Hw Hmass)
+      as [_ Hunion].
+    lra.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
