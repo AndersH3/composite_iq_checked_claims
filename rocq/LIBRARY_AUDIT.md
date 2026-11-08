@@ -492,6 +492,37 @@ and hypotheses remain unchanged. No new axioms, `Admitted`,
 parameters, oracle, unpinned library or changes to the
 historical Python/SPARK evidence were introduced.
 
+## Theorem-comment audit: eight strengthened mathematical explanations
+
+Beyond the 399 declaration-specific comments and seven explanatory
+module headers, this continuation replaces generic comments on
+**eight widely reused theorems**, without changing any declaration
+statement or proof term:
+
+- `FiniteBridge.finite_event_probability_is_indicator_expectation`,
+  `finite_event_indicator_covariance` and
+  `finite_event_independence_iff_zero_indicator_covariance`:
+  clarify the direct 0-1 indicator equivalence, the covariance
+  independence residual and the required normalization premises
+  for interpreting algebraic factorization as independence.
+- `FiniteMoments.variance_of_general_weighted_sum`,
+  `covariance_matrix_is_positive_semidefinite` and
+  `finite_covariance_cauchy_schwarz_squared`:
+  explain the actual finite covariance quadratic form, precise
+  nonnegative-weight hypotheses and degeneracy or strictness
+  boundaries. The matrix theorem does not silently assert
+  strict positive definiteness.
+- `FiniteUnion.finite_prob_sample_append` and
+  `union_prob_append`: distinguish concatenation of sample
+  occurrences from concatenation of event-family predicates
+  and identify the exact reusable Stdlib.List and FiniteSum
+  laws that discharge the proofs.
+
+This matters because a kernel-checked equality between real
+list expressions is not, by itself, a validated probabilistic
+or empirical model. The explanations make the scope of the
+checked claims explicit and auditable.
+
 ## Current Stdlib reuse: concatenated samples and indicator expectations
 
 Seven Rocq modules now contain **342 public theorem/lemma/example
