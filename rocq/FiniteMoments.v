@@ -1382,19 +1382,27 @@ Section FiniteProbabilityMoments.
       linear_combination (combine coefficients basis) x.
   Proof. reflexivity. Qed.
 
+  (* Stdlib.List.combine_split is the authoritative inverse of
+     List.combine for equal-length lists. A single projection bridge
+     replaces two separate list-length induction proofs below. *)
+  Lemma split_as_projection_maps :
+    forall (components : list (R * (Outcome -> R))),
+      split components = (map fst components, map snd components).
+  Proof.
+    induction components as [|[a f] components IH]; simpl.
+    - reflexivity.
+    - rewrite IH; reflexivity.
+  Qed.
+
   Lemma coefficients_of_combine :
     forall (coefficients : list R) (basis : list (Outcome -> R)),
       length coefficients = length basis ->
       map fst (combine coefficients basis) = coefficients.
   Proof.
-    induction coefficients as [|a coefficients IH];
-      intros basis Hlength.
-    - destruct basis; simpl in *; [reflexivity | discriminate].
-    - destruct basis as [|f rest]; simpl in Hlength;
-        [discriminate |].
-      simpl; f_equal.
-      apply IH.
-      injection Hlength as Htail; exact Htail.
+    intros coefficients basis Hlength.
+    pose proof (combine_split coefficients basis Hlength) as Hsplit.
+    rewrite split_as_projection_maps in Hsplit.
+    exact (f_equal fst Hsplit).
   Qed.
 
   Lemma basis_of_combine :
@@ -1402,14 +1410,10 @@ Section FiniteProbabilityMoments.
       length coefficients = length basis ->
       map snd (combine coefficients basis) = basis.
   Proof.
-    induction coefficients as [|a coefficients IH];
-      intros basis Hlength.
-    - destruct basis; simpl in *; [reflexivity | discriminate].
-    - destruct basis as [|f rest]; simpl in Hlength;
-        [discriminate |].
-      simpl; f_equal.
-      apply IH.
-      injection Hlength as Htail; exact Htail.
+    intros coefficients basis Hlength.
+    pose proof (combine_split coefficients basis Hlength) as Hsplit.
+    rewrite split_as_projection_maps in Hsplit.
+    exact (f_equal snd Hsplit).
   Qed.
 
   Lemma covariance_matrix_uses_only_basis :
