@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 434 public theorem/lemma/example declarations,
+The current branch has 438 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**437 proof scripts**, including the generic
+**441 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 78 proof scripts
+## FiniteUnion.v — 80 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -684,6 +684,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_independent_complement_first` (theorem) | Conditional partition and complement, polynomial equality | finite_conditional_prob_partition_by_event, finite_conditional_prob_complement, finite_conditional_prob_intersection_symmetric, Stdlib.Psatz.nra | **New:** conditional independence preserved under first-target complement |
 | `finite_conditional_independent_complement_second` (theorem) | Symmetry and existing complement theorem | finite_conditional_independent_symmetric, finite_conditional_independent_complement_first | **New:** second-target complement without duplicate event algebra |
 | `finite_conditional_independent_complement_both` (theorem) | Two theorem applications | finite_conditional_independent_complement_first, finite_conditional_independent_complement_second | **New:** simultaneous complement closure of finite conditional independence |
+| `finite_conditional_prob_given_true_normalized` (theorem) | Rewriting by finite mass, unit division | finite_prob_event_ext_on_samples, finite_prob_true, Stdlib.Reals.Rdiv_1 | **New:** normalized conditioning on true leaves event mass unchanged |
+| `finite_conditional_independent_given_true_iff_marginal_product` (theorem) | Existing theorem rewrites, iff splitting and Lra | finite_conditional_prob_given_true_normalized, finite_prob_true | **New:** unconditioned joint factorization coincides with generic independence under true conditioning |
 
 ## FiniteMoments.v — 167 proof scripts
 
@@ -878,7 +880,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_event_indicator_covariance_complement_first` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_event_indicator_covariance_complement_both` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 
-## FourCellBridge.v — 22 proof scripts
+## FourCellBridge.v — 24 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -904,3 +906,5 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `four_cell_generic_conditional_A_given_B` (theorem) | Lemma application, Computation | FiniteUnion.finite_conditional_prob; four_cell_conditional_A_given_B | **New:** reuse generic operator for A given B |
 | `four_cell_generic_conditional_both_given_either` (theorem) | Finite cases, Rewriting, Lemma application | FiniteUnion.finite_prob_event_ext_on_samples, two_event_union_probability, four_cell_conditional_both_given_either | **New:** generic both-given-either bridge |
 | `four_cell_generic_conditional_not_A_given_B` (theorem) | Rewriting, Lemma application | Stdlib.Bool.andb_comm, FiniteUnion.finite_prob_event_ext_on_samples, four_cell_conditional_not_A_given_B | **New:** generic B-only conditional bridge |
+| `four_cell_generic_independence_iff_marginal_product` (theorem) | Definitional shared sum equality, existing mass bridges and iff rewriting | FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product, four_cell_total_mass, four_cell_intersection_mass, four_cell_first_marginal, four_cell_second_marginal | **New:** generic independence specializes exactly to four-cell joint=marginal product |
+| `four_cell_generic_independence_iff_cross_product_cells` (theorem) | Iff rewriting and pre-existing admissions criterion | four_cell_generic_independence_iff_marginal_product, Admissions.binary_independence_criterion | **New:** generic conditional independence iff cross-product of four cell weights |

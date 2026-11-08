@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **434 theorem, lemma and example declarations** in seven
+for the two reports. **438 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1185,8 +1185,8 @@ matrix_bilinear_form, matrix_quadratic_form,
 weighted_basis_sum, fixed_basis_weighted_variance_identity,
 and zero_variance_is_constant_on_positive_mass.
 
-Current audited totals: **434 public claims, 437 proof scripts,
-493 documented declarations** across seven Rocq modules.
+Current audited totals: **438 public claims, 441 proof scripts,
+497 documented declarations** across seven Rocq modules.
 
 
 ## Generic finite conditional-independence interface
@@ -1213,13 +1213,34 @@ probability interpretation; no unit-mass normalization is assumed.
 The interface is a starting point for future conditional-independence
 cross-product factorization and stronger four-cell bridge rules, not a certified stochastic process model.
 
-Current audited totals: **434 public claims, 437 proof scripts,
-493 documented declarations** across seven Rocq modules.
+Current audited totals: **438 public claims, 441 proof scripts,
+497 documented declarations** across seven Rocq modules.
+
+## Generic conditional independence specialized to the four-cell model
+
+Two finite-union theorems show that normalizing the underlying outcome
+list to total mass one turns conditioning on the universally true event
+into ordinary event mass. Under the same normalization, the generic
+`finite_conditional_independent` predicate is equivalent to the exact
+joint-event product of its two marginal event masses.
+
+Two new `FourCellBridge.v` theorems instantiate that result with the
+already verified Boolean-pair enumeration and four-cell model weights:
+generic independence of A and B given true is equivalent both to
+`p_both m = p_A m * p_B m` and to
+`joint m * neither m = only_A m * only_B m`. The latter equivalence
+delegates to `Admissions.binary_independence_criterion`; there is
+no new four-cell enumeration, cross-product calculation, or assumption
+of observed independence. All results retain the existing normalized,
+nonnegative four-cell interpretation.
+
+Current audited totals: **438 public claims, 441 proof scripts,
+497 documented declarations** in seven Rocq modules.
 
 ## Research extensions
 
-The next valuable targets are: (1) connecting generic finite conditional independence to the verified
-four-cell `TwoEventModel` parameterization, (2) certified covariance-matrix rank statements beyond the
+The next valuable targets are: (1) extending the generic finite conditional-independence interface to
+multi-event conditional factorization and conditioning-event transformations, (2) certified covariance-matrix rank statements beyond the
 zero-quadratic-form support result, (3) using a maintained measure-theory
 library with checked finite-to-continuous interpretation lemmas,
 (4) bivariate Gaussian density normalization and certified tail

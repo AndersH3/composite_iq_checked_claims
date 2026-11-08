@@ -2669,6 +2669,70 @@ Section FiniteOutcomeSpace.
     exact Hindependent.
   Qed.
 
+
+  (**
+   [finite_conditional_prob_given_true_normalized] (theorem) — Conditional mass on the certain event.
+   Mathematical meaning: When the total finite sample weight is exactly one, conditioning a target Boolean event on the universally true event leaves its finite mass unchanged.
+   Exact checked proposition: For any real-valued weights, samples and target event, finite_sum weights samples=1 implies finite_conditional_prob weights samples event (fun _ => true)=finite_prob weights samples event.
+   Premises and side conditions: Unit total mass is assumed explicitly. No nonnegative-weight premise is needed for the algebraic quotient identity, although such a premise is needed to interpret the finite weights as probabilities.
+   Proof/definition method: Unfold the existing conditional quotient, simplify conjunction with the true predicate using checked event extensionality, use finite_prob_true for its denominator, and cancel division by the unit mass.
+   Library reuse: finite_prob_event_ext_on_samples, finite_prob_true, Stdlib.Bool.andb and Stdlib.Reals.Rdiv_1. No new normalization routine or summation is defined.
+   Boundary: This concerns a weighted finite outcome list and does not provide a general measure-theoretic conditioning operator.
+   *)
+  Theorem finite_conditional_prob_given_true_normalized :
+    forall weights samples event,
+      finite_sum weights samples = 1 ->
+      finite_conditional_prob weights samples event (fun _ => true) =
+      finite_prob weights samples event.
+  Proof.
+    intros weights samples event Hunit.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_event_ext_on_samples
+      weights samples (fun x => andb true (event x)) event).
+    2: { intros x _; reflexivity. }
+    rewrite finite_prob_true.
+    rewrite Hunit.
+    rewrite Rdiv_1.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_independent_given_true_iff_marginal_product] (theorem) — Normalized unconditional independence as conditional independence.
+   Mathematical meaning: In an explicitly normalized finite sample, the generic conditional-independence predicate with universally true conditioning event coincides exactly with the classical joint-mass product identity for the two Boolean events.
+   Exact checked proposition: For weights and samples with finite_sum weights samples=1, finite_conditional_independent weights samples first second (fun _ => true) iff finite_prob weights samples (fun x => andb (first x) (second x)) = finite_prob weights samples first * finite_prob weights samples second.
+   Premises and side conditions: The mass-normalization hypothesis ensures strictly positive true-event conditioning mass. No marginal positivity, independence or individual nonnegative-weight assumption is silently added; nonnegative weights are needed for probability interpretation.
+   Proof/definition method: Unfold the independence predicate, rewrite the true-event marginal to unit mass, and reuse finite_conditional_prob_given_true_normalized on the joint and both single-event target expressions before splitting the iff.
+   Library reuse: finite_conditional_prob_given_true_normalized, finite_prob_true, Stdlib.Reals and Stdlib.Lra; there is no duplicate finite conditional quotient proof.
+   Boundary: This is an equality of finite event masses and does not establish stochastic independence for empirical IQ tests or continuous distributions.
+   *)
+  Theorem finite_conditional_independent_given_true_iff_marginal_product :
+    forall weights samples first second,
+      finite_sum weights samples = 1 ->
+      (finite_conditional_independent weights samples
+         first second (fun _ => true) <->
+       finite_prob weights samples
+         (fun x => andb (first x) (second x)) =
+       finite_prob weights samples first *
+       finite_prob weights samples second).
+  Proof.
+    intros weights samples first second Hunit.
+    unfold finite_conditional_independent.
+    rewrite finite_prob_true.
+    rewrite Hunit.
+    rewrite (finite_conditional_prob_given_true_normalized
+      weights samples
+      (fun x => andb (first x) (second x)) Hunit).
+    rewrite (finite_conditional_prob_given_true_normalized
+      weights samples first Hunit).
+    rewrite (finite_conditional_prob_given_true_normalized
+      weights samples second Hunit).
+    split.
+    - intros [_ Hfactor].
+      exact Hfactor.
+    - intro Hfactor.
+      split; [lra | exact Hfactor].
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

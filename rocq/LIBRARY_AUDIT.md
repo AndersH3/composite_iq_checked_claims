@@ -993,6 +993,23 @@ the quotient as a bona fide conditional probability. The formalized interface
 does not yet give generic eventwise conditional cross-product criteria, general conditional
 random-variable independence, or continuous disintegration.
 
+## Generic independence to four-cell model bridge
+
+The `FiniteUnion` interface reuses `finite_prob_true` and sample-event
+extensionality to show that a unit-weight-mass sample conditioned on true
+reduces to the ordinary finite event mass. A companion theorem rewrites
+the generic positive-conditioning independence predicate into the
+joint-equals-product-of-marginals equation.
+
+`FourCellBridge` reuses its previously checked normalizing mass and
+two marginals, together with `four_cell_intersection_mass`, to specialize
+that generic theorem without re-enumerating the Boolean product.
+`Admissions.binary_independence_criterion` supplies the final equivalence
+to `joint * neither = only_A * only_B`.
+The four-cell weights are nonnegative and sum to one by record
+construction; no distributional independence or Gaussian conclusion
+is added, and the pinned Rocq Stdlib is sufficient.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
