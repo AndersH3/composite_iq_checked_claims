@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **337 theorem, lemma and example declarations** in seven
+for the two reports. **342 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -485,7 +485,7 @@ interpretations. The comments also name the precise Stdlib
 No declaration statement or executable proof was changed
 during this documentation-only improvement.
 
-## Latest continuation: general finite-sum partition and filtered-event bounds
+## Previous continuation: general finite-sum partition and filtered-event bounds
 
 The current source adds one general and two event-specific results.
 **There are now 337 publicly named theorem/lemma/example declarations,
@@ -536,6 +536,66 @@ generic folds, the recurrence and suffix-dependent covariance.
 All theorem hypotheses remain explicit. These identities are
 finite list-weight statements, not claims about empirical
 psychometrics, continuous distributions or inferred Gaussianity.
+
+## Latest continuation: filtered sample concatenation and indicator-score bridges
+
+**Current Rocq inventory:** 342 public theorem/lemma/example declarations
+across seven modules (Hoeflin 64; Admissions 67; FiniteUnion **54**;
+FiniteMoments 108; FiniteSum 20; FiniteBridge **16**;
+FourCellBridge 13). One existing local lemma and the two explicitly
+proved two-event model constructors bring this to **345 complete
+`Proof.` scripts**. There are **399 named declarations**, including
+records and definitions. All 399 have explanatory adjacent
+`(** ... *)` comments; all seven Rocq modules retain substantive
+opening explanatory headers.
+
+This continuation establishes five new identities, reusing
+existing library and already checked results:
+
+- `FiniteUnion.union_prob_sample_append`: union mass on a
+  concatenated sample list equals the sum of the masses on its
+  two input lists. Its proof simply specializes
+  `finite_prob_sample_append` to the existing `any_event`.
+- `FiniteUnion.finite_prob_filtered_append`: filtered event mass
+  over concatenated samples is additive. The proof uses the
+  **Stdlib.List.filter_app** law and `finite_prob_sample_append`.
+- `FiniteUnion.union_prob_filtered_append`: the corresponding
+  sample concatenation identity for an arbitrary family of
+  Boolean events; it delegates to `filter_app` and
+  `union_prob_sample_append` without an event-list induction.
+- `FiniteBridge.filtered_event_mass_is_indicator_expectation`:
+  mass of an event after sample selection equals the expectation
+  on the original sample of the indicator of the selection-event
+  conjunction. The proof composes the checked filtered-mass
+  correspondence with the existing event-to-moment bridge.
+- `FiniteBridge.filtered_union_mass_is_indicator_expectation`:
+  similarly expresses selected-sample union mass as the
+  indicator-score expectation of selection AND the finite
+  Boolean family union, using `Stdlib.List.existsb`.
+
+An existing proof, `FiniteUnion.union_prob_append`, now invokes
+`finite_prob_event_ext_on_samples` and `any_event_append`
+(which already delegates to **Stdlib.List.existsb_app**) instead
+of duplicating finite-sum extensionality.
+
+**Assumption audit:** All five new equalities hold for arbitrary
+finite lists, including duplicate occurrences, and arbitrary
+real weights, including signed values. They do not silently
+assume independence, nonnegative weights, disjoint events or
+unit total mass. For probabilistic interpretations those
+conditions must be supplied separately as appropriate.
+None of the equalities claims a conditional probability,
+continuous measure, or empirical psychometric inference.
+
+The full [proof-by-proof register](PROOF_REFACTOR_REGISTER.md)
+lists **all 345 scripts**, with exact source-order coverage
+enforced by the documentation checker before Rocq 9.2
+kernel validation. There are still **14 structural inductions**,
+limited to generic fold/list algebra, the `Nat.iter`
+recurrence and suffix-sensitive finite covariance properties.
+No preexisting theorem statement was changed, no new
+recursive filter/sum implementation was added, and historical
+Python/SPARK verification evidence remains untouched.
 
 ## Claims and exact theorem correspondences
 
