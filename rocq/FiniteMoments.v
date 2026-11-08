@@ -1155,22 +1155,16 @@ Section FiniteProbabilityMoments.
       (forall g, In g fs -> variance g = 1) ->
       covariance_row_sum f fs <= INR (length fs).
   Proof.
-    intros f fs.
-    induction fs as [|g rest IH]; intros Hmass Hw Hf Hunit.
-    - change (0 <= 0); lra.
-    - change
-        (covariance f g + covariance_row_sum f rest <=
-         INR (S (length rest))).
-      rewrite S_INR.
-      assert (Hg : variance g = 1).
-      { apply Hunit; simpl; auto. }
-      assert (Hrest : forall h, In h rest -> variance h = 1).
-      { intros h Hh. apply Hunit; simpl; auto. }
-      pose proof
-        (covariance_of_unit_variance_scores_bounded
-          f g Hmass Hw Hf Hg) as [_ Hcov].
-      specialize (IH Hmass Hw Hf Hrest).
-      lra.
+    intros f fs Hmass Hw Hf Hunit.
+    unfold covariance_row_sum.
+    replace (INR (length fs)) with
+      (FiniteSum.finite_sum (fun _ => 1) fs).
+    - apply FiniteSum.finite_sum_monotone.
+      intros g Hin.
+      pose proof (covariance_of_unit_variance_scores_bounded
+        f g Hmass Hw Hf (Hunit g Hin)) as [_ Hcov].
+      exact Hcov.
+    - rewrite FiniteSum.finite_sum_const; ring.
   Qed.
 
   Lemma unordered_covariance_sum_bounded_by_pair_count :
