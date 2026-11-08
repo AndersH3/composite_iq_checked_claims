@@ -1,6 +1,6 @@
 (** Module: FiniteUnion.v
    Purpose: Distribution-free union probability for finitely many Boolean events.
-   Defines event indicators, finite weighted masses, and Boolean unions, then proves monotonicity, inclusion-exclusion, Fréchet and union bounds.
+   Defines Boolean-event masses, unions and conditional ratios, then proves monotonicity, filtering, inclusion-exclusion, Fréchet and union bounds.
    Mathematical representation: Outcomes are enumerated in a list; Boolean events are functions on outcomes and probability sums use FiniteSum.finite_sum.
    Explicit hypotheses: Bounds use nonnegative outcome weights; unit upper bounds additionally require mass normalization; raw identities need neither.
    Library use: Stdlib.List.existsb, filter, Bool, Sorting.Permutation and the shared FiniteSum lemmas.
@@ -1950,6 +1950,74 @@ Section FiniteOutcomeSpace.
       weights samples (fun x => orb (e x) (f x)) Hw Hmass)
       as [_ Hunion].
     lra.
+  Qed.
+
+
+  (* This is an interpretive quotient of already-defined Boolean-event
+     masses, not a new probability measure or a recursive event type.
+     At zero conditioning mass R division remains a total algebraic
+     expression; theorems interpreting conditionals require positivity. *)
+(**
+   [finite_conditional_prob] (definition) — Generic conditional probability of finite Boolean events.
+   Mathematical meaning: Defines the mass of an intersection of a given event and a target event divided by the mass of the conditioning event, using the existing finite Boolean indicator model.
+   Exact declaration: Definition finite_conditional_prob weights samples event given := finite_prob weights samples (fun x => andb (given x) (event x)) / finite_prob weights samples given.
+   Premises and side conditions: Arbitrary real weights and repeated sample elements are syntactically permitted; interpretation as a probability requires nonnegative normalized weights and strictly positive conditioning-event mass.
+   Proof/definition method: Compose the already-defined finite_prob masses with Stdlib.Bool.andb and Reals division, preserving the exact original finite enumeration.
+   Library reuse: FiniteUnion.finite_prob, Stdlib.Bool.andb, Stdlib.Reals.Rdiv and FiniteSum.finite_sum.
+   Boundary: No continuous measure or new event algebra is provided; zero denominators are excluded from meaningful conditional interpretations.
+ *)
+  Definition finite_conditional_prob (weights : Outcome -> R)
+      (samples : list Outcome) (event given : Event) : R :=
+    finite_prob weights samples
+      (fun x => andb (given x) (event x)) /
+    finite_prob weights samples given.
+
+(**
+   [finite_conditional_prob_filtered] (theorem) — Generic conditional probability of finite Boolean events.
+   Mathematical meaning: Conditional mass may be computed by filtering the sample with the conditioning event, then taking the event mass on that restricted list and dividing by the original conditioning mass.
+   Exact checked proposition: For all weights, samples, event and given, finite_conditional_prob weights samples event given = finite_prob weights (filter given samples) event / finite_prob weights samples given.
+   Premises and side conditions: No normalization, sign assumption or positive denominator is needed for the identity as a real expression; positive mass is needed for conditional-probability semantics.
+   Proof/definition method: Unfold only the new quotient definition and rewrite by the pre-existing finite_prob_on_filtered_samples theorem, which uses Stdlib.List.filter.
+   Library reuse: Stdlib.List.filter, finite_prob_on_filtered_samples, finite_prob and Stdlib.Reals division.
+   Boundary: Duplicates retain their multiplicity; this is not a normalized distribution conditional on a measurable set in a continuous space.
+ *)
+  Theorem finite_conditional_prob_filtered :
+    forall weights samples event given,
+      finite_conditional_prob weights samples event given =
+        finite_prob weights (filter given samples) event /
+        finite_prob weights samples given.
+  Proof.
+    intros weights samples event given.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_on_filtered_samples weights samples given event).
+    reflexivity.
+  Qed.
+
+(**
+   [finite_conditional_prob_self] (theorem) — Generic conditional probability of finite Boolean events.
+   Mathematical meaning: Any strictly positive finite conditioning event has conditional probability one given itself.
+   Exact checked proposition: For all weights, samples, given, if 0 < finite_prob weights samples given then finite_conditional_prob weights samples given given = 1.
+   Premises and side conditions: The conditioning mass is strictly positive, making division by itself valid. Probability normalization and weight signs are not required for this algebraic identity, but are needed for general probability semantics.
+   Proof/definition method: Use finite_prob_event_ext_on_samples to identify the idempotent Boolean conjunction with the original event on the enumerated support, then apply the standard real-division self-identity.
+   Library reuse: Stdlib.Bool.andb, finite_prob_event_ext_on_samples, Stdlib.Reals.Rdiv_self and Lra.
+   Boundary: This does not prove that arbitrary signed finite weights define a valid probability distribution.
+ *)
+  Theorem finite_conditional_prob_self :
+    forall weights samples given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples given given = 1.
+  Proof.
+    intros weights samples given Hpositive.
+    unfold finite_conditional_prob.
+    assert (Hsame :
+      finite_prob weights samples
+        (fun x => andb (given x) (given x)) =
+      finite_prob weights samples given).
+    { apply finite_prob_event_ext_on_samples.
+      intros x Hx.
+      destruct (given x); reflexivity. }
+    rewrite Hsame.
+    apply Rdiv_self; lra.
   Qed.
 
 End FiniteOutcomeSpace.

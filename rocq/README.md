@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **355 theorem, lemma and example declarations** in seven
+for the two reports. **359 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -829,9 +829,23 @@ Each conditional ratio has an explicit positive conditioning-mass premise;
 none assumes route independence or claims empirical validity. They add
 no new event summation, matrix operation, or mathematical axioms.
 
-Current source totals: **355 public checked claims**, **358 explicit proof
-scripts**, **412 named declarations**, with full documentation and an
+Current source totals: **359 public checked claims**, **362 explicit proof
+scripts**, **417 named declarations**, with full documentation and an
 ordered proof-refactor register.
+
+## Generic finite conditional probability (further November 8 continuation)
+
+`FiniteUnion.finite_conditional_prob` is a thin quotient of existing
+finite Boolean-event masses, not a new probability measure. Its
+`finite_conditional_prob_filtered` theorem reuses the existing
+`finite_prob_on_filtered_samples` result, and
+`finite_conditional_prob_self` proves that a positive-mass event has
+conditional probability one given itself. Two new FourCellBridge
+corollaries connect B-given-A and A-given-B to this shared operator
+without altering the earlier four-cell statements.
+The complete seven-module declaration inventory is now 417 named
+items, 359 public theorem/lemma/example declarations, and 362
+proof scripts including the local helper and two record constructors.
 
 ## Research extensions
 

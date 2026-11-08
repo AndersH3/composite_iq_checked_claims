@@ -648,3 +648,47 @@ Proof.
   unfold conditional_not_A_given_B.
   reflexivity.
 Qed.
+
+(* Interpret established four-cell conditionals via the shared generic
+   conditional event operator, rather than duplicating list algebra. *)
+(**
+   [four_cell_generic_conditional_B_given_A] (theorem) — Generic conditional probability of finite Boolean events.
+   Mathematical meaning: The new general finite conditional-probability operator, specialized to B given A on the normalized Boolean pair space, equals the report-specific conditional_B_given_A expression.
+   Exact checked proposition: forall m, 0 < p_A m -> finite_conditional_prob (four_cell_weight m) four_cell_samples four_cell_B four_cell_A = conditional_B_given_A m.
+   Premises and side conditions: The first-event marginal is positive, and the FourCellModel record supplies normalized nonnegative cell weights.
+   Proof/definition method: Unfold the generic conditional operator and delegate to four_cell_conditional_B_given_A, retaining its unchanged positive-denominator premise.
+   Library reuse: FiniteUnion.finite_conditional_prob and four_cell_conditional_B_given_A; no separate finite sum or Boolean recursion.
+   Boundary: The claim applies to the specified finite four-outcome model, not empirically observed independence.
+ *)
+Theorem four_cell_generic_conditional_B_given_A :
+  forall m,
+    0 < p_A m ->
+    @FiniteUnion.finite_conditional_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples four_cell_B four_cell_A =
+    conditional_B_given_A m.
+Proof.
+  intros m Hpositive.
+  unfold FiniteUnion.finite_conditional_prob.
+  apply four_cell_conditional_B_given_A; exact Hpositive.
+Qed.
+
+(**
+   [four_cell_generic_conditional_A_given_B] (theorem) — Generic conditional probability of finite Boolean events.
+   Mathematical meaning: The general finite conditional operator, specialized to A given B, agrees with the previously established four-cell admissions conditional ratio.
+   Exact checked proposition: forall m, 0 < p_B m -> finite_conditional_prob (four_cell_weight m) four_cell_samples four_cell_A four_cell_B = conditional_A_given_B m.
+   Premises and side conditions: The B-marginal must be strictly positive; four-cell normalization and nonnegativity remain in the record constraints.
+   Proof/definition method: Unfold only the new generic operator and apply the existing four_cell_conditional_A_given_B bridge theorem.
+   Library reuse: FiniteUnion.finite_conditional_prob and four_cell_conditional_A_given_B; existing checked Boolean-event and marginal results.
+   Boundary: This is a finite semantic equivalence, not a derivation of Gaussian or observed admission rates.
+ *)
+Theorem four_cell_generic_conditional_A_given_B :
+  forall m,
+    0 < p_B m ->
+    @FiniteUnion.finite_conditional_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples four_cell_A four_cell_B =
+    conditional_A_given_B m.
+Proof.
+  intros m Hpositive.
+  unfold FiniteUnion.finite_conditional_prob.
+  apply four_cell_conditional_A_given_B; exact Hpositive.
+Qed.

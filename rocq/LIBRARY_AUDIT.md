@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 355 public theorem/lemma/example
+**Current audited inventory:** 359 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **358 proof scripts**. There are **412 named
+constructors, for **362 proof scripts**. There are **417 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -656,6 +656,19 @@ Each denominator is explicitly positive. All prior statements remain
 unchanged, and the audited inventory is 355 public claims, 358 scripts,
 412 fully documented declarations across the original seven files.
 No new recursion, probability axiom or empirical claim is introduced.
+
+## Shared conditional event operator (November 8)
+
+`FiniteUnion.finite_conditional_prob` is defined by composing the
+pre-existing indicator-event intersection mass and conditioning mass
+using standard real division. Its filtering theorem delegates to
+`finite_prob_on_filtered_samples`; positive-mass self-conditioning
+uses `finite_prob_event_ext_on_samples` and `Rdiv_self`. Two
+four-cell corollaries reuse the preceding conditional bridge proofs,
+with unchanged side conditions. The total source inventory rises to
+359 publicly named claims, 362 proof blocks, and 417 declarations.
+No new probability axioms, list recursions or matrix implementations
+are introduced.
 
 ## Deliberately retained project-specific definitions
 
