@@ -22,11 +22,11 @@ proof statements and report mappings do not change.
 ## Consolidated finite real sums and verified model bridge
 
 The shared `FiniteSum.v` module implements one definition using
-`Stdlib.List.map` and `fold_right`, and proves **sixteen reusable
+`Stdlib.List.map` and `fold_right`, and proves **seventeen reusable
 lemmas**: extensionality, addition, scalar multiplication, positivity,
 monotonicity, zero sums, append, permutation invariance, map composition,
 negation, subtraction, reversal, support-aware extensionality,
-member bounds, termwise-zero characterization, and double-sum interchange. In
+member bounds, termwise-zero characterization, constant sums, and double-sum interchange. In
 `FiniteMoments.v` and `FiniteUnion.v`, public `sum_finite` and
 `finite_sum` remain transparent aliases. Existing theorem signatures
 are preserved, while the previous duplicate inductions now delegate
@@ -177,7 +177,7 @@ MathComp, Coquelicot, abstract measure theory or a separate matrix
 library has been performed; such a migration needs checked
 interpretation/compatibility proofs.
 
-## Library-consolidation milestone: 320 checked declarations
+## Previous library-consolidation milestone: 320 checked declarations
 
 This continuation verifies four generic finite-sum laws and five
 finite-event laws, retaining all 311 prior named proof statements:
@@ -193,7 +193,7 @@ finite-event laws, retaining all 311 prior named proof statements:
 | `FiniteUnion.v` | Support-aware extensionality and nonnegative member/zero theorems | Characterizes when event probability is zero and when an observed positive-weight event forces positive mass |
 | `FiniteUnion.v` | `finite_prob_event_monotone`, `finite_prob_inclusion_exclusion`, `normalized_finite_prob_unit_interval` | Derives arbitrary finite-event Fréchet overlap bounds rather than repeating four-cell algebra |
 
-**Actual source inventory:** `FiniteSum` 16; `Hoeflin` 64;
+**Inventory at this milestone:** `FiniteSum` 16; `Hoeflin` 64;
 `Admissions` 67; `FiniteUnion` 43; `FiniteMoments` 103;
 `FiniteBridge` 14; `FourCellBridge` 13. **Total: 320**.
 
@@ -208,6 +208,50 @@ A complete replacement with MathComp matrices or a continuous
 measure library is not claimed. Both would require pinned additional
 dependencies and kernel-checked translation/equivalence theorems
 that preserve the existing finite interpretations.
+
+## Continued covariance and finite-sum consolidation: 325 checked declarations
+
+The latest seven-module source inventory is **325**:
+64 `Hoeflin`, 67 `Admissions`, 43 `FiniteUnion`,
+107 `FiniteMoments`, 17 `FiniteSum`, 14 `FiniteBridge`,
+and 13 `FourCellBridge`.
+
+The current pinned Rocq 9.2 workflow **passed** for commit
+`2a7af1e3639f96d749fb00519ad7ed97b3c022ec`.
+The scope of the new changes is limited to `FiniteSum.v` and
+`FiniteMoments.v`; the root README, original reports, Ada/SPARK
+evidence and theorem statement types were not modified.
+
+| Refactored theorem | Existing library/verified result | Replaced implementation |
+|---|---|---|
+| `diagonal_variance_sum_of_unit_scores` | New reusable `FiniteSum.finite_sum_const`, `finite_sum_ext_in`, Rocq Stdlib `INR` and `S_INR` | Removed unit-variance list induction |
+| `covariance_row_sum_bounded_by_count` | `finite_sum_monotone`, `finite_sum_const`, checked unit-variance pairwise covariance bounds | Removed row sum induction |
+| `covariance_double_sum_second_cons` | `finite_sum_add` and `covariance_symmetric` | Removed double covariance sum induction |
+| `expectation_of_general_weighted_sum` | `finite_sum_swap`, `finite_sum_scale`, `finite_sum_ext` | Removed weighted-component expectation induction |
+| `covariance_of_general_weighted_sums` | `covariance_of_general_weighted_second`, `covariance_symmetric`, `finite_sum_ext` | Removed first-battery covariance induction |
+| `covariance_with_sum_scores` | `Stdlib.List.map`, `finite_sum_map`, `covariance_of_general_weighted_second` | Replaced single-battery covariance induction by two explicit, proved unweighted/weighted interpretation lemmas |
+| `covariance_of_sum_scores` | `covariance_with_sum_scores`, `covariance_symmetric`, `finite_sum_ext` | Removed two-battery covariance induction |
+
+**Five new declarations:** the generic
+`FiniteSum.finite_sum_const`; `covariance_double_sum_symmetric`
+using `finite_sum_swap`; `covariance_cross_matrix_bilinear_swap`
+using the existing fixed-basis cross-matrix theorem; and
+`unweighted_scores_as_linear_combination` plus
+`unweighted_covariance_row_as_weighted` interpreting unweighted lists
+as unit-weight components by `Stdlib.List.map`.
+
+**Regression evidence:** direct source signature comparison against
+the previously kernel-checked branch commit `98c030e` finds
+all 320 original theorem/lemma/example declarations with **unchanged
+statements**. The latest addition compiles without any new
+`Axiom`, `Admitted`, `Parameter`, or external package dependency.
+
+There are still indispensable structural list inductions for
+suffix-dependent unordered-pair sums and list-shaped matrix
+representations. Replacing the report-specific finite semantics with
+MathComp matrices or arbitrary probability measures would require
+additional *proved* interpretations and compatibility results, not
+merely imports of new packages.
 
 ## Deliberately retained project-specific definitions
 
