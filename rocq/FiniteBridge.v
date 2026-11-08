@@ -21,19 +21,20 @@ Import ListNotations.
 Open Scope R_scope.
 
 (**
-   [finite_sum_models_agree] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: R), @FiniteUnion.finite_sum A f samples =
+   [finite_sum_models_agree] (theorem) — Correspondence between finite event
+   probabilities and score moments.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem finite_sum_models_agree : forall (A : Type)
+   (samples : list A) (f : A -> R), @FiniteUnion.finite_sum A f samples =
    @FiniteMoments.sum_finite A f samples.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: definitional computation.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses definitional reduction.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_sum_models_agree :
   forall (A : Type) (samples : list A) (f : A -> R),
@@ -44,19 +45,20 @@ Proof.
 Qed.
 
 (**
-   [finite_total_mass_models_agree] (theorem).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: R), @FiniteMoments.total_mass A samples weight =
-   @FiniteUnion.finite_sum A weight samples.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: definitional computation.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_total_mass_models_agree] (theorem) — Correspondence between finite event
+   probabilities and score moments.
+   Mathematical meaning: Expresses a checked identity or bound within the
+   correspondence between finite event probabilities and score moments.
+   Exact checked proposition: Theorem finite_total_mass_models_agree : forall (A :
+   Type) (samples : list A) (weight : A -> R), @FiniteMoments.total_mass A samples
+   weight = @FiniteUnion.finite_sum A weight samples.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses definitional reduction.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_total_mass_models_agree :
   forall (A : Type) (samples : list A) (weight : A -> R),
@@ -67,20 +69,22 @@ Proof.
 Qed.
 
 (**
-   [finite_event_probability_is_indicator_expectation] (theorem).
-   Meaning: Establishes finite-sum or finite-expectation algebra while
-   retaining the original sum semantics.
-   Formal conclusion: bool), @FiniteUnion.finite_prob A weight samples event =
-   @FiniteMoments.expect A samples weight (fun x => FiniteUnion.indicator
-   (event x)).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: definitional computation.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_probability_is_indicator_expectation] (theorem) — Correspondence
+   between finite event probabilities and score moments.
+   Mathematical meaning: Derives a sum or expectation identity for the explicitly
+   enumerated terms.
+   Exact checked proposition: Theorem
+   finite_event_probability_is_indicator_expectation : forall (A : Type) (samples :
+   list A) (weight : A -> R) (event : A -> bool), @FiniteUnion.finite_prob A weight
+   samples event = @FiniteMoments.expect A samples weight (fun x =>
+   FiniteUnion.indicator (event x)).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses definitional reduction.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_probability_is_indicator_expectation :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -93,19 +97,20 @@ Proof.
 Qed.
 
 (**
-   [indicator_square] (lemma).
-   Meaning: Relates variance, square root, correlation or reliability
-   parameters under the displayed numerical constraints.
-   Formal conclusion: forall b, FiniteUnion.indicator b * FiniteUnion.indicator
-   b = FiniteUnion.indicator b.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably FiniteUnion.indicator.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [indicator_square] (lemma) — Correspondence between finite event probabilities and
+   score moments.
+   Mathematical meaning: Establishes a correlation, square-root or reliability
+   identity under the stated real-number constraints.
+   Exact checked proposition: Lemma indicator_square : forall b,
+   FiniteUnion.indicator b * FiniteUnion.indicator b = FiniteUnion.indicator b.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization; references
+   include FiniteUnion.indicator.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Lemma indicator_square :
   forall b,
@@ -116,19 +121,21 @@ Proof.
 Qed.
 
 (**
-   [indicator_product_and] (lemma).
-   Meaning: Gives a precise computational or algebraic interpretation of the
-   named construction or assertion.
-   Formal conclusion: forall b c, FiniteUnion.indicator b *
-   FiniteUnion.indicator c = FiniteUnion.indicator (andb b c).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: ring/field normalization; notably FiniteUnion.indicator.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [indicator_product_and] (lemma) — Correspondence between finite event
+   probabilities and score moments.
+   Mathematical meaning: Expresses a checked identity or bound within the
+   correspondence between finite event probabilities and score moments.
+   Exact checked proposition: Lemma indicator_product_and : forall b c,
+   FiniteUnion.indicator b * FiniteUnion.indicator c = FiniteUnion.indicator (andb b
+   c).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses ring/field normalization, definitional
+   reduction; references include FiniteUnion.indicator.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Lemma indicator_product_and :
   forall b c,
@@ -139,22 +146,24 @@ Proof.
 Qed.
 
 (**
-   [finite_event_indicator_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: bool), @FiniteMoments.variance A samples weight (fun x =>
-   FiniteUnion.indicator (event x)) = @FiniteUnion.finite_prob A weight samples
-   event * (1 - @FiniteUnion.finite_prob A weight samples event).
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   ring/field normalization; notably FiniteMoments.expectation_ext.,
-   indicator_square., Hsquare..
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_indicator_variance] (theorem) — Correspondence between finite event
+   probabilities and score moments.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem finite_event_indicator_variance : forall (A :
+   Type) (samples : list A) (weight : A -> R) (event : A -> bool),
+   @FiniteMoments.variance A samples weight (fun x => FiniteUnion.indicator (event
+   x)) = @FiniteUnion.finite_prob A weight samples event * (1 -
+   @FiniteUnion.finite_prob A weight samples event).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, ring/field normalization; references include
+   FiniteMoments.expectation_ext., indicator_square., Hsquare..
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_variance :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -182,24 +191,25 @@ Proof.
 Qed.
 
 (**
-   [finite_event_indicator_covariance] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: bool), @FiniteMoments.covariance A samples weight (fun x
-   => FiniteUnion.indicator (a x)) (fun x => FiniteUnion.indicator (b x)) =
-   @FiniteUnion.finite_prob A weight samples (fun x => andb (a x) (b x)) -
-   @FiniteUnion.finite_prob A weight samples a * @FiniteUnion.finite_prob A
-   weight samples b.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   definitional computation; notably FiniteMoments.covariance.,
-   FiniteMoments.expectation_ext., indicator_product_and..
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_indicator_covariance] (theorem) — Correspondence between finite
+   event probabilities and score moments.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem finite_event_indicator_covariance : forall (A :
+   Type) (samples : list A) (weight : A -> R) (a b : A -> bool),
+   @FiniteMoments.covariance A samples weight (fun x => FiniteUnion.indicator (a x))
+   (fun x => FiniteUnion.indicator (b x)) = @FiniteUnion.finite_prob A weight samples
+   (fun x => andb (a x) (b x)) - @FiniteUnion.finite_prob A weight samples a *
+   @FiniteUnion.finite_prob A weight samples b.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, definitional reduction; references include
+   FiniteMoments.covariance., FiniteMoments.expectation_ext., indicator_product_and..
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_covariance :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -233,23 +243,25 @@ Proof.
 Qed.
 
 (**
-   [finite_event_independence_iff_zero_indicator_covariance] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: bool), @FiniteMoments.covariance A samples weight (fun x
-   => FiniteUnion.indicator (a x)) (fun x => FiniteUnion.indicator (b x)) = 0
-   <-> @FiniteUnion.finite_prob A weight samples (fun x => andb (a x) (b x)) =
-   @FiniteUnion.finite_prob A weight samples a * @FiniteUnion.finite_prob A
-   weight samples b.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, Stdlib Lra linear arithmetic; notably
-   finite_event_indicator_covariance..
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_independence_iff_zero_indicator_covariance] (theorem) —
+   Correspondence between finite event probabilities and score moments.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   finite_event_independence_iff_zero_indicator_covariance : forall (A : Type)
+   (samples : list A) (weight : A -> R) (a b : A -> bool), @FiniteMoments.covariance
+   A samples weight (fun x => FiniteUnion.indicator (a x)) (fun x =>
+   FiniteUnion.indicator (b x)) = 0 <-> @FiniteUnion.finite_prob A weight samples
+   (fun x => andb (a x) (b x)) = @FiniteUnion.finite_prob A weight samples a *
+   @FiniteUnion.finite_prob A weight samples b.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions. No further assumptions are implicit.
+   Proof/definition method: Kernel proof uses rewriting of equalities, linear real
+   arithmetic (Lra); references include finite_event_indicator_covariance..
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_independence_iff_zero_indicator_covariance :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -268,22 +280,26 @@ Proof.
 Qed.
 
 (**
-   [finite_event_indicator_zero_variance_iff_extreme_mass] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: bool), @FiniteMoments.variance A samples weight (fun x =>
-   FiniteUnion.indicator (event x)) = 0 <-> @FiniteUnion.finite_prob A weight
-   samples event = 0 \/ @FiniteUnion.finite_prob A weight samples event = 1.
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, Stdlib Lra linear arithmetic, ring/field
-   normalization; notably finite_event_indicator_variance., Rmult_integral.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_indicator_zero_variance_iff_extreme_mass] (theorem) — Correspondence
+   between finite event probabilities and score moments.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem
+   finite_event_indicator_zero_variance_iff_extreme_mass : forall (A : Type) (samples
+   : list A) (weight : A -> R) (event : A -> bool), @FiniteMoments.variance A samples
+   weight (fun x => FiniteUnion.indicator (event x)) = 0 <-> @FiniteUnion.finite_prob
+   A weight samples event = 0 \/ @FiniteUnion.finite_prob A weight samples event = 1.
+   Premises and side conditions: The displayed hypotheses include explicit nonzero or
+   strict-positive numerical conditions; stated unit-variance conditions. No further
+   assumptions are implicit.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, linear real arithmetic (Lra), ring/field
+   normalization; references include finite_event_indicator_variance.,
+   Rmult_integral.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_zero_variance_iff_extreme_mass :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -308,21 +324,23 @@ Qed.
    is an algebraic upper bound, not a claim that arbitrary signed weights
    define a probability distribution. *)
 (**
-   [finite_event_indicator_variance_at_most_quarter] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: bool), @FiniteMoments.variance A samples weight (fun x =>
-   FiniteUnion.indicator (event x)) <= /4.
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   Stdlib Psatz nonlinear arithmetic; notably finite_event_indicator_variance.,
-   Rle_0_sqr..
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_indicator_variance_at_most_quarter] (theorem) — Correspondence
+   between finite event probabilities and score moments.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem finite_event_indicator_variance_at_most_quarter
+   : forall (A : Type) (samples : list A) (weight : A -> R) (event : A -> bool),
+   @FiniteMoments.variance A samples weight (fun x => FiniteUnion.indicator (event
+   x)) <= /4.
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas, polynomial real arithmetic (Psatz); references
+   include finite_event_indicator_variance., Rle_0_sqr..
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_variance_at_most_quarter :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -340,20 +358,24 @@ Qed.
 
 (* Complement variance requires a normalized finite total mass. *)
 (**
-   [finite_event_indicator_complement_variance] (theorem).
-   Meaning: Establishes a finite-sample variance identity or bound, including
-   all stated scaling assumptions.
-   Formal conclusion: @FiniteMoments.variance A samples weight (fun x =>
-   FiniteUnion.indicator (negb (event x))) = @FiniteMoments.variance A samples
-   weight (fun x => FiniteUnion.indicator (event x)).
-   Hypotheses: Requires unit-variance or stated moment hypotheses where shown
-   in the statement; all other constraints remain explicit.
-   Proof outline: equational rewriting, ring/field normalization.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_indicator_complement_variance] (theorem) — Correspondence between
+   finite event probabilities and score moments.
+   Mathematical meaning: Identifies the precise variance, scaling behavior, or
+   variance bound for the stated score construction.
+   Exact checked proposition: Theorem finite_event_indicator_complement_variance :
+   forall (A : Type) (samples : list A) (weight : A -> R) (event : A -> bool),
+   @FiniteMoments.total_mass A samples weight = 1 -> @FiniteMoments.variance A
+   samples weight (fun x => FiniteUnion.indicator (negb (event x))) =
+   @FiniteMoments.variance A samples weight (fun x => FiniteUnion.indicator (event
+   x)).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_complement_variance :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -374,23 +396,26 @@ Qed.
 (* Use established covariance extensionality, affine-shift
    invariance and homogeneity; avoid re-expanding finite sums. *)
 (**
-   [finite_event_indicator_covariance_complement_second] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: @FiniteMoments.covariance A samples weight (fun x =>
-   FiniteUnion.indicator (a x)) (fun x => FiniteUnion.indicator (negb (b x))) =
-   - @FiniteMoments.covariance A samples weight (fun x => FiniteUnion.indicator
-   (a x)) (fun x => FiniteUnion.indicator (b x)).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas,
-   explicit case analysis, ring/field normalization, definitional computation;
-   notably FiniteMoments.covariance_extensional..
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_indicator_covariance_complement_second] (theorem) — Correspondence
+   between finite event probabilities and score moments.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   finite_event_indicator_covariance_complement_second : forall (A : Type) (samples :
+   list A) (weight : A -> R) (a b : A -> bool), @FiniteMoments.total_mass A samples
+   weight = 1 -> @FiniteMoments.covariance A samples weight (fun x =>
+   FiniteUnion.indicator (a x)) (fun x => FiniteUnion.indicator (negb (b x))) = -
+   @FiniteMoments.covariance A samples weight (fun x => FiniteUnion.indicator (a x))
+   (fun x => FiniteUnion.indicator (b x)).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
+   reuse of previously established lemmas, ring/field normalization, definitional
+   reduction; references include FiniteMoments.covariance_extensional..
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_covariance_complement_second :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -423,22 +448,26 @@ Proof.
 Qed.
 
 (**
-   [finite_event_indicator_covariance_complement_first] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: @FiniteMoments.covariance A samples weight (fun x =>
-   FiniteUnion.indicator (negb (a x))) (fun x => FiniteUnion.indicator (b x)) =
-   - @FiniteMoments.covariance A samples weight (fun x => FiniteUnion.indicator
-   (a x)) (fun x => FiniteUnion.indicator (b x)).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, application of already-proved lemmas;
-   notably finite_event_indicator_covariance_complement_second..
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   [finite_event_indicator_covariance_complement_first] (theorem) — Correspondence
+   between finite event probabilities and score moments.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   finite_event_indicator_covariance_complement_first : forall (A : Type) (samples :
+   list A) (weight : A -> R) (a b : A -> bool), @FiniteMoments.total_mass A samples
+   weight = 1 -> @FiniteMoments.covariance A samples weight (fun x =>
+   FiniteUnion.indicator (negb (a x))) (fun x => FiniteUnion.indicator (b x)) = -
+   @FiniteMoments.covariance A samples weight (fun x => FiniteUnion.indicator (a x))
+   (fun x => FiniteUnion.indicator (b x)).
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
+   previously established lemmas; references include
+   finite_event_indicator_covariance_complement_second., Hmass..
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_covariance_complement_first :
   forall (A : Type) (samples : list A) (weight : A -> R)
@@ -465,23 +494,27 @@ Proof.
 Qed.
 
 (**
-   [finite_event_indicator_covariance_complement_both] (theorem).
-   Meaning: Establishes an exact covariance identity or bound for the specified
-   finite score functions.
-   Formal conclusion: @FiniteMoments.covariance A samples weight (fun x =>
-   FiniteUnion.indicator (negb (a x))) (fun x => FiniteUnion.indicator (negb (b
-   x))) = @FiniteMoments.covariance A samples weight (fun x =>
-   FiniteUnion.indicator (a x)) (fun x => FiniteUnion.indicator (b x)).
-   Hypotheses: Exactly the quantified hypotheses displayed in the statement;
-   there are no hidden global probability or distribution axioms.
-   Proof outline: equational rewriting, ring/field normalization; notably
+   [finite_event_indicator_covariance_complement_both] (theorem) — Correspondence
+   between finite event probabilities and score moments.
+   Mathematical meaning: Derives a covariance identity or inequality from finite
+   weighted expectations.
+   Exact checked proposition: Theorem
+   finite_event_indicator_covariance_complement_both : forall (A : Type) (samples :
+   list A) (weight : A -> R) (a b : A -> bool), @FiniteMoments.total_mass A samples
+   weight = 1 -> @FiniteMoments.covariance A samples weight (fun x =>
+   FiniteUnion.indicator (negb (a x))) (fun x => FiniteUnion.indicator (negb (b x)))
+   = @FiniteMoments.covariance A samples weight (fun x => FiniteUnion.indicator (a
+   x)) (fun x => FiniteUnion.indicator (b...
+   Premises and side conditions: All required premises are written in the signature.
+   No independence or distributional assumption is silently supplied.
+   Proof/definition method: Kernel proof uses rewriting of equalities, ring/field
+   normalization; references include
    finite_event_indicator_covariance_complement_first,
    finite_event_indicator_covariance_complement_second.
-   Library discipline: FiniteSum, FiniteUnion, FiniteMoments and Rocq's
-   Bool/Reals tactics.
-   Scope: Zero indicator covariance corresponds to a finite event product
-   identity, not statistical independence for arbitrary continuous
-   distributions.
+   Library reuse: FiniteUnion, FiniteMoments, FiniteSum and Stdlib.Bool/Reals.
+   Boundary: Boolean event indicator algebra in an explicit finite sample, with
+   normalized nonnegative weights when interpreting real expressions as
+   probabilities.
  *)
 Theorem finite_event_indicator_covariance_complement_both :
   forall (A : Type) (samples : list A) (weight : A -> R)
