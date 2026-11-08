@@ -2353,7 +2353,7 @@ Section FiniteOutcomeSpace.
       (fun x => andb (given x)
         (andb (event1 x) (event2 x)))
       (fun x => andb (andb (given x) (event1 x)) (event2 x))).
-    2: { intros x _; symmetry; apply andb_assoc. }
+    2: { intros x _; apply andb_assoc. }
     field; lra.
   Qed.
 
