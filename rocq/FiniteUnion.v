@@ -1459,9 +1459,10 @@ Section FiniteOutcomeSpace.
    e = finite_sum weights samples.
    Premises and side conditions: All required premises are written in the signature.
    No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, ring/field normalization; references include
-   finite_prob., finite_sum_extensional, indicator_complement..
+   Proof/definition method: Express event and complement masses
+   through finite_prob_as_filtered_mass and use the checked generic
+   FiniteSum.finite_sum_filter_partition identity, with Rplus_comm
+   to align the order. No event-specific indicator arithmetic.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -1474,12 +1475,9 @@ Section FiniteOutcomeSpace.
         finite_sum weights samples.
   Proof.
     intros weights samples e.
-    unfold finite_prob.
-    rewrite <- finite_sum_addition.
-    apply finite_sum_extensional; intro x.
-    rewrite <- Rmult_plus_distr_l.
-    rewrite indicator_complement.
-    ring.
+    rewrite !finite_prob_as_filtered_mass.
+    rewrite Rplus_comm.
+    apply FiniteSum.finite_sum_filter_partition.
   Qed.
 
   (**
