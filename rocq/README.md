@@ -461,6 +461,30 @@ The prior theorem statements and their hypotheses remain unchanged.
 As throughout this project, the results concern finite algebraic
 moments and do not establish empirical validity or Gaussianity.
 
+### Precise semantics for foundational definitions
+
+In addition to the 394 adjacent declaration comments and the seven
+module headers, **19 core definition comments** have been rewritten
+from generic template descriptions into declaration-specific
+mathematical explanations. The changes cover the generic
+`FiniteSum.finite_sum` fold; eight Boolean-event definitions
+(including `Event`, `indicator`, `any_event`,
+`sum_event_indicators`, `finite_prob`, and `union_prob`);
+and ten finite-moment definitions (including `total_mass`,
+`expect`, `covariance`, `variance`,
+`centered_second_moment`, and weighted-score combinations).
+
+The updated comments spell out how **duplicates contribute by
+list position**, why arbitrary **negative or unnormalized real
+weights still define algebraic sums**, and exactly which
+**nonnegativity and normalization premises** are required
+for probability, nonnegative variance or centered-covariance
+interpretations. The comments also name the precise Stdlib
+`List.map`, `List.fold_right`, `List.existsb`,
+`Bool` and shared `FiniteSum` constructions reused.
+No declaration statement or executable proof was changed
+during this documentation-only improvement.
+
 ## Latest continuation: general finite-sum partition and filtered-event bounds
 
 The current source adds one general and two event-specific results.
