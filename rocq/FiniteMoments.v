@@ -131,9 +131,11 @@ Section FiniteProbabilityMoments.
       expect (fun x => f x - g x) = expect f - expect g.
   Proof.
     intros f g.
-    transitivity (expect (fun x => f x + (-1) * g x)).
-    - apply expectation_ext; intro x; ring.
-    - rewrite expectation_add, expectation_scale; ring.
+    unfold expect, sum_finite.
+    transitivity (FiniteSum.finite_sum
+      (fun x => weight x * f x - weight x * g x) samples).
+    - apply FiniteSum.finite_sum_ext; intro x; ring.
+    - apply FiniteSum.finite_sum_sub.
   Qed.
 
   Theorem expectation_affine :
