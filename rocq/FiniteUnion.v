@@ -27,13 +27,16 @@ Section FiniteOutcomeSpace.
   (**
    [Event] (definition) — Finite Boolean event mass and union/intersection
    inequalities.
-   Mathematical meaning: Defines Event using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: An event is a total decidable predicate on an outcome:
+   true means membership and false means nonmembership. No
+   specialized event-set data structure is introduced.
    Exact declaration: Definition Event := Outcome -> bool.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: The outcome type is arbitrary; this is a Boolean function,
+   not a sigma-algebra, finite sample enumeration or normalized
+   probability measure.
+   Proof/definition method: The alias is Outcome -> bool. Union, intersection
+   and event membership later use Rocq's standard Bool and List
+   functions instead of custom event-set implementations.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -44,13 +47,15 @@ Section FiniteOutcomeSpace.
   (**
    [indicator] (definition) — Finite Boolean event mass and union/intersection
    inequalities.
-   Mathematical meaning: Defines indicator using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: The exact 0-1 real indicator associated with Boolean
+   event membership; it turns Boolean predicates into terms in
+   the shared real-valued finite-sum algebra.
    Exact declaration: Definition indicator (b : bool) : R := if b then 1 else 0.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: No probability, weight sign or normalization hypothesis
+   is required for this Boolean-to-real conversion.
+   Proof/definition method: Uses if b then 1 else 0; positivity,
+   complement and conjunction properties are proved separately
+   with Bool case distinctions and Stdlib.Reals operations.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -63,14 +68,16 @@ Section FiniteOutcomeSpace.
   (**
    [any_event] (definition) — Finite Boolean event mass and union/intersection
    inequalities.
-   Mathematical meaning: Defines any event using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: The union predicate for a finite list of events,
+   true if some listed event accepts the outcome. The empty
+   list denotes the false event.
    Exact declaration: Definition any_event (events : list Event) (x : Outcome) : bool
    := existsb (fun e => e x) events.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Event-list entries may repeat; repetition does not change
+   the union truth value, although it changes sums of marginal
+   masses. No independence assumption is present.
+   Proof/definition method: Stdlib.List.existsb applies each event to the
+   same outcome, avoiding custom recursive event or set logic.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -83,14 +90,16 @@ Section FiniteOutcomeSpace.
   (**
    [sum_event_indicators] (definition) — Finite Boolean event mass and
    union/intersection inequalities.
-   Mathematical meaning: Defines sum event indicators using explicit Rocq operations,
-   so later theorems can refer to one stable mathematical object.
+   Mathematical meaning: Counts, as a real, how many listed events hold at
+   an outcome. Overlap or duplicated events each contribute
+   another indicator, so the result need not be at most one.
    Exact declaration: Definition sum_event_indicators (events : list Event) (x :
    Outcome) : R := FiniteSum.finite_sum (fun e => indicator (e x)) events.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Only finite event-list membership is needed. Events
+   may overlap or be repeated; no normalized probability model
+   is required for this counting expression.
+   Proof/definition method: Reuses FiniteSum.finite_sum of the existing
+   indicator functions, built from Stdlib.List.map/fold_right.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -105,14 +114,17 @@ Section FiniteOutcomeSpace.
   (**
    [finite_sum] (definition) — Finite Boolean event mass and union/intersection
    inequalities.
-   Mathematical meaning: Defines finite sum using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: An outcome-specialized alias of the generic
+   finite_sum from FiniteSum.v, preserving multiplicities and
+   real-valued integrands without another fold implementation.
    Exact declaration: Definition finite_sum (f : Outcome -> R) (xs : list Outcome) :
    R := FiniteSum.finite_sum f xs.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: The sample list may repeat outcomes and the
+   integrand can have any real sign. This is a list fold, not
+   a probability construction in itself.
+   Proof/definition method: Directly delegates to FiniteSum.finite_sum,
+   which already has checked addition, scaling, extensionality
+   and permutation theorems.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -124,15 +136,18 @@ Section FiniteOutcomeSpace.
   (**
    [finite_prob] (definition) — Finite Boolean event mass and union/intersection
    inequalities.
-   Mathematical meaning: Defines finite prob using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: Computes the event's weighted mass as the sum of
+   weights(x) times its Boolean 0-1 indicator over every sample
+   list occurrence, retaining duplicate contributions.
    Exact declaration: Definition finite_prob (weights : Outcome -> R) (samples : list
    Outcome) (event : Event) : R := finite_sum (fun x => weights x * indicator (event
    x)) samples.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Arbitrary real weights are accepted syntactically.
+   A genuine probability interpretation requires nonnegative
+   sample weights and appropriate total-mass normalization;
+   subsequent probability inequalities state those assumptions.
+   Proof/definition method: Uses the shared finite_sum and indicator,
+   not a separate probability recursion or an assumed measure.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -146,15 +161,17 @@ Section FiniteOutcomeSpace.
   (**
    [sum_marginal_probs] (definition) — Finite Boolean event mass and
    union/intersection inequalities.
-   Mathematical meaning: Defines sum marginal probs using explicit Rocq operations,
-   so later theorems can refer to one stable mathematical object.
+   Mathematical meaning: Adds event masses across the listed family,
+   counting overlaps and duplicate event entries separately.
+   Unlike union_prob, this quantity can exceed total mass.
    Exact declaration: Definition sum_marginal_probs (weights : Outcome -> R) (samples
    : list Outcome) (events : list Event) : R := FiniteSum.finite_sum (finite_prob
    weights samples) events.
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Finite event families are allowed to overlap;
+   neither disjointness nor independence, signs or total mass
+   are assumed by the definition.
+   Proof/definition method: Maps each event to its previously defined
+   finite_prob and sums via FiniteSum.finite_sum.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -168,15 +185,18 @@ Section FiniteOutcomeSpace.
   (**
    [union_prob] (definition) — Finite Boolean event mass and union/intersection
    inequalities.
-   Mathematical meaning: Defines union prob using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: Mass of the union of a finite event family:
+   each outcome-list occurrence is included once when at least
+   one event accepts it, regardless of how many events do.
    Exact declaration: Definition union_prob (weights : Outcome -> R) (samples : list
    Outcome) (events : list Event) : R := finite_prob weights samples (any_event
    events).
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: Outcome and event lists may include repeated elements.
+   Nonnegative weights and normalized total mass must be
+   stated separately for probability-specific bounds.
+   Proof/definition method: Computes finite_prob with the any_event
+   predicate built from Stdlib.List.existsb; no new event
+   recursion or inclusion-exclusion formula is embedded.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
