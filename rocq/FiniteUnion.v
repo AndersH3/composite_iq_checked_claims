@@ -1016,20 +1016,25 @@ Section FiniteOutcomeSpace.
   (**
    [finite_prob_sample_append] (theorem) — Finite Boolean event mass and
    union/intersection inequalities.
-   Mathematical meaning: Proves a list-structural invariant without custom sorting or
-   indexing.
+   Mathematical meaning: The weighted event mass is additive over a
+   concatenation of two sample lists. The same outcome can occur
+   in both inputs and contributes separately at both positions.
    Exact checked proposition: Theorem finite_prob_sample_append : forall weights left
    right e, finite_prob weights (left ++ right) e = finite_prob weights left e +
    finite_prob weights right e.
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
-   references include finite_prob, FiniteSum.finite_sum_app..
-   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
-   FiniteSum.
-   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
-   bounds need explicit nonnegative weights and possibly normalization.
-   *)
+   Premises and side conditions: Arbitrary real weights and a Boolean event predicate.
+   List concatenation changes enumeration multiplicities, not
+   event membership. No independence, positivity, normalization
+   or distinct-outcome premise is required.
+   Proof/definition method: Unfold finite_prob and its shared finite_sum
+   alias, then apply the already proved generic
+   FiniteSum.finite_sum_app theorem, without a new induction.
+   Library reuse: Stdlib.List.app, FiniteSum.finite_sum_app,
+   finite_prob and the shared FiniteSum.finite_sum definition.
+   Boundary: Exact additivity over concatenated lists; this
+   does not assert disjointness of events or conventional
+   additivity for arbitrary overlapping event sets.
+*)
   Theorem finite_prob_sample_append :
     forall weights left right e,
       finite_prob weights (left ++ right) e =
@@ -1778,22 +1783,27 @@ Section FiniteOutcomeSpace.
   (**
    [union_prob_append] (theorem) — Finite Boolean event mass and union/intersection
    inequalities.
-   Mathematical meaning: Proves a Boolean-event union/intersection fact or a
-   corresponding probability bound.
+   Mathematical meaning: The union of two finite event families equals
+   their Boolean OR at each outcome; this describes appending
+   event lists, not appending sample lists.
    Exact checked proposition: Theorem union_prob_append : forall weights samples left
    right, union_prob weights samples (left ++ right) = finite_prob weights samples
    (fun x => orb (any_event left x) (any_event right x)).
-   Premises and side conditions: All required premises are written in the signature.
-   No independence or distributional assumption is silently supplied.
-   Proof/definition method: Unfold the already defined union_prob
-   alias and reuse finite_prob_event_ext_on_samples, then discharge
-   the pointwise Boolean event equality using any_event_append.
-   No second finite-sum extensionality argument is necessary.
-   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
-   FiniteSum.
-   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
-   bounds need explicit nonnegative weights and possibly normalization.
-   *)
+   Premises and side conditions: Events are arbitrary Boolean predicates and
+   may overlap or repeat. Sample weights can have any sign;
+   the identity is Boolean/algebraic, not an independence
+   or probability-normalization statement.
+   Proof/definition method: Unfold union_prob to finite_prob, reuse the
+   already checked finite_prob_event_ext_on_samples theorem,
+   then apply any_event_append pointwise. This in turn relies
+   on Stdlib.List.existsb_app, with no new finite sum proof.
+   Library reuse: Stdlib.List.existsb_app, FiniteUnion.any_event,
+   any_event_append and finite_prob_event_ext_on_samples.
+   Boundary: Event-family union is idempotent under
+   duplicate events but the sum of marginal probabilities is
+   not; this identity concerns the union indicator, not the
+   generally larger sum of overlapping marginal masses.
+*)
   Theorem union_prob_append :
     forall weights samples left right,
       union_prob weights samples (left ++ right) =
