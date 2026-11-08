@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **362 theorem, lemma and example declarations** in seven
+for the two reports. **364 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -857,9 +857,22 @@ The proofs reuse existing finite Boolean event laws,
 `Stdlib.List.filter`, real order and field lemmas, without adding
 any probability-measure implementation or custom recursion.
 
-Current source: **362 public theorem/lemma/example declarations**,
+At this earlier stage: **362 public theorem/lemma/example declarations**,
 **365 explicit proof scripts** and **420 fully documented named
 declarations**, all within seven original Rocq modules.
+
+## Completion of the generic four-cell conditional bridge
+
+Two further FourCellBridge proofs reuse the exact finite-event support
+extensionality, two-event union identity and `Stdlib.Bool.andb_comm` to
+identify both-given-either and not-A-given-B as specializations of the
+shared `FiniteUnion.finite_conditional_prob` operator. These complement
+the two existing A|B and B|A generic conditional results.
+
+The seven-file source inventory now contains **364 public claims**,
+**367 proof scripts** and **422 fully documented declarations**. All
+existing named theorem propositions are unchanged. Nothing here proves
+empirical event independence or Gaussian admission tail estimates.
 
 ## Research extensions
 

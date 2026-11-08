@@ -692,3 +692,64 @@ Proof.
   unfold FiniteUnion.finite_conditional_prob.
   apply four_cell_conditional_A_given_B; exact Hpositive.
 Qed.
+
+(* The final two report conditionals now reuse the generic quotient
+   without duplicating finite-event summation or probability axioms. *)
+(**
+   [four_cell_generic_conditional_both_given_either] (theorem) — Generic-to-four-cell conditional interpretation.
+   Mathematical meaning: The generic conditional mass of the intersection of two Boolean admissions events given their union is exactly the existing report-level both-given-either conditional probability.
+   Exact checked proposition: For all m, 0 < p_either m implies finite_conditional_prob (four_cell_weight m) four_cell_samples (A and B) (A or B) = conditional_both_given_either m.
+   Premises and side conditions: The union mass must be strictly positive. The FourCell model supplies four nonnegative normalized cell weights; no event independence or equal marginals are assumed.
+   Proof/definition method: Unfold only the common conditional quotient, use finite_prob_event_ext_on_samples and Boolean pair case elimination for the absorbed intersection, rewrite the denominator by two_event_union_probability, and apply the earlier four-cell ratio theorem.
+   Library reuse: FiniteUnion.finite_prob_event_ext_on_samples, FiniteUnion.two_event_union_probability, four_cell_conditional_both_given_either, Stdlib.Bool.andb/orb.
+   Boundary: This is an exact four-outcome finite probability theorem, not a claimed real-world admission correlation or Gaussian result.
+ *)
+Theorem four_cell_generic_conditional_both_given_either :
+  forall m,
+    0 < p_either m ->
+    @FiniteUnion.finite_conditional_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      (fun x => andb (four_cell_A x) (four_cell_B x))
+      (fun x => orb (four_cell_A x) (four_cell_B x)) =
+    conditional_both_given_either m.
+Proof.
+  intros m Hpositive.
+  unfold FiniteUnion.finite_conditional_prob.
+  rewrite (@FiniteUnion.finite_prob_event_ext_on_samples
+    (bool * bool) (four_cell_weight m) four_cell_samples
+    (fun x => andb (orb (four_cell_A x) (four_cell_B x))
+      (andb (four_cell_A x) (four_cell_B x)))
+    (fun x => andb (four_cell_A x) (four_cell_B x))).
+  2: { intros [a b] _; destruct a, b; reflexivity. }
+  rewrite <- (@FiniteUnion.two_event_union_probability
+    (bool * bool) (four_cell_weight m) four_cell_samples
+    four_cell_A four_cell_B).
+  apply four_cell_conditional_both_given_either; exact Hpositive.
+Qed.
+
+(**
+   [four_cell_generic_conditional_not_A_given_B] (theorem) — Generic-to-four-cell conditional interpretation.
+   Mathematical meaning: Conditional mass of the complement of admission event A given B, expressed with the shared finite conditional operator, coincides with the original four-cell B-only conditional expression.
+   Exact checked proposition: Every m with positive p_B m satisfies finite_conditional_prob (four_cell_weight m) four_cell_samples (not A) B = conditional_not_A_given_B m.
+   Premises and side conditions: Strict positivity of B's marginal makes the ratio a meaningful conditional. The FourCellModel record retains normalized nonnegative cell weights, without assuming independent admissions routes.
+   Proof/definition method: Expand the shared quotient, use sample-support probability extensionality and the standard Boolean conjunction commutativity lemma, then apply the existing four-cell B-only conditional bridge.
+   Library reuse: Stdlib.Bool.andb_comm/negb, FiniteUnion.finite_prob_event_ext_on_samples, four_cell_conditional_not_A_given_B.
+   Boundary: The equality covers the explicitly enumerated four Boolean outcomes, not an empirical population or general conditional distribution.
+ *)
+Theorem four_cell_generic_conditional_not_A_given_B :
+  forall m,
+    0 < p_B m ->
+    @FiniteUnion.finite_conditional_prob (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      (fun x => negb (four_cell_A x)) four_cell_B =
+    conditional_not_A_given_B m.
+Proof.
+  intros m Hpositive.
+  unfold FiniteUnion.finite_conditional_prob.
+  rewrite (@FiniteUnion.finite_prob_event_ext_on_samples
+    (bool * bool) (four_cell_weight m) four_cell_samples
+    (fun x => andb (four_cell_B x) (negb (four_cell_A x)))
+    (fun x => andb (negb (four_cell_A x)) (four_cell_B x))).
+  2: { intros x _; apply andb_comm. }
+  apply four_cell_conditional_not_A_given_B; exact Hpositive.
+Qed.

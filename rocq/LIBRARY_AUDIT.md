@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 362 public theorem/lemma/example
+**Current audited inventory:** 364 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **365 proof scripts**. There are **420 named
+constructors, for **367 proof scripts**. There are **422 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -678,8 +678,21 @@ finite_prob_complement and finite_prob_as_filtered_mass to establish
 bounded positive-mass conditional probability, pointwise support
 extensionality, and conditional event/complement additivity. Reals
 field/order tactics handle division; no new list recursion or measure
-implementation is introduced. The currently documented inventory is
+implementation is introduced. The inventory at that earlier stage was
 362 public proofs, 365 proof scripts and 420 named declarations.
+
+## Completed four-cell conditional specialization
+
+Two new FourCellBridge declarations bridge the generic conditional
+operator to both-given-either and not-A-given-B, reusing
+`finite_prob_event_ext_on_samples`,
+`two_event_union_probability`, `Stdlib.Bool.andb_comm` and the
+previously checked four-cell conditional ratios. Four of four report
+conditional expressions now have exact generic finite-event
+interpretations. The current audited totals are 364 public proofs,
+367 proof scripts, and 422 documented declarations. All prior
+statements remain unchanged and no alternate event/mass implementations
+are introduced.
 
 ## Deliberately retained project-specific definitions
 

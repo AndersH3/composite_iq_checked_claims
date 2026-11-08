@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 362 public theorem/lemma/example declarations,
+The current branch has 364 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**365 proof scripts**, including the generic
+**367 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -134,6 +134,17 @@ or probability normalization assumption is introduced. The quotient
 bound requires nonnegative weights and positive conditioning mass,
 while event extensionality and the complement identity preserve their
 exact weaker premises.
+
+### Four-cell generic conditional interpretation completed
+
+Two more conditional correspondences show the report's
+`conditional_both_given_either` and `conditional_not_A_given_B`
+are special cases of the shared finite conditional operator. The
+proofs reuse standard Boolean identities and already checked finite
+union, support extensionality, and report-specific ratio theorems;
+no second event implementation or matrix recursion is introduced.
+All four original conditional report expressions are now covered by
+the same general finite conditional model, with positive denominators.
 
 ### Current structural-induction inventory
 
@@ -543,7 +554,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_event_indicator_covariance_complement_first` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_event_indicator_covariance_complement_both` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 
-## FourCellBridge.v — 20 proof scripts
+## FourCellBridge.v — 22 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -567,3 +578,5 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `four_cell_conditional_not_A_given_B` (theorem) | Rewriting, Computation | four_cell_second_without_first_mass; four_cell_second_marginal | **New:** Positive-B failure conditional bridge; reuse of verified event results |
 | `four_cell_generic_conditional_B_given_A` (theorem) | Lemma application, Computation | FiniteUnion.finite_conditional_prob; four_cell_conditional_B_given_A | **New:** reuse generic operator for B given A |
 | `four_cell_generic_conditional_A_given_B` (theorem) | Lemma application, Computation | FiniteUnion.finite_conditional_prob; four_cell_conditional_A_given_B | **New:** reuse generic operator for A given B |
+| `four_cell_generic_conditional_both_given_either` (theorem) | Finite cases, Rewriting, Lemma application | FiniteUnion.finite_prob_event_ext_on_samples, two_event_union_probability, four_cell_conditional_both_given_either | **New:** generic both-given-either bridge |
+| `four_cell_generic_conditional_not_A_given_B` (theorem) | Rewriting, Lemma application | Stdlib.Bool.andb_comm, FiniteUnion.finite_prob_event_ext_on_samples, four_cell_conditional_not_A_given_B | **New:** generic B-only conditional bridge |
