@@ -838,19 +838,47 @@ Section FiniteProbabilityMoments.
       unfold variance; ring.
   Qed.
 
+  (* An unweighted score list is just a list of unit-weight
+     components. Stdlib.List.map and shared finite_sum_map give the
+     interpretation without a second recursive score evaluator. *)
+  Lemma unweighted_scores_as_linear_combination :
+    forall fs x,
+      sum_scores fs x =
+        linear_combination (map (fun f => (1, f)) fs) x.
+  Proof.
+    intros fs x.
+    unfold sum_scores, linear_combination.
+    rewrite FiniteSum.finite_sum_map.
+    apply FiniteSum.finite_sum_ext; intro f.
+    simpl; ring.
+  Qed.
+
+  Lemma unweighted_covariance_row_as_weighted :
+    forall f fs,
+      covariance_row_sum f fs =
+        covariance_row f (map (fun g => (1, g)) fs).
+  Proof.
+    intros f fs.
+    unfold covariance_row_sum, covariance_row.
+    rewrite FiniteSum.finite_sum_map.
+    apply FiniteSum.finite_sum_ext; intro g.
+    simpl; ring.
+  Qed.
+
   Lemma covariance_with_sum_scores :
     forall f fs, total_mass = 1 ->
       covariance f (sum_scores fs) = covariance_row_sum f fs.
   Proof.
     intros f fs Hmass.
-    induction fs as [|g fs IH].
-    - change (covariance f (fun _ => 0) = 0).
-      apply covariance_with_constant_second; exact Hmass.
-    - change
-        (covariance f (fun x => g x + sum_scores fs x) =
-         covariance f g + covariance_row_sum f fs).
-      rewrite covariance_add_second.
-      rewrite IH; ring.
+    transitivity
+      (covariance f
+        (linear_combination (map (fun g => (1, g)) fs))).
+    - apply covariance_extensional.
+      + intro x; reflexivity.
+      + intro x; apply unweighted_scores_as_linear_combination.
+    - rewrite (covariance_of_general_weighted_second
+        f (map (fun g => (1, g)) fs) Hmass).
+      symmetry; apply unweighted_covariance_row_as_weighted.
   Qed.
 
   Lemma covariance_of_sum_scores :
