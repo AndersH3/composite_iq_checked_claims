@@ -531,17 +531,20 @@ Section FiniteProbabilityMoments.
       expect (linear_combination components) =
         linear_expectation components.
   Proof.
-    induction components as [|[a f] tail IH].
-    - cbn [linear_combination linear_expectation].
-      apply expectation_zero.
-    - change
-        (expect (fun x => a * f x + linear_combination tail x) =
-         a * expect f + linear_expectation tail).
-      rewrite expectation_add, expectation_scale.
-      replace (expect (fun x => linear_combination tail x))
-        with (expect (linear_combination tail)).
-      + rewrite IH; reflexivity.
-      + apply expectation_ext; intro x; reflexivity.
+    intros components.
+    unfold linear_combination, linear_expectation, expect, sum_finite.
+    transitivity (FiniteSum.finite_sum
+      (fun x => FiniteSum.finite_sum
+        (fun c => weight x * (fst c * snd c x)) components)
+      samples).
+    - apply FiniteSum.finite_sum_ext; intro x.
+      symmetry; apply FiniteSum.finite_sum_scale.
+    - rewrite FiniteSum.finite_sum_swap.
+      apply FiniteSum.finite_sum_ext; intro c.
+      transitivity (FiniteSum.finite_sum
+        (fun x => fst c * (weight x * snd c x)) samples).
+      + apply FiniteSum.finite_sum_ext; intro x; ring.
+      + rewrite FiniteSum.finite_sum_scale; reflexivity.
   Qed.
 
   Lemma covariance_of_general_weighted_second :
