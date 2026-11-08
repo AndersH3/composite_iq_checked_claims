@@ -287,15 +287,16 @@ three small mathematical library-backed proofs committed beforehand.
 | `FiniteUnion.finite_prob_as_filtered_mass` | `FiniteSum.finite_sum_filter`, `finite_sum_ext` | Event mass equals the sum of weights on outcomes selected by `List.filter`, with no extra normalization assumptions |
 | `FiniteUnion.finite_prob_event_ext_on_samples` | `FiniteSum.finite_sum_ext_in` | Event predicates need agree only on the finite sample's support |
 
-The new [`scripts/check_rocq_documentation.py`](../scripts/check_rocq_documentation.py)
+The new [`scripts/check_rocq_documentation.sh`](../scripts/check_rocq_documentation.sh)
 is a reproducible *static documentation policy check*, not a proof
 checker. It verifies the explanatory header and the adjacent,
-declaration-named, sufficiently substantive doc comments for all
-seven modules. GitHub Actions executes it before pinned Rocq 9.2
-kernel checking. Because this repository requires five Deal contracts
-per named Python function, the checker itself is contract annotated
-and the Rocq workflow installs the **existing pinned Deal 4.24.6**
-dependency. The original `Python contracts` workflow is not weakened.
+declaration-named, substantive doc comments for all seven modules.
+GitHub Actions runs it before pinned Rocq 9.2 kernel checking.
+It is a standalone shell utility invoking Python's standard library
+inline, rather than adding another Python source file. This preserves
+the repository's existing source-pinned Python Deal/SPARK verification
+inventory. The `Python contracts` workflow, its five-contracts-per-
+function rule, and the original evidence are not weakened or altered.
 
 **Source count distinction:** the README's 328 public theorem/lemma/example
 declarations exclude the existing `Local Lemma`, whereas the checker
