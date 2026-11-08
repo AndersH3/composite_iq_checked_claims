@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **414 theorem, lemma and example declarations** in seven
+for the two reports. **416 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1098,8 +1098,25 @@ follow from the existing positive-semidefinite theorem.
 No new matrix rank, nullspace, list sum or eigenvalue library
 is implemented.
 
-**Latest source totals: 414 public claims, 417 proof scripts,
+**Earlier source totals: 414 public claims, 417 proof scripts,
 472 fully documented named declarations** across seven modules.
+
+## Covariance row-dot identities and matrix nullity
+
+A new theorem identifies covariance with a coefficient-weighted
+basis score as the dot product of that coefficient list with
+the comparison score's covariance row. It reuses existing
+weighted covariance and covariance-row lemmas, plus
+Stdlib.List.map_map and canonical List.combine projections.
+A second result proves that covariance quadratic nullity is
+equivalent to the coefficient vector having zero dot product
+with each actual row of the list-of-lists covariance matrix,
+using Stdlib.List.in_map_iff and the existing coordinate-level
+nullity result. No new matrix product or rank implementation
+is needed.
+
+**Current totals: 416 public claims, 419 proof scripts,
+474 fully documented named declarations** in seven Rocq files.
 
 ## Research extensions
 

@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 414 public theorem/lemma/example
+**Current audited inventory:** 416 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **417 proof scripts**. There are **472 named
+constructors, for **419 proof scripts**. There are **474 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -873,6 +873,20 @@ Stdlib.Rle_dec/Lra yields the corresponding strict
 positivity iff, and hence the positive-definite iff
 criterion over all nonzero compatible coefficient lists.
 Current audit: 414 claims, 417 scripts, 472 named declarations.
+
+## Finite covariance row-dot and exact nullspace equivalences
+
+The existing covariance_of_general_weighted_second_unconditional
+and covariance_row_as_vector_dot identify covariance with a
+weighted-basis score with the coefficient dot product of a
+covariance row; list projections use Stdlib.List.map_map
+and the established List.combine lemmas. The actual
+list-of-lists covariance matrix has zero quadratic form iff
+its coefficient vector has zero dot product against every row,
+using Stdlib.List.in_map_iff and the previously checked
+basis-coordinate nullity theorem. No custom nullspace basis,
+matrix multiply, determinant or rank algorithm was introduced.
+The audit now covers 416 claims, 419 scripts, 474 declarations.
 
 ## Deliberately retained project-specific definitions
 

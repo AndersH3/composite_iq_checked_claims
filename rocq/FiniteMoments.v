@@ -5594,4 +5594,84 @@ Section FiniteProbabilityMoments.
       apply Hproperty; assumption.
   Qed.
 
+  (**
+   [covariance_with_weighted_basis_as_row_dot] (theorem) — Matrix-row covariance coordinates.
+   Mathematical meaning: The covariance between an arbitrary comparison score and a weighted sum of a finite basis equals the dot product of the coefficient vector with the comparison score's covariance row over the same basis.
+   Exact checked proposition: For all compatible coefficient/basis lists and comparison scores g, covariance g (weighted_basis_sum coefficients basis) = vector_dot coefficients (map (fun f => covariance g f) basis).
+   Premises and side conditions: Only list-length compatibility is required; covariance bilinearity is an exact finite algebraic identity even when weights are signed or total_mass differs from one. No independence, positive weight, or nondegenerate covariance assumption is imposed.
+   Proof/definition method: Expand weighted_basis_sum as the existing linear_combination; apply covariance_of_general_weighted_second_unconditional, then rewrite the covariance row using covariance_row_as_vector_dot. Stdlib.List.map_map fuses the covariance/snd projection; coefficients_of_combine and basis_of_combine normalize the two projections under length equality. No new list traversal is proved.
+   Library reuse: covariance_of_general_weighted_second_unconditional, covariance_row_as_vector_dot, coefficients_of_combine, basis_of_combine, Stdlib.List.map_map and vector_dot.
+   Boundary: This is a finite list-of-coordinates identity, not an assertion about general matrices or statistical population covariance.
+   *)
+  Theorem covariance_with_weighted_basis_as_row_dot :
+    forall coefficients basis g,
+      length coefficients = length basis ->
+      covariance g (weighted_basis_sum coefficients basis) =
+        vector_dot coefficients
+          (map (fun f => covariance g f) basis).
+  Proof.
+    intros coefficients basis g Hlength.
+    unfold weighted_basis_sum.
+    rewrite covariance_of_general_weighted_second_unconditional.
+    rewrite <- (covariance_row_as_vector_dot
+      g (combine coefficients basis)).
+    rewrite (coefficients_of_combine coefficients basis Hlength).
+    replace
+      (map (fun c => covariance g (snd c))
+        (combine coefficients basis))
+      with
+      (map (fun f => covariance g f)
+        (map snd (combine coefficients basis))).
+    - rewrite (basis_of_combine coefficients basis Hlength).
+      reflexivity.
+    - rewrite map_map.
+      reflexivity.
+  Qed.
+
+  (**
+   [fixed_basis_null_iff_zero_dot_with_every_covariance_row] (theorem) — Matrix-row covariance coordinates.
+   Mathematical meaning: A finite basis covariance quadratic form is zero exactly when the coefficient vector has zero dot product with each row of the actual list-of-lists covariance matrix. This is a direct matrix-row nullspace characterization without defining matrix multiplication or computing rank.
+   Exact checked proposition: For compatible coefficients and basis, unit total_mass and nonnegative sampled weights, matrix_quadratic_form coefficients (basis_covariance_matrix basis)=0 iff forall row in basis_covariance_matrix basis, vector_dot coefficients row=0.
+   Premises and side conditions: Total mass one, nonnegative sampled weights and coefficient/basis length equality are explicit; the basis may contain repeated scores and individual sample outcomes may have zero weight. Matrix rows can repeat because the list representation preserves multiplicity.
+   Proof/definition method: Use fixed_basis_null_iff_uncorrelated_with_basis. For each matrix row, Stdlib.List.in_map_iff supplies its originating basis score; covariance_symmetric plus covariance_with_weighted_basis_as_row_dot gives zero dot product. Conversely map each basis score to its covariance row with Stdlib.List.in_map and apply the same bridge to obtain the coordinate covariance-zero premise.
+   Library reuse: fixed_basis_null_iff_uncorrelated_with_basis, covariance_with_weighted_basis_as_row_dot, covariance_symmetric, Stdlib.List.in_map_iff and in_map.
+   Boundary: This certifies a rowwise nullspace equivalence for the defined finite covariance matrix; it neither constructs a nullspace basis nor proves a spectral rank theorem.
+   *)
+  Theorem fixed_basis_null_iff_zero_dot_with_every_covariance_row :
+    forall coefficients basis,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (matrix_quadratic_form coefficients
+         (basis_covariance_matrix basis) = 0 <->
+       forall row, In row (basis_covariance_matrix basis) ->
+         vector_dot coefficients row = 0).
+  Proof.
+    intros coefficients basis Hlength Hmass Hw.
+    pose proof (fixed_basis_null_iff_uncorrelated_with_basis
+      coefficients basis Hlength Hmass Hw) as Hcoordinate_iff.
+    split.
+    - intros Hnull row Hrow.
+      unfold basis_covariance_matrix in Hrow.
+      apply in_map_iff in Hrow.
+      destruct Hrow as [g [Hrow_eq Hg]].
+      subst row.
+      rewrite <- (covariance_with_weighted_basis_as_row_dot
+        coefficients basis g Hlength).
+      rewrite (covariance_symmetric g
+        (weighted_basis_sum coefficients basis)).
+      exact ((proj1 Hcoordinate_iff Hnull) g Hg).
+    - intros Hrows.
+      apply (proj2 Hcoordinate_iff).
+      intros g Hg.
+      rewrite (covariance_symmetric
+        (weighted_basis_sum coefficients basis) g).
+      rewrite (covariance_with_weighted_basis_as_row_dot
+        coefficients basis g Hlength).
+      apply Hrows.
+      unfold basis_covariance_matrix.
+      apply in_map.
+      exact Hg.
+  Qed.
+
 End FiniteProbabilityMoments.

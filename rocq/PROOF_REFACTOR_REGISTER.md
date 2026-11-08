@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 414 public theorem/lemma/example declarations,
+The current branch has 416 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**417 proof scripts**, including the generic
+**419 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -328,6 +328,20 @@ positive-definiteness iff theorem quantified over all nonzero
 compatible coefficient lists. These results are exact finite
 moment identities, not a spectral rank implementation.
 
+### Actual covariance-matrix rowwise null characterization
+
+The scalar covariance/weighted-score identity is re-expressed
+as the coefficient vector dot the covariance row of each basis
+score, via the existing covariance_of_general_weighted_second_unconditional,
+covariance_row_as_vector_dot and Stdlib.List.map_map.
+Stdlib.List.combine projection lemmas avoid new list recursions.
+The rowwise quadratic-null iff then uses
+fixed_basis_null_iff_uncorrelated_with_basis,
+covariance_symmetric and Stdlib.List.in_map_iff to link every
+list-of-lists covariance-matrix row to its originating basis score.
+No rank, determinant, matrix multiplication, eigenvector or
+nullspace-basis implementation is added.
+
 ### Current structural-induction inventory
 
 Exactly **14 proof scripts** currently contain an
@@ -603,7 +617,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 157 proof scripts
+## FiniteMoments.v — 159 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -764,6 +778,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_null_iff_uncorrelated_with_basis` (theorem) | Existing covariance linear-combination identity, finite-sum extensionality, null iff | covariance_of_general_weighted_second_unconditional, basis_of_combine, FiniteSum.finite_sum_ext_in, FiniteSum.finite_sum_zero, Stdlib.List.in_map | **New:** quadratic null iff composite score uncorrelated with every basis element |
 | `fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis` (theorem) | Real order cases, null iff, positive semidefiniteness | fixed_basis_covariance_matrix_positive_semidefinite, fixed_basis_null_iff_uncorrelated_with_basis, Stdlib.Reals.Rle_dec and Lra | **New:** strict quadratic positivity iff not orthogonal to the finite basis |
 | `fixed_basis_positive_definite_iff_no_nonzero_basis_orthogonal_direction` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis, Stdlib.List.repeat | **New:** positive definite iff no nonzero vector is covariance-orthogonal to the finite basis |
+| `covariance_with_weighted_basis_as_row_dot` (theorem) | Weighted covariance row rewriting, Stdlib list-map fusion | covariance_of_general_weighted_second_unconditional, covariance_row_as_vector_dot, coefficients_of_combine, basis_of_combine, Stdlib.List.map_map | **New:** covariance with a composite score equals a coefficient-dot-covariance-row |
+| `fixed_basis_null_iff_zero_dot_with_every_covariance_row` (theorem) | Iff projection, Stdlib.List.in_map_iff, covariance symmetry | fixed_basis_null_iff_uncorrelated_with_basis, covariance_with_weighted_basis_as_row_dot, Stdlib.List.in_map_iff | **New:** zero covariance quadratic iff every actual matrix row is orthogonal to coefficients |
 
 ## FiniteBridge.v — 16 proof scripts
 
