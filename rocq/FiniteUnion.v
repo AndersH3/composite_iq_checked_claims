@@ -310,8 +310,8 @@ Section FiniteOutcomeSpace.
         (fun y => weights y * indicator (e y)) samples)
       in Hbound.
     rewrite He in Hbound.
-    unfold indicator in Hbound.
-    nra.
+    simpl in Hbound.
+    lra.
   Qed.
 
   Theorem finite_prob_sample_append :
