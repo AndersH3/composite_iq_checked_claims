@@ -4470,4 +4470,54 @@ Section FiniteProbabilityMoments.
         assumption.
   Qed.
 
+  (**
+   [variance_of_constant_score_zero] (theorem) — Finite score variance and covariance-matrix degeneracy.
+   Mathematical meaning: Any constant-valued score has zero finite variance when the sample weights sum to one; this helper exposes a reusable property instead of repeating the covariance-with-constant proof in matrix examples.
+   Exact checked proposition: For every real constant c, total_mass = 1 implies variance (fun _ => c) = 0.
+   Premises and side conditions: The only assumption is unit total sample mass; individual nonnegative weights are not required for the exact algebraic identity. The constant may be any real number and the sample may contain repeated outcomes.
+   Proof/definition method: Unfold variance as self-covariance and directly apply the already verified covariance_with_constant_first identity under the unit-mass hypothesis.
+   Library reuse: covariance_with_constant_first, FiniteMoments.variance, Stdlib.Reals and the shared FiniteSum model.
+   Boundary: This is an exact constant-score variance identity for finite weighted outcomes, not a statistical assertion about continuous or observed scores.
+   *)
+  Theorem variance_of_constant_score_zero :
+    forall c,
+      total_mass = 1 ->
+      variance (fun _ => c) = 0.
+  Proof.
+    intros c Hmass.
+    unfold variance.
+    apply covariance_with_constant_first; exact Hmass.
+  Qed.
+
+  (**
+   [duplicate_basis_nontrivial_null_direction] (theorem) — Finite score variance and covariance-matrix degeneracy.
+   Mathematical meaning: A covariance matrix formed from two identical basis scores has a genuinely nonzero coefficient vector [1,-1] whose quadratic form is zero: subtracting the same score from itself yields the constant zero score.
+   Exact checked proposition: For all finite real-valued scores f with total_mass=1, [1;-1] differs from the zero coefficient vector [0;0], and matrix_quadratic_form [1;-1] (basis_covariance_matrix [f;f]) = 0.
+   Premises and side conditions: Only the unit total-mass hypothesis is needed to use the already-verified fixed-basis weighted variance theorem. The duplicate score functions are exactly identical; no empirical equal-correlation or near-equality assumption is made.
+   Proof/definition method: Use fixed_basis_weighted_variance_identity to interpret the quadratic form as variance, simplify the standard list combination of [1,-1] with [f,f], invoke variance_extensional and the reusable variance_of_constant_score_zero theorem; separately establish coefficient nontriviality by linear real arithmetic.
+   Library reuse: Stdlib.List.combine, FiniteSum.finite_sum, fixed_basis_weighted_variance_identity, variance_extensional, variance_of_constant_score_zero, Stdlib.Reals ring and Lra.
+   Boundary: This is an explicit finite two-dimensional singularity witness. It does not calculate arbitrary matrix rank, prove the converse rank-nullity theorem, or infer any IQ-test covariance structure.
+   *)
+  Theorem duplicate_basis_nontrivial_null_direction :
+    forall f,
+      total_mass = 1 ->
+      [1; -1] <> ([0; 0] : list R) /\
+      matrix_quadratic_form [1; -1]
+        (basis_covariance_matrix [f; f]) = 0.
+  Proof.
+    intros f Hmass.
+    split.
+    - intro Hzero.
+      inversion Hzero; lra.
+    - rewrite <- (fixed_basis_weighted_variance_identity
+        [1; -1] [f; f] eq_refl Hmass).
+      transitivity (variance (fun _ => 0)).
+      + apply variance_extensional.
+        intro x.
+        unfold weighted_basis_sum, linear_combination,
+          FiniteSum.finite_sum.
+        simpl; ring.
+      + apply variance_of_constant_score_zero; exact Hmass.
+  Qed.
+
 End FiniteProbabilityMoments.

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **376 theorem, lemma and example declarations** in seven
+for the two reports. **378 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -919,8 +919,23 @@ sampled outcomes in that direction. These reuse
 and the established zero-variance and support theorems without
 reimplementing matrix-vector arithmetic or assuming a spectral basis.
 
-The current seven-module inventory is **376 public claims**,
+At that preceding stage, the seven-module inventory comprised **376 public claims**,
 **379 registered proofs** and **434 documented named declarations**.
+
+## Explicit nonzero null direction for a duplicated score basis
+
+The new `variance_of_constant_score_zero` theorem reuses the
+checked covariance-with-constant law. A concrete result,
+`duplicate_basis_nontrivial_null_direction`, then proves that
+two identical score functions in basis `[f; f]` admit the nonzero
+coefficient vector `[1; -1]` with covariance quadratic form zero.
+The proof reuses `fixed_basis_weighted_variance_identity`,
+`variance_extensional`, `Stdlib.List.combine` and the common
+finite-sum implementation. This supplies a concrete degeneracy
+witness but does **not** certify an arbitrary rank or eigenvalue.
+
+Inventory: **378 public claims**, **381 proof scripts**,
+**436 fully documented named declarations** across seven Rocq files.
 
 ## Research extensions
 

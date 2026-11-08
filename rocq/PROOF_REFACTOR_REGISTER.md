@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 376 public theorem/lemma/example declarations,
+The current branch has 378 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**379 proof scripts**, including the generic
+**381 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -179,6 +179,16 @@ null-direction covariance-orthogonality and positive-support equality
 theorems reuse existing matrix/variance bridge lemmas instead of
 implementing new indexed matrix operations. Full eigenvalue and
 rank-nullity theorems remain outside the current finite-list API.
+
+### Concrete rank-deficiency witness for a duplicate score basis
+
+The standard covariance-with-constant theorem is exposed as a reusable
+variance-zero lemma under unit total mass. Applying the existing
+fixed-basis variance identity to duplicate score functions `[f; f]`
+and the genuinely nonzero coefficient list `[1; -1]` constructs a
+kernel-checked zero-quadratic-form witness. The list basis and
+combination are the existing Stdlib and FiniteSum constructs; there
+is no bespoke determinant, eigenvalue or rank implementation.
 
 ### Current structural-induction inventory
 
@@ -455,7 +465,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_total_probability` (theorem) | Rewriting, field algebra | finite_prob_filtered_partition, finite_conditional_prob_filtered, Stdlib.List.filter | **New:** partition-based law of total probability |
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 
-## FiniteMoments.v — 119 proof scripts
+## FiniteMoments.v — 121 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -578,6 +588,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_covariance_cauchy_schwarz_squared` (theorem) | Rewriting, Lemma application | fixed_basis_weighted_variance_identity, finite_covariance_cauchy_schwarz_squared | **New:** compare basis-matrix quadratic form against covariance with arbitrary score |
 | `null_covariance_direction_orthogonal_to_every_score` (theorem) | Rewriting, Lemma application | fixed_basis_weighted_variance_identity, zero_variance_implies_zero_covariance_first | **New:** matrix null direction is covariance-orthogonal to every finite score |
 | `null_covariance_direction_pairwise_constant_on_positive_mass` (theorem) | Lemma application, Transitivity | null_covariance_direction_constant_on_positive_mass | **New:** any two positive-support outcomes have equal scores in a null direction |
+| `variance_of_constant_score_zero` (theorem) | Lemma application | covariance_with_constant_first | **New:** reusable zero variance for constant score under total mass one |
+| `duplicate_basis_nontrivial_null_direction` (theorem) | Rewriting, Lemma application, ring and Lra | fixed_basis_weighted_variance_identity, variance_extensional, variance_of_constant_score_zero, Stdlib.List.combine and FiniteSum.finite_sum | **New:** explicit nonzero null coefficient vector for duplicated score basis |
 
 ## FiniteBridge.v — 16 proof scripts
 

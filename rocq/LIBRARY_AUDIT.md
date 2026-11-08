@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 376 public theorem/lemma/example
+**Current audited inventory:** 378 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **379 proof scripts**. There are **434 named
+constructors, for **381 proof scripts**. There are **436 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -725,8 +725,20 @@ Stdlib.Bool.andb_assoc and Rocq's real-field tactic. Three new finite
 matrix results invoke existing fixed-basis variance identification,
 finite Cauchy–Schwarz, zero-variance covariance, and positive-support
 constant-score theorems. No separate matrix implementation or unverified
-rank function is introduced. The present audit covers 376 public
+rank function is introduced. That earlier stage covered 376 public
 claims, 379 proof scripts and 434 documented declarations.
+
+## Duplicate-basis covariance degeneracy witness
+
+The new constant-score variance lemma delegates to
+`covariance_with_constant_first` rather than repeating expected-value
+algebra. The duplicate-basis theorem uses existing fixed-basis
+variance representation, `Stdlib.List.combine`, shared finite sums,
+variance extensionality and ring/Lra to exhibit an explicit nonzero
+zero-quadratic-form coefficient vector [1,-1]. It makes no unsupported
+claim about a general rank implementation or numerical matrix rank.
+Current inventory: 378 publicly checked claims, 381 proof scripts and
+436 fully documented declarations.
 
 ## Deliberately retained project-specific definitions
 
