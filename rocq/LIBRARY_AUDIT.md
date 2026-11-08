@@ -393,7 +393,7 @@ covariance identities. They are not replaced with gratuitous duplicate
 recursions. All existing theorem statements and mathematical
 assumptions remain unchanged.
 
-## Latest covariance consolidation: finite-sum linearity without normalizing mass
+## Previous covariance consolidation: finite-sum linearity without normalizing mass
 
 **Current inventory:** 334 public theorem/lemma/example declarations
 across seven modules, one additional local helper, two explicitly
@@ -425,6 +425,40 @@ The mathematical interpretation is exact *finite real-weighted*
 moment algebra. The stronger identity does not turn arbitrary signed
 weights into probabilities, establish a Gaussian joint distribution,
 or infer actual psychometric performance from a data set.
+
+## Current partition-library consolidation and proof coverage
+
+The seven Rocq modules now contain **337 public theorem, lemma and
+example declarations**, one additional local helper and two explicit
+record-constructor proofs, totaling **340 proof scripts**.
+All **394 named declarations** have detailed `(** ... *)`
+comments, all modules retain explanatory header comments, and the
+[complete ordered proof register](PROOF_REFACTOR_REGISTER.md) is
+checked by the GitHub Actions documentation gate.
+
+The latest changes deliberately reuse the existing Rocq Stdlib and
+our proven generic finite-sum lemmas:
+
+| Proof | Reused library results | Change |
+|---|---|---|
+| `FiniteSum.finite_sum_filter_partition` | `Stdlib.List.filter`, `Stdlib.Bool.negb`, `finite_sum_filter`, `finite_sum_add`, `finite_sum_ext`, `ring` | Proves list-fold partition additivity for arbitrary signed real terms without a separate list induction |
+| `FiniteUnion.finite_prob_filtered_partition` | `finite_sum_filter_partition` | Removes project-specific Boolean/indicator case analysis in favor of the general list theorem |
+| `FiniteUnion.finite_prob_complement` | `finite_prob_as_filtered_mass`, `finite_sum_filter_partition`, `Rplus_comm` | Derives event-complement mass using filtered lists rather than duplicated indicator algebra |
+| `FiniteUnion.finite_prob_filtered_mass_le` | `finite_prob_event_monotone`, `Stdlib.Bool.andb_true_iff` | Proves nonnegative-weight selection monotonicity without another finite-sum proof |
+| `FiniteUnion.union_prob_filtered_mass_le` | `finite_prob_filtered_mass_le`, `Stdlib.List.existsb` | Lifts monotonicity to finite unions of Boolean events |
+
+No new recursive `filter`, `map`, list sum, covariance function,
+or matrix implementation has been introduced. The sum identity is
+valid even with negative weights; the two **monotonicity inequalities
+require nonnegative sample weights** and correctly do not claim
+bounds for signed masses. Neither independence nor total-mass-one
+is required for these results.
+
+Fourteen underlying structural inductions remain, all listed
+in the proof register. The previous public theorem statements
+and hypotheses remain unchanged. No new axioms, `Admitted`,
+parameters, oracle, unpinned library or changes to the
+historical Python/SPARK evidence were introduced.
 
 ## Deliberately retained project-specific definitions
 
