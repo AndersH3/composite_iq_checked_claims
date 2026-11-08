@@ -5633,7 +5633,7 @@ Section FiniteProbabilityMoments.
    Mathematical meaning: A finite basis covariance quadratic form is zero exactly when the coefficient vector has zero dot product with each row of the actual list-of-lists covariance matrix. This is a direct matrix-row nullspace characterization without defining matrix multiplication or computing rank.
    Exact checked proposition: For compatible coefficients and basis, unit total_mass and nonnegative sampled weights, matrix_quadratic_form coefficients (basis_covariance_matrix basis)=0 iff forall row in basis_covariance_matrix basis, vector_dot coefficients row=0.
    Premises and side conditions: Total mass one, nonnegative sampled weights and coefficient/basis length equality are explicit; the basis may contain repeated scores and individual sample outcomes may have zero weight. Matrix rows can repeat because the list representation preserves multiplicity.
-   Proof/definition method: Use fixed_basis_null_iff_uncorrelated_with_basis. For each matrix row, Stdlib.List.in_map_iff supplies its originating basis score; covariance_symmetric plus covariance_with_weighted_basis_as_row_dot gives zero dot product. Conversely map each basis score to its covariance row with Stdlib.List.in_map and apply the same bridge to obtain the coordinate covariance-zero premise.
+   Proof/definition method: Use fixed_basis_null_iff_uncorrelated_with_basis. For each matrix row, Stdlib.List.in_map_iff supplies its originating basis score; covariance_symmetric plus covariance_with_weighted_basis_as_row_dot gives zero dot product. Conversely construct the matching covariance-row membership with an explicit in_map_iff witness for the basis score, avoiding ambiguous inference of the nested map function, then apply the same bridge to obtain the coordinate covariance-zero premise.
    Library reuse: fixed_basis_null_iff_uncorrelated_with_basis, covariance_with_weighted_basis_as_row_dot, covariance_symmetric, Stdlib.List.in_map_iff and in_map.
    Boundary: This certifies a rowwise nullspace equivalence for the defined finite covariance matrix; it neither constructs a nullspace basis nor proves a spectral rank theorem.
    *)
@@ -5670,8 +5670,11 @@ Section FiniteProbabilityMoments.
         coefficients basis g Hlength).
       apply Hrows.
       unfold basis_covariance_matrix.
-      apply in_map.
-      exact Hg.
+      apply in_map_iff.
+      exists g.
+      split.
+      + reflexivity.
+      + exact Hg.
   Qed.
 
 End FiniteProbabilityMoments.
