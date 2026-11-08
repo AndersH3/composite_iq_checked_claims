@@ -794,6 +794,21 @@ Section FiniteProbabilityMoments.
     apply covariance_symmetric.
   Qed.
 
+  (* Symmetry of the double covariance sum is a direct consequence
+     of FiniteSum.finite_sum_swap and the already proved scalar
+     covariance symmetry. No additional list induction is needed. *)
+  Lemma covariance_double_sum_symmetric :
+    forall fs gs,
+      covariance_double_sum fs gs = covariance_double_sum gs fs.
+  Proof.
+    intros fs gs.
+    unfold covariance_double_sum, covariance_row_sum.
+    rewrite (FiniteSum.finite_sum_swap fs gs covariance).
+    apply FiniteSum.finite_sum_ext; intro g.
+    apply FiniteSum.finite_sum_ext; intro f.
+    apply covariance_symmetric.
+  Qed.
+
   Lemma double_sum_diagonal_off_diagonal :
     forall fs,
       covariance_double_sum fs fs =
