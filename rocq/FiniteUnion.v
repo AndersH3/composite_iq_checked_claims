@@ -141,24 +141,19 @@ Section FiniteOutcomeSpace.
       sum_marginal_probs weights samples events.
   Proof.
     intros weights samples events.
-    induction events as [|e es IH]; simpl.
-    - change (finite_sum (fun x => weights x * 0) samples = 0).
-      transitivity (finite_sum (fun _ => 0) samples).
-      + apply finite_sum_extensional; intro x; ring.
-      + apply FiniteSum.finite_sum_zero.
-    - change
-        (finite_sum (fun x =>
-           weights x * (indicator (e x) + sum_event_indicators es x))
-           samples =
-         finite_prob weights samples e +
-           sum_marginal_probs weights samples es).
-      rewrite <- IH.
-      unfold finite_prob.
-      transitivity (finite_sum
-        (fun x => weights x * indicator (e x) +
-                  weights x * sum_event_indicators es x) samples).
-      + apply finite_sum_extensional; intro x; ring.
-      + rewrite finite_sum_addition; reflexivity.
+    change
+      (FiniteSum.finite_sum
+        (fun x => weights x * FiniteSum.finite_sum
+          (fun e => indicator (e x)) events) samples =
+       FiniteSum.finite_sum
+        (fun e => FiniteSum.finite_sum
+          (fun x => weights x * indicator (e x)) samples) events).
+    transitivity (FiniteSum.finite_sum
+      (fun x => FiniteSum.finite_sum
+        (fun e => weights x * indicator (e x)) events) samples).
+    - apply FiniteSum.finite_sum_ext; intro x.
+      symmetry; apply FiniteSum.finite_sum_scale.
+    - apply FiniteSum.finite_sum_swap.
   Qed.
 
   Theorem arbitrary_union_bound :
