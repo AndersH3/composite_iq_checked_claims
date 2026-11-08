@@ -22,11 +22,11 @@ proof statements and report mappings do not change.
 ## Consolidated finite real sums and verified model bridge
 
 The shared `FiniteSum.v` module implements one definition using
-`Stdlib.List.map` and `fold_right`, and proves **seventeen reusable
+`Stdlib.List.map` and `fold_right`, and proves **nineteen reusable
 lemmas**: extensionality, addition, scalar multiplication, positivity,
 monotonicity, zero sums, append, permutation invariance, map composition,
 negation, subtraction, reversal, support-aware extensionality,
-member bounds, termwise-zero characterization, constant sums, and double-sum interchange. In
+member bounds, termwise-zero characterization, constant sums, filtered list sums, aligned list zip/map sums, and double-sum interchange. In
 `FiniteMoments.v` and `FiniteUnion.v`, public `sum_finite` and
 `finite_sum` remain transparent aliases. Existing theorem signatures
 are preserved, while the previous duplicate inductions now delegate
@@ -309,6 +309,48 @@ remain unchanged. This pass does not constitute a complete rewrite
 using MathComp or an arbitrary-measure library. Any such migration
 would need independently checked correspondence lemmas preserving
 the finite semantics and theorem hypotheses.
+
+## Proof-by-proof consolidation register: all 332 scripts accounted for
+
+The latest source now contains **329 public theorem/lemma/example
+declarations** (FiniteSum 19, Hoeflin 64, Admissions 67,
+FiniteUnion 45, FiniteMoments 107, FiniteBridge 14, FourCellBridge 13).
+One existing `Local Lemma` and two `Definition` constructors with
+explicit `Proof./Defined.` bring the source to **332 proof scripts**.
+These belong to **386 named declarations** in the seven modules.
+
+The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) lists all
+332 scripts and classifies each by existing Rocq library use, proof
+method, and retention or refactor decision. The Rocq CI documentation
+checker validates the **complete ordered inventory** on every push.
+This is a source-level completeness check; it is distinct from the
+pinned Rocq 9.2 kernel checker, which verifies the actual terms.
+
+| Proof refactor | Existing reusable library | Effect |
+|---|---|---|
+| `finite_sum_zero` | `FiniteSum.finite_sum_const`, `Stdlib.Reals` ring | Remove induction over an arbitrary finite list for the constant-zero special case |
+| `finite_sum_monotone` | `finite_sum_nonnegative`, `finite_sum_sub`, `Stdlib.Lra` | Derive order preservation from the already checked sign of the pointwise difference |
+| `finite_sum_zip_map` (generic helper) | `Stdlib.List.map`, `combine`, existing `finite_sum_map` | Prove the aligned zip/map identity once, not in report-specific matrix arguments |
+| `covariance_row_as_vector_dot` | `finite_sum_zip_map`, support-independent `finite_sum_ext` | Eliminate a duplicated list induction over score components |
+| `covariance_double_sum_as_matrix_product` | `Stdlib.List.map_map`, `finite_sum_zip_map`, `covariance_row_as_vector_dot` | Eliminate a second specialized matrix-row list induction |
+
+**Structural induction review.** Exactly fifteen scripts still use an
+induction tactic. Ten establish genuine basic fold/list algebra in
+`FiniteSum`; one is the `Admissions.Nat.iter` closed-form theorem;
+four are over weighted components or suffix-dependent covariance and
+the `Stdlib.List.split` representation in `FiniteMoments`.
+Keeping these inductions is intentional: a replacement must have
+genuinely identical semantics, not merely a familiar theorem name.
+Their names and refactoring dispositions are explicit in the
+proof-by-proof register.
+
+**Scope.** Every proof has been inspected and classified for library
+reuse; not every proof text was changed. Trivial definitional proofs,
+direct calls to Rocq's Reals/Lra/Psatz/ring/field facilities, and checked
+previously formalized bridges should remain simple. The previous
+public theorem statements and their hypotheses are unchanged.
+No `Admitted`, project-specific axiom, external oracle, new recursive
+matrix implementation, or unpinned library dependency has been added.
 
 ## Deliberately retained project-specific definitions
 
