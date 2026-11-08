@@ -2169,6 +2169,45 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [covariance_with_sum_scores_unconditional] (lemma) — Covariance
+   of a score with an unweighted finite list-sum of other scores.
+   Mathematical meaning: Covariance distributes over an unweighted
+   finite sum: Cov(f, sum_i g_i) = sum_i Cov(f,g_i), even when the
+   real-valued sample weights do not sum to one.
+   Exact checked proposition: forall f fs,
+   covariance f (sum_scores fs) = covariance_row_sum f fs.
+   Premises and side conditions: Arbitrary finite sample enumeration,
+   signed weights and real score functions are allowed. The score
+   list may contain repetitions. No unit total mass, independence
+   or nonnegativity assumption is made in this algebraic equality.
+   Proof/definition method: Reuse the established representation of
+   unweighted scores as a Stdlib.List.map of unit-coefficient pairs,
+   then invoke covariance_of_general_weighted_second_unconditional
+   and unweighted_covariance_row_as_weighted.
+   Library reuse: Stdlib.List.map, covariance_extensional,
+   unweighted_scores_as_linear_combination,
+   covariance_of_general_weighted_second_unconditional and
+   unweighted_covariance_row_as_weighted. No new list induction.
+   Boundary: Algebraic finite covariance of a list sum; signed
+   outcome weights need not form a probability measure.
+   *)
+  Lemma covariance_with_sum_scores_unconditional :
+    forall f fs,
+      covariance f (sum_scores fs) = covariance_row_sum f fs.
+  Proof.
+    intros f fs.
+    transitivity
+      (covariance f
+        (linear_combination (map (fun g => (1, g)) fs))).
+    - apply covariance_extensional.
+      + intro x; reflexivity.
+      + intro x; apply unweighted_scores_as_linear_combination.
+    - rewrite (covariance_of_general_weighted_second_unconditional
+        f (map (fun g => (1, g)) fs)).
+      symmetry; apply unweighted_covariance_row_as_weighted.
+  Qed.
+
+  (**
    [covariance_with_sum_scores] (lemma) — Finite weighted score expectations,
    variances and covariance matrices.
    Mathematical meaning: Derives a covariance identity or inequality from finite
@@ -2177,10 +2216,9 @@ Section FiniteProbabilityMoments.
    total_mass = 1 -> covariance f (sum_scores fs) = covariance_row_sum f fs.
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, definitional reduction; references include
-   covariance_extensional., unweighted_scores_as_linear_combination.,
-   covariance_of_general_weighted_second.
+   Proof/definition method: Invoke the general covariance_with_sum_scores_unconditional
+   lemma, preserving the original total_mass = 1 premise in the
+   public statement without duplicating the linearity argument.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -2189,16 +2227,45 @@ Section FiniteProbabilityMoments.
     forall f fs, total_mass = 1 ->
       covariance f (sum_scores fs) = covariance_row_sum f fs.
   Proof.
-    intros f fs Hmass.
-    transitivity
-      (covariance f
-        (linear_combination (map (fun g => (1, g)) fs))).
-    - apply covariance_extensional.
-      + intro x; reflexivity.
-      + intro x; apply unweighted_scores_as_linear_combination.
-    - rewrite (covariance_of_general_weighted_second
-        f (map (fun g => (1, g)) fs) Hmass).
-      symmetry; apply unweighted_covariance_row_as_weighted.
+    intros f fs _.
+    apply covariance_with_sum_scores_unconditional.
+  Qed.
+
+  (**
+   [covariance_of_sum_scores_unconditional] (lemma) — Bilinearity
+   of covariance across two finite unweighted score lists.
+   Mathematical meaning: The covariance of the sums of two
+   finite score lists is the double sum of every pairwise
+   component covariance, without a sample normalization premise.
+   Exact checked proposition: forall fs gs,
+   covariance (sum_scores fs) (sum_scores gs) =
+   covariance_double_sum fs gs.
+   Premises and side conditions: Score lists may have unequal length,
+   contain repeats or be empty; sample weights and score values may
+   be signed. No independence or unit-mass hypothesis is required
+   for equality of the real-valued expressions.
+   Proof/definition method: Use covariance symmetry, apply
+   covariance_with_sum_scores_unconditional to each list in turn,
+   and use FiniteSum.finite_sum_ext to align the double sum.
+   Library reuse: covariance_symmetric,
+   covariance_with_sum_scores_unconditional,
+   FiniteSum.finite_sum_ext and the existing sum/covariance aliases.
+   Boundary: Algebraic finite-score list covariance; not a
+   probabilistic or empirical correlation assumption.
+   *)
+  Lemma covariance_of_sum_scores_unconditional :
+    forall fs gs,
+      covariance (sum_scores fs) (sum_scores gs) =
+        covariance_double_sum fs gs.
+  Proof.
+    intros fs gs.
+    rewrite (covariance_symmetric (sum_scores fs) (sum_scores gs)).
+    rewrite (covariance_with_sum_scores_unconditional
+      (sum_scores gs) fs).
+    unfold covariance_row_sum, covariance_double_sum.
+    apply FiniteSum.finite_sum_ext; intro f.
+    rewrite (covariance_symmetric (sum_scores gs) f).
+    apply covariance_with_sum_scores_unconditional.
   Qed.
 
   (**
@@ -2211,9 +2278,9 @@ Section FiniteProbabilityMoments.
    covariance_double_sum fs gs.
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas; references include covariance_symmetric,
-   covariance_with_sum_scores, covariance_row_sum.
+   Proof/definition method: Invoke the stronger covariance_of_sum_scores_unconditional
+   lemma; the original unit-mass premise and proposition remain
+   unchanged for downstream source compatibility.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -2223,13 +2290,38 @@ Section FiniteProbabilityMoments.
       covariance (sum_scores fs) (sum_scores gs) =
         covariance_double_sum fs gs.
   Proof.
-    intros fs gs Hmass.
-    rewrite (covariance_symmetric (sum_scores fs) (sum_scores gs)).
-    rewrite (covariance_with_sum_scores (sum_scores gs) fs Hmass).
-    unfold covariance_row_sum, covariance_double_sum.
-    apply FiniteSum.finite_sum_ext; intro f.
-    rewrite (covariance_symmetric (sum_scores gs) f).
-    apply covariance_with_sum_scores; exact Hmass.
+    intros fs gs _.
+    apply covariance_of_sum_scores_unconditional.
+  Qed.
+
+  (**
+   [variance_of_unweighted_sum_unconditional] (theorem) — Finite
+   variance of an arbitrary unweighted score-list composite.
+   Mathematical meaning: The variance of a sum of listed scores
+   equals the double sum of the score covariances, even for
+   unnormalized or signed sample weights.
+   Exact checked proposition: forall fs,
+   variance (sum_scores fs) = covariance_double_sum fs fs.
+   Premises and side conditions: Any finite list of real scores,
+   including duplicate scores, with arbitrary real sample
+   weights. This is an algebraic identity; nonnegative variance
+   requires a valid normalized nonnegative sample distribution.
+   Proof/definition method: Expand variance as self-covariance
+   and specialize covariance_of_sum_scores_unconditional with
+   identical score lists, without a separate induction.
+   Library reuse: The checked unconditional score-list covariance
+   identity and the existing variance/covariance_double_sum
+   definitions backed by FiniteSum.
+   Boundary: A finite real-valued quadratic expression, not
+   proof of empirical score covariance or Gaussianity.
+   *)
+  Theorem variance_of_unweighted_sum_unconditional :
+    forall fs,
+      variance (sum_scores fs) = covariance_double_sum fs fs.
+  Proof.
+    intro fs.
+    unfold variance.
+    apply covariance_of_sum_scores_unconditional.
   Qed.
 
   (**
@@ -2241,8 +2333,9 @@ Section FiniteProbabilityMoments.
    total_mass = 1 -> variance (sum_scores fs) = covariance_double_sum fs fs.
    Premises and side conditions: The displayed hypotheses include unit total sample
    mass. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses reuse of previously established lemmas;
-   references include variance., covariance_of_sum_scores, Hmass..
+   Proof/definition method: Apply the general variance_of_unweighted_sum_unconditional
+   theorem. The original total_mass = 1 premise remains part
+   of the public theorem signature even though not used here.
    Library reuse: Stdlib.List, Sorting.Permutation, Reals and FiniteSum.
    Boundary: Exact finite outcome weights and list score bases, not continuous random
    variables or empirical IQ covariance.
@@ -2251,9 +2344,8 @@ Section FiniteProbabilityMoments.
     forall fs, total_mass = 1 ->
       variance (sum_scores fs) = covariance_double_sum fs fs.
   Proof.
-    intros fs Hmass.
-    unfold variance.
-    apply covariance_of_sum_scores; exact Hmass.
+    intros fs _.
+    apply variance_of_unweighted_sum_unconditional.
   Qed.
 
   (**
