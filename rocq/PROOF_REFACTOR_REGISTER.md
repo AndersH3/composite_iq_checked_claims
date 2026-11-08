@@ -8,7 +8,7 @@ Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
 The branch starts from 328 public theorem/lemma/example declarations,
 one local helper, two constructed `Admissions.TwoEventModel` values,
-and the new generic `FiniteSum.finite_sum_zip_map`: **332 proof scripts**.
+and the new generic `FiniteSum.finite_sum_zip_map`: **334 proof scripts**.
 The record was created after the current generic list-fold and covariance
 matrix refactoring and counts explicit proof blocks, not definitions lacking
 proof obligations.
@@ -231,7 +231,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 45 proof scripts
+## FiniteUnion.v — 47 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -255,7 +255,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_prob_zero_iff_no_positive_mass_support` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field, Lra/Psatz, Computation | Shared finite sums, Stdlib.Lra/Psatz, Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `finite_prob_positive_of_positive_support` (theorem) | Lemma application, Rewriting, Lra/Psatz, Computation | Shared finite sums, Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `finite_prob_as_filtered_mass` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field, Computation | Shared finite sums, Stdlib ring/field | Reviewed: keep established tactic/library proof |
-| `finite_prob_event_ext_on_samples` (theorem) | Lemma application, Rewriting, Computation | Shared finite sums | Reviewed: keep established tactic/library proof |
+| `finite_prob_event_ext_on_samples` (theorem) | Rewriting, Lemma application, Computation | Stdlib.List.filter_ext_in, finite_prob_as_filtered_mass | **Refactored:** direct library filter extensionality rather than pointwise sum algebra |
+| `finite_prob_on_filtered_samples` (theorem) | Finite cases, Lemma application, Rewriting, Ring/field | Stdlib.List.filter, Stdlib.Bool.andb, FiniteSum.finite_sum_filter, finite_sum_ext | **New:** formalized event intersection under filtered samples |
+| `union_prob_on_filtered_samples` (theorem) | Lemma application | Prior checked finite_prob_on_filtered_samples, Stdlib.List.existsb | **New:** formalized union of events restricted to filtered outcomes |
 | `finite_prob_sample_append` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `finite_prob_sample_permutation` (theorem) | Lemma application | Shared finite sums | Reviewed: keep established tactic/library proof |
 | `union_prob_sample_permutation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
