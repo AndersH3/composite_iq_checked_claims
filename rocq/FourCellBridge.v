@@ -8,7 +8,7 @@ Open Scope R_scope.
 
 (* The four outcomes are the complete Cartesian product of two Booleans. *)
 Definition four_cell_samples : list (bool * bool) :=
-  [(true, true); (true, false); (false, true); (false, false)].
+  list_prod [true; false] [true; false].
 
 Definition four_cell_weight (m : TwoEventModel)
     (outcome : bool * bool) : R :=
@@ -92,10 +92,8 @@ Theorem four_cell_union_mass :
       [four_cell_A; four_cell_B] = p_either m.
 Proof.
   intro m.
-  rewrite (@FiniteUnion.two_event_union_probability
-    (bool * bool) (four_cell_weight m) four_cell_samples
-    four_cell_A four_cell_B).
-  unfold FiniteUnion.finite_prob, FiniteUnion.finite_sum,
+  unfold FiniteUnion.union_prob, FiniteUnion.any_event,
+    FiniteUnion.finite_prob, FiniteUnion.finite_sum,
     FiniteSum.finite_sum, four_cell_samples, four_cell_weight,
     four_cell_A, four_cell_B, FiniteUnion.indicator, p_either.
   simpl; ring.
