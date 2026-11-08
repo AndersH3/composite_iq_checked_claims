@@ -22,14 +22,21 @@ Open Scope R_scope.
 (**
    [finite_sum] (definition) — Shared real-valued list sums and their algebraic/order
    laws.
-   Mathematical meaning: Defines finite sum using explicit Rocq operations, so later
-   theorems can refer to one stable mathematical object.
+   Mathematical meaning: For each occurrence x in xs, evaluate the real integrand
+   f x, then add those terms, with zero for an empty list. A repeated
+   element contributes repeatedly; there is no deduplication, set
+   construction or implicit statistical normalization.
    Exact declaration: Definition finite_sum {A : Type} (f : A -> R) (xs : list A) : R
    := fold_right Rplus 0 (map f xs).
-   Premises and side conditions: Only the declared parameters, data fields, and types
-   constrain this construction; no extraneous postulates are introduced.
-   Proof/definition method: Definitionally uses the shown expression/record
-   constructor; proof obligations, if any, are attached to this declaration alone.
+   Premises and side conditions: The element type A is arbitrary, and f can
+   return negative or positive reals. xs is a finite list, so no
+   convergence, measure, probability-mass or positivity premise is
+   needed. The order is computational; later Permutation lemmas
+   establish order invariance of the resulting real sum.
+   Proof/definition method: Definitionally maps f over xs using
+   Stdlib.List.map and folds the resulting reals with Rplus and the
+   neutral element 0 using Stdlib.List.fold_right. Subsequent
+   algebraic laws are proved separately rather than assumed.
    Library reuse: Stdlib.List map, filter, fold_right, map_ext_in,
    Sorting.Permutation and Reals.
    Boundary: An arbitrary finite list and real integrand; this is not a continuous
