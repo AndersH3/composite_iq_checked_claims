@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **389 theorem, lemma and example declarations** in seven
+for the two reports. **393 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -975,8 +975,21 @@ a second fixed-basis iff uses the covariance-orthogonality theorem.
 This is a strictly algebraic finite-outcome characterization,
 not an arbitrary matrix rank function or spectral algorithm.
 
-Latest seven-module totals: **389 public theorem/lemma/example
+At the preceding stage: **389 public theorem/lemma/example
 declarations**, **392 proof scripts**, **447 documented names**.
+
+## Strict variance and quadratic-form positivity witnesses
+
+Four new results show strict finite variance positivity from a
+positive-weight outcome deviating from the mean, or from a pair
+of positive-weight outcomes with unequal score values. Their
+fixed-basis covariance-matrix analogues use the checked
+fixed_basis_weighted_variance_identity to transfer those
+strict inequalities to quadratic forms. No determinant, eigenvalue
+or matrix-rank routine was introduced.
+
+The current source has **393 public claims**, **396 proof scripts**
+and **451 fully documented declarations** in seven Rocq modules.
 
 ## Research extensions
 

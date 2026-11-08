@@ -632,9 +632,9 @@ algebraic generalization of finite composite covariance.
 It does **not** infer nonnegative variance or PSD covariance
 matrices for signed, unnormalized sample weights.
 
-**Current audited inventory:** 389 public theorem/lemma/example
+**Current audited inventory:** 393 public theorem/lemma/example
 declarations, one local helper and two proof-bearing record
-constructors, for **392 proof scripts**. There are **447 named
+constructors, for **396 proof scripts**. There are **451 named
 declarations** across seven Rocq modules, all with adjacent
 mathematical comments; every module retains an explanatory header.
 The [proof-by-proof register](PROOF_REFACTOR_REGISTER.md) contains
@@ -771,6 +771,17 @@ to the general equivalence, while a new fixed-basis orthogonality
 iff follows from the existing variance/matrix identity.
 No determinant, eigenvalue, or rank implementation is added.
 Current inventory: 389 claims, 392 scripts and 447 declarations.
+
+## Strict positivity from positive-weight score witnesses
+
+Four new claims transfer the existing zero-variance support
+characterization to strictly positive variance and fixed-basis
+quadratic-form conclusions when one positive-weight score
+deviates from its expectation, or two such outcomes differ.
+All proofs reuse variance_nonnegative, existing support lemmas,
+the fixed-basis variance identity, and Stdlib.Lra without
+implementing another covariance or matrix algebra.
+Current totals: 393 claims, 396 proofs, 451 named declarations.
 
 ## Deliberately retained project-specific definitions
 

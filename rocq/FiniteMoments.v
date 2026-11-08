@@ -4793,4 +4793,122 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+  (**
+   [positive_variance_of_positive_support_deviation] (theorem) — Strictly positive finite variance and covariance curvature.
+   Mathematical meaning: A nonnegative normalized finite weighted score has strictly positive variance whenever a positive-weight sampled outcome has a score different from the finite expected score.
+   Exact checked proposition: For any score f and sampled outcome x with 0 < weight x, normalized nonnegative sampled weights and f x <> expect f imply 0 < variance f.
+   Premises and side conditions: Normalization and nonnegative sampled outcome weights are explicit. A strictly positive weight and membership for the witness x are required. No distributional model, continuous density or independence is assumed.
+   Proof/definition method: Use the existing variance_nonnegative result to rule out negative variance. If variance were zero, apply zero_variance_is_constant_on_positive_mass at the witness x and contradict its nonzero deviation; discharge the real inequalities using Lra.
+   Library reuse: variance_nonnegative, zero_variance_is_constant_on_positive_mass, Stdlib.Reals.Rle_dec and Stdlib.Lra.
+   Boundary: This theorem is about exact positive variance on a finite weighted list; it supplies no numerical lower bound or statistical inference from noisy observations.
+   *)
+  Theorem positive_variance_of_positive_support_deviation :
+    forall f x,
+      total_mass = 1 ->
+      (forall y, In y samples -> 0 <= weight y) ->
+      In x samples -> 0 < weight x ->
+      f x <> expect f ->
+      0 < variance f.
+  Proof.
+    intros f x Hmass Hw Hx Hpositive Hdeviation.
+    pose proof (variance_nonnegative f Hmass Hw) as Hnonnegative.
+    destruct (Rle_dec (variance f) 0) as [Hle|Hgt].
+    - assert (Hzero : variance f = 0) by lra.
+      pose proof (zero_variance_is_constant_on_positive_mass
+        f x Hmass Hw Hzero Hx Hpositive) as Hconstant.
+      contradiction.
+    - lra.
+  Qed.
+
+  (**
+   [positive_variance_of_two_distinct_positive_support_values] (theorem) — Strictly positive finite variance and covariance curvature.
+   Mathematical meaning: Two enumerated outcomes with positive weights and different score values witness nonconstant positive-mass support and therefore imply strictly positive finite variance.
+   Exact checked proposition: For all f x y, normalized nonnegative sampled weights, positive membership-weight premises for x and y, and f x <> f y imply 0 < variance f.
+   Premises and side conditions: Both x and y must occur in the sample and receive strictly positive individual weights. Repeated outcome values are allowed in the list, but the stated score inequality ensures the two selected outcome values cannot coincide.
+   Proof/definition method: Use variance_nonnegative and the standard real-order decision lemma. Under a hypothetical zero variance, invoke zero_variance_is_constant_on_positive_mass separately at x and y; both must equal expect f, contradicting f x <> f y.
+   Library reuse: variance_nonnegative, zero_variance_is_constant_on_positive_mass, Stdlib.Reals.Rle_dec, Stdlib.Lra and equality transitivity.
+   Boundary: The proof certifies strict variance positivity in the finite model but neither estimates its magnitude nor establishes any physical or empirical factor rank.
+   *)
+  Theorem positive_variance_of_two_distinct_positive_support_values :
+    forall f x y,
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      In x samples -> 0 < weight x ->
+      In y samples -> 0 < weight y ->
+      f x <> f y ->
+      0 < variance f.
+  Proof.
+    intros f x y Hmass Hw Hx Hposx Hy Hposy Hdistinct.
+    pose proof (variance_nonnegative f Hmass Hw) as Hnonnegative.
+    destruct (Rle_dec (variance f) 0) as [Hle|Hgt].
+    - assert (Hzero : variance f = 0) by lra.
+      pose proof (zero_variance_is_constant_on_positive_mass
+        f x Hmass Hw Hzero Hx Hposx) as Hfirst.
+      pose proof (zero_variance_is_constant_on_positive_mass
+        f y Hmass Hw Hzero Hy Hposy) as Hsecond.
+      apply Hdistinct.
+      rewrite Hfirst, Hsecond.
+      reflexivity.
+    - lra.
+  Qed.
+
+  (**
+   [positive_fixed_basis_quadratic_of_positive_support_deviation] (theorem) — Strictly positive finite variance and covariance curvature.
+   Mathematical meaning: The fixed-basis covariance matrix has strictly positive quadratic form in a coefficient direction whenever the resulting weighted score differs from its mean at a positive-mass sampled outcome.
+   Exact checked proposition: For all coefficients basis x, equal coefficient/basis lengths, normalized nonnegative finite weights, positive sampled weight for x and weighted_basis_sum coefficients basis x <> expect (weighted_basis_sum coefficients basis) imply 0 < matrix_quadratic_form coefficients (basis_covariance_matrix basis).
+   Premises and side conditions: The basis and coefficient dimensions must agree. The finite sampled weights are normalized and nonnegative, and the deviation witness x must be listed with strictly positive weight; no basis linear independence is assumed.
+   Proof/definition method: Rewrite the quadratic form to the finite variance of weighted_basis_sum using fixed_basis_weighted_variance_identity, then invoke positive_variance_of_positive_support_deviation directly.
+   Library reuse: fixed_basis_weighted_variance_identity, positive_variance_of_positive_support_deviation, Stdlib.List, FiniteSum and Stdlib.Lra.
+   Boundary: This is a sufficient witness for strict quadratic positivity, not a general numeric eigenvalue lower bound or an assertion that the covariance matrix is positive definite.
+   *)
+  Theorem positive_fixed_basis_quadratic_of_positive_support_deviation :
+    forall coefficients basis x,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall y, In y samples -> 0 <= weight y) ->
+      In x samples -> 0 < weight x ->
+      weighted_basis_sum coefficients basis x <>
+        expect (weighted_basis_sum coefficients basis) ->
+      0 < matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis).
+  Proof.
+    intros coefficients basis x Hlength Hmass Hw Hx Hpositive Hdeviation.
+    rewrite <- (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    apply (positive_variance_of_positive_support_deviation
+      (weighted_basis_sum coefficients basis) x
+      Hmass Hw Hx Hpositive Hdeviation).
+  Qed.
+
+  (**
+   [positive_fixed_basis_quadratic_of_two_distinct_support_values] (theorem) — Strictly positive finite variance and covariance curvature.
+   Mathematical meaning: If two positive-weight outcomes yield different weighted sums for a fixed score basis, then the covariance quadratic form in that coefficient direction is strictly positive.
+   Exact checked proposition: For coefficients basis and x y, matching lengths, normalized nonnegative weights, positive enumerated x and y, and unequal weighted_basis_sum values at x and y entail strictly positive matrix_quadratic_form coefficients (basis_covariance_matrix basis).
+   Premises and side conditions: The two positive-weight witnesses must occur in the explicitly enumerated list. The coefficient/basis dimensions agree, and repeated occurrences do not change the proof; no Gaussian or nondegeneracy assumption is imposed on the entire basis.
+   Proof/definition method: Reuse the exact fixed_basis_weighted_variance_identity to convert the covariance matrix quadratic form into weighted-score variance, then directly apply positive_variance_of_two_distinct_positive_support_values.
+   Library reuse: fixed_basis_weighted_variance_identity, positive_variance_of_two_distinct_positive_support_values, FiniteSum and Stdlib.Reals.
+   Boundary: The conclusion certifies curvature in one tested coefficient direction only and does not yet prove full covariance-matrix rank or positive definiteness for every nonzero vector.
+   *)
+  Theorem positive_fixed_basis_quadratic_of_two_distinct_support_values :
+    forall coefficients basis x y,
+      length coefficients = length basis ->
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      In x samples -> 0 < weight x ->
+      In y samples -> 0 < weight y ->
+      weighted_basis_sum coefficients basis x <>
+        weighted_basis_sum coefficients basis y ->
+      0 < matrix_quadratic_form coefficients
+        (basis_covariance_matrix basis).
+  Proof.
+    intros coefficients basis x y Hlength Hmass Hw Hx Hposx Hy Hposy
+      Hdistinct.
+    rewrite <- (fixed_basis_weighted_variance_identity
+      coefficients basis Hlength Hmass).
+    apply (positive_variance_of_two_distinct_positive_support_values
+      (weighted_basis_sum coefficients basis) x y
+      Hmass Hw Hx Hposx Hy Hposy Hdistinct).
+  Qed.
+
+
 End FiniteProbabilityMoments.
