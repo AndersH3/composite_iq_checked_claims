@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **289 theorem, lemma and example declarations** in six
+for the two reports. **311 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -18,6 +18,7 @@ rocq compile Admissions.v
 rocq compile FiniteUnion.v
 rocq compile FiniteMoments.v
 rocq compile FiniteBridge.v
+rocq compile FourCellBridge.v
 ```
 
 The GitHub Actions workflow at
@@ -51,7 +52,7 @@ than maintaining separate recursive or list-fold algebra:
 - **`Stdlib.Sorting.Permutation`**: `Permutation_in` and
   `Permutation_sym` establish finite union probability invariance under
   reordering; `Stdlib.List.existsb_exists` handles event-family membership.
-- **`Stdlib.List`**: `length_map` and `in_map_iff` establish covariance-matrix
+- **`Stdlib.List`**: `length_map`, `in_map_iff`, `combine_split`, `list_prod`, `in_prod`, and `length_prod` establish covariance-matrix
   dimensions without project-specific list-indexing recursion.
 - **`Stdlib.Lra` / `Stdlib.Psatz`** and the standard `ring` /
   `field` tactics handle ordinary real arithmetic.
@@ -104,6 +105,48 @@ All previous theorem statements are preserved. No claim is made
 about Gaussian conditioning, empirical IQ psychometrics or continuous
 probability measures.
 
+## November 8 continuation: concrete four-cell interpretation
+
+The seven modules contain **311 named theorem, lemma and example
+declarations** (64 Hoeflin, 67 Admissions, 38 FiniteUnion,
+103 FiniteMoments, 12 FiniteSum, 14 FiniteBridge, 13 FourCellBridge).
+These are source-counted declarations, not a count of independent
+mathematical insights. Existing theorem statements in the original six
+modules were compared against commit `a2f6427` and are unchanged.
+
+- **`FourCellBridge.v` (13 theorems):** represents the four report-specific
+  admissions cells as `bool * bool`. Uses the standard
+  `Stdlib.List.list_prod` operation to enumerate the outcomes, and
+  `in_prod` and `length_prod` to check coverage and cardinality.
+  The four weights are exactly the report's joint, A-only, B-only and
+  neither masses. Their normalization and nonnegativity come from
+  `Admissions.TwoEventModel`, with no added axioms.
+- The bridge proves exact equivalence of both marginals, intersection,
+  union, and exactly-one admission mass with the original definitions.
+  It then reuses `FiniteBridge` to connect the four-cell model with
+  finite indicator covariance and both Bernoulli variance identities.
+  The resulting covariance-zero condition agrees with the explicit
+  four-cell independence criterion.
+- **`FiniteUnion.v` (+8 theorems):** derives true/false event masses,
+  sample concatenation, sample permutation, union sample permutation,
+  event-family marginal-sum permutation, event monotonicity and the
+  normalized unit-interval probability bound. These use shared
+  `FiniteSum` facts and `Stdlib.Sorting.Permutation` rather than
+  custom list algorithms. The empty event-family proof is reduced to
+  the established false-event theorem.
+- **`FiniteMoments.v` (+1 generic helper):** replaces two duplicated
+  `combine` projection inductions with `Stdlib.List.combine_split`
+  and a single checked `split`-to-projection lemma. The existing
+  expectation-subtraction theorem now uses the shared
+  `FiniteSum.finite_sum_sub` directly.
+
+This bridge is an explicit **finite** probabilistic interpretation;
+it does not establish continuous distributions, Gaussian tail
+integrals, psychometric validity, or statistical calibration. It does
+not require a MathComp or measure-theory dependency. The
+report-specific four-cell declarations remain separate from the
+library-backed Boolean-product interpretation.
+
 ## Claims and exact theorem correspondences
 
 | Report claim | Rocq statement(s) | Scope and qualification |
@@ -125,6 +168,8 @@ probability measures.
 | Normalized variance and threshold rescaling | `normalized_variance_is_one`, `threshold_recovered_after_normalization` | Uses an **assumed** variance and its nonzero squared divisor; not a distribution theorem |
 | Latent-factor squared correlation and conditional-variance expressions | `latent_reliability_plus_posterior_variance`, `latent_reliability_nonnegative`, `latent_posterior_variance_nonnegative`, `latent_reliability_at_most_one`, and boundary cases | Algebra for the report's *given* expressions; **does not prove the Gaussian conditional-distribution derivation** |
 | Shared finite real-sum infrastructure (technical bridge) | `FiniteSum.finite_sum_ext`, `finite_sum_add`, `finite_sum_scale`, `finite_sum_nonnegative`, `finite_sum_monotone`, `finite_sum_zero`, `finite_sum_app`, `finite_sum_permutation` | Exact `Stdlib.List` folds replace repeated finite-sum proofs in both domain models; no probability normalization is assumed by the generic library |
+| Four-cell admissions model interpreted as a standard Boolean-product probability space | `four_cell_total_mass`, `four_cell_first_marginal`, `four_cell_second_marginal`, `four_cell_intersection_mass`, `four_cell_union_mass`, `four_cell_exactly_one_mass`, `four_cell_indicator_covariance`, `four_cell_indicator_independence_criterion` | Explicit representation of all four outcomes and their normalized nonnegative weights; exact correspondence with the report's specialized joint, marginal and union expressions, using generic finite-probability and finite-moment library lemmas |
+| Finite event sample permutation and monotonicity | `finite_prob_sample_append`, `finite_prob_sample_permutation`, `union_prob_sample_permutation`, `finite_prob_event_monotone`, `normalized_finite_prob_unit_interval` | For finite lists and Boolean events, weighted sample order is irrelevant, monotone events have monotone mass under nonnegative weights, and unit-interval bounds require normalized nonnegative weights |
 | Finite Boolean event and moment models agree | `finite_sum_models_agree`, `finite_total_mass_models_agree`, `finite_event_probability_is_indicator_expectation` | Certified equality between the original finite-event sum/probability and finite-moment sum/indicator expectation for arbitrary real weights |
 | Event-indicator Bernoulli variance, covariance and independence | `indicator_square`, `indicator_product_and`, `finite_event_indicator_variance`, `finite_event_indicator_covariance`, `finite_event_independence_iff_zero_indicator_covariance`, `finite_event_indicator_zero_variance_iff_extreme_mass` | Algebraically proves Var(1_A)=p_A(1−p_A), Cov(1_A,1_B)=p_(A∩B)−p_A p_B and zero covariance iff the finite product identity; to interpret the masses as probabilities, nonnegative normalized weights are required |
 | Finite expectation: linearity, constants, centering, and nonnegative means | `expectation_add`, `expectation_scale`, `expectation_affine`, `centered_score_has_zero_expectation`, `expectation_nonnegative` | Finite sums with explicit masses; normalization and nonnegativity required where stated |
