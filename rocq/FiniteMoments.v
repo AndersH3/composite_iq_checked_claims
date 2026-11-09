@@ -6416,6 +6416,65 @@ Section FiniteProbabilityMoments.
       assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_cross_covariance_zero_variance_row] (theorem) —
+   Zero-variance scores annihilate rectangular covariance rows.
+   Mathematical meaning: A score whose variance vanishes has covariance
+   zero with every comparison score in any separate finite basis.
+   Exact checked proposition: For left right and bounded indices i j,
+   normalized nonnegative finite sample weights and variance of the
+   selected left score equal to zero imply indexed covariance(i,j)=0.
+   Premises and side conditions: The two bases may have different lengths,
+   duplicates or zero-weight outcomes. No Gaussian or independence premise.
+   Proof/definition method: Unfold only the indexed covariance function
+   and apply the already verified scalar zero-variance covariance theorem.
+   Library reuse: zero_variance_implies_zero_covariance_first,
+   indexed_basis_cross_covariance_matrix, Stdlib.Vectors.Fin and Vector.
+   Boundary: This establishes scalar entries, not generic matrix rank.
+   *)
+  Theorem indexed_basis_cross_covariance_zero_variance_row :
+    forall left right
+           (i : Fin.t (length left)) (j : Fin.t (length right)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      variance (Vector.nth (Vector.of_list left) i) = 0 ->
+      indexed_basis_cross_covariance_matrix left right i j = 0.
+  Proof.
+    intros left right i j Hmass Hw Hzero.
+    unfold indexed_basis_cross_covariance_matrix.
+    apply zero_variance_implies_zero_covariance_first; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_cross_covariance_zero_variance_column] (theorem) —
+   Zero-variance scores annihilate rectangular covariance columns.
+   Mathematical meaning: Zero variance in a score selected from the
+   right-hand basis forces covariance with every left score to be zero.
+   Exact checked proposition: For any bounded left index i, right index
+   j, normalized nonnegative weights, and variance(right[j])=0, the
+   rectangular cross-covariance entry at i,j is zero.
+   Premises and side conditions: Bases need not be square or independent;
+   zero-weight outcomes and repeated scores remain permitted.
+   Proof/definition method: Transpose the indexed rectangular covariance
+   using its existing symmetry lemma, then apply the new row-zero result.
+   Library reuse: indexed_basis_cross_covariance_matrix_swap,
+   indexed_basis_cross_covariance_zero_variance_row, Stdlib.Vectors.Fin.
+   Boundary: This is a finite exact identity, not a numerical nullspace.
+   *)
+  Theorem indexed_basis_cross_covariance_zero_variance_column :
+    forall left right
+           (i : Fin.t (length left)) (j : Fin.t (length right)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      variance (Vector.nth (Vector.of_list right) j) = 0 ->
+      indexed_basis_cross_covariance_matrix left right i j = 0.
+  Proof.
+    intros left right i j Hmass Hw Hzero.
+    rewrite indexed_basis_cross_covariance_matrix_swap.
+    apply indexed_basis_cross_covariance_zero_variance_row; assumption.
+  Qed.
+
   (**
    [indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row]
    (theorem) — A vanishing diagonal cell forces a zero covariance row.
@@ -6428,11 +6487,10 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: No basis independence or positive
    definiteness is assumed, and a zero-weight sampled outcome is not
    required to obey any constant-score property.
-   Proof/definition method: Rewrite the zero diagonal as a zero
-   variance and instantiate the existing scalar zero-variance-implies-
-   zero-covariance theorem for the two vector-selected scores.
+   Proof/definition method: Rewrite the zero diagonal as variance and
+   specialize the more general rectangular zero-variance row theorem.
    Library reuse: indexed_basis_covariance_matrix_diagonal,
-   zero_variance_implies_zero_covariance_first, Stdlib.Vectors.Vector.nth.
+   indexed_basis_cross_covariance_zero_variance_row, Stdlib.Vectors.Vector.nth.
    Boundary: This proves row-level covariance nullity, not a general
    linear-algebraic rank-nullity identity.
    *)
@@ -6445,8 +6503,134 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis i j Hmass Hw Hzero.
     rewrite indexed_basis_covariance_matrix_diagonal in Hzero.
-    unfold indexed_basis_cross_covariance_matrix.
-    apply zero_variance_implies_zero_covariance_first; assumption.
+    apply indexed_basis_cross_covariance_zero_variance_row; assumption.
+  Qed.
+
+
+  (**
+   [indexed_basis_covariance_matrix_zero_diagonal_implies_zero_column]
+   (theorem) — Zero diagonal variance annihilates the corresponding column.
+   Mathematical meaning: Every selected square covariance column is
+   identically zero when its own score variance is zero.
+   Exact checked proposition: Under unit mass and nonnegative sampled
+   weights, indexed covariance(i,i)=0 implies indexed covariance(j,i)=0.
+   Premises and side conditions: All indices are Fin.t-bounded; there is
+   no score independence, strict weight positivity, or invertibility.
+   Proof/definition method: Rewrite the diagonal as variance and invoke
+   the rectangular zero-variance column result with equal bases.
+   Library reuse: indexed_basis_covariance_matrix_diagonal,
+   indexed_basis_cross_covariance_zero_variance_column, Stdlib.Vectors.Fin.
+   Boundary: Zero columns are only coordinatewise finite nullity facts.
+   *)
+  Theorem indexed_basis_covariance_matrix_zero_diagonal_implies_zero_column :
+    forall basis (i j : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix basis basis i i = 0 ->
+      indexed_basis_cross_covariance_matrix basis basis j i = 0.
+  Proof.
+    intros basis i j Hmass Hw Hzero.
+    rewrite indexed_basis_covariance_matrix_diagonal in Hzero.
+    apply indexed_basis_cross_covariance_zero_variance_column; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_zero_row_iff_zero_diagonal] (theorem) —
+   The diagonal characterizes an entirely zero indexed covariance row.
+   Mathematical meaning: A zero row contains its zero diagonal, and
+   zero variance of its score forces all row covariances to vanish.
+   Exact checked proposition: For normalized nonnegative sample weights,
+   (forall j : Fin.t (length basis), covariance(i,j)=0) iff
+   indexed covariance(i,i)=0, for every bounded basis index i.
+   Premises and side conditions: Duplicate scores and zero-weight samples
+   are allowed. Strictly positive variance or rank is not assumed.
+   Proof/definition method: One direction specializes j=i; the converse
+   reuses the previous zero-diagonal-implies-zero-row theorem.
+   Library reuse: indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row,
+   Stdlib.Vectors.Fin and core propositional proof rules.
+   Boundary: This is not a general spectral matrix criterion.
+   *)
+  Theorem indexed_basis_covariance_matrix_zero_row_iff_zero_diagonal :
+    forall basis (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall j : Fin.t (length basis),
+          indexed_basis_cross_covariance_matrix basis basis i j = 0) <->
+       indexed_basis_cross_covariance_matrix basis basis i i = 0).
+  Proof.
+    intros basis i Hmass Hw.
+    split.
+    - intro Hrow. apply Hrow.
+    - intros Hzero j.
+      apply indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row;
+        assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_zero_column_iff_zero_diagonal]
+   (theorem) — The diagonal characterizes an entirely zero covariance column.
+   Mathematical meaning: Every coordinate in a square covariance column
+   vanishes exactly when that column's score variance vanishes.
+   Exact checked proposition: With unit total sample mass and nonnegative
+   sampled weights, (forall j, indexed covariance(j,i)=0) iff
+   indexed covariance(i,i)=0, for i : Fin.t (length basis).
+   Premises and side conditions: The basis may be empty or dependent,
+   with zero-weight sample occurrences and no invertibility premise.
+   Proof/definition method: Specialize a zero column at j=i and use the
+   previously proved zero-diagonal-to-zero-column implication backward.
+   Library reuse: indexed_basis_covariance_matrix_zero_diagonal_implies_zero_column
+   and Stdlib.Vectors.Fin; no independent covariance proof.
+   Boundary: This exact coordinate criterion does not calculate rank.
+   *)
+  Theorem indexed_basis_covariance_matrix_zero_column_iff_zero_diagonal :
+    forall basis (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall j : Fin.t (length basis),
+          indexed_basis_cross_covariance_matrix basis basis j i = 0) <->
+       indexed_basis_cross_covariance_matrix basis basis i i = 0).
+  Proof.
+    intros basis i Hmass Hw.
+    split.
+    - intro Hcolumn. apply Hcolumn.
+    - intros Hzero j.
+      apply indexed_basis_covariance_matrix_zero_diagonal_implies_zero_column;
+        assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_principal_minor_nonnegative] (theorem) —
+   Two-coordinate principal covariance minors are nonnegative.
+   Mathematical meaning: For every pair of bounded basis indices, the
+   expression representing their 2-by-2 covariance determinant is >= 0.
+   Exact checked proposition: Under unit total mass and nonnegative
+   sampled weights, 0 <= M(i,i)*M(j,j) - M(i,j)*M(j,i), where M denotes
+   indexed_basis_cross_covariance_matrix basis basis.
+   Premises and side conditions: The indices may coincide; no positive
+   definiteness or independent basis scores are required.
+   Proof/definition method: Rewrite M(j,i) to M(i,j) using indexed
+   symmetry, specialize the existing Cauchy-Schwarz bound, then use lra.
+   Library reuse: indexed_basis_covariance_matrix_symmetric,
+   indexed_basis_covariance_matrix_cauchy_schwarz_squared, Stdlib.Lra.
+   Boundary: Only two-coordinate principal minors are certified;
+   generic matrix determinants and spectral rank remain unproved.
+   *)
+  Theorem indexed_basis_covariance_matrix_principal_minor_nonnegative :
+    forall basis (i j : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <=
+        indexed_basis_cross_covariance_matrix basis basis i i *
+        indexed_basis_cross_covariance_matrix basis basis j j -
+        indexed_basis_cross_covariance_matrix basis basis i j *
+        indexed_basis_cross_covariance_matrix basis basis j i.
+  Proof.
+    intros basis i j Hmass Hw.
+    rewrite (indexed_basis_covariance_matrix_symmetric basis j i).
+    pose proof
+      (indexed_basis_covariance_matrix_cauchy_schwarz_squared
+        basis i j Hmass Hw) as Hcs.
+    lra.
   Qed.
 
 End FiniteProbabilityMoments.

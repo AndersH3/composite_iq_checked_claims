@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 512 public theorem/lemma/example declarations,
+The current branch has 518 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**515 proof scripts**, including the generic
+**521 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 188 proof scripts
+## FiniteMoments.v — 194 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -909,7 +909,13 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_matrix_diagonal_nonnegative` (theorem) | Rewrite diagonal entry to variance, then apply established variance_nonnegative | indexed_basis_covariance_matrix_diagonal, variance_nonnegative | **New:** normalized nonnegative finite weights imply nonnegative indexed covariance diagonal |
 | `indexed_basis_covariance_matrix_cauchy_schwarz_squared` (theorem) | Rewrite diagonal cells as variances, then invoke scalar finite Cauchy-Schwarz | indexed_basis_covariance_matrix_diagonal, finite_covariance_cauchy_schwarz_squared | **New:** squared indexed matrix entries are bounded by the product of diagonal cells |
 | `indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support` (theorem) | Rewrite diagonal entry to variance and apply existing supported-constant iff theorem | indexed_basis_covariance_matrix_diagonal, variance_zero_iff_exists_constant_on_positive_weight_support | **New:** zero indexed diagonal exactly characterizes a constant score on positive-weight support |
-| `indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row` (theorem) | Rewrite zero diagonal to variance and apply established zero-variance covariance lemma | indexed_basis_covariance_matrix_diagonal, zero_variance_implies_zero_covariance_first | **New:** zero indexed diagonal forces every cell of that covariance row to vanish |
+| `indexed_basis_cross_covariance_zero_variance_row` (theorem) | Specialize existing scalar null-covariance theorem in rectangular indexed entry | zero_variance_implies_zero_covariance_first, indexed_basis_cross_covariance_matrix | **New:** zero-variance left score annihilates any rectangular covariance row |
+| `indexed_basis_cross_covariance_zero_variance_column` (theorem) | Apply rectangular swap and established zero-variance row rule | indexed_basis_cross_covariance_matrix_swap, indexed_basis_cross_covariance_zero_variance_row | **New:** zero-variance right score annihilates any rectangular covariance column |
+| `indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row` (theorem) | Rewrite zero diagonal to variance and use rectangular zero-variance row lemma | indexed_basis_covariance_matrix_diagonal, indexed_basis_cross_covariance_zero_variance_row | **New:** zero indexed diagonal forces every cell of that covariance row to vanish |
+| `indexed_basis_covariance_matrix_zero_diagonal_implies_zero_column` (theorem) | Rewrite diagonal variance and apply rectangular zero-variance column lemma | indexed_basis_covariance_matrix_diagonal, indexed_basis_cross_covariance_zero_variance_column | **New:** zero indexed diagonal forces all covariance column cells to vanish |
+| `indexed_basis_covariance_matrix_zero_row_iff_zero_diagonal` (theorem) | Diagonal specialization and established zero-diagonal-to-zero-row lemma | indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row | **New:** a zero diagonal exactly characterizes a zero indexed row |
+| `indexed_basis_covariance_matrix_zero_column_iff_zero_diagonal` (theorem) | Diagonal specialization and established zero-diagonal-to-zero-column lemma | indexed_basis_covariance_matrix_zero_diagonal_implies_zero_column | **New:** a zero diagonal exactly characterizes a zero indexed column |
+| `indexed_basis_covariance_matrix_principal_minor_nonnegative` (theorem) | Indexed symmetry and previously proved Cauchy-Schwarz bound, then Lra | indexed_basis_covariance_matrix_symmetric, indexed_basis_covariance_matrix_cauchy_schwarz_squared, Stdlib.Lra | **New:** every two-coordinate principal covariance minor is nonnegative |
 
 ## FiniteBridge.v — 37 proof scripts
 

@@ -1389,6 +1389,18 @@ The next rank/nullspace work should connect to an established
 finite-dimensional linear-algebra library rather than duplicating
 generic elimination, spectral or determinant algorithms.
 
+## Rectangular nullity and two-coordinate covariance minors
+
+A general left/right covariance zero-variance row theorem uses the
+existing scalar `zero_variance_implies_zero_covariance_first`. Its
+column counterpart reuses indexed symmetry instead of separately
+reproving the scalar result. The former square zero-row proof now
+delegates to that general rectangular theorem. Indexed zero-row
+and zero-column iff criteria reuse the exact diagonal identities;
+the two-coordinate minor bound is a direct consequence of the
+earlier indexed Cauchy-Schwarz inequality and `Stdlib.Lra`.
+No custom determinant or rank algorithm has been introduced.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
