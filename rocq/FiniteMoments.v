@@ -5980,4 +5980,95 @@ Section FiniteProbabilityMoments.
     apply covariance_symmetric.
   Qed.
 
+
+  (**
+   [basis_cross_covariance_matrix_nth_error_row] (theorem) — Selecting a valid matrix row gives the corresponding mapped covariances.
+   Mathematical meaning: If the ith row score f is known through a successful nth_error lookup in a left basis, the ith row of the existing rectangular covariance matrix is exactly the list of covariances between f and every element of the right basis. This transports a finite-index witness from the basis to the matrix without choosing a default element.
+   Exact checked proposition: For score lists left and right, natural i and score f, nth_error left i=Some f implies nth_error (basis_cross_covariance_matrix left right) i=Some (map (fun g => covariance f g) right).
+   Premises and side conditions: The explicit Some hypothesis certifies that i is in the row-basis index domain. Right basis size is unrestricted; normalization, nonnegative weights and score independence are not assumed.
+   Proof/definition method: Unfold the existing cross-covariance list constructor and rewrite with Stdlib.List.nth_error_map followed by the successful source basis lookup. The result is direct and does not repeat any covariance computation.
+   Library reuse: Stdlib.List.nth_error_map, basis_cross_covariance_matrix and Stdlib.List.map; no custom row-indexing function or transpose algorithm is introduced.
+   Boundary: The theorem is about an existing list-of-lists covariance matrix rather than a generic bounded matrix type or spectral rank property.
+   *)
+  Theorem basis_cross_covariance_matrix_nth_error_row :
+    forall left right i f,
+      nth_error left i = Some f ->
+      nth_error (basis_cross_covariance_matrix left right) i =
+        Some (map (fun g => covariance f g) right).
+  Proof.
+    intros left right i f Hf.
+    unfold basis_cross_covariance_matrix.
+    rewrite nth_error_map.
+    rewrite Hf.
+    reflexivity.
+  Qed.
+
+  (**
+   [basis_cross_covariance_matrix_nth_error_row_length] (theorem) — Valid indexed covariance rows preserve their column dimension.
+   Mathematical meaning: Every matrix row successfully selected through nth_error from the rectangular covariance of bases left and right has exactly length right columns. Unlike an unguarded nth list operation this is explicitly conditional on a valid row index and therefore cannot silently include an out-of-bounds default row.
+   Exact checked proposition: If nth_error left i = Some f and nth_error (basis_cross_covariance_matrix left right) i=Some row, then length row=length right.
+   Premises and side conditions: The successful basis and matrix row indexing operations certify the bounds. Score lists can be empty or duplicated and there is no assumption about normalized sample weights or covariance definiteness.
+   Proof/definition method: Replace the indexed row using the previously checked basis_cross_covariance_matrix_nth_error_row identity, then invoke Stdlib.List.length_map for the covariance map over the right basis.
+   Library reuse: basis_cross_covariance_matrix_nth_error_row, Stdlib.List.length_map and nth_error; no new matrix dimension recursion is written.
+   Boundary: Rectangular row length preservation alone does not prove covariance rank, matrix inverse existence or a spectral decomposition.
+   *)
+  Theorem basis_cross_covariance_matrix_nth_error_row_length :
+    forall left right i f row,
+      nth_error left i = Some f ->
+      nth_error (basis_cross_covariance_matrix left right) i = Some row ->
+      length row = length right.
+  Proof.
+    intros left right i f row Hf Hrow.
+    rewrite (basis_cross_covariance_matrix_nth_error_row
+      left right i f Hf) in Hrow.
+    inversion Hrow; subst row.
+    apply length_map.
+  Qed.
+
+  (**
+   [basis_covariance_matrix_nth_error_entry] (theorem) — Selected square covariance cell equals covariance of corresponding basis scores.
+   Mathematical meaning: The ith row and jth column of the finite square covariance matrix are exactly the scalar covariance of the ith and jth basis scores whenever all positions are successfully selected by Stdlib.List.nth_error. This specializes the previously proved rectangular entry invariant to the square basis.
+   Exact checked proposition: If nth_error basis i=Some f, nth_error basis j=Some g and nth_error (basis_covariance_matrix basis) i=Some row, then nth_error row j=Some (covariance f g).
+   Premises and side conditions: The three option-valued lookups are explicit certificates of finite row and column indices. No separate normalization or weight positivity condition is needed for this exact list representation identity.
+   Proof/definition method: Rewrite the square covariance matrix as the equal-basis instance of the rectangular matrix and invoke the previously proved nth_error entry theorem with identical left and right score lists.
+   Library reuse: basis_covariance_matrix_as_cross, basis_cross_covariance_matrix_nth_error_entry and Stdlib.List.nth_error. No generic square matrix cell access routine is reimplemented.
+   Boundary: This is a checked entry representation result; it does not assert positive definiteness, nonsingularity or the empirical validity of the covariance values.
+   *)
+  Theorem basis_covariance_matrix_nth_error_entry :
+    forall basis i j f g row,
+      nth_error basis i = Some f ->
+      nth_error basis j = Some g ->
+      nth_error (basis_covariance_matrix basis) i = Some row ->
+      nth_error row j = Some (covariance f g).
+  Proof.
+    intros basis i j f g row Hf Hg Hrow.
+    rewrite basis_covariance_matrix_as_cross in Hrow.
+    eapply basis_cross_covariance_matrix_nth_error_entry;
+      eassumption.
+  Qed.
+
+  (**
+   [basis_covariance_matrix_nth_error_symmetric] (theorem) — Indexed entries of a square finite covariance matrix are symmetric.
+   Mathematical meaning: The jth cell in the ith covariance row equals the ith cell in the jth row for every pair of valid basis positions. This is the directly observable symmetric-entry property of the existing list-based covariance matrix and will serve as the source-side invariant for a future indexed-matrix implementation.
+   Exact checked proposition: Given nth_error basis i=Some f, nth_error basis j=Some g and both selected square matrix rows, nth_error row_i j=nth_error row_j i.
+   Premises and side conditions: Bounds and row existence are represented by four explicit Some hypotheses; sample masses may be signed and need not be normalized because scalar covariance symmetry is algebraic.
+   Proof/definition method: Rewrite both square matrix rows using basis_covariance_matrix_as_cross and instantiate the prior covariance-cross-matrix nth_error swap theorem with identical score bases. No manual transpose construction or entry arithmetic is required.
+   Library reuse: basis_covariance_matrix_as_cross, basis_cross_covariance_matrix_nth_error_swap and the established covariance_symmetric theorem indirectly.
+   Boundary: This verifies symmetry only for matrices constructed from the finite covariance operator, not for arbitrary matrices or for estimates with numerical rounding error.
+   *)
+  Theorem basis_covariance_matrix_nth_error_symmetric :
+    forall basis i j f g row_i row_j,
+      nth_error basis i = Some f ->
+      nth_error basis j = Some g ->
+      nth_error (basis_covariance_matrix basis) i = Some row_i ->
+      nth_error (basis_covariance_matrix basis) j = Some row_j ->
+      nth_error row_i j = nth_error row_j i.
+  Proof.
+    intros basis i j f g row_i row_j Hf Hg Hrow_i Hrow_j.
+    rewrite basis_covariance_matrix_as_cross in Hrow_i.
+    rewrite basis_covariance_matrix_as_cross in Hrow_j.
+    eapply basis_cross_covariance_matrix_nth_error_swap;
+      eassumption.
+  Qed.
+
 End FiniteProbabilityMoments.

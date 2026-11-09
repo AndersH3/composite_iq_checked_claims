@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 496 public theorem/lemma/example declarations,
+The current branch has 500 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**499 proof scripts**, including the generic
+**503 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 172 proof scripts
+## FiniteMoments.v — 176 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -894,6 +894,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `basis_cross_covariance_matrix_app_right` (theorem) | List induction and map_app for each pair of covariance rows | Stdlib.List.map_app, combine, basis_cross_covariance_matrix | **New:** column-basis append corresponds to elementwise row concatenation |
 | `basis_cross_covariance_matrix_nth_error_entry` (theorem) | Two Stdlib nth_error_map rewrites and option inversion | Stdlib.List.nth_error_map, basis_cross_covariance_matrix, covariance | **New:** indexed covariance list cell equals selected scalar covariance with explicit bounds |
 | `basis_cross_covariance_matrix_nth_error_swap` (theorem) | Two certified entry rewrites and covariance_symmetric | basis_cross_covariance_matrix_nth_error_entry, covariance_symmetric | **New:** left/right covariance matrices obey componentwise transpose symmetry |
+| `basis_cross_covariance_matrix_nth_error_row` (theorem) | Stdlib nth_error_map applies successful source basis index to mapped covariance row | Stdlib.List.nth_error_map, basis_cross_covariance_matrix | **New:** selected matrix row corresponds exactly to selected left-side basis score |
+| `basis_cross_covariance_matrix_nth_error_row_length` (theorem) | Indexed row substitution then Stdlib length_map | basis_cross_covariance_matrix_nth_error_row, Stdlib.List.length_map | **New:** every successfully selected rectangular covariance row has the right column count |
+| `basis_covariance_matrix_nth_error_entry` (theorem) | Square specialization of existing rectangular entry invariant | basis_covariance_matrix_as_cross, basis_cross_covariance_matrix_nth_error_entry | **New:** square covariance list entry equals covariance of selected score pair |
+| `basis_covariance_matrix_nth_error_symmetric` (theorem) | Square specialization of checked rectangular swap entry theorem | basis_covariance_matrix_as_cross, basis_cross_covariance_matrix_nth_error_swap | **New:** covariance square matrix has symmetric indexed entries |
 
 ## FiniteBridge.v — 37 proof scripts
 

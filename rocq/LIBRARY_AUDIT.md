@@ -1278,6 +1278,21 @@ Future conversion to an indexed matrix library must
 retain these exact entry and dimension invariants
 before any rank, nullspace or determinant claims.
 
+## Bounds-aware square matrix entries and dimensional row preservation
+
+Two further `nth_error` theorems for the rectangular
+basis covariance matrix transport source-basis index
+success into an exact covariance row and its length,
+using maintained Stdlib `nth_error_map` and
+`length_map`. Square basis covariance then inherits
+entry fidelity and symmetry by the checked
+equal-left-right cross-matrix specialization.
+All successful index values are explicit
+`Some` witnesses; future finite-indexed vectors
+can use these facts without introducing an
+out-of-range default or losing the matrix
+column dimension.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
