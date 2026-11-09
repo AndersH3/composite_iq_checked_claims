@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **611 proof scripts** in seven
+for the two reports. **613 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2279,6 +2279,22 @@ weights. There is no new summation, independence assumption or axiom.
 
 Current intended inventory: **608 public claims, 611 proof scripts,
 674 documented declarations** across seven modules, subject to CI.
+
+## Two-member family conditional independence without duplicated algebra
+
+The two-event conditional factorization and sum-minus-product union
+identities now have explicit event-family formulations. A new
+`finite_conditional_two_event_family_product` theorem projects
+the factorization already required by `finite_conditional_independent`
+and uses the shared `all_events_pair` Boolean identity.
+`finite_conditional_two_event_family_independent_union` delegates to
+the existing independent-union theorem after a standard `existsb`
+reduction. These are not new independence assumptions or Gaussian
+probability theorems; both rely on a strictly positive conditioner
+inside the conditional-independence predicate.
+
+Current intended inventory: **610 public claims, 613 proof scripts,
+676 documented declarations** across seven modules, subject to CI.
 
 ## Research extensions
 

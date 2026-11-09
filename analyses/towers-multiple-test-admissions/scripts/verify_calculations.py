@@ -3,6 +3,7 @@
 
 import argparse
 import csv
+import io
 import math
 from pathlib import Path
 
@@ -344,6 +345,23 @@ def basic_grid() -> list[dict]:
 @deal.post(lambda result: result is None)
 @deal.has("write")
 @deal.raises(OSError, csv.Error)
+# Retain the exact source schema and cell serialization in the
+# independently inspectable on-disk CSV. Parsing the written bytes
+# through the standard csv module also correctly handles embedded
+# delimiters, quoted headers and multiline string fields.
+@deal.ensure(lambda path, fields, rows, result: path.is_file())
+@deal.ensure(lambda path, fields, rows, result:
+             next(csv.reader(io.StringIO(path.read_text(encoding="utf-8"))))
+             == list(fields))
+@deal.ensure(lambda path, fields, rows, result:
+             len(list(csv.DictReader(io.StringIO(
+                 path.read_text(encoding="utf-8"))))) == len(rows))
+@deal.ensure(lambda path, fields, rows, result:
+             list(csv.DictReader(io.StringIO(path.read_text(encoding="utf-8"))))
+             == [{field: str(row[field]) for field in fields} for row in rows])
+@deal.ensure(lambda path, fields, rows, result:
+             all(len(record) == len(fields) for record in
+                 csv.reader(io.StringIO(path.read_text(encoding="utf-8")))))
 def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as stream:

@@ -1695,6 +1695,17 @@ theorems and the already verified generic inclusion-exclusion
 equalities. No second indicator algebra proof, custom list fold or
 unproved independence premise was added.
 
+## Conditional family independence via maintained pair lemmas
+
+The two-element event-family intersection product and conditional
+union sum-minus-product law reuse the existing
+`finite_conditional_independent` predicate,
+`finite_conditional_independent_union_formula`,
+`all_events_pair` and standard `existsb`/Boolean identities.
+Both conclusions are transported through the maintained conditional
+target-event extensionality theorem; no duplicate indicator arithmetic,
+new list recursion or hidden independence is added.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

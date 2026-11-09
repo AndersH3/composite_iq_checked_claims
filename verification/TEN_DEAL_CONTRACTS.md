@@ -400,6 +400,26 @@ functions**, while the independent repository-wide five-contract
 minimum, source-pinned historical evidence audit and negative
 controls remain mandatory.
 
+## Original Towers CSV writer: exact quoted-source preservation
+
+The original
+`analyses/towers-multiple-test-admissions/scripts/verify_calculations.py:write_csv`
+now has ten distinct Deal decorators. Its five new postconditions
+verify that a successful call creates a regular readable CSV path,
+preserves the caller's header order exactly, writes precisely the
+requested number of rows, preserves every string and numeric cell
+when round-tripped through `csv.DictReader`, and never changes
+the field width of a serialized record. Unlike splitting on commas,
+the checks use Python's maintained standard `csv` and `io`
+libraries, including proper handling of quoted commas and newline
+characters. A regression uses a temporary file with deliberately
+quoted and multiline fields instead of mutating published evidence.
+
+The staged ten-contract target becomes **40 named functions**;
+the five-contract floor remains mandatory across all current and
+legacy source. No historical proof record, source hash, negative
+control or archived inventory schema is altered.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

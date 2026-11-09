@@ -284,3 +284,27 @@ def test_legacy_hoeflin_csv_writer_retains_exact_twelve_digit_rows(
     assert stored[1:] == [[name, f"{z:.12f}", f"{score:.12f}"]
                           for name, z, score in rows]
     assert len(stored) == len(rows) + 1
+
+
+@deal.pre(lambda towers, tmp_path: protected_history_intact())
+@deal.ensure(lambda towers, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda towers, tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "import")
+def test_legacy_towers_csv_writer_preserves_quoted_rows_and_field_order(
+        towers, tmp_path):
+    """Exercise csv.DictWriter with a real embedded delimiter/newline."""
+    path = tmp_path / "quoted-original-model.csv"
+    fields = ("case", "rho", "source notes")
+    records = [
+        {"case": "first,case", "rho": 0.25, "source notes": "two\nlines"},
+        {"case": "second", "rho": 0.5, "source notes": "has,comma"},
+    ]
+    towers.write_csv(path, fields, records)
+    with path.open(newline="", encoding="utf-8") as stream:
+        reader = csv.DictReader(stream)
+        assert reader.fieldnames == list(fields)
+        assert list(reader) == [
+            {column: str(row[column]) for column in fields}
+            for row in records
+        ]

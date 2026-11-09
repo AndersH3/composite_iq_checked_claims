@@ -4962,6 +4962,99 @@ Section FiniteOutcomeSpace.
     apply finite_conditional_prob_inclusion_exclusion.
   Qed.
 
+
+  (**
+   [finite_conditional_two_event_family_product] (theorem) —
+   Conditional factorization of a two-member event-family conjunction.
+
+   Mathematical meaning: If two Boolean events satisfy the project's
+   explicit conditional-independence predicate given G, then requiring
+   both events has conditional mass equal to the product of their
+   conditional marginal masses.
+   Exact checked proposition: finite_conditional_independent weights
+   samples first second given implies the conditional finite mass of
+   all_events [first; second] equals conditional(first | given) times
+   conditional(second | given).
+   Premises and side conditions: Independence itself requires strictly
+   positive conditioning mass and its intersection product equation.
+   There is no assumption that the original weights sum to one.
+   Signed sample weights are supported algebraically; probabilistic
+   interpretation additionally requires their nonnegativity.
+   Proof/definition method: Project the factorization equation from
+   the established independence predicate, then transport the
+   family-level conjunction with conditional event extensionality and
+   the previously checked two-event Boolean-list helper.
+   Library reuse: finite_conditional_independent,
+   finite_conditional_prob_event_ext_on_samples, all_events_pair,
+   Stdlib.List.forallb and Stdlib.Bool.andb.
+   Boundary: Pairwise factorization for these two events does not
+   establish mutual independence of a larger family.
+   *)
+  Theorem finite_conditional_two_event_family_product :
+    forall weights samples (first second given : Event),
+      finite_conditional_independent weights samples first second given ->
+      finite_conditional_prob weights samples
+        (all_events [first; second]) given =
+      finite_conditional_prob weights samples first given *
+      finite_conditional_prob weights samples second given.
+  Proof.
+    intros weights samples first second given Hindependent.
+    destruct Hindependent as [_ Hfactor].
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples (all_events [first; second])
+      (fun x => andb (first x) (second x)) given).
+    - exact Hfactor.
+    - intros x _; apply all_events_pair.
+  Qed.
+
+  (**
+   [finite_conditional_two_event_family_independent_union] (theorem) —
+   Two-member family union formula under conditional independence.
+
+   Mathematical meaning: The probability that at least one of two
+   listed events holds, under the same positive-mass condition G,
+   equals the sum of conditional marginals minus their product when
+   the pair is explicitly conditionally independent.
+   Exact checked proposition: finite_conditional_independent weights
+   samples first second given implies conditional(any_event
+   [first; second] | given) equals conditional(first | given)
+   + conditional(second | given) - their product.
+   Premises and side conditions: The independence predicate includes
+   positive mass of G; no unit normalization or independence of more
+   than two event targets is introduced. Signed weights are permitted
+   for the algebraic identity but not for the probability reading.
+   Proof/definition method: Rewrite the standard library existsb
+   on the two-element list as Boolean disjunction using target-event
+   extensionality; apply the already checked conditional independent
+   union formula, not a new inclusion-exclusion calculation.
+   Library reuse: finite_conditional_independent_union_formula,
+   finite_conditional_prob_event_ext_on_samples, Stdlib.List.existsb,
+   Stdlib.Bool.orb_false_r.
+   Boundary: This theorem cannot establish independence from raw
+   empirical marginal probabilities or arbitrary pairwise hypotheses.
+   *)
+  Theorem finite_conditional_two_event_family_independent_union :
+    forall weights samples (first second given : Event),
+      finite_conditional_independent weights samples first second given ->
+      finite_conditional_prob weights samples
+        (any_event [first; second]) given =
+      finite_conditional_prob weights samples first given +
+      finite_conditional_prob weights samples second given -
+      finite_conditional_prob weights samples first given *
+      finite_conditional_prob weights samples second given.
+  Proof.
+    intros weights samples first second given Hindependent.
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples (any_event [first; second])
+      (fun x => orb (first x) (second x)) given).
+    - apply finite_conditional_independent_union_formula.
+      exact Hindependent.
+    - intros x _.
+      unfold any_event; simpl.
+      rewrite orb_false_r.
+      reflexivity.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
