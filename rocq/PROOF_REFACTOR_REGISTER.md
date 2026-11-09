@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 456 public theorem/lemma/example declarations,
+The current branch has 459 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**459 proof scripts**, including the generic
+**462 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 96 proof scripts
+## FiniteUnion.v — 99 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -702,6 +702,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_as_filtered_true` (theorem) | Simplify true-event intersection and reuse finite filtered mass/denominator identities | finite_prob_event_ext_on_samples, finite_prob_on_filtered_samples, finite_prob_true, finite_prob_as_filtered_mass | **New:** original conditioning equals true-event conditioning after filtering |
 | `finite_conditional_independent_iff_filtered_true` (theorem) | Rewrite mass guard and three conditional terms via restriction theorem | finite_conditional_prob_as_filtered_true, finite_prob_true, finite_prob_as_filtered_mass | **New:** generic conditional independence iff certain-event independence on the selected sample list |
 | `finite_conditional_independent_iff_filtered_cross_product` (theorem) | Rewrite existing conditioned cross-product criterion onto selected sublist | finite_conditional_independent_iff_cross_product_mass, finite_prob_on_filtered_samples, finite_prob_as_filtered_mass | **New:** denominator-free conditional independence criterion entirely on the filtered list |
+| `finite_conditional_all_events_append` (theorem) | Conditional event extensionality via Stdlib forallb_app | Stdlib.List.forallb_app, finite_conditional_prob_event_ext_on_samples, all_events | **New:** finite joint-event list concatenation is Boolean intersection |
+| `finite_conditional_all_events_singleton` (theorem) | Standard singleton forallb computation under event extensionality | all_events, Stdlib.List.forallb, finite_conditional_prob_event_ext_on_samples | **New:** singleton joint conditional mass equals event mass |
+| `finite_conditional_all_events_product` (theorem) | Event-list induction, chain-condition split and two-event factorization reuse | finite_conditional_prefix_independent, finite_conditional_prob_true, Stdlib.List.forallb/map/fold_right | **New:** arbitrary finite joint-event conditional product under stronger-than-pairwise suffix independence |
 
 ## FiniteMoments.v — 167 proof scripts
 

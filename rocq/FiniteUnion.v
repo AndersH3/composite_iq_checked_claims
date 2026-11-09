@@ -3,7 +3,7 @@
    Defines Boolean-event masses, unions and conditional ratios, then proves monotonicity, filtering, inclusion-exclusion, Fréchet and union bounds.
    Mathematical representation: Outcomes are enumerated in a list; Boolean events are functions on outcomes and probability sums use FiniteSum.finite_sum.
    Explicit hypotheses: Bounds use nonnegative outcome weights; unit upper bounds additionally require mass normalization; raw identities need neither.
-   Library use: Stdlib.List.existsb, filter, Bool, Sorting.Permutation and the shared FiniteSum lemmas.
+   Library use: Stdlib.List.existsb, forallb, map, fold_right, filter, Bool, Sorting.Permutation and the shared FiniteSum lemmas.
    Limitations: Repeated sample entries contribute repeated weight; no measure axiom, independence or distributional model is imported.
    Proof documentation: Every public and helper declaration below has its
    own statement, hypothesis, proof-approach, and scope commentary.
@@ -3174,6 +3174,122 @@ Section FiniteOutcomeSpace.
     rewrite <- (finite_prob_on_filtered_samples weights samples given first).
     rewrite <- (finite_prob_on_filtered_samples weights samples given second).
     reflexivity.
+  Qed.
+
+
+  (**
+   [all_events] (definition) — Finite intersection of a list of Boolean events by the standard List.forallb operator.
+   Mathematical meaning: A sample outcome lies in the intersection of a list of event predicates exactly when every listed event returns true for that outcome. The intersection of the empty list is the universally true event, the correct multiplicative unit for a subsequent finite joint-probability product.
+   Exact declaration: all_events events x := forallb (fun event => event x) events, with event lists and outcomes supplied through the enclosing FiniteOutcomeSpace section.
+   Premises and side conditions: Events need not be distinct, weights do not enter the definition, and the empty event list is accepted. Duplicating an event in the list does not change the resulting Boolean intersection.
+   Proof/definition method: Delegate Boolean universal quantification across an event list to Rocq Stdlib.List.forallb, rather than writing a project-specific recursive Boolean conjunction fold.
+   Library reuse: Stdlib.List.forallb, Stdlib.Bool.andb and the existing Event alias; no custom all-events recursion or finite probability representation is introduced.
+   Boundary: This is a decidable finite predicate over an arbitrary outcome type, not a sigma-algebra, random-variable product or automatically independent family of events.
+   *)
+  Definition all_events (events : list Event) : Event :=
+    fun x => forallb (fun event => event x) events.
+
+  (**
+   [finite_conditional_prefix_independent] (definition) — Sufficient chain assumptions for a finite list of conditionally independent event factors.
+   Mathematical meaning: Every listed event must be conditionally independent, given G, of the conjunction of all the events following it in the list. The empty list satisfies this structural conjunction of assumptions; the separate factorization theorem also requires a positive conditioning mass.
+   Exact declaration: finite_conditional_prefix_independent weights samples [] given := True; on first::rest it means finite_conditional_independent weights samples first (all_events rest) given AND finite_conditional_prefix_independent weights samples rest given.
+   Premises and side conditions: No pairwise-only independence assumption is substituted for the required independence of each first event from its entire remaining conjunction. The weights and sample list are retained identically at each tail and may have repeated outcomes.
+   Proof/definition method: Inductively collect the explicit finite Boolean-factorization premises required for product decomposition; the underlying intersection is the maintained Stdlib.List.forallb operation, not a custom event fold.
+   Library reuse: finite_conditional_independent, all_events and Stdlib.List plus ordinary propositional conjunction/True. Only the project-specific list of logical side conditions is recursively defined.
+   Boundary: This predicate does not imply mutual independence under arbitrary conditioning sets, nor does pairwise independence alone establish it.
+   *)
+  Fixpoint finite_conditional_prefix_independent
+      (weights : Outcome -> R) (samples : list Outcome)
+      (events : list Event) (given : Event) : Prop :=
+    match events with
+    | [] => True
+    | first :: rest =>
+        finite_conditional_independent weights samples
+          first (all_events rest) given /\
+        finite_conditional_prefix_independent weights samples rest given
+    end.
+
+  (**
+   [finite_conditional_all_events_append] (theorem) — Standard-library conjunction distributes over appending event lists.
+   Mathematical meaning: The joint event represented by all_events on two concatenated lists is the conjunction of the joint event for the left list with that for the right list, so the two representations have exactly the same conditional mass.
+   Exact checked proposition: For all weights, samples, left and right event lists and given, finite_conditional_prob weights samples (all_events (left ++ right)) given equals finite_conditional_prob weights samples (fun x => andb (all_events left x) (all_events right x)) given.
+   Premises and side conditions: No positivity, normalization or weight-sign premise is needed for the exact extensional equality. Empty lists and repeated events or sampled outcomes are permitted without altering the Boolean semantics.
+   Proof/definition method: Invoke the existing finite conditional event-extensionality theorem on each sampled outcome, then rewrite the concatenation with the standard Rocq List.forallb_app lemma.
+   Library reuse: Stdlib.List.forallb_app, Stdlib.List.app, finite_conditional_prob_event_ext_on_samples and all_events; no new list induction or Boolean append identity is implemented.
+   Boundary: Concatenated event intersections do not by themselves imply probabilistic independence or a product of marginal probabilities.
+   *)
+  Theorem finite_conditional_all_events_append :
+    forall weights samples left right given,
+      finite_conditional_prob weights samples
+        (all_events (left ++ right)) given =
+      finite_conditional_prob weights samples
+        (fun x => andb (all_events left x) (all_events right x)) given.
+  Proof.
+    intros weights samples left right given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    unfold all_events.
+    rewrite forallb_app.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_singleton] (theorem) — Single-event conjunction has the original conditional event mass.
+   Mathematical meaning: Intersecting a singleton list of Boolean event predicates does not change the event itself, since forallb on a one-element list reduces to the predicate value AND the true unit.
+   Exact checked proposition: For any weighted sample, event and given selector, finite_conditional_prob weights samples (all_events [event]) given = finite_conditional_prob weights samples event given.
+   Premises and side conditions: The identity holds for arbitrary real weights, zero conditioning denominator, and repeated sample points because it is an equality of two syntactically extensional finite event quotients.
+   Proof/definition method: Apply the established conditional probability target-event extensionality on the sample and reduce the standard list singleton conjunction definition by computation.
+   Library reuse: all_events, Stdlib.List.forallb, finite_conditional_prob_event_ext_on_samples and Stdlib.Bool.
+   Boundary: This is a finite Boolean conjunction normalization, not an independence assertion or a claim about the probability that some event actually occurs.
+   *)
+  Theorem finite_conditional_all_events_singleton :
+    forall weights samples event given,
+      finite_conditional_prob weights samples
+        (all_events [event]) given =
+      finite_conditional_prob weights samples event given.
+  Proof.
+    intros weights samples event given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_product] (theorem) — Conditional product formula for any finite event list under a checked sequence of factorization assumptions.
+   Mathematical meaning: The conditional probability of the conjunction of n event predicates equals the product of their n conditional probabilities if each current event is independent of the conjunction of the remaining events given the same selector G. Empty products have value one, consistent with the positive-mass certain-event identity.
+   Exact checked proposition: Given 0 < finite_prob weights samples given and finite_conditional_prefix_independent weights samples events given, finite_conditional_prob weights samples (all_events events) given = fold_right Rmult 1 (map (fun event => finite_conditional_prob weights samples event given) events).
+   Premises and side conditions: The conditioning marginal is explicitly strictly positive. The stepwise premise is stronger than pairwise independence and is imposed on the whole remaining intersection; repeated target events are not assumed independent. Arbitrary real weights satisfy the algebraic implication, while nonnegative weights are needed for statistical probability semantics.
+   Proof/definition method: Induct on the event list, using finite_conditional_prob_true as the empty-list base case, the first conjunct of finite_conditional_prefix_independent as the current two-event factorization, and the induction hypothesis on the remaining event list. Use only definitionally reduced forallb, map and fold_right, without a new probability fold.
+   Library reuse: Stdlib.List.forallb, map, fold_right, finite_conditional_independent and finite_conditional_prob_true. Event intersection and multiplicative product use maintained library operators rather than newly implemented algorithms.
+   Boundary: The theorem is a finite Boolean joint-probability factorization under explicit sufficient hypotheses; it does not derive mutual independence from pairwise independence or extend to Gaussian random variables.
+   *)
+  Theorem finite_conditional_all_events_product :
+    forall weights samples events given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_prefix_independent weights samples events given ->
+      finite_conditional_prob weights samples (all_events events) given =
+      fold_right Rmult 1
+        (map (fun event =>
+          finite_conditional_prob weights samples event given) events).
+  Proof.
+    intros weights samples events.
+    induction events as [|first rest IH]; intros given Hpositive Hchain.
+    - change (finite_conditional_prob weights samples
+        (fun _ => true) given = 1).
+      apply finite_conditional_prob_true.
+      exact Hpositive.
+    - simpl in Hchain.
+      destruct Hchain as [Hfactor Hrest].
+      change (finite_conditional_prob weights samples
+        (fun x => andb (first x) (all_events rest x)) given =
+        finite_conditional_prob weights samples first given *
+        fold_right Rmult 1
+          (map (fun event =>
+            finite_conditional_prob weights samples event given) rest)).
+      destruct Hfactor as [_ Hjoint].
+      rewrite Hjoint.
+      rewrite (IH given Hpositive Hrest).
+      reflexivity.
   Qed.
 
 End FiniteOutcomeSpace.

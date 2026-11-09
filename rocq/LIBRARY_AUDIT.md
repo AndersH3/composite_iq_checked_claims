@@ -1099,6 +1099,21 @@ unfiltered cross-product criterion and `Stdlib.List.filter`
 bridges. These exact structural results keep sample repetitions
 and total-mass semantics explicit.
 
+## General finite conjunction and product factorization
+
+A finite intersection of arbitrary Boolean event lists is represented
+with maintained `Stdlib.List.forallb`. The only new recursive
+construct is the project-specific **logical assumption list**
+`finite_conditional_prefix_independent`, which makes explicit
+the stronger-than-pairwise premise that each event is independent,
+given the same selector, from the conjunction of the remaining
+events. The finite product itself uses Stdlib `map` and
+`fold_right Rmult 1` and an induction that reuses the existing
+binary independence predicate and the true-event conditional
+probability theorem. Both definitions and the three theorems
+are fully documented. There is no additional Boolean conjunction
+recursion or probability integral implementation.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
