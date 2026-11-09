@@ -8032,4 +8032,123 @@ Section FiniteProbabilityMoments.
     exact Hrows.
   Qed.
 
+  (**
+   [indexed_basis_covariance_quadratic_zero_implies_equal_positive_support_scores] (theorem) — A null covariance direction has equal composite-score values at any two sampled outcomes with strictly positive weights.
+   Mathematical meaning: A null covariance direction has equal composite-score values at any two sampled outcomes with strictly positive weights.
+   Exact checked proposition: For all finite bases, correctly sized vectors of coefficients and positive-weight sampled x,y, normalized nonnegative weights plus Q(coefficients)=0 imply weighted_basis_sum coefficients basis x = weighted_basis_sum coefficients basis y.
+   Premises and side conditions: total_mass=1, nonnegative weights on the sampled list, membership and strict positive weight for x and y, and exactly zero indexed covariance quadratic. The basis and vector may be empty or repeated.
+   Proof/definition method: Unfold only the typed quadratic alias; apply the existing general list-coefficient pairwise null-constancy theorem, and discharge its list-length premise using VectorSpec.length_to_list.
+   Library reuse: null_covariance_direction_pairwise_constant_on_positive_mass; VectorSpec.length_to_list; indexed_basis_covariance_quadratic_form.
+   Boundary: This is a finite, exact positive-support equality, not a Gaussian covariance statement or a claim of positive definiteness.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_implies_equal_positive_support_scores :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      In x samples -> 0 < weight x ->
+      In y samples -> 0 < weight y ->
+      indexed_basis_covariance_quadratic_form basis coefficients = 0 ->
+      weighted_basis_sum (Vector.to_list coefficients) basis x =
+      weighted_basis_sum (Vector.to_list coefficients) basis y.
+  Proof.
+    intros basis coefficients x y Hmass Hw Hx Hwx Hy Hwy Hzero.
+    unfold indexed_basis_covariance_quadratic_form in Hzero.
+    eapply null_covariance_direction_pairwise_constant_on_positive_mass.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+    - exact Hx.
+    - exact Hwx.
+    - exact Hy.
+    - exact Hwy.
+    - exact Hzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_constant_at_positive_support_anchor] (theorem) — Given any single positive-weight sampled anchor, the typed covariance quadratic is zero exactly when every other positive-weight sampled score equals that anchor's composite score.
+   Mathematical meaning: Given any single positive-weight sampled anchor, the typed covariance quadratic is zero exactly when every other positive-weight sampled score equals that anchor's composite score.
+   Exact checked proposition: If x belongs to samples and 0<weight x, then under normalized nonnegative weights Q(coefficients)=0 iff forall y in samples with 0<weight y, weighted_basis_sum coefficients basis y = weighted_basis_sum coefficients basis x.
+   Premises and side conditions: The anchor x must have positive weight and be listed among samples. No chosen mean constant is needed; the coefficient vector remains exactly the length of the basis.
+   Proof/definition method: In the forward direction specialize the newly checked pairwise nullity theorem; conversely supply the anchor's own composite score as the constant witness to the existing indexed nullity iff positive-support constancy theorem.
+   Library reuse: indexed_basis_covariance_quadratic_zero_implies_equal_positive_support_scores and indexed_basis_covariance_quadratic_zero_iff_constant_on_support.
+   Boundary: This avoids arbitrary centering and only compares the finite positive-weight support. It neither asserts matrix rank nor infinite-population equivalence.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_constant_at_positive_support_anchor :
+    forall basis (coefficients : Vector.t R (length basis)) x,
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      In x samples -> 0 < weight x ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       forall y, In y samples -> 0 < weight y ->
+         weighted_basis_sum (Vector.to_list coefficients) basis y =
+         weighted_basis_sum (Vector.to_list coefficients) basis x).
+  Proof.
+    intros basis coefficients x Hmass Hw Hx Hwx.
+    split.
+    - intros Hzero y Hy Hwy.
+      symmetry.
+      eapply indexed_basis_covariance_quadratic_zero_implies_equal_positive_support_scores;
+        eauto.
+    - intro Hanchor.
+      apply (proj2
+        (indexed_basis_covariance_quadratic_zero_iff_constant_on_support
+          basis coefficients Hmass Hw)).
+      exists (weighted_basis_sum (Vector.to_list coefficients) basis x).
+      exact Hanchor.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_not_positive_definite_of_nonzero_supported_constant] (theorem) — A genuinely nonzero vector of basis coefficients producing a constant composite score on every positive-weight sampled outcome is an explicit degeneracy certificate.
+   Mathematical meaning: A genuinely nonzero vector of basis coefficients producing a constant composite score on every positive-weight sampled outcome is an explicit degeneracy certificate.
+   Exact checked proposition: Under unit-mass nonnegative sample weights, if coefficients:Vector.t R(length basis) has nonzero list representation and exists c with weighted_basis_sum coefficients basis x=c for every sampled positive-weight x, then ~ indexed_basis_covariance_positive_definite basis.
+   Premises and side conditions: Nonzero means the standard Vector.to_list representation differs from repeat 0 (length basis). Every positive-weight sampled outcome must share the same composite value; zero-weight occurrences are irrelevant.
+   Proof/definition method: Assume positive definiteness and specialize its previously checked equivalence with absence of nonzero supported-constant directions. The explicit supplied coefficient and real constant immediately contradict that characterization.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_no_nonzero_supported_constant and Vector.to_list.
+   Boundary: This proof constructs a logical degeneracy witness but does not compute a matrix rank, determinant or nullspace basis.
+   *)
+  Theorem indexed_basis_covariance_not_positive_definite_of_nonzero_supported_constant :
+    forall basis (coefficients : Vector.t R (length basis)) c,
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      Vector.to_list coefficients <> repeat 0 (length basis) ->
+      (forall x, In x samples -> 0 < weight x ->
+        weighted_basis_sum (Vector.to_list coefficients) basis x = c) ->
+      ~ indexed_basis_covariance_positive_definite basis.
+  Proof.
+    intros basis coefficients c Hmass Hw Hnonzero Hconstant Hpositive.
+    pose proof
+      (proj1
+        (indexed_basis_covariance_positive_definite_iff_no_nonzero_supported_constant
+          basis Hmass Hw) Hpositive) as Hno_constant.
+    apply (Hno_constant coefficients Hnonzero).
+    exists c.
+    exact Hconstant.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_not_positive_definite_of_nonzero_zero_quadratic] (theorem) — A nonzero bounded coefficient direction whose finite covariance quadratic vanishes gives a direct counterexample to positive definiteness.
+   Mathematical meaning: A nonzero bounded coefficient direction whose finite covariance quadratic vanishes gives a direct counterexample to positive definiteness.
+   Exact checked proposition: For unit-mass nonnegative samples, a nonzero coefficients:Vector.t R(length basis) with Q(coefficients)=0 implies ~indexed_basis_covariance_positive_definite basis.
+   Premises and side conditions: The nonnegativity and normalization conditions guarantee covariance positive semidefiniteness. The supplied vector must be nonzero; a zero vector has zero quadratic regardless of positive definiteness.
+   Proof/definition method: Use the checked positive-definiteness iff absence of nonzero zero-quadratic directions, then specialize the asserted exclusion to the explicit witness.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_no_nonzero_zero_quadratic and Stdlib.Vector.to_list.
+   Boundary: This is a direct mathematical witness of non-positive-definiteness, not an algorithm finding such directions or computing their count.
+   *)
+  Theorem indexed_basis_covariance_not_positive_definite_of_nonzero_zero_quadratic :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      Vector.to_list coefficients <> repeat 0 (length basis) ->
+      indexed_basis_covariance_quadratic_form basis coefficients = 0 ->
+      ~ indexed_basis_covariance_positive_definite basis.
+  Proof.
+    intros basis coefficients Hmass Hw Hnonzero Hzero Hpositive.
+    pose proof
+      (proj1
+        (indexed_basis_covariance_positive_definite_iff_no_nonzero_zero_quadratic
+          basis Hmass Hw) Hpositive) as Hno_zero.
+    apply (Hno_zero coefficients Hnonzero).
+    exact Hzero.
+  Qed.
+
 End FiniteProbabilityMoments.

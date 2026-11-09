@@ -1554,6 +1554,17 @@ support-constancy and Fin.t matrix-row equivalences. No
 additional vector algebra, finite-list induction or matrix
 elimination code was introduced.
 
+## Indexed covariance anchor and explicit degeneracy witnesses
+
+Four proof scripts use maintained existing results to
+characterize type-safe covariance nullity by pairwise
+equality on positive-weight finite support and by comparison
+to an arbitrary positive-support anchor. Two explicit
+degeneracy witness theorems reuse the indexed
+positive-definiteness iff criteria. `VectorSpec.length_to_list`
+is the only vector/list conversion obligation. No duplicate
+finite sums, matrix elimination or new axioms were introduced.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
