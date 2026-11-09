@@ -4849,7 +4849,7 @@ Section FiniteOutcomeSpace.
    andb (first x) (second x).
    Premises and side conditions: None; event predicates may coincide
    and no weight, mass, positivity or independence is assumed.
-   Proof method: Simplify Stdlib.List.forallb on a two-element list,
+   Proof/definition method: Simplify Stdlib.List.forallb on a two-element list,
    then eliminate its true identity using the maintained Boolean law.
    Library reuse: Stdlib.List.forallb and Stdlib.Bool.andb_true_r.
    Boundary: This is a finite Boolean identity, not a claim that
@@ -4880,7 +4880,7 @@ Section FiniteOutcomeSpace.
    Premises and side conditions: No nonnegative weights, positive
    normalization, independence, or nonempty sample are needed for
    this exact identity of finite real-weighted indicator sums.
-   Proof method: Transport the two-event conjunction through the
+   Proof/definition method: Transport the two-event conjunction through the
    existing event-mass extensionality theorem using all_events_pair,
    then invoke the already proven two_event_union_inclusion_exclusion.
    Library reuse: finite_prob_event_ext_on_samples,
@@ -4924,7 +4924,7 @@ Section FiniteOutcomeSpace.
    conditional quotient has totalized real-division semantics.
    A probability interpretation additionally requires positive
    conditioning mass and nonnegative sample weights.
-   Proof method: Transport the family disjunction and conjunction
+   Proof/definition method: Transport the family disjunction and conjunction
    pointwise via maintained conditional target-event extensionality,
    then apply finite_conditional_prob_inclusion_exclusion.
    Library reuse: Stdlib.List.existsb, Stdlib.Bool.orb_false_r,
