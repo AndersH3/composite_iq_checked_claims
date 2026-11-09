@@ -1213,6 +1213,22 @@ variance identity. Each new theorem is fully
 documented, with positive conditioning mass and
 statistical nonnegativity distinguished.
 
+## Reusable total-mass bridge and conditional complement covariance
+
+`conditioned_weights_moment_total_mass_one` exposes
+the already checked filtered-sample normalization
+directly in `FiniteMoments.total_mass` via
+definitional equality with the common finite sum.
+The conditional complement-variance proof was
+refactored to invoke it. Three new conditional
+Boolean-indicator covariance complement laws
+then reuse the existing normalization-dependent
+covariance theorems, with positive original
+conditioning mass stated explicitly. No
+new covariance sum, normalizing recursion,
+event algebra or general measure-theory axiom
+is introduced.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
