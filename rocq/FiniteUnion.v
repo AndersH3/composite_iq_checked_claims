@@ -3440,6 +3440,104 @@ Section FiniteOutcomeSpace.
     apply finite_conditional_union_bound_filtered; assumption.
   Qed.
 
+
+  (**
+   [finite_prob_scale_weights] (theorem) — Homogeneity of a finite Boolean event mass.
+   Mathematical meaning: Multiplying every sampled real weight by the same scalar multiplies the finite mass of every Boolean event by that scalar. This is the linearity property needed to compare conditional probabilities before and after a common change of weight units.
+   Exact checked proposition: For every real scalar scale, weights, sample list and Boolean event, finite_prob (fun x => scale * weights x) samples event = scale * finite_prob weights samples event.
+   Premises and side conditions: No positivity, normalization, event independence or distinct-outcome assumption is needed for the algebraic identity. The finite sample list and all repeated entries remain unchanged.
+   Proof/definition method: Unfold only the existing finite event mass and its shared finite_sum alias, rewrite the right-hand side with the existing finite_sum_scale lemma, and apply finite_sum_ext to match the two pointwise scalar products using the standard ring tactic.
+   Library reuse: FiniteSum.finite_sum_scale, FiniteSum.finite_sum_ext and Stdlib.Reals ring. There is no new recursive weighted-sum algorithm.
+   Boundary: Real scaling is not a claim that scaled signed weights remain probabilities; positive normalization and nonnegative weights have to be supplied when interpreting them statistically.
+   *)
+  Theorem finite_prob_scale_weights :
+    forall scale weights samples event,
+      finite_prob (fun x => scale * weights x) samples event =
+      scale * finite_prob weights samples event.
+  Proof.
+    intros scale weights samples event.
+    unfold finite_prob, finite_sum.
+    rewrite <- (FiniteSum.finite_sum_scale samples scale
+      (fun x => weights x * indicator (event x))).
+    apply FiniteSum.finite_sum_ext.
+    intro x; ring.
+  Qed.
+
+  (**
+   [finite_conditional_prob_scale_weights] (theorem) — Invariance of finite conditional event mass under positive global reweighting.
+   Mathematical meaning: Scaling all sample weights by one strictly positive common factor changes both the selected target mass and the conditioning mass by that same factor; consequently their ratio and the conditional probability of the target event stay unchanged.
+   Exact checked proposition: For all real scale, weights, samples, target event and given event, 0 < scale and 0 < finite_prob weights samples given imply finite_conditional_prob (fun x => scale * weights x) samples event given = finite_conditional_prob weights samples event given.
+   Premises and side conditions: Strict positivity of scale and of the original conditioning mass ensure both denominators are nonzero; unit total mass, independence, and nonnegative individual weights are not needed for the equality of real expressions.
+   Proof/definition method: Unfold only the existing conditional quotient, rewrite both finite event masses through finite_prob_scale_weights, then cancel their common nonzero positive scaling factor with the standard real-field tactic and linear arithmetic.
+   Library reuse: finite_prob_scale_weights, finite_conditional_prob, Stdlib.Reals field and Stdlib.Lra; no new probability operator or denominator calculation is introduced.
+   Boundary: A common positive scalar does not change conditional ratios; this does not imply invariance under outcome-dependent weighting or selection-bias transformations.
+   *)
+  Theorem finite_conditional_prob_scale_weights :
+    forall scale weights samples event given,
+      0 < scale ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob (fun x => scale * weights x)
+        samples event given =
+      finite_conditional_prob weights samples event given.
+  Proof.
+    intros scale weights samples event given Hscale Hgiven.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_scale_weights scale weights samples
+      (fun x => andb (given x) (event x))).
+    rewrite (finite_prob_scale_weights scale weights samples given).
+    field; lra.
+  Qed.
+
+  (**
+   [finite_conditional_independent_scale_weights] (theorem) — Positive rescaling invariance of a finite conditional-independence proposition.
+   Mathematical meaning: Conditional factorization of the joint event mass is unaffected by changing all finite outcome weights by a common positive factor, because both the positive conditioning-mass guard and each conditional quotient represent the same proposition after rescaling.
+   Exact checked proposition: For scale > 0 and any weights, samples and Boolean first, second and given, finite_conditional_independent (fun x => scale * weights x) samples first second given iff finite_conditional_independent weights samples first second given.
+   Premises and side conditions: The scale must be strictly positive to preserve positive conditioning mass in both directions. No normalization or nonnegative individual-weight assumption is silently inserted; the latter is needed only for probability interpretation.
+   Proof/definition method: Unfold the existing two-conjunct independence predicate, rewrite the scaled conditioning mass with finite_prob_scale_weights, extract positivity on either side by Stdlib nonlinear real arithmetic, and rewrite all three conditional terms through finite_conditional_prob_scale_weights with the recovered original conditioning-mass guard.
+   Library reuse: finite_prob_scale_weights, finite_conditional_prob_scale_weights, Stdlib.Psatz.nra and ordinary propositional iff. No repeated Boolean conjunction proof or independent finite summation is introduced.
+   Boundary: Uniform positive scaling leaves these finite ratios and factorization claims unchanged, whereas zero, negative or nonuniform scaling is not covered.
+   *)
+  Theorem finite_conditional_independent_scale_weights :
+    forall scale weights samples first second given,
+      0 < scale ->
+      (finite_conditional_independent (fun x => scale * weights x)
+         samples first second given <->
+       finite_conditional_independent weights samples first second given).
+  Proof.
+    intros scale weights samples first second given Hscale.
+    unfold finite_conditional_independent.
+    rewrite (finite_prob_scale_weights scale weights samples given).
+    assert (Hguard :
+      0 < scale * finite_prob weights samples given <->
+      0 < finite_prob weights samples given).
+    { split; intro H; nra. }
+    rewrite Hguard.
+    split.
+    - intros [Hgiven Hfactor].
+      split; [exact Hgiven |].
+      rewrite (finite_conditional_prob_scale_weights
+        scale weights samples
+        (fun x => andb (first x) (second x)) given Hscale Hgiven)
+        in Hfactor.
+      rewrite (finite_conditional_prob_scale_weights
+        scale weights samples first given Hscale Hgiven)
+        in Hfactor.
+      rewrite (finite_conditional_prob_scale_weights
+        scale weights samples second given Hscale Hgiven)
+        in Hfactor.
+      exact Hfactor.
+    - intros [Hgiven Hfactor].
+      split; [exact Hgiven |].
+      rewrite (finite_conditional_prob_scale_weights
+        scale weights samples
+        (fun x => andb (first x) (second x)) given Hscale Hgiven).
+      rewrite (finite_conditional_prob_scale_weights
+        scale weights samples first given Hscale Hgiven).
+      rewrite (finite_conditional_prob_scale_weights
+        scale weights samples second given Hscale Hgiven).
+      exact Hfactor.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

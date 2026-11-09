@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 464 public theorem/lemma/example declarations,
+The current branch has 467 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**467 proof scripts**, including the generic
+**470 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 104 proof scripts
+## FiniteUnion.v — 107 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -710,6 +710,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_at_most_member` (theorem) | Conditional mass monotonicity with universal-list implication | finite_conditional_prob_monotone, Stdlib.List.forallb_forall, all_events | **New:** finite conditioned intersection bounded above by each member |
 | `finite_conditional_marginals_sum_filtered` (theorem) | Factor common reciprocal out of standard FiniteSum of conditional marginals | FiniteSum.finite_sum_scale/finite_sum_ext, finite_conditional_prob_filtered, Stdlib.Reals ring | **New:** sum of conditional marginals equals sum on filtered sample divided by conditioning mass |
 | `finite_conditional_union_bound` (theorem) | Rewrite marginal-sum identity and reuse conditioned finite union bound | finite_conditional_marginals_sum_filtered, finite_conditional_union_bound_filtered | **New:** standard finite conditional union bound directly in terms of conditional member probabilities |
+| `finite_prob_scale_weights` (theorem) | Reuse shared finite_sum_scale, extensionality and ring | FiniteSum.finite_sum_scale, finite_sum_ext, Stdlib.Reals ring | **New:** finite Boolean event mass is homogeneous in the outcome weights |
+| `finite_conditional_prob_scale_weights` (theorem) | Common positive numerator/denominator factor cancellation by field | finite_prob_scale_weights, Stdlib.Reals field, Stdlib.Lra | **New:** finite conditional masses invariant under a common positive weight scaling |
+| `finite_conditional_independent_scale_weights` (theorem) | Positive-guard iff and conditional quotient rewrites | finite_prob_scale_weights, finite_conditional_prob_scale_weights, Stdlib.Psatz.nra | **New:** conditional-independence predicate iff preserved by common positive weight scaling |
 
 ## FiniteMoments.v — 167 proof scripts
 

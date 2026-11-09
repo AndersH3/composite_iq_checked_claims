@@ -1140,6 +1140,20 @@ integration structure is introduced. The inequality itself is
 just the prior selected-sample union bound rewritten in this
 standard marginal-sum representation.
 
+## Rescaling invariance by the existing finite-sum API
+
+The event-mass scaling lemma delegates to
+`FiniteSum.finite_sum_scale` and `finite_sum_ext`.
+Conditional probabilities and the generic conditional
+independence predicate inherit invariance under a
+single strictly positive global scale by real-field
+cancellation and the standard `nra` positivity
+tactic. The side condition is essential: neither
+nonuniform nor nonpositive reweightings have been
+proved to preserve independence. All three
+declarations carry explicit comments and no
+alternative summation implementation is introduced.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
