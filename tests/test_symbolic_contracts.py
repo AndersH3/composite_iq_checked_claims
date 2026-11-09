@@ -49,6 +49,14 @@ def copied_root(tmp_path) -> Path:
 @deal.has("read", "write", "global", "import", "syscall", "stdout", "stderr")
 def test_real_fixture_has_a_negative_counterexample_and_all_other_posts_prove(good_report) -> None:
     assert good_report["complete"] and symbolic.accepted(good_report)
+    # The ten-contract proof gates each contribute their original equality
+    # postcondition and five independently checked safety implications.
+    positive = good_report["files"][0]["theorems"]
+    assert {row["name"] for row in positive} == {
+        "totals_balanced", "successful_checks"}
+    assert all(len(row["obligations"]) == 6 for row in positive)
+    assert all(obligation["outcome"] == "proved"
+               for row in positive for obligation in row["obligations"])
     negative = good_report["files"][1]["theorems"][1]
     assert negative["name"] == "negative_probability"
     assert negative["conclusion"] == "FAIL"

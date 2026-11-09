@@ -201,7 +201,11 @@ acceptance logic, not new assumptions about native SPARK proof.
 The ten-contract regression subset contains **23 functions**:
 17 historical analysis functions and six current verification helpers.
 The five-contract minimum, historical evidence integrity, and
-negative-control tests remain in force.
+negative-control tests remain in force. The version-pinned symbolic
+`verification/check_symbolic.py` gate now expects six independently
+proved postconditions for each of these two functions instead of
+silently retaining its former one-postcondition count. The deliberately
+failing fixture still has the same exact three obligations.
 
 ## Next upgrades
 

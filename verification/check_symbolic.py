@@ -28,7 +28,10 @@ SCHEMA = "deal-symbolic-int-v1"
 ADAPTER = "isinstance-int-v1"
 NORMALIZATION = "pure-comparison-chains-v1"
 EXPECTED = {
-    "verification/proof_gate.py": {"totals_balanced": ["proved"], "successful_checks": ["proved"]},
+    "verification/proof_gate.py": {
+        "totals_balanced": ["proved"] * 6,
+        "successful_checks": ["proved"] * 6,
+    },
     "tests/fixtures/contract_negative_control.py": {
         "probability_identity": ["proved", "proved"],
         "negative_probability": ["counterexample", "proved", "proved"],
