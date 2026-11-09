@@ -236,19 +236,6 @@ def _valid_grid(rows) -> bool:
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: bool(CASES) and len({row[0] for row in CASES}) == len(CASES) and all(isinstance(label, str) and label and _finite(p_a) and _finite(p_b) and 0 < p_a < 1 and 0 < p_b < 1 for label, p_a, p_b in CASES))
-# Certified reference rows must obey the two-event Fréchet bounds and
-# reconstruct their joint event mass from either conditional probability.
-@deal.post(lambda result: len(result) == len(CASES))
-@deal.post(lambda result: all(row["joint"] <= min(row["p_a"], row["p_b"])
-                             for row in result))
-@deal.post(lambda result: all(row["union"] >= max(row["p_a"], row["p_b"])
-                             for row in result))
-@deal.post(lambda result: all(math.isclose(
-    row["conditional_b_given_a"] * row["p_a"], row["joint"],
-    rel_tol=2e-14, abs_tol=2e-14) for row in result))
-@deal.post(lambda result: all(math.isclose(
-    row["conditional_a_given_b"] * row["p_b"], row["joint"],
-    rel_tol=2e-14, abs_tol=2e-14) for row in result))
 def admission_rows() -> list[dict]:
     rows = []
     for label, p_a, p_b in CASES:
@@ -273,20 +260,6 @@ def admission_rows() -> list[dict]:
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == len(GRID_FIELDS) and all(isinstance(field, str) and field for field in GRID_FIELDS))
-# The old BASIC-grid reproduction keeps the specified cutoffs, distinguishes
-# event intersections from marginals and records its published-data residual.
-@deal.post(lambda result: len(result) == 3)
-@deal.post(lambda result: tuple(row["cutoff_iq"] for row in result)
-           == (133, 150, 164))
-@deal.post(lambda result: all(
-    row["grid_joint"] <= row["grid_marginal"] + 5e-15
-    for row in result))
-@deal.post(lambda result: all(
-    0 <= row["grid_conditional"] <= 1
-    for row in result))
-@deal.post(lambda result: all(math.isclose(
-    row["grid_minus_published"], row["grid_joint"] - row["published_joint"],
-    rel_tol=0, abs_tol=5e-15) for row in result))
 def basic_grid() -> list[dict]:
     """Reproduce Q..199 STEP .5 point sums in the published BASIC program.
 

@@ -106,26 +106,28 @@ functions listed above. Their stronger postconditions are
 exercised by the existing runtime and numerical property tests.
 No new restrictions on previously valid arguments were added.
 
-## Fourth ten-contract batch: legacy reference result generators
+## Fourth ten-contract batch: Hoeflin threshold generator
 
-The original analysis programs now also enforce ten distinct Deal
-contracts on `thresholds`, `admission_rows`, and `basic_grid`.
-The five additional postconditions per function specify label
-coverage, score-to-IQ conversion, theoretical quantile bounds,
-Fréchet joint/union probability constraints, reconstruction of
-the joint event from conditional rates, cutoff order, the
-intersection-versus-marginal relationship, and exact reproduction
-of the grid-minus-published residual.
+The original Hoeflin/Ferguson `thresholds` generator now also
+enforces ten distinct Deal decorators. Its five extra
+postconditions specify the expected output row count and shape,
+finite nonnegative quantile bounds, exact IQ-score conversion,
+and the limiting infinite-test threshold. Empty-list guards in
+two expressions accommodate Deal 4.24.6's approximation of loop
+results; the preexisting `_valid_rows` result validator still
+requires the full nonempty table.
 
-All validators and model computations continue to use their
-existing SciPy/NumPy library implementations; no duplicate
-probability integral or numerical grid code was introduced.
-These postconditions do not change the accepted input domains.
+Exploratory additions to the Towers `admission_rows` and
+`basic_grid` postconditions triggered a third-party Deal
+linter AST compilation failure. Those predicates were not kept,
+rather than bypassing the static lint/negative control gate.
+The underlying SciPy and NumPy numerical implementations remain
+unchanged.
 
-The enforced ten-contract set now includes **nineteen original
-analysis Python functions**. The project-wide policy remains
-a mandatory five contracts per named function and an optional
-ten where the constraints can be justified and tested.
+The enforced ten-contract set now includes **seventeen original
+analysis Python functions**. The mandatory minimum remains five
+per named function, with ten only where constraints are
+independently meaningful and accepted by the pinned toolchain.
 
 ## Next upgrades
 
