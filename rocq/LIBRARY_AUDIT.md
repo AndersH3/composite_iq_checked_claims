@@ -1541,6 +1541,19 @@ exclude nonzero quadratic null directions. No determinant,
 rank or matrix elimination implementation was added.
 All sampled probability assumptions remain explicit.
 
+## Constructive positive-support and bounded-row witnesses
+
+Two new theorems derive strictly positive typed coefficient
+quadratics from separated positive-weight outcome pairs and
+derive whole-basis positive definiteness if all nonzero typed
+directions have a pair. One explicit nonzero bounded covariance
+row dot proves strict positivity, while one nonzero direction
+annihilating every bounded covariance row refutes positive
+definiteness. These proofs reuse the already kernel-checked
+support-constancy and Fin.t matrix-row equivalences. No
+additional vector algebra, finite-list induction or matrix
+elimination code was introduced.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

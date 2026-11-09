@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 558 public theorem/lemma/example declarations,
+The current branch has 562 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**561 proof scripts**, including the generic
+**565 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 234 proof scripts
+## FiniteMoments.v — 238 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -956,6 +956,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_positive_definite_iff_positive_composite_variances` (theorem) | Rewrite arbitrary typed quadratic as existing finite composite-score variance in both directions | indexed_basis_covariance_quadratic_as_variance, indexed_basis_covariance_positive_definite | **New:** Positive definiteness iff every nonzero bounded coefficient direction has strictly positive composite-score variance |
 | `indexed_basis_covariance_positive_definite_iff_no_nonzero_basis_orthogonal_direction` (theorem) | Pointwise specialize indexed quadratic strict positivity iff nonorthogonality to basis scores | indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis, indexed_basis_covariance_positive_definite | **New:** Positive definiteness iff no nonzero coefficient direction is uncorrelated with its entire basis |
 | `indexed_basis_covariance_positive_definite_iff_no_nonzero_zero_quadratic` (theorem) | Combine existing indexed PSD and absence of quadratic zeros using standard lra | indexed_basis_covariance_quadratic_nonnegative, Stdlib.Lra | **New:** Positive definiteness iff a PSD covariance quadratic has no nonzero null direction |
+| `indexed_basis_covariance_quadratic_positive_of_distinct_support_values` (theorem) | Positive-support separation contradicts support constancy through existing positive-quadratic iff | indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support, weighted_basis_sum | **New:** Distinct composite scores on two positive-weight outcomes certify a strictly positive typed covariance quadratic |
+| `indexed_basis_covariance_positive_definite_of_separating_support_pairs` (theorem) | Apply the pairwise positive-support witness theorem pointwise to every nonzero typed coefficient vector | indexed_basis_covariance_quadratic_positive_of_distinct_support_values, indexed_basis_covariance_positive_definite | **New:** Pointwise positive-support sample separation of all nonzero typed composite directions implies positive definiteness |
+| `indexed_basis_covariance_quadratic_positive_of_nonzero_bounded_row_dot` (theorem) | Refute the universal bounded covariance-row nullity using one explicitly nonzero row dot witness | indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot, Stdlib.Vectors.Fin | **New:** A single nonzero typed covariance row dot product certifies strict positivity of the composite quadratic |
+| `indexed_basis_covariance_not_positive_definite_of_nonzero_bounded_row_kernel` (theorem) | Directly contradict the checked positive-definite no-nonzero-bounded-row-kernel criterion | indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel, Stdlib.Vectors.Fin | **New:** An explicit nonzero coefficient vector in every bounded covariance row kernel refutes positive definiteness |
 
 ## FiniteBridge.v — 37 proof scripts
 

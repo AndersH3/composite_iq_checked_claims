@@ -7915,4 +7915,121 @@ Section FiniteProbabilityMoments.
       lra.
   Qed.
 
+  (**
+   [indexed_basis_covariance_quadratic_positive_of_distinct_support_values] (theorem) — A pair of positively weighted sampled outcomes distinguished by a typed coefficient-composite score witnesses a strictly positive covariance quadratic.
+   Mathematical meaning: A pair of positively weighted sampled outcomes distinguished by a typed coefficient-composite score witnesses a strictly positive covariance quadratic.
+   Exact checked proposition: For any basis and coefficients:Vector.t R(length basis), normalized nonnegative weights and x,y in samples with strictly positive weights, unequal weighted_basis_sum coefficient_list basis scores at x and y imply 0 < indexed_basis_covariance_quadratic_form basis coefficients.
+   Premises and side conditions: Both x and y must occur in the sampled list and carry positive weight. No independent basis scores, distinct input outcomes or Gaussian distribution is assumed; only their evaluated composite scores must differ.
+   Proof/definition method: Invoke the existing indexed quadratic positivity iff no positive-support constant and refute constancy with the two witnessed sample values.
+   Library reuse: indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support, Stdlib logical connectives and the maintained weighted_basis_sum.
+   Boundary: This proves strict positivity for one specified coefficient direction only; it is not a numerical lower bound, coefficient injectivity or a matrix-rank calculation.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_of_distinct_support_values :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      In x samples -> 0 < weight x ->
+      In y samples -> 0 < weight y ->
+      weighted_basis_sum (Vector.to_list coefficients) basis x <>
+        weighted_basis_sum (Vector.to_list coefficients) basis y ->
+      0 < indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients x y Hmass Hw Hx Hwx Hy Hwy Hdifferent.
+    apply (proj2
+      (indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support
+        basis coefficients Hmass Hw)).
+    intros [c Hconstant].
+    apply Hdifferent.
+    transitivity c.
+    - apply Hconstant; assumption.
+    - symmetry. apply Hconstant; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_of_separating_support_pairs] (theorem) — If every nonzero typed coefficient direction distinguishes some pair of positive-weight sample outcomes, then the entire finite covariance basis is positive definite.
+   Mathematical meaning: If every nonzero typed coefficient direction distinguishes some pair of positive-weight sample outcomes, then the entire finite covariance basis is positive definite.
+   Exact checked proposition: Under unit mass and nonnegative sampled weights, if forall coefficients:Vector.t R(length basis) with Vector.to_list coefficients <> repeat 0 (length basis), exists two positive-weight sampled outcomes whose weighted composite-score values differ, then indexed_basis_covariance_positive_definite basis.
+   Premises and side conditions: Each nonzero coefficient vector must have its own possibly different witness pair; zero-weight samples do not count. This hypothesis does not require any externally defined finite-dimensional rank or eigenvalue theory.
+   Proof/definition method: Unfold the typed positive-definiteness predicate, select the witness pair for each nonzero coefficient, and reuse the previously checked indexed pair-separation positivity theorem.
+   Library reuse: indexed_basis_covariance_positive_definite, indexed_basis_covariance_quadratic_positive_of_distinct_support_values and Stdlib.Vectors.Vector.to_list.
+   Boundary: A sufficient witness criterion for strict positive definiteness is established, not the necessity of pair witnesses or an algorithm to enumerate them.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_of_separating_support_pairs :
+    forall basis,
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      (forall coefficients : Vector.t R (length basis),
+        Vector.to_list coefficients <> repeat 0 (length basis) ->
+        exists x y,
+          In x samples /\ 0 < weight x /\
+          In y samples /\ 0 < weight y /\
+          weighted_basis_sum (Vector.to_list coefficients) basis x <>
+            weighted_basis_sum (Vector.to_list coefficients) basis y) ->
+      indexed_basis_covariance_positive_definite basis.
+  Proof.
+    intros basis Hmass Hw Hseparates.
+    unfold indexed_basis_covariance_positive_definite.
+    intros coefficients Hnonzero.
+    destruct (Hseparates coefficients Hnonzero)
+      as [x [y [Hx [Hwx [Hy [Hwy Hdifferent]]]]]].
+    eapply indexed_basis_covariance_quadratic_positive_of_distinct_support_values;
+      eauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_positive_of_nonzero_bounded_row_dot] (theorem) — A nonzero dot product against any dimension-safe covariance row is a direct witness of strictly positive covariance quadratic form.
+   Mathematical meaning: A nonzero dot product against any dimension-safe covariance row is a direct witness of strictly positive covariance quadratic form.
+   Exact checked proposition: For any typed coefficient vector and bounded Fin.t row index i, under unit mass and nonnegative sample weights, vector_dot coefficient_list (map (fun g => covariance (Vector.nth (Vector.of_list basis) i) g) basis) <> 0 implies 0 < indexed_basis_covariance_quadratic_form basis coefficients.
+   Premises and side conditions: The bounded row and coefficient vector dimensions are enforced by standard Fin.t and Vector.t types. The covariance basis can be dependent and no positive-definiteness of the full matrix is assumed.
+   Proof/definition method: Use the previously checked strict-positive-iff-not-all-bounded-row-dots theorem. A particular nonzero row refutes universal row nullity.
+   Library reuse: indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot, Stdlib.Vectors.Fin and Vector, vector_dot.
+   Boundary: This is an explicitly witnessed sufficient condition for one positive direction, not a statement that every row is nonzero or that the covariance matrix has full rank.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_of_nonzero_bounded_row_dot :
+    forall basis (coefficients : Vector.t R (length basis))
+           (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      vector_dot (Vector.to_list coefficients)
+        (map (fun g => covariance
+          (Vector.nth (Vector.of_list basis) i) g) basis) <> 0 ->
+      0 < indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients i Hmass Hw Hnonzero.
+    apply (proj2
+      (indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot
+        basis coefficients Hmass Hw)).
+    intro Hall.
+    apply Hnonzero.
+    apply Hall.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_not_positive_definite_of_nonzero_bounded_row_kernel] (theorem) — An explicitly nonzero coefficient vector annihilating every bounded covariance matrix row proves the finite covariance basis is not positive definite.
+   Mathematical meaning: An explicitly nonzero coefficient vector annihilating every bounded covariance matrix row proves the finite covariance basis is not positive definite.
+   Exact checked proposition: For normalized nonnegative finite sample weights, existence of coefficients:Vector.t R(length basis) whose list representation differs from repeat 0 and whose dot product against every Fin.t-indexed covariance row vanishes implies ~ indexed_basis_covariance_positive_definite basis.
+   Premises and side conditions: The witness must be a genuine nonzero typed coefficient direction. The matrix need not be invertible; the theorem shows that the observed witness precludes positive definiteness.
+   Proof/definition method: Specialize the existing positive-definite iff no-nonzero-bounded-row-kernel theorem to the assumed positive-definite basis and contradict its indexed-row kernel exclusion with the supplied coefficient witness.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel, Stdlib.Vectors.Vector.to_list and Fin.t.
+   Boundary: This refutes positive definiteness constructively from an explicit null vector; it does not compute the full nullspace, rank or algebraic multiplicity.
+   *)
+  Theorem indexed_basis_covariance_not_positive_definite_of_nonzero_bounded_row_kernel :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      Vector.to_list coefficients <> repeat 0 (length basis) ->
+      (forall i : Fin.t (length basis),
+        vector_dot (Vector.to_list coefficients)
+          (map (fun g => covariance
+            (Vector.nth (Vector.of_list basis) i) g) basis) = 0) ->
+      ~ indexed_basis_covariance_positive_definite basis.
+  Proof.
+    intros basis coefficients Hmass Hw Hnonzero Hrows Hpositive.
+    pose proof
+      (proj1 (indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel
+        basis Hmass Hw) Hpositive) as Htrivial.
+    apply (Htrivial coefficients Hnonzero).
+    exact Hrows.
+  Qed.
+
 End FiniteProbabilityMoments.
