@@ -1665,6 +1665,16 @@ weighted sum. Empty/singleton mass identities reuse established
 `finite_prob_true` and the standard singleton `forallb`
 computation. No new foundation or custom list induction is required.
 
+## Conjunction transport under existing extensionality and permutation laws
+
+Ordinary finite-mass head/tail, membership-set and permutation
+identities now reuse `Stdlib.List.forallb`,
+`Stdlib.Sorting.Permutation`, `all_events_membership_ext`
+and `finite_prob_event_ext_on_samples`. A marginal upper bound
+is reduced to the existing singleton and event-family inclusion
+inequalities. No custom permutation induction, finite event sum,
+probability normalization or independence assumption is introduced.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

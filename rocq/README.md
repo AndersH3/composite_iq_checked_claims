@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **602 proof scripts** in seven
+for the two reports. **606 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2235,6 +2235,20 @@ is introduced.
 
 Current intended inventory: **599 public claims, 602 proof scripts,
 665 documented declarations** in seven Rocq modules, subject to CI.
+
+## Unconditional conjunction structure, membership and marginal bounds
+
+Four more well-documented declarations lift standard Boolean-list
+semantics to finite weighted mass: head-tail conjunction via
+`Stdlib.List.forallb`, membership extensionality via the existing
+`all_events_membership_ext`, permutation invariance via
+`Stdlib.Sorting.Permutation`, and the upper bound by any required
+event via the existing `finite_all_events_subset` and singleton
+law. All remain independent of sample normalization and event
+independence; only the inequality assumes nonnegative weights.
+
+Current intended inventory: **603 public claims, 606 proof scripts,
+669 documented declarations** in seven modules, subject to CI.
 
 ## Research extensions
 

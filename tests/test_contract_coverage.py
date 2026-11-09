@@ -111,7 +111,8 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
              "validate_calculations", "validate_simulation"},
         "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py":
             {"_finite", "probability_union", "conditional_probability",
-             "_valid_fields_rows", "_valid_admissions", "_valid_grid"},
+             "_valid_fields_rows", "_valid_admissions", "_valid_grid",
+             "admission_rows", "basic_grid"},
         "analyses/towers-multiple-test-admissions/ada/validate_results.py":
             {"_open_unit_ratio", "read"},
         "verification/check_contract_coverage.py":

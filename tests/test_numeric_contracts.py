@@ -208,6 +208,18 @@ def test_higher_correlation_increases_mixed_overlap(towers):
 @deal.has('stdout', 'stderr', 'read')
 def test_towers_reference_csvs(towers):
     admissions, grid = towers.admission_rows(), towers.basic_grid()
+    # Independent table-level provenance and arithmetic laws: these
+    # guards fail even if a stale CSV happens to contain plausible totals.
+    assert [row["case"] for row in admissions] == [
+        label for label, _, _ in towers.CASES]
+    assert all(row["rho"] == towers.RHO for row in admissions)
+    assert all(row["union"] == row["p_a"] + row["p_b"] - row["joint"]
+               for row in admissions)
+    assert [row["cutoff_iq"] for row in grid] == [133, 150, 164]
+    assert all(row["grid_minus_published"] ==
+               row["grid_joint"] - row["published_joint"] for row in grid)
+    assert all(row["grid_conditional"] ==
+               row["grid_joint"] / row["grid_marginal"] for row in grid)
     towers.verify_csv(towers.ROOT / "data/admission_probabilities.csv", towers.ADMISSION_FIELDS, admissions)
     towers.verify_csv(towers.ROOT / "data/followup_grid.csv", towers.GRID_FIELDS, grid)
     towers.verify_known_results(admissions, grid)

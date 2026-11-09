@@ -4633,6 +4633,135 @@ Section FiniteOutcomeSpace.
     - exact Hw.
   Qed.
 
+
+  (**
+   [finite_all_events_cons] (theorem) — Adding one required event corresponds to Boolean conjunction of head and tail.
+   Mathematical meaning: A nonempty family of required events is
+   satisfied exactly when its first predicate and the conjunction
+   over the remaining predicates both hold at each outcome.
+   Exact checked proposition: finite_prob weights samples
+   (all_events (event :: rest)) equals finite_prob weights samples
+   (fun x => andb (event x) (all_events rest x)).
+   Premises and side conditions: No normalization, positivity,
+   disjointness or event independence is needed for extensional mass
+   equality. Outcomes and event predicates may repeat.
+   Proof/definition method: Apply existing finite_prob_event_ext_on_samples
+   and reduce the standard library forallb on a cons list.
+   Library reuse: Stdlib.List.forallb, Bool.andb,
+   finite_prob_event_ext_on_samples and the maintained all_events.
+   Boundary: This identity does not factor the mass into a product.
+   *)
+  Theorem finite_all_events_cons :
+    forall weights samples event (rest : list Event),
+      finite_prob weights samples
+        (all_events (event :: rest)) =
+      finite_prob weights samples
+        (fun x => andb (event x) (all_events rest x)).
+  Proof.
+    intros weights samples event rest.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    unfold all_events; simpl.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_all_events_membership_extensional] (theorem) — Unconditional conjunction mass depends on event membership, not list representation.
+   Mathematical meaning: Two requirement lists containing exactly
+   the same event predicates define identical Boolean conjunctions
+   at every outcome, regardless of order and duplicate occurrences.
+   Exact checked proposition: If each event belongs to left iff
+   it belongs to right, their all_events finite masses are equal.
+   Premises and side conditions: No decidable equality on event
+   functions, weight sign, sample normalization or independence
+   assumption is required for an extensional equality.
+   Proof/definition method: Reuse existing all_events_membership_ext
+   pointwise under generic finite_prob_event_ext_on_samples.
+   Library reuse: all_events_membership_ext, Stdlib.List.In and
+   finite_prob_event_ext_on_samples; no custom list induction.
+   Boundary: Membership equality is stronger than equal cardinality;
+   this theorem does not equate unrelated event predicates.
+   *)
+  Theorem finite_all_events_membership_extensional :
+    forall weights samples (left right : list Event),
+      (forall event, In event left <-> In event right) ->
+      finite_prob weights samples (all_events left) =
+      finite_prob weights samples (all_events right).
+  Proof.
+    intros weights samples left right Hsame.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    apply all_events_membership_ext.
+    exact Hsame.
+  Qed.
+
+  (**
+   [finite_all_events_permutation] (theorem) — Reordering required events preserves unconditional joint mass.
+   Mathematical meaning: A permutation changes the sequence order
+   of a list of required predicates but leaves their conjunction
+   at each sampled outcome exactly unchanged.
+   Exact checked proposition: Permutation left right implies
+   finite_prob weights samples (all_events left) equals the
+   corresponding mass of all_events right.
+   Premises and side conditions: Event or sample repetitions,
+   negative weights and nonnormalized total mass are all allowed;
+   neither positivity nor conditional independence is assumed.
+   Proof/definition method: Lift the existing pointwise
+   all_events_permutation theorem through finite event extensionality.
+   Library reuse: Stdlib.Sorting.Permutation, all_events_permutation,
+   finite_prob_event_ext_on_samples.
+   Boundary: Only permutation of identical predicates is allowed,
+   not arbitrary replacement by equally probable events.
+   *)
+  Theorem finite_all_events_permutation :
+    forall weights samples (left right : list Event),
+      Permutation left right ->
+      finite_prob weights samples (all_events left) =
+      finite_prob weights samples (all_events right).
+  Proof.
+    intros weights samples left right Hperm.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    apply all_events_permutation.
+    exact Hperm.
+  Qed.
+
+  (**
+   [finite_all_events_at_most_member] (theorem) — A conjunction cannot exceed the mass of any required event.
+   Mathematical meaning: Requiring every predicate on a list
+   defines a subset of the event selected by each listed member.
+   Under nonnegative sample weights, its finite mass therefore
+   cannot exceed the selected member's marginal mass.
+   Exact checked proposition: If In member events and every
+   sampled weight is nonnegative, finite_prob weights samples
+   (all_events events) <= finite_prob weights samples member.
+   Premises and side conditions: Total mass need not be one.
+   Empty samples and duplicated events/outcomes are allowed; no
+   independence premise is introduced.
+   Proof/definition method: Rewrite the member mass as a singleton
+   conjunction and apply finite_all_events_subset to the list
+   inclusion established by Stdlib.List.In simplification.
+   Library reuse: finite_all_events_subset,
+   finite_all_events_singleton and Stdlib.List.In.
+   Boundary: This is an upper bound, not equality or product law.
+   *)
+  Theorem finite_all_events_at_most_member :
+    forall weights samples (events : list Event) member,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples (all_events events) <=
+      finite_prob weights samples member.
+  Proof.
+    intros weights samples events member Hmember Hw.
+    rewrite <- (finite_all_events_singleton weights samples member).
+    apply (finite_all_events_subset weights samples [member] events).
+    - intros e Hin.
+      simpl in Hin.
+      destruct Hin as [He | []].
+      subst e; exact Hmember.
+    - exact Hw.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

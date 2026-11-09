@@ -246,6 +246,18 @@ def _valid_grid(rows) -> bool:
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: bool(CASES) and len({row[0] for row in CASES}) == len(CASES) and all(isinstance(label, str) and label and _finite(p_a) and _finite(p_b) and 0 < p_a < 1 and 0 < p_b < 1 for label, p_a, p_b in CASES))
+# Each modeled row must retain its source-case identity and raw
+# probabilities; the derived union must obey inclusion-exclusion
+# exactly as calculated rather than trusting a rounded CSV fixture.
+@deal.post(lambda result: len(result) == len(CASES))
+@deal.post(lambda result: [row["case"] for row in result] ==
+           [label for label, _, _ in CASES])
+@deal.post(lambda result: all(row["rho"] == RHO for row in result))
+@deal.post(lambda result: all(row["p_a"] == p_a and row["p_b"] == p_b
+                              for row, (_, p_a, p_b) in zip(result, CASES)))
+@deal.post(lambda result: all(row["union"] ==
+                              row["p_a"] + row["p_b"] - row["joint"]
+                              for row in result))
 def admission_rows() -> list[dict]:
     rows = []
     for label, p_a, p_b in CASES:
@@ -270,6 +282,22 @@ def admission_rows() -> list[dict]:
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == len(GRID_FIELDS) and all(isinstance(field, str) and field for field in GRID_FIELDS))
+# Preserve the exact three BASIC cutoffs and the algebraic dependence
+# of each published comparison and conditional ratio on its recorded
+# unrounded joint/marginal values.
+@deal.post(lambda result: len(result) == 3)
+@deal.post(lambda result:
+           tuple(row["cutoff_iq"] for row in result) == (133, 150, 164))
+@deal.post(lambda result: all(row["grid_minus_published"] ==
+                              row["grid_joint"] - row["published_joint"]
+                              for row in result))
+@deal.post(lambda result: all(row["grid_conditional"] ==
+                              row["grid_joint"] / row["grid_marginal"]
+                              for row in result))
+@deal.post(lambda result: all(row["grid_div_rounded"] ==
+                              row["grid_joint"] /
+                              row["published_rounded_denominator"]
+                              for row in result))
 def basic_grid() -> list[dict]:
     """Reproduce Q..199 STEP .5 point sums in the published BASIC program.
 

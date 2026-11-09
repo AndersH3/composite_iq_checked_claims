@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 144 proof scripts
+## FiniteUnion.v — 148 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -751,6 +751,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_append_right_antitone` (theorem) | Right-membership into app plus conditional conjunction subset theorem | Stdlib.List.in_or_app, finite_conditional_all_events_subset | **New:** prepending requirements weakly decreases right joint mass |
 | `finite_all_events_append_left_antitone` (theorem) | Left-membership into app plus unconditional conjunction subset theorem | Stdlib.List.in_or_app, finite_all_events_subset | **New:** ordinary left conjunction append antitonicity |
 | `finite_all_events_append_right_antitone` (theorem) | Right-membership into app plus unconditional conjunction subset theorem | Stdlib.List.in_or_app, finite_all_events_subset | **New:** ordinary right conjunction append antitonicity |
+| `finite_all_events_cons` (theorem) | Lift maintained forallb cons through finite mass event extensionality | Stdlib.List.forallb, finite_prob_event_ext_on_samples | **New:** ordinary head-tail conjunction identity |
+| `finite_all_events_membership_extensional` (theorem) | Lift existing pointwise conjunction membership extensionality | all_events_membership_ext, finite_prob_event_ext_on_samples | **New:** unconditional mass invariance under membership equivalence |
+| `finite_all_events_permutation` (theorem) | Lift existing pointwise permutation theorem through finite event mass | all_events_permutation, Stdlib.Sorting.Permutation, finite_prob_event_ext_on_samples | **New:** ordinary conjunction mass independent of ordering |
+| `finite_all_events_at_most_member` (theorem) | Singleton mass identity and established family subset inequality | finite_all_events_singleton, finite_all_events_subset, Stdlib.List.In | **New:** conjunction mass bounded by each required member |
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

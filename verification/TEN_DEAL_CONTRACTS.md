@@ -300,6 +300,27 @@ The test-enforced ten-contract subset now covers **31 Python
 functions** (19 original analysis functions, 12 current verification
 helpers), while every named function still has at least five.
 
+## Ten-contract original Towers model table generators
+
+The historical `analyses/towers-multiple-test-admissions/scripts/verify_calculations.py`
+functions `admission_rows` and `basic_grid` each now have ten
+explicit Deal contracts. The five additional admissions postconditions
+preserve case count, case ordering, the assumed correlation, input
+marginal probabilities and the exact union inclusion-exclusion identity.
+The five grid postconditions preserve its three documented cutoffs
+and enforce the exact arithmetic relationships among the unrounded
+joint mass, published comparison, computed conditional and rounded
+denominator. The existing independent SciPy/numerical cross-checks
+and table validation are retained; these additional contracts do not
+establish that the Gaussian psychometric assumptions are empirically
+correct.
+
+Existing CSV regression tests now also assert the provenance and
+arithmetic laws explicitly. The optional ten-contract target covers
+**33 Python functions** (21 historical numerical/Ada functions and
+12 verification helpers). The mandatory floor stays five for all
+named Python functions, including all older scripts.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across
