@@ -1170,6 +1170,22 @@ theorem; the only Boolean step is a standard
 `forallb_forall` membership argument. All weight
 and denominator guards are explicit.
 
+## Checked normalized filtered-sample covariance interpretation
+
+The shared finite-sum scale lemma and the previously
+verified `finite_prob_as_filtered_mass` give unit total
+weight for `conditioned_weights` on a Boolean-filtered
+sample when conditioning mass is strictly positive.
+Existing Stdlib filter membership and nonnegative
+multiplication lemmas establish retained-weight
+nonnegativity. The new general conditional
+independence/zero-indicator-covariance theorem only
+composes the project’s finite filtered-true iff,
+positive scaling iff, and normalized finite indicator
+covariance equivalence. It neither redefines covariance
+nor implements a second probability sum or
+continuous conditional-expectation operator.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

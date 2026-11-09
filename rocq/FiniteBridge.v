@@ -1,6 +1,6 @@
 (** Module: FiniteBridge.v
    Purpose: Checked interpretation between Boolean event mass and finite moments.
-   Connects FiniteUnion event indicators to FiniteMoments expectation, variance, covariance and algebraic independence conditions.
+   Connects FiniteUnion event indicators to FiniteMoments expectation, variance, covariance and algebraic independence conditions, including positive-event filtering and explicitly normalized conditional weights.
    Mathematical representation: Both imported models use the same FiniteSum fold, and Boolean true/false indicators are represented by real 1/0.
    Explicit hypotheses: Probability interpretations require normalized nonnegative weights; algebraic equalities may hold for any real weights.
    Library use: FiniteSum, FiniteUnion, FiniteMoments and Rocq's Bool/Reals tactics.
@@ -666,4 +666,107 @@ Proof.
   split; intro H.
   - apply (proj2 Hcriterion); exact H.
   - apply (proj1 Hcriterion); exact H.
+Qed.
+
+
+
+(**
+   [conditioned_weights] (definition) — Explicit normalization of a finite sample selected by a Boolean conditioning event.
+   Mathematical meaning: When conditioning a weighted finite outcome list on a positive-mass Boolean event G, multiply every retained outcome's original weight by the reciprocal of the original mass P(G). The weighting function is defined on the entire outcome type, while the intended sample list is Stdlib.List.filter G samples.
+   Exact declaration: conditioned_weights A weight samples given x := / (FiniteUnion.finite_prob weight samples given) * weight x, for an arbitrary outcome type A.
+   Premises and side conditions: The definition itself is a total real expression even if the conditioning mass is zero, but the downstream probability theorem requires this mass to be strictly positive. Repeated sampled outcomes remain repeated and get their scaled original weights.
+   Proof/definition method: Compose the existing finite event mass with Rocq's standard real reciprocal and scalar multiplication; there is no independent probability measure, list traversal or normalization algorithm.
+   Library reuse: FiniteUnion.finite_prob, Stdlib.Reals.Rinv and Stdlib.List.filter for the associated restricted sample.
+   Boundary: This is a finite exact mass normalization of a selected outcome list, not a continuous conditional-density construction or an arbitrary change of weights.
+ *)
+Definition conditioned_weights (A : Type) (weight : A -> R)
+    (samples : list A) (given : A -> bool) : A -> R :=
+  fun x => / (@FiniteUnion.finite_prob A weight samples given) * weight x.
+
+(**
+   [conditioned_weights_total_mass_one] (theorem) — Exact normalization of the Boolean-filtered finite sample.
+   Mathematical meaning: The total original weight of the G-filtered outcome list is exactly the original event mass P(G), so division by that strictly positive mass makes the filtered list's total weight exactly one, even if the original complete sample was not normalized.
+   Exact checked proposition: For arbitrary A, samples, weights and given, 0 < FiniteUnion.finite_prob weight samples given implies FiniteUnion.finite_sum (conditioned_weights A weight samples given) (filter given samples) = 1.
+   Premises and side conditions: Strict positivity of the finite conditioning mass is required to cancel the reciprocal. Original total mass need not be one, and repeated sample occurrences retain their contributions; individual signed weights are permitted for the algebraic identity.
+   Proof/definition method: Unfold only the shared finite-sum alias and the new scalar weight definition, pull out the constant reciprocal using FiniteSum.finite_sum_scale, identify filtered total mass with the existing finite_prob_as_filtered_mass, and cancel with Rocq's real field tactic.
+   Library reuse: FiniteSum.finite_sum_scale, FiniteUnion.finite_prob_as_filtered_mass, Stdlib.List.filter, Stdlib.Reals field and Stdlib.Lra; no new summation or filtered-normalization recursion is implemented.
+   Boundary: A unit total real mass is not by itself a probability measure when any original retained weight is negative; nonnegativity has a separate theorem.
+ *)
+Theorem conditioned_weights_total_mass_one :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteUnion.finite_sum A
+      (conditioned_weights A weight samples given)
+      (filter given samples) = 1.
+Proof.
+  intros A samples weight given Hpositive.
+  unfold conditioned_weights, FiniteUnion.finite_sum.
+  rewrite (FiniteSum.finite_sum_scale (filter given samples)
+    (/ (@FiniteUnion.finite_prob A weight samples given)) weight).
+  rewrite <- (@FiniteUnion.finite_prob_as_filtered_mass
+    A weight samples given).
+  field; lra.
+Qed.
+
+(**
+   [conditioned_weights_nonnegative_on_filtered_samples] (theorem) — Nonnegative conditional weights on retained sampled outcomes.
+   Mathematical meaning: If the original finite samples carry nonnegative weights and the conditioning event has positive mass, the rescaled weights of each retained G-satisfying outcome remain nonnegative. Together with conditioned_weights_total_mass_one, the conditioned list is an explicitly normalized nonnegative finite probability model.
+   Exact checked proposition: For any A, original samples, weight and given, positive original given mass and nonnegative original sampled weights imply 0 <= conditioned_weights A weight samples given x for every x in filter given samples.
+   Premises and side conditions: Strict positivity of P(G) and nonnegativity of each weight on the original sample are explicit. No distinct-outcome assumption is needed and no positivity is demanded outside the selected finite sample.
+   Proof/definition method: Use Stdlib.List.filter_In to recover original-sample membership, Stdlib.Reals.Rinv_0_lt_compat for the positive normalization factor and Rmult_le_pos to preserve nonnegativity.
+   Library reuse: Stdlib.List.filter_In, Stdlib.Reals.Rinv_0_lt_compat/Rmult_le_pos and the existing conditioned_weights definition.
+   Boundary: Nonnegative finite list masses are not a statement about unenumerated outcomes or continuous measures; the selection predicate is the exact supplied Boolean event.
+ *)
+Theorem conditioned_weights_nonnegative_on_filtered_samples :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    forall x, In x (filter given samples) ->
+      0 <= conditioned_weights A weight samples given x.
+Proof.
+  intros A samples weight given Hpositive Hw x Hx.
+  unfold conditioned_weights.
+  apply Rmult_le_pos.
+  - apply Rlt_le, Rinv_0_lt_compat; exact Hpositive.
+  - apply Hw.
+    apply filter_In in Hx.
+    tauto.
+Qed.
+
+(**
+   [finite_conditional_independence_iff_conditioned_indicator_covariance_zero] (theorem) — Generic Boolean conditional independence as zero covariance under the normalized conditional sample.
+   Mathematical meaning: For any strictly positive-mass conditioning event G, finite conditional independence of Boolean events A and B under G is equivalent to zero covariance of their indicator scores when computed over the G-filtered sample with weights normalized by P(G). This extends the earlier true-conditioning covariance bridge to arbitrary positive-mass finite Boolean selectors.
+   Exact checked proposition: If 0 < finite_prob weight samples given, finite_conditional_independent weight samples first second given iff FiniteMoments.covariance (filter given samples) (conditioned_weights A weight samples given) (indicator first) (indicator second) = 0.
+   Premises and side conditions: Strictly positive original conditioning mass is required for the normalization. The real-algebra equivalence does not need individual nonnegative weights; to interpret covariance and independence statistically the original sample must have nonnegative weights, established as preserved by the separate nonnegativity theorem. No full-sample unit normalization is needed.
+   Proof/definition method: Rewrite original conditioning as true-event conditioning on the existing filtered sample; use the positive global scaling invariance of finite conditional independence to replace retained weights with normalized ones, and then instantiate the previously checked normalized indicator covariance/independence equivalence using conditioned_weights_total_mass_one.
+   Library reuse: FiniteUnion.finite_conditional_independent_iff_filtered_true, FiniteUnion.finite_conditional_independent_scale_weights, finite_normalized_conditional_independence_iff_zero_indicator_covariance, conditioned_weights_total_mass_one and Stdlib.Reals.Rinv_0_lt_compat. No independent covariance calculation, finite sum or conditioning definition is introduced.
+   Boundary: This is a discrete finite Boolean-indicator result under one conditioning selector, not an equivalence for arbitrary real-valued scores or continuous conditional covariance operators.
+ *)
+Theorem finite_conditional_independence_iff_conditioned_indicator_covariance_zero :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (first second given : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (@FiniteUnion.finite_conditional_independent A
+       weight samples first second given <->
+     @FiniteMoments.covariance A (filter given samples)
+       (conditioned_weights A weight samples given)
+       (fun x => FiniteUnion.indicator (first x))
+       (fun x => FiniteUnion.indicator (second x)) = 0).
+Proof.
+  intros A samples weight first second given Hpositive.
+  rewrite (@FiniteUnion.finite_conditional_independent_iff_filtered_true
+    A weight samples first second given).
+  assert (Hscale :
+      0 < / (@FiniteUnion.finite_prob A weight samples given)).
+  { apply Rinv_0_lt_compat; exact Hpositive. }
+  rewrite <- (@FiniteUnion.finite_conditional_independent_scale_weights
+    A (/ (@FiniteUnion.finite_prob A weight samples given))
+    weight (filter given samples) first second
+    (fun _ => true) Hscale).
+  unfold conditioned_weights.
+  apply finite_normalized_conditional_independence_iff_zero_indicator_covariance.
+  apply conditioned_weights_total_mass_one.
+  exact Hpositive.
 Qed.

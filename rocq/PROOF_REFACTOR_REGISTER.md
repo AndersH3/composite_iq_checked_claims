@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 471 public theorem/lemma/example declarations,
+The current branch has 474 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**474 proof scripts**, including the generic
+**477 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -890,7 +890,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_zero_covariance_row_dots_iff_supported_constant` (theorem) | Iff composition, lemma application | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_null_iff_exists_constant_on_positive_weight_support | **New:** zero dot against every covariance row iff composite score equals some positive-support constant |
 | `fixed_basis_positive_definite_iff_no_nonzero_supported_constant` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support, Stdlib.List.repeat | **New:** covariance positive definite iff no nonzero coefficient direction yields any supported constant |
 
-## FiniteBridge.v — 17 proof scripts
+## FiniteBridge.v — 20 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -911,6 +911,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_event_indicator_covariance_complement_first` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `finite_event_indicator_covariance_complement_both` (theorem) | Rewriting, Ring/field | Stdlib ring/field | Reviewed: keep established tactic/library proof |
 | `finite_normalized_conditional_independence_iff_zero_indicator_covariance` (theorem) | Rewrite existing two iff bridges, reverse equivalence | FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product; finite_event_independence_iff_zero_indicator_covariance | **New:** normalized true-conditioning independence iff zero indicator covariance |
+| `conditioned_weights_total_mass_one` (theorem) | Scalar reciprocal factor from filtered FiniteSum, positive denominator field cancellation | FiniteSum.finite_sum_scale, FiniteUnion.finite_prob_as_filtered_mass, Stdlib.Reals field | **New:** filtered sample weights scaled by positive conditioning mass sum to exactly one |
+| `conditioned_weights_nonnegative_on_filtered_samples` (theorem) | Filter membership and nonnegative scalar product | Stdlib.List.filter_In, Stdlib.Reals.Rinv_0_lt_compat/Rmult_le_pos | **New:** normalized filtered weights remain nonnegative on retained samples |
+| `finite_conditional_independence_iff_conditioned_indicator_covariance_zero` (theorem) | Compose filtered-true iff, positive scaling iff and normalized covariance bridge | FiniteUnion.finite_conditional_independent_iff_filtered_true, finite_conditional_independent_scale_weights, finite_normalized_conditional_independence_iff_zero_indicator_covariance | **New:** general positive-mass conditional independence iff indicator covariance zero on normalized filtered sample |
 
 ## FourCellBridge.v — 25 proof scripts
 
