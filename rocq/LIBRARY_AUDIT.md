@@ -1675,6 +1675,16 @@ is reduced to the existing singleton and event-family inclusion
 inequalities. No custom permutation induction, finite event sum,
 probability normalization or independence assumption is introduced.
 
+## Intersection versus union order by already checked bounds
+
+Both finite conjunction-versus-union inequalities are obtained
+by chaining the respective intersection-to-member and member-to-union
+results with `Stdlib.Reals.Rle_trans`. The conditional version
+retains the positive-conditioner premise and both versions require
+a named member witness and nonnegative sampled weights. Reuse of
+existing lemmas avoids a fresh sum induction, custom Boolean event
+algebra or hidden independence assumptions.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

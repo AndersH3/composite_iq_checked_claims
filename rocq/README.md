@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **606 proof scripts** in seven
+for the two reports. **608 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2249,6 +2249,21 @@ independence; only the inequality assumes nonnegative weights.
 
 Current intended inventory: **603 public claims, 606 proof scripts,
 669 documented declarations** in seven modules, subject to CI.
+
+## Finite event-family intersection versus union
+
+Two documented theorems bound the mass of an event-family conjunction
+by its union, both unconditionally and under positive-mass
+conditioning. Both results chain existing `finite_all_events_at_most_member`
+(or conditional counterpart) with the previously proved
+member-to-union inequality using standard real-order transitivity.
+The explicit `In member events` witness avoids the empty-family
+counterexample; nonnegative sample weights and positive conditioning
+mass are visible wherever needed. No new Boolean recursion or
+probability normalization assumption is introduced.
+
+Current intended inventory: **605 public claims, 608 proof scripts,
+671 documented declarations** across seven modules, subject to CI.
 
 ## Research extensions
 

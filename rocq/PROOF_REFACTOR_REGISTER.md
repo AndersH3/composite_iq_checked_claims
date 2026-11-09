@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 148 proof scripts
+## FiniteUnion.v — 150 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -755,6 +755,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_all_events_membership_extensional` (theorem) | Lift existing pointwise conjunction membership extensionality | all_events_membership_ext, finite_prob_event_ext_on_samples | **New:** unconditional mass invariance under membership equivalence |
 | `finite_all_events_permutation` (theorem) | Lift existing pointwise permutation theorem through finite event mass | all_events_permutation, Stdlib.Sorting.Permutation, finite_prob_event_ext_on_samples | **New:** ordinary conjunction mass independent of ordering |
 | `finite_all_events_at_most_member` (theorem) | Singleton mass identity and established family subset inequality | finite_all_events_singleton, finite_all_events_subset, Stdlib.List.In | **New:** conjunction mass bounded by each required member |
+| `finite_all_events_mass_at_most_union` (theorem) | Compose checked intersection/member and member/union inequalities | finite_all_events_at_most_member, arbitrary_union_contains_every_member, Rle_trans | **New:** unconditional intersection mass ≤ union mass under nonempty-family membership |
+| `finite_conditional_all_events_mass_at_most_union` (theorem) | Compose existing conditional intersection/member and member/union inequalities | finite_conditional_all_events_at_most_member, finite_conditional_union_contains_member, Rle_trans | **New:** positive-conditioner intersection mass ≤ union mass |
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

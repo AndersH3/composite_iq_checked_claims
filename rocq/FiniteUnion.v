@@ -4762,6 +4762,80 @@ Section FiniteOutcomeSpace.
     - exact Hw.
   Qed.
 
+  (**
+   [finite_all_events_mass_at_most_union] (theorem) — A common intersection cannot outweigh its containing union.
+   Mathematical meaning: For a nonempty family of Boolean alternatives,
+   every outcome satisfying all events also satisfies at least one;
+   nonnegative finite sample weights preserve that ordering of masses.
+   Exact checked proposition: If member is listed in events and
+   each enumerated weight is nonnegative, finite_prob of
+   all_events events is <= union_prob of the same event family.
+   Premises and side conditions: The explicit membership witness
+   ensures a genuinely nonempty family. The sample may be empty or
+   repeat outcomes; neither normalized total mass nor independence
+   is assumed. Nonnegative sample weights are necessary for order.
+   Proof/definition method: Compose the already checked bounds for
+   intersection <= the selected member and member <= family union.
+   No Boolean list recursion or fresh finite integration is needed.
+   Library reuse: finite_all_events_at_most_member,
+   arbitrary_union_contains_every_member and Stdlib.Reals.Rle_trans.
+   Boundary: The result is a weak inequality; equality can occur
+   for identical events, null contributions or degenerate samples.
+   *)
+  Theorem finite_all_events_mass_at_most_union :
+    forall weights samples (events : list Event) member,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples (all_events events) <=
+      union_prob weights samples events.
+  Proof.
+    intros weights samples events member Hmember Hw.
+    eapply Rle_trans.
+    - apply (finite_all_events_at_most_member
+        weights samples events member Hmember Hw).
+    - apply (arbitrary_union_contains_every_member
+        weights samples events member Hmember Hw).
+  Qed.
+
+  (**
+   [finite_conditional_all_events_mass_at_most_union] (theorem) — Conditioning preserves intersection versus union order.
+   Mathematical meaning: Under a fixed positive-mass conditioning
+   event, satisfying every listed requirement cannot have greater
+   conditional mass than satisfying at least one listed alternative.
+   Exact checked proposition: With member in events, nonnegative
+   weights on samples, and positive mass of given, conditional
+   all_events events mass is <= conditional any_event events mass.
+   Premises and side conditions: A membership witness excludes the
+   empty event list. Positive conditioning mass and sampled
+   nonnegative weights are explicit; unit total mass and conditional
+   independence are not required. Repeated events remain allowed.
+   Proof/definition method: Chain the previously proved
+   conditioned intersection-to-member and member-to-union bounds.
+   This reuses ordinary transitivity of real order rather than
+   reimplementing numerator/denominator monotonicity.
+   Library reuse: finite_conditional_all_events_at_most_member,
+   finite_conditional_union_contains_member and Stdlib.Reals.Rle_trans.
+   Boundary: The bound alone gives no product factorization, strict
+   inequality or assertion about continuous conditional measures.
+   *)
+  Theorem finite_conditional_all_events_mass_at_most_union :
+    forall weights samples (events : list Event) member given,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (all_events events) given <=
+      finite_conditional_prob weights samples
+        (any_event events) given.
+  Proof.
+    intros weights samples events member given Hmember Hw Hgiven.
+    eapply Rle_trans.
+    - apply (finite_conditional_all_events_at_most_member
+        weights samples events member given Hmember Hw Hgiven).
+    - apply (finite_conditional_union_contains_member
+        weights samples events member given Hmember Hw Hgiven).
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
