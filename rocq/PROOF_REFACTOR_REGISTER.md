@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 449 public theorem/lemma/example declarations,
+The current branch has 453 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**452 proof scripts**, including the generic
+**456 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 89 proof scripts
+## FiniteUnion.v — 93 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -676,9 +676,11 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_chain_rule` (theorem) | Lemma application, real-field cancellation | Stdlib.Bool.andb_assoc, finite_prob_event_ext_on_samples, Stdlib.Reals | **New:** positive-denominator finite conditional chain rule |
 | `finite_conditional_prob_intersection_symmetric` (theorem) | Extensionality, Stdlib Boolean commutativity | finite_conditional_prob_event_ext_on_samples, Stdlib.Bool.andb_comm | **New:** joint conditional mass is invariant under target-event order |
 | `finite_conditional_independent_symmetric` (theorem) | Conjunction decomposition, rewriting, real multiplication commutativity | finite_conditional_prob_intersection_symmetric, Stdlib.Reals.Rmult_comm | **New:** conditional independence is symmetric with explicit positive conditioning mass |
-| `finite_conditional_independent_event_ext_on_samples` (theorem) | Rewriting by finite-support equality | finite_conditional_prob_event_ext_on_samples, Stdlib.Bool.andb | **New:** target-event support invariance of conditional factorization |
+| `finite_conditional_independent_event_ext_on_samples` (theorem) | Delegate ordinary sample extensionality to stronger conditioned-support theorem | finite_conditional_independent_event_ext_on_conditioned_samples, Stdlib.List.In | **Refactored:** no independence unfolding or repeated conditional-mass rewrite |
+| `finite_conditional_independent_event_ext_on_conditioned_samples` (theorem) | Rewrite joint and first conditional marginal via conditioned support extensionality | finite_conditional_prob_event_ext_on_conditioned_samples, Stdlib.Bool.andb | **New:** first-target independence extensionality need only hold within conditioning event |
 | `finite_conditional_independent_conditioning_ext_on_samples` (theorem) | Rewriting both conditioning marginal and quotients | finite_prob_event_ext_on_samples, finite_conditional_prob_conditioning_ext_on_samples | **New:** conditioning-support invariance of the independence predicate |
 | `finite_conditional_independent_second_event_ext_on_samples` (theorem) | Iff rewriting and lemma application | finite_conditional_independent_symmetric, finite_conditional_independent_event_ext_on_samples | **New:** second-target support extensionality without duplicating the first-target proof |
+| `finite_conditional_independent_second_event_ext_on_conditioned_samples` (theorem) | Swap targets, apply stronger support extensionality, swap back | finite_conditional_independent_symmetric, finite_conditional_independent_event_ext_on_conditioned_samples | **New:** second-target independence extensionality on conditioned support |
 | `finite_conditional_independent_sample_permutation` (theorem) | Rewriting finite event masses; no list recursion | finite_prob_sample_permutation, FiniteSum.finite_sum_permutation, Stdlib.Sorting.Permutation | **New:** independence is invariant under reordering all sampled weighted outcomes |
 | `finite_conditional_prob_partition_by_event` (theorem) | Conditional inclusion–exclusion, beta normalization, Boolean extensionality and Lra | finite_conditional_prob_inclusion_exclusion, finite_conditional_prob_false, Stdlib.Bool | **New:** conditional event partition into target∧part and target∧¬part |
 | `finite_conditional_independent_complement_first` (theorem) | Conditional partition and complement, polynomial equality | finite_conditional_prob_partition_by_event, finite_conditional_prob_complement, finite_conditional_prob_intersection_symmetric, Stdlib.Psatz.nra | **New:** conditional independence preserved under first-target complement |
@@ -695,6 +697,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_independent_conditioning_second` (theorem) | Iff symmetry projection and lemma application | finite_conditional_independent_symmetric, finite_conditional_independent_conditioning_first | **New:** other target independent of conditioning event given itself |
 | `finite_conditional_independent_union_formula` (theorem) | Conditional inclusion-exclusion and factor rewrite | finite_conditional_prob_inclusion_exclusion, finite_conditional_independent, Stdlib.Lra | **New:** two-event conditional independent union formula |
 | `finite_conditional_three_event_product` (theorem) | Boolean associativity, conditioned target extensionality, two independence factorizations | finite_conditional_prob_event_ext_on_samples, Stdlib.Bool.andb_assoc, Stdlib.Reals ring | **New:** triple conditional joint factors given independence of A,B and of A∩B,C (not merely pairwise independence) |
+| `finite_conditional_independent_conditioning_complement_first` (theorem) | Reduce complement of conditioning to impossible target on conditioned support | finite_conditional_independent_false_first, finite_conditional_independent_event_ext_on_conditioned_samples | **New:** complementary selector independent of arbitrary target when conditioned on selector |
+| `finite_conditional_independent_conditioning_complement_second` (theorem) | Symmetry reuse | finite_conditional_independent_symmetric, finite_conditional_independent_conditioning_complement_first | **New:** complementary selector independent in second position |
 
 ## FiniteMoments.v — 167 proof scripts
 

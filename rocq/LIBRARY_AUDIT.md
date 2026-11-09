@@ -1072,6 +1072,19 @@ accidentally elevating pairwise independence to mutual
 independence. No new multievent operator, real-sum recursion,
 measure-theory dependency or conditional quotient is added.
 
+## Conditional-support extensionality refactoring
+
+Two theorems prove invariance of conditional independence under
+modification of either target **outside the selected conditioning
+support**, using the already checked conditional-mass extensionality
+theorem and symmetry. The earlier target extensionality proof is
+refactored into a direct corollary, removing duplicated expansion
+of the independence predicate. The complementary-conditioning-event
+identity follows by applying this theorem to the already proved
+impossible-event independence case. Existing theorem types remain
+unchanged. No new recursion, quotient, axiom or external dependency
+is introduced.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

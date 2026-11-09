@@ -2429,13 +2429,42 @@ Section FiniteOutcomeSpace.
       exact Hfactor.
   Qed.
 
+
+  (**
+   [finite_conditional_independent_event_ext_on_conditioned_samples] (theorem) — Conditional-support extensionality of the first independence target.
+   Mathematical meaning: A conditional-independence assertion is unchanged when its first Boolean target is replaced by another predicate that agrees only on sampled outcomes satisfying the conditioning event. Outcomes outside the conditioning event do not contribute to any of its three conditional probabilities.
+   Exact checked proposition: For arbitrary weights, samples, first, replacement, second and given, agreement of first and replacement at each sampled x with given x=true implies the biconditional between conditional independence of first,second and conditional independence of replacement,second given the same event.
+   Premises and side conditions: Positivity of the conditioning mass is built into both independence predicates. No unit normalization, nonnegative-weight premise or distinctness of outcomes is needed for the formal algebra; interpreting conditional masses as probabilities additionally requires nonnegative weights.
+   Proof/definition method: Unfold only the existing independence proposition; rewrite the conditional joint and the first conditional marginal by the already established target-event extensionality law on conditioned support, leaving the conditioning mass and second conditional marginal unchanged.
+   Library reuse: finite_conditional_prob_event_ext_on_conditioned_samples and Stdlib.Bool.andb, without new finite sums, Boolean enumeration, quotient definitions or proof axioms.
+   Boundary: This is equality on the selected finite support, not almost-everywhere equality in an abstract measure space; target replacement outside this support need not preserve unconditional event mass.
+   *)
+  Theorem finite_conditional_independent_event_ext_on_conditioned_samples :
+    forall weights samples first replacement second given,
+      (forall x, In x samples -> given x = true ->
+        first x = replacement x) ->
+      (finite_conditional_independent weights samples first second given <->
+       finite_conditional_independent weights samples replacement second given).
+  Proof.
+    intros weights samples first replacement second given Hagree.
+    unfold finite_conditional_independent.
+    rewrite (finite_conditional_prob_event_ext_on_conditioned_samples
+      weights samples
+      (fun x => andb (first x) (second x))
+      (fun x => andb (replacement x) (second x)) given).
+    2: { intros x Hx Hg; rewrite (Hagree x Hx Hg); reflexivity. }
+    rewrite (finite_conditional_prob_event_ext_on_conditioned_samples
+      weights samples first replacement given Hagree).
+    reflexivity.
+  Qed.
+
   (**
    [finite_conditional_independent_event_ext_on_samples] (theorem) — Support extensionality of a conditional-independence target.
    Mathematical meaning: Modifying the first target event away from the enumerated sample does not alter its conditional independence from the second event, because both its conditional marginal and their conditional intersection are unchanged.
    Exact checked proposition: If first and replacement agree at every member of samples, then conditional independence of first and second given is logically equivalent to conditional independence of replacement and second given.
    Premises and side conditions: The finite sample may repeat outcomes; positivity of the given marginal is internal to the predicate, and no further normalization or sign premise is imposed for the real algebraic equivalence.
-   Proof/definition method: Unfold only the independence predicate and rewrite its joint conditional mass using event agreement, then rewrite the first conditional marginal with the same existing conditional support-extensionality lemma.
-   Library reuse: finite_conditional_prob_event_ext_on_samples and Stdlib.Bool.andb; no induction on the sample or duplicate probability sum is used.
+   Proof/definition method: Refactor to invoke the stronger conditioned-support independence extensionality theorem; ordinary sampled-support agreement immediately yields the conditioned-support agreement required by that existing theorem.
+   Library reuse: finite_conditional_independent_event_ext_on_conditioned_samples and Stdlib.List.In; the proof no longer unfolds independence or duplicates conditional-mass algebra.
    Boundary: This concerns agreement on the actual finite sample, not almost-everywhere equality for an external probability measure.
    *)
   Theorem finite_conditional_independent_event_ext_on_samples :
@@ -2445,15 +2474,9 @@ Section FiniteOutcomeSpace.
        finite_conditional_independent weights samples replacement second given).
   Proof.
     intros weights samples first replacement second given Hagree.
-    unfold finite_conditional_independent.
-    rewrite (finite_conditional_prob_event_ext_on_samples
-      weights samples
-      (fun x => andb (first x) (second x))
-      (fun x => andb (replacement x) (second x)) given).
-    2: { intros x Hx; rewrite (Hagree x Hx); reflexivity. }
-    rewrite (finite_conditional_prob_event_ext_on_samples
-      weights samples first replacement given Hagree).
-    reflexivity.
+    apply finite_conditional_independent_event_ext_on_conditioned_samples.
+    intros x Hx _.
+    exact (Hagree x Hx).
   Qed.
 
   (**
@@ -2485,6 +2508,32 @@ Section FiniteOutcomeSpace.
     reflexivity.
   Qed.
 
+
+
+  (**
+   [finite_conditional_independent_second_event_ext_on_conditioned_samples] (theorem) — Conditional-support extensionality of the second independence target.
+   Mathematical meaning: Replacing the second independence target on outcomes outside a positive or zero-mass conditioning selector cannot change its conditional independence from the first event, provided the replacement agrees on every enumerated outcome where the conditioning predicate is true.
+   Exact checked proposition: For any finite weighted samples, first, second, replacement and given, support agreement of second and replacement restricted to given=true implies conditional independence first,second given iff conditional independence first,replacement given.
+   Premises and side conditions: The source and target independence predicates both require positive conditioning mass, but no additional positivity or total-mass normalization is imposed for the Boolean event equality; repeated samples are allowed.
+   Proof/definition method: Rewrite both sides by the already checked symmetry biconditional, making the second targets into first targets, then delegate to finite_conditional_independent_event_ext_on_conditioned_samples without repeating conditional quotient calculations.
+   Library reuse: finite_conditional_independent_symmetric, finite_conditional_independent_event_ext_on_conditioned_samples and Stdlib propositional iff rewriting.
+   Boundary: Exact finite conditioning-support invariance only; it makes no claim about continuous conditional laws or unobserved outcomes in a different finite list.
+   *)
+  Theorem finite_conditional_independent_second_event_ext_on_conditioned_samples :
+    forall weights samples first second replacement given,
+      (forall x, In x samples -> given x = true ->
+        second x = replacement x) ->
+      (finite_conditional_independent weights samples first second given <->
+       finite_conditional_independent weights samples first replacement given).
+  Proof.
+    intros weights samples first second replacement given Hagree.
+    rewrite (finite_conditional_independent_symmetric
+      weights samples first second given).
+    rewrite (finite_conditional_independent_symmetric
+      weights samples first replacement given).
+    apply finite_conditional_independent_event_ext_on_conditioned_samples.
+    exact Hagree.
+  Qed.
 
   (**
    [finite_conditional_independent_second_event_ext_on_samples] (theorem) — Support extensionality of the second independence target.
@@ -2988,6 +3037,56 @@ Section FiniteOutcomeSpace.
     rewrite Hpair.
     rewrite H12.
     ring.
+  Qed.
+
+
+  (**
+   [finite_conditional_independent_conditioning_complement_first] (theorem) — The complement of a conditioning event is impossible inside that event.
+   Mathematical meaning: When conditioning on G, the Boolean complement not-G is necessarily false, and therefore conditionally independent of any other target event in the first target position.
+   Exact checked proposition: If finite_prob weights samples given > 0, then finite_conditional_independent weights samples (fun x => negb (given x)) second given holds for arbitrary finite weights and sample occurrences.
+   Premises and side conditions: Strictly positive mass of G is necessary for the independence predicate. The support-equivalence proof needs neither normalized total mass nor nonnegative weights, although probabilistic interpretation does require them.
+   Proof/definition method: Show that false and not-G coincide wherever G is true, transfer the already checked impossible-event independence assertion through conditioned-support extensionality, and reuse the established positivity premise.
+   Library reuse: finite_conditional_independent_false_first, finite_conditional_independent_event_ext_on_conditioned_samples and Stdlib.Bool.negb; no new conditional probability or Boolean case enumeration is introduced.
+   Boundary: This is a conditioning tautology and does not imply that a nontrivial event is independent of its complement without conditioning.
+   *)
+  Theorem finite_conditional_independent_conditioning_complement_first :
+    forall weights samples second given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples
+        (fun x => negb (given x)) second given.
+  Proof.
+    intros weights samples second given Hgiven.
+    assert (Hagree :
+      forall x, In x samples -> given x = true ->
+      false = negb (given x)).
+    { intros x _ Hg; rewrite Hg; reflexivity. }
+    apply (proj1 (finite_conditional_independent_event_ext_on_conditioned_samples
+      weights samples (fun _ => false)
+      (fun x => negb (given x)) second given Hagree)).
+    apply finite_conditional_independent_false_first.
+    exact Hgiven.
+  Qed.
+
+  (**
+   [finite_conditional_independent_conditioning_complement_second] (theorem) — Complement-of-conditioning independence in the second target position.
+   Mathematical meaning: Under positive-mass conditioning G, the complementary event not-G is impossible on every conditioned sample, so it is independent of an arbitrary first target as well.
+   Exact checked proposition: For all finite weights, samples, first and given with strictly positive finite event mass of G, finite_conditional_independent weights samples first (fun x => negb (given x)) given.
+   Premises and side conditions: Only the conditioning-event positive-mass guard is required algebraically; nonnegative normalized finite weights are relevant solely when interpreting expressions as genuine probabilities.
+   Proof/definition method: Use independence symmetry to swap the target positions and invoke the checked complement-of-conditioning first-target theorem, avoiding a second conditional-support extensionality proof.
+   Library reuse: finite_conditional_independent_symmetric and finite_conditional_independent_conditioning_complement_first.
+   Boundary: This finite conditional tautology supplies no independence statement about G and not-G under unconditional sampling.
+   *)
+  Theorem finite_conditional_independent_conditioning_complement_second :
+    forall weights samples first given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_independent weights samples
+        first (fun x => negb (given x)) given.
+  Proof.
+    intros weights samples first given Hgiven.
+    apply (proj2 (finite_conditional_independent_symmetric
+      weights samples first (fun x => negb (given x)) given)).
+    apply finite_conditional_independent_conditioning_complement_first.
+    exact Hgiven.
   Qed.
 
 End FiniteOutcomeSpace.
