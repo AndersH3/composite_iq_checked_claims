@@ -5861,4 +5861,123 @@ Section FiniteProbabilityMoments.
       apply Hproperty; assumption.
   Qed.
 
+
+  (**
+   [basis_covariance_matrix_as_cross] (theorem) — Square finite covariance matrix as a specialization of the rectangular covariance API.
+   Mathematical meaning: The covariance matrix of one finite score basis is definitionally equal to the cross-covariance matrix obtained by using that same basis on both the row and column sides. This makes the shared rectangular representation the canonical entry point for subsequent dimension-indexed translations.
+   Exact checked proposition: For any score basis list, basis_covariance_matrix basis = basis_cross_covariance_matrix basis basis, with the sample and weight parameters inherited from the FiniteProbabilityMoments section.
+   Premises and side conditions: No assumption about score length, normalization, nonnegative weights, linear independence, or spectral rank is needed, and empty or duplicated bases are permitted.
+   Proof/definition method: Close the equality by definitional computation because both existing definitions use the identical nested Stdlib.List.map of scalar covariance.
+   Library reuse: basis_covariance_matrix, basis_cross_covariance_matrix, Stdlib.List.map, and the existing scalar covariance operator; no new square-matrix construction or summation is introduced.
+   Boundary: Equality of finite list representations does not establish symmetry of an arbitrary matrix or identify matrix rank.
+   *)
+  Theorem basis_covariance_matrix_as_cross :
+    forall basis,
+      basis_covariance_matrix basis =
+      basis_cross_covariance_matrix basis basis.
+  Proof. reflexivity. Qed.
+
+  (**
+   [basis_cross_covariance_matrix_app_left] (theorem) — Covariance rows distribute over concatenating score lists.
+   Mathematical meaning: Concatenating two lists of row-side scores and forming their cross-covariance matrix against the same column-side list is exactly the concatenation of the two existing cross-covariance matrices, preserving each row and all duplicate scores.
+   Exact checked proposition: For left1 left2 right score lists, basis_cross_covariance_matrix (left1 ++ left2) right = basis_cross_covariance_matrix left1 right ++ basis_cross_covariance_matrix left2 right.
+   Premises and side conditions: No matching lengths are required because the rectangular matrices have the same column basis. The weighted-sample model is unchanged, and neither normalized weights nor independence of scores is assumed.
+   Proof/definition method: Unfold the already defined matrix constructor and invoke the standard library map_app equation, avoiding a project-specific induction or matrix-row append algorithm.
+   Library reuse: Stdlib.List.map_app, basis_cross_covariance_matrix, Stdlib.List.app; all numeric cells still come from FiniteMoments.covariance.
+   Boundary: This is a row-list representation identity and does not imply a block matrix rank formula or a covariance factorization.
+   *)
+  Theorem basis_cross_covariance_matrix_app_left :
+    forall left1 left2 right,
+      basis_cross_covariance_matrix (left1 ++ left2) right =
+      basis_cross_covariance_matrix left1 right ++
+      basis_cross_covariance_matrix left2 right.
+  Proof.
+    intros left1 left2 right.
+    unfold basis_cross_covariance_matrix.
+    rewrite map_app.
+    reflexivity.
+  Qed.
+
+  (**
+   [basis_cross_covariance_matrix_app_right] (theorem) — Covariance columns distribute over concatenating score lists.
+   Mathematical meaning: Appending column-side score lists corresponds exactly to appending the two covariance row vectors for every score in the unchanged row-side basis. This result complements row append and identifies rectangular covariance block structure before any move to an indexed matrix library.
+   Exact checked proposition: For all left right1 right2 score bases, basis_cross_covariance_matrix left (right1 ++ right2) = map (fun rowpair => fst rowpair ++ snd rowpair) (combine (basis_cross_covariance_matrix left right1) (basis_cross_covariance_matrix left right2)).
+   Premises and side conditions: Both right-side lists are arbitrary and the row-side list is shared, so the two resulting matrices have the same row count. No normalization, nonnegative weights, distinctness or dimension parameters beyond the given lists are required.
+   Proof/definition method: Induct on the original left-side list and use the standard library map_app identity for each row. This is a proof about the existing nested map and combine operators, not a new matrix-building algorithm.
+   Library reuse: Stdlib.List.map_app, Stdlib.List.combine, basis_cross_covariance_matrix and ordinary list induction. No covariance expansion or dot-product recursion is introduced.
+   Boundary: The equality is for the particular list-of-lists encoding of rectangular covariance matrices; it is not a general matrix multiplication or block rank theorem.
+   *)
+  Theorem basis_cross_covariance_matrix_app_right :
+    forall left right1 right2,
+      basis_cross_covariance_matrix left (right1 ++ right2) =
+      map (fun rowpair => fst rowpair ++ snd rowpair)
+        (combine (basis_cross_covariance_matrix left right1)
+                 (basis_cross_covariance_matrix left right2)).
+  Proof.
+    intros left right1 right2.
+    induction left as [|f fs IH].
+    - reflexivity.
+    - cbn [basis_cross_covariance_matrix map combine].
+      rewrite map_app.
+      f_equal.
+      exact IH.
+  Qed.
+
+  (**
+   [basis_cross_covariance_matrix_nth_error_entry] (theorem) — Dimension-safe positional access to a rectangular covariance cell.
+   Mathematical meaning: If the ith left score and jth right score exist, then accessing the ith row and subsequently the jth entry of the rectangular covariance list returns exactly the scalar covariance of those two scores. Using Stdlib.List.nth_error preserves bounds information as Some rather than silently supplying a default value.
+   Exact checked proposition: If nth_error left i = Some f, nth_error right j = Some g, and nth_error (basis_cross_covariance_matrix left right) i = Some row, then nth_error row j = Some (covariance f g).
+   Premises and side conditions: Row and column index existence and the selected matrix row are all explicit through option-valued access. The indices may be any nat values for which the hypotheses hold. Neither weight nonnegativity nor finite-sample normalization is required.
+   Proof/definition method: Unfold the existing nested map constructor only at the required row, use Stdlib.List.nth_error_map twice to read the selected score and score pair, and eliminate the equality of Some values without recomputing covariance.
+   Library reuse: Stdlib.List.nth_error_map, Stdlib.Option.option_map, basis_cross_covariance_matrix, FiniteMoments.covariance. No custom indexing function, out-of-bounds default, or matrix entry recursion is introduced.
+   Boundary: This certifies individual existing list-matrix entries, not a length-preserving equivalence with a full Fin-indexed algebra or a rank theorem.
+   *)
+  Theorem basis_cross_covariance_matrix_nth_error_entry :
+    forall left right i j f g row,
+      nth_error left i = Some f ->
+      nth_error right j = Some g ->
+      nth_error (basis_cross_covariance_matrix left right) i =
+        Some row ->
+      nth_error row j = Some (covariance f g).
+  Proof.
+    intros left right i j f g row Hf Hg Hrow.
+    unfold basis_cross_covariance_matrix in Hrow.
+    rewrite nth_error_map in Hrow.
+    rewrite Hf in Hrow.
+    simpl in Hrow.
+    inversion Hrow; subst row.
+    rewrite nth_error_map.
+    rewrite Hg.
+    reflexivity.
+  Qed.
+
+  (**
+   [basis_cross_covariance_matrix_nth_error_swap] (theorem) — Scalar covariance symmetry at corresponding positions in transposed score lists.
+   Mathematical meaning: Reading the covariance of the ith left score and jth right score from the left-right matrix returns the same real value as reading the jth right score and ith left score from the corresponding right-left matrix. This is the componentwise matrix transpose law, with all row and column indices explicitly certified by nth_error.
+   Exact checked proposition: For left, right, naturals i,j, scores f,g and rows row_left,row_right, if nth_error left i=Some f, nth_error right j=Some g and each row is selected at its corresponding index, then nth_error row_left j = nth_error row_right i.
+   Premises and side conditions: The four option-valued indexing hypotheses explicitly guarantee existing basis scores and matrix rows; there is no implicit out-of-bounds behavior, unit-mass premise or nonnegative-weight assumption.
+   Proof/definition method: Rewrite both sides using the checked basis_cross_covariance_matrix_nth_error_entry theorem and apply the existing FiniteMoments.covariance_symmetric identity, avoiding hand-written transpose or nested list induction.
+   Library reuse: basis_cross_covariance_matrix_nth_error_entry, covariance_symmetric and Stdlib.List.nth_error. A maintained matrix library can subsequently exploit this verified componentwise transport.
+   Boundary: The theorem describes the score-basis covariance matrices only, not arbitrary matrices, matrix inversion, kernel dimensions or spectral decompositions.
+   *)
+  Theorem basis_cross_covariance_matrix_nth_error_swap :
+    forall left right i j f g row_left row_right,
+      nth_error left i = Some f ->
+      nth_error right j = Some g ->
+      nth_error (basis_cross_covariance_matrix left right) i =
+        Some row_left ->
+      nth_error (basis_cross_covariance_matrix right left) j =
+        Some row_right ->
+      nth_error row_left j = nth_error row_right i.
+  Proof.
+    intros left right i j f g row_left row_right
+      Hf Hg Hleft Hright.
+    rewrite (basis_cross_covariance_matrix_nth_error_entry
+      left right i j f g row_left Hf Hg Hleft).
+    rewrite (basis_cross_covariance_matrix_nth_error_entry
+      right left j i g f row_right Hg Hf Hright).
+    f_equal.
+    apply covariance_symmetric.
+  Qed.
+
 End FiniteProbabilityMoments.

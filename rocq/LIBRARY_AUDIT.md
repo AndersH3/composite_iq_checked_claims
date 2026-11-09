@@ -1259,6 +1259,25 @@ independent covariance algebra is introduced, and
 all assumptions needed for statistical semantics
 are explicit.
 
+## Source-indexed covariance entries before a matrix library migration
+
+`basis_covariance_matrix_as_cross` exposes the square
+representation as the rectangular cross-covariance
+constructor with identical score bases.
+The two basis-append laws are proved using Stdlib
+`map_app`, `combine` and structural simplification.
+The option-indexed entry lemma uses `nth_error_map`
+to prove that a cell selected from the list of lists
+is exactly the covariance of the corresponding
+two basis scores. Combining the entry lemma with
+`covariance_symmetric` establishes the two
+corresponding entries of swapped score lists are
+equal. This preserves bounds explicitly and
+avoids building a bespoke matrix-indexing API.
+Future conversion to an indexed matrix library must
+retain these exact entry and dimension invariants
+before any rank, nullspace or determinant claims.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

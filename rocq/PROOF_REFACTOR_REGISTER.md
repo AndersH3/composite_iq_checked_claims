@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 491 public theorem/lemma/example declarations,
+The current branch has 496 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**494 proof scripts**, including the generic
+**499 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 167 proof scripts
+## FiniteMoments.v — 172 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -889,6 +889,11 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_not_positive_definite_of_nonzero_covariance_row_kernel` (theorem) | Lemma application, nullity iff | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_not_positive_definite_of_nonzero_null_direction | **New:** a nonzero row-dot kernel vector disproves covariance positive definiteness |
 | `fixed_basis_zero_covariance_row_dots_iff_supported_constant` (theorem) | Iff composition, lemma application | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_null_iff_exists_constant_on_positive_weight_support | **New:** zero dot against every covariance row iff composite score equals some positive-support constant |
 | `fixed_basis_positive_definite_iff_no_nonzero_supported_constant` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support, Stdlib.List.repeat | **New:** covariance positive definite iff no nonzero coefficient direction yields any supported constant |
+| `basis_covariance_matrix_as_cross` (theorem) | Transparent equal-basis specialization of existing rectangular matrix definition | basis_covariance_matrix, basis_cross_covariance_matrix, Stdlib.List.map | **New:** square covariance list is equal-left-right cross covariance list |
+| `basis_cross_covariance_matrix_app_left` (theorem) | Stdlib map_app on score row lists | Stdlib.List.map_app, basis_cross_covariance_matrix | **New:** row-basis append law for rectangular covariance list |
+| `basis_cross_covariance_matrix_app_right` (theorem) | List induction and map_app for each pair of covariance rows | Stdlib.List.map_app, combine, basis_cross_covariance_matrix | **New:** column-basis append corresponds to elementwise row concatenation |
+| `basis_cross_covariance_matrix_nth_error_entry` (theorem) | Two Stdlib nth_error_map rewrites and option inversion | Stdlib.List.nth_error_map, basis_cross_covariance_matrix, covariance | **New:** indexed covariance list cell equals selected scalar covariance with explicit bounds |
+| `basis_cross_covariance_matrix_nth_error_swap` (theorem) | Two certified entry rewrites and covariance_symmetric | basis_cross_covariance_matrix_nth_error_entry, covariance_symmetric | **New:** left/right covariance matrices obey componentwise transpose symmetry |
 
 ## FiniteBridge.v — 37 proof scripts
 
