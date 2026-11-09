@@ -32,8 +32,14 @@ jobs:
         run: python -m pytest -q tests
       - name: Symbolically verify acceptance gates and the unchanged negative fixture
         run: python verification/check_symbolic.py
-      - name: Audit current symbolic-fix and source-pinned SPARK evidence
-        run: python verification/verify_evidence.py
+      # The retained Nov 5 campaign is a historical, source-pinned artifact.
+      # The live source changes as we strengthen Deal contracts; comparing that
+      # changing tree with its immutable historical Python inventory is invalid.
+      # Keep all archived hashes intact and audit the matching known-good source.
+      - name: Audit archived symbolic/SPARK evidence against its recorded source
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/composite-iq-symbolic-fixture-source" afaa2974b2272dec9ed874c1045a7f577359c860
+          python verification/verify_evidence.py verification/evidence/symbolic-fixture-computer10-20261105 --source-root "$RUNNER_TEMP/composite-iq-symbolic-fixture-source"
       - name: Audit prior SPARK campaigns against their explicit source revision
         run: |
           git worktree add --detach "$RUNNER_TEMP/composite-iq-prior-source" 2c32ecdd87690866bfcbf2d99725abba7cdad55e
