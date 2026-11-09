@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **621 public theorem/lemma/example claims**, plus
+The current branch has **623 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**624 proof scripts** across seven Rocq modules. The claims and scripts
+**626 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -606,7 +606,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 163 proof scripts
+## FiniteUnion.v — 165 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -774,6 +774,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `union_prob_filtered_mass_strict` (theorem) | Unfold union as existing event and reuse strict filtering | union_prob, finite_prob_filtered_mass_strict, Stdlib.List.existsb | **New:** identical strict reduction for any finite Boolean-event family |
 | `finite_conditional_prob_strict_monotone` (theorem) | Strict numerator comparison and positive common inverse | finite_prob_event_strict_monotone, Stdlib.Bool.andb_true_iff, Stdlib.Rmult_lt_compat_r | **New:** strict inclusion among conditional event targets with an inside-conditioning witness |
 | `finite_conditional_prob_strictly_between_zero_one_of_two_witnesses` (theorem) | Positivity of complementary conditioned masses and their sum-to-one identity | finite_conditional_prob_positive_of_joint_support_witness, finite_conditional_prob_complement, Stdlib.Lra | **New:** both conditioned target and conditioned complement supported implies interior mass |
+| `union_prob_append_strict_of_fresh_support` (theorem) | Strict event inclusion through standard existsb append | finite_prob_event_strict_monotone, any_event_append, Stdlib.List.existsb_app | **New:** fresh positive-weight right-family witness strictly enlarges unconditional union |
+| `finite_conditional_union_append_strict_of_fresh_support` (theorem) | Strict conditional event inclusion through standard existsb append | finite_conditional_prob_strict_monotone, any_event_append, Stdlib.List.existsb_app | **New:** fresh positive-weight right-family witness inside the conditioner strictly enlarges conditional union |
+
 
 
 

@@ -5437,6 +5437,114 @@ Section FiniteOutcomeSpace.
     split; lra.
   Qed.
 
+
+  (**
+   [union_prob_append_strict_of_fresh_support] (theorem) — Strict
+   growth of a finite event-family union after appending events.
+   Mathematical meaning: Adding events to an existing family
+   strictly increases union mass when an enumerated positive-weight
+   outcome enters the union for the first time.
+   Exact checked proposition: Under nonnegative sampled weights,
+   a listed x with any_event left x = false,
+   any_event right x = true and weights x > 0 implies
+   union_prob weights samples left <
+   union_prob weights samples (left ++ right).
+   Premises and side conditions: The outcome is a member of
+   the exact sample; event families can overlap or repeat.
+   No independence, unit normalization or distinctness of
+   sample occurrences is assumed.
+   Proof/definition method: Use Stdlib.List.existsb_app through
+   the established any_event_append lemma to show inclusion
+   and the fresh positive witness, then delegate the strict
+   inequality to finite_prob_event_strict_monotone.
+   Library reuse: finite_prob_event_strict_monotone,
+   any_event_append, Stdlib.List.existsb_app and union_prob.
+   Boundary: Strict finite union mass growth does not imply
+   additivity of marginal probabilities when events overlap.
+   *)
+  Theorem union_prob_append_strict_of_fresh_support :
+    forall weights samples (left right : list Event) x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In x samples ->
+      any_event left x = false ->
+      any_event right x = true ->
+      0 < weights x ->
+      union_prob weights samples left <
+        union_prob weights samples (left ++ right).
+  Proof.
+    intros weights samples left right x
+      Hw Hin Habsent Hpresent Hpositive.
+    unfold union_prob.
+    apply (finite_prob_event_strict_monotone
+      weights samples
+      (any_event left) (any_event (left ++ right)) x Hw).
+    - intros y _ Hleft.
+      rewrite any_event_append, Hleft.
+      reflexivity.
+    - exact Hin.
+    - exact Habsent.
+    - rewrite any_event_append, Habsent, Hpresent.
+      reflexivity.
+    - exact Hpositive.
+  Qed.
+
+  (**
+   [finite_conditional_union_append_strict_of_fresh_support] (theorem) —
+   Strict union growth under an unchanged positive conditioner.
+   Mathematical meaning: Appending events to an existing family
+   strictly increases conditional union mass if a fresh
+   positive-weight union outcome also satisfies the conditioner.
+   Exact checked proposition: Assuming nonnegative sampled weights
+   and positive mass of given, if x is a sample member with
+   given x = true, any_event left x = false,
+   any_event right x = true, and weights x > 0,
+   the conditional mass of any_event left given given is
+   strictly less than that of any_event (left ++ right) given given.
+   Premises and side conditions: The strictly positive common
+   denominator and an inside-conditioner fresh witness are
+   explicit. All event-family and sample multiplicities
+   remain unchanged; pairwise independence is not assumed.
+   Proof/definition method: Apply the existing conditional
+   strict-monotonicity theorem to the union predicates,
+   reducing their Boolean inclusion and witness using
+   the standard-library-backed any_event_append identity.
+   Library reuse: finite_conditional_prob_strict_monotone,
+   any_event_append, Stdlib.List.existsb_app and
+   finite_conditional_prob.
+   Boundary: Conditional finite union strictness is not a
+   result about independently estimated route probabilities.
+   *)
+  Theorem finite_conditional_union_append_strict_of_fresh_support :
+    forall weights samples (left right : list Event) given x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      0 < finite_prob weights samples given ->
+      In x samples ->
+      given x = true ->
+      any_event left x = false ->
+      any_event right x = true ->
+      0 < weights x ->
+      finite_conditional_prob weights samples
+        (any_event left) given <
+      finite_conditional_prob weights samples
+        (any_event (left ++ right)) given.
+  Proof.
+    intros weights samples left right given x
+      Hw Hgiven_mass Hin Hgiven Habsent Hpresent Hpositive.
+    apply (finite_conditional_prob_strict_monotone
+      weights samples
+      (any_event left) (any_event (left ++ right)) given x
+      Hw Hgiven_mass).
+    - intros y _ Hleft.
+      rewrite any_event_append, Hleft.
+      reflexivity.
+    - exact Hin.
+    - exact Hgiven.
+    - exact Habsent.
+    - rewrite any_event_append, Habsent, Hpresent.
+      reflexivity.
+    - exact Hpositive.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

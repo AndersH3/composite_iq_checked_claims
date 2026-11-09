@@ -1778,6 +1778,17 @@ and conditional witness theorem. The source reuses the established
 Boolean conjunction and real-quotient semantics without defining a
 new conditional distribution or asserting population inference.
 
+## Strict event-family append laws use standard Boolean folds
+
+The strict unconditional and conditional append theorems reduce
+directly to already checked strict event-mass and conditional
+monotonicity. The only event-family transformation required is the
+maintained `any_event_append` theorem based on
+`Stdlib.List.existsb_app`. A fresh, positively weighted listed
+outcome makes the comparison strict. No new event-recursive code,
+membership search, probability model, or independence assumption
+is necessary; the predicates retain finite multiset semantics.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

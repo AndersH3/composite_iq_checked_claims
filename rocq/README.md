@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **624 proof scripts** in seven
+for the two reports. **626 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **621 public claims, 624 proof scripts,
-687 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **623 public claims, 626 proof scripts,
+689 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **621 public claims,
-624 proof scripts, 687 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **623 public claims,
+626 proof scripts, 689 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2381,6 +2381,18 @@ complement, reusing the already verified conditional positivity and
 complement identities. These statements concern the exact enumerated
 finite sample; they assert neither independence nor empirical or
 continuous probability results.
+
+### Strict event-family extension from a genuinely new sample witness
+
+The pair `union_prob_append_strict_of_fresh_support` and
+`finite_conditional_union_append_strict_of_fresh_support`
+proves that appending an event family strictly enlarges its
+unconditional and (under a positive conditioner) conditional union
+mass when a new positively weighted sampled outcome enters the
+union. Both are immediate reductions to the maintained strict event
+comparison theorems, with `Stdlib.List.existsb_app` supplied via
+`any_event_append`. No fresh Boolean-family recursion, enumeration,
+or independence premise is introduced.
 
 ## Research extensions
 
