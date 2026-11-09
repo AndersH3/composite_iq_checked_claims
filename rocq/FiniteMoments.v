@@ -3,7 +3,7 @@
    Derives moment linearity, variance bounds, composite-score covariance, and finite-list covariance-matrix formulas from a common finite sum.
    Mathematical representation: A fixed list of samples and a real weight function define expectation; covariance and variance are differences/products of expectations.
    Explicit hypotheses: Where a claim needs genuine probability, hypotheses require normalized total mass and nonnegative weights; vector identities require compatible list lengths.
-   Library use: Stdlib.List, Sorting.Permutation, Reals and FiniteSum's reusable fold, extensionality, monotonicity and Fubini lemmas.
+   Library use: Stdlib.List, Sorting.Permutation, Vectors.Fin/Vector/VectorSpec, Reals and FiniteSum's reusable fold, extensionality, monotonicity and Fubini lemmas.
    Limitations: No assertion about Gaussian covariance, continuous random variables or observed IQ distributions follows from this finite model.
    Proof documentation: Every public and helper declaration below has its
    own statement, hypothesis, proof-approach, and scope commentary.
@@ -16,7 +16,7 @@
    Nonnegative normalized weights form an explicit finite probability model.
    All moment laws are derived from finite sums, not assumed as axioms.
    No Gaussian or empirical psychometric assumptions are used. *)
-From Stdlib Require Import Reals Lra Psatz List Sorting.Permutation.
+From Stdlib Require Import Reals Lra Psatz List Sorting.Permutation Vectors.Fin Vectors.Vector Vectors.VectorSpec.
 Require Import FiniteSum.
 Import ListNotations.
 Open Scope R_scope.
@@ -6069,6 +6069,105 @@ Section FiniteProbabilityMoments.
     rewrite basis_covariance_matrix_as_cross in Hrow_j.
     eapply basis_cross_covariance_matrix_nth_error_swap;
       eassumption.
+  Qed.
+
+
+  (**
+   [vector_of_list_nth_error] (theorem) — Library-based bridge between bounded vector indices and total option-valued list access.
+   Mathematical meaning: Converting a finite list into Rocq's length-indexed Vector.of_list does not change its elements: for any index Fin.t (length xs), the corresponding natural index from Fin.to_nat successfully accesses the same value with Stdlib.List.nth_error as Vector.nth. The index's dependent type certifies that the list position exists, including the fact that no index inhabits an empty list.
+   Exact checked proposition: forall T xs (i:Fin.t (length xs)), nth_error xs (proj1_sig (Fin.to_nat i)) = Some (Vector.nth (Vector.of_list xs) i).
+   Premises and side conditions: The list is arbitrary and its element type T need not be inhabited or decidably comparable; index validity is guaranteed directly by the Fin.t type, not an additional runtime condition.
+   Proof/definition method: Use the maintained VectorSpec.to_list_nth_order and VectorSpec.to_list_of_list_opp lemmas, the standard Fin.of_nat_to_nat_inv identity, and List.nth_error_nth' with the strict upper bound provided by Fin.to_nat. This avoids implementing a new vector/list conversion or an induction on bounded indices.
+   Library reuse: Stdlib.Vectors.Fin, Vector, VectorSpec, Stdlib.List.nth_error_nth' and the existing List definition. No dependent indexing algorithm or new axiom is introduced.
+   Boundary: This bridges the two standard finite collection representations only; covariance-specific algebra and matrix rank remain separate concerns.
+   *)
+  Theorem vector_of_list_nth_error :
+    forall (T : Type) (xs : list T) (i : Fin.t (length xs)),
+      nth_error xs (proj1_sig (Fin.to_nat i)) =
+        Some (Vector.nth (Vector.of_list xs) i).
+  Proof.
+    intros T xs i.
+    pose proof (proj2_sig (Fin.to_nat i)) as Hbound.
+    pose proof (VectorSpec.to_list_nth_order
+      T (length xs) (Vector.of_list xs)
+      (proj1_sig (Fin.to_nat i)) Hbound
+      (Vector.nth (Vector.of_list xs) i)) as Hnth.
+    unfold Vector.nth_order in Hnth.
+    rewrite Fin.of_nat_to_nat_inv in Hnth.
+    rewrite VectorSpec.to_list_of_list_opp in Hnth.
+    rewrite (nth_error_nth' xs
+      (proj1_sig (Fin.to_nat i))
+      (Vector.nth (Vector.of_list xs) i) Hbound).
+    f_equal.
+    symmetry.
+    exact Hnth.
+  Qed.
+
+  (**
+   [indexed_basis_cross_covariance_matrix] (definition) — Dimension-indexed rectangular covariance function using Rocq's standard finite vectors.
+   Mathematical meaning: Represent a covariance matrix as a total function on one bounded row index and one bounded column index. Its row and column dimensions are exactly the lengths of the corresponding finite score-basis lists. Each cell is computed by the *existing* scalar covariance of the two scores selected by Vector.nth from Vector.of_list, eliminating every out-of-range default.
+   Exact declaration: indexed_basis_cross_covariance_matrix left right : Fin.t (length left) -> Fin.t (length right) -> R := fun i j => covariance (Vector.nth (Vector.of_list left) i) (Vector.nth (Vector.of_list right) j).
+   Premises and side conditions: The basis lists may be empty or contain duplicates. Fin.t 0 is uninhabited, so no extra empty-basis case or sentinel score is required. The covariance model keeps the original weighted sample unchanged and imposes no normalization requirement for the raw algebraic definition.
+   Proof/definition method: Compose maintained Stdlib.Vectors.Vector.of_list and Vector.nth with the already checked finite scalar covariance function; there is no new index implementation, loop or row-major encoding.
+   Library reuse: Stdlib.Vectors.Fin, Stdlib.Vectors.Vector, and the existing FiniteMoments.covariance operator.
+   Boundary: A dimension-safe function matrix is not by itself a certified matrix rank/nullspace implementation, and no equality with the list representation is assumed without the entry bridge below.
+   *)
+  Definition indexed_basis_cross_covariance_matrix
+      (left right : list (Outcome -> R)) :
+      Fin.t (length left) -> Fin.t (length right) -> R :=
+    fun i j =>
+      covariance (Vector.nth (Vector.of_list left) i)
+                 (Vector.nth (Vector.of_list right) j).
+
+  (**
+   [indexed_basis_cross_covariance_matrix_entry] (theorem) — Cellwise equivalence of the list covariance matrix and the dimension-indexed representation.
+   Mathematical meaning: Reading a cell from an existing rectangular list covariance matrix at the bounded row and column indices encoded by Fin.t returns the entry of the new total Fin-indexed covariance function, establishing an exact bridge rather than merely assuming that the two representations match.
+   Exact checked proposition: For score lists left right, Fin.t (length left) i, Fin.t (length right) j and a matrix row, if nth_error (basis_cross_covariance_matrix left right) (proj1_sig (Fin.to_nat i))=Some row, then nth_error row (proj1_sig (Fin.to_nat j))=Some (indexed_basis_cross_covariance_matrix left right i j).
+   Premises and side conditions: Dimensions are enforced in the types of i and j and a successful row lookup is explicitly supplied, so no out-of-bounds row or column default is introduced. The result is algebraic for any original finite real sample weights.
+   Proof/definition method: Invoke the previously verified rectangular nth_error entry characterization and discharge its two basis score lookup premises using the new vector_of_list_nth_error lemma, which itself delegates to maintained standard-library vector/list conversions.
+   Library reuse: basis_cross_covariance_matrix_nth_error_entry, vector_of_list_nth_error, Stdlib.List.nth_error and Stdlib.Vectors.Fin/Vector.
+   Boundary: This proves exact cell agreement at the valid index pair, not yet an isomorphism of entire matrix APIs, covariance rank or a determinant identity.
+   *)
+  Theorem indexed_basis_cross_covariance_matrix_entry :
+    forall left right
+           (i : Fin.t (length left))
+           (j : Fin.t (length right)) row,
+      nth_error (basis_cross_covariance_matrix left right)
+        (proj1_sig (Fin.to_nat i)) = Some row ->
+      nth_error row (proj1_sig (Fin.to_nat j)) =
+        Some (indexed_basis_cross_covariance_matrix left right i j).
+  Proof.
+    intros left right i j row Hrow.
+    unfold indexed_basis_cross_covariance_matrix.
+    apply (basis_cross_covariance_matrix_nth_error_entry
+      left right (proj1_sig (Fin.to_nat i))
+      (proj1_sig (Fin.to_nat j))
+      (Vector.nth (Vector.of_list left) i)
+      (Vector.nth (Vector.of_list right) j) row).
+    - apply vector_of_list_nth_error.
+    - apply vector_of_list_nth_error.
+    - exact Hrow.
+  Qed.
+
+  (**
+   [indexed_basis_cross_covariance_matrix_swap] (theorem) — Transpose symmetry of the dimension-indexed finite covariance representation.
+   Mathematical meaning: For any valid row index in the left score basis and column index in the right score basis, the finite-indexed covariance entry is unchanged by swapping both bases and their indices. This is a dimension-safe rectangular transpose law directly inherited from scalar covariance symmetry.
+   Exact checked proposition: For left right score lists and i : Fin.t (length left), j : Fin.t (length right), indexed_basis_cross_covariance_matrix left right i j = indexed_basis_cross_covariance_matrix right left j i.
+   Premises and side conditions: The indexed types supply all dimension bounds; there is no requirement that the matrices are square, that the weight model is normalized or nonnegative, or that the basis scores are independent.
+   Proof/definition method: Unfold the dimension-indexed definition and invoke the already proved scalar covariance_symmetric theorem, avoiding implementation of a separate transposition routine or matrix index arithmetic.
+   Library reuse: indexed_basis_cross_covariance_matrix, covariance_symmetric, Stdlib.Vectors.Vector.nth and Fin.t.
+   Boundary: This is transpose symmetry of this particular covariance function, not a general theorem asserting symmetry of arbitrary rectangular matrices or a positive-definite covariance rank result.
+   *)
+  Theorem indexed_basis_cross_covariance_matrix_swap :
+    forall left right
+           (i : Fin.t (length left))
+           (j : Fin.t (length right)),
+      indexed_basis_cross_covariance_matrix left right i j =
+      indexed_basis_cross_covariance_matrix right left j i.
+  Proof.
+    intros left right i j.
+    unfold indexed_basis_cross_covariance_matrix.
+    apply covariance_symmetric.
   Qed.
 
 End FiniteProbabilityMoments.

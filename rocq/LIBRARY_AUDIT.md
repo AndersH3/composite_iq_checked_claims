@@ -1293,6 +1293,27 @@ can use these facts without introducing an
 out-of-range default or losing the matrix
 column dimension.
 
+## Bounded matrix indexing with the maintained Rocq vector library
+
+The dimension-safe `indexed_basis_cross_covariance_matrix`
+uses `Stdlib.Vectors.Fin.t` for row and column
+indices and `Stdlib.Vectors.Vector.of_list/nth`
+to select source scores. A new generic conversion
+lemma is proved from maintained `VectorSpec`
+`to_list_nth_order`/`to_list_of_list_opp`,
+`Fin.of_nat_to_nat_inv` and
+`List.nth_error_nth'`; this is a proof of semantic
+agreement with the existing list rather than an
+independent list-index implementation.
+The indexed matrix's correspondence to the old
+rectangular covariance list is then obtained
+cellwise from the previous checked nth_error
+entry theorem, and its swap law from existing
+covariance symmetry. The library currently
+proves only entry and dimension fidelity;
+rank, determinants and eigenstructure have
+not been formalized for this representation.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
