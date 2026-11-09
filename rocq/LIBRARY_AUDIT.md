@@ -1245,6 +1245,20 @@ No duplicate discriminant proof, quadratic sum,
 independence axiom or numerical approximation
 is introduced.
 
+## Sharp finite conditional covariance bounds from standard finite moments
+
+`finite_conditioned_indicator_variance_nonnegative`
+reuses `FiniteMoments.variance_nonnegative` after
+normalization and nonnegative selected-weight checks.
+The conditional indicator squared Cauchy–Schwarz bound
+and existing universal Bernoulli variance upper bound
+then establish the sharp algebraic 1/16 covariance
+square bound; Rocq `nra` yields the signed ±1/4
+covariance interval. No new probability sum or
+independent covariance algebra is introduced, and
+all assumptions needed for statistical semantics
+are explicit.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

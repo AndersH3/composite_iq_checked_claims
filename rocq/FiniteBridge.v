@@ -1181,3 +1181,98 @@ Proof.
   apply (finite_conditional_extreme_first_independent
     A samples weight given second first Hpositive Hw Hextreme).
 Qed.
+
+
+
+(**
+   [finite_conditioned_indicator_variance_nonnegative] (theorem) — Positivity of conditional Bernoulli indicator variance.
+   Mathematical meaning: The variance of a Boolean target's zero-one indicator in the selected finite probability model cannot be negative when the original sampled weights are nonnegative and the Boolean conditioning event has strictly positive mass. This provides the lower bound complementary to the existing universal one-quarter upper bound.
+   Exact checked proposition: For arbitrary A, original finite weighted samples, given and event, if P(G)>0 and each enumerated original weight is nonnegative, then 0 <= FiniteMoments.variance of indicator event with conditioned_weights on filter given samples.
+   Premises and side conditions: Positive conditioning mass is required for unit total selected mass and nonnegative original weights ensure nonnegative retained weights. The full original sample need not be normalized, and repeated sample occurrences remain significant.
+   Proof/definition method: Instantiate the already established FiniteMoments.variance_nonnegative theorem on the filtered weighted sample, discharging its normalized-mass and weight-positivity hypotheses with the reusable conditioned_weights_moment_total_mass_one and conditioned_weights_nonnegative_on_filtered_samples bridges.
+   Library reuse: FiniteMoments.variance_nonnegative, conditioned_weights_moment_total_mass_one, conditioned_weights_nonnegative_on_filtered_samples. No fresh centered-sum or square-positivity argument is implemented.
+   Boundary: The result is a genuine variance inequality only for normalized nonnegative selected weights; arbitrary signed weighted sums do not necessarily yield nonnegative variance.
+ *)
+Theorem finite_conditioned_indicator_variance_nonnegative :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    0 <= @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)).
+Proof.
+  intros A samples weight given event Hpositive Hw.
+  apply FiniteMoments.variance_nonnegative.
+  - apply conditioned_weights_moment_total_mass_one.
+    exact Hpositive.
+  - apply conditioned_weights_nonnegative_on_filtered_samples;
+      assumption.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_squared_at_most_sixteenth] (theorem) — Sharp universal finite conditional Bernoulli covariance-square bound.
+   Mathematical meaning: Covariance between the zero-one indicators of any two events conditioned on a positive-mass finite selector has absolute magnitude at most one quarter, equivalently covariance squared at most one sixteenth. This applies without assuming the two target events are conditionally independent.
+   Exact checked proposition: With positive P(G) and nonnegative original sampled weights, the product of conditional indicator covariance with itself, on the normalized G-filtered sample, is bounded above by /16.
+   Premises and side conditions: The original conditioning mass must be strictly positive and all originally enumerated weights must be nonnegative. No target independence, marginal positivity, unit full-sample normalization, or distinctness of samples is assumed.
+   Proof/definition method: Combine the previously verified conditional squared Cauchy–Schwarz inequality, the nonnegative conditional variance theorem and the unconditional algebraic one-quarter variance bound for both indicators. A standard nonlinear real arithmetic step bounds their product and hence the covariance square.
+   Library reuse: finite_conditioned_indicator_cauchy_schwarz_squared, finite_conditioned_indicator_variance_nonnegative, finite_conditioned_indicator_variance_at_most_quarter, Stdlib.Psatz.nra.
+   Boundary: The bound concerns only Boolean indicator covariance under exact normalized finite conditioning; it does not provide a universal bound for arbitrary score covariance or statistical estimation error.
+ *)
+Theorem finite_conditioned_indicator_covariance_squared_at_most_sixteenth :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) *
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) <= /16.
+Proof.
+  intros A samples weight given first second Hpositive Hw.
+  pose proof (finite_conditioned_indicator_cauchy_schwarz_squared
+    A samples weight given first second Hpositive Hw) as Hcs.
+  pose proof (finite_conditioned_indicator_variance_nonnegative
+    A samples weight given first Hpositive Hw) as Hfirst_nonnegative.
+  pose proof (finite_conditioned_indicator_variance_nonnegative
+    A samples weight given second Hpositive Hw) as Hsecond_nonnegative.
+  pose proof (finite_conditioned_indicator_variance_at_most_quarter
+    A samples weight given first) as Hfirst_bound.
+  pose proof (finite_conditioned_indicator_variance_at_most_quarter
+    A samples weight given second) as Hsecond_bound.
+  nra.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_between_quarters] (theorem) — The signed finite conditional Boolean-indicator covariance bound.
+   Mathematical meaning: The covariance between any pair of zero-one indicators in a normalized, nonnegative, finite sample selected by a positive-mass Boolean event lies between minus one quarter and plus one quarter. This is the signed version of the preceding squared bound, valid without any independence assumption.
+   Exact checked proposition: Under strictly positive original conditioning mass and nonnegative original sampled weights, - /4 <= FiniteMoments.covariance of two indicator targets on filter given samples with conditioned_weights, and that covariance <= /4.
+   Premises and side conditions: Positive conditioning mass and nonnegative original sampled weights are required; full-sample unit normalization and Boolean target independence are not. Duplicate sampled outcomes retain their original weighted multiplicity.
+   Proof/definition method: Instantiate finite_conditioned_indicator_covariance_squared_at_most_sixteenth and apply Stdlib nonlinear real arithmetic to extract both signed bounds from the upper bound on the square of the same real covariance.
+   Library reuse: finite_conditioned_indicator_covariance_squared_at_most_sixteenth, Stdlib.Psatz.nra, FiniteMoments.covariance; no new variance expansion or probabilistic enumeration.
+   Boundary: This is a sharp worst-case algebraic bound for finite Bernoulli covariance, not a confidence interval, an empirical correlation bound, or a Gaussian approximation.
+ *)
+Theorem finite_conditioned_indicator_covariance_between_quarters :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    - /4 <=
+      @FiniteMoments.covariance A (filter given samples)
+        (conditioned_weights A weight samples given)
+        (fun x => FiniteUnion.indicator (first x))
+        (fun x => FiniteUnion.indicator (second x)) /\
+      @FiniteMoments.covariance A (filter given samples)
+        (conditioned_weights A weight samples given)
+        (fun x => FiniteUnion.indicator (first x))
+        (fun x => FiniteUnion.indicator (second x)) <= /4.
+Proof.
+  intros A samples weight given first second Hpositive Hw.
+  pose proof (finite_conditioned_indicator_covariance_squared_at_most_sixteenth
+    A samples weight given first second Hpositive Hw) as Hsquare.
+  split; nra.
+Qed.

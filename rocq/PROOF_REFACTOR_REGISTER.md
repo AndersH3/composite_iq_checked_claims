@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 488 public theorem/lemma/example declarations,
+The current branch has 491 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**491 proof scripts**, including the generic
+**494 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -890,7 +890,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_zero_covariance_row_dots_iff_supported_constant` (theorem) | Iff composition, lemma application | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_null_iff_exists_constant_on_positive_weight_support | **New:** zero dot against every covariance row iff composite score equals some positive-support constant |
 | `fixed_basis_positive_definite_iff_no_nonzero_supported_constant` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support, Stdlib.List.repeat | **New:** covariance positive definite iff no nonzero coefficient direction yields any supported constant |
 
-## FiniteBridge.v — 34 proof scripts
+## FiniteBridge.v — 37 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -928,6 +928,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditioned_zero_indicator_variance_implies_zero_covariance` (theorem) | Apply established zero-variance covariance lemma to normalized selected sample | FiniteMoments.zero_variance_implies_zero_covariance_first, selected mass/nonnegativity bridges | **New:** zero conditional indicator variance forces zero conditional covariance |
 | `finite_conditional_extreme_first_independent` (theorem) | Compose extreme mass iff zero variance, covariance zero, independence iff | finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass, finite_conditioned_zero_indicator_variance_implies_zero_covariance, finite_conditional_independence_iff_conditioned_indicator_covariance_zero | **New:** conditional event with mass zero or one independent of any second event |
 | `finite_conditional_extreme_second_independent` (theorem) | Project original target-symmetry iff and invoke extreme-first theorem | FiniteUnion.finite_conditional_independent_symmetric, finite_conditional_extreme_first_independent | **New:** extreme conditional second target independent of any first event |
+| `finite_conditioned_indicator_variance_nonnegative` (theorem) | Apply established finite moment variance positivity with selected normalized mass/nonnegativity | FiniteMoments.variance_nonnegative, conditioned_weights_moment_total_mass_one, conditioned_weights_nonnegative_on_filtered_samples | **New:** nonnegative variance of selected Bernoulli indicators |
+| `finite_conditioned_indicator_covariance_squared_at_most_sixteenth` (theorem) | Cauchy–Schwarz with variance between 0 and 1/4, via nra | finite_conditioned_indicator_cauchy_schwarz_squared, finite_conditioned_indicator_variance_nonnegative, finite_conditioned_indicator_variance_at_most_quarter, Stdlib.Psatz.nra | **New:** squared conditional indicator covariance bounded by 1/16 |
+| `finite_conditioned_indicator_covariance_between_quarters` (theorem) | Extract signed interval from the squared bound by nra | finite_conditioned_indicator_covariance_squared_at_most_sixteenth, Stdlib.Psatz.nra | **New:** finite conditional Bernoulli covariance lies in [-1/4, 1/4] |
 
 ## FourCellBridge.v — 25 proof scripts
 
