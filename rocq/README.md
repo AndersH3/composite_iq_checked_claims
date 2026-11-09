@@ -2196,6 +2196,19 @@ for conditional inequalities.
 Current intended inventory: **587 public claims, 590 proof scripts and
 653 documented declarations** across seven Rocq modules, pending CI.
 
+## Append-family order for unions and conjunctions
+
+Four documented Rocq theorems derive right-sided union monotonicity
+(ordinary and conditional) and both-sided conditional conjunction
+antitonicity. All use `Stdlib.List.in_or_app` as a pure membership
+bridge and the previously established family-subset probability laws.
+Nonnegative sampled weights and strictly positive conditioning mass
+remain explicit for conditional inequalities. No event recursion,
+custom sum or independence claim was introduced.
+
+Current intended inventory: **591 public claims, 594 proof scripts,
+657 documented declarations** across seven Rocq modules, subject to CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

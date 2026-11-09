@@ -1636,6 +1636,15 @@ Two append-family monotonicity corollaries rely only on
 and positive conditioning mass explicit, without fresh enumeration,
 custom sums, independence or unproved probabilistic assumptions.
 
+## Two-sided event-family append order via standard membership
+
+Four append-order results use `Stdlib.List.in_or_app` and the
+checked union/conjunction family-subset theorems. Ordinary union
+monotonicity requires nonnegative sample weights; conditional union
+and intersection bounds also require strictly positive conditioner
+mass. Every proof avoids new `existsb` or `forallb` inductions
+and remains inside finite weighted Boolean-event semantics.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

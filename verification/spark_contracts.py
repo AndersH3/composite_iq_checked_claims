@@ -17,6 +17,9 @@ import deal
 
 SCHEMA = "explicit-contract-clauses-v1"
 MINIMUM = 5
+# Staged target: structural inventory reports ten independently written
+# explicit SPARK clauses/aspects without making ten mandatory globally.
+TARGET = 10
 ROOT = Path(__file__).resolve().parents[1]
 SPACE = re.compile(r"\s+")
 QUALIFIER = re.compile(r"\b(?:[a-z_]\w*\.)+")
@@ -227,6 +230,19 @@ def contract_entries(aspects: dict) -> list:
 @deal.post(lambda result: result["schema"] == SCHEMA and result["minimum_required"] == MINIMUM)
 @deal.raises(ValueError)
 @deal.has()
+# Independently cross-check the staged ten-clause reporting against the
+# complete per-entity inventory. The original five-clause acceptance rule
+# and native source identity checks are unchanged.
+@deal.post(lambda result: result["target_contracts"] == TARGET)
+@deal.post(lambda result:
+           result["entities_at_target"] + result["entities_below_target"]
+           == len(result["entities"]))
+@deal.post(lambda result: result["entities_at_target"]
+           == sum(row["contract_count"] >= TARGET for row in result["entities"]))
+@deal.post(lambda result: result["entities_below_target"]
+           == sum(row["contract_count"] < TARGET for row in result["entities"]))
+@deal.post(lambda result: result["contracts"]
+           == sum(row["contract_count"] for row in result["entities"]))
 def inventory(sources: dict, coverage: dict | None = None) -> dict:
     candidates = {}
     excluded = []
@@ -295,6 +311,9 @@ def inventory(sources: dict, coverage: dict | None = None) -> dict:
             if not non_subprogram:
                 unmatched_native.append(entity["name"])
     return {"schema": SCHEMA, "minimum_required": MINIMUM,
+            "target_contracts": TARGET,
+            "entities_at_target": sum(row["contract_count"] >= TARGET for row in rows),
+            "entities_below_target": sum(row["contract_count"] < TARGET for row in rows),
             "minimum_observed": min(row["contract_count"] for row in rows),
             "functions": sum(row["kind"] == "function" for row in rows),
             "procedures": sum(row["kind"] == "procedure" for row in rows),

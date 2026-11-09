@@ -295,3 +295,45 @@ def test_aspect_comments_neither_hide_nor_pad_contracts(position):
         assert result["complete"]
         assert result["entities"][0]["contract_count"] == 5
     return None
+
+
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_staged_spark_ten_contract_accounting_is_exact():
+    """Report the optional ten-clause target without weakening the five-clause gate."""
+    result = inventory({"p.ads": SPEC, "p.adb": BODY})
+    assert result["minimum_required"] == 5
+    assert result["target_contracts"] == 10
+    assert result["entities_at_target"] == 0
+    assert result["entities_below_target"] == 1
+    assert result["complete"]
+    assert result["entities_at_target"] + result["entities_below_target"] == len(result["entities"])
+
+
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_admission_exact_arithmetic_has_ten_native_contract_entries():
+    """Enforce the staged ten-clause target for five proven-by-algebra candidates."""
+    result = inventory(current_sources(ROOT))
+    targets = {
+        "admission_core.total": ("Total'Result >= C.N00", "Total'Result = 0"),
+        "admission_core.union_count": ("Union_Count'Result >= C.N10", "C.N00 = 0"),
+        "admission_core.fraction": ("Fraction'Result.Denominator > 0", "Numerator = 0"),
+        "admission_core.complement": ("Complement'Result = Scale - P", "Scale / 2"),
+        "admission_core.conditional": ("Conditional'Result.Denominator > 0", "Joint = 0"),
+    }
+    by_name = {row["identity"]: row for row in result["entities"]}
+    assert targets.keys() <= by_name.keys()
+    assert result["complete"] and result["minimum_observed"] >= 5
+    for name, phrases in targets.items():
+        row = by_name[name]
+        assert row["contract_count"] >= 10, (name, row)
+        clauses_text = "\n".join(entry["clause"] for entry in row["contracts"])
+        assert all(phrase in clauses_text for phrase in phrases), (name, clauses_text)
+    assert result["entities_at_target"] >= len(targets)

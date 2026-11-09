@@ -4257,6 +4257,141 @@ Section FiniteOutcomeSpace.
     - exact Hpositive.
   Qed.
 
+
+  (**
+   [finite_union_append_right_monotone] (theorem) — Additional alternatives never reduce the right union.
+   Mathematical meaning: Every alternative in the right list belongs
+   to left ++ right, so enlarging the alternative family weakly
+   increases its finite weighted mass.
+   Exact checked proposition: union_prob weights samples right <=
+   union_prob weights samples (left ++ right) under nonnegative weights.
+   Premises and side conditions: Nonnegative weights are required on
+   sampled outcomes; total normalization, independence and nonrepetition
+   of events or outcomes are not assumed.
+   Proof/definition method: Transport membership via Stdlib.List.in_or_app,
+   then use the previously checked finite_union_subset theorem.
+   Library reuse: Stdlib.List.in_or_app, finite_union_subset.
+   Boundary: Overlapping appended events may have no incremental mass.
+   *)
+  Theorem finite_union_append_right_monotone :
+    forall weights samples (left right : list Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      union_prob weights samples right <=
+      union_prob weights samples (left ++ right).
+  Proof.
+    intros weights samples left right Hw.
+    apply (finite_union_subset weights samples right (left ++ right)).
+    - intros event Hin.
+      apply in_or_app.
+      right; exact Hin.
+    - exact Hw.
+  Qed.
+
+  (**
+   [finite_conditional_union_append_right_monotone] (theorem) — Adding alternatives preserves conditional union order.
+   Mathematical meaning: A finite conditional union over the right
+   event family cannot lose mass when a left family is prepended.
+   Exact checked proposition: Conditional mass of any_event right
+   is <= conditional mass of any_event (left ++ right).
+   Premises and side conditions: Requires nonnegative sampled weights
+   and strictly positive conditioning mass; no event independence or
+   normalized sample total is inferred or needed.
+   Proof/definition method: Use Stdlib.List.in_or_app to show
+   the subset premise of finite_conditional_union_subset.
+   Library reuse: Stdlib.List.in_or_app,
+   finite_conditional_union_subset, finite_conditional_prob.
+   Boundary: The inequality can be equality for redundant alternatives.
+   *)
+  Theorem finite_conditional_union_append_right_monotone :
+    forall weights samples (left right : list Event) given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (any_event right) given <=
+      finite_conditional_prob weights samples
+        (any_event (left ++ right)) given.
+  Proof.
+    intros weights samples left right given Hw Hpositive.
+    apply (finite_conditional_union_subset
+      weights samples right (left ++ right) given).
+    - intros event Hin.
+      apply in_or_app.
+      right; exact Hin.
+    - exact Hw.
+    - exact Hpositive.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_append_left_antitone] (theorem) — Appending requirements cannot increase joint mass.
+   Mathematical meaning: To satisfy the conjunction over left ++ right,
+   an outcome must satisfy every event in left. Its conditional mass
+   is therefore at most that of the original left conjunction.
+   Exact checked proposition: Conditional all_events (left ++ right)
+   <= conditional all_events left with a positive conditioner.
+   Premises and side conditions: All sampled weights must be
+   nonnegative and conditioning mass strictly positive. Additional
+   requirements need not be independent or mutually compatible.
+   Proof/definition method: Reduce membership inclusion with the
+   standard Stdlib.List.in_or_app, applying existing
+   finite_conditional_all_events_subset without another forallb proof.
+   Library reuse: Stdlib.List.in_or_app and
+   finite_conditional_all_events_subset.
+   Boundary: This weak inequality gives no product factorization.
+   *)
+  Theorem finite_conditional_all_events_append_left_antitone :
+    forall weights samples (left right : list Event) given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (all_events (left ++ right)) given <=
+      finite_conditional_prob weights samples
+        (all_events left) given.
+  Proof.
+    intros weights samples left right given Hw Hpositive.
+    apply (finite_conditional_all_events_subset
+      weights samples left (left ++ right) given).
+    - intros event Hin.
+      apply in_or_app.
+      left; exact Hin.
+    - exact Hw.
+    - exact Hpositive.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_append_right_antitone] (theorem) — Prepended requirements cannot increase right joint mass.
+   Mathematical meaning: Any outcome satisfying every predicate in
+   left ++ right also satisfies every predicate from right,
+   hence its conditional finite weighted mass is no greater.
+   Exact checked proposition: Conditional mass of all_events
+   (left ++ right) is <= conditional mass of all_events right.
+   Premises and side conditions: Nonnegative sampled weights and
+   a strictly positive conditioning marginal are explicit;
+   duplicates and empty event lists remain permitted.
+   Proof/definition method: Use Stdlib.List.in_or_app for right-side
+   membership, then reuse finite_conditional_all_events_subset.
+   Library reuse: Stdlib.List.in_or_app,
+   finite_conditional_all_events_subset and existing all_events.
+   Boundary: Boolean conjunction semantics do not imply independence.
+   *)
+  Theorem finite_conditional_all_events_append_right_antitone :
+    forall weights samples (left right : list Event) given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (all_events (left ++ right)) given <=
+      finite_conditional_prob weights samples
+        (all_events right) given.
+  Proof.
+    intros weights samples left right given Hw Hpositive.
+    apply (finite_conditional_all_events_subset
+      weights samples right (left ++ right) given).
+    - intros event Hin.
+      apply in_or_app.
+      right; exact Hin.
+    - exact Hw.
+    - exact Hpositive.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

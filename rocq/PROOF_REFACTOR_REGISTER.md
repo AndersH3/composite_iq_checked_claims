@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 132 proof scripts
+## FiniteUnion.v — 136 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -739,6 +739,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_cons` (theorem) | Reduce forallb cons through existing conditional target extensionality | Stdlib.List.forallb, finite_conditional_prob_event_ext_on_samples | **New:** head-tail conjunction semantics under conditioning |
 | `finite_union_append_left_monotone` (theorem) | Standard in_or_app inclusion and existing finite family monotonicity | Stdlib.List.in_or_app, finite_union_subset | **New:** appending arbitrary alternatives weakly increases union mass |
 | `finite_conditional_union_append_left_monotone` (theorem) | Standard in_or_app inclusion and positive-conditioner family monotonicity | Stdlib.List.in_or_app, finite_conditional_union_subset | **New:** conditional append monotonicity |
+| `finite_union_append_right_monotone` (theorem) | Right-membership into app plus original union subset theorem | Stdlib.List.in_or_app, finite_union_subset | **New:** unconditional right-side append monotonicity |
+| `finite_conditional_union_append_right_monotone` (theorem) | Right-membership into app plus conditional union subset theorem | Stdlib.List.in_or_app, finite_conditional_union_subset | **New:** conditional right-side append monotonicity |
+| `finite_conditional_all_events_append_left_antitone` (theorem) | Left-membership into app plus conditional conjunction subset theorem | Stdlib.List.in_or_app, finite_conditional_all_events_subset | **New:** appending requirements weakly decreases left joint mass |
+| `finite_conditional_all_events_append_right_antitone` (theorem) | Right-membership into app plus conditional conjunction subset theorem | Stdlib.List.in_or_app, finite_conditional_all_events_subset | **New:** prepending requirements weakly decreases right joint mass |
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

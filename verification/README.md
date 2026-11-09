@@ -152,6 +152,35 @@ The source-pinned historical campaign `symbolic-fixture-computer10-20261105` con
 
 This adapter and normalization use private, version-pinned solver APIs and belong to the trusted verification tooling; tests do not prove their general correctness. They support the two recorded source files, not arbitrary Python or universal verification of the project. Runtime/property tests, static lint, limited symbolic results, native SPARK proofs and statistical-model validity remain distinct evidence.
 
+## Staged ten-clause SPARK contracts
+
+The mandatory floor remains **five** distinct explicit Global, Depends,
+Pre, Post, Refined_Post or Contract_Cases clauses per current SPARK
+function/procedure. As with Python Deal, ten is an aspirational per-entity
+target, **not** a global gate. The inventory now reports
+`target_contracts`, `entities_at_target` and
+`entities_below_target` in addition to its unchanged five-clause
+acceptance predicate. The counters are checked by Deal contracts and
+regression tests.
+
+Five exact-arithmetic routines in `Admission_Core` have strengthened
+specifications with ten or more explicit conditions: `Total`,
+`Union_Count`, `Fraction`, `Complement` and `Conditional`.
+These specify individual cell lower bounds, zero-cell conditions,
+positive denominators, exact complement regimes and conditional
+zero/unit boundaries. The extensions introduce no floating-point
+accuracy assumptions, operating-system success guarantees or new
+`SPARK_Mode` exclusions. The formal clause definitions and source
+integrity rules are explained in [TEN_SPARK_CONTRACTS.md](TEN_SPARK_CONTRACTS.md).
+
+**Verification distinction:** GitHub Actions structurally checks
+the declarations and Python regressions, but its workflow does not
+execute GNATprove. Until a new native compilation/proof campaign runs
+against the changed Ada source and its outputs are inspected, these
+new postconditions are **asserted specifications, not newly certified
+SPARK discharge results**. All retained campaigns remain immutable and
+continue to be audited against their original pinned source revisions.
+
 ## Python contracts
 
 Every current Python file imports Deal. Every named function, including tests and fixtures, carries at least five distinct meaningful Deal decorators. The gate accepts five or more distinct decorators, with no upper limit, and regression-tests five through eight. It rejects missing/insufficient declarations and repeated normalized syntax; it does not prove semantic independence or correctness. Install `requirements-dev.txt` and run `make check` from the repository root. The coverage gate also runs in GitHub Actions and inspects Git's file inventory, so adding a new Python file or function without contracts fails the check.
