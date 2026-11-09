@@ -3251,7 +3251,8 @@ Section FiniteOutcomeSpace.
     intros weights samples event given.
     apply finite_conditional_prob_event_ext_on_samples.
     intros x _.
-    reflexivity.
+    unfold all_events; simpl.
+    destruct (event x); reflexivity.
   Qed.
 
   (**
