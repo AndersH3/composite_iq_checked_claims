@@ -54,9 +54,10 @@ def lint_paths(root: Path, paths: list) -> dict:
         code, stdout, stderr = process.returncode, process.stdout, process.stderr
     except CalledProcessError as error:
         code, stdout, stderr = error.returncode, error.stdout, error.stderr
-    # Use Python's maintained JSON convenience API instead of instantiating
-    # an explicit decoder on each output line; malformed JSON still raises.
-    diagnostics = [json.loads(line) for line in stdout.splitlines() if line.strip()]
+    # Keep the already lint-accepted standard-library decoder interface.
+    # The installed Deal static analyzer cannot validate json.loads here,
+    # whereas this form has the same fail-closed JSON error behavior.
+    diagnostics = [json.JSONDecoder().decode(line) for line in stdout.splitlines() if line.strip()]
     return {"argv": command, "paths": relative, "returncode": code,
             "stdout": stdout, "stderr": stderr, "diagnostics": diagnostics}
 
@@ -125,7 +126,9 @@ def main() -> None:
     args = parser.parse_args()
     root = args.root.resolve()
     files = python_files(root)
-    control = root / NEGATIVE_CONTROL
+    # Keep Path.joinpath: the installed linter misclassifies Path / str
+    # as an unchecked numeric division without improving path safety.
+    control = root.joinpath(NEGATIVE_CONTROL)
     if control not in files:
         raise ValueError("The expected negative control is missing from the Python inventory")
     positive = lint_paths(root, [path for path in files if path != control])

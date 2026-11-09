@@ -439,10 +439,14 @@ untouched.
 
 ## Contract-lint runner modernization and acceptance invariants
 
-The maintained `verification/check_static_lint.py` now uses Python's
-standard `json.loads` API to decode each newline-delimited Deal
-diagnostic rather than allocating an explicit `JSONDecoder` instance
-on every line. Input order and exact CLI arguments are expressed as
+The maintained `verification/check_static_lint.py` retains its
+already-accepted Python standard-library `json.JSONDecoder().decode`
+and `Path.joinpath` interfaces. Candidate rewrites to `json.loads`
+and `Path / str` were rejected by the current Deal static analyzer
+as `DEL021` false positives (respectively `TypeError` and
+`ZeroDivisionError`), so the simpler substitutions were reverted.
+No linter exemption, error suppression, or weaker exception contract
+was introduced. Input order and exact CLI arguments are expressed as
 three additional meaningful postconditions on `lint_paths`, alongside
 the requirement that decoded diagnostics are objects. All existing
 preconditions, exception declarations, side-effect contracts, and
@@ -455,7 +459,7 @@ cardinality, and expected failing fixture identity/code/value.
 The function's actual fail-closed Boolean acceptance expression is
 unchanged. All three functions in this module now have explanatory
 docstrings describing domains, observable behavior, and audit limits.
-Standard `pathlib.Path` division replaces one verbose join call.
+The previously linted `pathlib.Path.joinpath` call remains unchanged.
 
 The staged ten-contract subset now covers **42 named Python
 functions**; the five-contract floor still applies to every current
