@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 538 public theorem/lemma/example declarations,
+The current branch has 543 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**541 proof scripts**, including the generic
+**546 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 214 proof scripts
+## FiniteMoments.v — 219 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -936,6 +936,11 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support` (theorem) | Apply fixed-basis strict-positivity iff with length_to_list | fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support, VectorSpec.length_to_list | **New:** Strictly positive vector-indexed quadratic iff the weighted basis score varies on support |
 | `indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_basis` (theorem) | Apply general zero-covariance basis orthogonality iff with standard vector length | fixed_basis_null_iff_uncorrelated_with_basis, VectorSpec.length_to_list | **New:** Dimension-safe covariance nullity iff uncorrelated with every basis score |
 | `indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots` (theorem) | Delegate to general list covariance row kernel iff and stdlib length | fixed_basis_null_iff_zero_dot_with_every_covariance_row, VectorSpec.length_to_list | **New:** All-dimensional coefficient-vector nullity iff zero dot with every covariance row |
+| `indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score` (theorem) | Specialize existing all-scores nullity iff with standard vector length theorem | fixed_basis_null_iff_orthogonal_to_every_score, VectorSpec.length_to_list | **New:** Indexed quadratic zero iff composite score has zero covariance with every comparison score |
+| `indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis` (theorem) | Specialize existing positive-quadratic iff basis covariance nonorthogonality | fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis, VectorSpec.length_to_list | **New:** Bounded coefficient quadratic positive iff composite score is not orthogonal to every basis score |
+| `indexed_basis_covariance_quadratic_positive_iff_nonzero_matrix_row_dot` (theorem) | Reuse general list PSD strict-positive iff nonzero covariance row dot | fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot, VectorSpec.length_to_list | **New:** Strictly positive dimension-safe quadratic iff not all covariance row products vanish |
+| `indexed_basis_covariance_quadratic_zero_matrix_row_dots_iff_constant_on_support` (theorem) | Use existing row-dot/support-constancy iff and the standard vector-to-list length | fixed_basis_zero_covariance_row_dots_iff_supported_constant, VectorSpec.length_to_list | **New:** Zero row dot products iff the weighted composite score is constant on positive sample support |
+| `indexed_basis_covariance_quadratic_nonzero_covariance_implies_positive` (theorem) | Nonzero scalar covariance gives positive composite variance; rewrite indexed quadratic | nonzero_covariance_implies_positive_variances, indexed_basis_covariance_quadratic_as_variance | **New:** A nonzero covariance witness with any score certifies a strictly positive indexed quadratic |
 
 ## FiniteBridge.v — 37 proof scripts
 

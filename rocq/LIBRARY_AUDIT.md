@@ -1478,6 +1478,20 @@ finite-sum induction or matrix traversal. This does not
 construct a full `Fin.t` matrix multiplication engine or
 calculate rank/kernel dimensions.
 
+## Bounded coefficient orthogonality and positivity reuse
+
+The maintained arbitrary-dimensional list covariance library
+already proves zero quadratic iff covariance with every score
+vanishes, strict positivity iff the basis is not entirely
+orthogonal, strict positivity iff some covariance-row dot
+is nonzero in the logical negation sense, and support constancy
+iff zero row dots. These statements now have `Vector.t`-typed
+coefficient variants that simply discharge all list lengths
+using `VectorSpec.length_to_list`. Nonzero scalar covariance
+also yields strict positivity via the previously checked
+composite variance bridge. No custom finite sample induction,
+matrix algorithm or new axiom was required.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

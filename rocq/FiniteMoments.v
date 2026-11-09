@@ -7319,4 +7319,135 @@ Section FiniteProbabilityMoments.
     - exact Hw.
   Qed.
 
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score] (theorem) — The variance-null coefficient direction is uncorrelated with every outcome score, not merely those listed in its basis.
+   Mathematical meaning: The variance-null coefficient direction is uncorrelated with every outcome score, not merely those listed in its basis.
+   Exact checked proposition: With total_mass=1 and nonnegative sampled weights, the bounded coefficient quadratic equals zero iff forall g : Outcome -> R, covariance (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0.
+   Premises and side conditions: The coefficient-vector length equals the basis length by its Vector.t type. All outcomes and score functions remain finite-sample weighted; no Gaussianity or independence assumption is made.
+   Proof/definition method: Unfold the dimension-safe coefficient interface and apply the existing all-scores orthogonality iff for fixed finite bases, discharging the only length premise with VectorSpec.length_to_list.
+   Library reuse: fixed_basis_null_iff_orthogonal_to_every_score, Stdlib.Vectors.VectorSpec.length_to_list and the established covariance definition.
+   Boundary: Universal covariance nullity under a finite weighted sample is a stronger functional statement than vanishing selected rows, but does not compute a numerical kernel rank.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       forall g : Outcome -> R,
+         covariance
+           (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_null_iff_orthogonal_to_every_score.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis] (theorem) — Strictly positive coefficient-vector covariance curvature is equivalent to the failure of orthogonality to all basis scores.
+   Mathematical meaning: Strictly positive coefficient-vector covariance curvature is equivalent to the failure of orthogonality to all basis scores.
+   Exact checked proposition: For normalized nonnegative sample weights, 0 < indexed_basis_covariance_quadratic_form basis coefficients iff not(forall g in basis, covariance (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0).
+   Premises and side conditions: Zero-weight sample occurrences and linear dependence remain allowed; no additional positive-definite assumption is introduced. The chosen score basis may be empty.
+   Proof/definition method: Instantiate the established fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis theorem after unfolding the representation and invoke the Stdlib vector/list length result.
+   Library reuse: fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis, VectorSpec.length_to_list and the existing finite covariance algebra.
+   Boundary: This is a strict-positivity criterion for one direction; it does not prove a nonsingular covariance matrix in every coefficient direction.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_quadratic_form basis coefficients <->
+       ~ (forall g, In g basis ->
+           covariance (weighted_basis_sum
+             (Vector.to_list coefficients) basis) g = 0)).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_positive_quadratic_iff_not_uncorrelated_with_basis.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_positive_iff_nonzero_matrix_row_dot] (theorem) — Strict positivity of the typed coefficient covariance quadratic is exactly failure of all covariance row dot products to vanish.
+   Mathematical meaning: Strict positivity of the typed coefficient covariance quadratic is exactly failure of all covariance row dot products to vanish.
+   Exact checked proposition: For normalized nonnegative sample weights, 0 < indexed covariance quadratic iff not(forall row in basis_covariance_matrix basis, vector_dot (Vector.to_list coefficients) row = 0).
+   Premises and side conditions: The vector length agrees by its type with basis length. The basis may be linearly dependent or empty; no invertibility, rank or nonzero sample-weight requirement beyond nonnegativity is added.
+   Proof/definition method: Unfold the coefficient-vector quadratic and reuse the general list-matrix fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot result; provide its sole length witness via VectorSpec.length_to_list.
+   Library reuse: fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot, VectorSpec.length_to_list, matrix_quadratic_form and vector_dot.
+   Boundary: The result is an exact algebraic criterion, not an effective algorithm deciding nonzero real matrix rows or extracting a nullspace basis.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_iff_nonzero_matrix_row_dot :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_quadratic_form basis coefficients <->
+       ~ (forall row, In row (basis_covariance_matrix basis) ->
+           vector_dot (Vector.to_list coefficients) row = 0)).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_positive_quadratic_iff_nonzero_covariance_row_dot.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_matrix_row_dots_iff_constant_on_support] (theorem) — Every covariance row dot product vanishes exactly when the composite score is constant throughout positive-weight sample support.
+   Mathematical meaning: Every covariance row dot product vanishes exactly when the composite score is constant throughout positive-weight sample support.
+   Exact checked proposition: Under total_mass=1 and nonnegative sampled weights, (forall covariance row, vector_dot (Vector.to_list coefficients) row = 0) iff exists c:R, forall sampled x with positive weight, weighted_basis_sum (Vector.to_list coefficients) basis x = c.
+   Premises and side conditions: No basis independence or invertibility is assumed. The zero-weight part of the sampled list is allowed to contain arbitrary score values.
+   Proof/definition method: Directly invoke the established fixed_basis_zero_covariance_row_dots_iff_supported_constant theorem on the standard vector-to-list coefficient projection; use the library vector length lemma.
+   Library reuse: fixed_basis_zero_covariance_row_dots_iff_supported_constant and Stdlib.Vectors.VectorSpec.length_to_list.
+   Boundary: The equivalence describes exact real-valued finite support nullity without determining a linear subspace dimension or rank.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_matrix_row_dots_iff_constant_on_support :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall row, In row (basis_covariance_matrix basis) ->
+          vector_dot (Vector.to_list coefficients) row = 0) <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           weighted_basis_sum (Vector.to_list coefficients) basis x = c).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    apply fixed_basis_zero_covariance_row_dots_iff_supported_constant.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_nonzero_covariance_implies_positive] (theorem) — One nonzero covariance witness between the composite basis score and an arbitrary score certifies strict positivity of the typed coefficient quadratic.
+   Mathematical meaning: One nonzero covariance witness between the composite basis score and an arbitrary score certifies strict positivity of the typed coefficient quadratic.
+   Exact checked proposition: For normalized nonnegative finite weights, if covariance (weighted_basis_sum (Vector.to_list coefficients) basis) g <> 0 for some score g, then 0 < indexed_basis_covariance_quadratic_form basis coefficients.
+   Premises and side conditions: The arbitrary comparison score need not belong to the basis; no empirical probability model, score independence or matrix invertibility is required. The witness must have nonzero covariance in the same normalized finite sample.
+   Proof/definition method: Apply the earlier scalar nonzero_covariance_implies_positive_variances theorem to the composite score and g, then rewrite the bounded quadratic by the checked composite-score variance bridge.
+   Library reuse: nonzero_covariance_implies_positive_variances, indexed_basis_covariance_quadratic_as_variance and Stdlib.Vectors.Vector.to_list.
+   Boundary: A nonzero covariance witness is sufficient for positivity but does not establish a uniform bound or positive definiteness of all coefficient directions.
+   *)
+  Theorem indexed_basis_covariance_quadratic_nonzero_covariance_implies_positive :
+    forall basis (coefficients : Vector.t R (length basis))
+           (g : Outcome -> R),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      covariance (weighted_basis_sum
+        (Vector.to_list coefficients) basis) g <> 0 ->
+      0 < indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients g Hmass Hw Hnonzero.
+    pose proof
+      (nonzero_covariance_implies_positive_variances
+        (weighted_basis_sum (Vector.to_list coefficients) basis)
+        g Hmass Hw Hnonzero) as [Hpositive _].
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis coefficients Hmass).
+    exact Hpositive.
+  Qed.
+
 End FiniteProbabilityMoments.
