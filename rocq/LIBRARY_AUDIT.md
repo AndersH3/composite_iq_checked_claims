@@ -1492,6 +1492,20 @@ also yields strict positivity via the previously checked
 composite variance bridge. No custom finite sample induction,
 matrix algorithm or new axiom was required.
 
+## Bounded indexed rows and two-coordinate algebra
+
+The existing two-coordinate quadratic form now has score/weight
+swap and common-coefficient scaling proofs using indexed
+covariance symmetry and Stdlib `ring`. The arbitrary-dimensional
+vector coefficient nullity theorem reuses the established
+list-matrix row-dot iff and the existing bounded row
+correspondence; `Stdlib.List.nth_error_In` establishes row
+membership without any custom traversal. Covariance with
+each bounded score and positivity of a witnessed nonzero
+covariance are direct instances of previously proven
+all-scores results. This remains a one-way indexed-row
+kernel statement, not rank-nullity or an eigenvalue algorithm.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

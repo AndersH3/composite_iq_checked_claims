@@ -7450,4 +7450,125 @@ Section FiniteProbabilityMoments.
     exact Hpositive.
   Qed.
 
+  (**
+   [indexed_basis_covariance_two_coordinate_form_swap] (theorem) — Interchanging the two selected scores and their coefficients leaves the same two-coordinate finite covariance quadratic.
+   Mathematical meaning: Interchanging the two selected scores and their coefficients leaves the same two-coordinate finite covariance quadratic.
+   Exact checked proposition: For basis, bounded indices i and j, and reals a,b, indexed_basis_covariance_two_coordinate_form basis i j a b = indexed_basis_covariance_two_coordinate_form basis j i b a.
+   Premises and side conditions: The scores and indices may coincide; there is no sample normalization, weight positivity, or covariance invertibility assumption. This is a purely algebraic covariance symmetry.
+   Proof/definition method: Unfold the existing two-coordinate polynomial, rewrite only the reversed covariance entry using indexed_basis_covariance_matrix_symmetric, and finish with the Stdlib ring tactic.
+   Library reuse: indexed_basis_covariance_matrix_symmetric, indexed_basis_covariance_two_coordinate_form, Stdlib.Reals and the ring tactic.
+   Boundary: This states permutation invariance of a two-score form, not general invariance of arbitrary matrix factorization or basis transformations.
+   *)
+  Theorem indexed_basis_covariance_two_coordinate_form_swap :
+    forall basis (i j : Fin.t (length basis)) a b,
+      indexed_basis_covariance_two_coordinate_form basis i j a b =
+      indexed_basis_covariance_two_coordinate_form basis j i b a.
+  Proof.
+    intros basis i j a b.
+    unfold indexed_basis_covariance_two_coordinate_form.
+    rewrite (indexed_basis_covariance_matrix_symmetric basis j i).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_two_coordinate_form_homogeneous] (theorem) — The two-coordinate covariance polynomial is homogeneous of degree two in its real score coefficients.
+   Mathematical meaning: The two-coordinate covariance polynomial is homogeneous of degree two in its real score coefficients.
+   Exact checked proposition: For any real multiplier t, indexed_basis_covariance_two_coordinate_form basis i j (t*a) (t*b) = (t*t) * indexed_basis_covariance_two_coordinate_form basis i j a b.
+   Premises and side conditions: Both indices are bounded by Fin.t. The sample weights can be signed or unnormalized, and no covariance positive-definiteness or Gaussian model is assumed.
+   Proof/definition method: Unfold the original two-coordinate polynomial and use the maintained real polynomial ring normalization tactic. No new variance scaling lemma or matrix multiplication is implemented.
+   Library reuse: indexed_basis_covariance_two_coordinate_form, Stdlib.Reals and standard ring normalization.
+   Boundary: Degree-two coefficient homogeneity is algebraic and does not prove a spectral decomposition or positive variance without normalized nonnegative weights.
+   *)
+  Theorem indexed_basis_covariance_two_coordinate_form_homogeneous :
+    forall basis (i j : Fin.t (length basis)) a b t,
+      indexed_basis_covariance_two_coordinate_form
+        basis i j (t * a) (t * b) =
+      (t * t) *
+        indexed_basis_covariance_two_coordinate_form basis i j a b.
+  Proof.
+    intros basis i j a b t.
+    unfold indexed_basis_covariance_two_coordinate_form.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_implies_bounded_row_dot_zero] (theorem) — A null arbitrary-dimensional coefficient vector has zero dot product against each total Fin.t-bounded covariance row.
+   Mathematical meaning: A null arbitrary-dimensional coefficient vector has zero dot product against each total Fin.t-bounded covariance row.
+   Exact checked proposition: For basis, coefficients : Vector.t R (length basis), and i : Fin.t (length basis), normalized nonnegative sample weights and indexed quadratic=0 imply that vector_dot (Vector.to_list coefficients) (map (fun g => covariance (Vector.nth (Vector.of_list basis) i) g) basis)=0.
+   Premises and side conditions: The coefficient vector, row and basis dimensions match through Vec/Fin types. Duplicate scores, zero-weight outcomes and dependent bases are permitted.
+   Proof/definition method: Use the existing zero-quadratic iff every list covariance row dot vanishes, then prove the selected bounded row occurs in the existing list covariance matrix using the previous indexed_basis_cross_covariance_matrix_row bridge and Stdlib.List.nth_error_In.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots, indexed_basis_cross_covariance_matrix_row, basis_covariance_matrix_as_cross and Stdlib.List.nth_error_In.
+   Boundary: This is one direction of an indexed matrix kernel characterization; surjectivity of Fin indices over arbitrary list rows is not asserted here, and rank/nullity dimensions remain separate.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_implies_bounded_row_dot_zero :
+    forall basis (coefficients : Vector.t R (length basis))
+           (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_quadratic_form basis coefficients = 0 ->
+      vector_dot (Vector.to_list coefficients)
+        (map (fun g => covariance
+          (Vector.nth (Vector.of_list basis) i) g) basis) = 0.
+  Proof.
+    intros basis coefficients i Hmass Hw Hzero.
+    pose proof
+      (proj1 (indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots
+        basis coefficients Hmass Hw) Hzero) as Hrows.
+    apply Hrows.
+    eapply nth_error_In.
+    rewrite basis_covariance_matrix_as_cross.
+    apply indexed_basis_cross_covariance_matrix_row.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_implies_uncorrelated_indexed_score] (theorem) — An arbitrary-dimensional null coefficient direction is uncorrelated with every single Fin.t-selected basis score.
+   Mathematical meaning: An arbitrary-dimensional null coefficient direction is uncorrelated with every single Fin.t-selected basis score.
+   Exact checked proposition: For any basis, vector coefficients and bounded i, unit-mass nonnegative sampled weights and indexed quadratic=0 imply covariance (weighted_basis_sum (Vector.to_list coefficients) basis) (Vector.nth (Vector.of_list basis) i)=0.
+   Premises and side conditions: The finite basis may be empty, in which case there is no bounded index to select. No independent-score, nonzero-direction or positive-definiteness assumption is required.
+   Proof/definition method: Specialize the previously verified nullity iff covariance vanishes against every arbitrary comparison score to the bounded score obtained by Stdlib Vector.nth.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score and Stdlib.Vectors.Vector.nth.
+   Boundary: This is an exact finite covariance coordinate implication, not an estimate of correlations, a generic rank identity or an assertion about continuous random variables.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_implies_uncorrelated_indexed_score :
+    forall basis (coefficients : Vector.t R (length basis))
+           (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_quadratic_form basis coefficients = 0 ->
+      covariance
+        (weighted_basis_sum (Vector.to_list coefficients) basis)
+        (Vector.nth (Vector.of_list basis) i) = 0.
+  Proof.
+    intros basis coefficients i Hmass Hw Hzero.
+    apply (proj1
+      (indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score
+        basis coefficients Hmass Hw) Hzero).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_nonzero_indexed_covariance_implies_positive] (theorem) — A nonzero covariance between the weighted basis composite and any bounded basis score witnesses strictly positive variance in its coefficient direction.
+   Mathematical meaning: A nonzero covariance between the weighted basis composite and any bounded basis score witnesses strictly positive variance in its coefficient direction.
+   Exact checked proposition: If total_mass=1, sample weights are nonnegative and covariance (weighted_basis_sum (Vector.to_list coefficients) basis) (Vector.nth (Vector.of_list basis) i) <> 0, then indexed_basis_covariance_quadratic_form basis coefficients > 0.
+   Premises and side conditions: No positive definiteness, statistical independence or nonzero variance of every basis coordinate is assumed. The bounded score and composite use the identical finite sample.
+   Proof/definition method: Specialize the already checked nonzero-covariance-witness-implies-positive indexed quadratic theorem to the score selected by Stdlib.Vectors.Vector.nth.
+   Library reuse: indexed_basis_covariance_quadratic_nonzero_covariance_implies_positive and Stdlib.Vectors.Fin/Vector.
+   Boundary: Only the direction with a witnessed nonzero covariance is certified positive; a claim about invertibility, generic matrix ranks or empirical IQ correlations would require separate proofs.
+   *)
+  Theorem indexed_basis_covariance_quadratic_nonzero_indexed_covariance_implies_positive :
+    forall basis (coefficients : Vector.t R (length basis))
+           (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      covariance
+        (weighted_basis_sum (Vector.to_list coefficients) basis)
+        (Vector.nth (Vector.of_list basis) i) <> 0 ->
+      0 < indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients i Hmass Hw Hnonzero.
+    apply (indexed_basis_covariance_quadratic_nonzero_covariance_implies_positive
+      basis coefficients
+      (Vector.nth (Vector.of_list basis) i) Hmass Hw).
+    exact Hnonzero.
+  Qed.
+
 End FiniteProbabilityMoments.
