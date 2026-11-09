@@ -6,11 +6,11 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 573 public theorem/lemma/example declarations,
-one local helper, and two constructed `Admissions.TwoEventModel` values:
-**576 proof scripts**, including the generic
-`FiniteSum.finite_sum_zip_map` and four newly formalized properties
-of event filtering and Boolean sample partitions.
+The current branch has **614 public theorem/lemma/example claims**, plus
+one local helper and two constructed `Admissions.TwoEventModel` values:
+**617 proof scripts** across seven Rocq modules. The claims and scripts
+are counted separately because helper and record-constructor proof blocks
+are included in the latter total.
 The record was created after the current generic list-fold and covariance
 matrix refactoring and counts explicit proof blocks, not definitions lacking
 proof obligations.
@@ -433,7 +433,7 @@ unchanged, *not* that every proof term was rewritten. The dependency
 column is a tactic-level heuristic; consult the actual source for
 full dependencies and the theorem-specific doc comment for hypotheses.
 
-## FiniteSum.v — 20 proof scripts
+## FiniteSum.v — 23 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -457,6 +457,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_sum_app` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
 | `finite_sum_permutation` (lemma) | Structural induction, Rewriting, Ring/field, Computation | Stdlib ring/field | Reviewed: structural induction retained |
 | `finite_sum_rev` (lemma) | Lemma application | Stdlib.Permutation | Reviewed: keep established tactic/library proof |
+| `finite_sum_nonnegative_zero_iff` (lemma) | Zero-criterion equivalence via extensionality | finite_sum_nonnegative_zero, finite_sum_ext_in, finite_sum_zero | **New:** reversible zero condition on nonnegative finite support, without induction |
+| `finite_sum_positive_of_positive_member` (lemma) | Contradiction with zero criterion; Lra | finite_sum_nonnegative, finite_sum_nonnegative_zero_iff, Stdlib.Rle_dec | **New:** positive aggregate from any positive listed contribution |
+| `finite_sum_strict_monotone_at_member` (lemma) | Positive difference sum and linearity | finite_sum_positive_of_positive_member, finite_sum_sub, Stdlib.Lra | **New:** strict monotonicity of sums from one strict coordinate |
+
 
 ## Hoeflin.v — 65 proof scripts
 

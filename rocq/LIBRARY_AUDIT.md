@@ -1715,6 +1715,21 @@ inclusion-exclusion and independent-union proofs delegate to that
 lemma under existing conditional event extensionality, replacing
 repeated local Boolean simplification without changing their types.
 
+## Strict inequalities for generic finite sums
+
+The shared finite-sum module now packages the nonnegative zero
+criterion as a two-way equivalence and derives positive mass from
+a positive listed contribution. The resulting strict monotonicity
+lemma is obtained by applying positivity to the difference `g-f`
+and rewriting with `finite_sum_sub`. The proofs reuse
+`finite_sum_nonnegative_zero`, `finite_sum_ext_in`,
+`finite_sum_zero`, `finite_sum_nonnegative`,
+`Stdlib.Reals.Rle_dec` and `Stdlib.Lra`.
+No new list induction, fold, separate strict-sum algorithm, or
+additional axiom is needed. Nonnegativity of summands is essential
+to the strict positivity argument; pointwise domination is essential
+to strict monotonicity, with one witness of strict domination.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **613 proof scripts** in seven
+for the two reports. **617 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,30 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **611 public claims, 614 proof scripts,
-677 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **614 public claims, 617 proof scripts,
+680 documented declarations** across seven modules, subject to CI.
+
+## Generic positive finite sums and strict monotonicity (9 November 2026)
+
+The shared `FiniteSum.v` layer now proves three more reusable facts:
+`finite_sum_nonnegative_zero_iff` characterizes a zero aggregate
+by the vanishing of **every** nonnegative listed summand;
+`finite_sum_positive_of_positive_member` derives strict positivity
+from one positive term; and `finite_sum_strict_monotone_at_member`
+lifts pointwise weak comparison plus a single strict comparison
+to strict comparison of the two totals.
+
+All three proofs reuse the existing finite sum, its zero and
+subtraction laws, Rocq's decidable real order and `Lra`; they
+introduce no new finite sum implementation, induction, axioms or
+admitted proofs. The new statements require their explicit
+support-membership and sign/order hypotheses. Multiplicities of
+repeated sample entries are retained.
+
+Expected source inventory after the change: **614 public claims,
+617 proof scripts, 680 documented declarations** across seven
+Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
+and source-documentation audits.
 
 ## Research extensions
 
