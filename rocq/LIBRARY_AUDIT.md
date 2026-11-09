@@ -1128,6 +1128,18 @@ monotonicity, and the upper intersection bound reuses
 induction. The assumptions of nonnegative weights and a
 strictly positive conditioning mass remain explicit.
 
+## Library-based conditional union-bound normalization
+
+The final conditional Boole bound is stated as an inequality
+between a conditional union mass and the sum of its conditional
+member masses. Its auxiliary denominator-factorization equality
+uses the shared `FiniteSum.finite_sum_scale` and
+`FiniteSum.finite_sum_ext` library-reuse bridges; no new
+`fold_right` implementation or independent conditional
+integration structure is introduced. The inequality itself is
+just the prior selected-sample union bound rewritten in this
+standard marginal-sum representation.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

@@ -3381,6 +3381,65 @@ Section FiniteOutcomeSpace.
     exact Hin.
   Qed.
 
+
+  (**
+   [finite_conditional_marginals_sum_filtered] (theorem) — Sum of conditional event marginals as one scaled finite sum on the conditioned sublist.
+   Mathematical meaning: Summing the conditional probabilities of a finite event family equals the sum of each target's unnormalized event mass on the G-filtered sample divided by the common conditioning mass. In particular the identity holds for an empty event family and does not create a separate conditional-sum operator.
+   Exact checked proposition: For arbitrary weights, samples, event lists and given, FiniteSum.finite_sum (fun e => finite_conditional_prob weights samples e given) events = sum_marginal_probs weights (filter given samples) events / finite_prob weights samples given.
+   Premises and side conditions: No nonnegative-weight or positive denominator assumption is needed for the exact algebraic equality, even if the denominator is zero according to Rocq's total real division convention. Statistical interpretation of these values requires positive conditioning mass and nonnegative weights.
+   Proof/definition method: Expand the already defined sum_marginal_probs and division, commute its scalar product, apply the previously checked FiniteSum.finite_sum_scale theorem backward, and identify the per-event integrands through finite_conditional_prob_filtered and Stdlib ring algebra.
+   Library reuse: FiniteSum.finite_sum_scale, FiniteSum.finite_sum_ext, finite_conditional_prob_filtered, Stdlib.Reals.Rmult_comm and ring. No custom event-list folding, conditional quotient or new finite sum is implemented.
+   Boundary: This identity is about sums of weighted finite Boolean-event masses and does not claim independence, mutual exclusivity or that the marginals sum to one.
+   *)
+  Theorem finite_conditional_marginals_sum_filtered :
+    forall weights samples events given,
+      FiniteSum.finite_sum
+        (fun event => finite_conditional_prob weights samples event given)
+        events =
+      sum_marginal_probs weights (filter given samples) events /
+      finite_prob weights samples given.
+  Proof.
+    intros weights samples events given.
+    unfold sum_marginal_probs, Rdiv.
+    rewrite (Rmult_comm
+      (FiniteSum.finite_sum
+        (finite_prob weights (filter given samples)) events)
+      (/ finite_prob weights samples given)).
+    rewrite <- (FiniteSum.finite_sum_scale events
+      (/ finite_prob weights samples given)
+      (finite_prob weights (filter given samples))).
+    apply FiniteSum.finite_sum_ext.
+    intro event.
+    rewrite (finite_conditional_prob_filtered
+      weights samples event given).
+    unfold Rdiv.
+    ring.
+  Qed.
+
+  (**
+   [finite_conditional_union_bound] (theorem) — The finite conditional Boole union bound in marginal-sum form.
+   Mathematical meaning: The conditional probability of the union of any finite Boolean event family is no greater than the sum of the conditional probabilities of its members, without any independence assumptions or restriction on overlap. It is the direct conditional generalization of the existing finite arbitrary-union bound.
+   Exact checked proposition: For weights nonnegative on samples and strictly positive finite_prob weights samples given, finite_conditional_prob weights samples (any_event events) given <= FiniteSum.finite_sum (fun event => finite_conditional_prob weights samples event given) events.
+   Premises and side conditions: Each originally sampled weight is nonnegative and the conditioning mass is strictly positive. The original full sample need not be normalized, event predicates may repeat, and no independent or mutually exclusive-event hypothesis is assumed.
+   Proof/definition method: Rewrite the conditional marginal sum through finite_conditional_marginals_sum_filtered and apply the already checked finite_conditional_union_bound_filtered inequality, so all substantial union and quotient inequalities remain in reusable earlier lemmas.
+   Library reuse: finite_conditional_marginals_sum_filtered, finite_conditional_union_bound_filtered, FiniteSum.finite_sum and Stdlib.List.filter.
+   Boundary: The inequality is a finite distribution-free bound; it does not claim sharpness, equality in the presence of overlap, or extension to continuous probability without a measure-theory bridge.
+   *)
+  Theorem finite_conditional_union_bound :
+    forall weights samples events given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples (any_event events) given <=
+      FiniteSum.finite_sum
+        (fun event => finite_conditional_prob weights samples event given)
+        events.
+  Proof.
+    intros weights samples events given Hweight Hgiven.
+    rewrite (finite_conditional_marginals_sum_filtered
+      weights samples events given).
+    apply finite_conditional_union_bound_filtered; assumption.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
