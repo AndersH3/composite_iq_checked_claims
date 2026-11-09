@@ -1,4 +1,5 @@
 """Audit decorators as syntax, rather than trusting mentions in text."""
+import ast
 from conftest import protected_history_intact, reference_inputs_intact
 import deal
 import pytest
@@ -56,6 +57,19 @@ def test_coverage_accepts_a_real_deal_import_alias(coverage_checker, tmp_path):
     assert report["function_count"] == 1 and report["contract_count"] == 5
     assert report["missing"] == []
     assert report["insufficient"] == []
+    # Check the exact AST classification boundaries, not just aggregated
+    # counts: only direct imported Deal attribute calls qualify.
+    is_deal = coverage_checker.is_contract
+    assert is_deal(ast.parse("contracts.post(lambda result: True)", mode="eval").body,
+                   {"contracts"})
+    assert not is_deal(ast.parse("not_deal.post(lambda result: True)", mode="eval").body,
+                       {"contracts"})
+    assert not is_deal(ast.parse("post(lambda result: True)", mode="eval").body,
+                       {"contracts"})
+    assert not is_deal(ast.parse("contracts.wrapped.post(lambda x: True)", mode="eval").body,
+                       {"contracts"})
+    assert not is_deal(ast.parse("'@contracts.post'", mode="eval").body,
+                       {"contracts"})
 
 
 @deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
@@ -101,7 +115,7 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         "analyses/towers-multiple-test-admissions/ada/validate_results.py":
             {"_open_unit_ratio", "read"},
         "verification/check_contract_coverage.py":
-            {"audit_file"},
+            {"audit_file", "is_contract"},
     }
     for path in files:
         report = coverage_checker.audit_file(path)

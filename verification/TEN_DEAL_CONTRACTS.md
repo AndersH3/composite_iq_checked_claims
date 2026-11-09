@@ -148,6 +148,26 @@ consistency claims, not a proof that every contract expresses an
 independent semantic obligation. The fail-closed Deal lint gate
 and the existing deliberately failing fixture remain intact.
 
+## Ten-contract AST decorator recognition
+
+`verification/check_contract_coverage.py::is_contract` now has five
+additional Deal conditions discriminating bare-name and constant
+expressions, named-call decorators without a Deal attribute, nested
+attribute paths, and explicit direct imported Deal-attribute
+recognition. The existing test for Deal import aliases now exercises
+accepted and rejected AST examples, including a shadowed foreign
+alias and a literal string containing decorator-looking source.
+The ten-contract regression checks cover both recognition and
+aggregate auditing, taking the explicit target subset to
+**19 named functions** (17 historical analysis functions and
+two current verification helpers).
+
+These checks preserve the true AST-based audit's semantics and do
+not treat source comments, strings, or names from other imported
+modules as Deal decorators. Every Python function still has the
+mandatory five distinct Deal decorators, including deliberately
+failing or source-pinned cases where ten would be inappropriate.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

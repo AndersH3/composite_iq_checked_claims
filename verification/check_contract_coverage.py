@@ -24,6 +24,25 @@ TARGET_CONTRACTS = 10
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises()
 @deal.has()
+# Protect against distinct ways to spoof a Deal decorator in Python AST:
+# bare names, constants, non-attribute call targets and nested attributes.
+# The positive implication separately protects an explicitly imported
+# direct Deal attribute from being overlooked by a later AST refactor.
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Name) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Constant) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Call) or
+             isinstance(node.func, ast.Attribute) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Attribute) or
+             isinstance(node.value, ast.Name) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not (isinstance(node, ast.Attribute) and
+                  isinstance(node.value, ast.Name) and
+                  node.value.id in aliases and node.attr in CONTRACTS)
+             or result is True)
 def is_contract(node: ast.expr, aliases: set) -> bool:
     expression = node.func if isinstance(node, ast.Call) else node
     return (isinstance(expression, ast.Attribute) and isinstance(expression.value, ast.Name)
