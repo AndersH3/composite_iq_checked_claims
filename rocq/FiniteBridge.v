@@ -770,3 +770,101 @@ Proof.
   apply conditioned_weights_total_mass_one.
   exact Hpositive.
 Qed.
+
+
+(**
+   [finite_conditioned_event_mass] (theorem) — Exact event mass of the normalized conditional sample.
+   Mathematical meaning: After restricting an original finite weighted sample to outcomes satisfying Boolean event G and dividing every retained weight by the positive original mass of G, the ordinary event mass of any target A is exactly the original conditional probability P(A|G). This certifies the semantics of the normalized filtered representation independently of covariance.
+   Exact checked proposition: For any A, samples, original weight, Boolean given and target, 0 < FiniteUnion.finite_prob weight samples given implies FiniteUnion.finite_prob (conditioned_weights A weight samples given) (filter given samples) target = FiniteUnion.finite_conditional_prob weight samples target given.
+   Premises and side conditions: Strictly positive conditioning mass is essential for real division cancellation. Original unit total mass, target positivity and independence are not assumed; real signed weights still satisfy the equality algebraically, while genuine conditional probability additionally needs nonnegative weights.
+   Proof/definition method: Unfold only the scalar conditional-weight definition, rewrite ordinary event mass by finite_prob_scale_weights, use finite_prob_on_filtered_samples to transfer the Boolean conjunction back to the original list, then cancel the strictly positive denominator with Rocq's real field tactic.
+   Library reuse: FiniteUnion.finite_prob_scale_weights, FiniteUnion.finite_prob_on_filtered_samples, FiniteUnion.finite_conditional_prob, Stdlib.List.filter, Stdlib.Reals field and Stdlib.Lra. No alternative finite-sum, conditional quotient or event recursion is introduced.
+   Boundary: This represents an explicit finite selected-outcome distribution; it does not construct a continuous regular conditional distribution.
+ *)
+Theorem finite_conditioned_event_mass :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteUnion.finite_prob A
+      (conditioned_weights A weight samples given)
+      (filter given samples) event =
+    @FiniteUnion.finite_conditional_prob A
+      weight samples event given.
+Proof.
+  intros A samples weight given event Hpositive.
+  unfold conditioned_weights.
+  rewrite (@FiniteUnion.finite_prob_scale_weights A
+    (/ (@FiniteUnion.finite_prob A weight samples given))
+    weight (filter given samples) event).
+  rewrite (@FiniteUnion.finite_prob_on_filtered_samples
+    A weight samples given event).
+  unfold FiniteUnion.finite_conditional_prob.
+  field; lra.
+Qed.
+
+(**
+   [finite_conditioned_indicator_variance] (theorem) — Conditional Bernoulli indicator variance on the normalized selected finite sample.
+   Mathematical meaning: The variance of the zero-one indicator score of event A in the normalized finite sample selected by G is exactly P(A|G) * (1 - P(A|G)). It is the finite conditional Bernoulli variance identity, not an unproved distributional approximation.
+   Exact checked proposition: If the original conditioning-event mass is strictly positive, FiniteMoments.variance (filter given samples) (conditioned_weights A weight samples given) (fun x => FiniteUnion.indicator (event x)) equals FiniteUnion.finite_conditional_prob weight samples event given multiplied by one minus that same conditional probability.
+   Premises and side conditions: Positive conditioning mass is explicit, while the algebraic variance identity does not need a unit-mass premise in addition to the already normalized weights. To interpret the variance probabilistically, the original sampled weights must be nonnegative, preserved by conditioned_weights_nonnegative_on_filtered_samples.
+   Proof/definition method: Instantiate the previously checked finite_event_indicator_variance on the filtered normalized list, and rewrite its single event-mass term with finite_conditioned_event_mass. No second-moment expansion or Boolean indicator multiplication is reproved.
+   Library reuse: finite_event_indicator_variance, finite_conditioned_event_mass, FiniteMoments.variance and FiniteUnion.indicator.
+   Boundary: Only the variance of a Boolean indicator is characterized; arbitrary real-valued scores need not have this Bernoulli variance formula.
+ *)
+Theorem finite_conditioned_indicator_variance :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)) =
+    @FiniteUnion.finite_conditional_prob A
+      weight samples event given *
+      (1 - @FiniteUnion.finite_conditional_prob A
+        weight samples event given).
+Proof.
+  intros A samples weight given event Hpositive.
+  rewrite (finite_event_indicator_variance
+    A (filter given samples)
+    (conditioned_weights A weight samples given) event).
+  rewrite (finite_conditioned_event_mass
+    A samples weight given event Hpositive).
+  reflexivity.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_residual] (theorem) — Conditional event-factorization residual as finite indicator covariance.
+   Mathematical meaning: Covariance of the two Boolean event-indicator scores in the normalized sample selected by G equals the conditional intersection mass P(A∩B|G) minus the product of conditional marginal masses P(A|G) P(B|G). It makes the exact algebraic residual behind conditional independence explicit.
+   Exact checked proposition: Under positive finite_prob weight samples given, FiniteMoments.covariance (filter given samples) (conditioned_weights A weight samples given) (indicator first) (indicator second) = FiniteUnion.finite_conditional_prob weight samples (fun x => andb (first x) (second x)) given - finite_conditional_prob first given * finite_conditional_prob second given.
+   Premises and side conditions: Only positive mass of G is needed for the real equality; nonnegative original weights give genuine probability and covariance semantics but are not needed for the algebra. No event independence is assumed, and the sample can contain duplicate outcomes.
+   Proof/definition method: Instantiate the already checked finite_event_indicator_covariance formula with the normalized filtered weight function, then rewrite its joint and both individual event masses by finite_conditioned_event_mass. This avoids recomputing a single covariance or finite list integral.
+   Library reuse: finite_event_indicator_covariance, finite_conditioned_event_mass, FiniteMoments.covariance, FiniteUnion.indicator and Stdlib.Bool.andb.
+   Boundary: The residual identity applies to finite Boolean indicator variables only and does not imply stochastic independence for arbitrary real-valued scores.
+ *)
+Theorem finite_conditioned_indicator_covariance_residual :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) =
+    @FiniteUnion.finite_conditional_prob A
+      weight samples (fun x => andb (first x) (second x)) given -
+    @FiniteUnion.finite_conditional_prob A
+      weight samples first given *
+    @FiniteUnion.finite_conditional_prob A
+      weight samples second given.
+Proof.
+  intros A samples weight given first second Hpositive.
+  rewrite (finite_event_indicator_covariance
+    A (filter given samples)
+    (conditioned_weights A weight samples given) first second).
+  rewrite (finite_conditioned_event_mass A samples weight given
+    (fun x => andb (first x) (second x)) Hpositive).
+  rewrite (finite_conditioned_event_mass A samples weight given
+    first Hpositive).
+  rewrite (finite_conditioned_event_mass A samples weight given
+    second Hpositive).
+  reflexivity.
+Qed.

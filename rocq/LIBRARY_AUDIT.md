@@ -1186,6 +1186,19 @@ covariance equivalence. It neither redefines covariance
 nor implements a second probability sum or
 continuous conditional-expectation operator.
 
+## Conditional event probability, Bernoulli variance and covariance residual
+
+`FiniteBridge.finite_conditioned_event_mass` uses the
+common finite probability scaling theorem and filtered
+event-mass bridge to identify the exact event masses in
+the normalized conditional sample. The two downstream
+moment statements invoke the established Boolean-indicator
+variance and covariance identities and replace event
+masses with the conditional masses via this reusable
+bridge. No second moment calculation, list fold,
+independence axiom or alternate covariance implementation
+is introduced.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
