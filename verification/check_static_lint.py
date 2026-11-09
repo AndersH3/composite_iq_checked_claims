@@ -29,7 +29,23 @@ NEGATIVE_CONTROL = "tests/fixtures/contract_negative_control.py"
            and isinstance(result["diagnostics"], list) and bool(result["paths"]))
 @deal.raises(OSError, ValueError, JSONDecodeError, TimeoutExpired)
 @deal.has("read", "syscall")
+@deal.ensure(lambda root, paths, result:
+             result["paths"] == [str(path.relative_to(root)) for path in paths])
+@deal.ensure(lambda root, paths, result:
+             result["argv"] == [sys.executable, "-m", "deal", "lint", "--json",
+                                *result["paths"]])
+@deal.ensure(lambda root, paths, result:
+             all(isinstance(item, dict) for item in result["diagnostics"]))
 def lint_paths(root: Path, paths: list) -> dict:
+    """Run Deal lint on precisely the supplied files and decode JSON diagnostics.
+
+    Invariants: each path is constrained by preconditions to remain under
+    the requested root, and input order is retained in both the command line
+    and returned report. Every nonblank stdout line must decode to a JSON
+    object. Failed Deal lint exits are recorded, not suppressed; subprocess
+    and JSON-decoding errors propagate through the declared exception contract.
+    The runner does not silently exempt the deliberate negative fixture.
+    """
     relative = [str(path.relative_to(root)) for path in paths]
     command = [sys.executable, "-m", "deal", "lint", "--json", *relative]
     try:
@@ -38,7 +54,9 @@ def lint_paths(root: Path, paths: list) -> dict:
         code, stdout, stderr = process.returncode, process.stdout, process.stderr
     except CalledProcessError as error:
         code, stdout, stderr = error.returncode, error.stdout, error.stderr
-    diagnostics = [json.JSONDecoder().decode(line) for line in stdout.splitlines() if line.strip()]
+    # Use Python's maintained JSON convenience API instead of instantiating
+    # an explicit decoder on each output line; malformed JSON still raises.
+    diagnostics = [json.loads(line) for line in stdout.splitlines() if line.strip()]
     return {"argv": command, "paths": relative, "returncode": code,
             "stdout": stdout, "stderr": stderr, "diagnostics": diagnostics}
 
@@ -48,7 +66,32 @@ def lint_paths(root: Path, paths: list) -> dict:
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises()
 @deal.has()
+@deal.ensure(lambda positive, negative, result:
+             not result or positive["returncode"] == 0)
+@deal.ensure(lambda positive, negative, result:
+             not result or (positive["stdout"] == "" and
+                            positive["stderr"] == "" and
+                            positive["diagnostics"] == []))
+@deal.ensure(lambda positive, negative, result:
+             not result or negative["returncode"] == 1)
+@deal.ensure(lambda positive, negative, result:
+             not result or (negative["stderr"] == "" and
+                            len(negative["diagnostics"]) == 1))
+@deal.ensure(lambda positive, negative, result:
+             not result or (negative["diagnostics"][0].get("path") ==
+                            NEGATIVE_CONTROL and
+                            negative["diagnostics"][0].get("code") == "DEL012" and
+                            negative["diagnostics"][0].get("value") == "-1"))
 def accepted(positive: dict, negative: dict) -> bool:
+    """Fail closed unless every source passed and the exact control failed.
+
+    Accepting a run requires clean linting of every non-control source file,
+    no unexplained stderr, and exactly one DEL012 diagnostic from the named
+    negative-control fixture. The five additional semantic postconditions
+    independently guard success-side exit/outputs and negative-side
+    exit, diagnostic count, identity, code, and bad value. A malformed or
+    missing field must not be silently considered a successful audit.
+    """
     expected = negative["diagnostics"]
     return (positive["returncode"] == 0 and positive["stdout"] == ""
             and positive["stderr"] == "" and positive["diagnostics"] == []
@@ -69,12 +112,20 @@ def accepted(positive: dict, negative: dict) -> bool:
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
 @deal.pre(lambda: ROOT.is_dir())
 def main() -> None:
+    """Audit all current Python sources, including the negative fixture.
+
+    The coverage inventory, Deal lint invocation, JSON diagnostics, and
+    fail-closed acceptance are delegated to existing library-backed helpers.
+    If a batch fails with stderr, per-file reruns collect diagnostics without
+    excluding any source from the overall result. The CLI exits nonzero on
+    incomplete audits and enables Deal contracts at its entry point.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     root = args.root.resolve()
     files = python_files(root)
-    control = root.joinpath(NEGATIVE_CONTROL)
+    control = root / NEGATIVE_CONTROL
     if control not in files:
         raise ValueError("The expected negative control is missing from the Python inventory")
     positive = lint_paths(root, [path for path in files if path != control])

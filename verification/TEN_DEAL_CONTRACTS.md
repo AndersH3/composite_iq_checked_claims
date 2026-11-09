@@ -437,6 +437,31 @@ the repository-wide minimum of five remains enforced. Historical
 native-proof evidence and the exact source-inventory schema are
 untouched.
 
+## Contract-lint runner modernization and acceptance invariants
+
+The maintained `verification/check_static_lint.py` now uses Python's
+standard `json.loads` API to decode each newline-delimited Deal
+diagnostic rather than allocating an explicit `JSONDecoder` instance
+on every line. Input order and exact CLI arguments are expressed as
+three additional meaningful postconditions on `lint_paths`, alongside
+the requirement that decoded diagnostics are objects. All existing
+preconditions, exception declarations, side-effect contracts, and
+negative-fixture expectations remain in force.
+
+The pure `accepted` predicate now has **ten Deal decorators**:
+the existing five plus five nonredundant guarded postconditions for
+the clean positive batch, explicit negative exit, exact diagnostic
+cardinality, and expected failing fixture identity/code/value.
+The function's actual fail-closed Boolean acceptance expression is
+unchanged. All three functions in this module now have explanatory
+docstrings describing domains, observable behavior, and audit limits.
+Standard `pathlib.Path` division replaces one verbose join call.
+
+The staged ten-contract subset now covers **42 named Python
+functions**; the five-contract floor still applies to every current
+and legacy Python function. No historical proof receipts, archived
+hashes, native Ada/SPARK sources, or negative fixtures were modified.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across
