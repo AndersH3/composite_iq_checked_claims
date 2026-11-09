@@ -123,7 +123,7 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
             {"totals_balanced", "successful_checks"},
         "verification/spark_contracts.py":
             {"masked", "split_top", "unparenthesized", "contract_entries",
-             "inventory", "ten_contract_summary", "current_sources"},
+             "inventory", "ten_contract_summary", "current_sources", "declarations"},
     }
     for path in files:
         report = coverage_checker.audit_file(path)

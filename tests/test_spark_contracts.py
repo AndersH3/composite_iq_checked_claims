@@ -6,7 +6,7 @@ import deal
 import pytest
 
 from verification.spark_contracts import (
-    clauses, contract_entries, current_sources, inventory, masked,
+    clauses, contract_entries, current_sources, declarations, inventory, masked,
     split_top, unparenthesized, ten_contract_summary,
 )
 
@@ -406,3 +406,26 @@ def test_current_ada_sources_preserve_sorted_relative_paths_and_exact_text(tmp_p
         encoding="utf-8")
     assert all(not Path(key).is_absolute() and ".." not in Path(key).parts
                for key in report)
+
+
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_ada_declarations_keep_schema_and_exact_source_attribution():
+    """Parse the known Ada spec and body without inventing extra records."""
+    specification = declarations(SPEC)
+    body = declarations(BODY)
+    assert len(specification) == len(body) == 1
+    required = {"name", "kind", "line", "end_line", "expression",
+                "form", "profile", "aspects", "off"}
+    assert set(specification[0]) == set(body[0]) == required
+    assert specification[0]["name"] == body[0]["name"] == "F"
+    assert specification[0]["kind"] == body[0]["kind"] == "function"
+    assert specification[0]["form"] == "declaration"
+    assert body[0]["form"] == "body"
+    assert specification[0]["line"] == body[0]["line"] == 2
+    assert specification[0]["aspects"]["pre"] == "X >= 0"
+    assert not specification[0]["expression"]
+    assert not body[0]["off"]

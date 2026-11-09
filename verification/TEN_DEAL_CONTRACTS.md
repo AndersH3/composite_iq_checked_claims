@@ -383,6 +383,23 @@ The optional ten-contract subset now has **38 Python functions**,
 including both historical and modern sources; all named functions
 still require at least five distinct Deal decorators.
 
+## Stronger Ada source-declaration schema validation
+
+`verification.spark_contracts.declarations` now has ten distinct Deal
+decorators. The additional five typed postconditions constrain the
+exact source-attributed declaration dictionary, function/procedure
+kind, declaration/body/expression form and Boolean flags, nonempty
+entity identity, normalized profile and typed aspect map. These
+schema guards do not count extra contracts in the Ada source, and
+they leave the historic immutable inventory representation unchanged.
+A regression reads both existing synthetic Ada specification and
+body fixtures and checks exact locations and precondition provenance.
+
+The staged ten-contract subset now covers **39 named Python
+functions**, while the independent repository-wide five-contract
+minimum, source-pinned historical evidence audit and negative
+controls remain mandatory.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

@@ -153,6 +153,26 @@ def clauses(text: str) -> list:
 @deal.post(lambda result: all(row["line"] > 0 and row["end_line"] >= row["line"] for row in result))
 @deal.raises(ValueError)
 @deal.has()
+# An Ada parser result is a source-attributed typed declaration record,
+# never a guessed body, aspect, boolean flag, or synthesized field.
+# Keep the existing tuple of schema keys stable for historic evidence.
+@deal.post(lambda result: all(set(row) == {
+    "name", "kind", "line", "end_line", "expression",
+    "form", "profile", "aspects", "off"} for row in result))
+@deal.post(lambda result: all(row["kind"] in {"function", "procedure"}
+                              for row in result))
+@deal.post(lambda result: all(row["form"] in {
+    "declaration", "body", "expression"} and
+    type(row["expression"]) is bool and type(row["off"]) is bool
+    for row in result))
+@deal.post(lambda result: all(isinstance(row["name"], str) and
+                              bool(row["name"]) and
+                              isinstance(row["profile"], str)
+                              for row in result))
+@deal.post(lambda result: all(isinstance(row["aspects"], dict) and
+                              all(isinstance(key, str) and isinstance(value, str)
+                                  for key, value in row["aspects"].items())
+                              for row in result))
 def declarations(text: str) -> list:
     code = masked(text)
     result = []
