@@ -644,6 +644,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `normalized_finite_prob_unit_interval` (theorem) | Lemma application, Lra/Psatz | Shared finite sums, Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `empty_family_probability_zero` (theorem) | Lemma application | Prior named lemmas | Earlier library refactor retained |
 | `singleton_family_probability` (theorem) | Lemma application, Rewriting, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
+| `any_event_membership_ext` (lemma) | Transfer existsb witnesses across event-list membership equivalence | Stdlib.List.existsb_exists, Bool | **New:** shared union Boolean extensionality; eliminates duplicate witness analysis |
 | `union_prob_membership_extensional` (theorem) | Finite cases, Lemma application, Rewriting, Computation | Stdlib.List | Earlier library refactor retained |
 | `union_prob_permutation_invariant` (theorem) | Lemma application | Stdlib.Permutation | Reviewed: keep established tactic/library proof |
 | `union_prob_duplicate_route` (theorem) | Lemma application, Computation | Prior named lemmas | Reviewed: keep established tactic/library proof |
@@ -725,7 +726,6 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_intersection_append_existing` (theorem) | Compose finite event-mass extensionality and all_events_membership_ext with shared list-membership helper | finite_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff | **New:** Appending an already-required event preserves unconditional intersection mass |
 | `finite_conditional_intersection_append_existing` (theorem) | Conditioned event-target extensionality plus shared list-membership and conjunction laws | finite_conditional_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff | **New:** Appending an already-required event preserves finite conditional intersection mass |
 
-| `any_event_membership_ext` (lemma) | Transfer existsb witnesses across event-list membership equivalence | Stdlib.List.existsb_exists, Bool | **New:** shared union Boolean extensionality; eliminates duplicate witness analysis |
 | `finite_conditional_union_membership_extensional` (theorem) | Lift shared pointwise union equivalence to conditional target equality | any_event_membership_ext, finite_conditional_prob_event_ext_on_samples | **New:** includes zero-conditioning-mass case |
 | `finite_conditional_union_permutation` (theorem) | Transfer predicate membership under a Stdlib permutation | Permutation_in, finite_conditional_union_membership_extensional | **New:** reordering conditioned union alternatives |
 | `finite_conditional_union_append_existing` (theorem) | Reuse already-present append membership equivalence | event_append_existing_membership_iff, finite_conditional_union_membership_extensional | **New:** adding an existing conditional union alternative |
