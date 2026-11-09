@@ -39,6 +39,12 @@ def test_mask_preserves_locations_and_ignores_comments_strings_and_characters():
         i for i, char in enumerate(source) if char == "\n"]
     assert "Fake" not in result and "Hidden" not in result and "quoted" not in result
     assert "X :=" in result and "C :=" in result
+    # The contract also protects exact source line widths and must
+    # replace non-comment syntax only by the original character/space.
+    assert [len(s) for s in source.split("\n")] == [
+        len(s) for s in result.split("\n")]
+    assert all(a == b or b == " " for a, b in zip(source, result))
+    assert result.count(";") <= source.count(";")
 
 
 @deal.pre(lambda: protected_history_intact())

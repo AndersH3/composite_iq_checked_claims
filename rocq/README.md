@@ -1,8 +1,8 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **573 theorem, lemma and example declarations** in seven
-Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
+for the two reports. **602 proof scripts** in seven
+Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
 ## Reproduction
@@ -2221,6 +2221,20 @@ corollaries use `Stdlib.List.in_or_app`. No new sums or recursions appear.
 
 Current intended inventory: **595 public claims, 598 proof scripts,
 661 documented declarations** across seven Rocq modules, subject to CI.
+
+## Shared append semantics and unconditional conjunction identities
+
+The maintained `Stdlib.List.forallb_app` fact is now used by a
+single documented `all_events_append` helper, replacing the
+duplicated Boolean reduction in the pre-existing conditional
+conjunction-append theorem. Its unconditional counterpart and
+empty/singleton conjunction identities are derived from existing
+`finite_prob_event_ext_on_samples` and `finite_prob_true`.
+No new list recursion, custom finite sum or independence assumption
+is introduced.
+
+Current intended inventory: **599 public claims, 602 proof scripts,
+665 documented declarations** in seven Rocq modules, subject to CI.
 
 ## Research extensions
 

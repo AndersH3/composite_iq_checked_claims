@@ -3235,6 +3235,117 @@ Section FiniteOutcomeSpace.
     end.
 
   (**
+   [all_events_append] (lemma) — A concatenated family of required events is the conjunction of its two components.
+   Mathematical meaning: Every listed Boolean predicate holds in
+   left ++ right exactly when every predicate holds in both left
+   and right, including when either family is empty.
+   Exact checked proposition: For arbitrary event lists left, right
+   and outcome x, all_events (left ++ right) x equals
+   andb (all_events left x) (all_events right x).
+   Premises and side conditions: This Boolean equality has no
+   independence, nonnegative-weight, conditioning-mass or
+   probability-normalization premise; event duplicates are allowed.
+   Proof/definition method: Apply the maintained standard-library
+   forallb_app theorem directly instead of implementing list recursion.
+   Library reuse: Stdlib.List.forallb_app, Stdlib.List.app,
+   Bool.andb and the existing all_events definition.
+   Boundary: Logical conjunction does not imply a product law for
+   probabilistic intersections without additional hypotheses.
+   *)
+  Lemma all_events_append :
+    forall (left right : list Event) x,
+      all_events (left ++ right) x =
+      andb (all_events left x) (all_events right x).
+  Proof.
+    intros left right x.
+    unfold all_events.
+    rewrite forallb_app.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_all_events_append] (theorem) — Finite mass of concatenated requirements is the mass of their Boolean intersection.
+   Mathematical meaning: A weighted finite sample gives identical
+   mass to the all-events predicate on the combined list and the
+   Boolean conjunction of the two separate all-events predicates.
+   Exact checked proposition: finite_prob weights samples
+   (all_events (left ++ right)) equals finite_prob weights samples
+   (fun x => andb (all_events left x) (all_events right x)).
+   Premises and side conditions: No weight-sign, total normalization,
+   independence or nonempty-list premise is needed for the equality.
+   Proof/definition method: Apply existing finite event-mass
+   extensionality on sampled outcomes and the shared append helper.
+   Library reuse: finite_prob_event_ext_on_samples,
+   all_events_append, Stdlib.List.forallb_app.
+   Boundary: This is an event identity, not disjoint additivity or
+   probabilistic independence of the left and right families.
+   *)
+  Theorem finite_all_events_append :
+    forall weights samples (left right : list Event),
+      finite_prob weights samples (all_events (left ++ right)) =
+      finite_prob weights samples
+        (fun x => andb (all_events left x) (all_events right x)).
+  Proof.
+    intros weights samples left right.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    apply all_events_append.
+  Qed.
+
+  (**
+   [finite_all_events_empty] (theorem) — The empty conjunction has the full finite sample mass.
+   Mathematical meaning: Requiring no listed Boolean events accepts
+   every sampled outcome, so its weighted mass equals the total
+   finite real-weight sum, even on a repeated-outcome list.
+   Exact checked proposition: finite_prob weights samples
+   (all_events []) = finite_sum weights samples.
+   Premises and side conditions: No positivity, normalization,
+   conditioning denominator or nonempty-sample premise is needed.
+   Proof/definition method: Reduce Stdlib.List.forallb [] to the
+   always-true event and reuse the previously checked true-event law.
+   Library reuse: Stdlib.List.forallb, finite_prob_true,
+   the existing finite_sum and all_events definitions.
+   Boundary: With signed weights the equality is algebraic
+   rather than a claim of a normalized probability distribution.
+   *)
+  Theorem finite_all_events_empty :
+    forall weights samples,
+      finite_prob weights samples (all_events []) =
+      finite_sum weights samples.
+  Proof.
+    intros weights samples.
+    change (finite_prob weights samples (fun _ => true) =
+              finite_sum weights samples).
+    apply finite_prob_true.
+  Qed.
+
+  (**
+   [finite_all_events_singleton] (theorem) — A one-element conjunction has exactly the mass of that event.
+   Mathematical meaning: Requiring the sole member of a singleton
+   list is equivalent to selecting its original Boolean event.
+   Exact checked proposition: finite_prob weights samples
+   (all_events [event]) = finite_prob weights samples event.
+   Premises and side conditions: Weights may be signed, outcomes
+   may repeat, and the event need not have positive or unit mass.
+   Proof/definition method: Apply generic finite event-mass
+   extensionality and simplify the library's singleton forallb.
+   Library reuse: Stdlib.List.forallb,
+   finite_prob_event_ext_on_samples and Bool.andb.
+   Boundary: This equality does not assert any event independence.
+   *)
+  Theorem finite_all_events_singleton :
+    forall weights samples event,
+      finite_prob weights samples (all_events [event]) =
+      finite_prob weights samples event.
+  Proof.
+    intros weights samples event.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    unfold all_events; simpl.
+    destruct (event x); reflexivity.
+  Qed.
+
+  (**
    [finite_conditional_all_events_append] (theorem) — Standard-library conjunction distributes over appending event lists.
    Mathematical meaning: The joint event represented by all_events on two concatenated lists is the conjunction of the joint event for the left list with that for the right list, so the two representations have exactly the same conditional mass.
    Exact checked proposition: For all weights, samples, left and right event lists and given, finite_conditional_prob weights samples (all_events (left ++ right)) given equals finite_conditional_prob weights samples (fun x => andb (all_events left x) (all_events right x)) given.
@@ -3253,9 +3364,7 @@ Section FiniteOutcomeSpace.
     intros weights samples left right given.
     apply finite_conditional_prob_event_ext_on_samples.
     intros x _.
-    unfold all_events.
-    rewrite forallb_app.
-    reflexivity.
+    apply all_events_append.
   Qed.
 
   (**

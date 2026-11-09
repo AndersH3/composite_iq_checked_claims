@@ -27,6 +27,18 @@ def require(condition: bool, message: str) -> None:
 @deal.ensure(lambda pairs, result: isinstance(result, dict) and len(result) == len(pairs))
 @deal.raises(ValueError)
 @deal.has()
+# JSON object decoding must not normalize keys, reorder fields, change
+# references to nested values, or lose explicit null-valued mappings.
+@deal.post(lambda result: all(isinstance(key, str) for key in result))
+@deal.ensure(lambda pairs, result:
+             list(result) == [key for key, _ in pairs])
+@deal.ensure(lambda pairs, result:
+             set(result) == {key for key, _ in pairs})
+@deal.ensure(lambda pairs, result:
+             all(result[key] is value for key, value in pairs))
+@deal.ensure(lambda pairs, result:
+             {key for key, value in result.items() if value is None} ==
+             {key for key, value in pairs if value is None})
 def unique_object(pairs: list) -> dict:
     """Reject ambiguous JSON objects rather than keeping the last duplicate key."""
     result = {}

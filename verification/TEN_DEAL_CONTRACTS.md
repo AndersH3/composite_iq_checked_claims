@@ -278,6 +278,28 @@ The ten-contract test-enforced Python subset now covers **29 functions**:
 19 historical analysis functions and ten current verification helpers.
 Every Python named function still has at least five Deal contracts.
 
+## Ten-contract source masking and native JSON object preservation
+
+Two additional pure verification helpers reach ten Deal decorators:
+
+- `verification.spark_contracts.masked` checks unchanged source
+  length, native line count and column widths, no invented nonspace
+  characters, and nonincreasing parenthesis/statement-delimiter counts.
+  It preserves precise Ada source locations while excluding comments,
+  string literals and character literals from the contract parser.
+- `verification.spark_coverage.unique_object` checks that decoded JSON
+  objects keep the original string keys, insertion order, value-object
+  identity, and exact set of explicit null-valued fields. Duplicate
+  keys still raise an error rather than being silently overwritten.
+
+Regression assertions cover source offsets, quoted Ada syntax, ordered
+JSON pairs and duplicate rejection. No historical evidence source hash,
+stored inventory schema or negative-control expectation is modified.
+
+The test-enforced ten-contract subset now covers **31 Python
+functions** (19 original analysis functions, 12 current verification
+helpers), while every named function still has at least five.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

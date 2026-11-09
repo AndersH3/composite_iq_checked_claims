@@ -1655,6 +1655,16 @@ generic event-mass monotonicity. Ordinary left/right append
 corollaries reuse standard `in_or_app`. This refactor reduces
 duplication without changing finite weighted-event semantics.
 
+## Reused forallb_app semantics for finite conjunction families
+
+A shared `all_events_append` helper delegates directly to
+`Stdlib.List.forallb_app`. The conditional conjunction-append
+theorem now uses this helper, and the new unconditional counterpart
+reuses finite event-mass extensionality rather than unfolding the
+weighted sum. Empty/singleton mass identities reuse established
+`finite_prob_true` and the standard singleton `forallb`
+computation. No new foundation or custom list induction is required.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

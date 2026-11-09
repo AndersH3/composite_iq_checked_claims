@@ -41,6 +41,22 @@ def require(condition: bool, message: str) -> None:
 @deal.ensure(lambda text, result: len(result) == len(text))
 @deal.raises()
 @deal.has()
+# A masked Ada source must never acquire new syntactic tokens or move
+# native line offsets. The five additional laws check positional
+# preservation, line widths, symbol conservation and delimiter bounds.
+@deal.ensure(lambda text, result: result.count("\n") == text.count("\n"))
+@deal.ensure(lambda text, result:
+             [len(part) for part in result.split("\n")] ==
+             [len(part) for part in text.split("\n")])
+@deal.ensure(lambda text, result:
+             all(actual == original or actual == " "
+                 for original, actual in zip(text, result)))
+@deal.ensure(lambda text, result:
+             result.count("(") <= text.count("(") and
+             result.count(")") <= text.count(")"))
+@deal.ensure(lambda text, result:
+             result.count(";") <= text.count(";") and
+             result.count(",") <= text.count(","))
 def masked(text: str) -> str:
     # Retain newlines and character positions for native source-location checks.
     return MASK.sub(lambda match: "".join("\n" if char == "\n" else " " for char in match.group()), text)
