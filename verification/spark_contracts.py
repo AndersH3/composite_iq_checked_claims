@@ -369,7 +369,7 @@ def current_sources(root: Path) -> dict:
     return {path.relative_to(root).as_posix(): path.read_text(encoding="utf-8") for path in paths}
 
 
-@deal.raises(SystemExit, OSError, ValueError, UnicodeDecodeError, TypeError)
+@deal.raises(SystemExit, OSError, ValueError, UnicodeDecodeError, TypeError, KeyError)
 @deal.has("read", "stdout", "stderr")
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
