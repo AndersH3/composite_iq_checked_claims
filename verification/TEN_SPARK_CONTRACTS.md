@@ -6,11 +6,16 @@ The project requires **at least five explicit behavioral/flow contract
 entries** for every current SPARK function and procedure. A separate
 **target of ten** applies where there are meaningful nonduplicated
 properties. This target does not silently become a stronger global
-acceptance precondition. `verification/spark_contracts.py` reports
+acceptance precondition. `verification/spark_contracts.py` derives
 `target_contracts=10`, `entities_at_target`, and
-`entities_below_target` from the current source inventory, while
-retaining `minimum_required=5`. Five new Deal postconditions on
-`inventory` check that the report agrees with its actual entity rows.
+`entities_below_target` in a separate
+`ten_contract_summary(inventory(...))` function. The original
+`inventory` return schema is unchanged to preserve exact historical
+source-bound evidence comparisons. Five new Deal postconditions on
+`inventory` validate its original accounting fields, while ten Deal
+decorators on the separate summary validate the staged ten-clause
+counters. The CLI adds `ten_contract_target` as derived presentation
+without changing the archive-sensitive inventory return value.
 
 The checker counts top-level Pre/Post/Refined_Post conjuncts,
 Contract_Cases alternatives and Global/Depends aspects. It rejects

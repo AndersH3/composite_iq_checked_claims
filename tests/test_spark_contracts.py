@@ -6,7 +6,7 @@ import pytest
 
 from verification.spark_contracts import (
     clauses, contract_entries, current_sources, inventory, masked,
-    unparenthesized,
+    unparenthesized, ten_contract_summary,
 )
 
 SPEC = """package P with SPARK_Mode is
@@ -306,11 +306,18 @@ def test_staged_spark_ten_contract_accounting_is_exact():
     """Report the optional ten-clause target without weakening the five-clause gate."""
     result = inventory({"p.ads": SPEC, "p.adb": BODY})
     assert result["minimum_required"] == 5
-    assert result["target_contracts"] == 10
-    assert result["entities_at_target"] == 0
-    assert result["entities_below_target"] == 1
     assert result["complete"]
-    assert result["entities_at_target"] + result["entities_below_target"] == len(result["entities"])
+    assert set(result) == {
+        "schema", "minimum_required", "minimum_observed", "functions",
+        "procedures", "contracts", "entities", "sources",
+        "excluded_completions", "insufficient", "missing_native",
+        "invalid_native", "unmatched_native", "native_cross_check", "complete",
+    }, "Historical exact-schema SPARK evidence compatibility must be preserved"
+    stage = ten_contract_summary(result)
+    assert stage["target_contracts"] == 10
+    assert stage["entities_at_target"] == 0
+    assert stage["entities_below_target"] == 1
+    assert stage["total_entities"] == len(result["entities"])
 
 
 @deal.pre(lambda: protected_history_intact())
@@ -336,4 +343,4 @@ def test_admission_exact_arithmetic_has_ten_native_contract_entries():
         assert row["contract_count"] >= 10, (name, row)
         clauses_text = "\n".join(entry["clause"] for entry in row["contracts"])
         assert all(phrase in clauses_text for phrase in phrases), (name, clauses_text)
-    assert result["entities_at_target"] >= len(targets)
+    assert ten_contract_summary(result)["entities_at_target"] >= len(targets)

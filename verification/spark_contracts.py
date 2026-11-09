@@ -230,19 +230,23 @@ def contract_entries(aspects: dict) -> list:
 @deal.post(lambda result: result["schema"] == SCHEMA and result["minimum_required"] == MINIMUM)
 @deal.raises(ValueError)
 @deal.has()
-# Independently cross-check the staged ten-clause reporting against the
-# complete per-entity inventory. The original five-clause acceptance rule
-# and native source identity checks are unchanged.
-@deal.post(lambda result: result["target_contracts"] == TARGET)
+# This legacy inventory is intentionally source/evidence schema stable.
+# Check five independent accounting equations without changing its keys:
+# historical SPARK campaign audits compare complete inventory dictionaries.
 @deal.post(lambda result:
-           result["entities_at_target"] + result["entities_below_target"]
-           == len(result["entities"]))
-@deal.post(lambda result: result["entities_at_target"]
-           == sum(row["contract_count"] >= TARGET for row in result["entities"]))
-@deal.post(lambda result: result["entities_below_target"]
-           == sum(row["contract_count"] < TARGET for row in result["entities"]))
-@deal.post(lambda result: result["contracts"]
-           == sum(row["contract_count"] for row in result["entities"]))
+           result["functions"] + result["procedures"] == len(result["entities"]))
+@deal.post(lambda result:
+           result["contracts"] == sum(row["contract_count"] for row in result["entities"]))
+@deal.post(lambda result:
+           result["minimum_observed"] == min(row["contract_count"] for row in result["entities"]))
+@deal.post(lambda result:
+           result["insufficient"] == [row["identity"] for row in result["entities"]
+                                      if row["contract_count"] < MINIMUM])
+@deal.post(lambda result:
+           result["complete"] == not (result["insufficient"] or
+                                     result["missing_native"] or
+                                     result["invalid_native"] or
+                                     result["unmatched_native"]))
 def inventory(sources: dict, coverage: dict | None = None) -> dict:
     candidates = {}
     excluded = []
@@ -311,9 +315,6 @@ def inventory(sources: dict, coverage: dict | None = None) -> dict:
             if not non_subprogram:
                 unmatched_native.append(entity["name"])
     return {"schema": SCHEMA, "minimum_required": MINIMUM,
-            "target_contracts": TARGET,
-            "entities_at_target": sum(row["contract_count"] >= TARGET for row in rows),
-            "entities_below_target": sum(row["contract_count"] < TARGET for row in rows),
             "minimum_observed": min(row["contract_count"] for row in rows),
             "functions": sum(row["kind"] == "function" for row in rows),
             "procedures": sum(row["kind"] == "procedure" for row in rows),
@@ -323,6 +324,38 @@ def inventory(sources: dict, coverage: dict | None = None) -> dict:
             "invalid_native": invalid_native, "unmatched_native": unmatched_native,
             "native_cross_check": coverage is not None,
             "complete": not insufficient and not missing_native and not invalid_native and not unmatched_native}
+
+
+
+@deal.pre(lambda report: isinstance(report, dict))
+@deal.pre(lambda report: isinstance(report.get("entities"), list))
+@deal.post(lambda result: result["target_contracts"] == TARGET)
+@deal.ensure(lambda report, result: result["total_entities"] == len(report["entities"]))
+@deal.ensure(lambda report, result:
+             result["entities_at_target"] ==
+             sum(row["contract_count"] >= TARGET for row in report["entities"]))
+@deal.ensure(lambda report, result:
+             result["entities_below_target"] ==
+             sum(row["contract_count"] < TARGET for row in report["entities"]))
+@deal.post(lambda result:
+           result["entities_at_target"] + result["entities_below_target"]
+           == result["total_entities"])
+@deal.post(lambda result: set(result) ==
+           {"target_contracts", "total_entities", "entities_at_target",
+            "entities_below_target"})
+@deal.raises(KeyError, TypeError)
+@deal.has()
+def ten_contract_summary(report: dict) -> dict:
+    """Summarize staged SPARK ten-clause progress without changing archive schemas.
+
+    The immutable evidence campaigns persist the original inventory's exact
+    keys. This separate derived report is not part of those archived checks.
+    The target concerns clause-count coverage, not GNATprove proof status.
+    """
+    counts = [row["contract_count"] for row in report["entities"]]
+    return {"target_contracts": TARGET, "total_entities": len(counts),
+            "entities_at_target": sum(count >= TARGET for count in counts),
+            "entities_below_target": sum(count < TARGET for count in counts)}
 
 
 @deal.pre(lambda root: isinstance(root, Path))
@@ -346,7 +379,10 @@ def main() -> None:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     result = inventory(current_sources(args.root))
-    print(json.dumps(result, indent=2))
+    # Keep the evidence-sensitive inventory unchanged. Only the CLI report
+    # contains the derived staged target accounting.
+    print(json.dumps({**result, "ten_contract_target": ten_contract_summary(result)},
+                     indent=2))
     raise SystemExit(0 if result["complete"] else 1)
 
 

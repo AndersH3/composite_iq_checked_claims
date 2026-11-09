@@ -264,16 +264,18 @@ source-pinned historical native/SPARK evidence is unchanged.
 ## Ten-contract SPARK inventory report consistency
 
 `verification.spark_contracts.inventory` now carries ten distinct Deal
-decorators. Five additional postconditions verify that the optional
-ten-clause per-entity SPARK counters sum to the entire inventory,
-match the actual recorded declarations, retain the configured target,
-and conserve the exact total of explicit clause entries. The original
-five-clause SPARK minimum and all historical source-hash audits remain
-unchanged. The dedicated `TEN_SPARK_CONTRACTS.md` explains the staged
-native extension and its current verification limitations.
+decorators. Five additional postconditions validate that the immutable-
+evidence-compatible inventory's original function, procedure,
+clause, minimum and completion counts agree with its entity rows.
+The separate `verification.spark_contracts.ten_contract_summary`
+has ten decorators and reports staged coverage **without altering
+the exact historical inventory schema**.
+The original five-clause SPARK minimum and historical source hashes
+remain unchanged. The dedicated `TEN_SPARK_CONTRACTS.md` explains
+the native verification limitations.
 
-The ten-contract test-enforced Python subset now covers **28 functions**:
-19 historical analysis functions and nine current verification helpers.
+The ten-contract test-enforced Python subset now covers **29 functions**:
+19 historical analysis functions and ten current verification helpers.
 Every Python named function still has at least five Deal contracts.
 
 ## Next upgrades

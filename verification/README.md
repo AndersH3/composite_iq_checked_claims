@@ -157,11 +157,12 @@ This adapter and normalization use private, version-pinned solver APIs and belon
 The mandatory floor remains **five** distinct explicit Global, Depends,
 Pre, Post, Refined_Post or Contract_Cases clauses per current SPARK
 function/procedure. As with Python Deal, ten is an aspirational per-entity
-target, **not** a global gate. The inventory now reports
-`target_contracts`, `entities_at_target` and
-`entities_below_target` in addition to its unchanged five-clause
-acceptance predicate. The counters are checked by Deal contracts and
-regression tests.
+target, **not** a global gate. A separate `ten_contract_summary(inventory(...))`
+reports `target_contracts`, `entities_at_target` and
+`entities_below_target`. The original `inventory` function retains its
+**exact historical JSON schema** for immutable evidence comparisons,
+and the CLI includes the derived counters under `ten_contract_target`.
+The counters are checked by Deal contracts and regression tests.
 
 Five exact-arithmetic routines in `Admission_Core` have strengthened
 specifications with ten or more explicit conditions: `Total`,
