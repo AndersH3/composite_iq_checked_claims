@@ -2209,6 +2209,19 @@ custom sum or independence claim was introduced.
 Current intended inventory: **591 public claims, 594 proof scripts,
 657 documented declarations** across seven Rocq modules, subject to CI.
 
+## Shared conjunction membership and ordinary intersection monotonicity
+
+A documented `all_events_membership_antitone` lemma now centralizes the
+maintained `Stdlib.List.forallb_forall` reasoning for Boolean conjunctions.
+The existing conditional conjunction family-subset theorem delegates
+to this helper rather than duplicating the witness proof. The ordinary
+finite-mass counterpart `finite_all_events_subset` combines the helper
+with existing `finite_prob_event_monotone`; two unconditional append
+corollaries use `Stdlib.List.in_or_app`. No new sums or recursions appear.
+
+Current intended inventory: **595 public claims, 598 proof scripts,
+661 documented declarations** across seven Rocq modules, subject to CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

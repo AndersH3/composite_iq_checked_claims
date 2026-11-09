@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 136 proof scripts
+## FiniteUnion.v — 140 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -717,7 +717,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `all_events_membership_ext` (theorem) | Boolean true/false analysis via Stdlib forallb_forall | Stdlib.List.forallb_forall, all_events | **New:** conjunction predicate depends only on membership set, not ordering or duplicates |
 | `all_events_permutation` (theorem) | Bidirectional membership transport through library permutation | all_events_membership_ext, Stdlib.Sorting.Permutation.Permutation_in/Permutation_sym | **New:** conditional event-family intersection invariant under list permutation |
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
-| `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
+| `all_events_membership_antitone` (lemma) | Shared Boolean inclusion via two maintained forallb_forall equivalences | Stdlib.List.forallb_forall | **Refactor:** centralize conjunction membership reasoning |
+| `finite_all_events_subset` (theorem) | Use generic nonnegative event monotonicity and shared conjunction implication | finite_prob_event_monotone, all_events_membership_antitone | **New:** unconditional intersection mass antitone under family inclusion |
+| `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from shared Boolean conjunction implication | finite_conditional_prob_monotone, all_events_membership_antitone | **Refactored:** remove duplicated forallb_forall reasoning |
 | `event_append_existing_membership_iff` (lemma) | Factor appended-event membership into one reusable Stdlib.List.in_app_iff proof | Stdlib.List.in_app_iff, Stdlib.List.In | **New:** Generic membership iff for appending an event already in the list |
 | `finite_union_append_existing` (theorem) | Reuse generic union-probability membership extensionality and shared append-existing membership iff | union_prob_membership_extensional, event_append_existing_membership_iff | **New:** Appending any already-listed event leaves finite union mass unchanged |
 | `finite_conditional_union_duplicate_head` (theorem) | Reuse conditional target extensionality and existing existsb Boolean idempotence | finite_conditional_prob_event_ext_on_samples, any_event, Stdlib.List.existsb | **New:** Conditional union mass invariant under a duplicated head event |
@@ -743,6 +745,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_union_append_right_monotone` (theorem) | Right-membership into app plus conditional union subset theorem | Stdlib.List.in_or_app, finite_conditional_union_subset | **New:** conditional right-side append monotonicity |
 | `finite_conditional_all_events_append_left_antitone` (theorem) | Left-membership into app plus conditional conjunction subset theorem | Stdlib.List.in_or_app, finite_conditional_all_events_subset | **New:** appending requirements weakly decreases left joint mass |
 | `finite_conditional_all_events_append_right_antitone` (theorem) | Right-membership into app plus conditional conjunction subset theorem | Stdlib.List.in_or_app, finite_conditional_all_events_subset | **New:** prepending requirements weakly decreases right joint mass |
+| `finite_all_events_append_left_antitone` (theorem) | Left-membership into app plus unconditional conjunction subset theorem | Stdlib.List.in_or_app, finite_all_events_subset | **New:** ordinary left conjunction append antitonicity |
+| `finite_all_events_append_right_antitone` (theorem) | Right-membership into app plus unconditional conjunction subset theorem | Stdlib.List.in_or_app, finite_all_events_subset | **New:** ordinary right conjunction append antitonicity |
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

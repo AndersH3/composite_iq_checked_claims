@@ -164,12 +164,13 @@ reports `target_contracts`, `entities_at_target` and
 and the CLI includes the derived counters under `ten_contract_target`.
 The counters are checked by Deal contracts and regression tests.
 
-Five exact-arithmetic routines in `Admission_Core` have strengthened
+Seven exact-arithmetic routines in `Admission_Core` have strengthened
 specifications with ten or more explicit conditions: `Total`,
-`Union_Count`, `Fraction`, `Complement` and `Conditional`.
-These specify individual cell lower bounds, zero-cell conditions,
-positive denominators, exact complement regimes and conditional
-zero/unit boundaries. The extensions introduce no floating-point
+`Union_Count`, `Fraction`, `Complement`, `Conditional`,
+`Marginal_A`, and `Marginal_B`. One additional operation,
+`Hoeflin_Core.Variance_Numerator`, has ten explicit contracts.
+These specify cell lower bounds, zero-cell conditions, positive
+denominators, exact complement regimes and correlation extremes. The extensions introduce no floating-point
 accuracy assumptions, operating-system success guarantees or new
 `SPARK_Mode` exclusions. The formal clause definitions and source
 integrity rules are explained in [TEN_SPARK_CONTRACTS.md](TEN_SPARK_CONTRACTS.md).

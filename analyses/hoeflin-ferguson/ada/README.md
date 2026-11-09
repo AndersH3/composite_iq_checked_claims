@@ -95,3 +95,16 @@ The trigonometric observations execute in the analyzed `Normal_Pair` body. Each 
 
 
 Every SPARK function/procedure has at least five explicit behavioral clauses or Global/Depends aspects; see the [contract counting rules](../../../verification/README.md#five-explicit-contracts-per-subprogram). The inventory is structural and does not establish five independent guarantees or prove trusted completions. Earlier evidence remains immutable.
+
+
+## Staged ten-clause SPARK variance-numerator specification
+
+`Hoeflin_Core.Variance_Numerator` now has ten counted explicit
+contracts: its established exact equicorrelation formula and bounds
+are supplemented by singleton-test, zero-correlation and
+full-correlation identities, a nonnegative multiple-test correlation
+contribution, and strict gain under multiple tests with positive
+correlation. These are exact integer arithmetic claims and do not
+certify floating-point normal-tail accuracy or a Gaussian model.
+The changed Ada source still needs a fresh GNATprove campaign;
+historical native proof records remain tied to their original hashes.

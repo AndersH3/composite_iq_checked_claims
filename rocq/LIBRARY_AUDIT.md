@@ -1645,6 +1645,16 @@ and intersection bounds also require strictly positive conditioner
 mass. Every proof avoids new `existsb` or `forallb` inductions
 and remains inside finite weighted Boolean-event semantics.
 
+## Consolidated forallb witness transport for conjunction order
+
+`all_events_membership_antitone` factors a repeated two-way
+`Stdlib.List.forallb_forall` argument into one documented helper.
+The conditional conjunction subset theorem delegates to it, while a
+new unconditional finite-mass subset theorem uses the maintained
+generic event-mass monotonicity. Ordinary left/right append
+corollaries reuse standard `in_or_app`. This refactor reduces
+duplication without changing finite weighted-event semantics.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

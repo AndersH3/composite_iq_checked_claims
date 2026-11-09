@@ -3651,6 +3651,77 @@ Section FiniteOutcomeSpace.
     exact Hperm.
   Qed.
 
+
+  (**
+   [all_events_membership_antitone] (lemma) — Requiring more listed events cannot make a false conjunction true.
+   Mathematical meaning: If every event required by the smaller list
+   also occurs in the larger list, then any outcome satisfying
+   the full larger conjunction satisfies the smaller conjunction.
+   Exact checked proposition: Event-family membership inclusion
+   implies all_events additional x = true -> all_events required x = true.
+   Premises and side conditions: No finite-sum, probability,
+   normalization, sample-weight, independence or decidable equality
+   assumptions are needed; duplicate event predicates remain permitted.
+   Proof/definition method: Transport Stdlib.List.forallb_forall
+   witnesses along the given list-membership inclusion. This helper
+   replaces duplicated Boolean reasoning in conditional mass bounds.
+   Library reuse: Stdlib.List.forallb_forall, Stdlib.List.In,
+   existing all_events and no new list recursion.
+   Boundary: A Boolean implication alone is not a probability inequality;
+   weight sign and positive conditioning must be imposed separately.
+   *)
+  Lemma all_events_membership_antitone :
+    forall (required additional : list Event),
+      (forall event, In event required -> In event additional) ->
+      forall x,
+        all_events additional x = true ->
+        all_events required x = true.
+  Proof.
+    intros required additional Hsubset x Hall.
+    unfold all_events in *.
+    apply (proj2 (@forallb_forall Event
+      (fun event => event x) required)).
+    intros event Hin.
+    apply (proj1 (@forallb_forall Event
+      (fun e => e x) additional) Hall).
+    apply Hsubset; exact Hin.
+  Qed.
+
+  (**
+   [finite_all_events_subset] (theorem) — More required events reduce unconditional finite intersection mass.
+   Mathematical meaning: A larger event-conjunction list has no
+   more sampled weighted mass than any included subset of requirements,
+   for nonnegative sampled outcome weights.
+   Exact checked proposition: When every required event occurs in
+   additional, finite_prob weights samples (all_events additional)
+   <= finite_prob weights samples (all_events required).
+   Premises and side conditions: Nonnegative weights on the explicit
+   finite sample are necessary; total mass and event independence
+   are unconstrained. Repeated outcomes/events remain allowed.
+   Proof/definition method: Feed the shared pointwise Boolean
+   antitonicity lemma to the existing finite_prob_event_monotone.
+   Library reuse: all_events_membership_antitone,
+   finite_prob_event_monotone and Stdlib.List.forallb_forall.
+   Boundary: This is a finite weighted conjunction inequality,
+   not a product of marginal probabilities or an independence result.
+   *)
+  Theorem finite_all_events_subset :
+    forall weights samples (required additional : list Event),
+      (forall event, In event required -> In event additional) ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples
+        (all_events additional) <=
+      finite_prob weights samples
+        (all_events required).
+  Proof.
+    intros weights samples required additional Hsubset Hw.
+    apply finite_prob_event_monotone.
+    - exact Hw.
+    - intros x _ Hall.
+      exact (all_events_membership_antitone
+        required additional Hsubset x Hall).
+  Qed.
+
   (**
    [finite_conditional_all_events_subset] (theorem) — Adding Boolean constraints cannot increase conditional intersection mass.
    Mathematical meaning: If every event in the shorter constraint list occurs somewhere in the longer list, then satisfying every event in the longer list implies satisfying every event in the shorter list; with nonnegative sampled weights this inclusion makes the longer intersection no more probable under the same positive-mass conditioning event.
@@ -3675,13 +3746,8 @@ Section FiniteOutcomeSpace.
       weights samples (all_events additional) (all_events required)
       given Hw Hgiven).
     intros x _ Hall.
-    unfold all_events in *.
-    apply (proj2 (@forallb_forall Event
-      (fun event => event x) required)).
-    intros event Hin.
-    apply (proj1 (@forallb_forall Event
-      (fun e => e x) additional) Hall).
-    apply Hsubset; exact Hin.
+    exact (all_events_membership_antitone
+      required additional Hsubset x Hall).
   Qed.
 
   (**
@@ -4390,6 +4456,72 @@ Section FiniteOutcomeSpace.
       right; exact Hin.
     - exact Hw.
     - exact Hpositive.
+  Qed.
+
+
+  (**
+   [finite_all_events_append_left_antitone] (theorem) — Appending more requirements decreases the first conjunction mass.
+   Mathematical meaning: Every outcome satisfying all Boolean events
+   in left ++ right satisfies the left conjunction alone, making
+   its unconditional nonnegative weighted mass no larger.
+   Exact checked proposition: The mass of all_events (left ++ right)
+   is at most the mass of all_events left for nonnegative sample weights.
+   Premises and side conditions: No conditioning mass, normalization,
+   independence, disjointness or unique-event requirement is added.
+   Proof/definition method: Reuse Stdlib.List.in_or_app to provide
+   inclusion to the existing finite_all_events_subset theorem.
+   Library reuse: Stdlib.List.in_or_app, finite_all_events_subset.
+   Boundary: A weak inequality cannot establish a product factorization.
+   *)
+  Theorem finite_all_events_append_left_antitone :
+    forall weights samples (left right : list Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples
+        (all_events (left ++ right)) <=
+      finite_prob weights samples
+        (all_events left).
+  Proof.
+    intros weights samples left right Hw.
+    apply (finite_all_events_subset
+      weights samples left (left ++ right)).
+    - intros event Hin.
+      apply in_or_app.
+      left; exact Hin.
+    - exact Hw.
+  Qed.
+
+  (**
+   [finite_all_events_append_right_antitone] (theorem) — Prepended requirements decrease the second conjunction mass.
+   Mathematical meaning: An outcome satisfying all events from
+   left ++ right must satisfy the right family, so prepending
+   arbitrary requirements cannot increase weighted finite mass.
+   Exact checked proposition: Nonnegative samples imply
+   finite_prob weights samples (all_events (left ++ right))
+   <= finite_prob weights samples (all_events right).
+   Premises and side conditions: Weights must be nonnegative on
+   samples; outcomes or event predicates may repeat. No independence,
+   total-probability normalization or conditional denominator occurs.
+   Proof/definition method: Use Stdlib.List.in_or_app for right
+   membership and reuse the shared finite_all_events_subset theorem.
+   Library reuse: Stdlib.List.in_or_app, finite_all_events_subset
+   and the maintained all_events/finite_prob definitions.
+   Boundary: This only establishes Boolean intersection monotonicity.
+   *)
+  Theorem finite_all_events_append_right_antitone :
+    forall weights samples (left right : list Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples
+        (all_events (left ++ right)) <=
+      finite_prob weights samples
+        (all_events right).
+  Proof.
+    intros weights samples left right Hw.
+    apply (finite_all_events_subset
+      weights samples right (left ++ right)).
+    - intros event Hin.
+      apply in_or_app.
+      right; exact Hin.
+    - exact Hw.
   Qed.
 
 End FiniteOutcomeSpace.

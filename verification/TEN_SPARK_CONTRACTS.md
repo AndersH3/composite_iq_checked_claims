@@ -35,7 +35,16 @@ Source: `analyses/towers-multiple-test-admissions/ada/src/admission_core.ads`.
 | `Fraction` | The rational record retains numerator <= positive denominator; zero numerator and unit-ratio edge cases preserve their meanings |
 | `Complement` | Exact subtraction, strict complement bounds inside the unit interval, and the two half-scale cases |
 | `Conditional` | The returned denominator remains strictly positive and exact zero/unit conditional ratios preserve their boundary cases |
+| `Marginal_A` | Each A-event cell is bounded by the A marginal, with both single-cell-zero and zero-marginal consequences |
+| `Marginal_B` | Each B-event cell is bounded by the B marginal, with both single-cell-zero and zero-marginal consequences |
 
+Additional source: `analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads`.
+
+| Subprogram | Additional useful specification properties |
+|---|---|
+| `Variance_Numerator` | Singleton-test identity, zero/full-correlation extremes and strictly positive correlation contribution for multiple tests |
+
+Eight operations now meet the staged ten-clause contract target.
 The additional contracts describe exact integer arithmetic and
 subtype-bounded records, rather than numerical or psychometric model
 validity. They do not weaken any former precondition or postcondition,

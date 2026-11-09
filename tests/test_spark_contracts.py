@@ -326,7 +326,7 @@ def test_staged_spark_ten_contract_accounting_is_exact():
 @deal.post(lambda result: result is None)
 @deal.has("read")
 def test_admission_exact_arithmetic_has_ten_native_contract_entries():
-    """Enforce the staged ten-clause target for five proven-by-algebra candidates."""
+    """Enforce ten-clause targets for eight exact-arithmetic SPARK interfaces."""
     result = inventory(current_sources(ROOT))
     targets = {
         "admission_core.total": ("Total'Result >= C.N00", "Total'Result = 0"),
@@ -334,6 +334,9 @@ def test_admission_exact_arithmetic_has_ten_native_contract_entries():
         "admission_core.fraction": ("Fraction'Result.Denominator > 0", "Numerator = 0"),
         "admission_core.complement": ("Complement'Result = Scale - P", "Scale / 2"),
         "admission_core.conditional": ("Conditional'Result.Denominator > 0", "Joint = 0"),
+        "admission_core.marginal_a": ("Marginal_A'Result >= C.N10", "Marginal_A'Result = 0"),
+        "admission_core.marginal_b": ("Marginal_B'Result >= C.N01", "Marginal_B'Result = 0"),
+        "hoeflin_core.variance_numerator": ("N = 1", "R = 1_000"),
     }
     by_name = {row["identity"]: row for row in result["entities"]}
     assert targets.keys() <= by_name.keys()

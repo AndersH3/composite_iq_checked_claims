@@ -52,14 +52,28 @@ package Admission_Core with SPARK_Mode is
    function Marginal_A (C : Counts) return Count with
      Global => null,
      Pre => Total (C) <= Max_Trials,
+     --  All nonnegative event-cell contributions remain visible,
+     --  including both exact zero-cell and zero-marginal boundaries.
      Post => Marginal_A'Result = C.N10 + C.N11
-       and Marginal_A'Result <= Total (C),
+       and Marginal_A'Result <= Total (C)
+       and Marginal_A'Result >= C.N10
+       and Marginal_A'Result >= C.N11
+       and (if C.N10 = 0 then Marginal_A'Result = C.N11)
+       and (if C.N11 = 0 then Marginal_A'Result = C.N10)
+       and (if Marginal_A'Result = 0 then C.N10 = 0 and C.N11 = 0),
      Depends => (Marginal_A'Result => C);
    function Marginal_B (C : Counts) return Count with
      Global => null,
      Pre => Total (C) <= Max_Trials,
+     --  The B marginal conserves each nonnegative contributor,
+     --  including the two component-zero and total-zero edge cases.
      Post => Marginal_B'Result = C.N01 + C.N11
-       and Marginal_B'Result <= Total (C),
+       and Marginal_B'Result <= Total (C)
+       and Marginal_B'Result >= C.N01
+       and Marginal_B'Result >= C.N11
+       and (if C.N01 = 0 then Marginal_B'Result = C.N11)
+       and (if C.N11 = 0 then Marginal_B'Result = C.N01)
+       and (if Marginal_B'Result = 0 then C.N01 = 0 and C.N11 = 0),
      Depends => (Marginal_B'Result => C);
    function Union_Count (C : Counts) return Count with
      Global => null,

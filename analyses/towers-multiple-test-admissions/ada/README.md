@@ -91,3 +91,7 @@ These are specification-level changes pending a fresh GNATprove proof
 campaign using the modified sources. Older published native coverage
 and proof records are evidence only for their historical, source-pinned
 revisions; they have not been rewritten or relabeled.
+
+The staged target now also covers `Admission_Core.Marginal_A` and
+`Marginal_B`, each with ten explicit clause/flow entries and
+separate lower-bound and empty-cell behavior specifications.
