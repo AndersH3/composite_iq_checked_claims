@@ -14,6 +14,9 @@ import deal
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"}
 MINIMUM_CONTRACTS = 5
+# Ten is a staged, nonredundant contract target; only five are compulsory
+# until every production function has a defensible ten-contract specification.
+TARGET_CONTRACTS = 10
 
 
 @deal.pre(lambda node, aliases: isinstance(node, ast.expr))
@@ -110,6 +113,13 @@ def main() -> None:
               "minimum_contracts": MINIMUM_CONTRACTS,
               "minimum_observed": min(row["distinct_contract_count"] for r in rows for row in r["function_contracts"]),
               "complete": not problems}
+    contract_counts = [function["distinct_contract_count"] for row in rows
+                       for function in row["function_contracts"]]
+    report["target_contracts"] = TARGET_CONTRACTS
+    report["functions_at_target"] = sum(count >= TARGET_CONTRACTS
+                                        for count in contract_counts)
+    report["functions_below_target"] = sum(count < TARGET_CONTRACTS
+                                           for count in contract_counts)
     print(json.dumps(report, indent=2))
     raise SystemExit(1 if problems else 0)
 

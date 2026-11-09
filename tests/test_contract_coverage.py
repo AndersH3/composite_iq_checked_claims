@@ -84,6 +84,20 @@ def test_coverage_checks_nested_functions(coverage_checker, tmp_path):
 def test_every_repository_python_function_has_a_real_contract(coverage_checker):
     files = coverage_checker.python_files(ROOT)
     assert files
+    # Preserve strengthened, mathematically motivated contracts in historic
+    # independent reference calculations and Ada result validators. The
+    # deliberately false negative-control and pinned symbolic theorem inputs
+    # are intentionally not forced into the optional ten-contract target.
+    targeted = {
+        "analyses/hoeflin-ferguson/scripts/verify_calculations.py":
+            {"variance_factor", "mean_threshold", "_positive_ratio"},
+        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py":
+            {"_positive_ratio", "wilson"},
+        "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py":
+            {"probability_union", "conditional_probability"},
+        "analyses/towers-multiple-test-admissions/ada/validate_results.py":
+            {"_open_unit_ratio"},
+    }
     for path in files:
         report = coverage_checker.audit_file(path)
         assert report["imports_deal"], path
@@ -91,6 +105,11 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         assert not report["insufficient"], (path, report["insufficient"])
         assert not report["duplicated"], (path, report["duplicated"])
         assert report["contract_count"] > 0, path
+        target_names = targeted.get(path.relative_to(ROOT).as_posix(), set())
+        counts = {entry["name"]: entry["distinct_contract_count"]
+                  for entry in report["function_contracts"]}
+        assert target_names <= counts.keys(), path
+        assert all(counts[name] >= 10 for name in target_names), (path, counts)
 
 
 @pytest.mark.parametrize("count", range(9))

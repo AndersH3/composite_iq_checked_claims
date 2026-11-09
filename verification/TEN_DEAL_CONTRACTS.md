@@ -54,6 +54,20 @@ from being misrepresented as the source that generated an older native
 proof campaign. New Deal checks are separately validated on the
 *current* checkout. No new SPARK campaign is asserted.
 
+## Enforced ten-contract regression subset
+
+The project-wide contract checker reports two non-gating coverage
+measures: `functions_at_target` and `functions_below_target`
+for `TARGET_CONTRACTS = 10`. These make the gap explicit without
+diluting the five-contract minimum, changing archived evidence
+inventories or falsely claiming every function is at ten.
+
+`tests/test_contract_coverage.py` additionally enforces the ten
+**distinct**-contract floor on the eight upgraded historical
+functions listed above. Their stronger postconditions are
+exercised by the existing runtime and numerical property tests.
+No new restrictions on previously valid arguments were added.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across
