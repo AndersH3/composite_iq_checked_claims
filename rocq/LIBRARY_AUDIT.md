@@ -1085,6 +1085,20 @@ impossible-event independence case. Existing theorem types remain
 unchanged. No new recursion, quotient, axiom or external dependency
 is introduced.
 
+## Selected-sample equivalence of generic conditional independence
+
+`FiniteUnion.finite_conditional_prob_as_filtered_true` uses the
+already established filter and finite event-mass interfaces to
+identify conditional probability with certain-event conditioning
+on the restricted list. The corresponding
+`finite_conditional_independent_iff_filtered_true` follows by
+rewriting the positivity guard and joint/marginal conditional
+masses without introducing a replacement probability operator.
+The filtered cross-product result delegates to the existing
+unfiltered cross-product criterion and `Stdlib.List.filter`
+bridges. These exact structural results keep sample repetitions
+and total-mass semantics explicit.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

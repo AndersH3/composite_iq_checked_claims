@@ -3089,6 +3089,93 @@ Section FiniteOutcomeSpace.
     exact Hgiven.
   Qed.
 
+
+  (**
+   [finite_conditional_prob_as_filtered_true] (theorem) — Conditioning an original finite list equals certain-event conditioning after filtering.
+   Mathematical meaning: To condition on G, first select the sampled outcomes satisfying G with the standard List.filter operation and then condition the resulting weighted list on the universally true event. The resulting conditional event mass equals the original conditional mass, even without explicit renormalization.
+   Exact checked proposition: For any real weights, finite samples and target and conditioning Boolean events, finite_conditional_prob weights samples event given = finite_conditional_prob weights (filter given samples) event (fun _ => true).
+   Premises and side conditions: Neither positive conditioning mass nor normalized/nonnegative weights is needed for the exact quotient equality; both denominators coincide as finite real sums, including the zero case where Rocq's real division has its algebraic convention. Repeated sample occurrences are retained.
+   Proof/definition method: Unfold only the existing quotient on both sides, simplify conjunction with true by finite support extensionality, replace the selected numerator using finite_prob_on_filtered_samples, and identify the denominator using finite_prob_true and finite_prob_as_filtered_mass.
+   Library reuse: Stdlib.List.filter, finite_prob_event_ext_on_samples, finite_prob_on_filtered_samples, finite_prob_true and finite_prob_as_filtered_mass; no new conditional kernel or finite summation is defined.
+   Boundary: This is finite-list conditioning; the formula does not assert measure-theoretic disintegration or give zero-denominator quotients their usual probabilistic interpretation.
+   *)
+  Theorem finite_conditional_prob_as_filtered_true :
+    forall weights samples event given,
+      finite_conditional_prob weights samples event given =
+      finite_conditional_prob weights (filter given samples)
+        event (fun _ => true).
+  Proof.
+    intros weights samples event given.
+    unfold finite_conditional_prob.
+    rewrite (finite_prob_event_ext_on_samples weights
+      (filter given samples) (fun x => andb true (event x)) event).
+    2: { intros x _; reflexivity. }
+    rewrite (finite_prob_on_filtered_samples
+      weights samples given event).
+    rewrite (finite_prob_true weights (filter given samples)).
+    rewrite (finite_prob_as_filtered_mass weights samples given).
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_independent_iff_filtered_true] (theorem) — Conditional independence as ordinary certain-event independence on a restricted finite list.
+   Mathematical meaning: Independence of A and B given selector G on the original list is equivalent to the same generic factorization assertion conditioned on true over the sublist selected by G. All conditional marginals and the strict positivity requirement are preserved.
+   Exact checked proposition: For all finite weights, samples, first, second and given, finite_conditional_independent weights samples first second given iff finite_conditional_independent weights (filter given samples) first second (fun _ => true).
+   Premises and side conditions: There is no extra positive-mass hypothesis because both independence predicates carry it; the equivalence includes failure of both predicates at zero conditioned mass. Arbitrary signed weights and repeated outcomes remain legal algebraically, with nonnegative weights needed for actual probability semantics.
+   Proof/definition method: Unfold the existing conditional-independence predicate, rewrite the two conditioning masses using finite_prob_true and finite_prob_as_filtered_mass, then rewrite its joint and both marginal conditional quotients via finite_conditional_prob_as_filtered_true.
+   Library reuse: finite_conditional_prob_as_filtered_true, finite_prob_true, finite_prob_as_filtered_mass and Stdlib.List.filter; no additional independence predicate or event-sum recursion is introduced.
+   Boundary: This represents conditioning by a restricted explicit finite list, not conditioning on a sigma-algebra or asserting a normalized conditional measure when the selector has zero mass.
+   *)
+  Theorem finite_conditional_independent_iff_filtered_true :
+    forall weights samples first second given,
+      (finite_conditional_independent weights samples first second given <->
+       finite_conditional_independent weights (filter given samples)
+         first second (fun _ => true)).
+  Proof.
+    intros weights samples first second given.
+    unfold finite_conditional_independent.
+    rewrite (finite_prob_true weights (filter given samples)).
+    rewrite (finite_prob_as_filtered_mass weights samples given).
+    rewrite (finite_conditional_prob_as_filtered_true
+      weights samples
+      (fun x => andb (first x) (second x)) given).
+    rewrite (finite_conditional_prob_as_filtered_true
+      weights samples first given).
+    rewrite (finite_conditional_prob_as_filtered_true
+      weights samples second given).
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_independent_iff_filtered_cross_product] (theorem) — A denominator-free independence criterion on the conditioning-selected sublist.
+   Mathematical meaning: Under positive conditioning mass, A and B are conditionally independent on the original weighted list iff their conjunction mass on the list filtered by G, multiplied by the total weight of that filtered list, equals the product of the two filtered marginal masses.
+   Exact checked proposition: Given 0 < finite_prob weights samples given, finite_conditional_independent weights samples first second given iff finite_prob weights (filter given samples) (A AND B) * FiniteSum.finite_sum weights (filter given samples) = finite_prob weights (filter given samples) first * finite_prob weights (filter given samples) second.
+   Premises and side conditions: Strict positive conditioning mass is required to cancel conditional denominators. The full sample mass need not be normalized, and even signed finite weights satisfy the algebraic criterion; genuine probabilistic semantics require all sampled weights to be nonnegative.
+   Proof/definition method: Reuse the checked conditional mass cross-product equivalence, then rewrite each of its three event intersections by finite_prob_on_filtered_samples and its remaining selector mass by finite_prob_as_filtered_mass.
+   Library reuse: finite_conditional_independent_iff_cross_product_mass, finite_prob_on_filtered_samples, finite_prob_as_filtered_mass and Stdlib.List.filter. No new quotient algebra or finite-sum traversal appears.
+   Boundary: A four-mass identity on an explicit finite selected list is not a proof of independence of real-valued random variables or of conditional independence after changing the weight model.
+   *)
+  Theorem finite_conditional_independent_iff_filtered_cross_product :
+    forall weights samples first second given,
+      0 < finite_prob weights samples given ->
+      (finite_conditional_independent weights samples first second given <->
+       finite_prob weights (filter given samples)
+         (fun x => andb (first x) (second x)) *
+         FiniteSum.finite_sum weights (filter given samples) =
+       finite_prob weights (filter given samples) first *
+       finite_prob weights (filter given samples) second).
+  Proof.
+    intros weights samples first second given Hpositive.
+    rewrite (finite_conditional_independent_iff_cross_product_mass
+      weights samples first second given Hpositive).
+    rewrite <- (finite_prob_on_filtered_samples weights samples given
+      (fun x => andb (first x) (second x))).
+    rewrite (finite_prob_as_filtered_mass weights samples given).
+    rewrite <- (finite_prob_on_filtered_samples weights samples given first).
+    rewrite <- (finite_prob_on_filtered_samples weights samples given second).
+    reflexivity.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
