@@ -100,6 +100,8 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
              "_valid_fields_rows", "_valid_admissions", "_valid_grid"},
         "analyses/towers-multiple-test-admissions/ada/validate_results.py":
             {"_open_unit_ratio", "read"},
+        "verification/check_contract_coverage.py":
+            {"audit_file"},
     }
     for path in files:
         report = coverage_checker.audit_file(path)

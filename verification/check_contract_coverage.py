@@ -36,6 +36,14 @@ def is_contract(node: ast.expr, aliases: set) -> bool:
            and isinstance(result["imports_deal"], bool) and result["contract_count"] >= 0)
 @deal.raises(OSError, ValueError, SyntaxError, TypeError)
 @deal.has("read", "import")
+# These invariants protect the audit's quantitative claims rather than merely
+# checking that its dictionary happens to have the expected field types.
+@deal.post(lambda result: result["function_count"] == len(result["function_contracts"]))
+@deal.post(lambda result: result["contract_count"] ==
+           sum(row["contract_count"] for row in result["function_contracts"]))
+@deal.post(lambda result: result["minimum_contracts"] == MINIMUM_CONTRACTS)
+@deal.post(lambda result: len(result["missing"]) <= len(result["insufficient"]))
+@deal.post(lambda result: len(result["duplicated"]) <= result["function_count"])
 def audit_file(path: Path) -> dict:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)

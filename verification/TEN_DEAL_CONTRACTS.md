@@ -129,6 +129,25 @@ analysis Python functions**. The mandatory minimum remains five
 per named function, with ten only where constraints are
 independently meaningful and accepted by the pinned toolchain.
 
+## Ten-contract consistency properties for the Python contract auditor
+
+The live `verification/check_contract_coverage.py::audit_file` function
+now has ten distinct Deal contracts. Its five additional return-value
+conditions certify: one record per discovered named function,
+the aggregate number of syntactic Deal decorators equals the sum of
+per-function counts, the policy minimum is reported without
+mutation, missing-contract functions are included among
+under-minimum functions, and the number of duplicated-function
+records never exceeds the parsed function count.
+
+The same regression test now requires ten decorators on this
+auditor, taking the explicitly enforced ten-contract target to
+**18 named functions** (17 legacy analysis functions and one live
+verification helper). These are *syntactic/accounting*
+consistency claims, not a proof that every contract expresses an
+independent semantic obligation. The fail-closed Deal lint gate
+and the existing deliberately failing fixture remain intact.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across
