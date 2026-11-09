@@ -252,7 +252,8 @@ def _valid_grid(rows) -> bool:
 # The preexisting _valid_admissions postcondition rejects empty tables;
 # the guarded length assertion also supports Deal's empty-return abstraction.
 @deal.post(lambda result: not result or len(result) == len(CASES))
-@deal.post(lambda result: [row["case"] for row in result] ==
+@deal.post(lambda result: not result or
+           [row["case"] for row in result] ==
            [label for label, _, _ in CASES])
 @deal.post(lambda result: all(row["rho"] == RHO for row in result))
 @deal.post(lambda result: all(row["p_a"] == p_a and row["p_b"] == p_b
@@ -290,7 +291,7 @@ def admission_rows() -> list[dict]:
 # postcondition rejects emptiness; a guarded length law avoids the
 # static linter's intermediate empty-list abstraction.
 @deal.post(lambda result: not result or len(result) == 3)
-@deal.post(lambda result:
+@deal.post(lambda result: not result or
            tuple(row["cutoff_iq"] for row in result) == (133, 150, 164))
 @deal.post(lambda result: all(row["grid_minus_published"] ==
                               row["grid_joint"] - row["published_joint"]
