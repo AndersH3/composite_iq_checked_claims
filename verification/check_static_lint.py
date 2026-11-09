@@ -80,8 +80,25 @@ def main() -> None:
     positive = lint_paths(root, [path for path in files if path != control])
     negative = lint_paths(root, [control])
     complete = accepted(positive, negative)
+    # Fail closed as before, but isolate third-party linter exceptions by
+    # repository path. This is diagnostic only; no file is exempted and the
+    # expected negative control must still be rejected independently.
+    isolated_failures = []
+    if positive["returncode"] != 0 and positive["stderr"]:
+        for path in files:
+            if path == control:
+                continue
+            individual = lint_paths(root, [path])
+            if individual["returncode"] != 0 or individual["stderr"]:
+                isolated_failures.append({
+                    "path": str(path.relative_to(root)),
+                    "returncode": individual["returncode"],
+                    "stderr_tail": individual["stderr"][-1800:],
+                    "diagnostics": individual["diagnostics"],
+                })
     print(json.dumps({"python_files": len(files), "positive_files": len(positive["paths"]),
                       "positive": positive, "negative_control": negative,
+                      "isolated_failures": isolated_failures,
                       "complete": complete}, indent=2))
     raise SystemExit(0 if complete else 1)
 
