@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **608 proof scripts** in seven
+for the two reports. **611 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2264,6 +2264,21 @@ probability normalization assumption is introduced.
 
 Current intended inventory: **605 public claims, 608 proof scripts,
 671 documented declarations** across seven modules, subject to CI.
+
+## Two-event family inclusion-exclusion without duplicated algebra
+
+A shared `all_events_pair` lemma reduces `Stdlib.List.forallb`
+on two event predicates to ordinary `andb`. New unconditional
+and conditional inclusion-exclusion theorems then lift the maintained
+generic indicator-mass identities into the event-family notation.
+Both reuse existing target-event extensionality lemmas. The
+conditional equality also covers a zero-mass conditioner as an
+identity of totalized real quotients; probabilistic interpretation
+still requires a strictly positive conditioner and nonnegative
+weights. There is no new summation, independence assumption or axiom.
+
+Current intended inventory: **608 public claims, 611 proof scripts,
+674 documented declarations** across seven modules, subject to CI.
 
 ## Research extensions
 

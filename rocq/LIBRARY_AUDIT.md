@@ -1685,6 +1685,16 @@ a named member witness and nonnegative sampled weights. Reuse of
 existing lemmas avoids a fresh sum induction, custom Boolean event
 algebra or hidden independence assumptions.
 
+## Two-event inclusion-exclusion via shared Bool/List reductions
+
+The `all_events_pair` helper uses `Stdlib.List.forallb` and the
+Boolean true identity to normalize a two-event family conjunction.
+Both unconditional and conditional family inclusion-exclusion
+statements reuse the existing mass/conditional-event extensionality
+theorems and the already verified generic inclusion-exclusion
+equalities. No second indicator algebra proof, custom list fold or
+unproved independence premise was added.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

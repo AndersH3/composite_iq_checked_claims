@@ -4836,6 +4836,132 @@ Section FiniteOutcomeSpace.
         weights samples events member given Hmember Hw Hgiven).
   Qed.
 
+
+  (**
+   [all_events_pair] (lemma) — Standard Boolean-list conjunction
+   reduces to the ordinary two-event intersection.
+
+   Mathematical meaning: Requiring every event in the two-element
+   family [first; second] accepts exactly the outcomes where both
+   first and second return true.
+   Exact checked proposition: For every first, second : Event and
+   outcome x, all_events [first; second] x =
+   andb (first x) (second x).
+   Premises and side conditions: None; event predicates may coincide
+   and no weight, mass, positivity or independence is assumed.
+   Proof method: Simplify Stdlib.List.forallb on a two-element list,
+   then eliminate its true identity using the maintained Boolean law.
+   Library reuse: Stdlib.List.forallb and Stdlib.Bool.andb_true_r.
+   Boundary: This is a finite Boolean identity, not a claim that
+   intersection probabilities multiply.
+   *)
+  Lemma all_events_pair :
+    forall (first second : Event) (x : Outcome),
+      all_events [first; second] x =
+      andb (first x) (second x).
+  Proof.
+    intros first second x.
+    unfold all_events; simpl.
+    rewrite andb_true_r.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_two_event_family_inclusion_exclusion] (theorem) —
+   Inclusion-exclusion in the report's finite event-family notation.
+
+   Mathematical meaning: The mass of either of two events plus the
+   mass of their joint occurrence equals the sum of marginal masses.
+   Exact checked proposition: For all weights, samples, first and
+   second, union_prob weights samples [first; second] +
+   finite_prob weights samples (all_events [first; second]) =
+   finite_prob weights samples first +
+   finite_prob weights samples second.
+   Premises and side conditions: No nonnegative weights, positive
+   normalization, independence, or nonempty sample are needed for
+   this exact identity of finite real-weighted indicator sums.
+   Proof method: Transport the two-event conjunction through the
+   existing event-mass extensionality theorem using all_events_pair,
+   then invoke the already proven two_event_union_inclusion_exclusion.
+   Library reuse: finite_prob_event_ext_on_samples,
+   two_event_union_inclusion_exclusion and all_events_pair; no new
+   indicator arithmetic or list induction is introduced.
+   Boundary: For signed weights this remains an algebraic equality;
+   interpreting all quantities as probabilities requires an
+   appropriate nonnegative normalized finite sample.
+   *)
+  Theorem finite_two_event_family_inclusion_exclusion :
+    forall weights samples (first second : Event),
+      union_prob weights samples [first; second] +
+      finite_prob weights samples (all_events [first; second]) =
+      finite_prob weights samples first +
+      finite_prob weights samples second.
+  Proof.
+    intros weights samples first second.
+    replace (finite_prob weights samples
+               (all_events [first; second]))
+      with (finite_prob weights samples
+              (fun x => andb (first x) (second x))).
+    - apply two_event_union_inclusion_exclusion.
+    - apply finite_prob_event_ext_on_samples.
+      intros x _.
+      apply all_events_pair.
+  Qed.
+
+  (**
+   [finite_conditional_two_event_family_inclusion_exclusion] (theorem) —
+   The same two-event family identity under fixed conditioning.
+
+   Mathematical meaning: The conditional union and conditional
+   intersection of two listed Boolean events add to the two
+   conditional marginal masses under the same conditioning event.
+   Exact checked proposition: For weights, samples, first, second
+   and given, conditional(any_event [first; second] | given) +
+   conditional(all_events [first; second] | given) =
+   conditional(first | given) + conditional(second | given).
+   Premises and side conditions: This algebraic equality holds even
+   if the conditioning mass is zero because the existing finite
+   conditional quotient has totalized real-division semantics.
+   A probability interpretation additionally requires positive
+   conditioning mass and nonnegative sample weights.
+   Proof method: Transport the family disjunction and conjunction
+   pointwise via maintained conditional target-event extensionality,
+   then apply finite_conditional_prob_inclusion_exclusion.
+   Library reuse: Stdlib.List.existsb, Stdlib.Bool.orb_false_r,
+   all_events_pair, finite_conditional_prob_event_ext_on_samples,
+   and finite_conditional_prob_inclusion_exclusion.
+   Boundary: Neither independence nor the general continuous
+   measure-theoretic conditional probability construction follows.
+   *)
+  Theorem finite_conditional_two_event_family_inclusion_exclusion :
+    forall weights samples (first second given : Event),
+      finite_conditional_prob weights samples
+        (any_event [first; second]) given +
+      finite_conditional_prob weights samples
+        (all_events [first; second]) given =
+      finite_conditional_prob weights samples first given +
+      finite_conditional_prob weights samples second given.
+  Proof.
+    intros weights samples first second given.
+    replace (finite_conditional_prob weights samples
+               (any_event [first; second]) given)
+      with (finite_conditional_prob weights samples
+              (fun x => orb (first x) (second x)) given).
+    2: { apply finite_conditional_prob_event_ext_on_samples.
+         intros x _.
+         unfold any_event; simpl.
+         rewrite orb_false_r.
+         reflexivity. }
+    replace (finite_conditional_prob weights samples
+               (all_events [first; second]) given)
+      with (finite_conditional_prob weights samples
+              (fun x => andb (first x) (second x)) given).
+    2: { apply finite_conditional_prob_event_ext_on_samples.
+         intros x _.
+         apply all_events_pair. }
+    apply finite_conditional_prob_inclusion_exclusion.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
