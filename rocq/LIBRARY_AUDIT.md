@@ -1433,6 +1433,19 @@ rectangular indexed bound rather than proving the same scalar
 fact again. The change is a strict abstraction improvement, with
 no new recursion, matrix operator, hypothesis or external library.
 
+## Indexed two-coordinate quadratic and checked variance reuse
+
+The small `indexed_basis_covariance_two_coordinate_form` is
+composed only of existing `Fin.t`-bounded covariance cells.
+Its exact two-score variance interpretation reuses
+`variance_of_two_weighted_scores`; nonnegativity, zero,
+and strict positivity reuse the established scalar
+`variance_nonnegative`, positive-support zero-variance iff,
+and strict-variance iff theorems. No custom matrix engine,
+determinant/eigenvalue computation or extra axioms are used.
+Extending to general rank/nullspace algorithms should integrate
+maintained finite-dimensional linear algebra libraries.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

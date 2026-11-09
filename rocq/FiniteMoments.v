@@ -6982,4 +6982,116 @@ Section FiniteProbabilityMoments.
           basis j Hmass Hw)); exact Hj.
   Qed.
 
+  (**
+   [indexed_basis_covariance_two_coordinate_form] (definition) — The covariance quadratic form restricted to any two bounded basis coordinates with real coefficients a and b.
+   Mathematical meaning: The covariance quadratic form restricted to any two bounded basis coordinates with real coefficients a and b.
+   Exact declaration: The form is (a*a)*M(i,i)+(b*b)*M(j,j)+2*a*b*M(i,j), using the already established indexed covariance cells M.
+   Premises and side conditions: Both indices are Fin.t (length basis). They may be equal; score lists may be empty or contain duplicates. No weight normalization or positivity premise is needed for the definition.
+   Proof/definition method: Combine preexisting covariance entries with ordinary Stdlib.Reals arithmetic, without implementing matrix iteration or a second summation algorithm.
+   Library reuse: indexed_basis_cross_covariance_matrix, Stdlib.Reals, Stdlib.Vectors.Fin and Vector.
+   Boundary: This is a purpose-specific two-coordinate quadratic polynomial, not a generic matrix library, eigenvalue algorithm or a claim of strict positivity.
+   *)
+  Definition indexed_basis_covariance_two_coordinate_form
+      (basis : list (Outcome -> R))
+      (i j : Fin.t (length basis)) (a b : R) : R :=
+    (a * a) * indexed_basis_cross_covariance_matrix basis basis i i +
+    (b * b) * indexed_basis_cross_covariance_matrix basis basis j j +
+    2 * a * b * indexed_basis_cross_covariance_matrix basis basis i j.
+
+  (**
+   [indexed_basis_covariance_two_coordinate_form_as_variance] (theorem) — The indexed two-coordinate covariance polynomial is exactly the variance of the corresponding weighted pair of scores.
+   Mathematical meaning: The indexed two-coordinate covariance polynomial is exactly the variance of the corresponding weighted pair of scores.
+   Exact checked proposition: For all basis, bounded i,j, and real a,b, indexed_basis_covariance_two_coordinate_form basis i j a b equals variance (fun x => a*selected_i x+b*selected_j x).
+   Premises and side conditions: No unit-mass or nonnegative-weight assumption is needed for this algebraic identity. Indices and scores may be equal, and weights may be signed.
+   Proof/definition method: Rewrite the existing scalar two-weighted-score variance formula, then unfold the indexed form and covariance definitions; finish by definitional equality.
+   Library reuse: variance_of_two_weighted_scores, covariance, variance, Stdlib.Vectors.Vector.nth.
+   Boundary: For signed or unnormalized finite weights, this equality alone gives no nonnegativity or generic spectral theorem.
+   *)
+  Theorem indexed_basis_covariance_two_coordinate_form_as_variance :
+    forall basis (i j : Fin.t (length basis)) a b,
+      indexed_basis_covariance_two_coordinate_form basis i j a b =
+      variance (fun x =>
+        a * Vector.nth (Vector.of_list basis) i x +
+        b * Vector.nth (Vector.of_list basis) j x).
+  Proof.
+    intros basis i j a b.
+    symmetry.
+    rewrite (variance_of_two_weighted_scores
+      (Vector.nth (Vector.of_list basis) i)
+      (Vector.nth (Vector.of_list basis) j) a b).
+    unfold indexed_basis_covariance_two_coordinate_form,
+      indexed_basis_cross_covariance_matrix.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_two_coordinate_form_nonnegative] (theorem) — Every two-coordinate principal covariance quadratic is nonnegative under normalized nonnegative finite weights.
+   Mathematical meaning: Every two-coordinate principal covariance quadratic is nonnegative under normalized nonnegative finite weights.
+   Exact checked proposition: For all basis, bounded i,j, and real a,b, total_mass=1 and sampled weights >=0 imply 0 <= indexed_basis_covariance_two_coordinate_form basis i j a b.
+   Premises and side conditions: The coefficients can both be zero and indices can be repeated. No positive definiteness, distinctness or score independence is assumed.
+   Proof/definition method: Rewrite the two-coordinate form to the variance of the weighted score pair, and apply the preexisting variance_nonnegative theorem.
+   Library reuse: indexed_basis_covariance_two_coordinate_form_as_variance, variance_nonnegative, Stdlib.Reals.
+   Boundary: The result covers every two-coordinate direction, not arbitrary-dimensional determinant, rank, or eigenvalue claims.
+   *)
+  Theorem indexed_basis_covariance_two_coordinate_form_nonnegative :
+    forall basis (i j : Fin.t (length basis)) a b,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= indexed_basis_covariance_two_coordinate_form basis i j a b.
+  Proof.
+    intros basis i j a b Hmass Hw.
+    rewrite indexed_basis_covariance_two_coordinate_form_as_variance.
+    apply variance_nonnegative; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_two_coordinate_form_zero_iff_constant_on_support] (theorem) — The two-coordinate form vanishes exactly when the selected coefficient-weighted score pair is constant on positive-weight sample support.
+   Mathematical meaning: The two-coordinate form vanishes exactly when the selected coefficient-weighted score pair is constant on positive-weight sample support.
+   Exact checked proposition: Under unit mass and nonnegative sampled weights, form(basis,i,j,a,b)=0 iff some real c satisfies a*selected_i x+b*selected_j x=c at every sampled positive-weight x.
+   Premises and side conditions: No coefficient is required to be nonzero; basis scores and indices may repeat. The support condition does not constrain zero-weight outcomes.
+   Proof/definition method: Rewrite form to the existing variance expression, then reuse the checked variance_zero_iff_exists_constant_on_positive_weight_support theorem.
+   Library reuse: indexed_basis_covariance_two_coordinate_form_as_variance, variance_zero_iff_exists_constant_on_positive_weight_support.
+   Boundary: This is exact finite-sample support nullity, not a generic dimension-of-kernel or matrix-rank theorem.
+   *)
+  Theorem indexed_basis_covariance_two_coordinate_form_zero_iff_constant_on_support :
+    forall basis (i j : Fin.t (length basis)) a b,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_two_coordinate_form basis i j a b = 0 <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           a * Vector.nth (Vector.of_list basis) i x +
+           b * Vector.nth (Vector.of_list basis) j x = c).
+  Proof.
+    intros basis i j a b Hmass Hw.
+    rewrite indexed_basis_covariance_two_coordinate_form_as_variance.
+    apply variance_zero_iff_exists_constant_on_positive_weight_support;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_two_coordinate_form_positive_iff_nonconstant_on_support] (theorem) — A two-coordinate covariance quadratic is strictly positive exactly when its selected weighted pair is nonconstant on positive-weight finite support.
+   Mathematical meaning: A two-coordinate covariance quadratic is strictly positive exactly when its selected weighted pair is nonconstant on positive-weight finite support.
+   Exact checked proposition: Under unit mass and nonnegative sampled weights, 0<form(basis,i,j,a,b) iff there is no c agreeing with a*selected_i x+b*selected_j x at all sampled positive-weight x.
+   Premises and side conditions: Zero coefficients, repeated indices and dependent basis scores are allowed; neither invertibility nor strict positivity of all directions is presumed.
+   Proof/definition method: Rewrite the form to the existing two-score variance and invoke variance_positive_iff_no_constant_on_positive_weight_support.
+   Library reuse: indexed_basis_covariance_two_coordinate_form_as_variance, variance_positive_iff_no_constant_on_positive_weight_support.
+   Boundary: Strict positivity in this particular direction is not general positive definiteness or empirical statistical validity.
+   *)
+  Theorem indexed_basis_covariance_two_coordinate_form_positive_iff_nonconstant_on_support :
+    forall basis (i j : Fin.t (length basis)) a b,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_two_coordinate_form basis i j a b <->
+       ~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             a * Vector.nth (Vector.of_list basis) i x +
+             b * Vector.nth (Vector.of_list basis) j x = c)).
+  Proof.
+    intros basis i j a b Hmass Hw.
+    rewrite indexed_basis_covariance_two_coordinate_form_as_variance.
+    apply variance_positive_iff_no_constant_on_positive_weight_support;
+      assumption.
+  Qed.
+
 End FiniteProbabilityMoments.
