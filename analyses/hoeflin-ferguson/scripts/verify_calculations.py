@@ -97,6 +97,18 @@ def _positive_ratio(numerator: float, denominator: float) -> float:
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or len(rows) == len(COUNTS) + 1)
 @deal.ensure(lambda rows, result: not result or [row[0] for row in rows] == [str(n) for n in COUNTS] + ["infinity"])
+# Accepted rows must preserve tuple width, finite numerical content,
+# nonnegative mean values, the IQ transform, and list-like shape.
+@deal.ensure(lambda rows, result: not result or isinstance(rows, (list, tuple)))
+@deal.ensure(lambda rows, result: not result or
+             all(isinstance(row, (tuple, list)) and len(row) == 3 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row[1]) and _finite(row[2]) for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(row[1] >= 0 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(math.isclose(row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
+                 for row in rows))
 def _valid_rows(rows) -> bool:
     if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
         return False

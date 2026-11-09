@@ -54,6 +54,23 @@ from being misrepresented as the source that generated an older native
 proof campaign. New Deal checks are separately validated on the
 *current* checkout. No new SPARK campaign is asserted.
 
+## Second ten-contract batch: historical validation predicates
+
+Four original CSV/numerical validation predicates now have five
+additional independent success postconditions apiece:
+`_valid_rows` in the Hoeflin/Ferguson verifier and
+`_valid_fields_rows`, `_valid_admissions`, `_valid_grid`
+in the Towers verifier. These contracts certify table shapes,
+field uniqueness, numerical domains, normalized IQ transforms,
+and probability/correlation ranges. They use conditional
+postconditions of the form `not result or condition` so that
+malformed inputs are **still rejected by returning False** rather
+than being turned into precondition exceptions.
+
+This makes **twelve original analysis functions** subject to the
+ten-distinct-Deal-contract regression checks, while retaining
+the project-wide five-contract floor and immutable symbolic fixtures.
+
 ## Enforced ten-contract regression subset
 
 The project-wide contract checker reports two non-gating coverage
@@ -63,7 +80,7 @@ diluting the five-contract minimum, changing archived evidence
 inventories or falsely claiming every function is at ten.
 
 `tests/test_contract_coverage.py` additionally enforces the ten
-**distinct**-contract floor on the eight upgraded historical
+**distinct**-contract floor on the twelve upgraded historical
 functions listed above. Their stronger postconditions are
 exercised by the existing runtime and numerical property tests.
 No new restrictions on previously valid arguments were added.

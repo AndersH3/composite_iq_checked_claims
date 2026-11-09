@@ -140,6 +140,16 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
 @deal.raises()
 @deal.ensure(lambda fields, rows, result: not result or len(fields) == len(set(fields)) and all(isinstance(field, str) and field for field in fields))
 @deal.ensure(lambda fields, rows, result: not result or all(isinstance(row, dict) and set(row) == set(fields) for row in rows))
+# Successful CSV-schema validation guarantees usable sequence types,
+# a nonempty header, safe typed values, and no absent field values.
+@deal.ensure(lambda fields, rows, result: not result or isinstance(fields, (list, tuple)))
+@deal.ensure(lambda fields, rows, result: not result or bool(fields))
+@deal.ensure(lambda fields, rows, result: not result or isinstance(rows, (list, tuple)))
+@deal.ensure(lambda fields, rows, result: not result or
+             all(isinstance(value, str) or _finite(value)
+                 for row in rows for value in row.values()))
+@deal.ensure(lambda fields, rows, result: not result or
+             all(value is not None for row in rows for value in row.values()))
 def _valid_fields_rows(fields, rows) -> bool:
     if not isinstance(fields, (tuple, list)) or not fields:
         return False
@@ -162,6 +172,25 @@ def _valid_fields_rows(fields, rows) -> bool:
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or len(rows) == len(CASES))
 @deal.ensure(lambda rows, result: not result or [(row["case"], row["p_a"], row["p_b"]) for row in rows] == list(CASES))
+# The accepted admissions table preserves its declared complete schema,
+# row label uniqueness, probability bounds, and correlation bounds.
+@deal.ensure(lambda rows, result: not result or
+             _valid_fields_rows(ADMISSION_FIELDS, rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["joint"]) and 0 <= row["joint"] <= 1 + 5e-14
+                 and _finite(row["union"]) and 0 <= row["union"] <= 1 + 5e-14
+                 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["conditional_b_given_a"])
+                 and 0 <= row["conditional_b_given_a"] <= 1 + 5e-14
+                 and _finite(row["conditional_a_given_b"])
+                 and 0 <= row["conditional_a_given_b"] <= 1 + 5e-14
+                 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["phi"]) and abs(row["phi"]) <= 1 + 5e-14
+                 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             len({row["case"] for row in rows}) == len(CASES))
 def _valid_admissions(rows) -> bool:
     if not _valid_fields_rows(ADMISSION_FIELDS, rows) or len(rows) != len(CASES):
         return False
@@ -181,6 +210,19 @@ def _valid_admissions(rows) -> bool:
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164))
 @deal.ensure(lambda rows, result: not result or all(_finite(row[field]) and 0 <= row[field] <= 1 for row in rows for field in ("marginal_continuous", "joint_continuous", "conditional_continuous", "grid_joint", "grid_marginal", "grid_conditional")))
+# Preserve the exact grid size, complete numeric schema, and independent
+# probability-domain checks for continuous and discretized outputs.
+@deal.ensure(lambda rows, result: not result or len(rows) == 3)
+@deal.ensure(lambda rows, result: not result or _valid_fields_rows(GRID_FIELDS, rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["joint_continuous"]) and
+                 0 <= row["joint_continuous"] <= 1 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["grid_joint"]) and
+                 0 <= row["grid_joint"] <= 1 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["conditional_continuous"]) and
+                 0 <= row["conditional_continuous"] <= 1 for row in rows))
 def _valid_grid(rows) -> bool:
     return (_valid_fields_rows(GRID_FIELDS, rows) and len(rows) == 3
             and tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164)
