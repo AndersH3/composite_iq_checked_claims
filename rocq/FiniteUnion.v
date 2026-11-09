@@ -3669,7 +3669,7 @@ Section FiniteOutcomeSpace.
    Boundary: This is an event-list membership lemma, not a probability or independence assertion.
    *)
   Lemma event_append_existing_membership_iff :
-    forall events member e,
+    forall (events : list Event) (member e : Event),
       In member events ->
       (In e (events ++ [member]) <-> In e events).
   Proof.
@@ -3695,7 +3695,8 @@ Section FiniteOutcomeSpace.
    Boundary: This generalizes duplicate-head behavior and is distinct from the marginal-union bound, which may count repeated events more than once.
    *)
   Theorem finite_union_append_existing :
-    forall weights samples events member,
+    forall (weights : Outcome -> R) (samples : list Outcome)
+           (events : list Event) (member : Event),
       In member events ->
       union_prob weights samples (events ++ [member]) =
       union_prob weights samples events.
@@ -3791,7 +3792,8 @@ Section FiniteOutcomeSpace.
    Boundary: Boolean intersection idempotence is not a product formula and does not imply statistical independence.
    *)
   Theorem finite_intersection_append_existing :
-    forall weights samples events member,
+    forall (weights : Outcome -> R) (samples : list Outcome)
+           (events : list Event) (member : Event),
       In member events ->
       finite_prob weights samples (all_events (events ++ [member])) =
       finite_prob weights samples (all_events events).
@@ -3815,7 +3817,8 @@ Section FiniteOutcomeSpace.
    Boundary: This is exact finite event-list idempotence under conditioning, not a conditional product factorization or observed statistical conclusion.
    *)
   Theorem finite_conditional_intersection_append_existing :
-    forall weights samples events member given,
+    forall (weights : Outcome -> R) (samples : list Outcome)
+           (events : list Event) (member given : Event),
       In member events ->
       finite_conditional_prob weights samples
         (all_events (events ++ [member])) given =
