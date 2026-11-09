@@ -1446,6 +1446,15 @@ determinant/eigenvalue computation or extra axioms are used.
 Extending to general rank/nullspace algorithms should integrate
 maintained finite-dimensional linear algebra libraries.
 
+## Indexed two-coordinate to list-matrix representation bridge
+
+The new indexed quadratic/list matrix theorem reuses the existing
+`covariance_matrix_quadratic_form_is_variance_unconditional`
+and `variance_extensional` results, rather than implementing
+fresh matrix traversal or finite summation. This is a direct
+connection to the established list matrix framework and prepares
+further PSD refactoring. It does not assert arbitrary matrix rank.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

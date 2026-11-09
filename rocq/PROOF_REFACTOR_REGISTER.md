@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 531 public theorem/lemma/example declarations,
+The current branch has 532 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**534 proof scripts**, including the generic
+**535 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 207 proof scripts
+## FiniteMoments.v — 208 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -926,6 +926,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_matrix_nonzero_entry_implies_positive_diagonals` (theorem) | Reduce to scalar covariance and apply already verified nonzero-covariance variance theorem | indexed_basis_covariance_matrix_diagonal, nonzero_covariance_implies_positive_variances | **New:** nonzero indexed covariance requires both diagonals strictly positive |
 | `indexed_basis_covariance_matrix_nonzero_entry_implies_nonconstant_scores` (theorem) | Two positive diagonal results and existing strict support-nonconstancy equivalence | indexed_basis_covariance_matrix_nonzero_entry_implies_positive_diagonals, indexed_basis_covariance_matrix_positive_diagonal_iff_nonconstant_on_support | **New:** nonzero covariance requires both selected scores to vary on positive-weight support |
 | `indexed_basis_covariance_two_coordinate_form_as_variance` (theorem) | Apply scalar two-weighted-score variance formula, unfold indexed entries | variance_of_two_weighted_scores, Stdlib.Vectors.Vector.nth | **New:** Two-coordinate covariance quadratic equals pair-score variance |
+| `indexed_basis_covariance_two_coordinate_form_as_list_matrix` (theorem) | Variance extensionality and the existing unconditional finite matrix quadratic identity | indexed_basis_covariance_two_coordinate_form_as_variance, variance_extensional, covariance_matrix_quadratic_form_is_variance_unconditional, Stdlib.List | **New:** bridge indexed two-coordinate covariance form to existing list-based matrix quadratic |
 | `indexed_basis_covariance_two_coordinate_form_nonnegative` (theorem) | Rewrite by pair variance identity, instantiate scalar variance_nonnegative | indexed_basis_covariance_two_coordinate_form_as_variance, variance_nonnegative | **New:** The two-coordinate covariance form is positive semidefinite under finite probability assumptions |
 | `indexed_basis_covariance_two_coordinate_form_zero_iff_constant_on_support` (theorem) | Reduce via pair variance then apply positive-weight support zero-variance characterization | indexed_basis_covariance_two_coordinate_form_as_variance, variance_zero_iff_exists_constant_on_positive_weight_support | **New:** Form nullity iff a supported-constant pair score |
 | `indexed_basis_covariance_two_coordinate_form_positive_iff_nonconstant_on_support` (theorem) | Reduce via pair variance then apply strict-variance support iff | indexed_basis_covariance_two_coordinate_form_as_variance, variance_positive_iff_no_constant_on_positive_weight_support | **New:** Positive two-coordinate form iff the pair score varies on support |

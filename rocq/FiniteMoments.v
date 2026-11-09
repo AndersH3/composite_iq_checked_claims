@@ -7024,6 +7024,59 @@ Section FiniteProbabilityMoments.
     reflexivity.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_two_coordinate_form_as_list_matrix]
+   (theorem) — Exact compatibility with the preexisting finite matrix API.
+   Mathematical meaning: The polynomial assembled from two bounded
+   Fin.t-indexed covariance cells equals the matrix quadratic form
+   of those same two selected scores in the established list matrix.
+   Exact checked proposition: For all basis, i,j : Fin.t(length basis),
+   a,b : R, indexed_basis_covariance_two_coordinate_form basis i j a b =
+   matrix_quadratic_form [a;b] (basis_covariance_matrix [selected_i;selected_j]).
+   Premises and side conditions: No normalization, nonnegativity,
+   independence or positive-definiteness assumption is required.
+   The indices may coincide and repeated basis functions are allowed.
+   Proof/definition method: Rewrite the indexed form as scalar
+   variance, use variance_extensional with the existing two-element
+   linear_combination and Stdlib ring arithmetic, then apply the
+   unconditional generic covariance_matrix_quadratic_form_is_variance
+   theorem. Pair projections and mapped matrix entries are definitionally
+   equal to the old list-matrix representation.
+   Library reuse: indexed_basis_covariance_two_coordinate_form_as_variance,
+   variance_extensional, linear_combination, FiniteSum.finite_sum,
+   covariance_matrix_quadratic_form_is_variance_unconditional,
+   matrix_quadratic_form, basis_covariance_matrix and Stdlib.List.
+   Boundary: This connects two finite matrix representations;
+   generic rank-nullity, determinants and Gaussian densities are unproved.
+   *)
+  Theorem indexed_basis_covariance_two_coordinate_form_as_list_matrix :
+    forall basis (i j : Fin.t (length basis)) a b,
+      indexed_basis_covariance_two_coordinate_form basis i j a b =
+      matrix_quadratic_form [a; b]
+        (basis_covariance_matrix
+          [Vector.nth (Vector.of_list basis) i;
+           Vector.nth (Vector.of_list basis) j]).
+  Proof.
+    intros basis i j a b.
+    rewrite indexed_basis_covariance_two_coordinate_form_as_variance.
+    set (f := Vector.nth (Vector.of_list basis) i).
+    set (g := Vector.nth (Vector.of_list basis) j).
+    transitivity (variance (linear_combination [(a, f); (b, g)])).
+    - apply variance_extensional.
+      intro x.
+      unfold linear_combination, FiniteSum.finite_sum.
+      simpl.
+      ring.
+    - symmetry.
+      change
+        (matrix_quadratic_form
+           (map fst [(a, f); (b, g)])
+           (covariance_matrix [(a, f); (b, g)]) =
+         variance (linear_combination [(a, f); (b, g)])).
+      apply covariance_matrix_quadratic_form_is_variance_unconditional.
+  Qed.
+
   (**
    [indexed_basis_covariance_two_coordinate_form_nonnegative] (theorem) — Every two-coordinate principal covariance quadratic is nonnegative under normalized nonnegative finite weights.
    Mathematical meaning: Every two-coordinate principal covariance quadratic is nonnegative under normalized nonnegative finite weights.
