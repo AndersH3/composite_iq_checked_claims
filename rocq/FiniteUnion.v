@@ -4905,7 +4905,7 @@ Section FiniteOutcomeSpace.
     - apply two_event_union_inclusion_exclusion.
     - apply finite_prob_event_ext_on_samples.
       intros x _.
-      apply all_events_pair.
+      symmetry; apply all_events_pair.
   Qed.
 
   (**
@@ -4958,7 +4958,7 @@ Section FiniteOutcomeSpace.
               (fun x => andb (first x) (second x)) given).
     2: { apply finite_conditional_prob_event_ext_on_samples.
          intros x _.
-         apply all_events_pair. }
+         symmetry; apply all_events_pair. }
     apply finite_conditional_prob_inclusion_exclusion.
   Qed.
 
