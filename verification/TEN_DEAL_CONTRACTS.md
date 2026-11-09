@@ -71,6 +71,27 @@ This makes **twelve original analysis functions** subject to the
 ten-distinct-Deal-contract regression checks, while retaining
 the project-wide five-contract floor and immutable symbolic fixtures.
 
+## Third ten-contract batch: parsers and preserved diagnostic scope
+
+The original Hoeflin/Ferguson Ada output validator now has
+ten contracts each on `csv_rows`, `validate_calculations`,
+and `validate_simulation`. Its CSV parser certifies complete,
+aligned nonempty headers and no missing values; the calculation
+validator certifies exact output schema and numeric error bounds;
+the simulation report certifies finite observable tail entries,
+complete count schemas, and explicit language preventing
+Monte Carlo diagnostics from being called a mathematical proof.
+
+The original Towers Ada result validator's `read` function
+also now has ten contracts certifying complete and consistent
+CSV schema. These contracts describe **successful return values**
+rather than precluding intentionally malformed inputs.
+
+There are now **sixteen legacy analysis functions** with the
+ten-distinct-contract regression floor, in addition to the
+existing mandatory five-contract coverage of all Python
+functions. Archived evidence source hashes remain unchanged.
+
 ## Enforced ten-contract regression subset
 
 The project-wide contract checker reports two non-gating coverage
@@ -80,7 +101,7 @@ diluting the five-contract minimum, changing archived evidence
 inventories or falsely claiming every function is at ten.
 
 `tests/test_contract_coverage.py` additionally enforces the ten
-**distinct**-contract floor on the twelve upgraded historical
+**distinct**-contract floor on the sixteen upgraded historical
 functions listed above. Their stronger postconditions are
 exercised by the existing runtime and numerical property tests.
 No new restrictions on previously valid arguments were added.

@@ -52,6 +52,16 @@ def require_close(actual, expected, label, *, atol=5e-11):
 @deal.post(lambda result: isinstance(result, list))
 @deal.raises(ValueError, csv.Error)
 @deal.has()
+# A successful CSV parse never inserts synthetic missing columns,
+# drops values, changes header schema between rows or accepts blank keys.
+@deal.post(lambda result: all(None not in row for row in result))
+@deal.post(lambda result: all(
+    value is not None for row in result for value in row.values()))
+@deal.post(lambda result: not result or
+           all(row.keys() == result[0].keys() for row in result))
+@deal.post(lambda result: all(
+    isinstance(key, str) and bool(key) for row in result for key in row))
+@deal.post(lambda result: not result or len(result[0]) > 0)
 def csv_rows(content):
     """Reject missing, duplicate, or uneven fields instead of accepting zip truncation."""
     reader = csv.DictReader(io.StringIO(content))
@@ -72,6 +82,15 @@ def csv_rows(content):
            and result["tolerance"] == 5e-11)
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.has("read")
+# A validated calculation report must have exactly the expected
+# result fields, integer sample counts and a finite error certificate.
+@deal.post(lambda result: set(result) == {
+    "threshold_rows", "worked_examples", "max_absolute_numeric_error", "tolerance"})
+@deal.post(lambda result: type(result["threshold_rows"]) is int)
+@deal.post(lambda result: type(result["worked_examples"]) is int)
+@deal.post(lambda result: result["tolerance"] > 0)
+@deal.post(lambda result: math.isfinite(result["max_absolute_numeric_error"])
+           and result["max_absolute_numeric_error"] <= 5e-11)
 def validate_calculations(path):
     content = path.read_text(encoding="utf-8")
     table, example_text = content.split("# examples\n")
@@ -148,6 +167,19 @@ def wilson(successes, total):
                    for case in result["cases"]))
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.has("read")
+# The Monte-Carlo diagnostic report separates observed finite counts
+# from any claim of a mathematical tail proof, and exposes both tail cases.
+@deal.post(lambda result: set(result) == {"cases", "limitation"})
+@deal.post(lambda result: isinstance(result["limitation"], str)
+           and "formal proof" in result["limitation"])
+@deal.post(lambda result: all(set(case) == {
+    "tests", "trials", "mean", "variance", "tails", "rare_count_descriptive_only"}
+    for case in result["cases"]))
+@deal.post(lambda result: all(
+    set(case["tails"]) == {"2", "3"} for case in result["cases"]))
+@deal.post(lambda result: all(
+    0 <= case["tails"][q]["observed"] <= 1
+    for case in result["cases"] for q in ("2", "3")))
 def validate_simulation(path):
     lines = [s for s in path.read_text(encoding="utf-8").splitlines()
              if not s.startswith("#")]

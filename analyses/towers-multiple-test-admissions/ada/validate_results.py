@@ -47,6 +47,16 @@ def require(condition, message):
                                  for key, value in row.items()) for row in result))
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.has("read")
+# The result retains a consistent complete CSV schema, never accepts
+# a missing parsed column, and contains only nonempty string headers.
+@deal.post(lambda result: all(None not in row for row in result))
+@deal.post(lambda result: all(
+    value is not None for row in result for value in row.values()))
+@deal.post(lambda result: not result or
+           all(row.keys() == result[0].keys() for row in result))
+@deal.post(lambda result: all(
+    isinstance(key, str) and bool(key) for row in result for key in row))
+@deal.post(lambda result: not result or len(result[0]) > 0)
 def read(path):
     with path.open(newline="") as stream:
         reader = csv.DictReader(stream)
