@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 555 public theorem/lemma/example declarations,
+The current branch has 558 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**558 proof scripts**, including the generic
+**561 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 231 proof scripts
+## FiniteMoments.v — 234 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -953,6 +953,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_bounded_row_dots_zero_iff_uncorrelated_with_every_score` (theorem) | Propositional composition of bounded-row nullity and universal score orthogonality | indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score | **New:** All bounded covariance row dots vanish iff the composite score is orthogonal to every score |
 | `indexed_basis_covariance_positive_definite_iff_no_nonzero_supported_constant` (theorem) | Pointwise bidirectional application of existing positive quadratic/support nonconstancy iff | indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support, indexed_basis_covariance_positive_definite | **New:** Indexed positive definiteness iff no nonzero coefficient vector yields a positive-support constant score |
 | `indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel` (theorem) | Pointwise composition of typed positive definiteness and positive iff not bounded row nullity | indexed_basis_covariance_positive_definite, indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot | **New:** Indexed positive definiteness iff no nonzero bounded coefficient vector is in the covariance row kernel |
+| `indexed_basis_covariance_positive_definite_iff_positive_composite_variances` (theorem) | Rewrite arbitrary typed quadratic as existing finite composite-score variance in both directions | indexed_basis_covariance_quadratic_as_variance, indexed_basis_covariance_positive_definite | **New:** Positive definiteness iff every nonzero bounded coefficient direction has strictly positive composite-score variance |
+| `indexed_basis_covariance_positive_definite_iff_no_nonzero_basis_orthogonal_direction` (theorem) | Pointwise specialize indexed quadratic strict positivity iff nonorthogonality to basis scores | indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis, indexed_basis_covariance_positive_definite | **New:** Positive definiteness iff no nonzero coefficient direction is uncorrelated with its entire basis |
+| `indexed_basis_covariance_positive_definite_iff_no_nonzero_zero_quadratic` (theorem) | Combine existing indexed PSD and absence of quadratic zeros using standard lra | indexed_basis_covariance_quadratic_nonnegative, Stdlib.Lra | **New:** Positive definiteness iff a PSD covariance quadratic has no nonzero null direction |
 
 ## FiniteBridge.v — 37 proof scripts
 

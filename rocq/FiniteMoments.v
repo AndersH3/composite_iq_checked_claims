@@ -7824,4 +7824,95 @@ Section FiniteProbabilityMoments.
       apply Hproperty; exact Hnonzero.
   Qed.
 
+  (**
+   [indexed_basis_covariance_positive_definite_iff_positive_composite_variances] (theorem) — Positive definiteness of the finite covariance basis is exactly strict positivity of the variance of every nonzero vector-weighted composite score.
+   Mathematical meaning: Positive definiteness of the finite covariance basis is exactly strict positivity of the variance of every nonzero vector-weighted composite score.
+   Exact checked proposition: If total_mass=1, indexed_basis_covariance_positive_definite basis iff every coefficients:Vector.t R(length basis) with Vector.to_list coefficients <> repeat 0 (length basis) satisfies 0 < variance (weighted_basis_sum (Vector.to_list coefficients) basis).
+   Premises and side conditions: The index and coefficient dimensions are enforced by Stdlib.Vectors.Vector.t and the finite basis length. The variance equality needs mass one but does not require positive weights for this algebraic equivalence.
+   Proof/definition method: Unfold typed positive definiteness and rewrite each coefficient direction via the already proved indexed_basis_covariance_quadratic_as_variance, in both directions. No matrix multiplication, normalization proof, or custom list fold is repeated.
+   Library reuse: indexed_basis_covariance_positive_definite, indexed_basis_covariance_quadratic_as_variance, Stdlib.Vectors.Vector.to_list.
+   Boundary: This is a characterization of positive-definite covariance structure under the stated finite algebra, not an assertion that the chosen basis is nondegenerate or a spectral calculation.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_positive_composite_variances :
+    forall basis,
+      total_mass = 1 ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         0 < variance (weighted_basis_sum
+           (Vector.to_list coefficients) basis)).
+  Proof.
+    intros basis Hmass.
+    unfold indexed_basis_covariance_positive_definite.
+    split; intros Hproperty coefficients Hnonzero.
+    - rewrite <- (indexed_basis_covariance_quadratic_as_variance
+        basis coefficients Hmass).
+      apply Hproperty; exact Hnonzero.
+    - rewrite (indexed_basis_covariance_quadratic_as_variance
+        basis coefficients Hmass).
+      apply Hproperty; exact Hnonzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_no_nonzero_basis_orthogonal_direction] (theorem) — A finite typed covariance basis is positive definite exactly when no nonzero coefficient vector yields a composite score orthogonal to all basis scores.
+   Mathematical meaning: A finite typed covariance basis is positive definite exactly when no nonzero coefficient vector yields a composite score orthogonal to all basis scores.
+   Exact checked proposition: Under unit-mass nonnegative sampled weights, indexed_basis_covariance_positive_definite basis iff forall nonzero typed coefficients, not (forall g in basis, covariance (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0).
+   Premises and side conditions: All quantification uses finite basis membership and length-checked real vectors. Repeated basis elements are allowed and independence is not assumed; lack of orthogonal directions is the exact condition.
+   Proof/definition method: Apply the existing positive quadratic iff non-orthogonality to basis scores theorem pointwise to every nonzero coefficient vector, preserving the normalized nonnegative sample premises.
+   Library reuse: indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis, indexed_basis_covariance_positive_definite and Stdlib.List.
+   Boundary: This is an equivalent structural criterion, not a covariance eigenvalue computation, numerical rank algorithm or empirical correlation claim.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_no_nonzero_basis_orthogonal_direction :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ (forall g, In g basis ->
+              covariance (weighted_basis_sum
+                (Vector.to_list coefficients) basis) g = 0)).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_covariance_positive_definite.
+    split; intros Hproperty coefficients Hnonzero.
+    - apply (proj1
+        (indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+    - apply (proj2
+        (indexed_basis_covariance_quadratic_positive_iff_not_uncorrelated_with_basis
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_no_nonzero_zero_quadratic] (theorem) — For normalized nonnegative finite sample weights, covariance positive definiteness is equivalent to the absence of nonzero coefficient directions with exactly zero quadratic form.
+   Mathematical meaning: For normalized nonnegative finite sample weights, covariance positive definiteness is equivalent to the absence of nonzero coefficient directions with exactly zero quadratic form.
+   Exact checked proposition: Under total_mass=1 and nonnegative sampled weights, indexed_basis_covariance_positive_definite basis iff every nonzero Vector.t coefficient vector has indexed_basis_covariance_quadratic_form basis coefficients <> 0.
+   Premises and side conditions: The covariance quadratic must be positive semidefinite under the displayed mass and nonnegativity assumptions; without PSD, a nonzero negative quadratic would make the right side insufficient.
+   Proof/definition method: In the positive-to-nonzero direction apply ordinary real linear arithmetic. Conversely combine nonzero quadratic with the already proved indexed quadratic nonnegativity and infer strict positivity using Stdlib.Lra.
+   Library reuse: indexed_basis_covariance_quadratic_nonnegative, indexed_basis_covariance_positive_definite and Stdlib.Lra.
+   Boundary: This is kernel triviality of an exact PSD finite covariance form, not construction of a kernel basis or rank-nullity theorem.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_no_nonzero_zero_quadratic :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         indexed_basis_covariance_quadratic_form basis coefficients <> 0).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_covariance_positive_definite.
+    split; intros Hproperty coefficients Hnonzero.
+    - pose proof (Hproperty coefficients Hnonzero) as Hpositive.
+      lra.
+    - pose proof (indexed_basis_covariance_quadratic_nonnegative
+        basis coefficients Hmass Hw) as Hnonnegative.
+      pose proof (Hproperty coefficients Hnonzero) as Hnotzero.
+      lra.
+  Qed.
+
 End FiniteProbabilityMoments.

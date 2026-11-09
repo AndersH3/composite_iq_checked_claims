@@ -1531,6 +1531,16 @@ criteria are obtained pointwise from already checked indexed
 quadratic iff results, without a duplicate rank algorithm,
 vector zero implementation, extra axiom or added dependency.
 
+## Typed positive definiteness through existing variance and PSD facts
+
+New indexed positive-definiteness equivalences reuse the
+existing composite-score variance identity, indexed
+strict-positivity-versus-basis-orthogonality iff, and
+positive-semidefinite nonnegativity with Stdlib.Lra to
+exclude nonzero quadratic null directions. No determinant,
+rank or matrix elimination implementation was added.
+All sampled probability assumptions remain explicit.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
