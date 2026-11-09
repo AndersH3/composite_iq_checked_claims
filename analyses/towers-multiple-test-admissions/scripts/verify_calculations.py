@@ -249,7 +249,9 @@ def _valid_grid(rows) -> bool:
 # Each modeled row must retain its source-case identity and raw
 # probabilities; the derived union must obey inclusion-exclusion
 # exactly as calculated rather than trusting a rounded CSV fixture.
-@deal.post(lambda result: len(result) == len(CASES))
+# The preexisting _valid_admissions postcondition rejects empty tables;
+# the guarded length assertion also supports Deal's empty-return abstraction.
+@deal.post(lambda result: not result or len(result) == len(CASES))
 @deal.post(lambda result: [row["case"] for row in result] ==
            [label for label, _, _ in CASES])
 @deal.post(lambda result: all(row["rho"] == RHO for row in result))
@@ -284,8 +286,10 @@ def admission_rows() -> list[dict]:
 @deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == len(GRID_FIELDS) and all(isinstance(field, str) and field for field in GRID_FIELDS))
 # Preserve the exact three BASIC cutoffs and the algebraic dependence
 # of each published comparison and conditional ratio on its recorded
-# unrounded joint/marginal values.
-@deal.post(lambda result: len(result) == 3)
+# unrounded joint/marginal values. The existing _valid_grid
+# postcondition rejects emptiness; a guarded length law avoids the
+# static linter's intermediate empty-list abstraction.
+@deal.post(lambda result: not result or len(result) == 3)
 @deal.post(lambda result:
            tuple(row["cutoff_iq"] for row in result) == (133, 150, 164))
 @deal.post(lambda result: all(row["grid_minus_published"] ==
