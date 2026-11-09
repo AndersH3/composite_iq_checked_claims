@@ -6096,7 +6096,7 @@ Section FiniteProbabilityMoments.
     unfold Vector.nth_order, Hbound in Hnth.
     rewrite Fin.of_nat_to_nat_inv in Hnth.
     rewrite VectorSpec.to_list_of_list_opp in Hnth.
-    rewrite (nth_error_nth' xs
+    rewrite (@nth_error_nth' T xs
       (proj1_sig (Fin.to_nat i))
       (Vector.nth (Vector.of_list xs) i) Hbound).
     f_equal.
