@@ -321,6 +321,26 @@ arithmetic laws explicitly. The optional ten-contract target covers
 12 verification helpers). The mandatory floor stays five for all
 named Python functions, including all older scripts.
 
+## Staged ten-contract source parsing and native proof-receipt audit
+
+Two additional verification functions now have ten Deal decorators.
+`verification.spark_contracts.split_top` preserves the ordered,
+whitespace-trimmed original Ada expression fragments and constrains
+aggregate extracted characters, including parenthesized clauses and
+empty edge cases. `verification.spark_coverage.read_coverage`
+preserves its **exact original archive-sensitive result schema** while
+additionally enforcing a sorted source-filter receipt, deterministic
+unique raw-file ordering and canonical 64-digit lowercase SHA-256
+digest text. Neither function substitutes a new proof assertion for
+native SPARK source evidence.
+
+Regression tests cover nested separators, empty/terminal clauses,
+raw-file SHA-256 recomputation, sorted file order, and source filter
+identity. The optional ten-contract subset now covers **35 Python
+functions** (21 historical analysis and 14 verification helpers).
+All named Python functions still have at least five distinct Deal
+decorators. No historical evidence JSON or source-bound SHA is modified.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

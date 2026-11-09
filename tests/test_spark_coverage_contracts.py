@@ -267,3 +267,23 @@ def test_native_unique_object_preserves_key_order_value_identity_and_nulls():
     assert mapping["positive"] is pairs[2][1]
     with pytest.raises(ValueError, match="Duplicate"):
         unique_object([("unit", nested), ("unit", None)])
+
+
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write")
+def test_native_coverage_receipt_keeps_sorted_hashed_source_provenance(tmp_path):
+    """File hashes, path ordering and source filtering retain exact receipts."""
+    write_native(tmp_path / "z.spark", [entity("Z", file="z.ads")])
+    write_native(tmp_path / "a.spark", [entity("A", file="a.ads")])
+    report = read_coverage(tmp_path, {"z.ads", "a.ads"})
+    assert report["source_names"] == ["a.ads", "z.ads"]
+    assert [f["path"] for f in report["raw_files"]] == ["a.spark", "z.spark"]
+    assert len({f["sha256"] for f in report["raw_files"]}) == 2
+    for row in report["raw_files"]:
+        assert row["sha256"] == hashlib.sha256(
+            (tmp_path / row["path"]).read_bytes()).hexdigest()
+    assert [(r["file"], r["name"]) for r in report["entities"]] == [
+        ("a.ads", "A"), ("z.ads", "Z")]

@@ -67,6 +67,18 @@ def masked(text: str) -> str:
 @deal.post(lambda result: isinstance(result, list) and bool(result))
 @deal.raises(ValueError)
 @deal.has()
+# A top-level split may remove separators and adjacent whitespace but
+# cannot fabricate clause characters, reverse prefix/suffix fragments,
+# change source token order or leave whitespace on returned fragments.
+@deal.post(lambda result: all(isinstance(part, str) for part in result))
+@deal.post(lambda result: all(part == part.strip() for part in result))
+@deal.ensure(lambda text, separator=",", *, result:
+             all(not part or part in text for part in result))
+@deal.ensure(lambda text, separator=",", *, result:
+             sum(len(part) for part in result) <= len(text))
+@deal.ensure(lambda text, separator=",", *, result:
+             text.strip().startswith(result[0]) and
+             text.strip().endswith(result[-1]))
 def split_top(text: str, separator: str = ",") -> list:
     result = []
     start = 0

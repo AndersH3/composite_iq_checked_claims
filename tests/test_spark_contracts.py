@@ -6,7 +6,7 @@ import pytest
 
 from verification.spark_contracts import (
     clauses, contract_entries, current_sources, inventory, masked,
-    unparenthesized, ten_contract_summary,
+    split_top, unparenthesized, ten_contract_summary,
 )
 
 SPEC = """package P with SPARK_Mode is
@@ -353,3 +353,27 @@ def test_admission_exact_arithmetic_has_ten_native_contract_entries():
         clauses_text = "\n".join(entry["clause"] for entry in row["contracts"])
         assert all(phrase in clauses_text for phrase in phrases), (name, clauses_text)
     assert ten_contract_summary(result)["entities_at_target"] >= len(targets)
+
+
+@pytest.mark.parametrize("source, separator, expected", [
+    (" A, B , C ", ",", ["A", "B", "C"]),
+    ("(A, B), C", ",", ["(A, B)", "C"]),
+    ("A and then (B and C)", r"\band\s+then\b|\band\b",
+     ["A", "(B and C)"]),
+    ("", ",", [""]),
+    ("A,", ",", ["A", ""]),
+])
+@deal.pre(lambda source, separator, expected: protected_history_intact())
+@deal.ensure(lambda source, separator, expected, *, result:
+             protected_history_intact())
+@deal.ensure(lambda source, separator, expected, *, result:
+             reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_split_top_preserves_original_fragment_order(source, separator, expected):
+    """Top-level splitting retains parenthesized clauses and source order."""
+    result = split_top(source, separator)
+    assert result == expected
+    assert sum(map(len, result)) <= len(source)
+    assert source.strip().startswith(result[0])
+    assert source.strip().endswith(result[-1])

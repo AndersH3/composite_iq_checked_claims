@@ -114,6 +114,27 @@ def normalize_entity(value: object) -> dict:
                    and not result["pragma_assume"] and not result["suppressed"]))
 @deal.raises(OSError, ValueError, JSONDecodeError)
 @deal.has("read")
+# The original archive-sensitive result dictionary must keep its
+# exact schema. These additional independent receipt properties verify
+# source-selection provenance, deterministic file order and uniqueness,
+# and the canonical shape of every retained SHA-256 digest.
+@deal.post(lambda result: set(result) == {
+    "source_names", "analysis_mode", "proof_metadata_complete",
+    "counts", "total_entities", "entities", "raw_files",
+    "pragma_assume", "suppressed", "no_assumptions_or_suppressions"})
+@deal.ensure(lambda folder, source_names=None, analysis_mode="all", *, result:
+             result["source_names"] ==
+             (sorted(source_names) if source_names is not None else None))
+@deal.post(lambda result:
+           [row["path"] for row in result["raw_files"]] ==
+           sorted(row["path"] for row in result["raw_files"]))
+@deal.post(lambda result:
+           len({row["path"] for row in result["raw_files"]}) ==
+           len(result["raw_files"]))
+@deal.post(lambda result:
+           all(len(row["sha256"]) == 64
+               and all(char in "0123456789abcdef" for char in row["sha256"])
+               for row in result["raw_files"]))
 def read_coverage(folder: Path, source_names: set[str] | None = None,
                   analysis_mode: str = "all") -> dict:
     """Return coverage, raw-file hashes, and all explicit assumption/suppression flags.
