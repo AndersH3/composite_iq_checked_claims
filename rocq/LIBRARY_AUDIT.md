@@ -1742,6 +1742,19 @@ zero-sum and strict-member-bound reasoning from `FiniteUnion.v`
 without assuming normalized weights or independence. All existing
 event and sample semantics are preserved.
 
+## Conditional-event positivity via positive-support and quotient lemmas
+
+Positive conditional mass is derived using the maintained event
+positive-support theorem for the Boolean conjunction, followed by
+`Stdlib.Reals.Rdiv_lt_0_compat`. A second theorem derives the
+positive conditioner mass from the same positive-weight witness,
+rather than introducing a separate positivity computation. These
+proofs reuse the existing `finite_prob` and `finite_conditional_prob`
+interfaces, and add no new summation, event structure, conditional
+distribution implementation, axiom or independence assumption.
+Nonnegative weights, actual sample membership and two true event
+predicates remain explicit hypotheses.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

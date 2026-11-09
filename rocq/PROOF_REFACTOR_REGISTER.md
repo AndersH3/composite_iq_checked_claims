@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **614 public theorem/lemma/example claims**, plus
+The current branch has **616 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**617 proof scripts** across seven Rocq modules. The claims and scripts
+**619 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -606,7 +606,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 156 proof scripts
+## FiniteUnion.v — 158 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -767,6 +767,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_two_event_family_inclusion_exclusion` (theorem) | Transport two-event family OR/AND via conditional target extensionality, then reuse generic conditional inclusion-exclusion | all_events_pair, finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_inclusion_exclusion, Stdlib.Bool.orb_false_r | **New:** identical conditional inclusion-exclusion in list semantics |
 | `finite_conditional_two_event_family_product` (theorem) | Transport two-event all_events conjunction to generic conditional factorization | finite_conditional_independent, all_events_pair, finite_conditional_prob_event_ext_on_samples | **New:** exact pairwise conditional product expressed in event-family notation |
 | `finite_conditional_two_event_family_independent_union` (theorem) | Transport shared any_event_pair and apply the maintained independent union formula | finite_conditional_independent_union_formula, any_event_pair, finite_conditional_prob_event_ext_on_samples | **Refactored:** conditional union sum-minus-product without repeat existsb rewriting |
+| `finite_conditional_prob_positive_of_positive_joint_support` (theorem) | Event witness positivity and standard positive quotient | finite_prob_positive_of_positive_support, Stdlib.Rdiv_lt_0_compat | **New:** positive conditional probability from explicit positive joint witness and denominator |
+| `finite_conditional_prob_positive_of_joint_support_witness` (theorem) | Derived denominator positivity and preceding conditional result | finite_prob_positive_of_positive_support, finite_conditional_prob_positive_of_positive_joint_support | **New:** supported witness provides denominator and numerator positivity |
+
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

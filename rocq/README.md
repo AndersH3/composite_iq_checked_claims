@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **617 proof scripts** in seven
+for the two reports. **619 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **614 public claims, 617 proof scripts,
-680 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **616 public claims, 619 proof scripts,
+682 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Expected source inventory after the change: **614 public claims,
-617 proof scripts, 680 documented declarations** across seven
+Inventory after these generic sum additions: **616 public claims,
+619 proof scripts, 682 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2340,6 +2340,18 @@ reasoning in `FiniteUnion.v`. They preserve the nonnegative-weight,
 Boolean event and sample-membership assumptions. Both theorem comments
 now explain the exact witness semantics, proof dependencies, and
 limits of probabilistic interpretation.
+
+### Conditional-event positivity from finite joint support
+
+The two new theorems
+`finite_conditional_prob_positive_of_positive_joint_support` and
+`finite_conditional_prob_positive_of_joint_support_witness` derive a
+strictly positive conditional event mass from a sampled outcome where
+both Boolean events hold with positive weight. The first makes the
+positive conditioning denominator explicit; the second proves that
+denominator condition from the same witness. Both reuse the generic
+positive support theorem and the standard `Rdiv_lt_0_compat` rule,
+without assuming independence or normalized total sample mass.
 
 ## Research extensions
 

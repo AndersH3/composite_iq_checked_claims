@@ -5077,6 +5077,97 @@ Section FiniteOutcomeSpace.
     - intros x _; apply any_event_pair.
   Qed.
 
+
+  (**
+   [finite_conditional_prob_positive_of_positive_joint_support] (theorem) —
+   Strict positivity of a conditional event from a supported joint witness.
+   Mathematical meaning: A positive-weight sampled outcome where both the
+   conditioning and target Boolean events hold makes their conditional
+   event mass strictly positive, when the conditioning mass is positive.
+   Exact checked proposition: For nonnegative sampled weights and
+   0 < finite_prob weights samples given, a member x of samples with
+   given x = true, event x = true, and 0 < weights x implies
+   0 < finite_conditional_prob weights samples event given.
+   Premises and side conditions: The denominator is explicitly
+   positive; the numerator witness contributes strictly positive
+   weight. The original sample need not have unit total mass.
+   Proof/definition method: Reuse the existing event positive-support
+   theorem on the Boolean conjunction in the numerator, then apply
+   Rocq's positive-quotient law. No bespoke summation is introduced.
+   Library reuse: finite_prob_positive_of_positive_support,
+   Stdlib.Bool.andb, Stdlib.Reals.Rdiv_lt_0_compat and FiniteSum.
+   Boundary: This is a finite conditional ratio. A statistical
+   interpretation still requires a suitable nonnegative measure
+   model; no independence or continuous conditioning is asserted.
+   *)
+  Theorem finite_conditional_prob_positive_of_positive_joint_support :
+    forall weights samples (event given : Event) x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      0 < finite_prob weights samples given ->
+      In x samples ->
+      given x = true ->
+      event x = true ->
+      0 < weights x ->
+      0 < finite_conditional_prob weights samples event given.
+  Proof.
+    intros weights samples event given x Hw Hgiven_mass Hin
+      Hgiven Hevent Hweight.
+    unfold finite_conditional_prob.
+    apply Rdiv_lt_0_compat.
+    - apply (finite_prob_positive_of_positive_support
+        weights samples (fun y => andb (given y) (event y)) x).
+      + exact Hw.
+      + exact Hin.
+      + rewrite Hgiven, Hevent.
+        reflexivity.
+      + exact Hweight.
+    - exact Hgiven_mass.
+  Qed.
+
+  (**
+   [finite_conditional_prob_positive_of_joint_support_witness] (theorem) —
+   A joint supported witness also certifies the conditioner denominator.
+   Mathematical meaning: A positive-weight sampled outcome satisfying
+   both Boolean predicates establishes positivity of the target
+   conditional mass without a separately supplied positive-denominator
+   assumption.
+   Exact checked proposition: If all sampled weights are nonnegative
+   and some listed x has positive weight with given x = true and
+   event x = true, then finite_conditional_prob weights samples
+   event given is strictly positive.
+   Premises and side conditions: The explicit witness is necessary;
+   an empty conditioner or a zero-weight witness is not enough.
+   Unit normalization and independence are not assumed.
+   Proof/definition method: First establish positive conditioning
+   mass with the existing positive-event-support theorem, then
+   instantiate the preceding conditional positivity result.
+   Library reuse: finite_prob_positive_of_positive_support,
+   finite_conditional_prob_positive_of_positive_joint_support,
+   FiniteSum and Rocq's ordinary lemma application.
+   Boundary: The conclusion is about the exact finite weighted
+   sample and does not imply nonzero population probability for
+   outcomes not included in that sample.
+   *)
+  Theorem finite_conditional_prob_positive_of_joint_support_witness :
+    forall weights samples (event given : Event) x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In x samples ->
+      given x = true ->
+      event x = true ->
+      0 < weights x ->
+      0 < finite_conditional_prob weights samples event given.
+  Proof.
+    intros weights samples event given x Hw Hin Hgiven Hevent Hweight.
+    apply (finite_conditional_prob_positive_of_positive_joint_support
+      weights samples event given x Hw).
+    - apply (finite_prob_positive_of_positive_support
+        weights samples given x Hw Hin Hgiven Hweight).
+    - exact Hin.
+    - exact Hgiven.
+    - exact Hevent.
+    - exact Hweight.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
