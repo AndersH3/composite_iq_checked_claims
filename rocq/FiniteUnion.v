@@ -5312,6 +5312,131 @@ Section FiniteOutcomeSpace.
       Hw Hin Hp Hunion Hpositive).
   Qed.
 
+
+  (**
+   [finite_conditional_prob_strict_monotone] (theorem) — Strict
+   target-event monotonicity under fixed positive conditioning.
+   Mathematical meaning: Adding an outcome of strictly positive
+   weight to a target event, while retaining all existing target
+   occurrences, strictly increases its conditional finite mass
+   when that outcome satisfies the conditioning event.
+   Exact checked proposition: With nonnegative sampled weights,
+   strictly positive finite mass of given, sampled inclusion
+   first => second, and a listed positive-weight x satisfying
+   given x = true, first x = false, and second x = true,
+   the conditional probability of first given given is strictly
+   less than that of second given given.
+   Premises and side conditions: Both conditional ratios have
+   the same positive denominator; the witness must lie inside
+   the conditioning support. Unit normalization, independence,
+   distinct samples and nonempty global support are not assumed.
+   Proof/definition method: Apply the strict event mass theorem
+   to the two Boolean conjunction numerators; multiply their
+   strict comparison by the positive reciprocal of the shared
+   conditioning mass using the Rocq ordered-field library.
+   Library reuse: finite_prob_event_strict_monotone,
+   Stdlib.Bool.andb_true_iff, Stdlib.Reals.Rinv_0_lt_compat,
+   Rmult_lt_compat_r and the existing finite_conditional_prob.
+   Boundary: This is strict finite conditional mass comparison,
+   not a statement about empirical confidence or continuous
+   conditional probability distributions.
+   *)
+  Theorem finite_conditional_prob_strict_monotone :
+    forall weights samples (first second given : Event) x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      0 < finite_prob weights samples given ->
+      (forall y, In y samples ->
+        first y = true -> second y = true) ->
+      In x samples ->
+      given x = true ->
+      first x = false ->
+      second x = true ->
+      0 < weights x ->
+      finite_conditional_prob weights samples first given <
+        finite_conditional_prob weights samples second given.
+  Proof.
+    intros weights samples first second given x
+      Hw Hgiven_mass Hsub Hin Hgiven Hfirst Hsecond Hpositive.
+    unfold finite_conditional_prob, Rdiv.
+    apply Rmult_lt_compat_r.
+    - apply Rinv_0_lt_compat; exact Hgiven_mass.
+    - apply (finite_prob_event_strict_monotone weights samples
+        (fun y => andb (given y) (first y))
+        (fun y => andb (given y) (second y)) x Hw).
+      + intros y Hy Hboth.
+        apply andb_true_iff in Hboth.
+        apply andb_true_iff.
+        destruct Hboth as [Hselected Htarget].
+        split; [exact Hselected |].
+        apply Hsub with (y := y); assumption.
+      + exact Hin.
+      + rewrite Hfirst.
+        destruct (given x); reflexivity.
+      + rewrite Hgiven, Hsecond; reflexivity.
+      + exact Hpositive.
+  Qed.
+
+  (**
+   [finite_conditional_prob_strictly_between_zero_one_of_two_witnesses]
+   (theorem) — Positive support on both sides of a conditional event.
+   Mathematical meaning: If the conditioning event includes one
+   positive-weight occurrence satisfying the target and a second
+   positive-weight occurrence failing it, its conditional finite
+   mass lies strictly between zero and one.
+   Exact checked proposition: For nonnegative sampled weights and
+   sample members yes and no with given true for both,
+   event yes = true, event no = false, and both weights > 0,
+   one has 0 < P(event | given) and P(event | given) < 1,
+   where P denotes the existing finite conditional mass.
+   Premises and side conditions: The witnesses need not be named
+   distinct, but opposite Boolean event values prevent them
+   from being the same outcome. Total sample mass may differ
+   from one, and no independence is assumed.
+   Proof/definition method: Establish strictly positive conditional
+   masses of the event and its Boolean complement with the
+   maintained witness theorem. Derive denominator positivity from
+   the first witness, then use the existing conditional complement
+   sum-to-one identity and Rocq linear real arithmetic.
+   Library reuse: finite_conditional_prob_positive_of_joint_support_witness,
+   finite_prob_positive_of_positive_support,
+   finite_conditional_prob_complement, Stdlib.Bool.negb, Stdlib.Lra.
+   Boundary: This proves an exact finite-population inequality
+   under explicit support premises, not an inferential confidence
+   interval or a general continuous-space conditional probability.
+   *)
+  Theorem finite_conditional_prob_strictly_between_zero_one_of_two_witnesses :
+    forall weights samples (event given : Event) yes no,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In yes samples ->
+      given yes = true ->
+      event yes = true ->
+      0 < weights yes ->
+      In no samples ->
+      given no = true ->
+      event no = false ->
+      0 < weights no ->
+      0 < finite_conditional_prob weights samples event given /\
+      finite_conditional_prob weights samples event given < 1.
+  Proof.
+    intros weights samples event given yes no
+      Hw Hyes Hgiven_yes Hevent_yes Hweight_yes
+      Hno Hgiven_no Hevent_no Hweight_no.
+    pose proof (finite_conditional_prob_positive_of_joint_support_witness
+      weights samples event given yes
+      Hw Hyes Hgiven_yes Hevent_yes Hweight_yes) as Hlower.
+    assert (Hcomplement_no : negb (event no) = true).
+    { rewrite Hevent_no; reflexivity. }
+    pose proof (finite_conditional_prob_positive_of_joint_support_witness
+      weights samples (fun x => negb (event x)) given no
+      Hw Hno Hgiven_no Hcomplement_no Hweight_no) as Hcomplement.
+    pose proof (finite_prob_positive_of_positive_support
+      weights samples given yes
+      Hw Hyes Hgiven_yes Hweight_yes) as Hdenominator.
+    pose proof (finite_conditional_prob_complement
+      weights samples event given Hdenominator) as Hpartition.
+    split; lra.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

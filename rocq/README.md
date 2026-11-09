@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **622 proof scripts** in seven
+for the two reports. **624 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **619 public claims, 622 proof scripts,
-685 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **621 public claims, 624 proof scripts,
+687 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **619 public claims,
-622 proof scripts, 685 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **621 public claims,
+624 proof scripts, 687 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2368,6 +2368,19 @@ already checked strict finite-sum comparison, event indicator order,
 filtered-mass equivalence, and the existing union operator.
 No independence, normality, unit normalization, extra axioms,
 or custom finite-sum recursion are introduced.
+
+### Strict conditional target comparison and interior conditional mass
+
+Two further finite conditional-event theorems preserve the existing
+strict-positive denominator semantics. The first lifts strict target
+event inclusion through a **common positive conditioning denominator**,
+using `finite_prob_event_strict_monotone` and Rocq's positive-inverse
+order laws. The second derives `0 < P(E|G) < 1` when the selected
+sample contains positive-weight witnesses for both `E` and its
+complement, reusing the already verified conditional positivity and
+complement identities. These statements concern the exact enumerated
+finite sample; they assert neither independence nor empirical or
+continuous probability results.
 
 ## Research extensions
 

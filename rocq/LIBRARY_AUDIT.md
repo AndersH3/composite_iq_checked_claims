@@ -1767,6 +1767,17 @@ duplicate occurrences, explicitly nonnegative weights, and positive
 support witnesses. The library audit deliberately does not treat
 them as empirical estimates or continuous-probability results.
 
+## Strict conditional target inclusion and interior mass
+
+Strict positive-weight event inclusion is lifted to fixed
+positive-mass conditioning by `Stdlib.Reals.Rmult_lt_compat_r`
+and `Rinv_0_lt_compat`. A pair of positive selected witnesses,
+one for a target and one for its complement, gives strict interior
+conditional mass using the prior `finite_conditional_prob_complement`
+and conditional witness theorem. The source reuses the established
+Boolean conjunction and real-quotient semantics without defining a
+new conditional distribution or asserting population inference.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
