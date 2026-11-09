@@ -1114,6 +1114,20 @@ probability theorem. Both definitions and the three theorems
 are fully documented. There is no additional Boolean conjunction
 recursion or probability integral implementation.
 
+## Finite union and intersection bounds under positive conditioning
+
+The general finite event-list union bound now applies to
+a conditioning-selected sample through the checked
+`finite_conditional_prob_filtered` representation.
+`arbitrary_union_bound` supplies the only substantive
+real inequality, while the standard reciprocal positivity
+lemma handles division. The lower union bound reuses
+`event_member_implies_union` and conditional event
+monotonicity, and the upper intersection bound reuses
+`Stdlib.List.forallb_forall` rather than a new Boolean
+induction. The assumptions of nonnegative weights and a
+strictly positive conditioning mass remain explicit.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

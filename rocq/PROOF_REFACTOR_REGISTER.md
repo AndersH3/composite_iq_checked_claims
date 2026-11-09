@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 459 public theorem/lemma/example declarations,
+The current branch has 462 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**462 proof scripts**, including the generic
+**465 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 99 proof scripts
+## FiniteUnion.v — 102 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -705,6 +705,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_append` (theorem) | Conditional event extensionality via Stdlib forallb_app | Stdlib.List.forallb_app, finite_conditional_prob_event_ext_on_samples, all_events | **New:** finite joint-event list concatenation is Boolean intersection |
 | `finite_conditional_all_events_singleton` (theorem) | Standard singleton forallb computation under event extensionality | all_events, Stdlib.List.forallb, finite_conditional_prob_event_ext_on_samples | **New:** singleton joint conditional mass equals event mass |
 | `finite_conditional_all_events_product` (theorem) | Event-list induction, chain-condition split and two-event factorization reuse | finite_conditional_prefix_independent, finite_conditional_prob_true, Stdlib.List.forallb/map/fold_right | **New:** arbitrary finite joint-event conditional product under stronger-than-pairwise suffix independence |
+| `finite_conditional_union_contains_member` (theorem) | Conditional event monotonicity and existing union membership implication | finite_conditional_prob_monotone, event_member_implies_union, Stdlib.List.In | **New:** member conditional mass is at most finite union conditional mass |
+| `finite_conditional_union_bound_filtered` (theorem) | Apply arbitrary union bound to conditioned List.filter and multiply by positive inverse | finite_conditional_prob_filtered, arbitrary_union_bound, Stdlib.List.filter_In, Stdlib.Reals.Rinv_0_lt_compat | **New:** distribution-free conditioned finite-family union upper bound |
+| `finite_conditional_all_events_at_most_member` (theorem) | Conditional mass monotonicity with universal-list implication | finite_conditional_prob_monotone, Stdlib.List.forallb_forall, all_events | **New:** finite conditioned intersection bounded above by each member |
 
 ## FiniteMoments.v — 167 proof scripts
 

@@ -3293,6 +3293,92 @@ Section FiniteOutcomeSpace.
       reflexivity.
   Qed.
 
+
+  (**
+   [finite_conditional_union_contains_member] (theorem) — Conditional union mass contains every constituent event mass.
+   Mathematical meaning: Under nonnegative sampled weights and a strictly positive conditioning mass, the conditional probability of any finite union of Boolean targets is no smaller than the conditional probability of any event listed in that union.
+   Exact checked proposition: For any weights, samples, events, member event and conditioning event G, In member events, nonnegative sampled weights and 0 < finite_prob weights samples G imply finite_conditional_prob weights samples member G <= finite_conditional_prob weights samples (any_event events) G.
+   Premises and side conditions: The event must occur in the provided list, each sampled weight must be nonnegative, and conditioning mass must be positive; the total mass need not be one and duplicate event predicates are permitted.
+   Proof/definition method: Apply the existing monotonicity theorem for finite conditional event masses and discharge its pointwise implication through the already checked event_member_implies_union theorem.
+   Library reuse: finite_conditional_prob_monotone, event_member_implies_union, Stdlib.List.In and Stdlib.List.existsb; no union event recursion or conditional-probability arithmetic is repeated.
+   Boundary: This is a distribution-free finite weighted list inequality, not evidence that listed admissions routes actually overlap or are mutually independent.
+   *)
+  Theorem finite_conditional_union_contains_member :
+    forall weights samples events member given,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples member given <=
+      finite_conditional_prob weights samples (any_event events) given.
+  Proof.
+    intros weights samples events member given Hin Hweight Hgiven.
+    apply (finite_conditional_prob_monotone weights samples
+      member (any_event events) given Hweight Hgiven).
+    intros x _ Hmember.
+    apply (event_member_implies_union events member x Hin).
+    exact Hmember.
+  Qed.
+
+  (**
+   [finite_conditional_union_bound_filtered] (theorem) — The finite Boole union upper bound under conditioning.
+   Mathematical meaning: The conditional mass of the union of an arbitrary finite event list is bounded by the sum of their masses on the sublist selected by G, divided by the positive mass of G. This is the classical union bound applied to a finite conditioned sample without renormalizing the weights.
+   Exact checked proposition: For nonnegative sampled weights and 0 < finite_prob weights samples given, finite_conditional_prob weights samples (any_event events) given <= sum_marginal_probs weights (filter given samples) events / finite_prob weights samples given.
+   Premises and side conditions: Every original sampled weight must be nonnegative (hence also every filtered sampled weight), and the finite mass of the conditioning event must be strictly positive. Neither total-mass normalization nor independence between events is assumed. Repeated outcomes retain multiplicity.
+   Proof/definition method: Rewrite the existing conditional quotient with finite_conditional_prob_filtered, recognize its numerator as union_prob on the filtered sample, apply the pre-existing arbitrary_union_bound on that list, and multiply the inequality by the nonnegative reciprocal of the conditioning mass.
+   Library reuse: finite_conditional_prob_filtered, arbitrary_union_bound, Stdlib.List.filter_In, Stdlib.Reals.Rinv_0_lt_compat and Rmult_le_compat_r. No new inclusion-exclusion enumeration, event-mass sum or independent-family axiom is introduced.
+   Boundary: This is an upper bound for finitely many Boolean event targets under explicitly positive conditioning; it does not assert that the bound is tight or derive the continuous-measure version.
+   *)
+  Theorem finite_conditional_union_bound_filtered :
+    forall weights samples events given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples (any_event events) given <=
+      sum_marginal_probs weights (filter given samples) events /
+      finite_prob weights samples given.
+  Proof.
+    intros weights samples events given Hweight Hgiven.
+    rewrite finite_conditional_prob_filtered.
+    change (union_prob weights (filter given samples) events /
+      finite_prob weights samples given <=
+      sum_marginal_probs weights (filter given samples) events /
+      finite_prob weights samples given).
+    unfold Rdiv.
+    apply Rmult_le_compat_r.
+    - apply Rlt_le, Rinv_0_lt_compat; exact Hgiven.
+    - apply arbitrary_union_bound.
+      intros x Hx.
+      apply Hweight.
+      apply filter_In in Hx.
+      tauto.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_at_most_member] (theorem) — Any finite intersection is conditionally bounded by each member.
+   Mathematical meaning: An outcome that satisfies every Boolean event in a nonempty finite list satisfies each listed member in particular, so the conditional mass of their conjunction cannot exceed the conditional mass of a chosen member for nonnegative weights.
+   Exact checked proposition: If member is in events, all sampled weights are nonnegative and finite_prob weights samples given is positive, finite_conditional_prob weights samples (all_events events) given <= finite_conditional_prob weights samples member given.
+   Premises and side conditions: Membership in the event list, sampled nonnegative weights and strictly positive conditioning mass are all explicit. No independence, distinctness, or unit sample-mass assumption is imposed.
+   Proof/definition method: Reduce the desired mass inequality to a pointwise Boolean inclusion using finite_conditional_prob_monotone, then invoke Stdlib.List.forallb_forall to extract a listed member's truth from the finite conjunction event.
+   Library reuse: finite_conditional_prob_monotone, all_events, Stdlib.List.forallb_forall and Stdlib.List.In. No custom conjunction induction, finite sum, or probability measure is introduced.
+   Boundary: This exact finite event intersection inequality is independent of the product-factorization results and does not imply that target events are stochastically independent.
+   *)
+  Theorem finite_conditional_all_events_at_most_member :
+    forall weights samples events member given,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples (all_events events) given <=
+      finite_conditional_prob weights samples member given.
+  Proof.
+    intros weights samples events member given Hin Hweight Hgiven.
+    apply (finite_conditional_prob_monotone weights samples
+      (all_events events) member given Hweight Hgiven).
+    intros x _ Hall.
+    unfold all_events in Hall.
+    apply forallb_forall in Hall.
+    apply Hall.
+    exact Hin.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
