@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 548 public theorem/lemma/example declarations,
+The current branch has 550 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**551 proof scripts**, including the generic
+**553 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 224 proof scripts
+## FiniteMoments.v — 226 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -946,6 +946,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_quadratic_zero_implies_bounded_row_dot_zero` (theorem) | List row nullity followed by bounded row realization and Stdlib nth_error_In | indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots, indexed_basis_cross_covariance_matrix_row, basis_covariance_matrix_as_cross, Stdlib.List.nth_error_In | **New:** Zero quadratic annihilates every total bounded covariance row dot product |
 | `indexed_basis_covariance_quadratic_zero_implies_uncorrelated_indexed_score` (theorem) | Specialize stronger all-scores orthogonality to selected Fin.t basis score | indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score, Stdlib.Vectors.Vector.nth | **New:** Zero arbitrary-dimensional coefficient quadratic implies zero covariance with each indexed basis score |
 | `indexed_basis_covariance_quadratic_nonzero_indexed_covariance_implies_positive` (theorem) | Apply general nonzero covariance witness theorem to selected bounded basis score | indexed_basis_covariance_quadratic_nonzero_covariance_implies_positive, Stdlib.Vectors.Vector.nth | **New:** Nonzero covariance with any indexed score certifies positive coefficient-vector quadratic |
+| `indexed_basis_covariance_matrix_row_has_bounded_index` (theorem) | Recover list row position via In_nth_error, bound with nth_error_Some, reify Fin.of_nat_lt and use indexed row theorem | Stdlib.List.In_nth_error, nth_error_Some, length_map, Fin.of_nat_lt, Fin.to_nat_of_nat, indexed_basis_cross_covariance_matrix_row | **New:** Every list covariance row is exactly a Fin.t-indexed covariance row |
+| `indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero` (theorem) | Compose existing forward bounded-row nullity and new list-row-to-Fin index coverage for converse | indexed_basis_covariance_quadratic_zero_implies_bounded_row_dot_zero, indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots, indexed_basis_covariance_matrix_row_has_bounded_index | **New:** Zero covariance quadratic iff all Fin.t-bounded covariance row dot products vanish |
 
 ## FiniteBridge.v — 37 proof scripts
 

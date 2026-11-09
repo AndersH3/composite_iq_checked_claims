@@ -1506,6 +1506,19 @@ covariance are direct instances of previously proven
 all-scores results. This remains a one-way indexed-row
 kernel statement, not rank-nullity or an eigenvalue algorithm.
 
+## Complete bounded-index row coverage and nullspace equivalence
+
+Every covariance row in the maintained list-matrix
+representation now has a `Fin.t` index witness, using
+`In_nth_error`, `nth_error_Some`, `length_map`,
+`Fin.of_nat_lt`, `Fin.to_nat_of_nat` and the existing
+indexed covariance row theorem. With the previously
+proved bounded-row implication and the generic list-matrix
+zero-row-dot iff, this supplies a fully bidirectional
+dimension-safe row-kernel criterion. No new induction,
+matrix elimination algorithm, rank computation or axiom
+is introduced; the connection is exact for finite sums.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

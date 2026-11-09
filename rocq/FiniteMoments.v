@@ -7571,4 +7571,80 @@ Section FiniteProbabilityMoments.
     exact Hnonzero.
   Qed.
 
+  (**
+   [indexed_basis_covariance_matrix_row_has_bounded_index] (theorem) — Every row appearing in the previously constructed list covariance matrix is the row selected by some valid Fin.t basis index.
+   Mathematical meaning: Every row appearing in the previously constructed list covariance matrix is the row selected by some valid Fin.t basis index.
+   Exact checked proposition: For any basis and row with In row (basis_covariance_matrix basis), there exists i : Fin.t (length basis) such that row = map (fun g => covariance (Vector.nth (Vector.of_list basis) i) g) basis.
+   Premises and side conditions: The basis may contain duplicate scores or be empty; membership of the row supplies the only existence hypothesis. No assumptions on sample weight sign, total mass, Gaussianity, invertibility, or scores are needed.
+   Proof/definition method: Use Stdlib.List.In_nth_error to obtain a row position; Stdlib.List.nth_error_Some and length_map establish the bound. Convert the position to a maintained Fin.t using Fin.of_nat_lt and Fin.to_nat_of_nat, then identify the row via the already certified indexed_basis_cross_covariance_matrix_row theorem.
+   Library reuse: Stdlib.List.In_nth_error, nth_error_Some, length_map, Stdlib.Vectors.Fin.of_nat_lt and Fin.to_nat_of_nat, indexed_basis_cross_covariance_matrix_row, basis_covariance_matrix_as_cross.
+   Boundary: This proves every matrix row is represented by some bounded index, including duplicate rows; it does not assert uniqueness or compute a rank or eigenvalue.
+   *)
+  Theorem indexed_basis_covariance_matrix_row_has_bounded_index :
+    forall basis row,
+      In row (basis_covariance_matrix basis) ->
+      exists i : Fin.t (length basis),
+        row = map (fun g => covariance
+          (Vector.nth (Vector.of_list basis) i) g) basis.
+  Proof.
+    intros basis row Hrow.
+    destruct (In_nth_error (basis_covariance_matrix basis) row Hrow)
+      as [n Hnth].
+    assert (Hlen : length (basis_covariance_matrix basis) =
+                   length basis).
+    { unfold basis_covariance_matrix.
+      rewrite length_map.
+      reflexivity. }
+    assert (Hbound : n < length basis).
+    { rewrite <- Hlen.
+      apply (proj1 (nth_error_Some _ _)).
+      rewrite Hnth.
+      discriminate. }
+    exists (Fin.of_nat_lt Hbound).
+    pose proof
+      (indexed_basis_cross_covariance_matrix_row
+        basis basis (Fin.of_nat_lt Hbound)) as Hselected.
+    rewrite <- basis_covariance_matrix_as_cross in Hselected.
+    rewrite Fin.to_nat_of_nat in Hselected.
+    simpl in Hselected.
+    rewrite Hnth in Hselected.
+    inversion Hselected.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero] (theorem) — The general typed coefficient covariance quadratic vanishes exactly when it annihilates every Fin.t-indexed basis covariance row.
+   Mathematical meaning: The general typed coefficient covariance quadratic vanishes exactly when it annihilates every Fin.t-indexed basis covariance row.
+   Exact checked proposition: Under unit mass and nonnegative sampled weights, indexed_basis_covariance_quadratic_form basis coefficients = 0 iff for every i:Fin.t(length basis), vector_dot (Vector.to_list coefficients) (map (fun g => covariance (Vector.nth (Vector.of_list basis) i) g) basis)=0.
+   Premises and side conditions: All indices and coefficient lengths are bounded by the standard library vector types. Zero weights, repeated scores and linearly dependent bases remain permitted; Gaussian and matrix invertibility assumptions are absent.
+   Proof/definition method: Use the already proven zero-quadratic-to-bounded-row direction. Conversely, use the generic list-matrix zero-row-dot iff, and apply the new list-row-surjectivity theorem to reify an index for each row that appears in the matrix.
+   Library reuse: indexed_basis_covariance_quadratic_zero_implies_bounded_row_dot_zero, indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots and indexed_basis_covariance_matrix_row_has_bounded_index.
+   Boundary: This is a full finite coordinatewise kernel criterion, but it does not calculate the dimension, nullity or basis of that kernel.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       forall i : Fin.t (length basis),
+         vector_dot (Vector.to_list coefficients)
+           (map (fun g => covariance
+             (Vector.nth (Vector.of_list basis) i) g) basis) = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    split.
+    - intros Hzero i.
+      apply indexed_basis_covariance_quadratic_zero_implies_bounded_row_dot_zero;
+        assumption.
+    - intro Hbounded.
+      apply (proj2
+        (indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots
+          basis coefficients Hmass Hw)).
+      intros row Hrow.
+      destruct (indexed_basis_covariance_matrix_row_has_bounded_index
+        basis row Hrow) as [i Hselected].
+      subst row.
+      apply Hbounded.
+  Qed.
+
 End FiniteProbabilityMoments.
