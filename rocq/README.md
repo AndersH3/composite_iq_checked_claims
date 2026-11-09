@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **619 proof scripts** in seven
+for the two reports. **622 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **616 public claims, 619 proof scripts,
-682 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **619 public claims, 622 proof scripts,
+685 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions: **616 public claims,
-619 proof scripts, 682 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **619 public claims,
+622 proof scripts, 685 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2352,6 +2352,22 @@ positive conditioning denominator explicit; the second proves that
 denominator condition from the same witness. Both reuse the generic
 positive support theorem and the standard `Rdiv_lt_0_compat` rule,
 without assuming independence or normalized total sample mass.
+
+## Strict event inclusion and filtered-mass comparison
+
+Three new Rocq theorems express strict mass comparisons rather than
+only non-strict event bounds:
+`finite_prob_event_strict_monotone`,
+`finite_prob_filtered_mass_strict`, and
+`union_prob_filtered_mass_strict`.
+
+They require a **positively weighted enumerated witness** belonging
+to the larger event but not the smaller one (or an outcome discarded
+by filtering). All sample weights must be nonnegative. They reuse the
+already checked strict finite-sum comparison, event indicator order,
+filtered-mass equivalence, and the existing union operator.
+No independence, normality, unit normalization, extra axioms,
+or custom finite-sum recursion are introduced.
 
 ## Research extensions
 

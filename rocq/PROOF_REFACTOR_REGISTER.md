@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **616 public theorem/lemma/example claims**, plus
+The current branch has **619 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**619 proof scripts** across seven Rocq modules. The claims and scripts
+**622 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -606,7 +606,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 158 proof scripts
+## FiniteUnion.v — 161 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -769,6 +769,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_two_event_family_independent_union` (theorem) | Transport shared any_event_pair and apply the maintained independent union formula | finite_conditional_independent_union_formula, any_event_pair, finite_conditional_prob_event_ext_on_samples | **Refactored:** conditional union sum-minus-product without repeat existsb rewriting |
 | `finite_conditional_prob_positive_of_positive_joint_support` (theorem) | Event witness positivity and standard positive quotient | finite_prob_positive_of_positive_support, Stdlib.Rdiv_lt_0_compat | **New:** positive conditional probability from explicit positive joint witness and denominator |
 | `finite_conditional_prob_positive_of_joint_support_witness` (theorem) | Derived denominator positivity and preceding conditional result | finite_prob_positive_of_positive_support, finite_conditional_prob_positive_of_positive_joint_support | **New:** supported witness provides denominator and numerator positivity |
+| `finite_prob_event_strict_monotone` (theorem) | Strict finite-sum monotonicity from one positively weighted event difference | FiniteSum.finite_sum_strict_monotone_at_member, indicator_implication_bound, Stdlib.Psatz.nra | **New:** strict event inclusion requires one enumerated positive-weight f-only witness |
+| `finite_prob_filtered_mass_strict` (theorem) | Filter-to-conjunction rewriting and strict event monotonicity | finite_prob_on_filtered_samples, finite_prob_event_strict_monotone, Stdlib.Bool.andb_true_iff | **New:** discard positive-weight support implies strict filtered-mass reduction |
+| `union_prob_filtered_mass_strict` (theorem) | Unfold union as existing event and reuse strict filtering | union_prob, finite_prob_filtered_mass_strict, Stdlib.List.existsb | **New:** identical strict reduction for any finite Boolean-event family |
+
 
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared

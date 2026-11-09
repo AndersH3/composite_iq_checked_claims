@@ -1755,6 +1755,18 @@ distribution implementation, axiom or independence assumption.
 Nonnegative weights, actual sample membership and two true event
 predicates remain explicit hypotheses.
 
+## Strict positive-support event comparisons from shared finite sums
+
+Instead of introducing a custom induction over events or outcomes,
+`finite_prob_event_strict_monotone` reuses
+`FiniteSum.finite_sum_strict_monotone_at_member` for weighted Boolean
+indicators. The two stricter sample-filter theorems transport that
+inequality through `finite_prob_on_filtered_samples` and
+`union_prob`. These are exact finite-list inequalities, preserving
+duplicate occurrences, explicitly nonnegative weights, and positive
+support witnesses. The library audit deliberately does not treat
+them as empirical estimates or continuous-probability results.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

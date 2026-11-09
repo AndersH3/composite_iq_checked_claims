@@ -5173,6 +5173,145 @@ Section FiniteOutcomeSpace.
     - exact Hweight.
   Qed.
 
+
+  (**
+   [finite_prob_event_strict_monotone] (theorem) — Strict monotonicity
+   when an event acquires positive finite sampled support.
+   Mathematical meaning: If every occurrence satisfying event e also
+   satisfies event f, and an enumerated positive-weight occurrence
+   satisfies f but not e, then f has strictly greater total mass.
+   Exact checked proposition: Under nonnegative sampled weights,
+   sample-restricted inclusion e => f, In x samples, e x = false,
+   f x = true, and 0 < weights x, we have
+   finite_prob weights samples e < finite_prob weights samples f.
+   Premises and side conditions: Inclusion is required only at the
+   sampled outcomes. The list may repeat outcomes; neither unit mass,
+   pairwise independence nor distinctness of observations is assumed.
+   Proof/definition method: Pointwise Boolean indicator monotonicity
+   and nonnegative weights give weak order of each contribution;
+   the witness provides a strictly larger contribution. Invoke the
+   generic strict finite-sum lemma rather than recursing over samples.
+   Library reuse: FiniteSum.finite_sum_strict_monotone_at_member,
+   indicator_implication_bound, Stdlib.Psatz.nra and Stdlib.List.In.
+   Boundary: This is strict finite weighted-set inclusion, not an
+   empirical estimate or a result for signed cancelling weights.
+   *)
+  Theorem finite_prob_event_strict_monotone :
+    forall weights samples (e f : Event) x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      (forall y, In y samples -> e y = true -> f y = true) ->
+      In x samples ->
+      e x = false ->
+      f x = true ->
+      0 < weights x ->
+      finite_prob weights samples e <
+        finite_prob weights samples f.
+  Proof.
+    intros weights samples e f x Hw Hsub Hin He Hf Hpositive.
+    unfold finite_prob, finite_sum.
+    apply (FiniteSum.finite_sum_strict_monotone_at_member
+      samples
+      (fun y => weights y * indicator (e y))
+      (fun y => weights y * indicator (f y)) x).
+    - intros y Hy.
+      pose proof (Hw y Hy) as Hweight.
+      pose proof (indicator_implication_bound
+        (e y) (f y) (Hsub y Hy)) as Hindicator.
+      nra.
+    - exact Hin.
+    - change (weights x * indicator (e x) <
+              weights x * indicator (f x)).
+      rewrite He, Hf.
+      unfold indicator.
+      nra.
+  Qed.
+
+  (**
+   [finite_prob_filtered_mass_strict] (theorem) — A genuine strict
+   decrease in event mass when filtering excludes positive support.
+   Mathematical meaning: Filtering a sample strictly reduces an
+   event's mass if at least one positive-weight sample occurrence
+   satisfying the event is discarded.
+   Exact checked proposition: If weights are nonnegative on samples,
+   x is in samples with p x = false, e x = true and weights x > 0,
+   then finite_prob weights (filter p samples) e <
+   finite_prob weights samples e.
+   Premises and side conditions: The filter is a Boolean predicate;
+   duplicates retain their weighted multiplicity. Neither normalization
+   nor independence is assumed, and a discarded zero-weight occurrence
+   would not justify a strict inequality.
+   Proof/definition method: Rewrite the filtered sample as a Boolean
+   conjunction by the already checked filtered-mass identity. Apply
+   the generic strict event-inclusion result using the discarded witness.
+   Library reuse: finite_prob_on_filtered_samples,
+   finite_prob_event_strict_monotone, Stdlib.Bool.andb_true_iff
+   and Stdlib.List.filter; no new fold or filter recursion.
+   Boundary: Strictness holds for the exact enumerated outcomes only,
+   not automatically for an unobserved population distribution.
+   *)
+  Theorem finite_prob_filtered_mass_strict :
+    forall weights samples (p e : Event) x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In x samples ->
+      p x = false ->
+      e x = true ->
+      0 < weights x ->
+      finite_prob weights (filter p samples) e <
+        finite_prob weights samples e.
+  Proof.
+    intros weights samples p e x Hw Hin Hp He Hpositive.
+    rewrite finite_prob_on_filtered_samples.
+    apply (finite_prob_event_strict_monotone
+      weights samples (fun y => andb (p y) (e y))
+      e x Hw).
+    - intros y _ Hboth.
+      apply andb_true_iff in Hboth.
+      exact (proj2 Hboth).
+    - exact Hin.
+    - rewrite Hp; reflexivity.
+    - exact He.
+    - exact Hpositive.
+  Qed.
+
+  (**
+   [union_prob_filtered_mass_strict] (theorem) — Strict union-mass
+   decrease from a discarded positive-weight union member.
+   Mathematical meaning: For any finite family of Boolean events,
+   deleting an outcome counted by their union with positive weight
+   strictly decreases the union mass if all weights are nonnegative.
+   Exact checked proposition: Nonnegative sample weights,
+   In x samples, p x = false, any_event events x = true and
+   weights x > 0 imply union_prob weights (filter p samples) events
+   < union_prob weights samples events.
+   Premises and side conditions: Event families may be empty,
+   overlap or contain repeats. The strict witness necessarily
+   belongs to at least one event, so an empty family cannot satisfy
+   the witness premise. Normalization is not assumed.
+   Proof/definition method: Unfold union_prob as the existing
+   finite_prob of any_event; delegate directly to the strict
+   filtered event-mass theorem without repeating Boolean or sum work.
+   Library reuse: union_prob, finite_prob_filtered_mass_strict,
+   Stdlib.List.existsb and FiniteSum.
+   Boundary: No disjointness, independence, Gaussian model,
+   or general continuous-measure result is implied.
+   *)
+  Theorem union_prob_filtered_mass_strict :
+    forall weights samples p events x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In x samples ->
+      p x = false ->
+      any_event events x = true ->
+      0 < weights x ->
+      union_prob weights (filter p samples) events <
+        union_prob weights samples events.
+  Proof.
+    intros weights samples p events x Hw Hin Hp Hunion Hpositive.
+    unfold union_prob.
+    apply (finite_prob_filtered_mass_strict
+      weights samples p (any_event events) x
+      Hw Hin Hp Hunion Hpositive).
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
