@@ -3574,12 +3574,10 @@ Section FiniteOutcomeSpace.
       exact Hin. }
     destruct (all_events left x) eqn:Hl;
       destruct (all_events right x) eqn:Hr; try reflexivity.
-    - pose proof (Hlr Hl) as Hcontradiction.
-      rewrite Hr in Hcontradiction.
-      discriminate Hcontradiction.
-    - pose proof (Hrl Hr) as Hcontradiction.
-      rewrite Hl in Hcontradiction.
-      discriminate Hcontradiction.
+    - specialize (Hlr eq_refl).
+      discriminate Hlr.
+    - specialize (Hrl eq_refl).
+      discriminate Hrl.
   Qed.
 
   (**
