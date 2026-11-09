@@ -3374,8 +3374,10 @@ Section FiniteOutcomeSpace.
       (all_events events) member given Hweight Hgiven).
     intros x _ Hall.
     unfold all_events in Hall.
-    apply forallb_forall in Hall.
-    apply Hall.
+    pose proof (proj1
+      (@forallb_forall Event (fun e => e x) events) Hall)
+      as Hallmember.
+    apply Hallmember.
     exact Hin.
   Qed.
 
