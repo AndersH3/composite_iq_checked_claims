@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 467 public theorem/lemma/example declarations,
+The current branch has 471 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**470 proof scripts**, including the generic
+**474 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 107 proof scripts
+## FiniteUnion.v — 111 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -713,6 +713,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_prob_scale_weights` (theorem) | Reuse shared finite_sum_scale, extensionality and ring | FiniteSum.finite_sum_scale, finite_sum_ext, Stdlib.Reals ring | **New:** finite Boolean event mass is homogeneous in the outcome weights |
 | `finite_conditional_prob_scale_weights` (theorem) | Common positive numerator/denominator factor cancellation by field | finite_prob_scale_weights, Stdlib.Reals field, Stdlib.Lra | **New:** finite conditional masses invariant under a common positive weight scaling |
 | `finite_conditional_independent_scale_weights` (theorem) | Positive-guard iff and conditional quotient rewrites | finite_prob_scale_weights, finite_conditional_prob_scale_weights, Stdlib.Psatz.nra | **New:** conditional-independence predicate iff preserved by common positive weight scaling |
+| `all_events_membership_ext` (theorem) | Boolean true/false analysis via Stdlib forallb_forall | Stdlib.List.forallb_forall, all_events | **New:** conjunction predicate depends only on membership set, not ordering or duplicates |
+| `all_events_permutation` (theorem) | Bidirectional membership transport through library permutation | all_events_membership_ext, Stdlib.Sorting.Permutation.Permutation_in/Permutation_sym | **New:** conditional event-family intersection invariant under list permutation |
+| `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
+| `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
 ## FiniteMoments.v — 167 proof scripts
 

@@ -3538,6 +3538,122 @@ Section FiniteOutcomeSpace.
       exact Hfactor.
   Qed.
 
+
+  (**
+   [all_events_membership_ext] (theorem) — Membership-extensionality of a finite Boolean conjunction.
+   Mathematical meaning: The finite conjunction of Boolean event predicates depends only on which predicates are members of the supplied event list. Event order and repeated occurrences cannot change the outcome-by-outcome truth value when the two lists have exactly the same membership relation.
+   Exact checked proposition: For any two lists left and right of Boolean events, if every event belongs to left iff it belongs to right, then all_events left x = all_events right x for every outcome x.
+   Premises and side conditions: The outcome type and event-list lengths are arbitrary; lists need not be permutations and may contain duplicates. There is no finite probability or normalization hypothesis because the theorem is purely Boolean.
+   Proof/definition method: Unfold all_events as Stdlib.List.forallb, use the standard forallb_forall equivalence in each direction to transport all true member predicates across equal membership sets, and rule out the only inconsistent Boolean case.
+   Library reuse: Stdlib.List.forallb_forall, Stdlib.List.In and Stdlib.Bool; no project-specific recursion over Boolean event lists is introduced.
+   Boundary: The theorem says nothing about the arithmetic sum of event marginals, which deliberately counts duplicate listed events separately; it concerns only their conjunction predicate.
+   *)
+  Theorem all_events_membership_ext :
+    forall left right,
+      (forall event, In event left <-> In event right) ->
+      forall x, all_events left x = all_events right x.
+  Proof.
+    intros left right Hsame x.
+    unfold all_events.
+    destruct (forallb (fun e : Event => e x) left) eqn:Hleft.
+    - symmetry.
+      apply (proj2 (@forallb_forall Event (fun e => e x) right)).
+      intros e Hright.
+      apply (proj1 (@forallb_forall Event (fun e => e x) left) Hleft).
+      apply (proj2 (Hsame e)).
+      exact Hright.
+    - destruct (forallb (fun e : Event => e x) right) eqn:Hright;
+        [|reflexivity].
+      exfalso.
+      assert (Htrue : forallb (fun e : Event => e x) left = true).
+      { apply (proj2 (@forallb_forall Event (fun e => e x) left)).
+        intros e Hin.
+        apply (proj1 (@forallb_forall Event (fun e => e x) right) Hright).
+        apply (proj1 (Hsame e)).
+        exact Hin. }
+      rewrite Hleft in Htrue.
+      discriminate Htrue.
+  Qed.
+
+  (**
+   [all_events_permutation] (theorem) — Finite Boolean conjunction is invariant under event-list permutation.
+   Mathematical meaning: Reordering the finite list of Boolean event predicates does not affect their pointwise conjunction. This is a direct structural consequence of membership-extensionality, not an independent induction on event lists.
+   Exact checked proposition: If Stdlib.Sorting.Permutation.Permutation left right, then all_events left x = all_events right x for every outcome x.
+   Premises and side conditions: Both lists contain exactly the same event occurrences up to permutation and may be empty or contain repeated event predicates. No sampled weights, conditional denominator, or normalization is assumed.
+   Proof/definition method: Reduce to all_events_membership_ext and use the standard Permutation_in lemma in both directions, applying Permutation_sym for the reverse membership implication.
+   Library reuse: all_events_membership_ext, Stdlib.Sorting.Permutation.Permutation_in and Permutation_sym, and Stdlib.List.In; no bespoke permutation proof or finite Boolean fold is added.
+   Boundary: Invariance of conjunction under reordering is not a claim that arbitrary event probabilities are independent or that probabilities factor.
+   *)
+  Theorem all_events_permutation :
+    forall left right,
+      Permutation left right ->
+      forall x, all_events left x = all_events right x.
+  Proof.
+    intros left right Hperm.
+    apply all_events_membership_ext.
+    intro e; split; intro Hin.
+    - eapply Permutation_in; [exact Hperm | exact Hin].
+    - eapply Permutation_in;
+        [apply Permutation_sym; exact Hperm | exact Hin].
+  Qed.
+
+  (**
+   [finite_conditional_all_events_permutation] (theorem) — Finite conditional conjunction mass ignores event order.
+   Mathematical meaning: When a list of Boolean targets is reordered, the conjunction event selected at each sample outcome is unchanged; therefore its conditional mass with respect to any conditioning event remains exactly the same.
+   Exact checked proposition: For weights, sample list, Boolean event lists left and right and conditioning event given, Permutation left right implies finite_conditional_prob weights samples (all_events left) given = finite_conditional_prob weights samples (all_events right) given.
+   Premises and side conditions: No positive conditioning mass or weight sign restriction is needed to preserve two equal real quotient expressions, including the formal zero-denominator case. Both lists may have duplicate events, and the sample may have repeated outcomes.
+   Proof/definition method: Apply the previously checked finite conditional target-event extensionality theorem and discharge its pointwise equality with all_events_permutation, avoiding unfolding any event mass or conditional quotient.
+   Library reuse: finite_conditional_prob_event_ext_on_samples and all_events_permutation, which itself reuses Stdlib.Sorting.Permutation.
+   Boundary: This equality holds for one fixed conditioning event, not for arbitrary reorderings that change event predicates or sample outcome weights.
+   *)
+  Theorem finite_conditional_all_events_permutation :
+    forall weights samples left right given,
+      Permutation left right ->
+      finite_conditional_prob weights samples
+        (all_events left) given =
+      finite_conditional_prob weights samples
+        (all_events right) given.
+  Proof.
+    intros weights samples left right given Hperm.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    apply all_events_permutation.
+    exact Hperm.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_subset] (theorem) — Adding Boolean constraints cannot increase conditional intersection mass.
+   Mathematical meaning: If every event in the shorter constraint list occurs somewhere in the longer list, then satisfying every event in the longer list implies satisfying every event in the shorter list; with nonnegative sampled weights this inclusion makes the longer intersection no more probable under the same positive-mass conditioning event.
+   Exact checked proposition: For arbitrary event lists required and additional, if each member of required is also in additional, weights are nonnegative on samples, and finite_prob weights samples given > 0, then finite_conditional_prob weights samples (all_events additional) given <= finite_conditional_prob weights samples (all_events required) given.
+   Premises and side conditions: Explicit sampled nonnegative weights and strictly positive conditioning mass are essential for the inequality. Event lists may be empty, have different lengths or duplicate predicates; no target independence or normalization is silently assumed.
+   Proof/definition method: Apply the existing finite_conditional_prob_monotone inequality with the two conjunction predicates; obtain the pointwise inclusion by two invocations of the standard forallb_forall characterization, transporting the truth of each required event to the longer list using membership inclusion.
+   Library reuse: finite_conditional_prob_monotone, all_events, Stdlib.List.forallb_forall and Stdlib.List.In. No new Boolean conjunction recursion or finite weighted sum is written.
+   Boundary: This is monotonicity under *adding constraints*, not the marginal-sum union bound or an assertion of independence among additional events.
+   *)
+  Theorem finite_conditional_all_events_subset :
+    forall weights samples required additional given,
+      (forall event, In event required -> In event additional) ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (all_events additional) given <=
+      finite_conditional_prob weights samples
+        (all_events required) given.
+  Proof.
+    intros weights samples required additional given Hsubset Hw Hgiven.
+    apply (finite_conditional_prob_monotone
+      weights samples (all_events additional) (all_events required)
+      given Hw Hgiven).
+    intros x _ Hall.
+    unfold all_events in *.
+    apply (proj2 (@forallb_forall Event
+      (fun event => event x) required)).
+    intros event Hin.
+    apply (proj1 (@forallb_forall Event
+      (fun e => e x) additional) Hall).
+    apply Hsubset; exact Hin.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

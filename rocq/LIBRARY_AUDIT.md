@@ -1154,6 +1154,22 @@ proved to preserve independence. All three
 declarations carry explicit comments and no
 alternative summation implementation is introduced.
 
+## Membership and permutation reasoning for finite intersections
+
+`all_events_membership_ext` identifies the pointwise
+conjunction built by Stdlib.List.forallb using only the
+existing Stdlib.List.forallb_forall equivalence. The
+permutation consequence uses the maintained
+`Stdlib.Sorting.Permutation` membership transport rather
+than a new permutation or list-fold implementation.
+Conditional intersection invariance then delegates to
+`finite_conditional_prob_event_ext_on_samples`.
+Monotonicity when extra events are required delegates
+to the existing conditional probability monotonicity
+theorem; the only Boolean step is a standard
+`forallb_forall` membership argument. All weight
+and denominator guards are explicit.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
