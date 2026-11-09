@@ -6088,12 +6088,12 @@ Section FiniteProbabilityMoments.
         Some (Vector.nth (Vector.of_list xs) i).
   Proof.
     intros T xs i.
-    pose proof (proj2_sig (Fin.to_nat i)) as Hbound.
+    pose (Hbound := proj2_sig (Fin.to_nat i)).
     pose proof (VectorSpec.to_list_nth_order
       T (length xs) (Vector.of_list xs)
       (proj1_sig (Fin.to_nat i)) Hbound
       (Vector.nth (Vector.of_list xs) i)) as Hnth.
-    unfold Vector.nth_order in Hnth.
+    unfold Vector.nth_order, Hbound in Hnth.
     rewrite Fin.of_nat_to_nat_inv in Hnth.
     rewrite VectorSpec.to_list_of_list_opp in Hnth.
     rewrite (nth_error_nth' xs
