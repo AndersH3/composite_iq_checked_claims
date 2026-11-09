@@ -1359,6 +1359,23 @@ covariance or matrix rank claim is introduced.
   the historical audits pin their source hashes.
 - Do not merge the existing pull request without an explicit request.
 
+## Indexed row and diagonal reuse
+
+The `Stdlib.Vectors.Fin/Vector` bridge now exposes a total bounded row
+lookup without implementing a new row/index algorithm:
+`indexed_basis_cross_covariance_matrix_row` composes the existing
+`vector_of_list_nth_error` with the existing rectangular list-row
+selection theorem. The companion row-length result reuses the established
+`basis_cross_covariance_matrix_nth_error_row_length` lemma.
+The total indexed-cell theorem is refactored to use that row witness.
+
+The indexed diagonal is *definitionally* the variance of the selected
+score, and conditional nonnegativity is a direct application of
+`variance_nonnegative`. Both use the project's existing algebra and
+standard library, not a parallel custom matrix representation.
+Rank-nullity and spectral properties still require separate checked
+connections to an established finite-dimensional linear algebra library.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

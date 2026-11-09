@@ -6173,6 +6173,71 @@ Section FiniteProbabilityMoments.
 
 
   (**
+   [indexed_basis_cross_covariance_matrix_row] (theorem) — A bounded vector
+   index selects a real row of the preexisting list covariance matrix.
+   Mathematical meaning: Every dimension-safe left-basis index determines
+   an actual list row containing exactly the covariances of that score
+   against the right-basis scores, including duplicates and empty columns.
+   Exact checked proposition: For any left and right score lists and
+   i : Fin.t (length left), nth_error of the old cross-covariance matrix
+   at proj1_sig (Fin.to_nat i) is Some (map (covariance selected_score) right).
+   Premises and side conditions: Fin.t certifies the left index; no
+   normalization, independence, square-shape or nonnegative weight is assumed.
+   Proof/definition method: First translate the bounded vector index to the
+   original list index, then reuse the preexisting row-selection theorem.
+   Library reuse: vector_of_list_nth_error,
+   basis_cross_covariance_matrix_nth_error_row, Stdlib.List.map,
+   Stdlib.Vectors.Fin and Vector.
+   Boundary: This is an exact row representation, not a determinant,
+   matrix-rank computation or statement about continuous score models.
+   *)
+  Theorem indexed_basis_cross_covariance_matrix_row :
+    forall left right (i : Fin.t (length left)),
+      nth_error (basis_cross_covariance_matrix left right)
+        (proj1_sig (Fin.to_nat i)) =
+      Some (map
+        (fun g => covariance
+          (Vector.nth (Vector.of_list left) i) g) right).
+  Proof.
+    intros left right i.
+    apply basis_cross_covariance_matrix_nth_error_row.
+    apply vector_of_list_nth_error.
+  Qed.
+
+  (**
+   [indexed_basis_cross_covariance_matrix_row_length] (theorem) —
+   Every bounded covariance row has the expected number of columns.
+   Mathematical meaning: A real row selected using a Fin.t index in the
+   existing list matrix cannot be ragged or truncated; its length equals
+   the number of scores in the right-hand basis.
+   Exact checked proposition: For left right i row, with
+   i : Fin.t (length left), a successful nth_error row lookup in
+   basis_cross_covariance_matrix left right implies
+   length row = length right.
+   Premises and side conditions: The only row-bound premise is
+   supplied by Fin.t; arbitrary finite weights and duplicate scores are
+   permitted. No mass-one or positive-definiteness premise is required.
+   Proof/definition method: Reuse the previously certified general
+   row-length theorem after converting the bounded index to a source
+   list lookup. No new induction or list traversal is implemented.
+   Library reuse: basis_cross_covariance_matrix_nth_error_row_length,
+   vector_of_list_nth_error and Stdlib.List.length_map.
+   Boundary: Row shape agreement is not an assertion about linear rank
+   or a generic matrix API.
+   *)
+  Theorem indexed_basis_cross_covariance_matrix_row_length :
+    forall left right (i : Fin.t (length left)) row,
+      nth_error (basis_cross_covariance_matrix left right)
+        (proj1_sig (Fin.to_nat i)) = Some row ->
+      length row = length right.
+  Proof.
+    intros left right i row Hrow.
+    eapply basis_cross_covariance_matrix_nth_error_row_length.
+    - apply vector_of_list_nth_error.
+    - exact Hrow.
+  Qed.
+
+  (**
    [indexed_basis_cross_covariance_matrix_entry_total] (theorem) — Every bounded covariance index pair has a successful matching list-matrix cell.
    Mathematical meaning: Given any row index in Fin.t (length left) and column index in Fin.t (length right), there necessarily exists a corresponding row in the original list-of-lists covariance matrix, and accessing the indicated column of that row succeeds and returns the value of the new dimension-indexed matrix representation. This upgrades the previous conditional entry theorem into a total existence-and-equality bridge.
    Exact checked proposition: For any left and right score lists and i:Fin.t(length left), j:Fin.t(length right), there exists row such that nth_error (basis_cross_covariance_matrix left right) (proj1_sig (Fin.to_nat i)) = Some row and nth_error row (proj1_sig (Fin.to_nat j)) = Some (indexed_basis_cross_covariance_matrix left right i j).
@@ -6195,17 +6260,10 @@ Section FiniteProbabilityMoments.
     exists (map
       (fun g => covariance (Vector.nth (Vector.of_list left) i) g)
       right).
-    assert (Hrow :
-      nth_error (basis_cross_covariance_matrix left right)
-        (proj1_sig (Fin.to_nat i)) =
-      Some (map
-        (fun g => covariance (Vector.nth (Vector.of_list left) i) g)
-        right)).
-    { apply basis_cross_covariance_matrix_nth_error_row.
-      apply vector_of_list_nth_error. }
-    split; [exact Hrow |].
-    apply indexed_basis_cross_covariance_matrix_entry.
-    exact Hrow.
+    split.
+    - apply indexed_basis_cross_covariance_matrix_row.
+    - apply indexed_basis_cross_covariance_matrix_entry.
+      apply indexed_basis_cross_covariance_matrix_row.
   Qed.
 
   (**
@@ -6225,6 +6283,64 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis i j.
     apply indexed_basis_cross_covariance_matrix_swap.
+  Qed.
+
+
+  (**
+   [indexed_basis_covariance_matrix_diagonal] (theorem) —
+   Diagonal covariance entries are variances for every bounded score index.
+   Mathematical meaning: The diagonal of the dimension-indexed covariance
+   matrix of a finite score basis is exactly the self-covariance (variance)
+   of the selected score. This equality is algebraic even for signed weights.
+   Exact checked proposition: For basis and i : Fin.t (length basis),
+   indexed_basis_cross_covariance_matrix basis basis i i =
+   variance (Vector.nth (Vector.of_list basis) i).
+   Premises and side conditions: No normalization or nonnegative weight
+   condition is required for this *equality*. Empty bases have no indices.
+   Proof/definition method: Both sides reduce to covariance of the same
+   selected score because variance is defined as self-covariance.
+   Library reuse: FiniteMoments.variance and covariance, Stdlib.Vectors
+   Fin.t and Vector.nth, without a separate diagonal traversal.
+   Boundary: The definitional equality does not imply nonnegative
+   variance until weight hypotheses are supplied in the next theorem.
+   *)
+  Theorem indexed_basis_covariance_matrix_diagonal :
+    forall basis (i : Fin.t (length basis)),
+      indexed_basis_cross_covariance_matrix basis basis i i =
+      variance (Vector.nth (Vector.of_list basis) i).
+  Proof.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_diagonal_nonnegative] (theorem) —
+   Nonnegative diagonal entries under normalized nonnegative sample weights.
+   Mathematical meaning: When the finite weighted sample is a probability
+   distribution, every diagonal cell of the dimension-indexed basis
+   covariance matrix is a nonnegative real number.
+   Exact checked proposition: For basis and i : Fin.t (length basis),
+   if total_mass = 1 and every sampled weight is nonnegative, then
+   0 <= indexed_basis_cross_covariance_matrix basis basis i i.
+   Premises and side conditions: The sample may contain duplicates and
+   the basis may be linearly dependent; there is no positive-definiteness,
+   independence or empirical-distribution assumption.
+   Proof/definition method: Rewrite the diagonal entry as the existing
+   variance and instantiate the previously proved finite variance
+   nonnegativity theorem, preserving its explicit hypotheses.
+   Library reuse: indexed_basis_covariance_matrix_diagonal,
+   variance_nonnegative, Stdlib.Reals and Stdlib.Vectors.Fin.
+   Boundary: This proves entrywise diagonal nonnegativity only, not
+   the general matrix spectral theorem or certified matrix rank.
+   *)
+  Theorem indexed_basis_covariance_matrix_diagonal_nonnegative :
+    forall basis (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= indexed_basis_cross_covariance_matrix basis basis i i.
+  Proof.
+    intros basis i Hmass Hw.
+    rewrite indexed_basis_covariance_matrix_diagonal.
+    apply variance_nonnegative; assumption.
   Qed.
 
 End FiniteProbabilityMoments.

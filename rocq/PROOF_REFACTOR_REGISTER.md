@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 505 public theorem/lemma/example declarations,
+The current branch has 509 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**508 proof scripts**, including the generic
+**512 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 181 proof scripts
+## FiniteMoments.v — 185 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -901,8 +901,12 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `vector_of_list_nth_error` (theorem) | Reuse VectorSpec.to_list_nth_order, Fin.of_nat_to_nat_inv and nth_error_nth' | Stdlib.Vectors.VectorSpec, Stdlib.Vectors.Fin, Stdlib.List | **New:** bounded vector index agrees with option-valued list access after of_list |
 | `indexed_basis_cross_covariance_matrix_entry` (theorem) | Compose source entry certification and Stdlib list/vector selected score equality | basis_cross_covariance_matrix_nth_error_entry, vector_of_list_nth_error | **New:** dimension-indexed covariance entry exactly equals existing list-matrix cell |
 | `indexed_basis_cross_covariance_matrix_swap` (theorem) | Scalar covariance symmetry in type-indexed representation | indexed_basis_cross_covariance_matrix, covariance_symmetric, Stdlib.Vectors.Fin | **New:** dimension-safe rectangular covariance transpose identity |
-| `indexed_basis_cross_covariance_matrix_entry_total` (theorem) | Fin-indexed score selection, certified matrix row existence, existing cell bridge | vector_of_list_nth_error, basis_cross_covariance_matrix_nth_error_row, indexed_basis_cross_covariance_matrix_entry | **New:** every bounded row and column index is successfully realized by the list covariance matrix |
+| `indexed_basis_cross_covariance_matrix_row` (theorem) | Use certified vector/list nth equality then existing row theorem | vector_of_list_nth_error, basis_cross_covariance_matrix_nth_error_row | **New:** every bounded row of the dimension-indexed model exists in the old list matrix |
+| `indexed_basis_cross_covariance_matrix_row_length` (theorem) | Reuse established row length lemma with Fin-to-list index bridge | basis_cross_covariance_matrix_nth_error_row_length, vector_of_list_nth_error | **New:** bounded indexed rows retain exact right-basis column dimensions |
+| `indexed_basis_cross_covariance_matrix_entry_total` (theorem) | Reuse certified total bounded row theorem and existing cell bridge | indexed_basis_cross_covariance_matrix_row, indexed_basis_cross_covariance_matrix_entry | **New:** every bounded row and column index is successfully realized by the list covariance matrix |
 | `indexed_basis_covariance_matrix_symmetric` (theorem) | Equal-basis specialization of dimension-indexed rectangular covariance swap | indexed_basis_cross_covariance_matrix_swap, Stdlib.Vectors.Fin | **New:** total symmetry of the square dimension-indexed covariance representation |
+| `indexed_basis_covariance_matrix_diagonal` (theorem) | Definitional reduction of variance to self-covariance | variance, covariance, Stdlib.Vectors.Vector.nth | **New:** each total bounded diagonal cell equals the selected score variance |
+| `indexed_basis_covariance_matrix_diagonal_nonnegative` (theorem) | Rewrite diagonal entry to variance, then apply established variance_nonnegative | indexed_basis_covariance_matrix_diagonal, variance_nonnegative | **New:** normalized nonnegative finite weights imply nonnegative indexed covariance diagonal |
 
 ## FiniteBridge.v — 37 proof scripts
 
