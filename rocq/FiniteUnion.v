@@ -3554,26 +3554,32 @@ Section FiniteOutcomeSpace.
       forall x, all_events left x = all_events right x.
   Proof.
     intros left right Hsame x.
-    unfold all_events.
-    destruct (forallb (fun e : Event => e x) left) eqn:Hleft.
-    - rewrite Hleft.
-      symmetry.
+    assert (Hlr :
+      all_events left x = true -> all_events right x = true).
+    { intro Hl.
+      unfold all_events in *.
       apply (proj2 (@forallb_forall Event (fun e => e x) right)).
-      intros e Hright.
-      apply (proj1 (@forallb_forall Event (fun e => e x) left) Hleft).
+      intros e Hin.
+      apply (proj1 (@forallb_forall Event (fun e => e x) left) Hl).
       apply (proj2 (Hsame e)).
-      exact Hright.
-    - destruct (forallb (fun e : Event => e x) right) eqn:Hright;
-        [|reflexivity].
-      exfalso.
-      assert (Htrue : forallb (fun e : Event => e x) left = true).
-      { apply (proj2 (@forallb_forall Event (fun e => e x) left)).
-        intros e Hin.
-        apply (proj1 (@forallb_forall Event (fun e => e x) right) Hright).
-        apply (proj1 (Hsame e)).
-        exact Hin. }
-      rewrite Hleft in Htrue.
-      discriminate Htrue.
+      exact Hin. }
+    assert (Hrl :
+      all_events right x = true -> all_events left x = true).
+    { intro Hr.
+      unfold all_events in *.
+      apply (proj2 (@forallb_forall Event (fun e => e x) left)).
+      intros e Hin.
+      apply (proj1 (@forallb_forall Event (fun e => e x) right) Hr).
+      apply (proj1 (Hsame e)).
+      exact Hin. }
+    destruct (all_events left x) eqn:Hl;
+      destruct (all_events right x) eqn:Hr; try reflexivity.
+    - pose proof (Hlr Hl) as Hcontradiction.
+      rewrite Hr in Hcontradiction.
+      discriminate Hcontradiction.
+    - pose proof (Hrl Hr) as Hcontradiction.
+      rewrite Hl in Hcontradiction.
+      discriminate Hcontradiction.
   Qed.
 
   (**
