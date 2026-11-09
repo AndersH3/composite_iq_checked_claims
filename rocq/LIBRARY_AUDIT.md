@@ -1463,6 +1463,21 @@ theorem. Its bridge to the list-matrix API is already checked and no
 new matrix traversal, variance positivity argument, axiom or
 library dependency is needed. All original side conditions remain.
 
+## All-dimensional covariance quadratic through Stdlib vectors
+
+An arbitrary-dimensional, exactly sized `Vector.t` of real
+coefficients now drives the established finite list-matrix
+quadratic. The maintained `VectorSpec.length_to_list` lemma
+discharges its sole length obligation. Consequently the new
+bounded coefficient theorems inherit variance equivalence,
+positive semidefiniteness, positive-support constancy/nullity,
+strict positivity, orthogonality to basis scores and the
+zero-covariance-row-dot criterion from already checked
+`fixed_basis_*` theorems, rather than adding duplicate
+finite-sum induction or matrix traversal. This does not
+construct a full `Fin.t` matrix multiplication engine or
+calculate rank/kernel dimensions.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

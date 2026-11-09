@@ -7154,4 +7154,169 @@ Section FiniteProbabilityMoments.
       assumption.
   Qed.
 
+  (**
+   [indexed_basis_covariance_quadratic_form] (definition) — A dimension-checked vector of coefficients applied to the existing covariance matrix of the same finite score basis.
+   Mathematical meaning: A dimension-checked vector of coefficients applied to the existing covariance matrix of the same finite score basis.
+   Exact declaration: For basis of length n and coefficients : Vector.t R n, the value is matrix_quadratic_form (Vector.to_list coefficients) (basis_covariance_matrix basis).
+   Premises and side conditions: The vector length equals the score-basis length by its type; the score basis can be empty or repeated. Neither positive weights nor total-mass normalization is required to define the expression.
+   Proof/definition method: Use the existing generic finite list-matrix quadratic and the standard library Vector.to_list conversion. No new finite sum, matrix index recursion or multiplication routine is introduced.
+   Library reuse: Stdlib.Vectors.Vector.to_list and VectorSpec.length_to_list, matrix_quadratic_form, basis_covariance_matrix.
+   Boundary: The coefficient type is fully dimension-safe, while the underlying matrix remains the previously certified list representation. This is not a determinant or spectral decomposition.
+   *)
+  Definition indexed_basis_covariance_quadratic_form
+      (basis : list (Outcome -> R))
+      (coefficients : Vector.t R (length basis)) : R :=
+    matrix_quadratic_form (Vector.to_list coefficients)
+      (basis_covariance_matrix basis).
+
+  (**
+   [indexed_basis_covariance_quadratic_as_variance] (theorem) — The arbitrary-dimensional bounded coefficient covariance quadratic equals the finite variance of its weighted basis score.
+   Mathematical meaning: The arbitrary-dimensional bounded coefficient covariance quadratic equals the finite variance of its weighted basis score.
+   Exact checked proposition: Under total_mass=1, indexed_basis_covariance_quadratic_form basis coefficients = variance (weighted_basis_sum (Vector.to_list coefficients) basis).
+   Premises and side conditions: The basis is any finite score list and the coefficient vector has exactly its length by type; signed weights are allowed, but the existing compatible fixed-basis variance theorem explicitly assumes unit total sample mass.
+   Proof/definition method: Unfold the new interface; apply the established fixed_basis_weighted_variance_identity in reverse. Discharge coefficient/basis length using the Stdlib VectorSpec.length_to_list theorem.
+   Library reuse: fixed_basis_weighted_variance_identity and Stdlib.Vectors.VectorSpec.length_to_list.
+   Boundary: This is a finite exact variance identity and does not assert Gaussianity, strict positivity or a generic matrix spectral representation.
+   *)
+  Theorem indexed_basis_covariance_quadratic_as_variance :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      indexed_basis_covariance_quadratic_form basis coefficients =
+      variance (weighted_basis_sum
+        (Vector.to_list coefficients) basis).
+  Proof.
+    intros basis coefficients Hmass.
+    unfold indexed_basis_covariance_quadratic_form.
+    symmetry.
+    apply fixed_basis_weighted_variance_identity.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_nonnegative] (theorem) — Every compatible dimension-indexed coefficient direction has a nonnegative covariance quadratic under finite probability assumptions.
+   Mathematical meaning: Every compatible dimension-indexed coefficient direction has a nonnegative covariance quadratic under finite probability assumptions.
+   Exact checked proposition: For any basis and Vector.t R (length basis) coefficients, total_mass=1 and nonnegative sample weights imply 0 <= indexed_basis_covariance_quadratic_form basis coefficients.
+   Premises and side conditions: The coefficient vector may be zero or the basis may be empty. Repeated or linearly dependent scores are allowed; strictly positive diagonals and invertibility are not required.
+   Proof/definition method: Unfold the coefficient-vector interface, apply the earlier general fixed-basis positive-semidefinite theorem, and prove vector/list length equality using VectorSpec.length_to_list.
+   Library reuse: fixed_basis_covariance_matrix_positive_semidefinite and Stdlib.Vectors.VectorSpec.length_to_list.
+   Boundary: A positive-semidefinite finite covariance quadratic is not necessarily positive definite, invertible, or a certified generic rank-nullity computation.
+   *)
+  Theorem indexed_basis_covariance_quadratic_nonnegative :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_covariance_matrix_positive_semidefinite.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_constant_on_support] (theorem) — The bounded coefficient vector has a zero covariance quadratic exactly when its composite score is constant on positive-weight finite support.
+   Mathematical meaning: The bounded coefficient vector has a zero covariance quadratic exactly when its composite score is constant on positive-weight finite support.
+   Exact checked proposition: Under unit mass and nonnegative sample weights, indexed covariance quadratic = 0 iff there exists c:R such that weighted_basis_sum (Vector.to_list coefficients) basis x=c at each positive-weight sampled x.
+   Premises and side conditions: The basis and coefficient lengths match by Vector.t typing; a zero coefficient direction, repeated basis functions, and zero-weight observations are all permitted.
+   Proof/definition method: Unfold the vector coefficient interface and directly specialize the established fixed_basis_null_iff_exists_constant_on_positive_weight_support theorem, using the Stdlib vector-to-list length lemma.
+   Library reuse: fixed_basis_null_iff_exists_constant_on_positive_weight_support and VectorSpec.length_to_list.
+   Boundary: This characterizes support-wise kernel directions algebraically; it does not establish their dimension, rank, or empirical statistical independence.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_constant_on_support :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           weighted_basis_sum (Vector.to_list coefficients) basis x = c).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_null_iff_exists_constant_on_positive_weight_support.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support] (theorem) — A bounded coefficient direction has strictly positive covariance quadratic precisely when no support-constant composite score exists.
+   Mathematical meaning: A bounded coefficient direction has strictly positive covariance quadratic precisely when no support-constant composite score exists.
+   Exact checked proposition: Under unit mass and nonnegative sampled weights, indexed covariance quadratic > 0 iff no c:R equals weighted_basis_sum (Vector.to_list coefficients) basis x at every positive-weight sampled x.
+   Premises and side conditions: Dependent or repeated score functions can make some nonzero coefficient directions null; the theorem does not assume the covariance matrix is positive definite.
+   Proof/definition method: Use the existing fixed-basis strict positivity iff positive-support nonconstancy theorem, discharging the only representation premise using VectorSpec.length_to_list.
+   Library reuse: fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support and Stdlib.Vectors.VectorSpec.length_to_list.
+   Boundary: Strict variance in one direction does not imply the matrix is invertible or that every direction is strictly positive.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_quadratic_form basis coefficients <->
+       ~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             weighted_basis_sum (Vector.to_list coefficients) basis x = c)).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_basis] (theorem) — An indexed coefficient direction has zero covariance quadratic iff its composite score is uncorrelated with every score in the chosen finite basis.
+   Mathematical meaning: An indexed coefficient direction has zero covariance quadratic iff its composite score is uncorrelated with every score in the chosen finite basis.
+   Exact checked proposition: Under unit sample mass and nonnegative sampled weights, quadratic=0 iff forall g in basis, covariance (weighted_basis_sum (Vector.to_list coefficients) basis) g=0.
+   Premises and side conditions: All finite basis score occurrences and compatible coefficient vector entries are included; zero weights or linear dependence are permitted. No distributional Gaussian assumption is added.
+   Proof/definition method: Unfold the bounded coefficient interface, invoke the checked fixed_basis_null_iff_uncorrelated_with_basis theorem, and use VectorSpec.length_to_list instead of a custom list/vector length proof.
+   Library reuse: fixed_basis_null_iff_uncorrelated_with_basis and Stdlib.Vectors.VectorSpec.length_to_list.
+   Boundary: This exact orthogonality equivalence is coordinatewise; it does not compute a rank, basis for the kernel or continuous covariance operator.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_basis :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       forall g, In g basis ->
+         covariance (weighted_basis_sum
+           (Vector.to_list coefficients) basis) g = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_null_iff_uncorrelated_with_basis.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots] (theorem) — A dimension-safe coefficient direction is null iff its dot product with every existing covariance-matrix row is zero.
+   Mathematical meaning: A dimension-safe coefficient direction is null iff its dot product with every existing covariance-matrix row is zero.
+   Exact checked proposition: Under normalized nonnegative finite weights, quadratic=0 iff forall row in basis_covariance_matrix basis, vector_dot (Vector.to_list coefficients) row=0.
+   Premises and side conditions: The length of the coefficient vector matches basis length by its type; no basis invertibility or rank premise is required, and empty bases are supported.
+   Proof/definition method: Specialize the previously proven fixed_basis_null_iff_zero_dot_with_every_covariance_row with the standard Vector.to_list length theorem, without custom matrix row traversal.
+   Library reuse: fixed_basis_null_iff_zero_dot_with_every_covariance_row, matrix_quadratic_form and VectorSpec.length_to_list.
+   Boundary: The result gives an exact linear-equation characterization of the finite quadratic nullspace but not its cardinality or dimension.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       forall row, In row (basis_covariance_matrix basis) ->
+         vector_dot (Vector.to_list coefficients) row = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_quadratic_form.
+    apply fixed_basis_null_iff_zero_dot_with_every_covariance_row.
+    - apply VectorSpec.length_to_list.
+    - exact Hmass.
+    - exact Hw.
+  Qed.
+
 End FiniteProbabilityMoments.

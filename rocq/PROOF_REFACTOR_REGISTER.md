@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 532 public theorem/lemma/example declarations,
+The current branch has 538 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**535 proof scripts**, including the generic
+**541 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 208 proof scripts
+## FiniteMoments.v — 214 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -930,6 +930,12 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_two_coordinate_form_nonnegative` (theorem) | Rewrite indexed form through checked list-matrix bridge and specialize general fixed-basis PSD | indexed_basis_covariance_two_coordinate_form_as_list_matrix, fixed_basis_covariance_matrix_positive_semidefinite | **Refactored:** reuse maintained general covariance PSD theorem rather than repeating variance nonnegativity |
 | `indexed_basis_covariance_two_coordinate_form_zero_iff_constant_on_support` (theorem) | Reduce via pair variance then apply positive-weight support zero-variance characterization | indexed_basis_covariance_two_coordinate_form_as_variance, variance_zero_iff_exists_constant_on_positive_weight_support | **New:** Form nullity iff a supported-constant pair score |
 | `indexed_basis_covariance_two_coordinate_form_positive_iff_nonconstant_on_support` (theorem) | Reduce via pair variance then apply strict-variance support iff | indexed_basis_covariance_two_coordinate_form_as_variance, variance_positive_iff_no_constant_on_positive_weight_support | **New:** Positive two-coordinate form iff the pair score varies on support |
+| `indexed_basis_covariance_quadratic_as_variance` (theorem) | Apply existing fixed-basis variance identity using Stdlib vector-to-list length | fixed_basis_weighted_variance_identity, VectorSpec.length_to_list | **New:** General dimension-checked covariance quadratic equals composite-score variance under unit mass |
+| `indexed_basis_covariance_quadratic_nonnegative` (theorem) | Specialize generic fixed-basis PSD using VectorSpec.length_to_list | fixed_basis_covariance_matrix_positive_semidefinite, VectorSpec.length_to_list | **New:** All dimension-safe coefficient directions have nonnegative finite covariance quadratic |
+| `indexed_basis_covariance_quadratic_zero_iff_constant_on_support` (theorem) | Specialize existing positive-support nullity iff using Stdlib vector length | fixed_basis_null_iff_exists_constant_on_positive_weight_support, VectorSpec.length_to_list | **New:** General bounded coefficient nullity iff finite positive-support constancy |
+| `indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support` (theorem) | Apply fixed-basis strict-positivity iff with length_to_list | fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support, VectorSpec.length_to_list | **New:** Strictly positive vector-indexed quadratic iff the weighted basis score varies on support |
+| `indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_basis` (theorem) | Apply general zero-covariance basis orthogonality iff with standard vector length | fixed_basis_null_iff_uncorrelated_with_basis, VectorSpec.length_to_list | **New:** Dimension-safe covariance nullity iff uncorrelated with every basis score |
+| `indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots` (theorem) | Delegate to general list covariance row kernel iff and stdlib length | fixed_basis_null_iff_zero_dot_with_every_covariance_row, VectorSpec.length_to_list | **New:** All-dimensional coefficient-vector nullity iff zero dot with every covariance row |
 
 ## FiniteBridge.v — 37 proof scripts
 
