@@ -3556,7 +3556,8 @@ Section FiniteOutcomeSpace.
     intros left right Hsame x.
     unfold all_events.
     destruct (forallb (fun e : Event => e x) left) eqn:Hleft.
-    - symmetry.
+    - rewrite Hleft.
+      symmetry.
       apply (proj2 (@forallb_forall Event (fun e => e x) right)).
       intros e Hright.
       apply (proj1 (@forallb_forall Event (fun e => e x) left) Hleft).
