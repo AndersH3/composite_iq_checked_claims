@@ -6749,4 +6749,118 @@ Section FiniteProbabilityMoments.
     tauto.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_matrix_positive_diagonal_iff_nonconstant_on_support]
+   (theorem) — Strict positive indexed variance iff the selected score
+   is not constant on the finite positive-weight support.
+   Mathematical meaning: Each covariance diagonal is positive
+   precisely when no constant real value agrees with the selected
+   score at every outcome carrying positive sample mass.
+   Exact checked proposition: For any bounded basis index i under unit
+   total mass and nonnegative sampled weights, 0 < covariance(i,i)
+   iff not exists c:R with selected_score i x=c at every sampled x
+   whose weight is strictly positive.
+   Premises and side conditions: Zero-weight observations and repeated
+   scores are allowed. No score independence or invertibility is assumed.
+   Proof/definition method: Rewrite the indexed diagonal as scalar
+   variance and invoke the existing strict-variance iff support theorem.
+   Library reuse: indexed_basis_covariance_matrix_diagonal,
+   variance_positive_iff_no_constant_on_positive_weight_support,
+   Stdlib.Vectors.Vector.nth and Stdlib.Reals.
+   Boundary: This gives finite-coordinate strict variance, not
+   eigenvalue positivity or full matrix positive definiteness.
+   *)
+  Theorem indexed_basis_covariance_matrix_positive_diagonal_iff_nonconstant_on_support :
+    forall basis (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_cross_covariance_matrix basis basis i i <->
+       ~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             Vector.nth (Vector.of_list basis) i x = c)).
+  Proof.
+    intros basis i Hmass Hw.
+    rewrite indexed_basis_covariance_matrix_diagonal.
+    apply variance_positive_iff_no_constant_on_positive_weight_support;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_nonzero_entry_implies_positive_diagonals]
+   (theorem) — Any nonzero covariance entry has two positive variances.
+   Mathematical meaning: Nonzero off-diagonal covariance is impossible
+   when either of the corresponding basis scores has zero variance.
+   Exact checked proposition: For bounded i and j, unit total mass,
+   nonnegative sampled weights and indexed covariance(i,j) <> 0 imply
+   0 < indexed covariance(i,i) and 0 < indexed covariance(j,j).
+   Premises and side conditions: The indices may coincide; no
+   independent-score hypothesis or positive-definite matrix is needed.
+   Proof/definition method: Rewrite both diagonal cells as variances;
+   unfold only the indexed cross-covariance entry in the premise and
+   apply the existing scalar nonzero-covariance theorem.
+   Library reuse: indexed_basis_covariance_matrix_diagonal,
+   nonzero_covariance_implies_positive_variances, Stdlib.Vectors.Fin.
+   Boundary: Positive diagonal cells alone do not imply full-rank
+   covariance, matrix invertibility or statistical significance.
+   *)
+  Theorem indexed_basis_covariance_matrix_nonzero_entry_implies_positive_diagonals :
+    forall basis (i j : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix basis basis i j <> 0 ->
+      0 < indexed_basis_cross_covariance_matrix basis basis i i /\
+      0 < indexed_basis_cross_covariance_matrix basis basis j j.
+  Proof.
+    intros basis i j Hmass Hw Hnonzero.
+    rewrite !indexed_basis_covariance_matrix_diagonal.
+    unfold indexed_basis_cross_covariance_matrix in Hnonzero.
+    apply nonzero_covariance_implies_positive_variances; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_nonzero_entry_implies_nonconstant_scores]
+   (theorem) — Nonzero covariance requires variation in both selected scores.
+   Mathematical meaning: If two basis coordinates have nonzero covariance,
+   neither score can be constant throughout the positive-weight support.
+   Exact checked proposition: Under normalized nonnegative finite weights,
+   indexed covariance(i,j) <> 0 implies no positive-support constant
+   witness exists for either selected score i or selected score j.
+   Premises and side conditions: There is no Gaussian model,
+   independence assumption or requirement that the two scores differ;
+   zero-weight samples need not have the same score values.
+   Proof/definition method: Obtain both strictly positive diagonal
+   entries from the existing nonzero-entry theorem, then convert each
+   one to positive-support nonconstancy using the new diagonal iff.
+   Library reuse: indexed_basis_covariance_matrix_nonzero_entry_implies_positive_diagonals,
+   indexed_basis_covariance_matrix_positive_diagonal_iff_nonconstant_on_support
+   and Stdlib.Reals/Vector.
+   Boundary: This is a necessary condition for nonzero covariance,
+   not an equivalence or an empirical correlation test.
+   *)
+  Theorem indexed_basis_covariance_matrix_nonzero_entry_implies_nonconstant_scores :
+    forall basis (i j : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix basis basis i j <> 0 ->
+      (~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             Vector.nth (Vector.of_list basis) i x = c)) /\
+      (~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             Vector.nth (Vector.of_list basis) j x = c)).
+  Proof.
+    intros basis i j Hmass Hw Hnonzero.
+    pose proof
+      (indexed_basis_covariance_matrix_nonzero_entry_implies_positive_diagonals
+        basis i j Hmass Hw Hnonzero) as [Hi Hj].
+    split.
+    - apply (proj1
+        (indexed_basis_covariance_matrix_positive_diagonal_iff_nonconstant_on_support
+          basis i Hmass Hw)); exact Hi.
+    - apply (proj1
+        (indexed_basis_covariance_matrix_positive_diagonal_iff_nonconstant_on_support
+          basis j Hmass Hw)); exact Hj.
+  Qed.
+
 End FiniteProbabilityMoments.

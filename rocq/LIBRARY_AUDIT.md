@@ -1412,6 +1412,16 @@ variance equivalence and positive-weight-support theorem, using
 finite-sample inductions, linear algebra implementations or new
 probability axioms.
 
+## Strict coordinate positivity and nonconstant positive support
+
+The strict diagonal criterion is derived from the existing
+`variance_positive_iff_no_constant_on_positive_weight_support`.
+The nonzero off-diagonal criterion reuses the scalar
+`nonzero_covariance_implies_positive_variances`, and its
+nonconstant-support consequence composes the two checked theorems.
+These do not imply positive definiteness or an abstract matrix
+rank theorem; they preserve the original finite weighted semantics.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
