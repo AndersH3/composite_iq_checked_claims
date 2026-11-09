@@ -2136,6 +2136,20 @@ each refactor and the complete explanatory comments remain.
 Current inventory: **573 public claims, 576 proof scripts,
 639 documented declarations** across seven Rocq modules.
 
+## Shared conditional union membership equivalences
+
+The finite union membership proof is factored into a pure event predicate
+lemma using `Stdlib.List.existsb_exists`. It now serves the existing
+unconditional union theorem and three new conditional union results:
+membership-extensional equality, event-list permutation, and appending
+an already-present event. The new theorems reuse the existing conditional
+target extensionality and permutation and append-membership lemmas.
+They retain exact equality even when the conditioning mass is zero.
+
+The new intended inventory is **577 claims, 580 proof scripts, 643
+documented declarations** across seven Rocq modules. All new claims
+require the Rocq kernel and existing documentation CI gates.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

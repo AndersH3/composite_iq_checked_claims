@@ -118,6 +118,8 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
             {"audit_file", "is_contract"},
         "verification/spark_coverage.py":
             {"location", "normalize_entity"},
+        "verification/proof_gate.py":
+            {"totals_balanced", "successful_checks"},
     }
     for path in files:
         report = coverage_checker.audit_file(path)

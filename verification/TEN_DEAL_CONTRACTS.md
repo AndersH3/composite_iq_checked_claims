@@ -187,6 +187,22 @@ every named Python function. Runtime property tests, static
 Deal lint and source-pinned evidence verification remain
 separate mandatory checks.
 
+## Ten-contract native proof-gate accounting
+
+`verification.proof_gate.totals_balanced` and `successful_checks`
+now each have ten distinct Deal decorators. The five additional checks
+on the former verify that an accepted nonnegative total bounds each
+proof category and the three-category partial sum. The latter checks
+clean native process status, positive proof inventory, no unproved or
+justified goals, and unconditional rejection of failed process exits.
+These are independently evaluated consequences of the existing
+acceptance logic, not new assumptions about native SPARK proof.
+
+The ten-contract regression subset contains **23 functions**:
+17 historical analysis functions and six current verification helpers.
+The five-contract minimum, historical evidence integrity, and
+negative-control tests remain in force.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

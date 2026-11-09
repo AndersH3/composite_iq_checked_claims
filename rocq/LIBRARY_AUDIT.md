@@ -1591,6 +1591,17 @@ reuse `all_events_membership_ext` instead of Boolean case
 splits. This is a deliberate consolidation of verified
 library laws, with no additional finite probability recursion.
 
+## Shared Boolean event membership under conditioning
+
+`any_event_membership_ext` now centralizes the Stdlib
+`existsb_exists` witness transport for list-membership-equivalent
+event families. The unconditional union membership theorem delegates
+to this helper. Three additional conditional union laws derive
+permutation and duplicate-event invariance using existing conditional
+target extensionality, `Permutation_in`, and the shared
+`event_append_existing_membership_iff` rather than new enumeration
+or Boolean recursion. Zero-mass conditioning is included.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

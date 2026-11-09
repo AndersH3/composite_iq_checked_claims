@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 118 proof scripts
+## FiniteUnion.v — 122 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -724,6 +724,13 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_intersection_duplicate_head` (theorem) | Conditional target extensionality plus Stdlib conjunction predicate repeated-head identity | finite_conditional_prob_event_ext_on_samples, all_events, Stdlib.List.forallb | **New:** Conditional intersection mass invariant under a duplicated head event |
 | `finite_intersection_append_existing` (theorem) | Compose finite event-mass extensionality and all_events_membership_ext with shared list-membership helper | finite_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff | **New:** Appending an already-required event preserves unconditional intersection mass |
 | `finite_conditional_intersection_append_existing` (theorem) | Conditioned event-target extensionality plus shared list-membership and conjunction laws | finite_conditional_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff | **New:** Appending an already-required event preserves finite conditional intersection mass |
+
+| `any_event_membership_ext` (lemma) | Transfer existsb witnesses across event-list membership equivalence | Stdlib.List.existsb_exists, Bool | **New:** shared union Boolean extensionality; eliminates duplicate witness analysis |
+| `finite_conditional_union_membership_extensional` (theorem) | Lift shared pointwise union equivalence to conditional target equality | any_event_membership_ext, finite_conditional_prob_event_ext_on_samples | **New:** includes zero-conditioning-mass case |
+| `finite_conditional_union_permutation` (theorem) | Transfer predicate membership under a Stdlib permutation | Permutation_in, finite_conditional_union_membership_extensional | **New:** reordering conditioned union alternatives |
+| `finite_conditional_union_append_existing` (theorem) | Reuse already-present append membership equivalence | event_append_existing_membership_iff, finite_conditional_union_membership_extensional | **New:** adding an existing conditional union alternative |
+The preexisting `union_prob_membership_extensional` proof now uses the shared
+`any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
 ## FiniteMoments.v — 242 proof scripts
 

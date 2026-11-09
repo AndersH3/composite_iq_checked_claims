@@ -1433,6 +1433,49 @@ Section FiniteOutcomeSpace.
      matters.  Bool.existsb_exists and Sorting.Permutation.Permutation_in
      replace a custom induction over list permutations. *)
 
+
+  (**
+   [any_event_membership_ext] (lemma) — Pointwise union is determined by event membership.
+   Mathematical meaning: Equivalent membership sets of Boolean predicates
+   produce equal disjunctions at every outcome, regardless of duplicates.
+   Exact checked proposition: forall left right, if In e left iff In e right
+   for every event e, then any_event left x = any_event right x for every x.
+   Premises and side conditions: No event-function equality decision,
+   normalized mass, positivity, or independence hypothesis is required.
+   Proof/definition method: Transfer witnesses in both directions using
+   Stdlib.List.existsb_exists and refute incompatible Boolean results.
+   Library reuse: existsb_exists, Bool, List.In and existing any_event.
+   Boundary: This concerns finite Boolean unions, not marginal sums,
+   independent events, or observed probabilities.
+   *)
+  Lemma any_event_membership_ext :
+    forall (left right : list Event),
+      (forall event, In event left <-> In event right) ->
+      forall x, any_event left x = any_event right x.
+  Proof.
+    intros left right Hmembers x.
+    unfold any_event.
+    destruct (existsb (fun event => event x) left) eqn:Hleft;
+      destruct (existsb (fun event => event x) right) eqn:Hright;
+      try reflexivity.
+    - apply existsb_exists in Hleft.
+      destruct Hleft as [event [Hin Htrue]].
+      assert (Hyes : existsb (fun e => e x) right = true).
+      { apply existsb_exists.
+        exists event; split.
+        - apply (proj1 (Hmembers event)); exact Hin.
+        - exact Htrue. }
+      rewrite Hright in Hyes; discriminate.
+    - apply existsb_exists in Hright.
+      destruct Hright as [event [Hin Htrue]].
+      assert (Hyes : existsb (fun e => e x) left = true).
+      { apply existsb_exists.
+        exists event; split.
+        - apply (proj2 (Hmembers event)); exact Hin.
+        - exact Htrue. }
+      rewrite Hleft in Hyes; discriminate.
+  Qed.
+
   (**
    [union_prob_membership_extensional] (theorem) — Finite Boolean event mass and
    union/intersection inequalities.
@@ -1443,9 +1486,9 @@ Section FiniteOutcomeSpace.
    weights samples left = union_prob weights samples right.
    Premises and side conditions: The displayed hypotheses include sample or list
    membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
-   reuse of previously established lemmas, definitional reduction; references include
-   union_prob, finite_sum_extensional, any_event.
+   Proof/definition method: Reuse any_event_membership_ext to eliminate
+   duplicated existsb witness case analysis; lift pointwise equality
+   through the maintained finite_sum_extensional theorem.
    Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
    FiniteSum.
    Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
@@ -1460,26 +1503,8 @@ Section FiniteOutcomeSpace.
     intros weights samples left right Hmembers.
     unfold union_prob, finite_prob.
     apply finite_sum_extensional; intro x.
-    assert (Hevents : any_event left x = any_event right x).
-    { destruct (any_event left x) eqn:Hleft;
-      destruct (any_event right x) eqn:Hright; try reflexivity.
-      - unfold any_event in Hleft, Hright.
-        apply existsb_exists in Hleft.
-        destruct Hleft as [e [Hin He]].
-        assert (Hyes : existsb (fun a => a x) right = true).
-        { apply existsb_exists. exists e. split.
-          - apply (proj1 (Hmembers e)); exact Hin.
-          - exact He. }
-        rewrite Hright in Hyes; discriminate.
-      - unfold any_event in Hleft, Hright.
-        apply existsb_exists in Hright.
-        destruct Hright as [e [Hin He]].
-        assert (Hyes : existsb (fun a => a x) left = true).
-        { apply existsb_exists. exists e. split.
-          - apply (proj2 (Hmembers e)); exact Hin.
-          - exact He. }
-        rewrite Hleft in Hyes; discriminate. }
-    rewrite Hevents; reflexivity.
+    rewrite (any_event_membership_ext left right Hmembers x).
+    reflexivity.
   Qed.
 
   (**
@@ -3830,6 +3855,95 @@ Section FiniteOutcomeSpace.
     intros x _.
     apply all_events_membership_ext.
     intro e.
+    apply event_append_existing_membership_iff.
+    exact Hmember.
+  Qed.
+
+
+  (**
+   [finite_conditional_union_membership_extensional] (theorem) — Conditional union depends only on listed event membership.
+   Mathematical meaning: Families of Boolean events with identical membership
+   relations have equal conditional union probability.
+   Exact checked proposition: If In e left <-> In e right for every e,
+   then finite_conditional_prob weights samples (any_event left) given
+   equals its right-family counterpart.
+   Premises and side conditions: All samples and real weights are allowed,
+   including zero-mass conditioning. No positivity, normalization
+   or conditional independence assumption is needed.
+   Proof/definition method: Lift the shared Boolean union membership
+   equivalence through existing conditional target extensionality.
+   Library reuse: any_event_membership_ext and
+   finite_conditional_prob_event_ext_on_samples.
+   Boundary: This is neither a union bound nor a factorization into marginals.
+   *)
+  Theorem finite_conditional_union_membership_extensional :
+    forall weights samples (left right : list Event) (given : Event),
+      (forall event, In event left <-> In event right) ->
+      finite_conditional_prob weights samples (any_event left) given =
+      finite_conditional_prob weights samples (any_event right) given.
+  Proof.
+    intros weights samples left right given Hmembers.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    apply any_event_membership_ext.
+    exact Hmembers.
+  Qed.
+
+  (**
+   [finite_conditional_union_permutation] (theorem) — Event ordering does not change conditional union probability.
+   Mathematical meaning: Reordering finite alternatives changes neither their
+   Boolean disjunction nor the probability of that disjunction given an event.
+   Exact checked proposition: Permutation left right implies equality
+   of the conditional probabilities of any_event left and any_event right.
+   Premises and side conditions: Conditional mass may vanish; no
+   weight nonnegativity or event independence is presumed.
+   Proof/definition method: Transport membership in both directions
+   using Permutation_in, and invoke conditional membership extensionality.
+   Library reuse: Stdlib.Sorting.Permutation.Permutation_in,
+   Permutation_sym and finite_conditional_union_membership_extensional.
+   Boundary: This is an exact finite event-list symmetry, not empirical inference.
+   *)
+  Theorem finite_conditional_union_permutation :
+    forall weights samples (left right : list Event) (given : Event),
+      Permutation left right ->
+      finite_conditional_prob weights samples (any_event left) given =
+      finite_conditional_prob weights samples (any_event right) given.
+  Proof.
+    intros weights samples left right given Hperm.
+    apply finite_conditional_union_membership_extensional.
+    intro event; split; intro Hin.
+    - eapply Permutation_in; eauto.
+    - eapply Permutation_in.
+      + apply Permutation_sym; exact Hperm.
+      + exact Hin.
+  Qed.
+
+  (**
+   [finite_conditional_union_append_existing] (theorem) — Repeated alternatives preserve conditioned union mass.
+   Mathematical meaning: Appending a duplicate event already present
+   in a finite union has no effect after conditioning.
+   Exact checked proposition: In member events implies conditional
+   equality of any_event (events ++ [member]) and any_event events.
+   Premises and side conditions: The member is already listed;
+   conditioning mass may be zero, samples may repeat, and weights
+   need not be normalized or even nonnegative for this equality.
+   Proof/definition method: Reuse the existing append-membership iff
+   and conditional union membership extensionality.
+   Library reuse: event_append_existing_membership_iff,
+   finite_conditional_union_membership_extensional, List.in_app_iff.
+   Boundary: Duplicate alternatives are not disjoint contributions
+   to a sum of event marginal probabilities.
+   *)
+  Theorem finite_conditional_union_append_existing :
+    forall weights samples (events : list Event) (member given : Event),
+      In member events ->
+      finite_conditional_prob weights samples
+        (any_event (events ++ [member])) given =
+      finite_conditional_prob weights samples (any_event events) given.
+  Proof.
+    intros weights samples events member given Hmember.
+    apply finite_conditional_union_membership_extensional.
+    intro event.
     apply event_append_existing_membership_iff.
     exact Hmember.
   Qed.
