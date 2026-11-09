@@ -104,13 +104,13 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
     # are intentionally not forced into the optional ten-contract target.
     targeted = {
         "analyses/hoeflin-ferguson/scripts/verify_calculations.py":
-            {"variance_factor", "mean_threshold", "_positive_ratio", "_valid_rows",
+            {"_finite", "variance_factor", "mean_threshold", "_positive_ratio", "_valid_rows",
              "thresholds"},
         "analyses/hoeflin-ferguson/ada/scripts/validate_results.py":
             {"_positive_ratio", "wilson", "csv_rows",
              "validate_calculations", "validate_simulation"},
         "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py":
-            {"probability_union", "conditional_probability",
+            {"_finite", "probability_union", "conditional_probability",
              "_valid_fields_rows", "_valid_admissions", "_valid_grid"},
         "analyses/towers-multiple-test-admissions/ada/validate_results.py":
             {"_open_unit_ratio", "read"},

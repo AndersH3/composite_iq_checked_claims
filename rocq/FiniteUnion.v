@@ -4189,6 +4189,74 @@ Section FiniteOutcomeSpace.
     reflexivity.
   Qed.
 
+
+  (**
+   [finite_union_append_left_monotone] (theorem) — Adding alternatives cannot reduce finite union mass.
+   Mathematical meaning: Every left-family alternative remains available
+   after appending any right-family list. Its finite weighted union
+   therefore weakly increases under nonnegative sample weights.
+   Exact checked proposition: union_prob weights samples left <=
+   union_prob weights samples (left ++ right) under sampled nonnegativity.
+   Premises and side conditions: No total-mass normalization,
+   independence or uniqueness of outcome/event occurrences is assumed.
+   Proof/definition method: Transport left membership via the
+   standard Stdlib.List.in_or_app and apply finite_union_subset.
+   Library reuse: Stdlib.List.in_or_app, finite_union_subset
+   and the project's existing union_prob representation.
+   Boundary: The inequality is weak and does not imply that
+   additional overlapping alternatives strictly increase admission mass.
+   *)
+  Theorem finite_union_append_left_monotone :
+    forall weights samples (left right : list Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      union_prob weights samples left <=
+      union_prob weights samples (left ++ right).
+  Proof.
+    intros weights samples left right Hw.
+    apply (finite_union_subset weights samples left (left ++ right)).
+    - intros event Hin.
+      apply in_or_app.
+      left; exact Hin.
+    - exact Hw.
+  Qed.
+
+  (**
+   [finite_conditional_union_append_left_monotone] (theorem) — Appending alternatives preserves conditional union order.
+   Mathematical meaning: Extending a Boolean event family cannot
+   decrease the conditional chance of at least one listed event
+   occurring, provided the conditioning event has positive mass.
+   Exact checked proposition: The conditional union probability of
+   left is at most that of left ++ right for nonnegative sampled
+   weights and strictly positive finite_prob weights samples given.
+   Premises and side conditions: Positive denominator is essential;
+   neither normalized total mass nor conditional independence is used.
+   Duplicate sample outcomes and event predicates remain permitted.
+   Proof/definition method: Use the same Stdlib.List.in_or_app membership
+   inclusion with the existing finite_conditional_union_subset theorem.
+   Library reuse: Stdlib.List.in_or_app,
+   finite_conditional_union_subset and finite_conditional_prob.
+   Boundary: Appending only redundant events can give equality;
+   no disjoint-additivity or independent-route assumption follows.
+   *)
+  Theorem finite_conditional_union_append_left_monotone :
+    forall weights samples (left right : list Event) given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (any_event left) given <=
+      finite_conditional_prob weights samples
+        (any_event (left ++ right)) given.
+  Proof.
+    intros weights samples left right given Hw Hpositive.
+    apply (finite_conditional_union_subset
+      weights samples left (left ++ right) given).
+    - intros event Hin.
+      apply in_or_app.
+      left; exact Hin.
+    - exact Hw.
+    - exact Hpositive.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

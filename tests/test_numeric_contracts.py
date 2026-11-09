@@ -233,3 +233,19 @@ def test_deal_generated_contract_cases(hoeflin, towers, kernel):
     for case in cases:
         result = case()
         assert math.isfinite(result) and 0 <= result <= 1
+
+@pytest.mark.parametrize("value,expected", [
+    (None, False), ("0.5", False), (False, False), (True, False),
+    (complex(1, 2), False), (math.nan, False), (math.inf, False),
+    (-math.inf, False), (0, True), (-11, True), (0.25, True),
+    (10 ** 500, False),
+])
+@deal.pre(lambda hoeflin, towers, value, expected: protected_history_intact())
+@deal.ensure(lambda hoeflin, towers, value, expected, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, towers, value, expected, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_legacy_finite_number_guards_reject_invalid_types(hoeflin, towers, value, expected):
+    """Both original model scripts must reject non-finite input categories."""
+    assert hoeflin._finite(value) is expected
+    assert towers._finite(value) is expected

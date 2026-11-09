@@ -2185,6 +2185,17 @@ inferred from the Boolean conjunction representation.
 Current intended inventory: **585 public claims, 588 proof scripts and
 651 documented declarations** across seven Rocq modules, subject to CI.
 
+## Monotonic append-family admission alternatives
+
+The ordinary and conditioned union append-left corollaries use
+`Stdlib.List.in_or_app` and the existing family-inclusion theorems,
+without new list recursion or finite-sum algebra. Nonnegative weights
+are explicit, and positive conditioning mass is additionally needed
+for conditional inequalities.
+
+Current intended inventory: **587 public claims, 590 proof scripts and
+653 documented declarations** across seven Rocq modules, pending CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

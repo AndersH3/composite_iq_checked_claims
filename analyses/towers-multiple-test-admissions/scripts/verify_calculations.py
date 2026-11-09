@@ -40,6 +40,16 @@ GRID_FIELDS = (
 @deal.raises()
 @deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
 @deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
+# Explicitly guard each non-finite input category, including the Boolean
+# subclass of int, without strengthening finite numeric input preconditions.
+@deal.ensure(lambda value, result: not isinstance(value, bool) or result is False)
+@deal.ensure(lambda value, result: isinstance(value, (int, float)) or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or not math.isnan(value) or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or value != math.inf or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or value != -math.inf or result is False)
 def _finite(value) -> bool:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return False

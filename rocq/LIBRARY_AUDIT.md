@@ -1628,6 +1628,14 @@ extensionality theorem. The empty case explicitly uses positive
 conditioning mass and `finite_conditional_prob_true`.
 No new factorization, matrix algebra or fresh Boolean recursion occurs.
 
+## Appended event lists reuse maintained list membership
+
+Two append-family monotonicity corollaries rely only on
+`Stdlib.List.in_or_app`, `finite_union_subset` and
+`finite_conditional_union_subset`. They make nonnegative weights
+and positive conditioning mass explicit, without fresh enumeration,
+custom sums, independence or unproved probabilistic assumptions.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

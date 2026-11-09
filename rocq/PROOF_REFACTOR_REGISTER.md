@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 130 proof scripts
+## FiniteUnion.v — 132 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -737,6 +737,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_union_append` (theorem) | Reuse existing any_event_append and conditioned target extensionality | any_event_append, finite_conditional_prob_event_ext_on_samples, Stdlib.List.existsb_app | **New:** conditional append semantics without custom union recursion |
 | `finite_conditional_all_events_empty` (theorem) | Reduce empty forallb and apply positive-denominator certain-event law | Stdlib.List.forallb, finite_conditional_prob_true | **New:** conditional unit mass of empty conjunction when conditioning is positive |
 | `finite_conditional_all_events_cons` (theorem) | Reduce forallb cons through existing conditional target extensionality | Stdlib.List.forallb, finite_conditional_prob_event_ext_on_samples | **New:** head-tail conjunction semantics under conditioning |
+| `finite_union_append_left_monotone` (theorem) | Standard in_or_app inclusion and existing finite family monotonicity | Stdlib.List.in_or_app, finite_union_subset | **New:** appending arbitrary alternatives weakly increases union mass |
+| `finite_conditional_union_append_left_monotone` (theorem) | Standard in_or_app inclusion and positive-conditioner family monotonicity | Stdlib.List.in_or_app, finite_conditional_union_subset | **New:** conditional append monotonicity |
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

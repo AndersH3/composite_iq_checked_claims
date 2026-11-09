@@ -245,6 +245,22 @@ The ten-contract test-enforced subset now covers **25 functions**:
 17 historical analysis functions and eight current verification helpers.
 The five-contract floor remains mandatory for all Python code.
 
+## Ten-contract numeric-domain guards in original model scripts
+
+The `_finite` utilities in the original Hoeflin/Ferguson and Towers
+`scripts/verify_calculations.py` now each have ten distinct Deal
+decorators. Five new postconditions separately reject Boolean inputs,
+nonnumeric types, NaN, positive infinity and negative infinity,
+without constraining legitimate finite numeric inputs. Regression
+tests also exercise the existing oversized-integer overflow branch.
+These safeguards do not constitute empirical validation of the
+underlying statistical models.
+
+The ten-contract regression subset now covers **27 functions**:
+19 historical analysis functions and eight current verification
+helpers. Every Python function maintains at least five contracts;
+source-pinned historical native/SPARK evidence is unchanged.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across
