@@ -1229,6 +1229,22 @@ new covariance sum, normalizing recursion,
 event algebra or general measure-theory axiom
 is introduced.
 
+## Conditional indicator Cauchy–Schwarz and degenerate independence
+
+`finite_conditioned_indicator_cauchy_schwarz_squared`
+delegates to FiniteMoments' existing checked
+finite-score Cauchy–Schwarz inequality and uses
+the reusable unit-mass and nonnegative filtered-weight
+bridges. The zero-variance covariance law likewise
+reuses FiniteMoments' dedicated implication. Two
+degenerate-event conditional-independence corollaries
+then compose the previously proved extreme-mass
+variance equivalence, covariance-to-independence
+iff and symmetry, with all hypotheses explicit.
+No duplicate discriminant proof, quadratic sum,
+independence axiom or numerical approximation
+is introduced.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

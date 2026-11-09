@@ -1054,3 +1054,130 @@ Proof.
   apply conditioned_weights_moment_total_mass_one.
   exact Hpositive.
 Qed.
+
+
+
+(**
+   [finite_conditioned_indicator_cauchy_schwarz_squared] (theorem) — Conditional indicator covariance satisfies the finite Cauchy–Schwarz inequality.
+   Mathematical meaning: The square of the covariance of two Boolean event indicators on the normalized G-filtered finite sample is bounded above by the product of their two conditional indicator variances. The result is a direct instance of the maintained finite-score covariance Cauchy–Schwarz theorem, with all normalization side conditions discharged by the conditioning bridge.
+   Exact checked proposition: For A, weights, samples, first, second and given, positive original conditioning event mass and nonnegative weight on each original sampled outcome imply conditional indicator covariance squared <= the product of conditional indicator variances, all computed with conditioned_weights on filter given samples.
+   Premises and side conditions: Strictly positive conditioning mass makes the selected normalization well defined; nonnegative original sampled weights ensure the finite covariance inequality is valid. Unit total mass of the original unfiltered samples is not assumed.
+   Proof/definition method: Instantiate the existing FiniteMoments.finite_covariance_cauchy_schwarz_squared on the selected sample; supply unit total mass through conditioned_weights_moment_total_mass_one and nonnegative selected weights through conditioned_weights_nonnegative_on_filtered_samples.
+   Library reuse: FiniteMoments.finite_covariance_cauchy_schwarz_squared, conditioned_weights_moment_total_mass_one, conditioned_weights_nonnegative_on_filtered_samples, and Stdlib.List.filter; no new discriminant argument or quadratic-form expansion.
+   Boundary: This is a finite selected-indicator covariance inequality, not a certified Cauchy–Schwarz theorem for arbitrary continuous conditional distributions or a psychometric model.
+ *)
+Theorem finite_conditioned_indicator_cauchy_schwarz_squared :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) *
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) <=
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x)) *
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (second x)).
+Proof.
+  intros A samples weight given first second Hpositive Hw.
+  apply FiniteMoments.finite_covariance_cauchy_schwarz_squared.
+  - apply conditioned_weights_moment_total_mass_one.
+    exact Hpositive.
+  - apply conditioned_weights_nonnegative_on_filtered_samples;
+      assumption.
+Qed.
+
+(**
+   [finite_conditioned_zero_indicator_variance_implies_zero_covariance] (theorem) — Conditional degenerate Boolean indicator is uncorrelated with every other Boolean indicator.
+   Mathematical meaning: When a Boolean event indicator has zero variance on the normalized finite sample conditioned on G, its covariance with the indicator of any second Boolean event is also zero, assuming nonnegative selected weights and a positive conditioning mass.
+   Exact checked proposition: If original sampled weights are nonnegative, finite_prob weight samples given is positive, and the first selected indicator variance equals zero, then the selected normalized finite covariance of the first and second indicators equals zero.
+   Premises and side conditions: Nonnegative original weights and strictly positive conditioning mass are required for the existing finite Cauchy–Schwarz implication. The unfiltered sample need not have unit mass; no independence assumption is made.
+   Proof/definition method: Apply the existing FiniteMoments.zero_variance_implies_zero_covariance_first lemma, reusing the same selected-mass and nonnegativity bridges as in finite_conditioned_indicator_cauchy_schwarz_squared rather than repeating a square-bound proof.
+   Library reuse: FiniteMoments.zero_variance_implies_zero_covariance_first, conditioned_weights_moment_total_mass_one, conditioned_weights_nonnegative_on_filtered_samples.
+   Boundary: This establishes zero covariance for the specified selected Boolean scores; it is not a general statement that any zero-variance score is independent in a continuous probability model.
+ *)
+Theorem finite_conditioned_zero_indicator_variance_implies_zero_covariance :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x)) = 0 ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) = 0.
+Proof.
+  intros A samples weight given first second Hpositive Hw Hzero.
+  apply FiniteMoments.zero_variance_implies_zero_covariance_first.
+  - apply conditioned_weights_moment_total_mass_one.
+    exact Hpositive.
+  - apply conditioned_weights_nonnegative_on_filtered_samples;
+      assumption.
+  - exact Hzero.
+Qed.
+
+(**
+   [finite_conditional_extreme_first_independent] (theorem) — A conditional event with extreme probability is conditionally independent of any other finite Boolean event.
+   Mathematical meaning: Under strictly positive conditioning mass and nonnegative finite weights, if the first Boolean target has conditional probability zero or one given G, then its indicator has zero selected-sample variance; Cauchy–Schwarz makes its indicator covariance with every second event vanish, and the established indicator covariance criterion yields conditional independence.
+   Exact checked proposition: For any A, sample list, original nonnegative sampled weights, first, second and given, positive finite_prob weight samples given and either finite_conditional_prob first given=0 or =1 imply finite_conditional_independent weight samples first second given.
+   Premises and side conditions: Strictly positive conditioning mass and nonnegative weights on the original enumerated outcomes are explicit; neither unit unfiltered total mass nor positivity of the second event mass is required. Only exact zero or one conditional probability, not approximate extremes, is covered.
+   Proof/definition method: Compose the already checked zero-variance iff extreme-conditional-mass theorem, the selected zero-variance-implies-zero-covariance theorem, and the generic conditioned indicator-covariance independence iff, avoiding an independent intersection-probability calculation.
+   Library reuse: finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass, finite_conditioned_zero_indicator_variance_implies_zero_covariance, finite_conditional_independence_iff_conditioned_indicator_covariance_zero.
+   Boundary: Exact conditional independence at a degenerate Boolean event is proved; no pairwise-to-mutual independence, continuous conditional independence or near-extreme statistical approximation follows.
+ *)
+Theorem finite_conditional_extreme_first_independent :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    (@FiniteUnion.finite_conditional_prob A weight samples first given = 0 \/
+     @FiniteUnion.finite_conditional_prob A weight samples first given = 1) ->
+    @FiniteUnion.finite_conditional_independent A
+      weight samples first second given.
+Proof.
+  intros A samples weight given first second Hpositive Hw Hextreme.
+  apply (proj2
+    (finite_conditional_independence_iff_conditioned_indicator_covariance_zero
+      A samples weight first second given Hpositive)).
+  apply (finite_conditioned_zero_indicator_variance_implies_zero_covariance
+    A samples weight given first second Hpositive Hw).
+  apply (proj2
+    (finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass
+      A samples weight given first Hpositive)).
+  exact Hextreme.
+Qed.
+
+(**
+   [finite_conditional_extreme_second_independent] (theorem) — Symmetric conditional independence of an extreme-probability second Boolean event.
+   Mathematical meaning: If the second target has finite conditional probability exactly zero or one given a positive-mass conditioning event, it is conditionally independent of any first Boolean target with nonnegative sample weights; this is the same degenerate-factorization fact with target order reversed.
+   Exact checked proposition: For any A, weights, samples, Boolean given, first and second, nonnegative original sampled weights, positive given mass and finite_conditional_prob second given=0 or =1 imply finite_conditional_independent weight samples first second given.
+   Premises and side conditions: All positivity and nonnegativity premises from the first-target theorem are retained. The other event requires no positive marginal mass, and the unfiltered list need not be normalized.
+   Proof/definition method: Reuse the established finite conditional-independence symmetry biconditional and the just-proved first-target extreme-event theorem; do not duplicate any conditional covariance or zero-variance argument.
+   Library reuse: FiniteUnion.finite_conditional_independent_symmetric and finite_conditional_extreme_first_independent. The entire proof is a logical iff projection and theorem application.
+   Boundary: This is an exact finite Boolean conditional fact about probability zero or one, not a statistical test of approximate independence or an empirical covariance claim.
+ *)
+Theorem finite_conditional_extreme_second_independent :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    (@FiniteUnion.finite_conditional_prob A weight samples second given = 0 \/
+     @FiniteUnion.finite_conditional_prob A weight samples second given = 1) ->
+    @FiniteUnion.finite_conditional_independent A
+      weight samples first second given.
+Proof.
+  intros A samples weight given first second Hpositive Hw Hextreme.
+  apply (proj2 (@FiniteUnion.finite_conditional_independent_symmetric
+    A weight samples first second given)).
+  apply (finite_conditional_extreme_first_independent
+    A samples weight given second first Hpositive Hw Hextreme).
+Qed.
