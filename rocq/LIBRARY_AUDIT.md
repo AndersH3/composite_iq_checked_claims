@@ -1314,6 +1314,21 @@ proves only entry and dimension fidelity;
 rank, determinants and eigenstructure have
 not been formalized for this representation.
 
+## Total finite-indexed covariance source correspondence
+
+The `indexed_basis_cross_covariance_matrix_entry_total`
+theorem upgrades conditional entry equality to an
+existential witness of a successful source list row
+and matching column cell for **every** bounded
+row/column index pair. This constructs the original
+Stdlib.List.map covariance row via the checked
+vector/list index lemma and previously established
+row- and cell-selection facts. The indexed square
+matrix symmetry law is a direct specialization
+of the rectangular swap theorem. No default-value
+index fallback, new recursion, independent scalar
+covariance or matrix rank claim is introduced.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,

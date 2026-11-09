@@ -6171,4 +6171,60 @@ Section FiniteProbabilityMoments.
     apply covariance_symmetric.
   Qed.
 
+
+  (**
+   [indexed_basis_cross_covariance_matrix_entry_total] (theorem) — Every bounded covariance index pair has a successful matching list-matrix cell.
+   Mathematical meaning: Given any row index in Fin.t (length left) and column index in Fin.t (length right), there necessarily exists a corresponding row in the original list-of-lists covariance matrix, and accessing the indicated column of that row succeeds and returns the value of the new dimension-indexed matrix representation. This upgrades the previous conditional entry theorem into a total existence-and-equality bridge.
+   Exact checked proposition: For any left and right score lists and i:Fin.t(length left), j:Fin.t(length right), there exists row such that nth_error (basis_cross_covariance_matrix left right) (proj1_sig (Fin.to_nat i)) = Some row and nth_error row (proj1_sig (Fin.to_nat j)) = Some (indexed_basis_cross_covariance_matrix left right i j).
+   Premises and side conditions: The Fin.t index types enforce both dimensions, including the lack of indices for empty dimensions; no additional row-existence premise, default score, unit total mass or nonnegative sample weight is required. Scores may repeat, and the source finite sample remains exactly the same.
+   Proof/definition method: Choose the original covariance row produced by Stdlib.List.map from the bounded left-basis score. The vector/list nth_error conversion certifies its original basis position, the checked basis row-selection theorem certifies its matrix-row position, and the previously proved indexed entry theorem certifies the matching cell.
+   Library reuse: vector_of_list_nth_error, basis_cross_covariance_matrix_nth_error_row, indexed_basis_cross_covariance_matrix_entry, Stdlib.List.map/nth_error, and Stdlib.Vectors.Fin/Vector. No custom matrix indexing or re-enumeration is introduced.
+   Boundary: This gives exact finite entry correspondence for the existing covariance construction, not an equivalence of arbitrary matrix algebra operators or a rank/nullspace theorem.
+   *)
+  Theorem indexed_basis_cross_covariance_matrix_entry_total :
+    forall left right
+           (i : Fin.t (length left))
+           (j : Fin.t (length right)),
+      exists row,
+        nth_error (basis_cross_covariance_matrix left right)
+          (proj1_sig (Fin.to_nat i)) = Some row /\
+        nth_error row (proj1_sig (Fin.to_nat j)) =
+          Some (indexed_basis_cross_covariance_matrix left right i j).
+  Proof.
+    intros left right i j.
+    exists (map
+      (fun g => covariance (Vector.nth (Vector.of_list left) i) g)
+      right).
+    assert (Hrow :
+      nth_error (basis_cross_covariance_matrix left right)
+        (proj1_sig (Fin.to_nat i)) =
+      Some (map
+        (fun g => covariance (Vector.nth (Vector.of_list left) i) g)
+        right)).
+    { apply basis_cross_covariance_matrix_nth_error_row.
+      apply vector_of_list_nth_error. }
+    split; [exact Hrow |].
+    apply indexed_basis_cross_covariance_matrix_entry.
+    exact Hrow.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_symmetric] (theorem) — Total symmetry of the dimension-indexed square covariance representation.
+   Mathematical meaning: Every pair of valid bounded indices in a single finite score basis selects equal covariance entries in the opposite order. Unlike the earlier list-based symmetry statement, both entry lookups are total by construction, because they are functions on Fin.t (length basis) rather than potentially failing list positions.
+   Exact checked proposition: For every basis and i,j : Fin.t(length basis), indexed_basis_cross_covariance_matrix basis basis i j = indexed_basis_cross_covariance_matrix basis basis j i.
+   Premises and side conditions: The square shape is expressed by supplying the same basis to both dimensions, which also works for an empty basis (there can be no Fin.t 0 indices). No real-weight positivity, normalization, basis independence or invertibility premise is added.
+   Proof/definition method: Instantiate the already verified rectangular indexed covariance swap identity with equal row and column bases. This reuses the scalar covariance symmetry proof indirectly and does not repeat any vector indexing or covariance algebra.
+   Library reuse: indexed_basis_cross_covariance_matrix_swap, Stdlib.Vectors.Fin.t and the established FiniteMoments.covariance_symmetric result.
+   Boundary: This is symmetry of a finite-indexed covariance function, not a certified generic matrix transpose, eigenvalue, determinant or spectral theorem.
+   *)
+  Theorem indexed_basis_covariance_matrix_symmetric :
+    forall basis
+           (i j : Fin.t (length basis)),
+      indexed_basis_cross_covariance_matrix basis basis i j =
+      indexed_basis_cross_covariance_matrix basis basis j i.
+  Proof.
+    intros basis i j.
+    apply indexed_basis_cross_covariance_matrix_swap.
+  Qed.
+
 End FiniteProbabilityMoments.
