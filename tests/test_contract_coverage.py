@@ -105,7 +105,7 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
     targeted = {
         "analyses/hoeflin-ferguson/scripts/verify_calculations.py":
             {"_finite", "variance_factor", "mean_threshold", "_positive_ratio", "_valid_rows",
-             "thresholds"},
+             "thresholds", "write_csv"},
         "analyses/hoeflin-ferguson/ada/scripts/validate_results.py":
             {"_positive_ratio", "wilson", "csv_rows",
              "validate_calculations", "validate_simulation"},

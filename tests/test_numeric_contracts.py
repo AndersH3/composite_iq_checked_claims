@@ -1,6 +1,7 @@
 """Check domain rejection and independent mathematical properties."""
 from conftest import protected_history_intact, reference_inputs_intact
 import math
+import csv
 
 import deal
 from hypothesis import given, settings, strategies as st
@@ -261,3 +262,25 @@ def test_legacy_finite_number_guards_reject_invalid_types(hoeflin, towers, value
     """Both original model scripts must reject non-finite input categories."""
     assert hoeflin._finite(value) is expected
     assert towers._finite(value) is expected
+
+
+@deal.pre(lambda hoeflin, tmp_path, monkeypatch: protected_history_intact())
+@deal.ensure(lambda hoeflin, tmp_path, monkeypatch, *, result:
+             protected_history_intact())
+@deal.ensure(lambda hoeflin, tmp_path, monkeypatch, *, result:
+             reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "global", "import")
+def test_legacy_hoeflin_csv_writer_retains_exact_twelve_digit_rows(
+        hoeflin, tmp_path, monkeypatch):
+    """Write only into a temporary path and independently parse every field."""
+    destination = tmp_path / "thresholds.csv"
+    monkeypatch.setattr(hoeflin, "CSV_PATH", destination)
+    rows = hoeflin.thresholds()
+    hoeflin.write_csv(rows)
+    with destination.open(newline="", encoding="utf-8") as stream:
+        stored = list(csv.reader(stream))
+    assert stored[0] == list(hoeflin.FIELDS)
+    assert stored[1:] == [[name, f"{z:.12f}", f"{score:.12f}"]
+                          for name, z, score in rows]
+    assert len(stored) == len(rows) + 1

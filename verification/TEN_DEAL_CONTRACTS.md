@@ -341,6 +341,24 @@ functions** (21 historical analysis and 14 verification helpers).
 All named Python functions still have at least five distinct Deal
 decorators. No historical evidence JSON or source-bound SHA is modified.
 
+## Exact source-table serialization in the original Hoeflin script
+
+The historical
+`analyses/hoeflin-ferguson/scripts/verify_calculations.py:write_csv`
+now has ten Deal decorators. The five new postconditions check the
+actual saved CSV header, exact row count, preserved source-case labels,
+and the explicit twelve-digit decimal formatting for both calculated
+columns. These are writer guarantees about the resulting artifact,
+not new assumptions about the normal model. The test uses a
+temporary destination through pytest monkeypatching and independently
+parses the entire output with the maintained `csv` library, leaving
+the published project data and source-bound evidence untouched.
+
+With this historical-script upgrade the optional ten-contract
+target covers **36 named Python functions** (22 historical analysis
+functions and 14 verification helpers); the mandatory five-contract
+floor is unchanged for every older and current function.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

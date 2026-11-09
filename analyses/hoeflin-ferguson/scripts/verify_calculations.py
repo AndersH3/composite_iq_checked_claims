@@ -176,6 +176,28 @@ def check_close(actual: float, expected: float, label: str) -> None:
 @deal.has("read", "write")
 @deal.raises(OSError, csv.Error)
 @deal.ensure(lambda rows, result: CSV_PATH.is_file())
+# Preserve the actual on-disk source table: exact column names,
+# complete row count, source labels, and the declared twelve-decimal
+# formatting of each separately calculated z and IQ-score field.
+# Since this is a writer, these properties are checked after I/O.
+@deal.ensure(lambda rows, result:
+             CSV_PATH.read_text(encoding="utf-8").splitlines()[0] ==
+             ",".join(FIELDS))
+@deal.ensure(lambda rows, result:
+             len(CSV_PATH.read_text(encoding="utf-8").splitlines()) ==
+             len(rows) + 1)
+@deal.ensure(lambda rows, result:
+             [line.split(",")[0] for line in
+              CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
+             [name for name, _, _ in rows])
+@deal.ensure(lambda rows, result:
+             [line.split(",")[1] for line in
+              CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
+             [f"{z:.12f}" for _, z, _ in rows])
+@deal.ensure(lambda rows, result:
+             [line.split(",")[2] for line in
+              CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
+             [f"{score:.12f}" for _, _, score in rows])
 def write_csv(rows: list[tuple[str, float, float]]) -> None:
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
