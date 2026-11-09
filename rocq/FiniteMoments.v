@@ -7082,8 +7082,12 @@ Section FiniteProbabilityMoments.
    Mathematical meaning: Every two-coordinate principal covariance quadratic is nonnegative under normalized nonnegative finite weights.
    Exact checked proposition: For all basis, bounded i,j, and real a,b, total_mass=1 and sampled weights >=0 imply 0 <= indexed_basis_covariance_two_coordinate_form basis i j a b.
    Premises and side conditions: The coefficients can both be zero and indices can be repeated. No positive definiteness, distinctness or score independence is assumed.
-   Proof/definition method: Rewrite the two-coordinate form to the variance of the weighted score pair, and apply the preexisting variance_nonnegative theorem.
-   Library reuse: indexed_basis_covariance_two_coordinate_form_as_variance, variance_nonnegative, Stdlib.Reals.
+   Proof/definition method: Rewrite the indexed two-coordinate form
+   as a quadratic on the existing two-score list covariance matrix,
+   then specialize the general finite fixed-basis covariance
+   positive-semidefinite theorem with [a;b] and the selected scores.
+   Library reuse: indexed_basis_covariance_two_coordinate_form_as_list_matrix,
+   fixed_basis_covariance_matrix_positive_semidefinite, Stdlib.List and Reals.
    Boundary: The result covers every two-coordinate direction, not arbitrary-dimensional determinant, rank, or eigenvalue claims.
    *)
   Theorem indexed_basis_covariance_two_coordinate_form_nonnegative :
@@ -7093,8 +7097,11 @@ Section FiniteProbabilityMoments.
       0 <= indexed_basis_covariance_two_coordinate_form basis i j a b.
   Proof.
     intros basis i j a b Hmass Hw.
-    rewrite indexed_basis_covariance_two_coordinate_form_as_variance.
-    apply variance_nonnegative; assumption.
+    rewrite indexed_basis_covariance_two_coordinate_form_as_list_matrix.
+    apply fixed_basis_covariance_matrix_positive_semidefinite.
+    - reflexivity.
+    - exact Hmass.
+    - exact Hw.
   Qed.
 
   (**

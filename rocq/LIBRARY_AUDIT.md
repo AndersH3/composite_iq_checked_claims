@@ -1455,6 +1455,14 @@ fresh matrix traversal or finite summation. This is a direct
 connection to the established list matrix framework and prepares
 further PSD refactoring. It does not assert arbitrary matrix rank.
 
+## Refactoring two-coordinate positivity to maintained covariance PSD
+
+The indexed quadratic nonnegativity proof now delegates to the
+existing all-finite-bases `fixed_basis_covariance_matrix_positive_semidefinite`
+theorem. Its bridge to the list-matrix API is already checked and no
+new matrix traversal, variance positivity argument, axiom or
+library dependency is needed. All original side conditions remain.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

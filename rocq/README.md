@@ -1879,6 +1879,18 @@ the existing general fixed-basis matrix theorem through this bridge.
 Current inventory: **532 public claims, 535 proof scripts,
 596 documented declarations** across seven Rocq modules.
 
+## Generic fixed-basis positive-semidefinite theorem reuse
+
+The two-coordinate form nonnegativity proof was refactored to reuse
+`fixed_basis_covariance_matrix_positive_semidefinite` through the
+kernel-checked `indexed_basis_covariance_two_coordinate_form_as_list_matrix`
+bridge. Its theorem statement and exact normalization/nonnegative-weight
+assumptions are unchanged. This removes a duplicated scalar variance
+positivity step in favor of the existing general finite matrix theorem.
+
+Current inventory remains **532 public claims, 535 proof scripts,
+596 documented declarations** across seven Rocq modules.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
