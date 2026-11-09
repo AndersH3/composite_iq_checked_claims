@@ -106,6 +106,27 @@ functions listed above. Their stronger postconditions are
 exercised by the existing runtime and numerical property tests.
 No new restrictions on previously valid arguments were added.
 
+## Fourth ten-contract batch: legacy reference result generators
+
+The original analysis programs now also enforce ten distinct Deal
+contracts on `thresholds`, `admission_rows`, and `basic_grid`.
+The five additional postconditions per function specify label
+coverage, score-to-IQ conversion, theoretical quantile bounds,
+Fréchet joint/union probability constraints, reconstruction of
+the joint event from conditional rates, cutoff order, the
+intersection-versus-marginal relationship, and exact reproduction
+of the grid-minus-published residual.
+
+All validators and model computations continue to use their
+existing SciPy/NumPy library implementations; no duplicate
+probability integral or numerical grid code was introduced.
+These postconditions do not change the accepted input domains.
+
+The enforced ten-contract set now includes **nineteen original
+analysis Python functions**. The project-wide policy remains
+a mandatory five contracts per named function and an optional
+ten where the constraints can be justified and tested.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

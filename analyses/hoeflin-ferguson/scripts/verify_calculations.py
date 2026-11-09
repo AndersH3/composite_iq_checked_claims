@@ -127,6 +127,18 @@ def _valid_rows(rows) -> bool:
 @deal.raises()
 @deal.pre(lambda: bool(COUNTS) and len(COUNTS) == len(set(COUNTS)) and all(type(n) is int and 1 <= n <= 1_000_000 for n in COUNTS))
 @deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1 and _finite(Q) and 0 < Q <= 10)
+# Every threshold-table entry preserves the expected label, independent
+# positive-scale bounds and exact IQ = 100 + 16 z conversion.
+@deal.post(lambda result: len(result) == len(COUNTS) + 1)
+@deal.post(lambda result: all(isinstance(row, tuple) and len(row) == 3
+                              for row in result))
+@deal.post(lambda result: all(0 <= row[1] <= Q + 2e-14 for row in result))
+@deal.post(lambda result: all(math.isclose(
+    row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
+    for row in result))
+@deal.post(lambda result: math.isclose(
+    result[-1][1], Q * math.sqrt(RHO),
+    rel_tol=2e-14, abs_tol=1e-14))
 def thresholds() -> list[tuple[str, float, float]]:
     rows = []
     for n in COUNTS:
