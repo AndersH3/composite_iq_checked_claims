@@ -7972,8 +7972,8 @@ Section FiniteProbabilityMoments.
     intros coefficients Hnonzero.
     destruct (Hseparates coefficients Hnonzero)
       as [x [y [Hx [Hwx [Hy [Hwy Hdifferent]]]]]].
-    eapply indexed_basis_covariance_quadratic_positive_of_distinct_support_values;
-      eauto.
+    exact (indexed_basis_covariance_quadratic_positive_of_distinct_support_values
+      basis coefficients x y Hmass Hw Hx Hwx Hy Hwy Hdifferent).
   Qed.
 
   (**
