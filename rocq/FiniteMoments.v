@@ -6343,4 +6343,110 @@ Section FiniteProbabilityMoments.
     apply variance_nonnegative; assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_matrix_cauchy_schwarz_squared] (theorem) —
+   Squared Cauchy-Schwarz inequality for bounded covariance-matrix entries.
+   Mathematical meaning: The square of the covariance between any two
+   selected basis scores is bounded by the product of their diagonal
+   entries. Both diagonals are variances of exactly the same scores.
+   Exact checked proposition: For basis, i,j : Fin.t (length basis),
+   normalized total mass and nonnegative sampled weights imply
+   indexed covariance(i,j) * indexed covariance(i,j) <=
+   indexed covariance(i,i) * indexed covariance(j,j).
+   Premises and side conditions: The basis may contain repeated or
+   dependent score functions. No strict positivity, Gaussian model,
+   empirical correlation or matrix invertibility is assumed.
+   Proof/definition method: Rewrite both indexed diagonal entries
+   with the established variance bridge, unfold only the indexed entry
+   definition and apply the prior finite covariance Cauchy-Schwarz theorem.
+   Library reuse: indexed_basis_covariance_matrix_diagonal,
+   finite_covariance_cauchy_schwarz_squared, Stdlib.Vectors.Fin and Vector.
+   Boundary: A coordinatewise squared bound is not a certified spectral
+   decomposition or generic matrix rank theorem.
+   *)
+  Theorem indexed_basis_covariance_matrix_cauchy_schwarz_squared :
+    forall basis (i j : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix basis basis i j *
+      indexed_basis_cross_covariance_matrix basis basis i j <=
+      indexed_basis_cross_covariance_matrix basis basis i i *
+      indexed_basis_cross_covariance_matrix basis basis j j.
+  Proof.
+    intros basis i j Hmass Hw.
+    rewrite !indexed_basis_covariance_matrix_diagonal.
+    unfold indexed_basis_cross_covariance_matrix.
+    apply finite_covariance_cauchy_schwarz_squared; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support]
+   (theorem) — Exact support characterization of a zero diagonal cell.
+   Mathematical meaning: A basis-score variance vanishes exactly when
+   that selected score is constant on all positive-weight sampled
+   outcomes, even when zero-weight sample occurrences have other values.
+   Exact checked proposition: Under total_mass=1 and nonnegative sampled
+   weights, indexed covariance(i,i)=0 iff there exists c:R such that
+   each sampled x with weight x>0 has Vector.nth selected_score i x=c.
+   Premises and side conditions: The score-basis index is Fin.t-bounded;
+   the original finite sample may contain duplicates and zero-weight
+   outcomes, and no statistical or functional independence is assumed.
+   Proof/definition method: Replace the indexed diagonal by the
+   definitionally equal variance and apply the existing iff theorem
+   describing zero variance on positive-weight support.
+   Library reuse: indexed_basis_covariance_matrix_diagonal,
+   variance_zero_iff_exists_constant_on_positive_weight_support,
+   Stdlib.Vectors.Vector.nth and Stdlib.Reals.
+   Boundary: This is a finite weighted-support statement; it does not
+   compute nullity or rank of the indexed covariance matrix.
+   *)
+  Theorem indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support :
+    forall basis (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_cross_covariance_matrix basis basis i i = 0 <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           Vector.nth (Vector.of_list basis) i x = c).
+  Proof.
+    intros basis i Hmass Hw.
+    rewrite indexed_basis_covariance_matrix_diagonal.
+    apply variance_zero_iff_exists_constant_on_positive_weight_support;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row]
+   (theorem) — A vanishing diagonal cell forces a zero covariance row.
+   Mathematical meaning: Under normalized nonnegative weights, a
+   zero-variance selected basis score is uncorrelated with every score
+   in the same basis. Thus all entries in its indexed matrix row vanish.
+   Exact checked proposition: For bounded i,j in a finite score basis,
+   total_mass=1, nonnegative sampled weights and indexed
+   covariance(i,i)=0 imply indexed covariance(i,j)=0.
+   Premises and side conditions: No basis independence or positive
+   definiteness is assumed, and a zero-weight sampled outcome is not
+   required to obey any constant-score property.
+   Proof/definition method: Rewrite the zero diagonal as a zero
+   variance and instantiate the existing scalar zero-variance-implies-
+   zero-covariance theorem for the two vector-selected scores.
+   Library reuse: indexed_basis_covariance_matrix_diagonal,
+   zero_variance_implies_zero_covariance_first, Stdlib.Vectors.Vector.nth.
+   Boundary: This proves row-level covariance nullity, not a general
+   linear-algebraic rank-nullity identity.
+   *)
+  Theorem indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row :
+    forall basis (i j : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix basis basis i i = 0 ->
+      indexed_basis_cross_covariance_matrix basis basis i j = 0.
+  Proof.
+    intros basis i j Hmass Hw Hzero.
+    rewrite indexed_basis_covariance_matrix_diagonal in Hzero.
+    unfold indexed_basis_cross_covariance_matrix.
+    apply zero_variance_implies_zero_covariance_first; assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

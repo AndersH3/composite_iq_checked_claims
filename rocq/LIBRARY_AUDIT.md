@@ -1376,6 +1376,19 @@ standard library, not a parallel custom matrix representation.
 Rank-nullity and spectral properties still require separate checked
 connections to an established finite-dimensional linear algebra library.
 
+## Indexed covariance inequalities and support-nullity reuse
+
+The indexed covariance Cauchy-Schwarz inequality is a specialization of
+the existing `finite_covariance_cauchy_schwarz_squared`, not a separate
+matrix inequality implementation. The exact positive-support constant
+characterization and its zero-row consequence reuse
+`variance_zero_iff_exists_constant_on_positive_weight_support`
+and `zero_variance_implies_zero_covariance_first`. Each statement
+retains explicit mass-one and nonnegative-weight premises.
+The next rank/nullspace work should connect to an established
+finite-dimensional linear-algebra library rather than duplicating
+generic elimination, spectral or determinant algorithms.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
