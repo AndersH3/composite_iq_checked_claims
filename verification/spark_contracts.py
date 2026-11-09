@@ -243,10 +243,10 @@ def contract_entries(aspects: dict) -> list:
            result["insufficient"] == [row["identity"] for row in result["entities"]
                                       if row["contract_count"] < MINIMUM])
 @deal.post(lambda result:
-           result["complete"] == not (result["insufficient"] or
+           result["complete"] == (not (result["insufficient"] or
                                      result["missing_native"] or
                                      result["invalid_native"] or
-                                     result["unmatched_native"]))
+                                     result["unmatched_native"])))
 def inventory(sources: dict, coverage: dict | None = None) -> dict:
     candidates = {}
     excluded = []
