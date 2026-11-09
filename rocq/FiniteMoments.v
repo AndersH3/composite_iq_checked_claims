@@ -7595,7 +7595,7 @@ Section FiniteProbabilityMoments.
     { unfold basis_covariance_matrix.
       rewrite length_map.
       reflexivity. }
-    assert (Hbound : n < length basis).
+    assert (Hbound : (n < length basis)%nat).
     { rewrite <- Hlen.
       apply (proj1 (nth_error_Some _ _)).
       rewrite Hnth.
