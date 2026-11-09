@@ -1519,6 +1519,18 @@ dimension-safe row-kernel criterion. No new induction,
 matrix elimination algorithm, rank computation or axiom
 is introduced; the connection is exact for finite sums.
 
+## Indexed coefficient positivity and zero-kernel equivalences
+
+The fully bidirectional bounded-row covariance criterion
+now supports three additional iff characterizations by
+composing existing theorems with the standard `tauto`
+tactic. A transparent `indexed_basis_covariance_positive_definite`
+predicate quantifies over nonzero `Vector.t` coefficient
+vectors; its support-constancy and no-nonzero-bounded-kernel
+criteria are obtained pointwise from already checked indexed
+quadratic iff results, without a duplicate rank algorithm,
+vector zero implementation, extra axiom or added dependency.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

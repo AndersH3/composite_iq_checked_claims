@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **550 theorem, lemma and example declarations** in seven
+for the two reports. **555 theorem, lemma and example declarations** in seven
 Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -1185,8 +1185,8 @@ matrix_bilinear_form, matrix_quadratic_form,
 weighted_basis_sum, fixed_basis_weighted_variance_identity,
 and zero_variance_is_constant_on_positive_mass.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 
 ## Generic finite conditional-independence interface
@@ -1213,8 +1213,8 @@ probability interpretation; no unit-mass normalization is assumed.
 The interface is a starting point for future conditional-independence
 cross-product factorization and stronger four-cell bridge rules, not a certified stochastic process model.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Generic conditional independence specialized to the four-cell model
 
@@ -1234,8 +1234,8 @@ no new four-cell enumeration, cross-product calculation, or assumption
 of observed independence. All results retain the existing normalized,
 nonnegative four-cell interpretation.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Degenerate Boolean-event independence laws
 
@@ -1249,8 +1249,8 @@ conditional-mass laws; their reverse-order partners use only
 the already checked symmetry theorem. No new list recursion, event
 sum, or conditional quotient is introduced.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq files.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq files.
 
 ## True-conditioning independence and zero indicator covariance
 
@@ -1265,8 +1265,8 @@ The formalization does not assume that observed admissions are
 independent and does not generalize zero covariance to independence
 of arbitrary real-valued scores.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Finite conditional independence as a cross-product equation
 
@@ -1286,8 +1286,8 @@ for signed weights; interpreting it probabilistically requires
 nonnegative sample weights. No additional conditional probability
 operator or finite-sum implementation is introduced.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Conditioning-event independence and finite union factorization
 
@@ -1303,8 +1303,8 @@ the already checked conditional-independence factorization:
 This is a two-event finite algebraic identity, not an extension
 to mutually independent families of events.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Three-event conditional factorization
 
@@ -1322,8 +1322,8 @@ The proof delegates to the existing two-event conditional
 factorization and Stdlib.Boolean conjunction associativity, without
 introducing a new list fold or general mutual-independence axiom.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Conditional-support refactoring of the independence interface
 
@@ -1342,8 +1342,8 @@ checked impossible-event theorem, stronger support extensionality
 and independence symmetry. No additional weighted summation or
 probability definition is introduced.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Finite conditioning by standard-library list filtering
 
@@ -1363,8 +1363,8 @@ cross-product theorem. No new event sums, conditional quotients,
 or probability wrappers are introduced. Zero-denominator cases
 remain algebraic and are not interpreted as probabilities.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Arbitrary finite conditional event products
 
@@ -1390,8 +1390,8 @@ The proof does not define a new finite sum or probability
 quotient: conjunction and product use `forallb`, `map`,
 `fold_right` and the existing conditional-independence API.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Conditional finite-family union and intersection bounds
 
@@ -1411,8 +1411,8 @@ and `List.forallb_forall` rather than implementing new
 probability sums, event-set recursion, or an independent
 conjunction calculus.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Direct finite conditional Boole union bound
 
@@ -1433,8 +1433,8 @@ composes that identity with the prior filtered conditional
 union bound, without a second union-bound proof or new
 finite-sum recursion.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Positive common scaling of finite outcome weights
 
@@ -1450,8 +1450,8 @@ in both directions. The original event list and all
 multiplicities stay unchanged, and no new summation
 or probability quotient is introduced.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Set-extensional finite event families and permutation invariance
 
@@ -1472,8 +1472,8 @@ These theorems reuse `finite_conditional_prob_monotone`,
 the shared conditional target-event extensionality theorem
 and Stdlib rather than adding more finite-list recursion.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Conditional indicator covariance under normalized filtered weights
 
@@ -1499,8 +1499,8 @@ Boolean indicator scores; it makes no claim that
 uncorrelated general real-valued scores are independent
 or that arbitrary continuous conditional densities exist.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Exact conditional Bernoulli moments and covariance residual
 
@@ -1524,8 +1524,8 @@ Nonnegative original sample weights are still needed
 for probability interpretations; none of the proofs
 redefines the finite covariance or conditional quotient.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Normalized conditional indicator variance bounds
 
@@ -1548,8 +1548,8 @@ contracts and no violations on the pinned Python CI
 verification for commit `001fdfe`. The minimum observed
 number of distinct contracts per named function is five.
 
-Current audited Rocq totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited Rocq totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Conditional indicator covariance complement laws
 
@@ -1570,8 +1570,8 @@ Each result retains a strictly positive conditioning
 mass requirement; nonnegative individual weights
 are additionally needed for probabilistic semantics.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Cauchy–Schwarz and conditional degenerate-event independence
 
@@ -1594,8 +1594,8 @@ These are real-algebraic, kernel-checked consequences of
 existing finite moment results, not a claim that
 near-extreme observed frequencies are independent.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Quantitative finite conditional Bernoulli covariance bounds
 
@@ -1614,8 +1614,8 @@ All proof steps reuse existing finite moments and the
 standard Rocq `nra` tactic, without manual covariance
 sum expansion.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Dimension-preserving groundwork for covariance matrices
 
@@ -1641,8 +1641,8 @@ eigenvalue theorem. The implementation reuses
 `nth_error_map`, and the existing scalar covariance,
 rather than inventing custom matrix traversal.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Certified finite covariance rows and square symmetry
 
@@ -1661,8 +1661,8 @@ results. No new indexing algorithm, out-of-bounds
 sentinel, matrix transpose operator or covariance
 calculation is introduced.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## First finite-indexed matrix representation with a checked cell bridge
 
@@ -1690,8 +1690,8 @@ No rank, nullspace or continuous-distribution
 conclusion is claimed yet. Those need separate
 checked matrix-theory connections.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Total source-matrix access for bounded covariance indices
 
@@ -1714,8 +1714,8 @@ fully checked transport of individual
 covariance entries; rank and nullspace
 algorithms remain separate unproved work.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Bounded covariance rows and diagonal-variance bridge
 
@@ -1736,8 +1736,8 @@ a proof about continuous probability distributions. No new matrix
 traversal, library dependency, axiom, Python code or changed source-pinned
 verification artifact is introduced.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Indexed finite covariance inequalities and zero-variance support
 
@@ -1756,8 +1756,8 @@ Each proof is reduced to an existing scalar finite-covariance theorem;
 no new induction, custom matrix data structure or Gaussian assumption
 is introduced. Rank-nullity remains a separate library-integration task.
 
-Current audited totals: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current audited totals: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Rectangular covariance nullity and two-coordinate minors
 
@@ -1780,8 +1780,8 @@ axioms, Python modules, or historical source-pinned SPARK evidence
 have been introduced. Rank-nullity and spectral decompositions
 remain separate, unproved extensions.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Exact coordinate nullity and positive-support constancy
 
@@ -1802,8 +1802,8 @@ The model still lacks a generic matrix rank/kernel dimension theorem;
 no such claim is made. The changes introduce no custom matrix
 operation, new external dependency, Python code or SPARK modifications.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Indexed covariance positivity and positive-support variation
 
@@ -1821,8 +1821,8 @@ and the prior `Fin.t` diagonal bridge. They introduce no separate
 finite-sample recursion, matrix algorithm, Gaussian measure, new
 Rocq axiom, Python file, or historical source modification.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Rectangular indexed covariance bounds and variation
 
@@ -1839,8 +1839,8 @@ diagonal-to-variance identity instead of unfolding scalar covariance
 again. No custom matrix traversal, new external dependency, axiom,
 Python source change or historical evidence modification was needed.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** in seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** in seven Rocq modules.
 
 ## Two-coordinate indexed covariance quadratic via scalar variance
 
@@ -1861,8 +1861,8 @@ kernel/rank results and continuous distribution theory remain
 separately unproved. No Python source or archived SPARK evidence
 was modified.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Two-coordinate bridge to the established list-matrix quadratic
 
@@ -1876,8 +1876,8 @@ No independent generic matrix multiplication or list recursion
 was introduced. Later positive-semidefiniteness proofs can use
 the existing general fixed-basis matrix theorem through this bridge.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Generic fixed-basis positive-semidefinite theorem reuse
 
@@ -1888,8 +1888,8 @@ bridge. Its theorem statement and exact normalization/nonnegative-weight
 assumptions are unchanged. This removes a duplicated scalar variance
 positivity step in favor of the existing general finite matrix theorem.
 
-Current inventory remains **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory remains **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Arbitrary-dimensional vector coefficients and covariance nullity
 
@@ -1915,8 +1915,8 @@ implementation or a kernel-dimension theorem.
 No Python files, new Rocq axioms, external dependencies or
 historical source-pinned SPARK verification artifacts were changed.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Dimension-safe covariance orthogonality and strict positivity
 
@@ -1938,8 +1938,8 @@ none asserts finite matrix rank or continuous probability results.
 There are no new Python changes, matrix algorithms, dependencies,
 axioms or edits to source-pinned SPARK evidence.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Two-coordinate algebra and bounded covariance row consequences
 
@@ -1965,8 +1965,8 @@ All theorem comments and the proof inventory were updated;
 no Python sources, new axioms, custom finite sums or
 source-pinned SPARK evidence were changed.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Complete Fin.t-indexed covariance-row nullspace criterion
 
@@ -1988,8 +1988,35 @@ vanish**. The converse follows from completeness of the
 row-index bridge and the existing general fixed-basis nullity
 theorem. The result does not compute rank or nullspace dimension.
 
-Current inventory: **550 public claims, 553 proof scripts,
-615 documented declarations** across seven Rocq modules.
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
+
+## Indexed covariance positive definiteness and bounded row kernel
+
+Five further theorem proofs reuse the complete Fin.t row
+kernel iff. Strict positivity of an arbitrary-dimensional
+typed coefficient covariance quadratic is now equivalent
+to the bounded row dot products not all vanishing. A
+vanishing bounded row system is equivalent both to a
+positive-support-constant composite score and to a
+composite score uncorrelated with every outcome score.
+These are propositional compositions of existing checked
+results and do not repeat covariance algebra.
+
+The `indexed_basis_covariance_positive_definite` definition
+quantifies over all nonzero `Vector.t R (length basis)`
+coefficient directions, using the existing `Vector.to_list`
+and `List.repeat` representation of a zero vector.
+Two further iff theorems characterize positive definiteness
+as the absence of any nonzero supported-constant score
+direction, equivalently the absence of a nonzero bounded
+covariance row-kernel direction, under unit-mass nonnegative
+weights. The existing fixed-basis results supply the
+substantive mathematics. **No rank dimension, eigenvalue,
+spectral theorem or determinant algorithm is claimed.**
+
+Current inventory: **555 public claims, 558 proof scripts,
+621 documented declarations** across seven Rocq modules.
 
 ## Research extensions
 

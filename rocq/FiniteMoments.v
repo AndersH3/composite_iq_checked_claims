@@ -7647,4 +7647,181 @@ Section FiniteProbabilityMoments.
       apply Hbounded.
   Qed.
 
+  (**
+   [indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot] (theorem) — A dimension-safe coefficient covariance quadratic is positive precisely when the indexed covariance row dot products do not all vanish.
+   Mathematical meaning: A dimension-safe coefficient covariance quadratic is positive precisely when the indexed covariance row dot products do not all vanish.
+   Exact checked proposition: Under total_mass=1 and nonnegative sample weights, 0 < indexed_basis_covariance_quadratic_form basis coefficients iff not (forall i : Fin.t (length basis), vector_dot (Vector.to_list coefficients) (map (fun g => covariance selected_i g) basis)=0).
+   Premises and side conditions: All coefficient and row dimensions are enforced by Vector.t and Fin.t. The basis may be repeated or linearly dependent, and no invertibility or Gaussianity is assumed.
+   Proof/definition method: Combine three previously checked iff theorems: positive iff not all existing matrix-row dots vanish, zero quadratic iff all existing matrix-row dots vanish, and zero quadratic iff all bounded row dots vanish. The standard tauto tactic composes them without a new real inequality proof.
+   Library reuse: indexed_basis_covariance_quadratic_positive_iff_nonzero_matrix_row_dot, indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots, indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, Stdlib.tauto.
+   Boundary: A negated universal indexed-row condition witnesses strict positive curvature logically; no finite matrix rank or nonzero-row extraction algorithm is claimed.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_quadratic_form basis coefficients <->
+       ~ (forall i : Fin.t (length basis),
+            vector_dot (Vector.to_list coefficients)
+              (map (fun g => covariance
+                (Vector.nth (Vector.of_list basis) i) g) basis) = 0)).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_positive_iff_nonzero_matrix_row_dot
+        basis coefficients Hmass Hw) as Hpositive.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots
+        basis coefficients Hmass Hw) as Hlist.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero
+        basis coefficients Hmass Hw) as Hindexed.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bounded_row_dots_zero_iff_constant_on_support] (theorem) — All bounded covariance row dot products vanish precisely when the coefficient-weighted composite score is constant on positive-weight finite support.
+   Mathematical meaning: All bounded covariance row dot products vanish precisely when the coefficient-weighted composite score is constant on positive-weight finite support.
+   Exact checked proposition: For normalized nonnegative sample weights, (forall bounded i, vector_dot coefficient_list (map (fun g => covariance selected_i g) basis)=0) iff exists c:R such that weighted_basis_sum coefficient_list basis x=c at every sampled x with positive weight.
+   Premises and side conditions: The coefficient vector has exactly the basis length. Scores and sample occurrences may repeat, and zero-weight outcomes need not satisfy the supported-constant equality.
+   Proof/definition method: Compose the new full indexed-row zero-quadratic iff with the already checked finite positive-support zero-quadratic iff, using standard tauto.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, indexed_basis_covariance_quadratic_zero_iff_constant_on_support and Stdlib.tauto.
+   Boundary: This characterizes finite weighted row-kernel directions exactly, but does not compute their dimension or claim anything about continuous probability.
+   *)
+  Theorem indexed_basis_covariance_bounded_row_dots_zero_iff_constant_on_support :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall i : Fin.t (length basis),
+          vector_dot (Vector.to_list coefficients)
+            (map (fun g => covariance
+              (Vector.nth (Vector.of_list basis) i) g) basis) = 0) <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           weighted_basis_sum (Vector.to_list coefficients) basis x = c).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero
+        basis coefficients Hmass Hw) as Hindexed.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_constant_on_support
+        basis coefficients Hmass Hw) as Hsupported.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bounded_row_dots_zero_iff_uncorrelated_with_every_score] (theorem) — Annihilating all Fin.t-indexed covariance rows is equivalent to the composite score being uncorrelated with every outcome score.
+   Mathematical meaning: Annihilating all Fin.t-indexed covariance rows is equivalent to the composite score being uncorrelated with every outcome score.
+   Exact checked proposition: Under mass-one nonnegative weights, all bounded covariance row dots vanish iff forall g : Outcome -> R, covariance (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0.
+   Premises and side conditions: All indices and vector coefficient dimensions are statically bounded. No basis independence or nonzero variance premise is made, and finite samples with duplicates are permitted.
+   Proof/definition method: Compose the established indexed bounded-row zero-quadratic equivalence with the stronger checked zero-quadratic iff all-scores covariance orthogonality result by Stdlib.tauto.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score and Stdlib.tauto.
+   Boundary: This exact finite-sample orthogonality criterion is not the dimension of a matrix kernel or a Gaussian conditional independence assertion.
+   *)
+  Theorem indexed_basis_covariance_bounded_row_dots_zero_iff_uncorrelated_with_every_score :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall i : Fin.t (length basis),
+          vector_dot (Vector.to_list coefficients)
+            (map (fun g => covariance
+              (Vector.nth (Vector.of_list basis) i) g) basis) = 0) <->
+       forall g : Outcome -> R,
+         covariance
+           (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero
+        basis coefficients Hmass Hw) as Hindexed.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score
+        basis coefficients Hmass Hw) as Hall.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite] (definition) — A type-checked positive-definiteness predicate for all nonzero real coefficient vectors of a finite basis.
+   Mathematical meaning: A type-checked positive-definiteness predicate for all nonzero real coefficient vectors of a finite basis.
+   Exact declaration: indexed_basis_covariance_positive_definite basis means forall coefficients : Vector.t R (length basis), Vector.to_list coefficients <> repeat 0 (length basis) -> 0 < indexed_basis_covariance_quadratic_form basis coefficients.
+   Premises and side conditions: The coefficient shape is fixed by the basis dimension, and nonzeroness is stated using the existing list representation and Stdlib.List.repeat. No normalized weights are necessary to form the predicate.
+   Proof/definition method: Define a transparent Prop abbreviation over the previously checked indexed coefficient quadratic and the standard Vector.to_list/List.repeat zero comparison, without defining an alternative vector zero test.
+   Library reuse: indexed_basis_covariance_quadratic_form, Stdlib.Vectors.Vector.to_list, Stdlib.List.repeat and Stdlib.Reals.
+   Boundary: This is the standard algebraic notion of strict positivity for all nonzero coefficient directions; it does not automatically hold for dependent bases or calculate eigenvalues.
+   *)
+  Definition indexed_basis_covariance_positive_definite
+      (basis : list (Outcome -> R)) : Prop :=
+    forall coefficients : Vector.t R (length basis),
+      Vector.to_list coefficients <> repeat 0 (length basis) ->
+      0 < indexed_basis_covariance_quadratic_form basis coefficients.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_no_nonzero_supported_constant] (theorem) — A finite indexed covariance basis is positive definite precisely when no nonzero bounded coefficient vector forms a score constant on positive-weight support.
+   Mathematical meaning: A finite indexed covariance basis is positive definite precisely when no nonzero bounded coefficient vector forms a score constant on positive-weight support.
+   Exact checked proposition: Under total_mass=1 and nonnegative sampled weights, indexed_basis_covariance_positive_definite basis iff for every coefficients:Vector.t R (length basis) with Vector.to_list coefficients <> repeat 0 (length basis), no c:R is equal to its composite score on all positive-weight sampled outcomes.
+   Premises and side conditions: Empty bases and zero-weight sample occurrences are allowed; the theorem does not require independent basis scores because that is captured by the no-constant-direction condition itself.
+   Proof/definition method: Unfold the typed predicate and apply the previously verified pointwise indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support theorem in both directions.
+   Library reuse: indexed_basis_covariance_positive_definite, indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support, Stdlib.Vectors.Vector.to_list and Stdlib.List.repeat.
+   Boundary: This is a checked structural characterization of positive definiteness, not a numerical eigenvalue bound, finite-sample IQ data result or determinant formula.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_no_nonzero_supported_constant :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ (exists c : R,
+             forall x, In x samples -> 0 < weight x ->
+               weighted_basis_sum (Vector.to_list coefficients)
+                 basis x = c)).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_covariance_positive_definite.
+    split; intros Hproperty coefficients Hnonzero.
+    - apply (proj1
+        (indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+    - apply (proj2
+        (indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel] (theorem) — Positive definiteness is equivalent to the absence of nonzero typed coefficient vectors annihilating all bounded covariance rows.
+   Mathematical meaning: Positive definiteness is equivalent to the absence of nonzero typed coefficient vectors annihilating all bounded covariance rows.
+   Exact checked proposition: With normalized nonnegative weights, indexed_basis_covariance_positive_definite basis iff every coefficients:Vector.t R (length basis) with nonzero Vector.to_list has not(forall i:Fin.t(length basis), vector_dot coefficient_list (map (fun g => covariance selected_i g) basis)=0).
+   Premises and side conditions: The basis may be dependent; in that case the no-nonzero-kernel condition can fail. All coefficient and row lengths are certified by standard vector types, and no Gaussian distribution is assumed.
+   Proof/definition method: Unfold indexed positive definiteness and specialize the previously checked strictly-positive-quadratic iff nonzero bounded row dot theorem to each nonzero coefficient vector, in both directions.
+   Library reuse: indexed_basis_covariance_positive_definite, indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot, Stdlib.Vectors.Fin/Vector.
+   Boundary: This establishes a kernel-triviality criterion by exact finite covariance algebra, but does not compute matrix rank, eigenvalues or a nullspace basis.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ (forall i : Fin.t (length basis),
+              vector_dot (Vector.to_list coefficients)
+                (map (fun g => covariance
+                  (Vector.nth (Vector.of_list basis) i) g) basis) = 0)).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_covariance_positive_definite.
+    split; intros Hproperty coefficients Hnonzero.
+    - apply (proj1
+        (indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+    - apply (proj2
+        (indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+  Qed.
+
 End FiniteProbabilityMoments.

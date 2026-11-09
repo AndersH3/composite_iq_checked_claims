@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 550 public theorem/lemma/example declarations,
+The current branch has 555 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**553 proof scripts**, including the generic
+**558 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 226 proof scripts
+## FiniteMoments.v — 231 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -948,6 +948,11 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_quadratic_nonzero_indexed_covariance_implies_positive` (theorem) | Apply general nonzero covariance witness theorem to selected bounded basis score | indexed_basis_covariance_quadratic_nonzero_covariance_implies_positive, Stdlib.Vectors.Vector.nth | **New:** Nonzero covariance with any indexed score certifies positive coefficient-vector quadratic |
 | `indexed_basis_covariance_matrix_row_has_bounded_index` (theorem) | Recover list row position via In_nth_error, bound with nth_error_Some, reify Fin.of_nat_lt and use indexed row theorem | Stdlib.List.In_nth_error, nth_error_Some, length_map, Fin.of_nat_lt, Fin.to_nat_of_nat, indexed_basis_cross_covariance_matrix_row | **New:** Every list covariance row is exactly a Fin.t-indexed covariance row |
 | `indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero` (theorem) | Compose existing forward bounded-row nullity and new list-row-to-Fin index coverage for converse | indexed_basis_covariance_quadratic_zero_implies_bounded_row_dot_zero, indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots, indexed_basis_covariance_matrix_row_has_bounded_index | **New:** Zero covariance quadratic iff all Fin.t-bounded covariance row dot products vanish |
+| `indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot` (theorem) | Compose positive/list-row iff and nullity/list-row/indexed-row iff using tauto | indexed_basis_covariance_quadratic_positive_iff_nonzero_matrix_row_dot, indexed_basis_covariance_quadratic_zero_iff_zero_matrix_row_dots, indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero | **New:** Positive indexed covariance quadratic iff not all bounded covariance row dots vanish |
+| `indexed_basis_covariance_bounded_row_dots_zero_iff_constant_on_support` (theorem) | Propositional composition of bounded-row zero iff quadratic zero iff supported constancy | indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, indexed_basis_covariance_quadratic_zero_iff_constant_on_support | **New:** All bounded row dot products vanish iff the weighted score is supported-constant |
+| `indexed_basis_covariance_bounded_row_dots_zero_iff_uncorrelated_with_every_score` (theorem) | Propositional composition of bounded-row nullity and universal score orthogonality | indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score | **New:** All bounded covariance row dots vanish iff the composite score is orthogonal to every score |
+| `indexed_basis_covariance_positive_definite_iff_no_nonzero_supported_constant` (theorem) | Pointwise bidirectional application of existing positive quadratic/support nonconstancy iff | indexed_basis_covariance_quadratic_positive_iff_nonconstant_on_support, indexed_basis_covariance_positive_definite | **New:** Indexed positive definiteness iff no nonzero coefficient vector yields a positive-support constant score |
+| `indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel` (theorem) | Pointwise composition of typed positive definiteness and positive iff not bounded row nullity | indexed_basis_covariance_positive_definite, indexed_basis_covariance_quadratic_positive_iff_nonzero_bounded_row_dot | **New:** Indexed positive definiteness iff no nonzero bounded coefficient vector is in the covariance row kernel |
 
 ## FiniteBridge.v — 37 proof scripts
 
