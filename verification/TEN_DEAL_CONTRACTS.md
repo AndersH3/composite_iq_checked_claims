@@ -205,7 +205,13 @@ negative-control tests remain in force. The version-pinned symbolic
 `verification/check_symbolic.py` gate now expects six independently
 proved postconditions for each of these two functions instead of
 silently retaining its former one-postcondition count. The deliberately
-failing fixture still has the same exact three obligations.
+failing fixture still has the same exact three obligations. The archived
+source-pinned symbolic record has only the older single postcondition per
+proof-gate function. The version-aware symbolic acceptance logic permits
+that historic shape **only** for the original proof-gate SHA-256 and the
+historical evidence auditor additionally checks actual selected source
+bytes and immutable release hashes; all live proofs require six verified
+obligations each. There is no weakening of the current symbolic gate.
 
 ## Next upgrades
 

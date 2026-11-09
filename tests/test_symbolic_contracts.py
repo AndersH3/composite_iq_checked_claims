@@ -62,6 +62,21 @@ def test_real_fixture_has_a_negative_counterexample_and_all_other_posts_prove(go
     assert negative["conclusion"] == "FAIL"
     assert negative["counterexample"] == {} and negative["counterexample"] is not None
     assert [row["outcome"] for row in negative["obligations"]] == ["counterexample", "proved", "proved"]
+    # The archived report was emitted by the pinned one-postcondition version.
+    # Accept its actual source-bound obligations, but never tolerate removing
+    # clauses from a current report or corrupting an archived obligation.
+    historical_path = (ROOT / "verification/evidence"
+                       / "symbolic-fixture-computer10-20261105/symbolic/result.json")
+    historical = json.loads(historical_path.read_text())
+    assert symbolic.accepted(historical)
+    assert all(len(row["obligations"]) == 1 for row in historical["files"][0]["theorems"])
+    corrupted = deepcopy(historical)
+    corrupted["files"][0]["theorems"][0]["obligations"][0]["outcome"] = "unsupported"
+    assert not symbolic.accepted(corrupted)
+    unpinned = deepcopy(historical)
+    unpinned["files"][0]["sha256"] = "0" * 64
+    unpinned["sources"][0]["sha256"] = "0" * 64
+    assert not symbolic.accepted(unpinned)
 
 
 @deal.pre(lambda good_report: protected_history_intact())
