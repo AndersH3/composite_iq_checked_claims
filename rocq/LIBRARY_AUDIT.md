@@ -1401,6 +1401,17 @@ the two-coordinate minor bound is a direct consequence of the
 earlier indexed Cauchy-Schwarz inequality and `Stdlib.Lra`.
 No custom determinant or rank algorithm has been introduced.
 
+## Zero covariance rows and columns as supported-constant scores
+
+The total `Fin.t`-indexed covariance symmetry theorem supplies a
+zero-row iff zero-column equivalence without probability hypotheses.
+Under normalized nonnegative finite weights, zero row or column iff
+support-constant score follows solely from the existing diagonal
+variance equivalence and positive-weight-support theorem, using
+`tauto`. These are exact logical compositions, not fresh
+finite-sample inductions, linear algebra implementations or new
+probability axioms.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

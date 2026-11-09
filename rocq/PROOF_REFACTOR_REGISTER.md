@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 518 public theorem/lemma/example declarations,
+The current branch has 521 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**521 proof scripts**, including the generic
+**524 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 194 proof scripts
+## FiniteMoments.v — 197 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -916,6 +916,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_matrix_zero_row_iff_zero_diagonal` (theorem) | Diagonal specialization and established zero-diagonal-to-zero-row lemma | indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row | **New:** a zero diagonal exactly characterizes a zero indexed row |
 | `indexed_basis_covariance_matrix_zero_column_iff_zero_diagonal` (theorem) | Diagonal specialization and established zero-diagonal-to-zero-column lemma | indexed_basis_covariance_matrix_zero_diagonal_implies_zero_column | **New:** a zero diagonal exactly characterizes a zero indexed column |
 | `indexed_basis_covariance_matrix_principal_minor_nonnegative` (theorem) | Indexed symmetry and previously proved Cauchy-Schwarz bound, then Lra | indexed_basis_covariance_matrix_symmetric, indexed_basis_covariance_matrix_cauchy_schwarz_squared, Stdlib.Lra | **New:** every two-coordinate principal covariance minor is nonnegative |
+| `indexed_basis_covariance_matrix_zero_row_iff_zero_column` (theorem) | Rewrite indexed covariance symmetric cells in both directions | indexed_basis_covariance_matrix_symmetric, Stdlib.Vectors.Fin | **New:** indexed zero rows and columns are equivalent without weight assumptions |
+| `indexed_basis_covariance_matrix_zero_row_iff_constant_on_support` (theorem) | Compose zero-row iff zero-diagonal and support constancy iff via tauto | indexed_basis_covariance_matrix_zero_row_iff_zero_diagonal, indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support | **New:** a zero row exactly identifies constant positive-support score |
+| `indexed_basis_covariance_matrix_zero_column_iff_constant_on_support` (theorem) | Compose unconditional row/column equivalence with support criterion via tauto | indexed_basis_covariance_matrix_zero_row_iff_zero_column, indexed_basis_covariance_matrix_zero_row_iff_constant_on_support | **New:** a zero column exactly identifies constant positive-support score |
 
 ## FiniteBridge.v — 37 proof scripts
 

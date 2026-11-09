@@ -6633,4 +6633,120 @@ Section FiniteProbabilityMoments.
     lra.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_matrix_zero_row_iff_zero_column] (theorem) —
+   Null rows and columns agree in a symmetric indexed covariance matrix.
+   Mathematical meaning: All entries of a selected covariance row
+   vanish precisely when all entries of the corresponding column vanish.
+   Exact checked proposition: For any basis and i : Fin.t (length basis),
+   (forall j, indexed covariance(i,j)=0) iff
+   (forall j, indexed covariance(j,i)=0).
+   Premises and side conditions: This is algebraic covariance symmetry,
+   with no normalization, nonnegative weight, nonempty basis,
+   Gaussian distribution or statistical independence assumption.
+   Proof/definition method: Rewrite each cell by the established
+   indexed square covariance symmetry theorem in opposite directions.
+   Library reuse: indexed_basis_covariance_matrix_symmetric,
+   Stdlib.Vectors.Fin and core propositional reasoning.
+   Boundary: Symmetry relates coordinates but does not certify a
+   numerical matrix rank, determinant or general nullspace algorithm.
+   *)
+  Theorem indexed_basis_covariance_matrix_zero_row_iff_zero_column :
+    forall basis (i : Fin.t (length basis)),
+      (forall j : Fin.t (length basis),
+        indexed_basis_cross_covariance_matrix basis basis i j = 0) <->
+      (forall j : Fin.t (length basis),
+        indexed_basis_cross_covariance_matrix basis basis j i = 0).
+  Proof.
+    intros basis i.
+    split; intros Hzero j.
+    - rewrite (indexed_basis_covariance_matrix_symmetric basis j i).
+      apply Hzero.
+    - rewrite (indexed_basis_covariance_matrix_symmetric basis i j).
+      apply Hzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_zero_row_iff_constant_on_support]
+   (theorem) — Exact constant-score criterion for an indexed zero row.
+   Mathematical meaning: A covariance row vanishes exactly when the
+   score it represents is constant over every outcome with positive
+   weight in the enumerated finite sample.
+   Exact checked proposition: Under unit total mass and nonnegative
+   sampled weights, all covariance(i,j)=0 over bounded j iff
+   exists c:R, forall x in samples with weight x>0, selected_score i x=c.
+   Premises and side conditions: The claim permits repeated score basis
+   elements, repeated outcomes, and different values at zero-weight
+   outcomes. No invertibility or score independence is assumed.
+   Proof/definition method: Compose the existing zero-row iff zero
+   diagonal result with the established diagonal iff positive-support
+   constant characterization, using propositional transitivity (tauto).
+   Library reuse: indexed_basis_covariance_matrix_zero_row_iff_zero_diagonal,
+   indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support,
+   Stdlib.Vectors.Vector.nth and the standard tauto tactic.
+   Boundary: This is exact finite support behavior, not a statement
+   about continuous random variables or generic matrix nullity.
+   *)
+  Theorem indexed_basis_covariance_matrix_zero_row_iff_constant_on_support :
+    forall basis (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall j : Fin.t (length basis),
+          indexed_basis_cross_covariance_matrix basis basis i j = 0) <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           Vector.nth (Vector.of_list basis) i x = c).
+  Proof.
+    intros basis i Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_matrix_zero_row_iff_zero_diagonal
+        basis i Hmass Hw) as Hrow.
+    pose proof
+      (indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support
+        basis i Hmass Hw) as Hconstant.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_matrix_zero_column_iff_constant_on_support]
+   (theorem) — Exact constant-score criterion for an indexed zero column.
+   Mathematical meaning: Every covariance with one selected score as
+   second coordinate is zero exactly when that score is constant on
+   the finite sample's positive-weight support.
+   Exact checked proposition: For a bounded basis index i and normalized
+   nonnegative weights, all covariance(j,i)=0 over bounded j iff there
+   is c:R equal to selected_score i x at every positive-weight sample x.
+   Premises and side conditions: This assumes neither matrix
+   invertibility nor positive variance and places no restriction on
+   zero-weight occurrences beyond nonnegative weights.
+   Proof/definition method: Compose the unconditional row/column
+   symmetry equivalence with the preceding zero-row support theorem,
+   using the standard propositional tauto tactic.
+   Library reuse: indexed_basis_covariance_matrix_zero_row_iff_zero_column,
+   indexed_basis_covariance_matrix_zero_row_iff_constant_on_support,
+   Stdlib.Vectors.Vector.nth and standard tauto.
+   Boundary: Finite support-constancy is not a full rank computation or
+   an empirical claim about correlations between IQ subtests.
+   *)
+  Theorem indexed_basis_covariance_matrix_zero_column_iff_constant_on_support :
+    forall basis (i : Fin.t (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall j : Fin.t (length basis),
+          indexed_basis_cross_covariance_matrix basis basis j i = 0) <->
+       exists c : R,
+         forall x, In x samples -> 0 < weight x ->
+           Vector.nth (Vector.of_list basis) i x = c).
+  Proof.
+    intros basis i Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_matrix_zero_row_iff_zero_column
+        basis i) as Hsym.
+    pose proof
+      (indexed_basis_covariance_matrix_zero_row_iff_constant_on_support
+        basis i Hmass Hw) as Hrow.
+    tauto.
+  Qed.
+
 End FiniteProbabilityMoments.
