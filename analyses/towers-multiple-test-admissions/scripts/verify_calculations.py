@@ -56,6 +56,14 @@ def _finite(value) -> bool:
              max(p_a, p_b) - 5e-15 <= result <= min(1, p_a + p_b) + 5e-15)
 @deal.has()
 @deal.raises()
+# Inclusion-exclusion also constrains each marginal contribution,
+# its upper sum bound, and the disjoint-events boundary exactly.
+@deal.ensure(lambda p_a, p_b, joint, result: result == p_a + p_b - joint)
+@deal.ensure(lambda p_a, p_b, joint, result: result + 5e-15 >= p_a)
+@deal.ensure(lambda p_a, p_b, joint, result: result + 5e-15 >= p_b)
+@deal.ensure(lambda p_a, p_b, joint, result: result <= p_a + p_b + 5e-15)
+@deal.ensure(lambda p_a, p_b, joint, result: joint != 0 or math.isclose(
+    result, p_a + p_b, rel_tol=0, abs_tol=5e-15))
 def probability_union(p_a: float, p_b: float, joint: float) -> float:
     """Inclusion-exclusion for a feasible pair of event probabilities."""
     return p_a + p_b - joint
@@ -66,6 +74,14 @@ def probability_union(p_a: float, p_b: float, joint: float) -> float:
 @deal.post(lambda result: _finite(result) and 0 <= result <= 1)
 @deal.has()
 @deal.raises()
+# Recover the joint mass from its conditional, and check the
+# empty-intersection, equal-event and certain-conditioning boundaries.
+@deal.ensure(lambda joint, marginal, result: result == joint / marginal)
+@deal.ensure(lambda joint, marginal, result: math.isclose(
+    result * marginal, joint, rel_tol=8e-15, abs_tol=1e-15))
+@deal.ensure(lambda joint, marginal, result: joint != 0 or result == 0)
+@deal.ensure(lambda joint, marginal, result: joint != marginal or result == 1)
+@deal.ensure(lambda joint, marginal, result: marginal != 1 or result == joint)
 def conditional_probability(joint: float, marginal: float) -> float:
     """Conditional rate with its explicitly positive marginal denominator."""
     return joint / marginal

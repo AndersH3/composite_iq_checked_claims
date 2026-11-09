@@ -43,6 +43,13 @@ def _finite(value) -> bool:
     n * result, 1 + (n - 1) * rho, rel_tol=8e-15, abs_tol=1e-15))
 @deal.has()
 @deal.raises()
+# Independently specify no correlation, perfect correlation, singleton basis,
+# and the two lower variance bounds implied by the equicorrelation model.
+@deal.ensure(lambda n, rho, result: rho != 0 or math.isclose(result, 1 / n, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: rho != 1 or math.isclose(result, 1, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: n != 1 or math.isclose(result, 1, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: result + 2e-15 >= rho)
+@deal.ensure(lambda n, rho, result: result + 2e-15 >= 1 / n)
 def variance_factor(n: int, rho: float) -> float:
     """Variance of an equally weighted mean for the nonnegative-correlation model."""
     return rho + (1 - rho) / n
@@ -55,6 +62,13 @@ def variance_factor(n: int, rho: float) -> float:
 @deal.ensure(lambda n, rho, quantile, result: result <= quantile)
 @deal.has()
 @deal.raises()
+# The component threshold must reduce correctly at zero, singleton, perfect
+# and zero correlation, and never undershoot the independent-score bound.
+@deal.ensure(lambda n, rho, quantile, result: quantile != 0 or result == 0)
+@deal.ensure(lambda n, rho, quantile, result: n != 1 or math.isclose(result, quantile, rel_tol=0, abs_tol=2e-14))
+@deal.ensure(lambda n, rho, quantile, result: rho != 1 or math.isclose(result, quantile, rel_tol=0, abs_tol=2e-14))
+@deal.ensure(lambda n, rho, quantile, result: rho != 0 or math.isclose(result, quantile / math.sqrt(n), rel_tol=5e-15, abs_tol=2e-14))
+@deal.ensure(lambda n, rho, quantile, result: result + 2e-14 >= quantile / math.sqrt(n))
 def mean_threshold(n: int, rho: float, quantile: float) -> float:
     """Convert a positive composite quantile to a required component mean."""
     return quantile * math.sqrt(variance_factor(n, rho))
@@ -65,6 +79,14 @@ def mean_threshold(n: int, rho: float, quantile: float) -> float:
 @deal.post(lambda result: _finite(result))
 @deal.has()
 @deal.raises()
+# Check exact zero and unit denominators, quotient sign preservation
+# and numerical recovery of the numerator on the declared finite domain.
+@deal.ensure(lambda numerator, denominator, result: numerator != 0 or result == 0)
+@deal.ensure(lambda numerator, denominator, result: denominator != 1 or result == numerator)
+@deal.ensure(lambda numerator, denominator, result: numerator <= 0 or result >= 0)
+@deal.ensure(lambda numerator, denominator, result: numerator >= 0 or result <= 0)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(
+    result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-15))
 def _positive_ratio(numerator: float, denominator: float) -> float:
     """A finite scalar quotient on the documented numerical working range."""
     return numerator / denominator

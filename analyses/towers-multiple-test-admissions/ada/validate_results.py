@@ -15,6 +15,15 @@ ROOT = Path(__file__).resolve().parent
 @deal.post(lambda result: math.isfinite(result) and 0 < result < 1)
 @deal.raises()
 @deal.has()
+# An open-unit Park--Miller state preserves its exact quotient, lower
+# unit, upper-complement and floating-point reconstruction constraints.
+@deal.ensure(lambda numerator, denominator, result: result == numerator / denominator)
+@deal.ensure(lambda numerator, denominator, result: result <= numerator)
+@deal.ensure(lambda numerator, denominator, result: result >= 1 / denominator)
+@deal.ensure(lambda numerator, denominator, result: result <=
+             1 - 1 / denominator + 1e-15)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(
+    result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-8))
 def _open_unit_ratio(numerator, denominator):
     """Map a positive Park--Miller state to an open-unit-interval float."""
     return numerator / denominator

@@ -23,6 +23,14 @@ COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 @deal.post(lambda result: math.isfinite(result) and 0 <= result <= 2)
 @deal.raises()
 @deal.has()
+# Verify quotient boundary behavior and a numerical round-trip separately
+# from the basic interval/range contract of the old Ada validator.
+@deal.ensure(lambda numerator, denominator, result: numerator != 0 or result == 0)
+@deal.ensure(lambda numerator, denominator, result: denominator != 1 or result == numerator)
+@deal.ensure(lambda numerator, denominator, result: result <= numerator)
+@deal.ensure(lambda numerator, denominator, result: numerator > denominator or result <= 1)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(
+    result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-15))
 def _positive_ratio(numerator, denominator):
     """Divide bounded variance terms by a positive test count or variance sum."""
     return numerator / denominator
@@ -113,6 +121,13 @@ def validate_calculations(path):
              and successes / total - 1e-15 <= result[1])
 @deal.raises()
 @deal.has()
+# Wilson intervals retain list shape and correctly cover the zero-count
+# and all-success limiting cases, including positive finite-width bounds.
+@deal.post(lambda result: isinstance(result, list))
+@deal.ensure(lambda successes, total, result: successes != 0 or result[0] <= 1e-14)
+@deal.ensure(lambda successes, total, result: successes != total or result[1] >= 1 - 1e-14)
+@deal.ensure(lambda successes, total, result: successes != 0 or result[1] > 0)
+@deal.ensure(lambda successes, total, result: successes != total or result[0] < 1)
 def wilson(successes, total):
     z = float(norm.isf(.025))
     phat = successes / total
