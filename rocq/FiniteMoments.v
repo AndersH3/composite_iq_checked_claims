@@ -6344,6 +6344,124 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_cross_covariance_cauchy_schwarz_squared] (theorem) —
+   Cauchy-Schwarz for a rectangular, dimension-safe covariance entry.
+   Mathematical meaning: The squared covariance between a score from
+   the left basis and a score from the right basis does not exceed
+   the product of their two finite-sample score variances.
+   Exact checked proposition: For arbitrary lists left and right,
+   bounded indices i and j, and total_mass=1 with nonnegative sample
+   weights, M(i,j)*M(i,j) <= variance(left[i])*variance(right[j]),
+   where M is indexed_basis_cross_covariance_matrix left right.
+   Premises and side conditions: Bases can have unequal dimensions,
+   repeated scores or zero-variance components; independence and
+   strictly positive variances are not premises.
+   Proof/definition method: Unfold the indexed covariance entry only
+   and apply the existing scalar finite Cauchy-Schwarz inequality.
+   Library reuse: finite_covariance_cauchy_schwarz_squared,
+   indexed_basis_cross_covariance_matrix, Stdlib.Vectors.Fin/Vector.
+   Boundary: This proves coordinatewise squared covariance bounds;
+   it is not a generic matrix spectral or determinant theorem.
+   *)
+  Theorem indexed_basis_cross_covariance_cauchy_schwarz_squared :
+    forall left right
+           (i : Fin.t (length left)) (j : Fin.t (length right)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix left right i j *
+      indexed_basis_cross_covariance_matrix left right i j <=
+      variance (Vector.nth (Vector.of_list left) i) *
+      variance (Vector.nth (Vector.of_list right) j).
+  Proof.
+    intros left right i j Hmass Hw.
+    unfold indexed_basis_cross_covariance_matrix.
+    apply finite_covariance_cauchy_schwarz_squared; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_cross_covariance_nonzero_implies_positive_variances]
+   (theorem) — A nonzero rectangular covariance requires both variances.
+   Mathematical meaning: An indexed cross-covariance entry can be
+   nonzero only when each of its selected scores has strictly positive
+   variance under the same normalized nonnegative finite sample.
+   Exact checked proposition: Given bounded i in left and j in right,
+   total_mass=1, nonnegative sampled weights and M(i,j)<>0,
+   both 0<variance(left[i]) and 0<variance(right[j]) follow.
+   Premises and side conditions: No matching list lengths, independent
+   basis functions, Gaussianity or matrix invertibility is required.
+   Proof/definition method: Reduce the indexed entry to its
+   definition, then apply the existing scalar nonzero-covariance theorem.
+   Library reuse: nonzero_covariance_implies_positive_variances,
+   indexed_basis_cross_covariance_matrix and Stdlib.Vectors.Fin/Vector.
+   Boundary: Positive individual variances are necessary, not
+   sufficient, for a nonzero covariance or full-rank matrix.
+   *)
+  Theorem indexed_basis_cross_covariance_nonzero_implies_positive_variances :
+    forall left right
+           (i : Fin.t (length left)) (j : Fin.t (length right)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix left right i j <> 0 ->
+      0 < variance (Vector.nth (Vector.of_list left) i) /\
+      0 < variance (Vector.nth (Vector.of_list right) j).
+  Proof.
+    intros left right i j Hmass Hw Hnonzero.
+    unfold indexed_basis_cross_covariance_matrix in Hnonzero.
+    apply nonzero_covariance_implies_positive_variances; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_cross_covariance_nonzero_implies_nonconstant_scores]
+   (theorem) — Both selected scores vary on positive-weight support.
+   Mathematical meaning: When cross-covariance between two selected
+   scores is nonzero, neither score is constant across all the
+   finite sample outcomes that actually carry positive mass.
+   Exact checked proposition: For bounded rectangular indices i,j,
+   unit total mass, nonnegative weights, and M(i,j)<>0, neither
+   selected left nor selected right score has a constant value on
+   every sampled x satisfying weight x>0.
+   Premises and side conditions: Zero-weight outcomes need not obey
+   any score equality; nonconstant scores can still have covariance
+   zero, so the stated implication is intentionally one-way.
+   Proof/definition method: Use the just-checked rectangular
+   nonzero-covariance positive-variance theorem and the preexisting
+   scalar strict-variance iff no-positive-support-constant theorem.
+   Library reuse: indexed_basis_cross_covariance_nonzero_implies_positive_variances,
+   variance_positive_iff_no_constant_on_positive_weight_support,
+   Stdlib.Vectors.Vector.nth and Stdlib.Reals.
+   Boundary: This is exact finite support variation, not empirical
+   association, rank, causal or continuous-probability inference.
+   *)
+  Theorem indexed_basis_cross_covariance_nonzero_implies_nonconstant_scores :
+    forall left right
+           (i : Fin.t (length left)) (j : Fin.t (length right)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_cross_covariance_matrix left right i j <> 0 ->
+      (~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             Vector.nth (Vector.of_list left) i x = c)) /\
+      (~ (exists c : R,
+           forall x, In x samples -> 0 < weight x ->
+             Vector.nth (Vector.of_list right) j x = c)).
+  Proof.
+    intros left right i j Hmass Hw Hnonzero.
+    pose proof
+      (indexed_basis_cross_covariance_nonzero_implies_positive_variances
+        left right i j Hmass Hw Hnonzero) as [Hleft Hright].
+    split.
+    - apply (proj1
+        (variance_positive_iff_no_constant_on_positive_weight_support
+          (Vector.nth (Vector.of_list left) i) Hmass Hw)).
+      exact Hleft.
+    - apply (proj1
+        (variance_positive_iff_no_constant_on_positive_weight_support
+          (Vector.nth (Vector.of_list right) j) Hmass Hw)).
+      exact Hright.
+  Qed.
+
   (**
    [indexed_basis_covariance_matrix_cauchy_schwarz_squared] (theorem) —
    Squared Cauchy-Schwarz inequality for bounded covariance-matrix entries.
@@ -6357,11 +6475,12 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: The basis may contain repeated or
    dependent score functions. No strict positivity, Gaussian model,
    empirical correlation or matrix invertibility is assumed.
-   Proof/definition method: Rewrite both indexed diagonal entries
-   with the established variance bridge, unfold only the indexed entry
-   definition and apply the prior finite covariance Cauchy-Schwarz theorem.
+   Proof/definition method: Rewrite the two indexed diagonal cells
+   as variances and specialize the more general rectangular indexed
+   Cauchy-Schwarz theorem, avoiding a second scalar covariance reduction.
    Library reuse: indexed_basis_covariance_matrix_diagonal,
-   finite_covariance_cauchy_schwarz_squared, Stdlib.Vectors.Fin and Vector.
+   indexed_basis_cross_covariance_cauchy_schwarz_squared,
+   Stdlib.Vectors.Fin and Vector.
    Boundary: A coordinatewise squared bound is not a certified spectral
    decomposition or generic matrix rank theorem.
    *)
@@ -6376,8 +6495,8 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis i j Hmass Hw.
     rewrite !indexed_basis_covariance_matrix_diagonal.
-    unfold indexed_basis_cross_covariance_matrix.
-    apply finite_covariance_cauchy_schwarz_squared; assumption.
+    apply indexed_basis_cross_covariance_cauchy_schwarz_squared;
+      assumption.
   Qed.
 
   (**

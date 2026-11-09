@@ -1422,6 +1422,17 @@ nonconstant-support consequence composes the two checked theorems.
 These do not imply positive definiteness or an abstract matrix
 rank theorem; they preserve the original finite weighted semantics.
 
+## Rectangular variance bounds and inherited square proof
+
+The new rectangular `Fin.t`-indexed covariance lemmas reuse
+`finite_covariance_cauchy_schwarz_squared`,
+`nonzero_covariance_implies_positive_variances`, and
+`variance_positive_iff_no_constant_on_positive_weight_support`
+directly. The square Cauchy-Schwarz theorem now depends on the
+rectangular indexed bound rather than proving the same scalar
+fact again. The change is a strict abstraction improvement, with
+no new recursion, matrix operator, hypothesis or external library.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

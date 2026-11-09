@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 524 public theorem/lemma/example declarations,
+The current branch has 527 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**527 proof scripts**, including the generic
+**530 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -718,7 +718,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
 
-## FiniteMoments.v — 200 proof scripts
+## FiniteMoments.v — 203 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -907,7 +907,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `indexed_basis_covariance_matrix_symmetric` (theorem) | Equal-basis specialization of dimension-indexed rectangular covariance swap | indexed_basis_cross_covariance_matrix_swap, Stdlib.Vectors.Fin | **New:** total symmetry of the square dimension-indexed covariance representation |
 | `indexed_basis_covariance_matrix_diagonal` (theorem) | Definitional reduction of variance to self-covariance | variance, covariance, Stdlib.Vectors.Vector.nth | **New:** each total bounded diagonal cell equals the selected score variance |
 | `indexed_basis_covariance_matrix_diagonal_nonnegative` (theorem) | Rewrite diagonal entry to variance, then apply established variance_nonnegative | indexed_basis_covariance_matrix_diagonal, variance_nonnegative | **New:** normalized nonnegative finite weights imply nonnegative indexed covariance diagonal |
-| `indexed_basis_covariance_matrix_cauchy_schwarz_squared` (theorem) | Rewrite diagonal cells as variances, then invoke scalar finite Cauchy-Schwarz | indexed_basis_covariance_matrix_diagonal, finite_covariance_cauchy_schwarz_squared | **New:** squared indexed matrix entries are bounded by the product of diagonal cells |
+| `indexed_basis_cross_covariance_cauchy_schwarz_squared` (theorem) | Specialize scalar finite Cauchy-Schwarz to dimension-indexed rectangular entries | finite_covariance_cauchy_schwarz_squared, Stdlib.Vectors.Fin | **New:** squared rectangular indexed covariance is bounded by selected score variances |
+| `indexed_basis_cross_covariance_nonzero_implies_positive_variances` (theorem) | Specialize scalar nonzero-covariance theorem to rectangular indexed cells | nonzero_covariance_implies_positive_variances, Stdlib.Vectors.Vector.nth | **New:** nonzero rectangular covariance forces both variances strictly positive |
+| `indexed_basis_cross_covariance_nonzero_implies_nonconstant_scores` (theorem) | Use rectangular positive variances and scalar nonconstant-on-support iff | indexed_basis_cross_covariance_nonzero_implies_positive_variances, variance_positive_iff_no_constant_on_positive_weight_support | **New:** nonzero rectangular covariance requires both scores vary on positive-weight support |
+| `indexed_basis_covariance_matrix_cauchy_schwarz_squared` (theorem) | Rewrite diagonal cells as variances and specialize rectangular Cauchy-Schwarz | indexed_basis_covariance_matrix_diagonal, indexed_basis_cross_covariance_cauchy_schwarz_squared | **New:** squared indexed matrix entries are bounded by the product of diagonal cells |
 | `indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support` (theorem) | Rewrite diagonal entry to variance and apply existing supported-constant iff theorem | indexed_basis_covariance_matrix_diagonal, variance_zero_iff_exists_constant_on_positive_weight_support | **New:** zero indexed diagonal exactly characterizes a constant score on positive-weight support |
 | `indexed_basis_cross_covariance_zero_variance_row` (theorem) | Specialize existing scalar null-covariance theorem in rectangular indexed entry | zero_variance_implies_zero_covariance_first, indexed_basis_cross_covariance_matrix | **New:** zero-variance left score annihilates any rectangular covariance row |
 | `indexed_basis_cross_covariance_zero_variance_column` (theorem) | Apply rectangular swap and established zero-variance row rule | indexed_basis_cross_covariance_matrix_swap, indexed_basis_cross_covariance_zero_variance_row | **New:** zero-variance right score annihilates any rectangular covariance column |
