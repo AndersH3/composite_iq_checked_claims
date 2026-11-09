@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 155 proof scripts
+## FiniteUnion.v — 156 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -758,10 +758,11 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_all_events_mass_at_most_union` (theorem) | Compose checked intersection/member and member/union inequalities | finite_all_events_at_most_member, arbitrary_union_contains_every_member, Rle_trans | **New:** unconditional intersection mass ≤ union mass under nonempty-family membership |
 | `finite_conditional_all_events_mass_at_most_union` (theorem) | Compose existing conditional intersection/member and member/union inequalities | finite_conditional_all_events_at_most_member, finite_conditional_union_contains_member, Rle_trans | **New:** positive-conditioner intersection mass ≤ union mass |
 | `all_events_pair` (lemma) | Reduce two-element forallb and use the true identity of Boolean conjunction | Stdlib.List.forallb, Stdlib.Bool.andb_true_r | **New:** shared exact two-event conjunction semantics |
+| `any_event_pair` (lemma) | Two-member existsb disjunction via the standard Boolean false unit | Stdlib.List.existsb, Stdlib.Bool.orb_false_r | **New shared helper:** remove duplicated two-member disjunction unfolding |
 | `finite_two_event_family_inclusion_exclusion` (theorem) | Transport two-event family conjunction via generic finite mass extensionality, then reuse established inclusion-exclusion | all_events_pair, finite_prob_event_ext_on_samples, two_event_union_inclusion_exclusion | **New:** event-family union plus intersection equals sum of marginals |
 | `finite_conditional_two_event_family_inclusion_exclusion` (theorem) | Transport two-event family OR/AND via conditional target extensionality, then reuse generic conditional inclusion-exclusion | all_events_pair, finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_inclusion_exclusion, Stdlib.Bool.orb_false_r | **New:** identical conditional inclusion-exclusion in list semantics |
 | `finite_conditional_two_event_family_product` (theorem) | Transport two-event all_events conjunction to generic conditional factorization | finite_conditional_independent, all_events_pair, finite_conditional_prob_event_ext_on_samples | **New:** exact pairwise conditional product expressed in event-family notation |
-| `finite_conditional_two_event_family_independent_union` (theorem) | Transport existsb pair disjunction and apply existing independent union formula | finite_conditional_independent_union_formula, finite_conditional_prob_event_ext_on_samples, Stdlib.Bool.orb_false_r | **New:** conditional union sum-minus-product under explicit independence |
+| `finite_conditional_two_event_family_independent_union` (theorem) | Transport shared any_event_pair and apply the maintained independent union formula | finite_conditional_independent_union_formula, any_event_pair, finite_conditional_prob_event_ext_on_samples | **Refactored:** conditional union sum-minus-product without repeat existsb rewriting |
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

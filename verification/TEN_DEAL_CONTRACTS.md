@@ -420,6 +420,23 @@ the five-contract floor remains mandatory across all current and
 legacy source. No historical proof record, source hash, negative
 control or archived inventory schema is altered.
 
+## Ten-contract source-attributed Ada behavioral clauses
+
+`verification.spark_contracts.clauses` now has ten distinct Deal
+contracts: the five added postconditions keep every output clause
+trimmed, tied to a verbatim normalized input substring, bounded
+by source length and ordered from the first to last input fragment.
+Crucially, top-level Ada `if` and `for` expressions are explicitly
+required to remain **one atomic clause**; treating conjunctions
+inside a quantified formula as independent contracts would unsafely
+inflate the SPARK coverage floor. A new parametrized regression
+checks ordinary, parenthesized and quantified expressions.
+
+The staged ten-contract subset becomes **41 named functions**;
+the repository-wide minimum of five remains enforced. Historical
+native-proof evidence and the exact source-inventory schema are
+untouched.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

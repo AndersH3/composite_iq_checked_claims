@@ -429,3 +429,25 @@ def test_ada_declarations_keep_schema_and_exact_source_attribution():
     assert specification[0]["aspects"]["pre"] == "X >= 0"
     assert not specification[0]["expression"]
     assert not body[0]["off"]
+
+
+@pytest.mark.parametrize("source, expected", [
+    ("A and B", ["A", "B"]),
+    ("(A and B)", ["A", "B"]),
+    ("A and (B and C)", ["A", "(B and C)"]),
+    ("if X = 0 then A and B else C",
+     ["if X = 0 then A and B else C"]),
+    ("for all X => A and then B", ["for all X => A and then B"]),
+])
+@deal.pre(lambda source, expected: protected_history_intact())
+@deal.ensure(lambda source, expected, *, result: protected_history_intact())
+@deal.ensure(lambda source, expected, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_source_attributed_ada_clauses_do_not_split_quantifiers(
+        source, expected):
+    """Standard conjunction splitting must respect nested/quantified clauses."""
+    parts = clauses(source)
+    assert parts == expected
+    assert all(part in source for part in parts)
+    assert sum(map(len, parts)) <= len(source)

@@ -4867,6 +4867,38 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
+   [any_event_pair] (lemma) — Two-element event-family disjunction
+   is exactly the usual Boolean OR of the two event predicates.
+
+   Mathematical meaning: A two-element list represents the union
+   of precisely its first and second Boolean events, including when
+   either or both predicates are constantly false.
+   Exact checked proposition: For all Event predicates first, second
+   and outcomes x, any_event [first; second] x is equal to
+   orb (first x) (second x).
+   Premises and side conditions: No positivity, sample, independence
+   or normalization assumption; duplicate predicate members are
+   permitted without changing their Boolean disjunction.
+   Proof/definition method: Reduce the maintained Stdlib.List.existsb
+   singleton/two-element fold and remove the false unit using the
+   established Stdlib.Bool.orb_false_r identity.
+   Library reuse: Stdlib.List.existsb, Stdlib.Bool.orb_false_r
+   and the existing any_event definition; no new list recursion.
+   Boundary: Boolean event inclusion does not assert that the union
+   mass is the sum of marginal masses when the events overlap.
+   *)
+  Lemma any_event_pair :
+    forall (first second : Event) (x : Outcome),
+      any_event [first; second] x =
+      orb (first x) (second x).
+  Proof.
+    intros first second x.
+    unfold any_event; simpl.
+    rewrite orb_false_r.
+    reflexivity.
+  Qed.
+
+  (**
    [finite_two_event_family_inclusion_exclusion] (theorem) —
    Inclusion-exclusion in the report's finite event-family notation.
 
@@ -4929,7 +4961,7 @@ Section FiniteOutcomeSpace.
    then apply finite_conditional_prob_inclusion_exclusion.
    Library reuse: Stdlib.List.existsb, Stdlib.Bool.orb_false_r,
    all_events_pair, finite_conditional_prob_event_ext_on_samples,
-   and finite_conditional_prob_inclusion_exclusion.
+   any_event_pair and finite_conditional_prob_inclusion_exclusion.
    Boundary: Neither independence nor the general continuous
    measure-theoretic conditional probability construction follows.
    *)
@@ -4949,9 +4981,7 @@ Section FiniteOutcomeSpace.
               (fun x => orb (first x) (second x)) given).
     2: { apply finite_conditional_prob_event_ext_on_samples.
          intros x _.
-         unfold any_event; simpl.
-         rewrite orb_false_r.
-         reflexivity. }
+         symmetry; apply any_event_pair. }
     replace (finite_conditional_prob weights samples
                (all_events [first; second]) given)
       with (finite_conditional_prob weights samples
@@ -5028,8 +5058,8 @@ Section FiniteOutcomeSpace.
    extensionality; apply the already checked conditional independent
    union formula, not a new inclusion-exclusion calculation.
    Library reuse: finite_conditional_independent_union_formula,
-   finite_conditional_prob_event_ext_on_samples, Stdlib.List.existsb,
-   Stdlib.Bool.orb_false_r.
+   finite_conditional_prob_event_ext_on_samples, any_event_pair,
+   Stdlib.List.existsb and Stdlib.Bool.orb_false_r.
    Boundary: This theorem cannot establish independence from raw
    empirical marginal probabilities or arbitrary pairwise hypotheses.
    *)
@@ -5049,10 +5079,7 @@ Section FiniteOutcomeSpace.
       (fun x => orb (first x) (second x)) given).
     - apply finite_conditional_independent_union_formula.
       exact Hindependent.
-    - intros x _.
-      unfold any_event; simpl.
-      rewrite orb_false_r.
-      reflexivity.
+    - intros x _; apply any_event_pair.
   Qed.
 
 End FiniteOutcomeSpace.

@@ -137,6 +137,20 @@ def unparenthesized(text: str) -> str:
 @deal.post(lambda result: bool(result) and all(isinstance(item, str) and bool(item) for item in result))
 @deal.raises(ValueError)
 @deal.has()
+# Normalized contract clauses must be exact source fragments. In
+# particular a quantified/conditional Ada expression remains atomic:
+# splitting its internal conjunction would silently change the logic.
+@deal.post(lambda result: all(part == part.strip() for part in result))
+@deal.ensure(lambda text, result:
+             all(part in unparenthesized(text) for part in result))
+@deal.ensure(lambda text, result:
+             sum(len(part) for part in result) <= len(unparenthesized(text)))
+@deal.ensure(lambda text, result:
+             not re.match(r"(?:if|for)\b", unparenthesized(text), re.IGNORECASE)
+             or result == [unparenthesized(text)])
+@deal.ensure(lambda text, result:
+             unparenthesized(text).startswith(result[0]) and
+             unparenthesized(text).endswith(result[-1]))
 def clauses(text: str) -> list:
     require(bool(text.strip()), "Empty behavioral contract clause")
     text = unparenthesized(text)

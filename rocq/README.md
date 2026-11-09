@@ -2296,6 +2296,18 @@ inside the conditional-independence predicate.
 Current intended inventory: **610 public claims, 613 proof scripts,
 676 documented declarations** across seven modules, subject to CI.
 
+## Shared two-event Boolean disjunction refactor
+
+A documented `any_event_pair` lemma replaces the duplicated
+`existsb` unfolding and `orb_false_r` normalization in both the
+conditional two-event family inclusion-exclusion proof and the
+independent two-event union proof. It parallels the already checked
+`all_events_pair` helper and reuses only maintained Rocq 9.2
+standard-library operations.
+
+Current intended inventory: **611 public claims, 614 proof scripts,
+677 documented declarations** across seven modules, subject to CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

@@ -1706,6 +1706,15 @@ Both conclusions are transported through the maintained conditional
 target-event extensionality theorem; no duplicate indicator arithmetic,
 new list recursion or hidden independence is added.
 
+## Centralized two-element event-family Boolean identities
+
+`any_event_pair` now supplies the maintained `existsb`/Boolean
+OR identity for two-event lists, alongside `all_events_pair`
+for `forallb`/Boolean AND. The conditional family
+inclusion-exclusion and independent-union proofs delegate to that
+lemma under existing conditional event extensionality, replacing
+repeated local Boolean simplification without changing their types.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
