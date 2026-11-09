@@ -1602,6 +1602,14 @@ target extensionality, `Permutation_in`, and the shared
 `event_append_existing_membership_iff` rather than new enumeration
 or Boolean recursion. Zero-mass conditioning is included.
 
+## Ordinary and conditional event-family inclusion without new summation
+
+The reusable `any_event_membership_monotone` lemma transports a
+`Stdlib.List.existsb_exists` witness to a larger event family.
+`finite_union_subset` and `finite_conditional_union_subset` reuse
+established event-mass monotonicity, with explicit nonnegative weights
+and positive conditional denominator only where needed.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

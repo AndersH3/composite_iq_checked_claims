@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 122 proof scripts
+## FiniteUnion.v — 125 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -729,6 +729,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_union_membership_extensional` (theorem) | Lift shared pointwise union equivalence to conditional target equality | any_event_membership_ext, finite_conditional_prob_event_ext_on_samples | **New:** includes zero-conditioning-mass case |
 | `finite_conditional_union_permutation` (theorem) | Transfer predicate membership under a Stdlib permutation | Permutation_in, finite_conditional_union_membership_extensional | **New:** reordering conditioned union alternatives |
 | `finite_conditional_union_append_existing` (theorem) | Reuse already-present append membership equivalence | event_append_existing_membership_iff, finite_conditional_union_membership_extensional | **New:** adding an existing conditional union alternative |
+| `any_event_membership_monotone` (lemma) | Transfer existsb witnesses through event membership inclusion | Stdlib.List.existsb_exists | **New:** a single Boolean implication for both probability laws |
+| `finite_union_subset` (theorem) | Generic nonnegative event-mass monotonicity via shared Boolean inclusion | finite_prob_event_monotone, any_event_membership_monotone | **New:** distribution-free ordinary union inclusion inequality |
+| `finite_conditional_union_subset` (theorem) | Reuse conditioned target monotonicity with shared Boolean inclusion | finite_conditional_prob_monotone, any_event_membership_monotone | **New:** distribution-free conditioned union inclusion inequality |
+
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 

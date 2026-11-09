@@ -2146,9 +2146,18 @@ an already-present event. The new theorems reuse the existing conditional
 target extensionality and permutation and append-membership lemmas.
 They retain exact equality even when the conditioning mass is zero.
 
-The new intended inventory is **577 claims, 580 proof scripts, 643
+The new intended inventory is **580 claims, 583 proof scripts, 646
 documented declarations** across seven Rocq modules. All new claims
 require the Rocq kernel and existing documentation CI gates.
+
+## Reuse generic finite event monotonicity for event-family inclusion
+
+A shared `any_event_membership_monotone` lemma uses the maintained
+`existsb_exists` membership bridge rather than Boolean recursion.
+Ordinary and positive-conditioner conditional union inclusion inequalities
+follow from `finite_prob_event_monotone` and
+`finite_conditional_prob_monotone`. Both require only nonnegative sampled
+weights; the conditional result also requires positive conditioning mass.
 
 ## Research extensions
 

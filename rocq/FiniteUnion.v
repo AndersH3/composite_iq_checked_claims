@@ -3948,6 +3948,99 @@ Section FiniteOutcomeSpace.
     exact Hmember.
   Qed.
 
+
+  (**
+   [any_event_membership_monotone] (lemma) — Event-family inclusion preserves union truth.
+   Mathematical meaning: When every smaller-family predicate also belongs
+   to a larger family, a true smaller union is a true larger union.
+   Exact checked proposition: In e smaller -> In e larger for every e
+   implies any_event smaller x = true -> any_event larger x = true.
+   Premises and side conditions: Arbitrary event predicates and outcomes;
+   no event equality decider, sample weights, mass or independence assumed.
+   Proof/definition method: Transport the witnessing event provided by
+   Stdlib.List.existsb_exists through the membership inclusion.
+   Library reuse: Stdlib.List.existsb_exists and existing any_event.
+   Boundary: This is Boolean inclusion, not addition of event marginals.
+   *)
+  Lemma any_event_membership_monotone :
+    forall (smaller larger : list Event),
+      (forall event, In event smaller -> In event larger) ->
+      forall x, any_event smaller x = true ->
+                any_event larger x = true.
+  Proof.
+    intros smaller larger Hsubset x Hsmall.
+    unfold any_event in *.
+    apply existsb_exists in Hsmall.
+    destruct Hsmall as [event [Hin Hholds]].
+    apply existsb_exists.
+    exists event; split.
+    - apply Hsubset; exact Hin.
+    - exact Hholds.
+  Qed.
+
+  (**
+   [finite_union_subset] (theorem) — More alternatives cannot reduce finite union mass.
+   Mathematical meaning: On a finite sample with nonnegative weights,
+   enlarging a family of events weakly increases its union probability.
+   Exact checked proposition: Membership inclusion smaller -> larger and
+   sampled weight nonnegativity imply union_prob smaller <= union_prob larger.
+   Premises and side conditions: No unit total mass or event independence
+   is required; duplicate sampled outcomes retain their weighted occurrences.
+   Proof/definition method: Apply established finite_prob_event_monotone
+   with the separately proved Boolean family-inclusion implication.
+   Library reuse: finite_prob_event_monotone,
+   any_event_membership_monotone and union_prob.
+   Boundary: Weak inequality only, not strict increase or disjoint additivity.
+   *)
+  Theorem finite_union_subset :
+    forall weights samples (smaller larger : list Event),
+      (forall event, In event smaller -> In event larger) ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      union_prob weights samples smaller <=
+      union_prob weights samples larger.
+  Proof.
+    intros weights samples smaller larger Hsubset Hw.
+    unfold union_prob.
+    apply finite_prob_event_monotone.
+    - exact Hw.
+    - intros x _ Hyes.
+      exact (any_event_membership_monotone
+        smaller larger Hsubset x Hyes).
+  Qed.
+
+  (**
+   [finite_conditional_union_subset] (theorem) — More alternatives cannot reduce conditional union mass.
+   Mathematical meaning: Enlarging a family of Boolean alternatives
+   weakly increases their union's probability given a fixed event.
+   Exact checked proposition: Membership inclusion, nonnegative sampled
+   weights and positive mass of the conditioner imply conditional
+   probability of the smaller union <= that of the larger union.
+   Premises and side conditions: The conditioning event must have
+   strictly positive mass; total mass normalization and independence
+   are unnecessary, and repeated sampled outcomes are permitted.
+   Proof/definition method: Apply the existing conditional monotonicity
+   theorem to the shared Boolean event-family inclusion result.
+   Library reuse: finite_conditional_prob_monotone,
+   any_event_membership_monotone, Stdlib.List.existsb_exists.
+   Boundary: Exact finite inequality, not a conditional independence
+   assumption or a bound on a sum of event marginal probabilities.
+   *)
+  Theorem finite_conditional_union_subset :
+    forall weights samples (smaller larger : list Event) (given : Event),
+      (forall event, In event smaller -> In event larger) ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples (any_event smaller) given <=
+      finite_conditional_prob weights samples (any_event larger) given.
+  Proof.
+    intros weights samples smaller larger given Hsubset Hw Hgiven.
+    apply (finite_conditional_prob_monotone weights samples
+      (any_event smaller) (any_event larger) given Hw Hgiven).
+    intros x _ Hyes.
+    exact (any_event_membership_monotone
+      smaller larger Hsubset x Hyes).
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
