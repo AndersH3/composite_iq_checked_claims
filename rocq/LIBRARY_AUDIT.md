@@ -1578,6 +1578,19 @@ probability assumptions, external libraries or axioms
 are necessary. Duplicate event-list constraints remain
 distinct from additive marginal probability bounds.
 
+## Reuse existing union membership and conjunction extensionality
+
+The previously added duplicate-head union theorem was
+recognized as redundant with `union_prob_duplicate_route`
+and **replaced** by a stronger append-existing event rule.
+A single membership lemma built on `Stdlib.List.in_app_iff`
+avoids repeating proofs of list membership across the new
+union, intersection, and conditional intersection theorems.
+The duplicate-head intersection theorems themselves now
+reuse `all_events_membership_ext` instead of Boolean case
+splits. This is a deliberate consolidation of verified
+library laws, with no additional finite probability recursion.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

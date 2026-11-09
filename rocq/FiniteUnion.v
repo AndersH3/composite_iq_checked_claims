@@ -3660,26 +3660,51 @@ Section FiniteOutcomeSpace.
   Qed.
 
   (**
-   [finite_union_duplicate_head] (theorem) — Repeating the first event of a finite union event list leaves the union mass unchanged for any sampled weights, including signed or unnormalized ones.
-   Mathematical meaning: Repeating the first event of a finite union event list leaves the union mass unchanged for any sampled weights, including signed or unnormalized ones.
-   Exact checked proposition: For weights, samples, event and events, union_prob weights samples (event :: event :: events) = union_prob weights samples (event :: events).
-   Premises and side conditions: No nonnegative-weight, normalization, independence or nonempty-list assumption is required. The event is a Boolean predicate over finite-sample outcomes.
-   Proof/definition method: Unfold union_prob and use existing finite_prob_event_ext_on_samples. The resulting predicate equality is the Boolean idempotence of two repeated existsb occurrences; destruct the event's Boolean value only.
-   Library reuse: finite_prob_event_ext_on_samples, union_prob, any_event, Stdlib.List.existsb and Stdlib.Bool.orb.
-   Boundary: Duplicate entries do not change union-event probability, although summing the marginal masses of duplicate events separately would count them twice.
+   [event_append_existing_membership_iff] (lemma) — Appending an already-present Boolean event to a finite event list preserves exactly which event predicates occur in the list.
+   Mathematical meaning: Appending an already-present Boolean event to a finite event list preserves exactly which event predicates occur in the list.
+   Exact checked proposition: If In member events, then for every Event e, In e (events ++ [member]) <-> In e events.
+   Premises and side conditions: The appended member is already in the list; no decidable equality on event functions is assumed, and membership is ordinary Stdlib.List.In.
+   Proof/definition method: Apply Stdlib.List.in_app_iff to translate appended membership; use the member equality and the given membership premise. This single helper replaces three duplicated ad-hoc list proofs.
+   Library reuse: Stdlib.List.in_app_iff, Stdlib.List.In and ordinary equality substitution.
+   Boundary: This is an event-list membership lemma, not a probability or independence assertion.
    *)
-  Theorem finite_union_duplicate_head :
-    forall weights samples event events,
-      union_prob weights samples (event :: event :: events) =
-      union_prob weights samples (event :: events).
+  Lemma event_append_existing_membership_iff :
+    forall events member e,
+      In member events ->
+      (In e (events ++ [member]) <-> In e events).
   Proof.
-    intros weights samples event events.
-    unfold union_prob.
-    apply finite_prob_event_ext_on_samples.
-    intros x _.
-    unfold any_event.
-    simpl.
-    destruct (event x); reflexivity.
+    intros events member e Hmember.
+    split.
+    - intro Hin.
+      apply in_app_iff in Hin.
+      destruct Hin as [Hin | [Heq | []]].
+      + exact Hin.
+      + subst e. exact Hmember.
+    - intro Hin.
+      apply in_app_iff.
+      left. exact Hin.
+  Qed.
+
+  (**
+   [finite_union_append_existing] (theorem) — Appending a duplicate already-listed Boolean event anywhere at the end of a union list cannot change the union's finite weighted mass.
+   Mathematical meaning: Appending a duplicate already-listed Boolean event anywhere at the end of a union list cannot change the union's finite weighted mass.
+   Exact checked proposition: For any weights samples events member with In member events, union_prob weights samples (events ++ [member]) = union_prob weights samples events.
+   Premises and side conditions: No nonnegative, unit-mass or independence assumption is required. The event may already occur in several positions; repeated sample points remain permitted.
+   Proof/definition method: Reuse the existing general union_prob_membership_extensional theorem and the factored Stdlib-based event_append_existing_membership_iff helper. Do not reimplement any event union Boolean recursion.
+   Library reuse: union_prob_membership_extensional, event_append_existing_membership_iff and Stdlib.List.in_app_iff.
+   Boundary: This generalizes duplicate-head behavior and is distinct from the marginal-union bound, which may count repeated events more than once.
+   *)
+  Theorem finite_union_append_existing :
+    forall weights samples events member,
+      In member events ->
+      union_prob weights samples (events ++ [member]) =
+      union_prob weights samples events.
+  Proof.
+    intros weights samples events member Hmember.
+    apply union_prob_membership_extensional.
+    intro e.
+    apply event_append_existing_membership_iff.
+    exact Hmember.
   Qed.
 
   (**
@@ -3725,9 +3750,10 @@ Section FiniteOutcomeSpace.
     intros weights samples event events.
     apply finite_prob_event_ext_on_samples.
     intros x _.
-    unfold all_events.
+    apply all_events_membership_ext.
+    intro e.
     simpl.
-    destruct (event x); reflexivity.
+    tauto.
   Qed.
 
   (**
@@ -3749,9 +3775,60 @@ Section FiniteOutcomeSpace.
     intros weights samples event events given.
     apply finite_conditional_prob_event_ext_on_samples.
     intros x _.
-    unfold all_events.
+    apply all_events_membership_ext.
+    intro e.
     simpl.
-    destruct (event x); reflexivity.
+    tauto.
+  Qed.
+
+  (**
+   [finite_intersection_append_existing] (theorem) — Adding another occurrence of an already-required Boolean event does not change the finite mass of the intersection of all constraints.
+   Mathematical meaning: Adding another occurrence of an already-required Boolean event does not change the finite mass of the intersection of all constraints.
+   Exact checked proposition: For any weights samples events member with In member events, finite_prob weights samples (all_events (events ++ [member])) = finite_prob weights samples (all_events events).
+   Premises and side conditions: The required event has to appear in the original event list, but no normalized mass, nonnegative sample weights or independence assumptions are needed.
+   Proof/definition method: Use the generic finite event-mass target extensionality theorem; reduce event-list conjunction equality to the existing all_events_membership_ext theorem and the shared append-existing membership lemma.
+   Library reuse: finite_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff, Stdlib.List.In.
+   Boundary: Boolean intersection idempotence is not a product formula and does not imply statistical independence.
+   *)
+  Theorem finite_intersection_append_existing :
+    forall weights samples events member,
+      In member events ->
+      finite_prob weights samples (all_events (events ++ [member])) =
+      finite_prob weights samples (all_events events).
+  Proof.
+    intros weights samples events member Hmember.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    apply all_events_membership_ext.
+    intro e.
+    apply event_append_existing_membership_iff.
+    exact Hmember.
+  Qed.
+
+  (**
+   [finite_conditional_intersection_append_existing] (theorem) — Appending a required event already present among constraints leaves their conditional intersection mass invariant for every conditioning predicate.
+   Mathematical meaning: Appending a required event already present among constraints leaves their conditional intersection mass invariant for every conditioning predicate.
+   Exact checked proposition: For any weights samples events member given with In member events, finite_conditional_prob weights samples (all_events (events ++ [member])) given = finite_conditional_prob weights samples (all_events events) given.
+   Premises and side conditions: No positive-conditioning-mass premise is required: the existing finite conditional-target extensionality theorem includes the zero-mass branch. All samples, original weights and the conditioning event remain fixed.
+   Proof/definition method: Reuse conditional target extensionality, all_events_membership_ext and the shared appending-an-existing-event membership iff, with no new finite conditional-probability algebra.
+   Library reuse: finite_conditional_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff.
+   Boundary: This is exact finite event-list idempotence under conditioning, not a conditional product factorization or observed statistical conclusion.
+   *)
+  Theorem finite_conditional_intersection_append_existing :
+    forall weights samples events member given,
+      In member events ->
+      finite_conditional_prob weights samples
+        (all_events (events ++ [member])) given =
+      finite_conditional_prob weights samples
+        (all_events events) given.
+  Proof.
+    intros weights samples events member given Hmember.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    apply all_events_membership_ext.
+    intro e.
+    apply event_append_existing_membership_iff.
+    exact Hmember.
   Qed.
 
 End FiniteOutcomeSpace.

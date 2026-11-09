@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 570 public theorem/lemma/example declarations,
+The current branch has 573 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**573 proof scripts**, including the generic
+**576 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 115 proof scripts
+## FiniteUnion.v — 118 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -717,10 +717,13 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `all_events_permutation` (theorem) | Bidirectional membership transport through library permutation | all_events_membership_ext, Stdlib.Sorting.Permutation.Permutation_in/Permutation_sym | **New:** conditional event-family intersection invariant under list permutation |
 | `finite_conditional_all_events_permutation` (theorem) | Conditional target extensionality using pointwise permutation invariance | finite_conditional_prob_event_ext_on_samples, all_events_permutation | **New:** conditional finite intersection mass invariant under event ordering |
 | `finite_conditional_all_events_subset` (theorem) | Conditioned mass monotonicity from Stdlib forallb_forall membership inclusion | finite_conditional_prob_monotone, Stdlib.List.forallb_forall | **New:** adding required events cannot increase conditional intersection probability |
-| `finite_union_duplicate_head` (theorem) | Finite event-mass extensionality and Bool.orb idempotence for duplicated existsb head | finite_prob_event_ext_on_samples, union_prob, any_event, Stdlib.List.existsb | **New:** Unconditional union mass invariant under duplicating the head event |
+| `event_append_existing_membership_iff` (lemma) | Factor appended-event membership into one reusable Stdlib.List.in_app_iff proof | Stdlib.List.in_app_iff, Stdlib.List.In | **New:** Generic membership iff for appending an event already in the list |
+| `finite_union_append_existing` (theorem) | Reuse generic union-probability membership extensionality and shared append-existing membership iff | union_prob_membership_extensional, event_append_existing_membership_iff | **New:** Appending any already-listed event leaves finite union mass unchanged |
 | `finite_conditional_union_duplicate_head` (theorem) | Reuse conditional target extensionality and existing existsb Boolean idempotence | finite_conditional_prob_event_ext_on_samples, any_event, Stdlib.List.existsb | **New:** Conditional union mass invariant under a duplicated head event |
 | `finite_intersection_duplicate_head` (theorem) | Generic finite probability extensionality and forallb/andb repeated-head idempotence | finite_prob_event_ext_on_samples, all_events, Stdlib.List.forallb | **New:** Unconditional intersection mass invariant under duplicating a required event |
 | `finite_conditional_intersection_duplicate_head` (theorem) | Conditional target extensionality plus Stdlib conjunction predicate repeated-head identity | finite_conditional_prob_event_ext_on_samples, all_events, Stdlib.List.forallb | **New:** Conditional intersection mass invariant under a duplicated head event |
+| `finite_intersection_append_existing` (theorem) | Compose finite event-mass extensionality and all_events_membership_ext with shared list-membership helper | finite_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff | **New:** Appending an already-required event preserves unconditional intersection mass |
+| `finite_conditional_intersection_append_existing` (theorem) | Conditioned event-target extensionality plus shared list-membership and conjunction laws | finite_conditional_prob_event_ext_on_samples, all_events_membership_ext, event_append_existing_membership_iff | **New:** Appending an already-required event preserves finite conditional intersection mass |
 
 ## FiniteMoments.v — 242 proof scripts
 
