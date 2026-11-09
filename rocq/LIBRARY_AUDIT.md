@@ -1619,6 +1619,15 @@ No new enumeration or real-arithmetic normalization is introduced;
 the identities include signed weights and zero conditioning mass as
 algebraic quotient expressions only.
 
+## Conditioned conjunction via maintained forallb
+
+The empty and head-tail conjunction laws now reduce the shared
+`all_events` definition through `Stdlib.List.forallb` and lift
+its Boolean semantics with the already-proved conditional-event
+extensionality theorem. The empty case explicitly uses positive
+conditioning mass and `finite_conditional_prob_true`.
+No new factorization, matrix algebra or fresh Boolean recursion occurs.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

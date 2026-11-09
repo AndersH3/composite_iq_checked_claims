@@ -52,6 +52,18 @@ def test_forward_declaration_pairs_with_body_and_qualified_parameter_types():
     row, = result["entities"]
     assert row["identity"] == "p.f" and row["path"] == "p.ads"
     assert row["contract_count"] == 5
+    # Preserve source attribution and exact dictionary schema when
+    # counting explicit behavioral clauses; comments alone never count.
+    entries = contract_entries({
+        "global": "null",
+        "depends": "F'Result => X",
+        "pre": "X >= 0",
+        "post": "F'Result >= 0 and then F'Result = X",
+    })
+    assert len(entries) == 5
+    assert all(set(entry) == {"aspect", "clause"} for entry in entries)
+    assert [entry["aspect"] for entry in entries] == [
+        "global", "depends", "pre", "post", "post"]
 
 
 @deal.pre(lambda: protected_history_intact())

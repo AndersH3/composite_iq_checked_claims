@@ -121,7 +121,7 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         "verification/proof_gate.py":
             {"totals_balanced", "successful_checks"},
         "verification/spark_contracts.py":
-            {"unparenthesized"},
+            {"unparenthesized", "contract_entries"},
     }
     for path in files:
         report = coverage_checker.audit_file(path)

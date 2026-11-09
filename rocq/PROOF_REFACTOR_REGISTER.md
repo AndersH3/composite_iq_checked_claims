@@ -602,7 +602,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 128 proof scripts
+## FiniteUnion.v — 130 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -735,6 +735,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_union_empty` (theorem) | Reduce empty existsb and use established false-event conditional mass | Stdlib.List.existsb, finite_conditional_prob_false | **New:** arbitrary-conditioning empty-family identity |
 | `finite_conditional_union_singleton` (theorem) | Lift singleton existsb computation through conditioned event extensionality | finite_conditional_prob_event_ext_on_samples, Stdlib.List.existsb | **New:** singleton conditional union exactly matches event mass |
 | `finite_conditional_union_append` (theorem) | Reuse existing any_event_append and conditioned target extensionality | any_event_append, finite_conditional_prob_event_ext_on_samples, Stdlib.List.existsb_app | **New:** conditional append semantics without custom union recursion |
+| `finite_conditional_all_events_empty` (theorem) | Reduce empty forallb and apply positive-denominator certain-event law | Stdlib.List.forallb, finite_conditional_prob_true | **New:** conditional unit mass of empty conjunction when conditioning is positive |
+| `finite_conditional_all_events_cons` (theorem) | Reduce forallb cons through existing conditional target extensionality | Stdlib.List.forallb, finite_conditional_prob_event_ext_on_samples | **New:** head-tail conjunction semantics under conditioning |
 
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.

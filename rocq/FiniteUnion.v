@@ -4126,6 +4126,69 @@ Section FiniteOutcomeSpace.
     apply any_event_append.
   Qed.
 
+
+  (**
+   [finite_conditional_all_events_empty] (theorem) — Empty conjunction is certain under positive conditioning mass.
+   Mathematical meaning: Requiring every member of an empty family
+   imposes no restriction; Stdlib.List.forallb [] is true, so
+   conditioning on any strictly positive-mass event gives unit mass.
+   Exact checked proposition: If 0 < finite_prob weights samples given,
+   then finite_conditional_prob weights samples (all_events []) given = 1.
+   Premises and side conditions: Only the positive conditioning mass
+   is needed for this quotient identity; no mass normalization or
+   independence assumption is added. Weights may otherwise be arbitrary.
+   Proof/definition method: Reduce the empty Stdlib.List.forallb and
+   apply the already checked finite_conditional_prob_true.
+   Library reuse: Stdlib.List.forallb, all_events and
+   finite_conditional_prob_true, with no new event recursion.
+   Boundary: Positive conditioning mass is essential for interpreting
+   an empty required-event family as conditional probability one.
+   *)
+  Theorem finite_conditional_all_events_empty :
+    forall weights samples given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (all_events []) given = 1.
+  Proof.
+    intros weights samples given Hpositive.
+    change (finite_conditional_prob weights samples
+              (fun _ => true) given = 1).
+    apply finite_conditional_prob_true.
+    exact Hpositive.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_cons] (theorem) — Adding a required event is Boolean conjunction.
+   Mathematical meaning: A nonempty list of required Boolean events
+   represents the conjunction of the head predicate with the
+   conjunction represented by its tail.
+   Exact checked proposition: For arbitrary weights, samples, event,
+   rest and given, conditional mass of all_events (event :: rest)
+   equals conditional mass of fun x => andb (event x) (all_events rest x).
+   Premises and side conditions: No nonnegative-weight, independence
+   or positive-conditioning assumption is needed for the exact identity;
+   empty tails and repeated outcomes or predicates are permitted.
+   Proof/definition method: Apply existing conditional target
+   extensionality and reduce the maintained Stdlib.List.forallb cons.
+   Library reuse: all_events, Stdlib.List.forallb, Bool.andb and
+   finite_conditional_prob_event_ext_on_samples.
+   Boundary: Conjunction is not a product of probabilities without
+   additional, explicit conditional-independence assumptions.
+   *)
+  Theorem finite_conditional_all_events_cons :
+    forall weights samples event (rest : list Event) given,
+      finite_conditional_prob weights samples
+        (all_events (event :: rest)) given =
+      finite_conditional_prob weights samples
+        (fun x => andb (event x) (all_events rest x)) given.
+  Proof.
+    intros weights samples event rest given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    unfold all_events; simpl.
+    reflexivity.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

@@ -2173,6 +2173,18 @@ Current intended inventory: **583 public claims, 586 proof scripts and
 649 documented declarations** across seven Rocq files, subject to the
 Rocq 9.2 kernel and documentation CI.
 
+## Conditional conjunction base case and head-tail structure
+
+Two additional documented theorems reduce `all_events []` to true and
+`all_events (head :: rest)` to a Boolean conjunction, using the
+maintained `Stdlib.List.forallb` and generic conditional extensionality.
+The empty conjunction equals conditional probability one only with
+explicitly positive conditioning mass. No independence premise is
+inferred from the Boolean conjunction representation.
+
+Current intended inventory: **585 public claims, 588 proof scripts and
+651 documented declarations** across seven Rocq modules, subject to CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

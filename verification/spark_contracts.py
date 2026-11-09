@@ -187,6 +187,15 @@ def declarations(text: str) -> list:
 @deal.post(lambda result: isinstance(result, list))
 @deal.raises(ValueError)
 @deal.has()
+# No generated clause may have a foreign aspect, lose its string source,
+# or escape the exact two-field evidence representation.
+@deal.post(lambda result: all(isinstance(row, dict) for row in result))
+@deal.post(lambda result: all(set(row) == {"aspect", "clause"} for row in result))
+@deal.post(lambda result: all(isinstance(row["clause"], str) for row in result))
+@deal.ensure(lambda aspects, result: all(row["aspect"] in aspects for row in result))
+@deal.post(lambda result: all(row["aspect"] in
+             {"global", "depends", "pre", "post", "refined_post", "contract_cases"}
+             for row in result))
 def contract_entries(aspects: dict) -> list:
     result = []
     identities = set()

@@ -229,6 +229,22 @@ The ten-contract regression target now covers **24 functions**:
 17 historical analysis functions and seven current verification helpers.
 Every Python function retains its mandatory five-contract minimum.
 
+## Ten-contract Ada/SPARK explicit-clause extraction
+
+`verification.spark_contracts.contract_entries` now has ten distinct
+Deal decorators. Its five new postconditions guarantee that extracted
+clauses remain dictionaries of exactly `aspect` and `clause`,
+preserve source strings and known Ada aspect types, and refer only to
+keys actually present in the caller's source-aspect mapping.
+The existing anti-duplication and literal-Boolean-padding rejection
+remain unchanged. A direct regression asserts the five expected
+clauses and exact provenance in a standard Pre/Post/Global/Depends
+fixture. No SPARK native evidence was modified.
+
+The ten-contract test-enforced subset now covers **25 functions**:
+17 historical analysis functions and eight current verification helpers.
+The five-contract floor remains mandatory for all Python code.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across
