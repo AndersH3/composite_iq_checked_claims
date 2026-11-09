@@ -30,7 +30,7 @@ def totals_balanced(total: int, flow: int, proved: int, justified: int, unproved
 @deal.ensure(lambda returncode, total, unproved, justified, result: not result or total >= 1)
 @deal.ensure(lambda returncode, total, unproved, justified, result: not result or unproved == 0)
 @deal.ensure(lambda returncode, total, unproved, justified, result: not result or justified == 0)
-@deal.ensure(lambda returncode, total, unproved, justified, result: returncode == 0 or result is False)
+@deal.ensure(lambda returncode, total, unproved, justified, result: returncode == 0 or result == False)
 @deal.raises()
 @deal.has()
 def successful_checks(returncode: int, total: int, unproved: int, justified: int) -> bool:
