@@ -753,6 +753,8 @@ Section FiniteOutcomeSpace.
     split.
     - intros Hsum x Hin He.
       pose proof ((proj1 Hzero) Hsum x Hin) as Hterm.
+      (* Expose the lambda application before rewriting the event Boolean. *)
+      change (weights x * indicator (e x) = 0) in Hterm.
       rewrite He in Hterm.
       unfold indicator in Hterm.
       nra.
@@ -800,7 +802,9 @@ Section FiniteOutcomeSpace.
       + apply Hw; exact Hy.
       + apply indicator_nonnegative.
     - exact Hin.
-    - rewrite He.
+    - (* The generic member theorem leaves the integrand as an applied lambda. *)
+      change (0 < weights x * indicator (e x)).
+      rewrite He.
       unfold indicator.
       nra.
   Qed.
@@ -5118,7 +5122,8 @@ Section FiniteOutcomeSpace.
         weights samples (fun y => andb (given y) (event y)) x).
       + exact Hw.
       + exact Hin.
-      + rewrite Hgiven, Hevent.
+      + change (andb (given x) (event x) = true).
+        rewrite Hgiven, Hevent.
         reflexivity.
       + exact Hweight.
     - exact Hgiven_mass.
