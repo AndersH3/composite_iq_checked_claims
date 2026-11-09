@@ -3659,6 +3659,101 @@ Section FiniteOutcomeSpace.
     apply Hsubset; exact Hin.
   Qed.
 
+  (**
+   [finite_union_duplicate_head] (theorem) — Repeating the first event of a finite union event list leaves the union mass unchanged for any sampled weights, including signed or unnormalized ones.
+   Mathematical meaning: Repeating the first event of a finite union event list leaves the union mass unchanged for any sampled weights, including signed or unnormalized ones.
+   Exact checked proposition: For weights, samples, event and events, union_prob weights samples (event :: event :: events) = union_prob weights samples (event :: events).
+   Premises and side conditions: No nonnegative-weight, normalization, independence or nonempty-list assumption is required. The event is a Boolean predicate over finite-sample outcomes.
+   Proof/definition method: Unfold union_prob and use existing finite_prob_event_ext_on_samples. The resulting predicate equality is the Boolean idempotence of two repeated existsb occurrences; destruct the event's Boolean value only.
+   Library reuse: finite_prob_event_ext_on_samples, union_prob, any_event, Stdlib.List.existsb and Stdlib.Bool.orb.
+   Boundary: Duplicate entries do not change union-event probability, although summing the marginal masses of duplicate events separately would count them twice.
+   *)
+  Theorem finite_union_duplicate_head :
+    forall weights samples event events,
+      union_prob weights samples (event :: event :: events) =
+      union_prob weights samples (event :: events).
+  Proof.
+    intros weights samples event events.
+    unfold union_prob.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    unfold any_event.
+    simpl.
+    destruct (event x); reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_union_duplicate_head] (theorem) — Repeating one Boolean event in the conditioned union does not change the conditional probability, even if the conditioning event has zero weighted mass.
+   Mathematical meaning: Repeating one Boolean event in the conditioned union does not change the conditional probability, even if the conditioning event has zero weighted mass.
+   Exact checked proposition: For any weights samples event events given, finite_conditional_prob weights samples (any_event (event :: event :: events)) given = finite_conditional_prob weights samples (any_event (event :: events)) given.
+   Premises and side conditions: The same conditioning event and outcome sample list occur on both sides. No positivity or normalization is needed because the existing conditional-probability extensionality law handles its zero-mass branch.
+   Proof/definition method: Apply the checked finite_conditional_prob_event_ext_on_samples to the duplicated and single-occurrence union predicates; reduce existsb on the list heads, then analyze one Boolean event value.
+   Library reuse: finite_conditional_prob_event_ext_on_samples, any_event, Stdlib.List.existsb and Stdlib.Bool.orb.
+   Boundary: This is finite conditional event-list idempotence, not a statistical independence or disjoint-event assumption.
+   *)
+  Theorem finite_conditional_union_duplicate_head :
+    forall weights samples event events given,
+      finite_conditional_prob weights samples
+        (any_event (event :: event :: events)) given =
+      finite_conditional_prob weights samples
+        (any_event (event :: events)) given.
+  Proof.
+    intros weights samples event events given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    unfold any_event.
+    simpl.
+    destruct (event x); reflexivity.
+  Qed.
+
+  (**
+   [finite_intersection_duplicate_head] (theorem) — Repeating one required Boolean event does not change the finite probability that all listed events occur.
+   Mathematical meaning: Repeating one required Boolean event does not change the finite probability that all listed events occur.
+   Exact checked proposition: For weights, samples, event and events, finite_prob weights samples (all_events (event :: event :: events)) = finite_prob weights samples (all_events (event :: events)).
+   Premises and side conditions: Signed or unnormalized sample weights, duplicate sample outcomes and empty tails remain allowed. It is an equality of Boolean event predicates, not a probability inequality.
+   Proof/definition method: Use the generic finite_prob_event_ext_on_samples to reduce equality of finite event masses to equality on sampled outcomes. Unfold maintained all_events, simplify forallb, and apply Boolean idempotence by cases.
+   Library reuse: finite_prob_event_ext_on_samples, all_events, Stdlib.List.forallb and Stdlib.Bool.andb.
+   Boundary: The result concerns conjunction truth values, not independence products of individual event probabilities.
+   *)
+  Theorem finite_intersection_duplicate_head :
+    forall weights samples event events,
+      finite_prob weights samples
+        (all_events (event :: event :: events)) =
+      finite_prob weights samples
+        (all_events (event :: events)).
+  Proof.
+    intros weights samples event events.
+    apply finite_prob_event_ext_on_samples.
+    intros x _.
+    unfold all_events.
+    simpl.
+    destruct (event x); reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_intersection_duplicate_head] (theorem) — Requiring an event twice in a conditioned finite intersection leaves its conditional mass identical to requiring it once.
+   Mathematical meaning: Requiring an event twice in a conditioned finite intersection leaves its conditional mass identical to requiring it once.
+   Exact checked proposition: For any weights, samples, event, events and given, finite_conditional_prob weights samples (all_events (event :: event :: events)) given = finite_conditional_prob weights samples (all_events (event :: events)) given.
+   Premises and side conditions: No normalized-sample or positive-conditioning-mass hypothesis is needed; extensionality of conditional Boolean targets covers the existing zero-denominator behavior.
+   Proof/definition method: Apply the already checked conditional-target extensionality theorem, unfold the standard-library forallb conjunction over duplicate heads, and destruct its single Boolean head value.
+   Library reuse: finite_conditional_prob_event_ext_on_samples, all_events, Stdlib.List.forallb and Stdlib.Bool.andb.
+   Boundary: This is idempotence of a finite required-event list; it does not establish conditional independence or a product rule.
+   *)
+  Theorem finite_conditional_intersection_duplicate_head :
+    forall weights samples event events given,
+      finite_conditional_prob weights samples
+        (all_events (event :: event :: events)) given =
+      finite_conditional_prob weights samples
+        (all_events (event :: events)) given.
+  Proof.
+    intros weights samples event events given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    unfold all_events.
+    simpl.
+    destruct (event x); reflexivity.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

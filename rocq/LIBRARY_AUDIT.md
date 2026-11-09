@@ -1565,6 +1565,19 @@ positive-definiteness iff criteria. `VectorSpec.length_to_list`
 is the only vector/list conversion obligation. No duplicate
 finite sums, matrix elimination or new axioms were introduced.
 
+## Event-list duplicate idempotence from Stdlib booleans
+
+Four finite union and intersection theorems lift the
+Boolean idempotence of repeated `existsb` and `forallb`
+head events to unconditional and conditional finite event
+masses. The proofs rely on maintained
+`finite_prob_event_ext_on_samples` and
+`finite_conditional_prob_event_ext_on_samples` instead of
+reimplementing finite sums or conditioning. No new
+probability assumptions, external libraries or axioms
+are necessary. Duplicate event-list constraints remain
+distinct from additive marginal probability bounds.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
