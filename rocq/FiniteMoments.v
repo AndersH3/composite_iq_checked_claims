@@ -16,7 +16,8 @@
    Nonnegative normalized weights form an explicit finite probability model.
    All moment laws are derived from finite sums, not assumed as axioms.
    No Gaussian or empirical psychometric assumptions are used. *)
-From Stdlib Require Import Reals Lra Psatz List Sorting.Permutation Vectors.Fin Vectors.Vector Vectors.VectorSpec.
+From Stdlib Require Import Reals Lra Psatz List Sorting.Permutation.
+From Stdlib Require Vectors.Fin Vectors.Vector Vectors.VectorSpec.
 Require Import FiniteSum.
 Import ListNotations.
 Open Scope R_scope.
