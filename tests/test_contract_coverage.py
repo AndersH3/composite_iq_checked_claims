@@ -116,14 +116,14 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         "analyses/towers-multiple-test-admissions/ada/validate_results.py":
             {"_open_unit_ratio", "read"},
         "verification/check_contract_coverage.py":
-            {"audit_file", "is_contract"},
+            {"audit_file", "is_contract", "python_files"},
         "verification/spark_coverage.py":
             {"location", "normalize_entity", "unique_object", "read_coverage"},
         "verification/proof_gate.py":
             {"totals_balanced", "successful_checks"},
         "verification/spark_contracts.py":
             {"masked", "split_top", "unparenthesized", "contract_entries",
-             "inventory", "ten_contract_summary"},
+             "inventory", "ten_contract_summary", "current_sources"},
     }
     for path in files:
         report = coverage_checker.audit_file(path)
@@ -192,3 +192,25 @@ def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker
 def test_empty_python_inventory_cannot_establish_coverage(coverage_checker, tmp_path):
     with pytest.raises(ValueError):
         coverage_checker.python_files(tmp_path)
+
+
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result:
+             protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result:
+             reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "syscall")
+def test_python_source_enumeration_rejects_ignored_and_outside_files(
+        coverage_checker, tmp_path):
+    """A local fallback scan retains only deterministic regular Python sources."""
+    first = tmp_path / "first.py"
+    nested = tmp_path / "nested" / "second.py"
+    ignored = tmp_path / "__pycache__" / "ignored.py"
+    for path in (first, nested, ignored):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("pass\n", encoding="utf-8")
+    report = coverage_checker.python_files(tmp_path)
+    assert report == [first, nested]
+    assert all(path.is_file() and path.is_relative_to(tmp_path)
+               and not path.is_symlink() for path in report)

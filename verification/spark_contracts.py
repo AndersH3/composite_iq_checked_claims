@@ -391,6 +391,20 @@ def ten_contract_summary(report: dict) -> dict:
 @deal.post(lambda result: isinstance(result, dict) and bool(result))
 @deal.raises(OSError, UnicodeDecodeError)
 @deal.has("read")
+# Return sorted, strictly source-root-relative Ada file receipts; every
+# returned value is the exact current UTF-8 source, not a masked or
+# normalized text that could be accidentally mistaken for native evidence.
+@deal.post(lambda result: list(result) == sorted(result))
+@deal.post(lambda result: all(Path(path).suffix in {".ads", ".adb"}
+                              for path in result))
+@deal.post(lambda result: all(path.startswith(("analyses/", "verification/"))
+                              for path in result))
+@deal.post(lambda result: all(not Path(path).is_absolute()
+                              and ".." not in Path(path).parts
+                              for path in result))
+@deal.ensure(lambda root, result:
+             all(root.joinpath(path).read_text(encoding="utf-8") == content
+                 for path, content in result.items()))
 def current_sources(root: Path) -> dict:
     paths = sorted(root.glob("analyses/*/ada/src/*.ad[bs]"))
     paths += sorted(root.glob("verification/*/src/*.ad[bs]"))

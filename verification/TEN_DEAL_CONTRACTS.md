@@ -359,6 +359,30 @@ target covers **36 named Python functions** (22 historical analysis
 functions and 14 verification helpers); the mandatory five-contract
 floor is unchanged for every older and current function.
 
+## Exact source-root and repository inventory contracts
+
+Two more verification functions reach ten Deal decorators:
+
+- `verification.spark_contracts.current_sources` checks deterministic
+  ordering, Ada extensions, permitted source-tree prefixes, strictly
+  relative paths without parent traversals, and that the actual
+  UTF-8 source text exactly matches the caller-visible result.
+  A regression uses temporary synthetic Ada package files under
+  the two sanctioned roots and verifies unrelated files are skipped.
+- `verification.check_contract_coverage.python_files` checks
+  deterministic path order, scope within the requested checkout,
+  physical file presence, absence of symbolic links, and no
+  source-root parent traversal. A temporary-directory regression
+  exercises the existing non-Git fallback, with an ignored
+  `__pycache__` file excluded from the inventory.
+
+These contracts do not invent proof evidence; they strengthen the
+provenance and integrity checks on the live source inventories while
+preserving the archived SPARK evidence and exact inventory JSON keys.
+The optional ten-contract subset now has **38 Python functions**,
+including both historical and modern sources; all named functions
+still require at least five distinct Deal decorators.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

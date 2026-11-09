@@ -105,6 +105,17 @@ def audit_file(path: Path) -> dict:
            and len(result) == len(set(result)) and all(p.suffix == ".py" for p in result))
 @deal.raises(OSError, ValueError, subprocess.SubprocessError)
 @deal.has("read", "syscall")
+# Enumerated code must be repository-relative, regular, non-symlink
+# Python source and deterministic. A malicious or stale Git index must
+# not silently introduce outside paths or missing files into the audit.
+@deal.post(lambda result: result == sorted(result))
+@deal.ensure(lambda root, result: all(path.is_relative_to(root)
+                                     for path in result))
+@deal.post(lambda result: all(path.is_file() for path in result))
+@deal.post(lambda result: all(not path.is_symlink() for path in result))
+@deal.ensure(lambda root, result:
+             all(".." not in path.relative_to(root).parts
+                 for path in result))
 def python_files(root: Path) -> list:
     try:
         output = subprocess.check_output(["git", "-C", str(root), "ls-files", "--cached", "--others",

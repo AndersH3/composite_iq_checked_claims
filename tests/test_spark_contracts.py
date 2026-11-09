@@ -1,5 +1,6 @@
 """The explicit Ada contract floor is structural and must fail closed."""
 from conftest import ROOT, protected_history_intact, reference_inputs_intact
+from pathlib import Path
 
 import deal
 import pytest
@@ -377,3 +378,31 @@ def test_split_top_preserves_original_fragment_order(source, separator, expected
     assert sum(map(len, result)) <= len(source)
     assert source.strip().startswith(result[0])
     assert source.strip().endswith(result[-1])
+
+
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write")
+def test_current_ada_sources_preserve_sorted_relative_paths_and_exact_text(tmp_path):
+    """Select only requested Ada source trees; retain the source byte semantics."""
+    specification = tmp_path / "analyses" / "example" / "ada" / "src" / "core.ads"
+    body = tmp_path / "verification" / "sample" / "src" / "checker.adb"
+    ignored = tmp_path / "analyses" / "example" / "ada" / "other" / "hidden.ads"
+    for path in (specification, body, ignored):
+        path.parent.mkdir(parents=True, exist_ok=True)
+    specification.write_text("package Core is\nend Core;\n", encoding="utf-8")
+    body.write_text("package body Checker is\nend Checker;\n", encoding="utf-8")
+    ignored.write_text("ignore me", encoding="utf-8")
+    report = current_sources(tmp_path)
+    assert list(report) == [
+        "analyses/example/ada/src/core.ads",
+        "verification/sample/src/checker.adb",
+    ]
+    assert report["analyses/example/ada/src/core.ads"] == specification.read_text(
+        encoding="utf-8")
+    assert report["verification/sample/src/checker.adb"] == body.read_text(
+        encoding="utf-8")
+    assert all(not Path(key).is_absolute() and ".." not in Path(key).parts
+               for key in report)
