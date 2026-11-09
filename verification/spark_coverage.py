@@ -41,6 +41,13 @@ def unique_object(pairs: list) -> dict:
 @deal.post(lambda result: isinstance(result, dict))
 @deal.raises(ValueError)
 @deal.has()
+# Preserve the exact GNATprove source locator, its Ada extension and the
+# normalized two-field schema; do not fabricate line numbers or file names.
+@deal.post(lambda result: set(result) == {"file", "line"})
+@deal.ensure(lambda value, result: result["file"] == value["file"])
+@deal.ensure(lambda value, result: result["line"] == value["line"])
+@deal.post(lambda result: Path(result["file"]).suffix in {".ads", ".adb"})
+@deal.post(lambda result: bool(result["file"].strip()))
 def location(value: object) -> dict:
     require(isinstance(value, dict), "Source location must be an object")
     require(isinstance(value.get("file"), str) and bool(value["file"].strip()),
@@ -56,6 +63,16 @@ def location(value: object) -> dict:
 @deal.post(lambda result: isinstance(result, dict))
 @deal.raises(ValueError)
 @deal.has()
+# Source/coverage normalization must not silently change an entity's
+# identity, analysis status, number of locations or first source line.
+@deal.post(lambda result:
+           set(result) == {"name", "file", "line", "status", "sloc"})
+@deal.ensure(lambda value, result: result["name"] == value["name"])
+@deal.ensure(lambda value, result: result["status"] == value["spark"])
+@deal.ensure(lambda value, result:
+             len(result["sloc"]) == len(value["sloc"]))
+@deal.ensure(lambda value, result:
+             result["sloc"][0]["line"] == value["sloc"][0]["line"])
 def normalize_entity(value: object) -> dict:
     require(isinstance(value, dict), "SPARK entity must be an object")
     require(isinstance(value.get("name"), str) and bool(value["name"].strip()),

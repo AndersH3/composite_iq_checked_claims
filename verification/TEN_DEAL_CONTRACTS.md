@@ -168,6 +168,25 @@ modules as Deal decorators. Every Python function still has the
 mandatory five distinct Deal decorators, including deliberately
 failing or source-pinned cases where ten would be inappropriate.
 
+## Ten-contract GNATprove source-location normalization
+
+Two additional current verification functions now have ten
+distinct Deal contracts: `spark_coverage.location` and
+`spark_coverage.normalize_entity`. Five new conditions
+preserve the exact input source filename and positive line
+number, enforce the `.ads`/`.adb` source-file extension
+and nonempty name, guarantee the normalized field schema,
+and conserve the original entity name, SPARK status, number
+of source locations and first source line.
+
+No accepted GNATprove report schema or source-pin changed.
+The regression target subset now contains **21 functions**
+(17 historical analyses and 4 current verification helpers).
+The unconditional five-contract minimum remains enforced on
+every named Python function. Runtime property tests, static
+Deal lint and source-pinned evidence verification remain
+separate mandatory checks.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across
