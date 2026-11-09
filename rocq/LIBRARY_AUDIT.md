@@ -1730,6 +1730,18 @@ additional axiom is needed. Nonnegativity of summands is essential
 to the strict positivity argument; pointwise domination is essential
 to strict monotonicity, with one witness of strict domination.
 
+## Event support lemmas reuse generic strict sums
+
+Two existing event-mass theorem bodies are refactored without changing
+their propositions: the zero-mass support equivalence now uses
+`FiniteSum.finite_sum_nonnegative_zero_iff`, while the positive-mass
+witness implication uses `FiniteSum.finite_sum_positive_of_positive_member`.
+The Boolean indicators still need only their standard two-case reduction
+and the established nonnegative-product lemma. This removes duplicated
+zero-sum and strict-member-bound reasoning from `FiniteUnion.v`
+without assuming normalized weights or independence. All existing
+event and sample semantics are preserved.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

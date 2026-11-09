@@ -713,25 +713,26 @@ Section FiniteOutcomeSpace.
   (* Zero event mass is exactly absence of positive weighted support.
      No assumption about globally distinct sample entries is needed. *)
   (**
-   [finite_prob_zero_iff_no_positive_mass_support] (theorem) — Finite Boolean event
-   mass and union/intersection inequalities.
-   Mathematical meaning: Expresses a checked identity or bound within the finite
-   boolean event mass and union/intersection inequalities.
-   Exact checked proposition: Theorem finite_prob_zero_iff_no_positive_mass_support :
-   forall weights samples e, (forall x, In x samples -> 0 <= weights x) ->
-   (finite_prob weights samples e = 0 <-> forall x, In x samples -> e x = true ->
-   weights x = 0).
-   Premises and side conditions: The displayed hypotheses include nonnegative outcome
-   weights; explicit nonzero or strict-positive numerical conditions; sample or list
-   membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses case analysis, rewriting of equalities,
-   reuse of previously established lemmas, polynomial real arithmetic (Psatz),
-   ring/field normalization, definitional reduction; references include finite_prob,
-   Rmult_le_pos., indicator_nonnegative..
-   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
-   FiniteSum.
-   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
-   bounds need explicit nonnegative weights and possibly normalization.
+   [finite_prob_zero_iff_no_positive_mass_support] (theorem) —
+   Vanishing Boolean-event mass and the positive-weight sample support.
+   Mathematical meaning: A Boolean event has zero weighted mass exactly
+   when no listed outcome satisfying the event carries positive weight.
+   Exact checked proposition: With all listed weights nonnegative,
+   finite_prob weights samples e = 0 if and only if each listed x with
+   e x = true satisfies weights x = 0.
+   Premises and side conditions: Nonnegative weights are essential to
+   exclude cancellation; sample entries may repeat. No unit normalization
+   or pairwise event independence is assumed.
+   Proof/definition method: Apply the generic nonnegative finite-sum
+   zero equivalence to weight times the Boolean indicator, and simplify
+   the indicator in the true/false cases. The backward implication
+   establishes each summand's zero value without a new sum induction.
+   Library reuse: FiniteSum.finite_sum_nonnegative_zero_iff,
+   Stdlib.Reals.Rmult_le_pos, indicator_nonnegative, Stdlib.Psatz.nra
+   and Stdlib ring; no module-specific zero-sum proof is recreated.
+   Boundary: The statement is about a finite weighted outcome list.
+   A genuine probabilistic interpretation additionally needs total
+   normalization, and signed weights invalidate the forward direction.
    *)
   Theorem finite_prob_zero_iff_no_positive_mass_support :
     forall weights samples e,
@@ -739,50 +740,51 @@ Section FiniteOutcomeSpace.
       (finite_prob weights samples e = 0 <->
        forall x, In x samples -> e x = true -> weights x = 0).
   Proof.
-    intros weights samples e Hw; split.
-    - intros Hzero x Hin He.
-      unfold finite_prob, finite_sum in Hzero.
-      assert (Hnonnegative : forall y, In y samples ->
-        0 <= weights y * indicator (e y)).
-      { intros y Hy; apply Rmult_le_pos.
-        - apply Hw; exact Hy.
-        - apply indicator_nonnegative. }
-      pose proof (FiniteSum.finite_sum_nonnegative_zero
-        samples (fun y => weights y * indicator (e y))
-        Hnonnegative Hzero x Hin) as Hterm.
-      change (weights x * indicator (e x) = 0) in Hterm.
+    intros weights samples e Hw.
+    unfold finite_prob, finite_sum.
+    assert (Hnonnegative : forall y, In y samples ->
+      0 <= weights y * indicator (e y)).
+    { intros y Hy; apply Rmult_le_pos.
+      - apply Hw; exact Hy.
+      - apply indicator_nonnegative. }
+    pose proof (FiniteSum.finite_sum_nonnegative_zero_iff
+      samples (fun y => weights y * indicator (e y))
+      Hnonnegative) as Hzero.
+    split.
+    - intros Hsum x Hin He.
+      pose proof ((proj1 Hzero) Hsum x Hin) as Hterm.
       rewrite He in Hterm.
       unfold indicator in Hterm.
       nra.
     - intros Hsupport.
-      unfold finite_prob, finite_sum.
-      transitivity (FiniteSum.finite_sum (fun _ => 0) samples).
-      + apply FiniteSum.finite_sum_ext_in.
-        intros x Hin.
-        destruct (e x) eqn:He; simpl.
-        * rewrite (Hsupport x Hin He); ring.
-        * ring.
-      + apply FiniteSum.finite_sum_zero.
+      apply (proj2 Hzero).
+      intros x Hin.
+      destruct (e x) eqn:He; simpl.
+      + rewrite (Hsupport x Hin He); ring.
+      + ring.
   Qed.
-
   (**
-   [finite_prob_positive_of_positive_support] (theorem) — Finite Boolean event mass
-   and union/intersection inequalities.
-   Mathematical meaning: Expresses a checked identity or bound within the finite
-   boolean event mass and union/intersection inequalities.
-   Exact checked proposition: Theorem finite_prob_positive_of_positive_support :
-   forall weights samples e x, (forall y, In y samples -> 0 <= weights y) -> In x
-   samples -> e x = true -> 0 < weights x -> 0 < finite_prob weights samples e.
-   Premises and side conditions: The displayed hypotheses include nonnegative outcome
-   weights; explicit nonzero or strict-positive numerical conditions; sample or list
-   membership. No further assumptions are implicit.
-   Proof/definition method: Kernel proof uses rewriting of equalities, reuse of
-   previously established lemmas, linear real arithmetic (Lra), definitional
-   reduction; references include finite_prob, Rmult_le_pos., indicator_nonnegative..
-   Library reuse: Stdlib.List (existsb/filter), Bool, Sorting.Permutation and
-   FiniteSum.
-   Boundary: Finite list semantics; duplicates contribute repeatedly. Probabilistic
-   bounds need explicit nonnegative weights and possibly normalization.
+   [finite_prob_positive_of_positive_support] (theorem) —
+   Positive event mass from an observed positive-weight event witness.
+   Mathematical meaning: A listed outcome with strictly positive
+   weight satisfying the event guarantees positive total event mass
+   if no other listed weight is negative.
+   Exact checked proposition: With nonnegative sampled weights,
+   In x samples, e x = true and 0 < weights x imply
+   0 < finite_prob weights samples e.
+   Premises and side conditions: The witness must occur in the
+   enumerated sample, and its Boolean event value must be true.
+   Neither sample normalization nor event independence is required.
+   Proof/definition method: Apply the shared strict finite-sum
+   positivity lemma directly to the weighted indicator contributions;
+   all contributions are nonnegative, and the witness contributes
+   exactly its strictly positive weight. No bespoke member-bound
+   arithmetic is repeated in this event module.
+   Library reuse: FiniteSum.finite_sum_positive_of_positive_member,
+   Stdlib.Reals.Rmult_le_pos, indicator_nonnegative and Stdlib.Psatz.nra.
+   Boundary: This is finite weighted support, not evidence that an
+   unobserved event has positive population probability; signed
+   weights could otherwise cancel the positive contribution.
    *)
   Theorem finite_prob_positive_of_positive_support :
     forall weights samples e x,
@@ -792,23 +794,16 @@ Section FiniteOutcomeSpace.
   Proof.
     intros weights samples e x Hw Hin He Hpositive.
     unfold finite_prob, finite_sum.
-    assert (Hnonnegative : forall y, In y samples ->
-      0 <= weights y * indicator (e y)).
-    { intros y Hy; apply Rmult_le_pos.
-      - apply Hw; exact Hy.
-      - apply indicator_nonnegative. }
-    pose proof (FiniteSum.finite_sum_member_le
-      samples (fun y => weights y * indicator (e y))
-      x Hnonnegative Hin) as Hbound.
-    change (weights x * indicator (e x) <=
-      FiniteSum.finite_sum
-        (fun y => weights y * indicator (e y)) samples)
-      in Hbound.
-    rewrite He in Hbound.
-    simpl in Hbound.
-    lra.
+    apply (FiniteSum.finite_sum_positive_of_positive_member
+      samples (fun y => weights y * indicator (e y)) x).
+    - intros y Hy; apply Rmult_le_pos.
+      + apply Hw; exact Hy.
+      + apply indicator_nonnegative.
+    - exact Hin.
+    - rewrite He.
+      unfold indicator.
+      nra.
   Qed.
-
   (* A Boolean event restricts the sample list using the standard
      List.filter operation. This equivalence is valid for arbitrary real
      weights; normalization and positivity are not needed for equality. *)

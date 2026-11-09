@@ -2330,6 +2330,17 @@ Expected source inventory after the change: **614 public claims,
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
+### Existing event-mass proofs refactored to the shared sum layer
+
+The propositions of `finite_prob_zero_iff_no_positive_mass_support`
+and `finite_prob_positive_of_positive_support` are unchanged. Their
+proofs now use the generic zero-sum equivalence and positive-member
+lemma in `FiniteSum.v`, rather than duplicating the finite-sum
+reasoning in `FiniteUnion.v`. They preserve the nonnegative-weight,
+Boolean event and sample-membership assumptions. Both theorem comments
+now explain the exact witness semantics, proof dependencies, and
+limits of probabilistic interpretation.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
