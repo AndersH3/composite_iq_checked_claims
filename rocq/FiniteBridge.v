@@ -868,3 +868,81 @@ Proof.
     second Hpositive).
   reflexivity.
 Qed.
+
+
+(**
+   [finite_conditioned_indicator_variance_at_most_quarter] (theorem) — Universal upper bound for conditional finite Bernoulli variance.
+   Mathematical meaning: The real-valued variance of a finite zero-one event indicator computed in the positive-mass conditioning-selected, normalized sample does not exceed one quarter. This bound holds algebraically from p(1-p) <= 1/4 even for nonprobability signed weights.
+   Exact checked proposition: For every outcome type A, original finite samples, real weight function, given Boolean selector and event, FiniteMoments.variance on filter given samples with conditioned_weights and indicator event is at most /4.
+   Premises and side conditions: No positive mass or sampled nonnegativity is required for the raw algebraic upper bound because FiniteMoments' indicator-variance identity and completing-the-square bound are valid for any finite real weights. A probabilistic conditional-variance interpretation requires the separately established strictly positive conditioning mass and nonnegative original sample weights.
+   Proof/definition method: Instantiate the already proved finite_event_indicator_variance_at_most_quarter on the restricted list and its existing conditioned_weights function, rather than expand a variance polynomial or repeat real completing-the-square arguments.
+   Library reuse: finite_event_indicator_variance_at_most_quarter, FiniteMoments.variance, FiniteUnion.indicator, and Stdlib.List.filter through the shared finite sample model; no new summation, inequality or moment operator is introduced.
+   Boundary: This is the specific Bernoulli indicator variance upper bound, not an upper bound on arbitrary real-valued score variance or on a continuous conditional covariance matrix.
+ *)
+Theorem finite_conditioned_indicator_variance_at_most_quarter :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)) <= /4.
+Proof.
+  intros A samples weight given event.
+  apply finite_event_indicator_variance_at_most_quarter.
+Qed.
+
+(**
+   [finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass] (theorem) — Conditional Bernoulli degeneracy exactly at probability zero or one.
+   Mathematical meaning: Under a strictly positive selected conditioning mass, a zero-one indicator has zero variance in the normalized selected sample if and only if its conditional event probability is exactly zero or exactly one.
+   Exact checked proposition: If 0 < FiniteUnion.finite_prob weight samples given, then variance of indicator event on filter given samples under conditioned_weights is zero iff finite_conditional_prob weight samples event given = 0 or = 1.
+   Premises and side conditions: Strictly positive original conditioning mass is required to identify normalized selected event mass with the original conditional quotient. Neither original total-mass normalization nor nonnegative weights is needed for the algebraic iff; nonnegative selected weights provide the usual probabilistic interpretation of indicator degeneracy.
+   Proof/definition method: Instantiate the already kernel-checked finite_event_indicator_zero_variance_iff_extreme_mass equivalence and rewrite its ordinary selected-sample event mass through finite_conditioned_event_mass.
+   Library reuse: finite_event_indicator_zero_variance_iff_extreme_mass, finite_conditioned_event_mass, FiniteMoments.variance, and Stdlib.List.filter. No polynomial-factorization proof or custom variance implementation is duplicated.
+   Boundary: Zero indicator variance in the finite selected sample is equivalent to an extreme conditional event mass; it does not establish nontrivial independence or imply zero variance for arbitrary real-valued scores.
+ *)
+Theorem finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (@FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)) = 0 <->
+     @FiniteUnion.finite_conditional_prob A weight samples event given = 0 \/
+     @FiniteUnion.finite_conditional_prob A weight samples event given = 1).
+Proof.
+  intros A samples weight given event Hpositive.
+  pose proof (finite_event_indicator_zero_variance_iff_extreme_mass
+    A (filter given samples)
+    (conditioned_weights A weight samples given) event) as Hextreme.
+  rewrite (finite_conditioned_event_mass
+    A samples weight given event Hpositive) in Hextreme.
+  exact Hextreme.
+Qed.
+
+(**
+   [finite_conditioned_indicator_complement_variance] (theorem) — Complement invariance of conditional Bernoulli indicator variance.
+   Mathematical meaning: In the filtered finite outcome distribution whose weight sum has been normalized to one, complementing a Boolean target event preserves the variance of its zero-one indicator, as the centered scores differ only by sign.
+   Exact checked proposition: If the original conditioning event has strictly positive finite mass, the FiniteMoments variance of indicator (negb event) and indicator event on filter given samples with conditioned_weights are exactly equal.
+   Premises and side conditions: Positive finite mass of the conditioning selector is required to establish the unit total conditional weight needed by the existing complement-variance theorem. Nonnegative sampled weights are not needed for the algebraic equality, although they are required to view these scores as probability variables.
+   Proof/definition method: Prove total mass of the normalized selected-sample representation equals one by definitional conversion to the previously proved conditioned_weights_total_mass_one, then apply the existing finite_event_indicator_complement_variance theorem directly.
+   Library reuse: conditioned_weights_total_mass_one, finite_event_indicator_complement_variance, FiniteMoments.total_mass, FiniteUnion.finite_sum and Stdlib.List.filter. No new covariance expansion, Boolean indicator algebra or finite summation is constructed.
+   Boundary: Complement invariance applies only to Boolean indicator variance under the same conditioning selector, not to arbitrary continuous variables or to a change in the sample conditioning event itself.
+ *)
+Theorem finite_conditioned_indicator_complement_variance :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (negb (event x))) =
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)).
+Proof.
+  intros A samples weight given event Hpositive.
+  apply finite_event_indicator_complement_variance.
+  change (@FiniteUnion.finite_sum A
+    (conditioned_weights A weight samples given)
+    (filter given samples) = 1).
+  apply conditioned_weights_total_mass_one.
+  exact Hpositive.
+Qed.

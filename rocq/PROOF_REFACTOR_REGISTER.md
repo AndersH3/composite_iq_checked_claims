@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has 477 public theorem/lemma/example declarations,
+The current branch has 480 public theorem/lemma/example declarations,
 one local helper, and two constructed `Admissions.TwoEventModel` values:
-**480 proof scripts**, including the generic
+**483 proof scripts**, including the generic
 `FiniteSum.finite_sum_zip_map` and four newly formalized properties
 of event filtering and Boolean sample partitions.
 The record was created after the current generic list-fold and covariance
@@ -890,7 +890,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `fixed_basis_zero_covariance_row_dots_iff_supported_constant` (theorem) | Iff composition, lemma application | fixed_basis_null_iff_zero_dot_with_every_covariance_row, fixed_basis_null_iff_exists_constant_on_positive_weight_support | **New:** zero dot against every covariance row iff composite score equals some positive-support constant |
 | `fixed_basis_positive_definite_iff_no_nonzero_supported_constant` (theorem) | Iff projection, lemma application | fixed_basis_positive_quadratic_iff_no_constant_on_positive_weight_support, Stdlib.List.repeat | **New:** covariance positive definite iff no nonzero coefficient direction yields any supported constant |
 
-## FiniteBridge.v — 23 proof scripts
+## FiniteBridge.v — 26 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -917,6 +917,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditioned_event_mass` (theorem) | Positive-denominator cancellation after finite event scaling and filtering | FiniteUnion.finite_prob_scale_weights, finite_prob_on_filtered_samples, Stdlib.Reals field | **New:** exact original conditional probability equals event mass on normalized selected finite sample |
 | `finite_conditioned_indicator_variance` (theorem) | Rewrite existing indicator variance with normalized selected mass bridge | finite_event_indicator_variance, finite_conditioned_event_mass | **New:** conditional Bernoulli variance = p(A|G)*(1-p(A|G)) |
 | `finite_conditioned_indicator_covariance_residual` (theorem) | Rewrite existing indicator covariance event-mass residual | finite_event_indicator_covariance, finite_conditioned_event_mass | **New:** conditioned indicator covariance equals conditional joint minus marginal product |
+| `finite_conditioned_indicator_variance_at_most_quarter` (theorem) | Existing indicator variance upper bound instantiation | finite_event_indicator_variance_at_most_quarter, Stdlib.List.filter | **New:** universal conditional indicator variance upper bound of one quarter |
+| `finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass` (theorem) | Indicator degeneracy iff rewritten through selected event mass | finite_event_indicator_zero_variance_iff_extreme_mass, finite_conditioned_event_mass | **New:** conditional indicator variance zero iff target conditional mass is zero or one |
+| `finite_conditioned_indicator_complement_variance` (theorem) | Normalize selected finite mass, instantiate complement-variance theorem | conditioned_weights_total_mass_one, finite_event_indicator_complement_variance | **New:** conditional indicator variance unchanged by complementing the target |
 
 ## FourCellBridge.v — 25 proof scripts
 

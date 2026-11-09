@@ -1199,6 +1199,20 @@ bridge. No second moment calculation, list fold,
 independence axiom or alternate covariance implementation
 is introduced.
 
+## Reused Bernoulli variance theorems under positive conditioning
+
+The normalized conditional sample introduced in
+`FiniteBridge` supports direct instantiation of the
+previously proved indicator-variance upper bound,
+zero-variance/extreme-mass iff, and complement
+invariance of Bernoulli indicator variance. The
+last theorem obtains its unit-mass hypothesis
+definitionally from `conditioned_weights_total_mass_one`
+rather than reproving any finite expectation or
+variance identity. Each new theorem is fully
+documented, with positive conditioning mass and
+statistical nonnegativity distinguished.
+
 ## Dependencies to evaluate before deeper migration
 
 1. Rocq **standard library** is the baseline for real-number algebra,
