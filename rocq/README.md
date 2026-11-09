@@ -2159,6 +2159,20 @@ follow from `finite_prob_event_monotone` and
 `finite_conditional_prob_monotone`. Both require only nonnegative sampled
 weights; the conditional result also requires positive conditioning mass.
 
+## Conditional union identity base cases and concatenation
+
+Three documented theorems now cover empty-family zero mass, singleton-family
+identity and appended event-family Boolean OR under the same conditioning
+predicate. The proofs reuse `finite_conditional_prob_false`,
+`finite_conditional_prob_event_ext_on_samples` and the existing
+`any_event_append` lemma built on `Stdlib.List.existsb_app`.
+They are exact equalities even when conditioning mass is zero; that
+case has no ordinary statistical conditional-probability interpretation.
+
+Current intended inventory: **583 public claims, 586 proof scripts and
+649 documented declarations** across seven Rocq files, subject to the
+Rocq 9.2 kernel and documentation CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

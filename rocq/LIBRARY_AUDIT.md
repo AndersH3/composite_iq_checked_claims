@@ -1610,6 +1610,15 @@ The reusable `any_event_membership_monotone` lemma transports a
 established event-mass monotonicity, with explicit nonnegative weights
 and positive conditional denominator only where needed.
 
+## Conditional finite unions from existing list identities
+
+Empty, singleton and append family conditional identities now delegate
+to established false-event and target-extensionality lemmas, with
+`any_event_append` supplying the standard `existsb_app` reduction.
+No new enumeration or real-arithmetic normalization is introduced;
+the identities include signed weights and zero conditioning mass as
+algebraic quotient expressions only.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

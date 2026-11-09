@@ -213,6 +213,22 @@ historical evidence auditor additionally checks actual selected source
 bytes and immutable release hashes; all live proofs require six verified
 obligations each. There is no weakening of the current symbolic gate.
 
+## Ten-contract outer-parenthesis parser
+
+`verification.spark_contracts.unparenthesized` now has ten distinct
+Deal contracts. The five additional postconditions check whitespace
+normalization, source-substring preservation, the necessity of an
+opening and closing parenthesis if any text was removed, and the
+minimum two-character shortening when a wrapping pair is stripped.
+The function still accepts unbalanced or partial top-level expressions
+as before, and its original explicit malformed-outer-pair rejection
+is unchanged. Regression tests distinguish true outer parentheses
+from adjacent parenthesized clauses. No old SPARK evidence is modified.
+
+The ten-contract regression target now covers **24 functions**:
+17 historical analysis functions and seven current verification helpers.
+Every Python function retains its mandatory five-contract minimum.
+
 ## Next upgrades
 
 Extend the ten-contract target in small, testable batches across

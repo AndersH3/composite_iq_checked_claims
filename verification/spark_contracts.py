@@ -71,6 +71,16 @@ def split_top(text: str, separator: str = ",") -> list:
 @deal.ensure(lambda text, result: len(result) <= len(text))
 @deal.raises(ValueError)
 @deal.has()
+# Parsing may remove only complete outer parenthesis pairs; no token may be
+# synthesized, and ordinary top-level conjunctions must remain untouched.
+@deal.ensure(lambda text, result: result == result.strip())
+@deal.ensure(lambda text, result: result in text)
+@deal.ensure(lambda text, result:
+             result == text.strip() or text.strip().startswith("("))
+@deal.ensure(lambda text, result:
+             result == text.strip() or text.strip().endswith(")"))
+@deal.ensure(lambda text, result:
+             result == text.strip() or len(result) + 2 <= len(text.strip()))
 def unparenthesized(text: str) -> str:
     text = text.strip()
     while text.startswith("(") and text.endswith(")"):

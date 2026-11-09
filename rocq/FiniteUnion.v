@@ -4041,6 +4041,91 @@ Section FiniteOutcomeSpace.
       smaller larger Hsubset x Hyes).
   Qed.
 
+
+  (**
+   [finite_conditional_union_empty] (theorem) — Empty finite event families have zero conditional union mass.
+   Mathematical meaning: No Boolean event in the empty family can hold,
+   so its disjunction is the false event and its conditional mass is zero.
+   Exact checked proposition: For any weights, samples and given event,
+   finite_conditional_prob weights samples (any_event []) given = 0.
+   Premises and side conditions: No positivity, normalization, nonempty
+   sample or conditioning-mass assumption is needed for this identity.
+   Proof/definition method: Reduce the standard Stdlib.List.existsb
+   on the empty family, then reuse finite_conditional_prob_false.
+   Library reuse: Stdlib.List.existsb, finite_conditional_prob_false,
+   the existing any_event definition, and no new probability recursion.
+   Boundary: A zero-mass conditional expression with zero denominator
+   is a statement about the repository's real-valued quotient convention.
+   *)
+  Theorem finite_conditional_union_empty :
+    forall weights samples given,
+      finite_conditional_prob weights samples
+        (any_event []) given = 0.
+  Proof.
+    intros weights samples given.
+    change (finite_conditional_prob weights samples
+              (fun _ => false) given = 0).
+    apply finite_conditional_prob_false.
+  Qed.
+
+  (**
+   [finite_conditional_union_singleton] (theorem) — One alternative is its own conditional union.
+   Mathematical meaning: The disjunction of a singleton Boolean event
+   family is the original event, including on repeated sampled outcomes.
+   Exact checked proposition: For weights, samples, event and given,
+   conditional mass of any_event [event] equals conditional mass of event.
+   Premises and side conditions: No nonnegative-weight, normalized-mass,
+   nonzero-denominator or independence premise is required for equality.
+   Proof/definition method: Apply existing conditional target extensionality
+   and compute singleton Stdlib.List.existsb with Bool.orb_false_r.
+   Library reuse: finite_conditional_prob_event_ext_on_samples,
+   any_event and Stdlib.List.existsb.
+   Boundary: This identity does not assert that conditional probability
+   is statistically identifiable when the conditioning mass vanishes.
+   *)
+  Theorem finite_conditional_union_singleton :
+    forall weights samples event given,
+      finite_conditional_prob weights samples
+        (any_event [event]) given =
+      finite_conditional_prob weights samples event given.
+  Proof.
+    intros weights samples event given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    unfold any_event; simpl.
+    destruct (event x); reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_union_append] (theorem) — Concatenated event families form the disjunction of their unions.
+   Mathematical meaning: A conditional finite union over two appended
+   event lists is exactly the conditional mass of the Boolean OR
+   of the separate family predicates.
+   Exact checked proposition: For any weights, samples, left, right
+   and given, conditional mass of any_event (left ++ right) equals
+   conditional mass of fun x => orb (any_event left x) (any_event right x).
+   Premises and side conditions: Event lists can be empty, overlap or
+   repeat predicates; weights and conditioning masses are unrestricted.
+   Proof/definition method: Reuse the already checked any_event_append
+   pointwise under generic conditional target extensionality.
+   Library reuse: Stdlib.List.existsb_app through any_event_append,
+   finite_conditional_prob_event_ext_on_samples and Bool.orb.
+   Boundary: The identity is not conditional independence, nor does it
+   turn an overlapping union into a sum of event marginal probabilities.
+   *)
+  Theorem finite_conditional_union_append :
+    forall weights samples (left right : list Event) given,
+      finite_conditional_prob weights samples
+        (any_event (left ++ right)) given =
+      finite_conditional_prob weights samples
+        (fun x => orb (any_event left x) (any_event right x)) given.
+  Proof.
+    intros weights samples left right given.
+    apply finite_conditional_prob_event_ext_on_samples.
+    intros x _.
+    apply any_event_append.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

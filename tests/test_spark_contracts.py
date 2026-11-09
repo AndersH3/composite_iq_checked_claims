@@ -6,6 +6,7 @@ import pytest
 
 from verification.spark_contracts import (
     clauses, contract_entries, current_sources, inventory, masked,
+    unparenthesized,
 )
 
 SPEC = """package P with SPARK_Mode is
@@ -112,6 +113,11 @@ end P;
 @deal.has("read")
 def test_top_level_conjunctions_and_atomic_conditionals(text, expected):
     assert clauses(text) == expected
+    # Fully wrapping pairs disappear but unrelated top-level clauses are
+    # not stripped: these are separately contract-checked parser laws.
+    assert unparenthesized("  (((A)))  ") == "A"
+    assert unparenthesized("(A) and then (B)") == "(A) and then (B)"
+    assert unparenthesized("  ") == ""
 
 
 @pytest.mark.parametrize("text", ["", "()", "   "])
