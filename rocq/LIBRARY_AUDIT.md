@@ -1789,6 +1789,18 @@ outcome makes the comparison strict. No new event-recursive code,
 membership search, probability model, or independence assumption
 is necessary; the predicates retain finite multiset semantics.
 
+## Hierarchical three-event conditional factorization
+
+The maintained event-family `all_events` is still only
+`Stdlib.List.forallb`; `all_events_triple` expands a three-element
+list and uses `Stdlib.Bool.andb_assoc` rather than adding recursion
+or a new event conjunction operator. The corresponding conditional
+product result delegates to the existing two-event product theorem
+and conditional target-extensionality. The additional
+independence premise concerns the *conjunction* of the first two
+events versus the third, so the proof does **not** conflate
+pairwise independence with mutual independence.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

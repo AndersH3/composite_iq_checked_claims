@@ -5545,6 +5545,106 @@ Section FiniteOutcomeSpace.
     - exact Hpositive.
   Qed.
 
+
+  (**
+   [all_events_triple] (lemma) — The conjunction of three listed
+   Boolean events in the maintained finite event-family semantics.
+   Mathematical meaning: The standard forallb fold over a list of
+   three events is the left-associated conjunction of the three
+   individual Boolean memberships.
+   Exact checked proposition: For all first, second, third and x,
+   all_events [first; second; third] x =
+   andb (andb (first x) (second x)) (third x).
+   Premises and side conditions: No weights, probability, positivity,
+   distribution or independence premise is needed. Repeated events
+   retain their idempotent Boolean interpretation.
+   Proof/definition method: Simplify Stdlib.List.forallb on exactly
+   three list cells, remove its true unit, and reassociate the
+   Boolean conjunction using the standard Bool associativity law.
+   Library reuse: Stdlib.List.forallb, Stdlib.Bool.andb_true_r,
+   Stdlib.Bool.andb_assoc and the existing all_events definition.
+   Boundary: Boolean conjunction semantics alone does not imply
+   a product law for event probabilities.
+   *)
+  Lemma all_events_triple :
+    forall (first second third : Event) (x : Outcome),
+      all_events [first; second; third] x =
+      andb (andb (first x) (second x)) (third x).
+  Proof.
+    intros first second third x.
+    unfold all_events; simpl.
+    rewrite andb_true_r.
+    rewrite <- andb_assoc.
+    reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_three_event_family_product] (theorem) —
+   Hierarchical three-event conditional factorization.
+   Mathematical meaning: If the first and second events factor
+   conditionally given G, and their conjunction conditionally
+   factors from the third event given the same G, then the
+   conditional mass of all three events equals the product
+   of their three conditional marginal masses.
+   Exact checked proposition: finite_conditional_independent
+   weights samples first second given and
+   finite_conditional_independent weights samples
+   (fun x => andb (first x) (second x)) third given
+   imply P(all_events [first;second;third] | given) =
+   P(first|given) * P(second|given) * P(third|given), where P
+   is the maintained finite_conditional_prob expression.
+   Premises and side conditions: Both independence predicates
+   include strictly positive conditioning mass. They are two
+   explicit hierarchical independence assumptions, not just
+   pairwise independence of all three targets. Signed weights
+   are allowed for the algebraic equality, but their probability
+   interpretation requires nonnegative sampled weights.
+   Proof/definition method: Transport the triple Boolean fold
+   to the left-associated conjunction with all_events_triple;
+   project the second factorization assumption. Transport
+   the first conditional pair factorization through all_events_pair
+   and substitute it into the second, without repeating any
+   finite-sum, indicator or quotient calculations.
+   Library reuse: finite_conditional_two_event_family_product,
+   finite_conditional_prob_event_ext_on_samples, all_events_pair,
+   all_events_triple, Stdlib.Bool.andb_assoc and existing
+   finite_conditional_independent semantics.
+   Boundary: Hierarchical factorization is a conditional finite
+   event identity, not a proof that arbitrary three-event
+   pairwise independence implies mutual independence or that a
+   real-world admission sample satisfies these hypotheses.
+   *)
+  Theorem finite_conditional_three_event_family_product :
+    forall weights samples (first second third given : Event),
+      finite_conditional_independent weights samples
+        first second given ->
+      finite_conditional_independent weights samples
+        (fun x => andb (first x) (second x)) third given ->
+      finite_conditional_prob weights samples
+        (all_events [first; second; third]) given =
+      finite_conditional_prob weights samples first given *
+      finite_conditional_prob weights samples second given *
+      finite_conditional_prob weights samples third given.
+  Proof.
+    intros weights samples first second third given
+      Hfirst_second Hjoint_third.
+    destruct Hjoint_third as [_ Hfactor].
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples (all_events [first; second; third])
+      (fun x => andb (andb (first x) (second x)) (third x))
+      given).
+    2: { intros x _; apply all_events_triple. }
+    rewrite Hfactor.
+    pose proof (finite_conditional_two_event_family_product
+      weights samples first second given Hfirst_second) as Hpair.
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples (all_events [first; second])
+      (fun x => andb (first x) (second x)) given) in Hpair.
+    2: { intros x _; apply all_events_pair. }
+    rewrite Hpair.
+    reflexivity.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

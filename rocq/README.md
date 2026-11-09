@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **626 proof scripts** in seven
+for the two reports. **628 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **623 public claims, 626 proof scripts,
-689 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **625 public claims, 628 proof scripts,
+691 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **623 public claims,
-626 proof scripts, 689 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **625 public claims,
+628 proof scripts, 691 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2393,6 +2393,21 @@ union. Both are immediate reductions to the maintained strict event
 comparison theorems, with `Stdlib.List.existsb_app` supplied via
 `any_event_append`. No fresh Boolean-family recursion, enumeration,
 or independence premise is introduced.
+
+### Three-event conditional product from hierarchical independence
+
+The new `all_events_triple` helper rewrites the standard
+three-member `Stdlib.List.forallb` into a left-associated Boolean
+conjunction using `Stdlib.Bool.andb_assoc`. The theorem
+`finite_conditional_three_event_family_product` then proves the
+three-way conditional product rule by reusing the two-event conditional
+product and the explicitly assumed independence between the first
+pair's conjunction and the third event.
+
+**Pairwise independence alone is not sufficient** for this conclusion.
+The statement is a finite Boolean event identity under two explicit
+hierarchical conditional-factorization premises; it does not claim
+that the observed report data satisfies these premises.
 
 ## Research extensions
 
