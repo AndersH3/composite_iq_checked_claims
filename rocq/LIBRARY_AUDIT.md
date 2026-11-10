@@ -1924,6 +1924,22 @@ lemmas; future finite rank theorems still require an actual
 linear-map/dimension library bridge rather than another
 independent handwritten matrix library.
 
+## Centered weighted sample evaluation as a covariance-kernel interface
+
+A transparent typed-coefficient sample evaluation now reuses
+`weighted_basis_sum`, `expect`, and `Stdlib.Vectors.Vector.to_list`.
+Its zero set on the sample is shown equal to the kernel of the
+existing indexed covariance-row action by composing checked
+quadratic=variance, zero-variance support, and covariance-row
+nullity equivalences. The generic Stdlib real zero-product
+and order lemmas handle zero-weight outcomes. This avoids
+a new matrix engine, recursive event/sum traversal, or
+an unproved assumption that the two kernels coincide.
+
+A genuine rank-nullity formula still needs a separately
+certified linear-map structure and dimension theory; current
+claims identify kernels without asserting their dimensions.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

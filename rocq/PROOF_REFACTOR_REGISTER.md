@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **651 public theorem/lemma/example claims**, plus
+The current branch has **654 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**654 proof scripts** across seven Rocq modules. The claims and scripts
+**657 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -815,7 +815,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 245 proof scripts
+## FiniteMoments.v — 248 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1064,6 +1064,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `variance_positive_iff_exists_positive_weight_deviation` (theorem) | Generic constructive positive finite-sum witness applied to weighted squared deviations | centered_second_moment_identity, FiniteSum.finite_sum_positive_iff_positive_member, Stdlib.Reals.Rle_0_sqr/Rmult_lt_0_compat, Lra/Psatz | **New:** strictly positive variance iff a listed positive-weight sample deviates from its expectation |
 | `indexed_basis_covariance_quadratic_positive_iff_supported_deviation` (theorem) | Transfer generic positive variance witness through an existing typed quadratic/variance equality | indexed_basis_covariance_quadratic_as_variance, variance_positive_iff_exists_positive_weight_deviation, Stdlib.Vector.to_list | **New:** positive typed covariance quadratic iff a listed positive-weight composite score deviates from its mean |
 | `indexed_basis_covariance_positive_definite_iff_all_nonzero_supported_deviations` (theorem) | Pointwise lifting of constructive positive quadratic iff to every nonzero typed vector | indexed_basis_covariance_quadratic_positive_iff_supported_deviation, indexed_basis_covariance_positive_definite, Stdlib.Vector.to_list, Stdlib.List.repeat | **New:** positive definiteness iff every nonzero direction has a real enumerated positive-weight deviation witness |
+| `indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero` (theorem) | Reuse indexed quadratic=variance and generic zero-variance support iff; standard real zero-product split | indexed_basis_covariance_quadratic_as_variance, variance_zero_iff_constant_on_positive_weight_support, Rle_lt_dec, Rmult_integral | **New:** covariance quadratic zero iff each observed weighted centered composite score is zero |
+| `indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero` (theorem) | Compose two previously checked indexed covariance quadratic-nullity iff results | indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero | **New:** bounded covariance row kernel equals centered sample evaluation kernel |
+| `indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel` (theorem) | Transport positive-definite iff trivial indexed row kernel through the centered evaluation kernel equivalence | indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel, indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero | **New:** positive definite iff no nonzero typed coefficient vector annihilates all centered weighted sample evaluations |
+
 
 
 

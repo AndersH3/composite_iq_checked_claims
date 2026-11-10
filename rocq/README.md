@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **654 proof scripts** in seven
+for the two reports. **657 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **651 public claims, 654 proof scripts,
-717 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **654 public claims, 657 proof scripts,
+721 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **651 public claims,
-654 proof scripts, 717 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **654 public claims,
+657 proof scripts, 721 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2596,6 +2596,31 @@ The result is a constructive bridge toward finite covariance
 kernel and rank questions. A dimension or numerical eigenvalue
 claim would still require a separately checked linear-algebra
 formalization with its own explicit assumptions.
+
+### Weighted centered sample evaluation as a covariance-kernel bridge
+
+The new `indexed_basis_centered_weighted_score` is a transparent
+function evaluating the weight times the deviation of a
+dimension-correct composite basis score from its expectation.
+It reuses existing `weighted_basis_sum`, `expect`, and
+`Stdlib.Vectors.Vector.to_list` without reimplementing
+a matrix, finite sum or linear map.
+
+`indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero`
+shows that the indexed covariance quadratic vanishes exactly
+when this centered weighted function vanishes at every sampled
+outcome, given unit mass and nonnegative sampled weights.
+`indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero`
+identifies this sample evaluation kernel with the existing
+Fin.t-indexed covariance row kernel.
+
+`indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel`
+lifts this kernel equivalence to all nonzero typed coefficient
+vectors, relating positive definiteness to the triviality of
+the centered evaluation kernel. A future finite-dimensional
+rank-nullity theorem requires a maintained linear-algebra
+library and an explicitly proved linear-map/dimension bridge;
+none is assumed here.
 
 ## Research extensions
 

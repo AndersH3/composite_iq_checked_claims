@@ -8349,4 +8349,218 @@ Section FiniteProbabilityMoments.
       apply Hproperty; exact Hnonzero.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_weighted_score] (definition) —
+   A finite-sample centered evaluation function for typed covariance
+   coefficient directions.
+   Mathematical meaning: At any outcome, compute the product
+   of its sample weight and the deviation of the corresponding
+   real-coefficient composite score from its finite expectation.
+   Exact declaration: The function of x is
+   weight x * (weighted_basis_sum (Vector.to_list coefficients)
+   basis x - expect (weighted_basis_sum
+   (Vector.to_list coefficients) basis)).
+   Premises and side conditions: The coefficient dimension is fixed
+   by Vector.t R (length basis); its value is defined even on
+   nonsampled outcomes, with arbitrary real weights and total mass.
+   Kernel theorems below explicitly restrict this function to
+   In x samples and require normalized nonnegative weights.
+   Proof/definition method: Compose the established weighted_basis_sum
+   and expect functions with Stdlib.Vectors.Vector.to_list
+   and ordinary real multiplication/subtraction. It is a
+   transparent alias, not a new list-fold or matrix algorithm.
+   Library reuse: weighted_basis_sum, expect,
+   Stdlib.Vectors.Vector.to_list and Stdlib.Reals.
+   Boundary: This is one finite-sample evaluation functional,
+   not a fully packaged linear map or a certified rank dimension.
+   *)
+  Definition indexed_basis_centered_weighted_score
+      (basis : list (Outcome -> R))
+      (coefficients : Vector.t R (length basis))
+      (x : Outcome) : R :=
+    weight x *
+      (weighted_basis_sum (Vector.to_list coefficients) basis x -
+        expect (weighted_basis_sum
+          (Vector.to_list coefficients) basis)).
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero]
+   (theorem) — Exact covariance nullity as vanishing of the
+   centered weighted score on every enumerated outcome.
+   Mathematical meaning: With normalized nonnegative finite
+   weights, an indexed covariance coefficient direction has
+   zero quadratic form precisely when its weighted
+   deviation-from-mean is zero at every listed sample outcome.
+   Exact checked proposition: For basis and coefficients of
+   matching Vector.t dimension, total_mass=1 and weight>=0
+   on samples imply Q(basis,coefficients)=0 iff
+   forall x, In x samples ->
+   indexed_basis_centered_weighted_score basis coefficients x=0.
+   Premises and side conditions: Zero-weight sample entries
+   contribute zero automatically. Repeated list occurrences,
+   zero vectors, and empty bases are allowed; normalization and
+   nonnegativity are essential to the zero-variance support law.
+   Proof/definition method: Rewrite the indexed covariance
+   quadratic as an ordinary finite variance. Then invoke the
+   existing variance-zero iff centered score is constant
+   at its expectation on positive-weight support. For each
+   sampled outcome, use the standard real order decision
+   Rle_lt_dec to separate a zero weight from positive weight,
+   and use the standard zero-product lemma in the reverse
+   direction. No fresh variance calculation or list induction.
+   Library reuse: indexed_basis_covariance_quadratic_as_variance,
+   variance_zero_iff_constant_on_positive_weight_support,
+   Stdlib.Reals.Rle_lt_dec/Rmult_integral and Stdlib.Lra.
+   Boundary: The target is exact equality on a fixed
+   finite weighted list. It does not compute matrix rank,
+   diagonalize a covariance matrix, or introduce measure axioms.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       forall x, In x samples ->
+         indexed_basis_centered_weighted_score
+           basis coefficients x = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis coefficients Hmass).
+    pose proof (variance_zero_iff_constant_on_positive_weight_support
+      (weighted_basis_sum (Vector.to_list coefficients) basis)
+      Hmass Hw) as Hzero.
+    split.
+    - intros Hvar x Hx.
+      unfold indexed_basis_centered_weighted_score.
+      destruct (Rle_lt_dec (weight x) 0) as [Hnonpos | Hpositive].
+      + assert (Hweight_zero : weight x = 0).
+        { pose proof (Hw x Hx); lra. }
+        rewrite Hweight_zero; ring.
+      + rewrite ((proj1 Hzero Hvar) x Hx Hpositive).
+        ring.
+    - intros Hsamples.
+      apply (proj2 Hzero).
+      intros x Hx Hpositive.
+      specialize (Hsamples x Hx).
+      unfold indexed_basis_centered_weighted_score in Hsamples.
+      apply Rmult_integral in Hsamples.
+      destruct Hsamples as [Hweight_zero | Hcenter_zero].
+      + lra.
+      + lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero]
+   (theorem) — Link the indexed covariance matrix row kernel
+   with the centered weighted sample evaluation kernel.
+   Mathematical meaning: A dimension-checked real coefficient
+   vector annihilates every Fin.t-indexed covariance row
+   exactly when its centered weighted composite score is
+   zero on every listed sample outcome.
+   Exact checked proposition: Under unit mass and nonnegative
+   sample weights, the statement that every
+   i:Fin.t(length basis) has zero vector_dot of the
+   coefficient list and its selected covariance row is equivalent
+   to the statement that every In x samples has zero
+   indexed_basis_centered_weighted_score basis coefficients x.
+   Premises and side conditions: Both the input coefficient
+   and the covariance row indices are typed. The sample can
+   contain duplicates and zero-weight outcomes; no Gaussian,
+   independence, or positive-definiteness hypothesis is assumed.
+   Proof/definition method: Compose the existing quadratic-zero
+   iff bounded covariance-row kernel equivalence with the
+   previous quadratic-zero iff centered sample evaluation
+   equivalence. Standard propositional reasoning suffices.
+   Library reuse:
+   indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero,
+   indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero,
+   Stdlib.Vectors.Fin, Stdlib.Vectors.Vector and Stdlib.Logic.
+   Boundary: This identifies two kernels but does not count
+   their dimensions or state a rank-nullity theorem.
+   *)
+  Theorem indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall i : Fin.t (length basis),
+         vector_dot (Vector.to_list coefficients)
+           (map (fun g => covariance
+             (Vector.nth (Vector.of_list basis) i) g) basis) = 0) <->
+       forall x, In x samples ->
+         indexed_basis_centered_weighted_score
+           basis coefficients x = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero
+        basis coefficients Hmass Hw) as Hrows.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero
+        basis coefficients Hmass Hw) as Hevaluation.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel]
+   (theorem) — Positive definiteness is precisely the absence
+   of nonzero typed coefficient vectors that annihilate all
+   centered weighted sampled evaluations.
+   Mathematical meaning: A finite covariance basis is
+   positive definite exactly when every nonzero coefficient
+   direction has a nonzero weighted score deviation on
+   some enumerated sample, phrased as a kernel-triviality
+   property of a single centered evaluation function.
+   Exact checked proposition: Given normalized nonnegative
+   weights, indexed_basis_covariance_positive_definite basis
+   iff each coefficients:Vector.t R (length basis)
+   satisfying Vector.to_list coefficients <> repeat 0
+   fails to have centered_weighted_score equal zero
+   at every In x samples.
+   Premises and side conditions: The basis and coefficient
+   lengths are fixed by the Vector.t type. No individual
+   sample weight need be strictly positive; zero-mass
+   outcomes simply contribute zero. Matrix invertibility
+   and independent basis scores are not assumed.
+   Proof/definition method: Reuse the checked positive-definite
+   iff no nonzero bounded covariance row kernel and the
+   newly checked row-kernel iff centered sample evaluation.
+   The proof transports the same nonzero vector between
+   these two representations without new matrix arithmetic.
+   Library reuse:
+   indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel,
+   indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero,
+   Stdlib.Vectors.Vector.to_list and Stdlib.List.repeat.
+   Boundary: This is an exact structural kernel criterion.
+   A numerical rank/determinant result or rank-nullity
+   dimension formula remains a separate verification task.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ (forall x, In x samples ->
+             indexed_basis_centered_weighted_score
+               basis coefficients x = 0)).
+  Proof.
+    intros basis Hmass Hw.
+    rewrite (indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel
+      basis Hmass Hw).
+    split; intros Hproperty coefficients Hnonzero Hkernel.
+    - apply (Hproperty coefficients Hnonzero).
+      apply (proj2
+        (indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero
+          basis coefficients Hmass Hw)).
+      exact Hkernel.
+    - apply (Hproperty coefficients Hnonzero).
+      apply (proj1
+        (indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero
+          basis coefficients Hmass Hw)).
+      exact Hkernel.
+  Qed.
+
 End FiniteProbabilityMoments.
