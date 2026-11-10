@@ -9421,11 +9421,11 @@ Section FiniteProbabilityMoments.
     induction coefficients as [|c cs IH]; intros basis a x.
     - (* No coefficient can contribute, even if the basis is nonempty. *)
       destruct basis as [|f fs];
-        unfold weighted_basis_sum, linear_combination;
+        unfold weighted_basis_sum, linear_combination, FiniteSum.finite_sum;
         simpl; ring.
     - destruct basis as [|f fs].
       + (* List.combine truncates at an empty score basis. *)
-        unfold weighted_basis_sum, linear_combination.
+        unfold weighted_basis_sum, linear_combination, FiniteSum.finite_sum.
         simpl; ring.
       + (* Distribute the scalar over the current term and shared tail. *)
         unfold weighted_basis_sum, linear_combination in *.
