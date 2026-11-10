@@ -5977,6 +5977,169 @@ Section FiniteOutcomeSpace.
     - exact Hchain.
   Qed.
 
+
+  (**
+   [union_prob_zero_iff_no_positive_support] (theorem) —
+   Characterize zero union mass by the absence of positive-weight
+   enumerated outcomes satisfying at least one family member.
+   Mathematical meaning: A Boolean union has zero weighted mass
+   exactly when its sampled support contains only zero-weight
+   observations, assuming all sampled weights are nonnegative.
+   Exact checked proposition: Nonnegative weights on samples imply
+   union_prob weights samples events = 0 iff every In x samples
+   satisfying any_event events x = true has weights x = 0.
+   Premises and side conditions: Nonnegative weights rule out
+   cancellation. Neither total-mass normalization, distinct
+   outcomes nor event-family independence is assumed; empty
+   event lists satisfy both sides automatically.
+   Proof/definition method: Unfold only the union alias and
+   specialize the existing single-event zero-support iff.
+   Library reuse: finite_prob_zero_iff_no_positive_mass_support,
+   union_prob, any_event and FiniteSum.
+   Boundary: This is an exact finite weighted-list property,
+   not a statistical claim about unobserved population support.
+   *)
+  Theorem union_prob_zero_iff_no_positive_support :
+    forall weights samples (events : list Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      (union_prob weights samples events = 0 <->
+       forall x, In x samples -> any_event events x = true ->
+         weights x = 0).
+  Proof.
+    intros weights samples events Hw.
+    unfold union_prob.
+    apply finite_prob_zero_iff_no_positive_mass_support.
+    exact Hw.
+  Qed.
+
+  (**
+   [union_prob_zero_iff_each_member_zero] (theorem) —
+   A nonnegative finite union has zero mass precisely when all
+   its constituent events have zero mass.
+   Mathematical meaning: Overlapping or duplicated events cannot
+   cancel one another under nonnegative outcome weights. A union
+   vanishes exactly when every listed event vanishes.
+   Exact checked proposition: For weights nonnegative on samples,
+   union_prob weights samples events = 0 iff
+   forall member, In member events ->
+     finite_prob weights samples member = 0.
+   Premises and side conditions: All event lists, including empty
+   and duplicated families, are allowed. The claim does not
+   require independent events or total mass equal to one.
+   Proof/definition method: Reduce both union and single-event
+   vanishing to their established zero-support characterizations.
+   Convert an accepted union outcome to a witnessed member by
+   Stdlib.List.existsb_exists; convert member inclusion back to
+   union membership with the existing event_member_implies_union.
+   Library reuse: union_prob_zero_iff_no_positive_support,
+   finite_prob_zero_iff_no_positive_mass_support,
+   Stdlib.List.existsb_exists and event_member_implies_union.
+   Boundary: This equivalence is false for arbitrary signed
+   weights, where positive and negative contributions can cancel.
+   *)
+  Theorem union_prob_zero_iff_each_member_zero :
+    forall weights samples (events : list Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      (union_prob weights samples events = 0 <->
+       forall member, In member events ->
+         finite_prob weights samples member = 0).
+  Proof.
+    intros weights samples events Hw.
+    split.
+    - intros Hunion member Hmember.
+      apply (proj2 (finite_prob_zero_iff_no_positive_mass_support
+        weights samples member Hw)).
+      intros x Hx Hhit.
+      apply ((proj1 (union_prob_zero_iff_no_positive_support
+        weights samples events Hw)) Hunion x Hx).
+      apply (event_member_implies_union events member x).
+      + exact Hmember.
+      + exact Hhit.
+    - intros Hmembers.
+      apply (proj2 (union_prob_zero_iff_no_positive_support
+        weights samples events Hw)).
+      intros x Hx Hhit.
+      unfold any_event in Hhit.
+      apply existsb_exists in Hhit.
+      destruct Hhit as [member [Hmember Hevent]].
+      exact ((proj1 (finite_prob_zero_iff_no_positive_mass_support
+        weights samples member Hw))
+        (Hmembers member Hmember) x Hx Hevent).
+  Qed.
+
+  (**
+   [union_prob_positive_of_positive_support] (theorem) —
+   Strictly positive union mass from a positive-weight sampled
+   outcome already accepted by the family union.
+   Mathematical meaning: One positive-weight accepted occurrence
+   suffices for strictly positive total union mass when all other
+   sampled weights are nonnegative.
+   Exact checked proposition: With nonnegative sample weights,
+   In x samples, any_event events x = true and 0 < weights x
+   imply 0 < union_prob weights samples events.
+   Premises and side conditions: A witness must belong to the
+   precise enumerated sample. Duplicated sample occurrences
+   contribute repeatedly. Independence and normalization are not
+   needed, but negative weights would allow cancellation.
+   Proof/definition method: Rewrite union_prob as the existing
+   finite probability of any_event and invoke the existing
+   strictly positive single-event support theorem.
+   Library reuse: finite_prob_positive_of_positive_support,
+   union_prob, any_event and FiniteSum.
+   Boundary: Does not infer positive population probability
+   from any particular empirical observation.
+   *)
+  Theorem union_prob_positive_of_positive_support :
+    forall weights samples (events : list Event) x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In x samples -> any_event events x = true ->
+      0 < weights x ->
+      0 < union_prob weights samples events.
+  Proof.
+    intros weights samples events x Hw Hx Hunion Hweight.
+    unfold union_prob.
+    apply (finite_prob_positive_of_positive_support
+      weights samples (any_event events) x Hw Hx Hunion Hweight).
+  Qed.
+
+  (**
+   [union_prob_positive_of_positive_member_support] (theorem) —
+   Witness-based positivity using a particular listed event.
+   Mathematical meaning: A positive-weight outcome that satisfies
+   any actual member of an event family also guarantees positive
+   mass for that family's union.
+   Exact checked proposition: Given nonnegative sampled weights,
+   In member events, In x samples, member x = true, and
+   0 < weights x, conclude 0 < union_prob weights samples events.
+   Premises and side conditions: The family may contain duplicate
+   predicates and the sample may contain duplicate outcomes.
+   There are no independence or unit normalization assumptions.
+   Proof/definition method: Establish any_event membership using
+   the already checked event_member_implies_union, then invoke
+   the shared union positive-support corollary; no fresh list
+   search or indicator arithmetic is required.
+   Library reuse: event_member_implies_union,
+   union_prob_positive_of_positive_support, Stdlib.List.In.
+   Boundary: This is strictly positive finite mass on a specified
+   weighted enumeration, not a causal or distributional model.
+   *)
+  Theorem union_prob_positive_of_positive_member_support :
+    forall weights samples (events : list Event) member x,
+      (forall y, In y samples -> 0 <= weights y) ->
+      In member events -> In x samples ->
+      member x = true -> 0 < weights x ->
+      0 < union_prob weights samples events.
+  Proof.
+    intros weights samples events member x
+      Hw Hmember Hx Hhit Hweight.
+    apply (union_prob_positive_of_positive_support
+      weights samples events x Hw Hx).
+    - apply (event_member_implies_union events member x).
+      + exact Hmember.
+      + exact Hhit.
+    - exact Hweight.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

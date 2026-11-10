@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **635 proof scripts** in seven
+for the two reports. **639 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **632 public claims, 635 proof scripts,
-698 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **636 public claims, 639 proof scripts,
+702 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **632 public claims,
-635 proof scripts, 698 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **636 public claims,
+639 proof scripts, 702 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2461,6 +2461,25 @@ identities after the finite-family De Morgan bridge. The
 general union product proof now reuses the new conditional
 partition theorem rather than repeating the De Morgan rewrite.
 No new independence premise or list-fold implementation is needed.
+
+### Finite union mass determined by event support
+
+The zero-mass law `union_prob_zero_iff_no_positive_support`
+is a specialization of the existing finite-event support theorem.
+`union_prob_zero_iff_each_member_zero` strengthens it to
+an event-family equivalence: under nonnegative sampled weights,
+the mass of a union vanishes exactly when the mass of **every
+listed member** vanishes. The proof uses
+`Stdlib.List.existsb_exists` and the checked
+`event_member_implies_union` lemma instead of implementing a
+second union search.
+
+The positive counterparts,
+`union_prob_positive_of_positive_support` and
+`union_prob_positive_of_positive_member_support`,
+reuse single-event positivity and show that one positive-weight
+sampled witness suffices. These results require no independence
+or normalized total mass and remain specific to finite lists.
 
 ## Research extensions
 

@@ -1838,6 +1838,18 @@ union-product theorem now invokes the conditional partition
 lemma directly, removing duplicate De Morgan transport
 from its proof script while retaining all side conditions.
 
+## Finite union support and zero-mass equivalence
+
+The existing `finite_prob_zero_iff_no_positive_mass_support`
+and `finite_prob_positive_of_positive_support` provide all
+real-weight support reasoning. Their union counterparts are
+direct aliases, while the characterization by member-event
+zero masses uses `Stdlib.List.existsb_exists` for the one
+required event-family witness and the existing member-implies-union
+theorem in the reverse direction. No new probability fold,
+finite-list recursion or event enumeration is needed.
+Nonnegative weights explicitly prevent signed cancellation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **632 public theorem/lemma/example claims**, plus
+The current branch has **636 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**635 proof scripts** across seven Rocq modules. The claims and scripts
+**639 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -606,7 +606,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 174 proof scripts
+## FiniteUnion.v — 178 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -785,6 +785,11 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_union_complement_partition` (theorem) | Conditional target transport and existing conditional complement identity | all_negated_events_eq_negated_any, finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_complement | **New:** conditional union plus all-failures mass equals one under positive conditioner |
 | `finite_conditional_union_complement_chain_product` (theorem) | **Refactored:** general complement-family product and reusable conditional partition, avoiding a second De Morgan transport | finite_conditional_all_events_product, finite_conditional_union_complement_partition, finite_conditional_prob_complement, Stdlib.List.map_map/map_ext_in, Stdlib.Lra | Arbitrary finite conditional union formula with explicit non-pairwise complement chain |
 | `finite_conditional_nonempty_union_complement_chain_product` (theorem) | General union formula and first-guard positivity projection | finite_conditional_union_complement_chain_product, finite_conditional_prefix_independent_cons_positive | **New:** positivity is a consequence of the nonempty complement chain, not an extra premise |
+| `union_prob_zero_iff_no_positive_support` (theorem) | Immediate union alias application of generic finite-event zero-support criterion | finite_prob_zero_iff_no_positive_mass_support | **New:** zero union iff no sampled positive-weight union support |
+| `union_prob_zero_iff_each_member_zero` (theorem) | Support iff in both directions; existsb witness extraction and member inclusion | union_prob_zero_iff_no_positive_support, finite_prob_zero_iff_no_positive_mass_support, Stdlib.List.existsb_exists, event_member_implies_union | **New:** nonnegative union mass vanishes iff every member event mass vanishes |
+| `union_prob_positive_of_positive_support` (theorem) | Immediate reuse of single-event positive witness criterion | finite_prob_positive_of_positive_support, any_event | **New:** positive-weight union support implies strictly positive union mass |
+| `union_prob_positive_of_positive_member_support` (theorem) | Member-to-union witness then generic union positivity | event_member_implies_union, union_prob_positive_of_positive_support | **New:** any listed event with a positive-weight sampled witness makes union mass positive |
+
 
 
 
