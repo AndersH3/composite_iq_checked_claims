@@ -1940,6 +1940,17 @@ A genuine rank-nullity formula still needs a separately
 certified linear-map structure and dimension theory; current
 claims identify kernels without asserting their dimensions.
 
+## Centered sample evaluations and their zero-sum image constraint
+
+The zero-total constraint is an instance of the maintained
+`centered_score_has_zero_expectation`, not a second proof
+of finite expectation arithmetic. Its sign consequences
+delegate to `FiniteSum.finite_sum_nonnegative_zero_iff`
+and `finite_sum_neg`, then to the existing centered-score
+kernel characterization. This reduces the later rank problem
+to an explicitly zero-sum finite evaluation family, but
+makes no unproved assertion about dimension or linearity.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

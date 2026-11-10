@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **657 proof scripts** in seven
+for the two reports. **660 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **654 public claims, 657 proof scripts,
-721 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **657 public claims, 660 proof scripts,
+724 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **654 public claims,
-657 proof scripts, 721 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **657 public claims,
+660 proof scripts, 724 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2621,6 +2621,29 @@ the centered evaluation kernel. A future finite-dimensional
 rank-nullity theorem requires a maintained linear-algebra
 library and an explicitly proved linear-map/dimension bridge;
 none is assumed here.
+
+### Centered evaluation zero-sum constraint
+
+`indexed_basis_centered_weighted_score_sum_zero` reuses
+`centered_score_has_zero_expectation` to prove that the centered
+weighted sample evaluations sum to zero whenever the total
+sample mass is one. This exact identity holds even for signed
+weights and does not assume covariance positive semidefiniteness.
+
+For nonnegative sampled weights, the
+`indexed_basis_centered_weighted_score_nonnegative_implies_quadratic_zero`
+and
+`indexed_basis_centered_weighted_score_nonpositive_implies_quadratic_zero`
+theorems show that if every centered sample evaluation
+has the same weak sign, all evaluations vanish and the
+covariance quadratic is zero. The proofs reuse the generic
+`FiniteSum.finite_sum_nonnegative_zero_iff`, `finite_sum_neg`
+and previously established sample-evaluation kernel equivalence.
+
+Geometrically, this is the explicit zero-total constraint
+needed before constructing a finite-dimensional centered
+evaluation linear map. No codomain dimension, covariance
+rank bound, or rank-nullity theorem is claimed yet.
 
 ## Research extensions
 

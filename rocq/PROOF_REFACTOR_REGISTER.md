@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **654 public theorem/lemma/example claims**, plus
+The current branch has **657 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**657 proof scripts** across seven Rocq modules. The claims and scripts
+**660 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -815,7 +815,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 248 proof scripts
+## FiniteMoments.v — 251 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1067,6 +1067,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero` (theorem) | Reuse indexed quadratic=variance and generic zero-variance support iff; standard real zero-product split | indexed_basis_covariance_quadratic_as_variance, variance_zero_iff_constant_on_positive_weight_support, Rle_lt_dec, Rmult_integral | **New:** covariance quadratic zero iff each observed weighted centered composite score is zero |
 | `indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero` (theorem) | Compose two previously checked indexed covariance quadratic-nullity iff results | indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero, indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero | **New:** bounded covariance row kernel equals centered sample evaluation kernel |
 | `indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel` (theorem) | Transport positive-definite iff trivial indexed row kernel through the centered evaluation kernel equivalence | indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel, indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero | **New:** positive definite iff no nonzero typed coefficient vector annihilates all centered weighted sample evaluations |
+| `indexed_basis_centered_weighted_score_sum_zero` (theorem) | Identify centered weighted finite sum as existing centered expectation and apply earlier result | centered_score_has_zero_expectation, FiniteSum.finite_sum | **New:** centered weighted sample evaluation lies in exact zero-sum hyperplane when mass=1 |
+| `indexed_basis_centered_weighted_score_nonnegative_implies_quadratic_zero` (theorem) | Generic finite nonnegative-zero sum criterion plus centered kernel equivalence | FiniteSum.finite_sum_nonnegative_zero_iff, indexed_basis_centered_weighted_score_sum_zero, indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero | **New:** all nonnegative centered evaluations force a null covariance direction |
+| `indexed_basis_centered_weighted_score_nonpositive_implies_quadratic_zero` (theorem) | Negate sample evaluations using the maintained sum-negation theorem then apply generic nonnegative-zero iff | FiniteSum.finite_sum_neg, FiniteSum.finite_sum_nonnegative_zero_iff, indexed_basis_centered_weighted_score_sum_zero, indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero | **New:** all nonpositive centered evaluations likewise force covariance nullity |
+
 
 
 

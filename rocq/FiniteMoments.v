@@ -8563,4 +8563,169 @@ Section FiniteProbabilityMoments.
       exact Hkernel.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_weighted_score_sum_zero] (theorem) —
+   The finite list of centered weighted score evaluations has
+   exact aggregate zero for every dimension-correct coefficient
+   vector under unit total mass.
+   Mathematical meaning: Summing the contributions
+   weight(x)*(composite(x)-E[composite]) over the enumerated
+   sample gives zero, so the image of the centered-sample
+   evaluation map lies in the zero-total coordinate hyperplane.
+   Exact checked proposition: If total_mass = 1, then
+   FiniteSum.finite_sum
+     (indexed_basis_centered_weighted_score basis coefficients)
+     samples = 0 for all basis and typed coefficients.
+   Premises and side conditions: No nonnegativity, independence
+   or nonempty sample assumption is needed for the algebraic
+   implication; signed weights satisfy it when total mass
+   equals one. Repeated outcomes retain their multiplicities.
+   Proof/definition method: Unfold only the centered sample
+   evaluation and identify its list sum with the established
+   expectation of a centered composite score. Invoke the existing
+   centered_score_has_zero_expectation theorem directly rather
+   than repeating expectation subtraction or scalar identities.
+   Library reuse: centered_score_has_zero_expectation,
+   FiniteSum.finite_sum, expect and Stdlib.Vectors.Vector.to_list.
+   Boundary: The zero-total identity is a necessary constraint
+   on sampled evaluations; it does not itself establish a rank
+   bound, linear-map dimension, or a matrix spectral property.
+   *)
+  Theorem indexed_basis_centered_weighted_score_sum_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      FiniteSum.finite_sum
+        (indexed_basis_centered_weighted_score
+          basis coefficients) samples = 0.
+  Proof.
+    intros basis coefficients Hmass.
+    unfold indexed_basis_centered_weighted_score.
+    change
+      (expect (fun x =>
+        weighted_basis_sum (Vector.to_list coefficients) basis x -
+        expect (weighted_basis_sum
+          (Vector.to_list coefficients) basis)) = 0).
+    apply centered_score_has_zero_expectation.
+    exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_centered_weighted_score_nonnegative_implies_quadratic_zero]
+   (theorem) — Nonnegative centered evaluations cannot
+   produce positive covariance quadratic curvature when
+   their finite sum is identically zero.
+   Mathematical meaning: If all enumerated centered weighted
+   composite scores are nonnegative, the exact zero-total
+   identity forces every such score to vanish. Under normalized
+   nonnegative sample weights, the corresponding covariance
+   quadratic is therefore zero.
+   Exact checked proposition: For total_mass=1,
+   nonnegative sampled weights, and
+   forall x in samples, 0 <=
+   indexed_basis_centered_weighted_score basis coefficients x,
+   conclude indexed_basis_covariance_quadratic_form
+   basis coefficients = 0.
+   Premises and side conditions: The nonnegativity of the
+   centered weighted evaluations is a separate assumption
+   from nonnegativity of the underlying weights. No nonzero
+   coefficient, independence or Gaussian assumption is needed.
+   Proof/definition method: Apply the generic finite-sum
+   nonnegative-zero iff theorem to the centered evaluations
+   using the previous zero-total identity, then transport
+   their pointwise vanishing to zero covariance quadratic via
+   the existing centered-score kernel equivalence.
+   Library reuse: FiniteSum.finite_sum_nonnegative_zero_iff,
+   indexed_basis_centered_weighted_score_sum_zero,
+   indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero.
+   Boundary: This proves degeneracy of one specified coefficient
+   direction; it does not determine covariance-matrix rank.
+   *)
+  Theorem indexed_basis_centered_weighted_score_nonnegative_implies_quadratic_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples ->
+        0 <= indexed_basis_centered_weighted_score
+          basis coefficients x) ->
+      indexed_basis_covariance_quadratic_form basis coefficients = 0.
+  Proof.
+    intros basis coefficients Hmass Hw Hnonnegative.
+    apply (proj2
+      (indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero
+        basis coefficients Hmass Hw)).
+    apply (proj1 (FiniteSum.finite_sum_nonnegative_zero_iff
+      samples
+      (indexed_basis_centered_weighted_score basis coefficients)
+      Hnonnegative)).
+    apply indexed_basis_centered_weighted_score_sum_zero.
+    exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_centered_weighted_score_nonpositive_implies_quadratic_zero]
+   (theorem) — Nonpositive centered sampled evaluations also
+   force a zero covariance quadratic form.
+   Mathematical meaning: The centered weighted composite
+   evaluations sum to zero; if they are all nonpositive, then
+   their pointwise negations are nonnegative with zero sum,
+   hence every original evaluation vanishes.
+   Exact checked proposition: Under unit total mass and
+   nonnegative sampled weights, pointwise nonpositivity of
+   indexed_basis_centered_weighted_score on all In x samples
+   implies indexed_basis_covariance_quadratic_form = 0.
+   Premises and side conditions: Both the sample weight and
+   centered-evaluation sign premises are explicit.
+   Duplicate and zero-weight samples are permitted; no
+   independence or prior positive-definiteness is assumed.
+   Proof/definition method: Apply the standard FiniteSum
+   negation identity and nonnegative-zero iff to the negated
+   centered evaluations, using the already checked zero-total
+   theorem. Then transport their vanishing through the
+   established centered sample evaluation kernel theorem.
+   Library reuse: FiniteSum.finite_sum_neg,
+   FiniteSum.finite_sum_nonnegative_zero_iff,
+   indexed_basis_centered_weighted_score_sum_zero,
+   indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero.
+   Boundary: This concerns an exact finite signed coordinate
+   condition, not a general rank computation or eigenvalue proof.
+   *)
+  Theorem indexed_basis_centered_weighted_score_nonpositive_implies_quadratic_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples ->
+        indexed_basis_centered_weighted_score
+          basis coefficients x <= 0) ->
+      indexed_basis_covariance_quadratic_form basis coefficients = 0.
+  Proof.
+    intros basis coefficients Hmass Hw Hnonpositive.
+    assert (Hneg_nonnegative :
+      forall x, In x samples ->
+        0 <= - indexed_basis_centered_weighted_score
+          basis coefficients x).
+    { intros x Hx.
+      specialize (Hnonpositive x Hx).
+      lra. }
+    assert (Hneg_zero :
+      FiniteSum.finite_sum
+        (fun x => - indexed_basis_centered_weighted_score
+          basis coefficients x) samples = 0).
+    { rewrite FiniteSum.finite_sum_neg.
+      rewrite (indexed_basis_centered_weighted_score_sum_zero
+        basis coefficients Hmass).
+      ring. }
+    apply (proj2
+      (indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero
+        basis coefficients Hmass Hw)).
+    intros x Hx.
+    pose proof
+      ((proj1 (FiniteSum.finite_sum_nonnegative_zero_iff
+        samples
+        (fun y => - indexed_basis_centered_weighted_score
+          basis coefficients y)
+        Hneg_nonnegative)) Hneg_zero x Hx) as Hpoint.
+    lra.
+  Qed.
+
 End FiniteProbabilityMoments.
