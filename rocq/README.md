@@ -2802,8 +2802,24 @@ They certify the elementary kernel-subspace laws as explicit
 predicates but do not yet package them into a maintained library's
 linear-map/subspace abstraction or assert a numeric rank-nullity law.
 
-Current target inventory: **682 public claims, 685 proof scripts,
+Inventory for preceding typed sample-kernel batch: **682 public claims, 685 proof scripts,
 750 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Typed covariance-row kernel bridge and closure (10 November 2026)
+
+Two extensively commented transparent predicates name the already-checked
+bounded sample-evaluation kernel and bounded covariance-row kernel, so new
+proofs no longer duplicate long indexed covariance row dot-product
+expressions. A direct bridge theorem transports their membership under
+unit total mass and nonnegative listed weights. Three corollaries prove
+membership of the canonical all-zero coefficient vector and closure of
+the covariance-row kernel under componentwise vector addition and all
+real scalar multipliers. Every proof reuses the earlier sample-kernel
+linearity and closure theorems; no new matrix implementation, generic
+vector recursion, Gaussian assumption, or rank calculation is added.
+
+Current target inventory: **686 public claims, 689 proof scripts,
+756 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

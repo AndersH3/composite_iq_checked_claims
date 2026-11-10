@@ -9930,4 +9930,228 @@ Section FiniteProbabilityMoments.
       exact Hkernel.
   Qed.
 
+
+  (**
+   [indexed_basis_bounded_sample_kernel] (definition) —
+   Reusable typed kernel predicate for centered sample evaluation.
+   Mathematical meaning: A coefficient vector lies in this
+   kernel exactly when its existing centered weighted score is
+   zero at every sample position, not merely at one position.
+   Exact declaration: indexed_basis_bounded_sample_kernel basis
+   coefficients := forall i : Fin.t (length samples),
+   indexed_basis_centered_sample_evaluation basis coefficients i = 0.
+   Premises and side conditions: Coefficient-vector dimension is
+   the basis length and index dimension is the sample-list length;
+   neither normalized weights nor positive weights are needed.
+   Empty sample and basis lists are allowed. Duplicate sample
+   occurrences remain distinct bounded positions.
+   Proof/definition method: Name the already-used universal-zero
+   predicate transparently; no alternate evaluator or recursion.
+   Library reuse: indexed_basis_centered_sample_evaluation,
+   Stdlib.Vectors.Fin.t and Stdlib.Vectors.Vector.t.
+   Boundary: This predicate does not by itself package a
+   subspace record or establish its dimension.
+   *)
+  Definition indexed_basis_bounded_sample_kernel
+      (basis : list (Outcome -> R))
+      (coefficients : Vector.t R (length basis)) : Prop :=
+    forall i : Fin.t (length samples),
+      indexed_basis_centered_sample_evaluation
+        basis coefficients i = 0.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel] (definition) —
+   Reusable typed covariance-row nullspace predicate.
+   Mathematical meaning: A coefficient direction belongs to
+   this kernel precisely when its dot product against every
+   covariance row selected by a bounded basis index is zero.
+   Exact declaration: For each i : Fin.t (length basis),
+   vector_dot (Vector.to_list coefficients)
+   (map (fun g => covariance
+     (Vector.nth (Vector.of_list basis) i) g) basis) = 0.
+   Premises and side conditions: Coefficients and covariance rows
+   are indexed by the same basis size. No sign, normalization or
+   distinctness restriction is needed merely to define the kernel;
+   normalized nonnegative weights are explicit only in the bridge.
+   Proof/definition method: Name the previously checked row-dot
+   nullity proposition, without computing or storing another
+   covariance matrix representation.
+   Library reuse: vector_dot, covariance, Stdlib.List.map,
+   Stdlib.Vectors.Vector.to_list/nth/of_list and Fin.t.
+   Boundary: This is a predicate, not a certified numerical
+   matrix rank, a nullspace basis, or a dimension theorem.
+   *)
+  Definition indexed_basis_bounded_covariance_row_kernel
+      (basis : list (Outcome -> R))
+      (coefficients : Vector.t R (length basis)) : Prop :=
+    forall i : Fin.t (length basis),
+      vector_dot (Vector.to_list coefficients)
+        (map (fun g => covariance
+          (Vector.nth (Vector.of_list basis) i) g) basis) = 0.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel]
+   (theorem) — The two reusable, dimension-safe kernel predicates
+   coincide under the explicit finite-probability premises.
+   Mathematical meaning: A coefficient direction annihilates
+   every bounded covariance row if and only if it produces zero
+   weighted centered evaluation at every bounded sample position.
+   Exact checked proposition: Under total_mass = 1 and
+   nonnegative weights on samples, indexed_basis_bounded_covariance_row_kernel
+   basis coefficients iff indexed_basis_bounded_sample_kernel
+   basis coefficients for all correctly sized vectors.
+   Premises and side conditions: Basis and sample lengths need
+   not match. Repeated samples, duplicate basis functions and
+   zero-weight entries are supported. No Gaussian assumptions.
+   Proof/definition method: Unfold only the two new transparent
+   predicate names, then apply the previously kernel-checked
+   bounded row-vs-sample equivalence.
+   Library reuse:
+   indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel,
+   Stdlib.Vectors.Fin/Vector.
+   Boundary: Equality of kernel membership does not by itself
+   prove numerical covariance rank or rank-nullity.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_bounded_covariance_row_kernel basis coefficients <->
+       indexed_basis_bounded_sample_kernel basis coefficients).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_bounded_covariance_row_kernel,
+      indexed_basis_bounded_sample_kernel.
+    apply indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_zero] (theorem) —
+   Canonical zero coefficient direction is in the covariance-row
+   kernel under the same explicit finite-probability assumptions.
+   Mathematical meaning: The vector whose coefficients are all
+   zero annihilates each covariance row, even for an empty or
+   duplicated finite score basis.
+   Exact checked proposition: If total_mass = 1 and weights
+   are nonnegative on the given samples, then
+   indexed_basis_bounded_covariance_row_kernel basis
+     (Vector.const 0 (length basis)) holds.
+   Premises and side conditions: The weight assumptions are
+   inherited from the generic kernel equivalence used here,
+   although direct zero-row algebra can be stronger.
+   Proof/definition method: Transport the already-proved typed
+   zero-sample evaluation result through the named kernel iff;
+   no new covariance expansion or vector traversal.
+   Library reuse:
+   indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel,
+   indexed_basis_centered_sample_evaluation_zero_coefficients,
+   Stdlib.Vectors.Vector.const.
+   Boundary: Membership of one vector gives no matrix dimension.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_zero :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_bounded_covariance_row_kernel
+        basis (Vector.const 0 (length basis)).
+  Proof.
+    intros basis Hmass Hw.
+    apply (proj2 (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+      basis (Vector.const 0 (length basis)) Hmass Hw)).
+    unfold indexed_basis_bounded_sample_kernel.
+    intro i.
+    apply indexed_basis_centered_sample_evaluation_zero_coefficients.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_closed_under_add]
+   (theorem) — Closure of the named covariance-row kernel under
+   componentwise addition of dimension-correct coefficient vectors.
+   Mathematical meaning: If two coefficient directions each
+   annihilate all bounded covariance rows, then their vector sum
+   also annihilates those rows.
+   Exact checked proposition: Under unit total mass and
+   nonnegative listed weights, row-kernel membership of left
+   and right implies membership of Vector.map2 Rplus left right.
+   Premises and side conditions: Both coefficient vectors are
+   Vector.t R (length basis), with no restriction on the relative
+   number of sampled outcomes or basis functions; empty and
+   duplicated lists are permitted.
+   Proof/definition method: Transport each row-kernel premise
+   through the established named row/sample equivalence, apply
+   the existing sample-kernel add-closure theorem, then transport
+   the result back. No dot-product induction or matrix algebra.
+   Library reuse:
+   indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel,
+   indexed_basis_centered_sample_kernel_closed_under_add,
+   Stdlib.Vectors.Vector.map2.
+   Boundary: Subspace-like closure is not a rank statement.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_closed_under_add :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_bounded_covariance_row_kernel basis left ->
+      indexed_basis_bounded_covariance_row_kernel basis right ->
+      indexed_basis_bounded_covariance_row_kernel
+        basis (Vector.map2 Rplus left right).
+  Proof.
+    intros basis left right Hmass Hw Hleft Hright.
+    apply (proj2 (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+      basis (Vector.map2 Rplus left right) Hmass Hw)).
+    unfold indexed_basis_bounded_sample_kernel.
+    apply (indexed_basis_centered_sample_kernel_closed_under_add
+      basis left right).
+    - apply (proj1 (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+        basis left Hmass Hw)).
+      exact Hleft.
+    - apply (proj1 (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+        basis right Hmass Hw)).
+      exact Hright.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_closed_under_scale]
+   (theorem) — Closure of the named covariance-row kernel under
+   arbitrary real scalar multiplication of coefficient vectors.
+   Mathematical meaning: Any scalar multiple of a coefficient
+   direction annihilating every indexed covariance row still
+   annihilates every row.
+   Exact checked proposition: Under normalized nonnegative
+   sample weights, row-kernel membership of coefficients
+   implies membership of Vector.map (fun c => a*c) coefficients
+   for every real a, including a = 0.
+   Premises and side conditions: Only the already necessary
+   finite mass and nonnegative-weight conditions are added to
+   the type-level vector dimension; no assumption about
+   nonzero scalars or distinct sample entries is hidden.
+   Proof/definition method: Convert row membership to sample
+   membership, apply checked sample-kernel scalar closure,
+   and use the converse named equivalence for the result.
+   Library reuse:
+   indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel,
+   indexed_basis_centered_sample_kernel_closed_under_scale,
+   Stdlib.Vectors.Vector.map.
+   Boundary: Does not identify a nullity dimension or rank.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_closed_under_scale :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_bounded_covariance_row_kernel basis coefficients ->
+      indexed_basis_bounded_covariance_row_kernel
+        basis (Vector.map (fun c => a * c) coefficients).
+  Proof.
+    intros basis coefficients a Hmass Hw Hkernel.
+    apply (proj2 (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+      basis (Vector.map (fun c => a * c) coefficients) Hmass Hw)).
+    unfold indexed_basis_bounded_sample_kernel.
+    apply (indexed_basis_centered_sample_kernel_closed_under_scale
+      basis coefficients a).
+    apply (proj1 (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+      basis coefficients Hmass Hw)).
+    exact Hkernel.
+  Qed.
+
 End FiniteProbabilityMoments.

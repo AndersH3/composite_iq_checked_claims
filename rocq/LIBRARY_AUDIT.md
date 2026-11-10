@@ -2049,6 +2049,18 @@ checked pointwise linearity and standard real zero-product lemma.
 The code retains the existing vector and finite-index machinery
 and introduces no custom matrix, normalization or rank assertion.
 
+## Reusable predicates for indexed kernel transport
+
+Two transparent predicates replace long, repeated nested covariance-row
+and centered-sample universal-zero expressions in subsequent proofs.
+Their exact equality of membership under normalized nonnegative weights
+reuses the earlier checked bounded row/sample-kernel equivalence.
+Covariance-row zero membership and closure under `Vector.map2 Rplus`
+and `Vector.map` reduce to the established sample-kernel laws; no
+new evaluation, covariance matrix, vector traversal or rank engine is
+introduced. These definitions will support a future library-backed
+subspace and finite-dimensional rank-nullity development.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

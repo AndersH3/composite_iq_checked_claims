@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 274 proof scripts
+## FiniteMoments.v — 278 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1095,6 +1095,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_kernel_closed_under_scale` (theorem) | Rewrite checked pointwise homogeneity and zero premise | indexed_basis_centered_sample_evaluation_scale, Stdlib.Ring | **New:** the bounded evaluation kernel is closed under real scalar multiplication |
 | `indexed_basis_centered_sample_kernel_closed_under_add` (theorem) | Rewrite checked pointwise additivity and zero premises | indexed_basis_centered_sample_evaluation_add, Stdlib.Ring | **New:** the bounded evaluation kernel is closed under coefficient-vector addition |
 | `indexed_basis_centered_sample_kernel_nonzero_scale_iff` (theorem) | Zero-product lemma and existing scale-closure theorem | indexed_basis_centered_sample_evaluation_scale, indexed_basis_centered_sample_kernel_closed_under_scale, Stdlib.Reals.Rmult_integral | **New:** nonzero coefficient scaling preserves the sample kernel exactly |
+| `indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel` (theorem) | Unfold two transparent kernel predicates, apply checked bounded kernel bridge | indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel, Stdlib.Vectors.Fin/Vector | **New:** reuse named covariance-row vs. centered-sample kernel equivalence |
+| `indexed_basis_bounded_covariance_row_kernel_zero` (theorem) | Transport canonical zero evaluation through named kernel equivalence | indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel, indexed_basis_centered_sample_evaluation_zero_coefficients | **New:** typed zero coefficient vector annihilates bounded covariance rows |
+| `indexed_basis_bounded_covariance_row_kernel_closed_under_add` (theorem) | Transport both hypotheses via iff; apply prior sample-kernel addition; transport conclusion | indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel, indexed_basis_centered_sample_kernel_closed_under_add | **New:** covariance-row kernel closed under vector addition |
+| `indexed_basis_bounded_covariance_row_kernel_closed_under_scale` (theorem) | Transport via iff and reuse prior sample-kernel scalar closure | indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel, indexed_basis_centered_sample_kernel_closed_under_scale | **New:** covariance-row kernel closed under arbitrary real scaling |
 
 
 ## FiniteBridge.v — 37 proof scripts
