@@ -2818,8 +2818,24 @@ real scalar multipliers. Every proof reuses the earlier sample-kernel
 linearity and closure theorems; no new matrix implementation, generic
 vector recursion, Gaussian assumption, or rank calculation is added.
 
-Current target inventory: **686 public claims, 689 proof scripts,
+Inventory for preceding named-kernel bridge batch: **686 public claims, 689 proof scripts,
 756 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Named covariance kernel scaling and positive definiteness (10 November 2026)
+
+The named bounded covariance-row kernel is now also shown invariant
+under all nonzero real coefficient scalings. The proof composes the
+checked named row/sample-kernel equivalence with the earlier
+nonzero-scaling sample-nullspace equivalence, without opening a
+covariance sum. Two additional equivalences state the existing
+positive-definite covariance criterion directly using the reusable
+named row and sample kernel predicates: positive definiteness holds
+precisely when no nonzero, dimension-correct coefficient direction
+belongs to either kernel. No false assumption of rank equality,
+full column rank or a numerical rank-nullity formula is introduced.
+
+Current target inventory: **689 public claims, 692 proof scripts,
+759 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

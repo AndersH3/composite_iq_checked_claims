@@ -2061,6 +2061,17 @@ new evaluation, covariance matrix, vector traversal or rank engine is
 introduced. These definitions will support a future library-backed
 subspace and finite-dimensional rank-nullity development.
 
+## Named kernel scaling and positive-definite interface
+
+The covariance-row nonzero-scale iff is a propositional composition
+of the existing row/sample kernel bridge and checked sample-kernel
+nonzero-scalar iff. The named-row and named-sample positive-definiteness
+criteria unfold only the transparent predicates to reuse their
+corresponding previously checked kernel-triviality laws. This
+eliminates repetition of the lengthy row-dot expressions from later
+applications without replacing the covariance calculation, vector
+representation or inventing a spectral/rank engine.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

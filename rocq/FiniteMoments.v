@@ -10154,4 +10154,142 @@ Section FiniteProbabilityMoments.
     exact Hkernel.
   Qed.
 
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_nonzero_scale_iff]
+   (theorem) — Exact nullspace invariance under nonzero
+   coefficient scaling in the covariance-row representation.
+   Mathematical meaning: Multiplying a typed coefficient
+   direction by any nonzero scalar preserves, in both directions,
+   the property of annihilating every indexed covariance row.
+   Exact checked proposition: Under total_mass = 1,
+   nonnegative listed weights and a <> 0, row-kernel membership
+   of Vector.map (fun c => a*c) coefficients is equivalent
+   to row-kernel membership of coefficients themselves.
+   Premises and side conditions: Both coefficient vectors
+   have type Vector.t R (length basis). No matching basis
+   and sample lengths, distinctness, nonempty support,
+   covariance invertibility or Gaussian assumption is needed.
+   Proof/definition method: Compose the existing named
+   covariance-row/sample kernel equivalence in the original
+   and rescaled directions with the previously checked exact
+   nonzero-scale iff for the sample kernel. Pure propositional
+   reasoning closes the transported equivalence.
+   Library reuse:
+   indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel,
+   indexed_basis_centered_sample_kernel_nonzero_scale_iff,
+   Stdlib.Vectors.Vector.map and Stdlib.Logic.tauto.
+   Boundary: A kernel-membership equivalence; this does not
+   calculate the kernel dimension or covariance matrix rank.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_nonzero_scale_iff :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      a <> 0 ->
+      (indexed_basis_bounded_covariance_row_kernel
+         basis (Vector.map (fun c => a * c) coefficients) <->
+       indexed_basis_bounded_covariance_row_kernel
+         basis coefficients).
+  Proof.
+    intros basis coefficients a Hmass Hw Hnonzero.
+    pose proof
+      (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+        basis (Vector.map (fun c => a * c) coefficients)
+        Hmass Hw) as Hscaled.
+    pose proof
+      (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+        basis coefficients Hmass Hw) as Horiginal.
+    pose proof
+      (indexed_basis_centered_sample_kernel_nonzero_scale_iff
+        basis coefficients a Hnonzero) as Hsample_scale.
+    unfold indexed_basis_bounded_sample_kernel in Hscaled, Horiginal.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial]
+   (theorem) — Positive definiteness is exactly absence
+   of a nonzero typed coefficient in the named covariance-row kernel.
+   Mathematical meaning: Under a normalized finite nonnegative
+   probability model, strict positivity of every nonzero
+   covariance quadratic form is equivalent to a trivial
+   bounded covariance-row nullspace.
+   Exact checked proposition: Under total_mass = 1 and
+   nonnegative sample weights, indexed_basis_covariance_positive_definite
+   basis holds iff every coefficients with
+   Vector.to_list coefficients <> repeat 0 (length basis)
+   fails indexed_basis_bounded_covariance_row_kernel basis coefficients.
+   Premises and side conditions: Nonzero is expressed by
+   the maintained typed vector-to-list representation; no
+   dimension equality between basis and sample outcomes
+   is assumed. Basis dependence may make both sides false.
+   Proof/definition method: Unfold the newly named row-kernel
+   predicate and apply the existing, fully checked positive
+   definiteness iff no nonzero bounded row-kernel theorem.
+   Library reuse:
+   indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel,
+   Stdlib.Vectors.Vector.to_list and Stdlib.List.repeat.
+   Boundary: This is a kernel-triviality characterization,
+   not a computed determinant, matrix rank, or eigenvalue.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ indexed_basis_bounded_covariance_row_kernel
+             basis coefficients).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_bounded_covariance_row_kernel.
+    apply indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial]
+   (theorem) — Positive definiteness is exactly absence
+   of a nonzero typed coefficient in the named sample-evaluation kernel.
+   Mathematical meaning: A finite basis has positive-definite
+   covariance precisely when no nonzero dimension-correct
+   coefficient vector evaluates to the zero weighted centered
+   score at all bounded sample positions.
+   Exact checked proposition: Under total_mass = 1 and
+   nonnegative listed weights, indexed_basis_covariance_positive_definite
+   basis iff every coefficients of type Vector.t R (length basis)
+   with Vector.to_list coefficients <> repeat 0 (length basis)
+   fails indexed_basis_bounded_sample_kernel basis coefficients.
+   Premises and side conditions: Sample and basis dimensions may
+   differ, including zero. Repeated samples and basis scores are
+   represented literally; normalization/nonnegativity are explicit.
+   Proof/definition method: Unfold the named transparent sample
+   predicate and delegate to the already checked positive-definiteness
+   iff no nonzero bounded-sample-kernel equivalence. The finite
+   covariance quadratic is not re-expanded or re-summed.
+   Library reuse:
+   indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel,
+   Stdlib.Vectors.Vector.to_list and Stdlib.Vectors.Fin.t.
+   Boundary: Characterizes triviality of an explicitly typed kernel,
+   but rank-nullity and a numerical covariance rank require
+   a separately checked library-backed dimension theorem.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ indexed_basis_bounded_sample_kernel
+             basis coefficients).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_bounded_sample_kernel.
+    apply indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel;
+      assumption.
+  Qed.
+
 End FiniteProbabilityMoments.
