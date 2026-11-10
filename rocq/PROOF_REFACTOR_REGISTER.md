@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 269 proof scripts
+## FiniteMoments.v — 274 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1090,6 +1090,11 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_vector_to_list_map2_add` (lemma) | Standard paired vector induction and list conversion, no vector implementation | Stdlib.Vectors.Vector.rect2/map2/to_list, Stdlib.List.combine/map | **New:** map2 plus corresponds to the paired coefficient list representation |
 | `indexed_basis_centered_weighted_score_add` (theorem) | Reuse list addition, vector transport and existing linear expectation | indexed_vector_to_list_map2_add, weighted_basis_sum_coefficients_zip_add, VectorSpec.length_to_list, expectation_add, expectation_ext | **New:** centered weighted score is additive in the typed coefficient direction |
 | `indexed_basis_centered_sample_evaluation_add` (theorem) | Unfold bounded wrapper and apply the existing centered-score additivity | indexed_basis_centered_weighted_score_add, Stdlib.Vectors.Vector.map2/nth | **New:** dimension-safe sample evaluation is pointwise additive |
+| `weighted_basis_sum_repeat_zero` (theorem) | Explicit empty/cons basis cases; retain shared sum tail and ring normalization | Stdlib.List.repeat/combine, weighted_basis_sum, FiniteSum.finite_sum, Stdlib.Ring | **New:** all-zero coefficient list evaluates to zero |
+| `indexed_basis_centered_sample_evaluation_zero_coefficients` (theorem) | Transport canonical zero vector, reuse zero list composite and expectation extensionality | VectorSpec.to_list_const, weighted_basis_sum_repeat_zero, expectation_zero, expectation_ext | **New:** typed zero coefficient vector belongs to every bounded sample kernel |
+| `indexed_basis_centered_sample_kernel_closed_under_scale` (theorem) | Rewrite checked pointwise homogeneity and zero premise | indexed_basis_centered_sample_evaluation_scale, Stdlib.Ring | **New:** the bounded evaluation kernel is closed under real scalar multiplication |
+| `indexed_basis_centered_sample_kernel_closed_under_add` (theorem) | Rewrite checked pointwise additivity and zero premises | indexed_basis_centered_sample_evaluation_add, Stdlib.Ring | **New:** the bounded evaluation kernel is closed under coefficient-vector addition |
+| `indexed_basis_centered_sample_kernel_nonzero_scale_iff` (theorem) | Zero-product lemma and existing scale-closure theorem | indexed_basis_centered_sample_evaluation_scale, indexed_basis_centered_sample_kernel_closed_under_scale, Stdlib.Reals.Rmult_integral | **New:** nonzero coefficient scaling preserves the sample kernel exactly |
 
 
 ## FiniteBridge.v — 37 proof scripts

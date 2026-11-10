@@ -2038,6 +2038,17 @@ composite evaluator; its bounded index corollary is immediate.
 These results complement scalar homogeneity without introducing
 custom finite vectors, matrices, axioms or a rank formula.
 
+## Canonical zero vector and sample-kernel closure
+
+The canonical zero direction uses the maintained
+`VectorSpec.to_list_const` law, the original weighted-basis
+score, and the checked zero-expectation/extensionality results.
+Kernel closure under addition/scaling and invariance under nonzero
+scalar multiplication are direct corollaries of the previously
+checked pointwise linearity and standard real zero-product lemma.
+The code retains the existing vector and finite-index machinery
+and introduces no custom matrix, normalization or rank assertion.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

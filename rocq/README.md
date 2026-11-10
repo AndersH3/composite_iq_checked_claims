@@ -2785,8 +2785,25 @@ than a custom vector recursion. Both finite expectation additivity
 and composite sums reuse existing library laws, without a new matrix
 engine or numerical rank claim.
 
-Current target inventory: **677 public claims, 680 proof scripts,
+Inventory for preceding additivity batch: **677 public claims, 680 proof scripts,
 745 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Typed bounded sample kernel closure (10 November 2026)
+
+Five small, separately registered lemmas show that the canonical
+`Vector.const 0` coefficient direction evaluates to zero; the
+sample-evaluation kernel is closed under coefficient-vector addition
+and arbitrary real scalar multiplication; and multiplying by a
+nonzero real scalar preserves the kernel in both directions.
+These results reuse the newly checked additivity/homogeneity
+identities, standard `VectorSpec.to_list_const`,
+`expectation_zero`/`expectation_ext`, and `Rmult_integral`.
+They certify the elementary kernel-subspace laws as explicit
+predicates but do not yet package them into a maintained library's
+linear-map/subspace abstraction or assert a numeric rank-nullity law.
+
+Current target inventory: **682 public claims, 685 proof scripts,
+750 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

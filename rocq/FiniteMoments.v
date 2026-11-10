@@ -9719,4 +9719,214 @@ Section FiniteProbabilityMoments.
     apply indexed_basis_centered_weighted_score_add.
   Qed.
 
+
+  (**
+   [weighted_basis_sum_repeat_zero] (theorem) —
+   Zero coefficients annihilate every finite composite score.
+   Mathematical meaning: The all-zero coefficient list of
+   exactly the basis length produces an identically zero
+   composite score at every outcome and for any basis list.
+   Exact checked proposition: For all finite basis lists and
+   outcomes x, weighted_basis_sum (repeat 0 (length basis))
+   basis x = 0.
+   Premises and side conditions: The empty list, duplicated
+   basis functions and signed score values are permitted;
+   no unit mass, normalized weights or support hypothesis.
+   Proof/definition method: A short induction over the basis
+   reduces only the standard coefficient-basis zip; the
+   remaining tail remains the existing weighted_basis_sum.
+   Standard ring arithmetic eliminates zero coefficients.
+   Library reuse: Stdlib.List.repeat/combine,
+   weighted_basis_sum, FiniteSum.finite_sum and Stdlib.Ring.
+   Boundary: A zero coefficient evaluation identity, not a
+   proof about the dimension of a covariance matrix kernel.
+   *)
+  Theorem weighted_basis_sum_repeat_zero :
+    forall (basis : list (Outcome -> R)) (x : Outcome),
+      weighted_basis_sum (repeat 0 (length basis)) basis x = 0.
+  Proof.
+    intro basis.
+    induction basis as [|f rest IH]; intro x.
+    - unfold weighted_basis_sum, linear_combination, FiniteSum.finite_sum.
+      simpl; ring.
+    - change
+        (0 * f x +
+           weighted_basis_sum (repeat 0 (length rest)) rest x = 0).
+      rewrite (IH x).
+      ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_evaluation_zero_coefficients]
+   (theorem) — A standard typed zero vector belongs to the sample kernel.
+   Mathematical meaning: For every finite basis and bounded sample
+   position, the centered weighted evaluation of Vector.const 0
+   is exactly zero. The result holds irrespective of whether the
+   sample weights define a normalized probability distribution.
+   Exact checked proposition: For every basis and i : Fin.t
+   (length samples), indexed_basis_centered_sample_evaluation
+   basis (Vector.const 0 (length basis)) i = 0.
+   Premises and side conditions: The list of samples and basis
+   may be empty or contain duplicate elements. The vector
+   dimension is enforced by the standard Vector.const type.
+   Proof/definition method: Convert the standard vector constant
+   with maintained VectorSpec.to_list_const, use the zero-list
+   score theorem and its expectation extensionality corollary,
+   then simplify the centered weighted difference by ring.
+   Library reuse: VectorSpec.to_list_const, Vector.const,
+   weighted_basis_sum_repeat_zero, expectation_ext,
+   expectation_zero and Stdlib.Ring.
+   Boundary: Exhibits the zero element in the kernel, not
+   a general subspace record or finite-dimensional rank.
+   *)
+  Theorem indexed_basis_centered_sample_evaluation_zero_coefficients :
+    forall (basis : list (Outcome -> R))
+           (i : Fin.t (length samples)),
+      indexed_basis_centered_sample_evaluation
+        basis (Vector.const 0 (length basis)) i = 0.
+  Proof.
+    intros basis i.
+    unfold indexed_basis_centered_sample_evaluation,
+      indexed_basis_centered_weighted_score.
+    rewrite VectorSpec.to_list_const.
+    rewrite (weighted_basis_sum_repeat_zero basis
+      (Vector.nth (Vector.of_list samples) i)).
+    assert (Hexpect :
+        expect (weighted_basis_sum
+          (repeat 0 (length basis)) basis) = 0).
+    { rewrite <- expectation_zero.
+      apply expectation_ext.
+      intro x.
+      apply weighted_basis_sum_repeat_zero. }
+    rewrite Hexpect.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_kernel_closed_under_scale]
+   (theorem) — The sample-evaluation nullspace is closed
+   under multiplying its coefficient directions by real scalars.
+   Mathematical meaning: If a dimension-correct direction has zero
+   centered weighted evaluation at every bounded sample position,
+   then any real scalar multiple is another zero direction.
+   Exact checked proposition: For every basis, coefficient
+   vector and scalar a, a universally zero sample evaluator
+   implies all indexed evaluations of Vector.map (fun c => a*c)
+   coefficients are also zero.
+   Premises and side conditions: No unit mass, nonnegative
+   weights or nonzero-scalar condition is needed. Basis and
+   sample dimensions may differ, including empty lists.
+   Proof/definition method: Rewrite each coordinate with the
+   checked pointwise scalar-homogeneity theorem and use the
+   zero premise; ordinary real ring arithmetic closes the result.
+   Library reuse: indexed_basis_centered_sample_evaluation_scale,
+   Stdlib.Vectors.Vector.map, Stdlib.Ring.
+   Boundary: Algebraic kernel closure only; no assertion
+   about its dimension or rank is introduced.
+   *)
+  Theorem indexed_basis_centered_sample_kernel_closed_under_scale :
+    forall basis (coefficients : Vector.t R (length basis))
+           (a : R),
+      (forall i : Fin.t (length samples),
+         indexed_basis_centered_sample_evaluation
+           basis coefficients i = 0) ->
+      forall i : Fin.t (length samples),
+        indexed_basis_centered_sample_evaluation
+          basis (Vector.map (fun c => a * c) coefficients) i = 0.
+  Proof.
+    intros basis coefficients a Hkernel i.
+    rewrite indexed_basis_centered_sample_evaluation_scale.
+    rewrite (Hkernel i).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_kernel_closed_under_add]
+   (theorem) — The indexed centered sample nullspace is
+   closed under componentwise coefficient-vector addition.
+   Mathematical meaning: Adding two directions that annihilate
+   all sample-position centered evaluations produces another
+   direction that annihilates the same positions.
+   Exact checked proposition: Given two Vector.t R (length basis)
+   directions whose indexed sample evaluations vanish universally,
+   every evaluation of Vector.map2 Rplus left right also vanishes.
+   Premises and side conditions: No covariance normalization,
+   weight positivity, distinctness or nonempty-domain assumption.
+   The sample index is bounded by the original samples list.
+   Proof/definition method: Apply the previously kernel-checked
+   pointwise additivity law and substitute both zero identities;
+   no numerical induction or new vector sum implementation.
+   Library reuse: indexed_basis_centered_sample_evaluation_add,
+   Stdlib.Vectors.Vector.map2, Stdlib.Ring.
+   Boundary: Closure under addition is not alone a
+   finite-dimensional kernel rank or nullity formula.
+   *)
+  Theorem indexed_basis_centered_sample_kernel_closed_under_add :
+    forall basis (left right : Vector.t R (length basis)),
+      (forall i : Fin.t (length samples),
+         indexed_basis_centered_sample_evaluation
+           basis left i = 0) ->
+      (forall i : Fin.t (length samples),
+         indexed_basis_centered_sample_evaluation
+           basis right i = 0) ->
+      forall i : Fin.t (length samples),
+        indexed_basis_centered_sample_evaluation
+          basis (Vector.map2 Rplus left right) i = 0.
+  Proof.
+    intros basis left right Hleft Hright i.
+    rewrite indexed_basis_centered_sample_evaluation_add.
+    rewrite (Hleft i), (Hright i).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_kernel_nonzero_scale_iff]
+   (theorem) — Nonzero scalar multiplication preserves the
+   exact bounded centered sample evaluation kernel.
+   Mathematical meaning: A nonzero multiple of a typed
+   coefficient direction annihilates every sample position
+   exactly when the original direction does.
+   Exact checked proposition: If a <> 0, the universal-zero
+   predicate for the Vector.map scalar multiple of coefficients
+   is equivalent to the universal-zero predicate for coefficients.
+   Premises and side conditions: Only nonzero a is required.
+   Weights can be signed or unnormalized; both the domain
+   and index dimension are fixed by standard dependent types.
+   Proof/definition method: Expand the scaled coordinate via
+   pointwise homogeneity, then use the standard real
+   Rmult_integral zero-product fact and reject the zero-scalar
+   disjunct. The reverse implication uses the already established
+   sample-kernel closure under arbitrary scalar multiplication.
+   Library reuse: indexed_basis_centered_sample_evaluation_scale,
+   indexed_basis_centered_sample_kernel_closed_under_scale,
+   Stdlib.Reals.Rmult_integral.
+   Boundary: Proves exact invariance under a nonzero scalar
+   but does not define a formal kernel dimension.
+   *)
+  Theorem indexed_basis_centered_sample_kernel_nonzero_scale_iff :
+    forall basis (coefficients : Vector.t R (length basis))
+           (a : R),
+      a <> 0 ->
+      ((forall i : Fin.t (length samples),
+          indexed_basis_centered_sample_evaluation
+            basis (Vector.map (fun c => a * c) coefficients) i = 0) <->
+       forall i : Fin.t (length samples),
+         indexed_basis_centered_sample_evaluation
+           basis coefficients i = 0).
+  Proof.
+    intros basis coefficients a Hnonzero.
+    split.
+    - intros Hscaled i.
+      specialize (Hscaled i).
+      rewrite indexed_basis_centered_sample_evaluation_scale
+        in Hscaled.
+      apply Rmult_integral in Hscaled.
+      destruct Hscaled as [Hzero | Hzero].
+      + contradiction.
+      + exact Hzero.
+    - intro Hkernel.
+      apply indexed_basis_centered_sample_kernel_closed_under_scale.
+      exact Hkernel.
+  Qed.
+
 End FiniteProbabilityMoments.
