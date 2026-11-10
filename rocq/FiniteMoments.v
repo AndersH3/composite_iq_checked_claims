@@ -9794,10 +9794,11 @@ Section FiniteProbabilityMoments.
     assert (Hexpect :
         expect (weighted_basis_sum
           (repeat 0 (length basis)) basis) = 0).
-    { rewrite <- expectation_zero.
-      apply expectation_ext.
-      intro x.
-      apply weighted_basis_sum_repeat_zero. }
+    { transitivity (expect (fun _ => 0)).
+      - apply expectation_ext.
+        intro x.
+        apply weighted_basis_sum_repeat_zero.
+      - apply expectation_zero. }
     rewrite Hexpect.
     ring.
   Qed.
