@@ -9427,9 +9427,12 @@ Section FiniteProbabilityMoments.
       + (* List.combine truncates at an empty score basis. *)
         unfold weighted_basis_sum, linear_combination, FiniteSum.finite_sum.
         simpl; ring.
-      + (* Distribute the scalar over the current term and shared tail. *)
-        unfold weighted_basis_sum, linear_combination in *.
-        simpl.
+      + (* Preserve the existing shared-sum tail as a named expression
+           so the induction hypothesis rewrites it without reimplementation. *)
+        change
+          ((a * c) * f x +
+             weighted_basis_sum (map (fun t => a * t) cs) fs x =
+           a * (c * f x + weighted_basis_sum cs fs x)).
         rewrite (IH fs a x).
         ring.
   Qed.
