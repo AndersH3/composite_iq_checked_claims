@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 256 proof scripts
+## FiniteMoments.v — 258 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1077,11 +1077,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero` (theorem) | Reify In sample positions with stdlib List.nth_error and Fin bounded indices; reuse the existing list-to-vector bridge | vector_of_list_nth_error, Stdlib.List.In_nth_error/nth_error_Some/nth_error_In, Fin.of_nat_lt/to_nat_of_nat | **New:** zero bounded Fin.t sample evaluation iff every enumerated centered score is zero |
 | `indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel` (theorem) | Compose existing covariance-row kernel with new pure sample-indexing equivalence | indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero, indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero | **New:** covariance-row and bounded sample-evaluation kernels coincide |
 | `indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel` (theorem) | Transport existing positive-definiteness vs sampled kernel criterion through exact standard index bridge | indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel, indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero | **New:** positive-definite covariance iff bounded sample mapping has no nonzero typed kernel direction |
-
-
-
-
-
+| `finite_expectation_monotone_equality_iff_positive_support` (theorem) | Instantiate generic finite-sum equality iff at products and distinguish zero from positive sample weight | FiniteSum.finite_sum_monotone_equality_iff_pointwise, Stdlib.Rlt_dec, Stdlib.Psatz | **New:** weighted expectations equal precisely when ordered scores agree on listed positive support |
+| `finite_expectation_strict_monotone_iff_positive_support_witness` (theorem) | Reuse constructive strict monotonicity on weighted summands and derive a positive-weight witness | FiniteSum.finite_sum_strict_monotone_iff_strict_member, Stdlib.Psatz | **New:** strict weighted expectation comparison exactly witnesses a positively weighted strict score |
 
 
 ## FiniteBridge.v — 37 proof scripts

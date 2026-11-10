@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **667 proof scripts** in seven
+for the two reports. **669 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2704,8 +2704,25 @@ nonnegative zero/positive member equivalences, sum subtraction, and
 Rocq standard-library real linear arithmetic. No matrix rank theorem
 or continuous-measure claim is inferred.
 
-Current target inventory: **664 public claims, 667 proof scripts,
+Inventory for this preceding sum-only batch: **664 public claims, 667 proof scripts,
 732 documented declarations** across seven Rocq modules, pending CI.
+
+## Exact order characterization for finite expectations (10 November 2026)
+
+The new `finite_expectation_monotone_equality_iff_positive_support`
+and `finite_expectation_strict_monotone_iff_positive_support_witness`
+theorems transport the generic ordered-sum equivalences to weighted
+expectations. Under nonnegative weights and a pointwise score order,
+equality of expectations means that the scores agree at every listed
+**positive-weight** sample. Strict expectation order holds precisely
+when some listed positive-weight sample has a strict score order.
+No normalized-total-mass premise or separate sample induction is used.
+The proofs reuse `FiniteSum` and the standard Rocq real algebra
+libraries; they do not establish general measure-theoretic or
+empirical-statistical conclusions.
+
+Current target inventory: **666 public claims, 669 proof scripts,
+734 documented declarations** across seven modules, pending CI.
 
 ## Research extensions
 

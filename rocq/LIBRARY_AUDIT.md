@@ -1986,6 +1986,17 @@ to `g - f`. Both rely on the maintained `finite_sum_sub` lemma and
 implementation. The strict result produces an actual list witness
 without requiring decidable equality on the input type.
 
+## Weighted expectation order on positive sample support
+
+The new weighted expectation comparison theorems specialize the
+established finite-sum order equivalences to the existing
+`expect` representation, with pointwise nonnegative weights.
+They distinguish positively weighted outcomes from zero-weight
+ones by the standard real order decision and algebra, without
+rebuilding an expectation summation or inducting on the sample
+list. This is an exact support-sensitive interface for later
+covariance arguments, not a general measure-theory theorem.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

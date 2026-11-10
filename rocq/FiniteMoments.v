@@ -9064,4 +9064,141 @@ Section FiniteProbabilityMoments.
       exact Hkernel.
   Qed.
 
+
+  (**
+   [finite_expectation_monotone_equality_iff_positive_support]
+   (theorem) — Equality case of finite weighted expectation monotonicity.
+   Mathematical meaning: When weights are nonnegative and f is no
+   larger than g at every enumerated sample, equality of expectations
+   forces equality of scores wherever the sample weight is positive.
+   Conversely, agreement on the positive-weight support suffices
+   because samples of zero weight cannot affect either expectation.
+   Exact checked proposition: If every listed weight is nonnegative
+   and f x <= g x on samples, then expect f = expect g iff
+   forall x, In x samples -> 0 < weight x -> f x = g x.
+   Premises and side conditions: No total-mass normalization,
+   nonempty-list assumption, or decidable equality on outcomes
+   is needed. Repeated sample occurrences retain their multiplicity.
+   Proof/definition method: Instantiate the checked unweighted
+   finite-sum equality criterion at the products weight*f and
+   weight*g. Positive weights permit cancellation; otherwise
+   nonnegativity implies zero weight, so both products are zero.
+   Library reuse: FiniteSum.finite_sum_monotone_equality_iff_pointwise,
+   Stdlib.Reals.Rlt_dec, Stdlib.Lra/Psatz and standard arithmetic.
+   Boundary: The conclusion concerns the enumerated positive
+   weight support only, not general measure-theoretic almost-sure
+   equality or an empirical score distribution.
+   *)
+  Theorem finite_expectation_monotone_equality_iff_positive_support :
+    forall (f g : Outcome -> R),
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> f x <= g x) ->
+      (expect f = expect g <->
+       forall x, In x samples -> 0 < weight x -> f x = g x).
+  Proof.
+    intros f g Hweight Hordered.
+    assert (Hweighted :
+        forall x, In x samples ->
+          weight x * f x <= weight x * g x).
+    { intros x Hx.
+      pose proof (Hweight x Hx) as Hw.
+      pose proof (Hordered x Hx) as Hfg.
+      nra. }
+    pose proof
+      (FiniteSum.finite_sum_monotone_equality_iff_pointwise
+        samples (fun x => weight x * f x)
+        (fun x => weight x * g x) Hweighted) as Hiff.
+    change
+      (FiniteSum.finite_sum (fun x => weight x * f x) samples =
+       FiniteSum.finite_sum (fun x => weight x * g x) samples <->
+       forall x, In x samples -> 0 < weight x -> f x = g x).
+    split.
+    - intro Hequal.
+      pose proof ((proj1 Hiff) Hequal) as Hcoordinates.
+      intros x Hx Hpositive.
+      specialize (Hcoordinates x Hx).
+      nra.
+    - intro Hpositive_support.
+      apply (proj2 Hiff).
+      intros x Hx.
+      destruct (Rlt_dec 0 (weight x)) as [Hpositive | Hnonpositive].
+      + rewrite (Hpositive_support x Hx Hpositive).
+        reflexivity.
+      + assert (Hnonnegative : 0 <= weight x).
+        { apply Hweight; exact Hx. }
+        assert (Hzero : weight x = 0) by lra.
+        rewrite Hzero.
+        ring.
+  Qed.
+
+  (**
+   [finite_expectation_strict_monotone_iff_positive_support_witness]
+   (theorem) — Constructive strict weighted expectation comparison.
+   Mathematical meaning: For pointwise ordered scores under
+   nonnegative sample weights, strict inequality between their
+   finite expectations is equivalent to an actual listed outcome
+   of positive weight at which f is strictly below g.
+   Exact checked proposition: Assuming nonnegative listed weights
+   and f x <= g x on the samples, expect f < expect g iff
+   exists x, In x samples /\ 0 < weight x /\ f x < g x.
+   Premises and side conditions: Repeated outcomes are permitted,
+   and neither normalization nor decidable equality is required.
+   The support witness cannot have zero weight.
+   Proof/definition method: Apply the checked strict finite-sum
+   comparison equivalence to weight*f and weight*g. Nonnegative
+   weights and ordered scores ensure products are ordered; a
+   strictly ordered product identifies positive weight and a
+   strictly ordered score. Reverse implication multiplies the
+   positive factors and reuses the same equivalence.
+   Library reuse: FiniteSum.finite_sum_strict_monotone_iff_strict_member,
+   Stdlib.Reals.Rlt_dec and Stdlib.Psatz nonlinear real arithmetic.
+   Boundary: This is exact for finite weighted observations;
+   it does not establish statistical or continuous dominance.
+   *)
+  Theorem finite_expectation_strict_monotone_iff_positive_support_witness :
+    forall (f g : Outcome -> R),
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> f x <= g x) ->
+      (expect f < expect g <->
+       exists x, In x samples /\ 0 < weight x /\ f x < g x).
+  Proof.
+    intros f g Hweight Hordered.
+    assert (Hweighted :
+        forall x, In x samples ->
+          weight x * f x <= weight x * g x).
+    { intros x Hx.
+      pose proof (Hweight x Hx) as Hw.
+      pose proof (Hordered x Hx) as Hfg.
+      nra. }
+    pose proof
+      (FiniteSum.finite_sum_strict_monotone_iff_strict_member
+        samples (fun x => weight x * f x)
+        (fun x => weight x * g x) Hweighted) as Hiff.
+    change
+      (FiniteSum.finite_sum (fun x => weight x * f x) samples <
+       FiniteSum.finite_sum (fun x => weight x * g x) samples <->
+       exists x, In x samples /\ 0 < weight x /\ f x < g x).
+    split.
+    - intro Hstrict.
+      destruct ((proj1 Hiff) Hstrict) as [x [Hx Hproduct]].
+      assert (Hw : 0 <= weight x).
+      { apply Hweight; exact Hx. }
+      assert (Hfg : f x <= g x).
+      { apply Hordered; exact Hx. }
+      assert (Hpositive : 0 < weight x).
+      { destruct (Rlt_dec 0 (weight x)) as [Hp | Hnot].
+        - exact Hp.
+        - assert (Hzero : weight x = 0) by lra.
+          rewrite Hzero in Hproduct.
+          nra. }
+      assert (Hscore_strict : f x < g x) by nra.
+      exists x.
+      repeat split; assumption.
+    - intros [x [Hx [Hpositive Hscore_strict]]].
+      apply (proj2 Hiff).
+      exists x; split.
+      + exact Hx.
+      + nra.
+  Qed.
+
 End FiniteProbabilityMoments.
