@@ -1901,6 +1901,17 @@ intersection positivity statements delegate to existing
 member upper bounds. No fresh sum recursion, Boolean-event
 traversal or conditional quotient is implemented.
 
+## Constructive finite moment and typed covariance support witnesses
+
+The generic `FiniteSum.finite_sum_positive_iff_positive_member`
+is now used for a new strictly-positive variance iff theorem
+by applying it to the existing centered squared-deviation
+integrand. The typed covariance-quadratic variant delegates
+to `indexed_basis_covariance_quadratic_as_variance`, avoiding
+another proof about list-matrix multiplication or vector
+index arithmetic. This is a support-witness bridge for
+later rank/kernel statements, not a spectral library replacement.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

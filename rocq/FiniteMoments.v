@@ -8151,4 +8151,136 @@ Section FiniteProbabilityMoments.
     exact Hzero.
   Qed.
 
+
+  (**
+   [variance_positive_iff_exists_positive_weight_deviation] (theorem) —
+   Constructive support witness for strictly positive finite variance.
+   Mathematical meaning: Under normalized nonnegative sample weights,
+   a real-valued score has positive variance precisely when an
+   actual positive-weight listed outcome has a score different
+   from its finite weighted expectation.
+   Exact checked proposition: Assuming total_mass=1 and sampled
+   nonnegative weights, 0 < variance f iff there is an x with
+   In x samples, 0 < weight x, and f x <> expect f.
+   Premises and side conditions: The list can contain repeated
+   outcomes and individual sample weights may be zero. The total
+   sample mass equals one. The witness's weight is strictly
+   positive, and no Gaussianity, independence or global score
+   equality decision is assumed.
+   Proof/definition method: Rewrite variance by the existing
+   centered-second-moment identity. Apply the generic
+   FiniteSum.finite_sum_positive_iff_positive_member to the
+   pointwise nonnegative weighted squared deviation. A positive
+   summand forces both factors nonzero; conversely, positive
+   weight and a nonzero real deviation yield a strictly
+   positive product by ordinary real square arithmetic.
+   Library reuse: centered_second_moment_identity,
+   FiniteSum.finite_sum_positive_iff_positive_member,
+   Stdlib.Reals.Rle_0_sqr/Rmult_lt_0_compat, Stdlib.Lra/Psatz.
+   Boundary: This is a finite exact variance criterion with a
+   concrete listed witness, not a spectral rank theorem or a
+   statistical confidence statement for unobserved outcomes.
+   *)
+  Theorem variance_positive_iff_exists_positive_weight_deviation :
+    forall f,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < variance f <->
+       exists x, In x samples /\ 0 < weight x /\
+         f x <> expect f).
+  Proof.
+    intros f Hmass Hw.
+    rewrite <- (centered_second_moment_identity f Hmass).
+    change
+      (0 < FiniteSum.finite_sum
+        (fun x => weight x *
+          ((f x - expect f) * (f x - expect f))) samples <->
+       exists x, In x samples /\ 0 < weight x /\
+         f x <> expect f).
+    assert (Hnonnegative :
+      forall x, In x samples ->
+        0 <= weight x * ((f x - expect f) * (f x - expect f))).
+    { intros x Hx.
+      apply Rmult_le_pos.
+      - apply Hw; exact Hx.
+      - change (0 <= Rsqr (f x - expect f)).
+        apply Rle_0_sqr. }
+    pose proof (FiniteSum.finite_sum_positive_iff_positive_member
+      samples
+      (fun x => weight x *
+        ((f x - expect f) * (f x - expect f)))
+      Hnonnegative) as Hiff.
+    split.
+    - intro Hpositive.
+      destruct ((proj1 Hiff) Hpositive) as [x [Hx Hterm]].
+      assert (Hweight_positive : 0 < weight x).
+      { pose proof (Hw x Hx) as Hweight_nonnegative.
+        destruct (Rle_dec (weight x) 0) as [Hle | Hnotle].
+        - assert (Hzero : weight x = 0) by lra.
+          rewrite Hzero in Hterm.
+          nra.
+        - lra. }
+      assert (Hdeviation : f x <> expect f).
+      { intro Heq.
+        rewrite Heq in Hterm.
+        replace (expect f - expect f) with 0 in Hterm by ring.
+        nra. }
+      exists x; repeat split; assumption.
+    - intros [x [Hx [Hweight_positive Hdeviation]]].
+      apply (proj2 Hiff).
+      exists x; split.
+      + exact Hx.
+      + assert (Hdiff : f x - expect f <> 0) by lra.
+        assert (Hsquare :
+          0 < (f x - expect f) * (f x - expect f)) by nra.
+        apply Rmult_lt_0_compat; assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_positive_iff_supported_deviation]
+   (theorem) — Concrete positive-weight witness for curvature of a
+   dimension-safe finite covariance-matrix quadratic form.
+   Mathematical meaning: For an exactly sized typed real coefficient
+   vector, the covariance quadratic is strictly positive precisely
+   when its composite basis score differs from its finite mean
+   at some positive-weight listed outcome.
+   Exact checked proposition: Assuming unit total mass and
+   nonnegative sampled weights, Q(basis,coefficients)>0 iff
+   there exists an enumerated x with 0<weight x and
+   weighted_basis_sum (Vector.to_list coefficients) basis x <>
+   expect (weighted_basis_sum (Vector.to_list coefficients) basis).
+   Premises and side conditions: Vector.t R (length basis)
+   certifies coefficient dimension. Zero coefficients and empty
+   bases are allowed in the proposition, in which cases both
+   sides may be false. No empirical factor, Gaussian model
+   or unsupported matrix-rank assumption is introduced.
+   Proof/definition method: Rewrite the existing indexed
+   covariance quadratic as the variance of the identical
+   weighted composite score, then invoke the checked
+   constructive variance-positive support iff. No fresh
+   coefficient iteration, matrix operation or positivity proof.
+   Library reuse: indexed_basis_covariance_quadratic_as_variance,
+   variance_positive_iff_exists_positive_weight_deviation,
+   Stdlib.Vectors.Vector.to_list and FiniteSum.
+   Boundary: This is a sample-support characterization of
+   positive quadratic curvature, not a computed rank,
+   eigenvalue or matrix inverse.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_iff_supported_deviation :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_quadratic_form basis coefficients <->
+       exists x, In x samples /\ 0 < weight x /\
+         weighted_basis_sum (Vector.to_list coefficients) basis x <>
+           expect (weighted_basis_sum
+             (Vector.to_list coefficients) basis)).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis coefficients Hmass).
+    apply variance_positive_iff_exists_positive_weight_deviation;
+      assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

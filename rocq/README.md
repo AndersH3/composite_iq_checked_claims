@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **651 proof scripts** in seven
+for the two reports. **653 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **648 public claims, 651 proof scripts,
-714 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **650 public claims, 653 proof scripts,
+716 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **648 public claims,
-651 proof scripts, 714 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **650 public claims,
+653 proof scripts, 716 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2560,6 +2560,25 @@ The generic `FiniteSum.finite_sum_positive_of_positive_member`
 proof was also shortened to the existing
 `finite_sum_member_le` member bound and `Stdlib.Lra`.
 This removes the former redundant real-decision case analysis.
+
+### Constructive positive variance and indexed covariance curvature
+
+`variance_positive_iff_exists_positive_weight_deviation`
+uses the generic constructive finite-sum positivity theorem
+on nonnegative weighted squared score deviations. Under unit
+total mass and nonnegative sampled weights, strictly positive
+variance now yields an actual enumerated, positive-weight
+sample with score different from its finite mean, rather than
+only a negated universal constancy predicate.
+
+`indexed_basis_covariance_quadratic_positive_iff_supported_deviation`
+transfers this witness through the maintained dimension-safe
+covariance quadratic = composite-score variance identity.
+It characterizes strictly positive covariance curvature for
+any `Vector.t R (length basis)` coefficient direction by
+positive-weight sampled deviation. This is useful evidence
+for later kernel and rank reasoning but **does not yet
+compute rank or prove a rank-nullity dimension formula**.
 
 ## Research extensions
 
