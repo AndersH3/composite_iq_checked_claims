@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **665 proof scripts** in seven
+for the two reports. **667 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2689,6 +2689,23 @@ separates the basis and sample dimensions without asserting
 equal length, invertibility, or a rank theorem. A future
 linear-map proof and standard algebraic dimension theorem
 are still required before a numeric rank claim.
+
+## Ordered finite-sum comparison equivalences (10 November 2026)
+
+Two new finite-sum lemmas strengthen the reusable order interface without
+adding recursion or axioms. `finite_sum_monotone_equality_iff_pointwise`
+shows that pointwise ordered summands have equal total sums exactly when
+they agree on every enumerated item. The complementary
+`finite_sum_strict_monotone_iff_strict_member` identifies a concrete
+strictly ordered list member precisely when the total sums differ strictly.
+Both require pointwise `f x <= g x` on the listed domain and preserve
+empty-list and duplicate-entry cases. Their proofs reuse the existing
+nonnegative zero/positive member equivalences, sum subtraction, and
+Rocq standard-library real linear arithmetic. No matrix rank theorem
+or continuous-measure claim is inferred.
+
+Current target inventory: **664 public claims, 667 proof scripts,
+732 documented declarations** across seven Rocq modules, pending CI.
 
 ## Research extensions
 

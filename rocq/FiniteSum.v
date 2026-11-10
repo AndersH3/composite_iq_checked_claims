@@ -840,3 +840,107 @@ Proof.
       apply (finite_sum_positive_of_positive_member
         (a :: rest) f x Hnonnegative Hin Hpositive).
 Qed.
+
+(**
+   [finite_sum_monotone_equality_iff_pointwise] (lemma) —
+   Characterization of equality in finite-sum monotonicity.
+   Mathematical meaning: When one real-valued summand is pointwise
+   no larger than another on the enumerated support, equality of
+   their two finite sums is equivalent to pointwise equality at
+   every enumerated item, including repeated list entries.
+   Exact checked proposition: If f x <= g x whenever In x xs,
+   then finite_sum f xs = finite_sum g xs iff
+   forall x, In x xs -> f x = g x.
+   Premises and side conditions: The input type requires no
+   decidable equality; empty and repeated lists are permitted.
+   The pointwise comparison is essential: without it,
+   signed differences might cancel even when sums agree.
+   Proof/definition method: Apply the already checked zero-sum
+   characterization to the nonnegative difference g-f and rewrite
+   its finite sum using the generic subtraction law; Lra
+   converts zero differences to equal pointwise values.
+   Library reuse: finite_sum_nonnegative_zero_iff,
+   finite_sum_sub, Stdlib.List.In and Stdlib.Lra.
+   Boundary: This is an exact finite-list equivalence, not
+   an almost-everywhere statement on a continuous measure.
+ *)
+Lemma finite_sum_monotone_equality_iff_pointwise {A : Type} :
+  forall (xs : list A) (f g : A -> R),
+    (forall x, In x xs -> f x <= g x) ->
+    (finite_sum f xs = finite_sum g xs <->
+      forall x, In x xs -> f x = g x).
+Proof.
+  intros xs f g Hle.
+  assert (Hnonnegative :
+      forall x, In x xs -> 0 <= g x - f x).
+  { intros x Hx.
+    specialize (Hle x Hx).
+    lra. }
+  split.
+  - intro Hequal.
+    assert (Hzero : finite_sum (fun x => g x - f x) xs = 0).
+    { rewrite finite_sum_sub; lra. }
+    apply (proj1 (finite_sum_nonnegative_zero_iff
+      xs (fun x => g x - f x) Hnonnegative)) in Hzero.
+    intros x Hx.
+    specialize (Hzero x Hx).
+    lra.
+  - intro Hpointwise.
+    assert (Hzero : finite_sum (fun x => g x - f x) xs = 0).
+    { apply (proj2 (finite_sum_nonnegative_zero_iff
+        xs (fun x => g x - f x) Hnonnegative)).
+      intros x Hx.
+      specialize (Hpointwise x Hx).
+      lra. }
+    rewrite finite_sum_sub in Hzero.
+    lra.
+Qed.
+
+(**
+   [finite_sum_strict_monotone_iff_strict_member] (lemma) —
+   Constructive witness characterization of strict finite-sum order.
+   Mathematical meaning: Under a pointwise non-strict comparison,
+   strict inequality of total sums occurs exactly when at least
+   one actual enumerated item has a strict comparison.
+   Exact checked proposition: If f x <= g x on all In x xs,
+   then finite_sum f xs < finite_sum g xs iff
+   exists x, In x xs /\ f x < g x.
+   Premises and side conditions: The list may be empty, can
+   repeat items, and does not need decidable equality.
+   The pointwise inequality rules out cancellation by
+   negative contributions to the difference g-f.
+   Proof/definition method: The forward implication converts
+   the strict inequality to positivity of a nonnegative
+   difference sum and invokes the previously established
+   constructive positive-member iff. The reverse direction
+   delegates to the checked strict-monotonicity-at-member lemma.
+   Library reuse: finite_sum_positive_iff_positive_member,
+   finite_sum_strict_monotone_at_member, finite_sum_sub,
+   Stdlib.List.In and Stdlib.Lra.
+   Boundary: Only finite enumerated sums are compared;
+   no inference about continuous distributions is made.
+ *)
+Lemma finite_sum_strict_monotone_iff_strict_member {A : Type} :
+  forall (xs : list A) (f g : A -> R),
+    (forall x, In x xs -> f x <= g x) ->
+    (finite_sum f xs < finite_sum g xs <->
+      exists x, In x xs /\ f x < g x).
+Proof.
+  intros xs f g Hle.
+  assert (Hnonnegative :
+      forall x, In x xs -> 0 <= g x - f x).
+  { intros x Hx.
+    specialize (Hle x Hx).
+    lra. }
+  split.
+  - intro Hstrict.
+    assert (Hpositive : 0 < finite_sum (fun x => g x - f x) xs).
+    { rewrite finite_sum_sub; lra. }
+    apply (proj1 (finite_sum_positive_iff_positive_member
+      xs (fun x => g x - f x) Hnonnegative)) in Hpositive.
+    destruct Hpositive as [x [Hx Hdiff]].
+    exists x; split; [exact Hx | lra].
+  - intros [x [Hx Hstrict]].
+    exact (finite_sum_strict_monotone_at_member
+      xs f g x Hle Hx Hstrict).
+Qed.

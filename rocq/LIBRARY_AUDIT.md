@@ -1977,6 +1977,15 @@ The covariance algebra is unchanged. This establishes a
 dimension-safe interface without reinventing an index search
 or asserting a linear-space rank before proving it.
 
+## Ordered finite-sum comparison without a second induction
+
+The new equality and strict-order equivalences for pointwise ordered
+summands reuse the existing zero and positive support criteria applied
+to `g - f`. Both rely on the maintained `finite_sum_sub` lemma and
+`Stdlib.Lra`, not fresh real-order induction or a separate summation
+implementation. The strict result produces an actual list witness
+without requiring decidable equality on the input type.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

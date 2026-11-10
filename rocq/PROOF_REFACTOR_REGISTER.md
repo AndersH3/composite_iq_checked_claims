@@ -433,7 +433,7 @@ unchanged, *not* that every proof term was rewritten. The dependency
 column is a tactic-level heuristic; consult the actual source for
 full dependencies and the theorem-specific doc comment for hypotheses.
 
-## FiniteSum.v — 24 proof scripts
+## FiniteSum.v — 26 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -461,6 +461,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_sum_positive_of_positive_member` (lemma) | **Refactored:** strict positivity from already checked bound on a listed term | finite_sum_member_le, Stdlib.Lra | Removes real-order case split and repeated nonnegative-zero reasoning without changing statement |
 | `finite_sum_strict_monotone_at_member` (lemma) | Positive difference sum and linearity | finite_sum_positive_of_positive_member, finite_sum_sub, Stdlib.Lra | **New:** strict monotonicity of sums from one strict coordinate |
 | `finite_sum_positive_iff_positive_member` (lemma) | Constructive induction extracting a listed positive real term; converse via generic strict support theorem | finite_sum_positive_of_positive_member, Stdlib.Rlt_dec, Stdlib.List.map/fold_right, Lra | **New:** strict positivity of a nonnegative finite sum iff a positive listed term exists |
+| `finite_sum_monotone_equality_iff_pointwise` (lemma) | Generic nonnegative difference zero criterion and linear arithmetic | finite_sum_nonnegative_zero_iff, finite_sum_sub, Stdlib.Lra | **New:** equality of ordered finite sums exactly when all enumerated terms agree; no duplicated induction |
+| `finite_sum_strict_monotone_iff_strict_member` (lemma) | Constructive positive-difference support witness plus established strict-order converse | finite_sum_positive_iff_positive_member, finite_sum_strict_monotone_at_member, finite_sum_sub, Stdlib.Lra | **New:** strict inequality iff a listed strict comparison exists; reuses maintained generic theorems |
 
 
 ## Hoeflin.v — 65 proof scripts
