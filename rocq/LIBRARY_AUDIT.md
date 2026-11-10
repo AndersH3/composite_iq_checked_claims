@@ -1964,6 +1964,19 @@ already defined positive-definite predicate gives a
 finite observational detection criterion for every
 nonzero typed direction.
 
+## Dimension-checked finite sample evaluation kernel
+
+Both sides of the covariance-kernel bridge now use standard
+finite indices: covariance rows are indexed by `Fin.t (length basis)`
+and sampled evaluations by `Fin.t (length samples)`.
+The conversion from list membership to bounded sample indices
+delegates to `Stdlib.List.In_nth_error`, `nth_error_In`,
+`nth_error_Some`, `Fin.of_nat_lt`, `Fin.to_nat_of_nat` and
+the repository's existing checked `vector_of_list_nth_error`.
+The covariance algebra is unchanged. This establishes a
+dimension-safe interface without reinventing an index search
+or asserting a linear-space rank before proving it.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

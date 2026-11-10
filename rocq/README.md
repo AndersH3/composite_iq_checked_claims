@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **662 proof scripts** in seven
+for the two reports. **665 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **659 public claims, 662 proof scripts,
-726 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **662 public claims, 665 proof scripts,
+730 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **659 public claims,
-662 proof scripts, 726 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **662 public claims,
+665 proof scripts, 730 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2662,6 +2662,33 @@ Together with the zero-sum image and row-kernel bridge,
 this supplies a concrete input-to-observation interface
 for subsequent dimension/rank work, without treating
 the interface itself as a full linear-map/rank theorem.
+
+### Dimension-safe indexed centered sample evaluations
+
+`indexed_basis_centered_sample_evaluation` now gives a
+finite coordinate function with input coefficients typed
+by `Vector.t R (length basis)` and output sample
+coordinates indexed by `Fin.t (length samples)`.
+It reuses standard `Vector.of_list`, `Vector.nth` and
+the already checked centered weighted sample score.
+
+`indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero`
+proves the output coordinate function vanishes everywhere
+precisely when all enumerated sample outcome evaluations
+vanish, using the existing `vector_of_list_nth_error` lemma
+and maintained list/finite-index conversions. The
+`indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel`
+theorem identifies this typed finite sample kernel with the
+typed covariance row kernel.
+
+Finally,
+`indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel`
+connects positive definiteness to triviality of the
+dimension-checked sample evaluation kernel. This explicitly
+separates the basis and sample dimensions without asserting
+equal length, invertibility, or a rank theorem. A future
+linear-map proof and standard algebraic dimension theorem
+are still required before a numeric rank claim.
 
 ## Research extensions
 

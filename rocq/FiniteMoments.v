@@ -8857,4 +8857,209 @@ Section FiniteProbabilityMoments.
       apply Hproperty; exact Hnonzero.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_sample_evaluation] (definition) —
+   A bounded sample-indexed, weighted centered covariance score.
+   Mathematical meaning: A coefficient vector of the precise
+   basis length determines one real centered weighted score
+   at every sample position indexed by Fin.t (length samples).
+   Exact declaration: The returned real at index i is
+   indexed_basis_centered_weighted_score basis coefficients
+   (Vector.nth (Vector.of_list samples) i).
+   Premises and side conditions: Both the coefficient vector
+   and the sample index are dimension-correct by type.
+   All sampled occurrences, including repeats, have their
+   own valid bounded indices. No total-mass or weight-sign
+   assumption is needed to define this function.
+   Proof/definition method: Compose the existing centered
+   weighted sample score with the maintained standard
+   Vector.of_list/Vector.nth encoding and Fin.t indexing.
+   No custom index search, vector traversal or matrix
+   multiplication is implemented.
+   Library reuse: indexed_basis_centered_weighted_score,
+   Stdlib.Vectors.Fin, Stdlib.Vectors.Vector.of_list/nth.
+   Boundary: This is a finite coordinate function, rather
+   than a packaged proof of linear-map structure or rank.
+   *)
+  Definition indexed_basis_centered_sample_evaluation
+      (basis : list (Outcome -> R))
+      (coefficients : Vector.t R (length basis))
+      (i : Fin.t (length samples)) : R :=
+    indexed_basis_centered_weighted_score
+      basis coefficients
+      (Vector.nth (Vector.of_list samples) i).
+
+  (**
+   [indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero]
+   (theorem) — A bounded Fin.t-indexed sample evaluation is
+   identically zero iff every enumerated outcome has zero
+   centered weighted score.
+   Mathematical meaning: Enumerating the sample positions
+   with standard bounded finite indices captures exactly the
+   same observations as enumerating membership in the
+   original sample list; duplicate entries remain counted
+   as separate positions.
+   Exact checked proposition: For any basis and length-typed
+   coefficients, (forall i:Fin.t(length samples),
+   indexed_basis_centered_sample_evaluation basis coeff i=0)
+   iff (forall x, In x samples ->
+   indexed_basis_centered_weighted_score basis coeff x=0).
+   Premises and side conditions: This is a purely structural
+   list/vector bridge: no normalized total mass, nonnegative
+   weights, independence, Gaussianity or nonempty-list premise.
+   Proof/definition method: For each sampled outcome, reuse
+   Stdlib.List.In_nth_error to obtain an index; convert its
+   strict bound with Fin.of_nat_lt and the standard
+   Fin.to_nat_of_nat law. Transport its lookup result using
+   the repository's already checked vector_of_list_nth_error.
+   Conversely, use the same lookup bridge and standard
+   Stdlib.List.nth_error_In for every bounded index.
+   Library reuse: vector_of_list_nth_error,
+   Stdlib.List.In_nth_error/nth_error_Some/nth_error_In,
+   Stdlib.Vectors.Fin.of_nat_lt/to_nat_of_nat,
+   Stdlib.Vectors.Vector.of_list/nth.
+   Boundary: This only identifies a finite coordinate kernel;
+   it does not assume dimension equality or a matrix rank.
+   *)
+  Theorem indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      ((forall i : Fin.t (length samples),
+          indexed_basis_centered_sample_evaluation
+            basis coefficients i = 0) <->
+       forall x, In x samples ->
+         indexed_basis_centered_weighted_score
+           basis coefficients x = 0).
+  Proof.
+    intros basis coefficients.
+    split.
+    - intros Hindices x Hx.
+      destruct (In_nth_error samples x Hx) as [n Hnth].
+      assert (Hbound : (n < length samples)%nat).
+      { apply (proj1 (nth_error_Some _ _)).
+        rewrite Hnth.
+        discriminate. }
+      pose proof (vector_of_list_nth_error Outcome samples
+        (Fin.of_nat_lt Hbound)) as Hlookup.
+      rewrite Fin.to_nat_of_nat in Hlookup.
+      simpl in Hlookup.
+      rewrite Hnth in Hlookup.
+      injection Hlookup as Hsame.
+      rewrite Hsame.
+      exact (Hindices (Fin.of_nat_lt Hbound)).
+    - intros Hsamples i.
+      unfold indexed_basis_centered_sample_evaluation.
+      apply Hsamples.
+      eapply nth_error_In.
+      apply vector_of_list_nth_error.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel]
+   (theorem) — The exact typed covariance-row nullspace
+   equals the typed centered sample-evaluation nullspace.
+   Mathematical meaning: A correctly sized real coefficient
+   vector annihilates every basis-indexed covariance row
+   if and only if it produces zero centered weighted scores
+   at all sample positions indexed by Fin.t (length samples).
+   Exact checked proposition: Under total_mass=1 and
+   nonnegative sampled weights, (forall i:Fin.t(length basis),
+   vector_dot coefficient_list covariance_row_i = 0)
+   iff (forall j:Fin.t(length samples),
+   indexed_basis_centered_sample_evaluation basis coeff j=0).
+   Premises and side conditions: Both index domains are
+   certified separately by their Fin.t types; the basis and
+   sample lengths need not agree. Duplicate elements and
+   empty lists are handled by their existing representations.
+   Proof/definition method: Compose the previously checked
+   row-kernel iff sample-membership evaluation-kernel theorem
+   with the newly checked pure indexing equivalence.
+   No recoding or traversing covariance matrix entries is needed.
+   Library reuse:
+   indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero,
+   indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero,
+   Stdlib.Vectors.Fin and Stdlib.Logic.
+   Boundary: This is equality of typed kernels, not a
+   statement about their dimensions or the matrix rank.
+   *)
+  Theorem indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      ((forall i : Fin.t (length basis),
+          vector_dot (Vector.to_list coefficients)
+            (map (fun g => covariance
+              (Vector.nth (Vector.of_list basis) i) g) basis) = 0) <->
+       forall j : Fin.t (length samples),
+         indexed_basis_centered_sample_evaluation
+           basis coefficients j = 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero
+        basis coefficients Hmass Hw) as Hrows.
+    pose proof
+      (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
+        basis coefficients) as Hindices.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel]
+   (theorem) — Typed covariance positive definiteness is
+   equivalent to a trivial kernel for the bounded sample
+   evaluation mapping from basis dimensions to sample positions.
+   Mathematical meaning: For every nonzero coefficient vector
+   in Vector.t R(length basis), at least one bounded sample
+   evaluation must be nonzero precisely when the covariance
+   quadratic is strictly positive in every nonzero direction.
+   Exact checked proposition: Under unit mass and sampled
+   nonnegative weights, indexed_basis_covariance_positive_definite
+   basis iff for all nonzero typed coefficients,
+   not(forall j:Fin.t(length samples),
+   indexed_basis_centered_sample_evaluation basis coeff j=0).
+   Premises and side conditions: Both the input and output
+   domains are typed by the existing standard finite-vector
+   index machinery. No equal basis/sample length, spectral,
+   full-row-rank or Gaussianity assumption is introduced.
+   Proof/definition method: Reuse the existing positive-definite
+   iff no nonzero centered weighted sample kernel, then
+   transport exact universal zero tests with the new
+   bounded-sample indexing theorem in both directions.
+   Library reuse:
+   indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel,
+   indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero,
+   Stdlib.Vectors.Fin/Vector and Stdlib.List.repeat.
+   Boundary: The result proves kernel triviality, but the
+   linear-map structure and rank-nullity formula still
+   require a separate checked library-based development.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ (forall j : Fin.t (length samples),
+             indexed_basis_centered_sample_evaluation
+               basis coefficients j = 0)).
+  Proof.
+    intros basis Hmass Hw.
+    rewrite
+      (indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel
+        basis Hmass Hw).
+    split; intros Hproperty coefficients Hnonzero Hkernel.
+    - apply (Hproperty coefficients Hnonzero).
+      apply (proj2
+        (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
+          basis coefficients)).
+      exact Hkernel.
+    - apply (Hproperty coefficients Hnonzero).
+      apply (proj1
+        (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
+          basis coefficients)).
+      exact Hkernel.
+  Qed.
+
 End FiniteProbabilityMoments.
