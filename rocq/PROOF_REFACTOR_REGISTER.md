@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 281 proof scripts
+## FiniteMoments.v — 283 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1102,6 +1102,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_bounded_covariance_row_kernel_nonzero_scale_iff` (theorem) | Compose two named kernel iff bridges with the checked nonzero-scaling sample iff | indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel, indexed_basis_centered_sample_kernel_nonzero_scale_iff, Stdlib.Logic.tauto | **New:** covariance row nullity invariant under nonzero scalar coefficient multiplication |
 | `indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial` (theorem) | Transparent row-kernel predicate unfolding and existing positive-definite criterion | indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_row_kernel | **Refactored API:** existing typed row nullspace injectivity result expressed using named kernel predicate |
 | `indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial` (theorem) | Transparent sample-kernel predicate unfolding and existing positive-definite criterion | indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel | **Refactored API:** existing typed sample nullspace injectivity result expressed using named kernel predicate |
+| `indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel` (theorem) | Compose centered-score quadratic nullity with Fin.t sample indexing and named predicate | indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero, indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero, Stdlib.Logic.tauto | **New:** zero covariance quadratic iff named centered-sample kernel membership |
+| `indexed_basis_covariance_quadratic_zero_iff_named_row_kernel` (theorem) | Propositional composition of named quadratic/sample and named row/sample iff | indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel, indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel | **New:** zero covariance quadratic iff named bounded covariance-row nullspace membership |
 
 
 ## FiniteBridge.v — 37 proof scripts

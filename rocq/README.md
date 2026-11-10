@@ -2834,8 +2834,23 @@ precisely when no nonzero, dimension-correct coefficient direction
 belongs to either kernel. No false assumption of rank equality,
 full column rank or a numerical rank-nullity formula is introduced.
 
-Current target inventory: **689 public claims, 692 proof scripts,
+Inventory for preceding positive-definiteness batch: **689 public claims, 692 proof scripts,
 759 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Covariance quadratic nullity as named typed kernel membership (10 November 2026)
+
+Two kernel-checked interface equivalences identify exact zero covariance
+quadratic values with membership in the named bounded centered-sample
+kernel and, equivalently, the named bounded covariance-row kernel.
+They are obtained by composing the existing quadratic-zero support
+result with the established Fin.t sample-index bridge and row/sample
+kernel equivalence. Both require unit total sample mass and
+nonnegative listed weights and permit degenerate or repeated score
+bases. No additional covariance formula, new real-sum induction or
+spectral/rank arithmetic is introduced.
+
+Current target inventory: **691 public claims, 694 proof scripts,
+761 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

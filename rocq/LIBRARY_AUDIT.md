@@ -2072,6 +2072,17 @@ eliminates repetition of the lengthy row-dot expressions from later
 applications without replacing the covariance calculation, vector
 representation or inventing a spectral/rank engine.
 
+## Null quadratic forms via named finite kernels
+
+The newly named sample and covariance-row kernel predicates now also
+characterize zero values of the existing dimension-checked covariance
+quadratic. Both equivalences are purely compositional: the sample
+statement reuses checked centered-score quadratic nullity plus the
+standard Vector/Fin sample-index bridge, while the row statement
+reuses the verified row/sample kernel iff. This preserves the exact
+normalization and nonnegative-weight hypotheses and avoids new
+matrix operations, spectral arguments or duplicate sum inductions.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

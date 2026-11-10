@@ -10292,4 +10292,94 @@ Section FiniteProbabilityMoments.
       assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel]
+   (theorem) — Covariance quadratic nullity equals membership
+   in the reusable bounded centered sample-evaluation kernel.
+   Mathematical meaning: A dimension-correct coefficient
+   direction has a zero covariance quadratic form precisely
+   when its centered weighted evaluation vanishes at every
+   enumerated sample position.
+   Exact checked proposition: If total_mass = 1 and every
+   listed weight is nonnegative, then
+   indexed_basis_covariance_quadratic_form basis coefficients = 0
+   iff indexed_basis_bounded_sample_kernel basis coefficients.
+   Premises and side conditions: Sample and basis lengths are
+   unrelated; zero sample weights and repeated score functions
+   are allowed. Nonnegative normalized weights are explicit
+   because they justify the quadratic zero-support equivalence.
+   Proof/definition method: Compose the earlier exact zero
+   quadratic iff universally zero centered weighted score theorem
+   with the maintained Vector/Fin bounded-index iff sample-membership
+   theorem. The named kernel is only unfolded as an alias.
+   Library reuse:
+   indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero,
+   indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero,
+   Stdlib.Vectors.Fin and Stdlib.Logic.tauto.
+   Boundary: A kernel-membership characterization, not a
+   numerical dimension, spectral decomposition or rank formula.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       indexed_basis_bounded_sample_kernel basis coefficients).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero
+        basis coefficients Hmass Hw) as Hquadratic.
+    pose proof
+      (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
+        basis coefficients) as Hindices.
+    unfold indexed_basis_bounded_sample_kernel.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_named_row_kernel]
+   (theorem) — Covariance quadratic nullity equals membership
+   in the reusable bounded covariance-row kernel.
+   Mathematical meaning: A dimension-correct coefficient vector
+   annihilates the covariance quadratic form exactly when its
+   dot product with every indexed covariance row vanishes.
+   Exact checked proposition: Under total_mass = 1 and
+   nonnegative listed sample weights,
+   indexed_basis_covariance_quadratic_form basis coefficients = 0
+   iff indexed_basis_bounded_covariance_row_kernel basis coefficients.
+   Premises and side conditions: Coefficient size is the length
+   of the score basis. No invertibility or positive definiteness
+   is assumed; the equivalence applies also to degenerate bases.
+   Repeated outcomes and zero-weight occurrences are supported.
+   Proof/definition method: Compose the named quadratic-zero
+   iff sample-kernel equivalence with the checked named
+   covariance-row iff sample-kernel bridge, using only
+   propositional logic and no new covariance expansion.
+   Library reuse:
+   indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel,
+   indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel,
+   Stdlib.Logic.tauto and Stdlib.Vectors.Vector.
+   Boundary: A nullspace equivalence for one finite
+   quadratic expression, not a claim about spectral rank,
+   continuous measures, or empirical covariance.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_named_row_kernel :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       indexed_basis_bounded_covariance_row_kernel basis coefficients).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel
+        basis coefficients Hmass Hw) as Hquadratic.
+    pose proof
+      (indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel
+        basis coefficients Hmass Hw) as Hkernels.
+    tauto.
+  Qed.
+
 End FiniteProbabilityMoments.
