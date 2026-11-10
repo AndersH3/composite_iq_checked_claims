@@ -2007,6 +2007,16 @@ or positive-witness search. The assumptions explicitly retain
 nonnegative weights and scores, with no normalization requirement;
 zero-weight outcomes do not constrain the score.
 
+## Expected-square kernels without new arithmetic machinery
+
+The expected-square zero and strict-positive witness results are
+specializations of the existing nonnegative finite expectation
+support laws. Standard `Rle_0_sqr`, `Rmult_integral` and
+`Psatz.nra` discharge the sole remaining real-square goals,
+without separate sample traversal, custom vector algebra, or
+an unsupported covariance rank conclusion. These facts provide
+reusable finite quadratic support predicates for later work.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

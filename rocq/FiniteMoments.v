@@ -9287,4 +9287,105 @@ Section FiniteProbabilityMoments.
     exact Hiff.
   Qed.
 
+
+  (**
+   [finite_expectation_square_zero_iff_zero_on_positive_support]
+   (theorem) — Exact zero-kernel criterion for finite square moments.
+   Mathematical meaning: Under nonnegative weights, the expected
+   square of a score vanishes exactly when every enumerated sample
+   carrying strictly positive weight has score zero. The score
+   itself may have either sign.
+   Exact checked proposition: If the weights are nonnegative on
+   the sample list, expect (fun x => f x * f x) = 0 iff
+   forall x, In x samples -> 0 < weight x -> f x = 0.
+   Premises and side conditions: No normalization, sample uniqueness,
+   decidable outcome equality, or nonempty-support assumption is
+   needed. Zero-weight outcomes are unrestricted.
+   Proof/definition method: Reuse the earlier nonnegative
+   expectation zero criterion on squared scores; use the
+   standard nonnegativity of squares and the real zero-product
+   lemma to recover the underlying score's zero value.
+   Library reuse: finite_expectation_nonnegative_zero_iff_positive_support,
+   Stdlib.Reals.Rle_0_sqr/Rmult_integral and Stdlib.Ring.
+   Boundary: This is a finite quadratic nullity theorem,
+   not a spectral rank or continuous L2-space result.
+   *)
+  Theorem finite_expectation_square_zero_iff_zero_on_positive_support :
+    forall (f : Outcome -> R),
+      (forall x, In x samples -> 0 <= weight x) ->
+      (expect (fun x => f x * f x) = 0 <->
+       forall x, In x samples -> 0 < weight x -> f x = 0).
+  Proof.
+    intros f Hweight.
+    pose proof
+      (finite_expectation_nonnegative_zero_iff_positive_support
+        (fun x => f x * f x) Hweight
+        (fun x _ => Rle_0_sqr (f x))) as Hiff.
+    split.
+    - intros Hzero x Hx Hpositive.
+      pose proof ((proj1 Hiff) Hzero x Hx Hpositive)
+        as Hsquare_zero.
+      apply Rmult_integral in Hsquare_zero.
+      destruct Hsquare_zero as [Hleft | Hright];
+        assumption.
+    - intros Hzero.
+      apply (proj2 Hiff).
+      intros x Hx Hpositive.
+      rewrite (Hzero x Hx Hpositive).
+      ring.
+  Qed.
+
+  (**
+   [finite_expectation_square_positive_iff_nonzero_positive_support]
+   (theorem) — Constructive nonzero-sample criterion for a
+   strictly positive finite square moment.
+   Mathematical meaning: With nonnegative weights, the expected
+   square is positive if and only if at least one enumerated
+   positively weighted score is nonzero. The witness is a
+   concrete sample position, not a generic direction in an
+   unspecified vector space.
+   Exact checked proposition: If all listed weights are
+   nonnegative, then 0 < expect (fun x => f x * f x)
+   iff exists x, In x samples /\ 0 < weight x /\ f x <> 0.
+   Premises and side conditions: Empty lists and repeated
+   samples are admitted; normalization is not required.
+   Strict support positivity cannot be replaced by a merely
+   positive score on an event of zero weight.
+   Proof/definition method: Specialize the preceding general
+   strictly positive expectation criterion to squared scores.
+   The standard nonnegative-square fact justifies its premise;
+   real nonlinear arithmetic converts strict positive squares
+   to nonzero scores in both directions.
+   Library reuse: finite_expectation_nonnegative_positive_iff_positive_support_witness,
+   Stdlib.Reals.Rle_0_sqr and Stdlib.Psatz.nra.
+   Boundary: This provides only one finite positive quadratic
+   direction; it is not a covariance-matrix rank theorem.
+   *)
+  Theorem finite_expectation_square_positive_iff_nonzero_positive_support :
+    forall (f : Outcome -> R),
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < expect (fun x => f x * f x) <->
+       exists x, In x samples /\ 0 < weight x /\ f x <> 0).
+  Proof.
+    intros f Hweight.
+    pose proof
+      (finite_expectation_nonnegative_positive_iff_positive_support_witness
+        (fun x => f x * f x) Hweight
+        (fun x _ => Rle_0_sqr (f x))) as Hiff.
+    split.
+    - intros Hpositive.
+      destruct ((proj1 Hiff) Hpositive)
+        as [x [Hx [Hmass Hsquare]]].
+      exists x.
+      repeat split; try assumption.
+      intro Hzero.
+      rewrite Hzero in Hsquare.
+      nra.
+    - intros [x [Hx [Hmass Hnonzero]]].
+      apply (proj2 Hiff).
+      exists x.
+      repeat split; try assumption.
+      nra.
+  Qed.
+
 End FiniteProbabilityMoments.

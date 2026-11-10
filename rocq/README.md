@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **671 proof scripts** in seven
+for the two reports. **673 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2735,8 +2735,24 @@ strictly positive score. Zero-weight entries are irrelevant, repetitions
 remain counted, and no total-mass normalization is needed. No new
 sum fold, induction, axiom or decidable equality was introduced.
 
-Current target inventory: **668 public claims, 671 proof scripts,
+Inventory for the preceding nonnegative expectation batch: **668 public claims, 671 proof scripts,
 736 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Finite expected-square nullity and positive witnesses (10 November 2026)
+
+The new `finite_expectation_square_zero_iff_zero_on_positive_support`
+identifies the exact positive-weight kernel of a finite expected square:
+it is zero if and only if the sampled score is zero at every
+positive-weight occurrence. The companion
+`finite_expectation_square_positive_iff_nonzero_positive_support`
+produces an enumerated nonzero sample score precisely when the
+expected square is strictly positive. These are reusable quadratic
+support facts, obtained from the preceding expectation sign
+characterizations and Rocq standard real-arithmetic libraries.
+No fresh sum induction, matrix engine or rank claim is introduced.
+
+Current target inventory: **670 public claims, 673 proof scripts,
+738 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 
