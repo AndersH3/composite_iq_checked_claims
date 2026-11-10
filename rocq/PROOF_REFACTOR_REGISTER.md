@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 258 proof scripts
+## FiniteMoments.v — 260 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1079,6 +1079,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel` (theorem) | Transport existing positive-definiteness vs sampled kernel criterion through exact standard index bridge | indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel, indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero | **New:** positive-definite covariance iff bounded sample mapping has no nonzero typed kernel direction |
 | `finite_expectation_monotone_equality_iff_positive_support` (theorem) | Instantiate generic finite-sum equality iff at products and distinguish zero from positive sample weight | FiniteSum.finite_sum_monotone_equality_iff_pointwise, Stdlib.Rlt_dec, Stdlib.Psatz | **New:** weighted expectations equal precisely when ordered scores agree on listed positive support |
 | `finite_expectation_strict_monotone_iff_positive_support_witness` (theorem) | Reuse constructive strict monotonicity on weighted summands and derive a positive-weight witness | FiniteSum.finite_sum_strict_monotone_iff_strict_member, Stdlib.Psatz | **New:** strict weighted expectation comparison exactly witnesses a positively weighted strict score |
+| `finite_expectation_nonnegative_zero_iff_positive_support` (theorem) | Zero-score specialization of existing ordered-expectation equality criterion; symmetry only | finite_expectation_monotone_equality_iff_positive_support, expectation_zero, Stdlib.Logic | **New:** vanishing nonnegative finite expectation iff all positive-weight sample scores vanish |
+| `finite_expectation_nonnegative_positive_iff_positive_support_witness` (theorem) | Strict-order specialization at the zero score, no new induction | finite_expectation_strict_monotone_iff_positive_support_witness, expectation_zero | **New:** strict positivity iff a positive-weight positive-score listed witness exists |
 
 
 ## FiniteBridge.v — 37 proof scripts

@@ -1997,6 +1997,16 @@ rebuilding an expectation summation or inducting on the sample
 list. This is an exact support-sensitive interface for later
 covariance arguments, not a general measure-theory theorem.
 
+## Positive-support characterization of finite expectations
+
+The nonnegative zero/strict positivity criteria for expectations now
+specialize the checked support-sensitive order equivalences at the
+constant zero score. `expectation_zero` handles the only numerical
+rewrite, so neither proof repeats list induction, zero-sum algebra,
+or positive-witness search. The assumptions explicitly retain
+nonnegative weights and scores, with no normalization requirement;
+zero-weight outcomes do not constrain the score.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

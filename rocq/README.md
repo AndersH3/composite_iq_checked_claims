@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **669 proof scripts** in seven
+for the two reports. **671 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2721,8 +2721,22 @@ The proofs reuse `FiniteSum` and the standard Rocq real algebra
 libraries; they do not establish general measure-theoretic or
 empirical-statistical conclusions.
 
-Current target inventory: **666 public claims, 669 proof scripts,
+Inventory at the end of this preceding batch: **666 public claims, 669 proof scripts,
 734 documented declarations** across seven modules, pending CI.
+
+## Zero and positive finite expectations via support witnesses (10 November 2026)
+
+Two nonnegative-moment corollaries reuse the maintained order-equivalence
+theorems with the identically zero score. With nonnegative listed
+weights and nonnegative listed scores, an expectation is zero exactly
+when every positive-weight sample score is zero; the expectation is
+strictly positive exactly when a listed positive-weight sample has a
+strictly positive score. Zero-weight entries are irrelevant, repetitions
+remain counted, and no total-mass normalization is needed. No new
+sum fold, induction, axiom or decidable equality was introduced.
+
+Current target inventory: **668 public claims, 671 proof scripts,
+736 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

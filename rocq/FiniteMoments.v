@@ -9201,4 +9201,90 @@ Section FiniteProbabilityMoments.
       + nra.
   Qed.
 
+
+  (**
+   [finite_expectation_nonnegative_zero_iff_positive_support]
+   (theorem) — Positive-support characterization of a vanishing
+   nonnegative finite expectation.
+   Mathematical meaning: For a nonnegative score on samples with
+   nonnegative weights, its finite weighted expectation is exactly
+   zero if and only if the score vanishes at every listed outcome
+   carrying strictly positive mass.
+   Exact checked proposition: If each listed weight and score value
+   is nonnegative, then expect f = 0 iff, for every x with
+   In x samples and 0 < weight x, the equality f x = 0 holds.
+   Premises and side conditions: Total-mass normalization is not
+   required. Empty lists and repeated samples are permitted;
+   zero-weight occurrences impose no restriction on the score.
+   Proof/definition method: Specialize the existing ordered-
+   expectation equality characterization to the identically
+   zero score, rewrite its expectation using expectation_zero,
+   and reverse the two elementary real equalities.
+   Library reuse: finite_expectation_monotone_equality_iff_positive_support,
+   expectation_zero, Stdlib.Logic and Stdlib.Reals.
+   Boundary: This is equality on enumerated positive-mass
+   support, not an abstract almost-sure measure-theory theorem.
+   *)
+  Theorem finite_expectation_nonnegative_zero_iff_positive_support :
+    forall (f : Outcome -> R),
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 <= f x) ->
+      (expect f = 0 <->
+       forall x, In x samples -> 0 < weight x -> f x = 0).
+  Proof.
+    intros f Hweight Hnonnegative.
+    pose proof
+      (finite_expectation_monotone_equality_iff_positive_support
+        (fun _ => 0) f Hweight Hnonnegative) as Hiff.
+    rewrite expectation_zero in Hiff.
+    split.
+    - intros Hzero x Hx Hpositive.
+      pose proof ((proj1 Hiff) (eq_sym Hzero) x Hx Hpositive)
+        as Hpointwise.
+      symmetry; exact Hpointwise.
+    - intro Hpointwise.
+      symmetry.
+      apply (proj2 Hiff).
+      intros x Hx Hpositive.
+      symmetry.
+      apply Hpointwise; assumption.
+  Qed.
+
+  (**
+   [finite_expectation_nonnegative_positive_iff_positive_support_witness]
+   (theorem) — Constructive strict-positivity witness for finite
+   nonnegative expectations.
+   Mathematical meaning: A finite expectation of a nonnegative
+   score is strictly positive precisely when an actual listed
+   sample carries both positive mass and a strictly positive score.
+   Exact checked proposition: Under nonnegative listed weights
+   and scores, 0 < expect f iff there exists x with
+   In x samples, 0 < weight x, and 0 < f x.
+   Premises and side conditions: Normalized total mass is not
+   assumed; empty and duplicate-containing sample lists remain
+   valid, and a positive-score zero-mass point is insufficient.
+   Proof/definition method: Instantiate the previously proved
+   strict monotonicity equivalence for weighted expectations
+   with the identically zero first score, then rewrite the
+   expectation of zero. No new summation or induction is used.
+   Library reuse: finite_expectation_strict_monotone_iff_positive_support_witness,
+   expectation_zero, Stdlib.Logic and Stdlib.Reals.
+   Boundary: The produced witness belongs to the explicit
+   finite sample list, not to an unspecified continuous support.
+   *)
+  Theorem finite_expectation_nonnegative_positive_iff_positive_support_witness :
+    forall (f : Outcome -> R),
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> 0 <= f x) ->
+      (0 < expect f <->
+       exists x, In x samples /\ 0 < weight x /\ 0 < f x).
+  Proof.
+    intros f Hweight Hnonnegative.
+    pose proof
+      (finite_expectation_strict_monotone_iff_positive_support_witness
+        (fun _ => 0) f Hweight Hnonnegative) as Hiff.
+    rewrite expectation_zero in Hiff.
+    exact Hiff.
+  Qed.
+
 End FiniteProbabilityMoments.
