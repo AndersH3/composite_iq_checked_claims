@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **639 public theorem/lemma/example claims**, plus
+The current branch has **641 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**642 proof scripts** across seven Rocq modules. The claims and scripts
+**644 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -606,7 +606,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 181 proof scripts
+## FiniteUnion.v — 183 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -758,7 +758,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_all_events_cons` (theorem) | Lift maintained forallb cons through finite mass event extensionality | Stdlib.List.forallb, finite_prob_event_ext_on_samples | **New:** ordinary head-tail conjunction identity |
 | `finite_all_events_membership_extensional` (theorem) | Lift existing pointwise conjunction membership extensionality | all_events_membership_ext, finite_prob_event_ext_on_samples | **New:** unconditional mass invariance under membership equivalence |
 | `finite_all_events_permutation` (theorem) | Lift existing pointwise permutation theorem through finite event mass | all_events_permutation, Stdlib.Sorting.Permutation, finite_prob_event_ext_on_samples | **New:** ordinary conjunction mass independent of ordering |
-| `finite_all_events_at_most_member` (theorem) | Singleton mass identity and established family subset inequality | finite_all_events_singleton, finite_all_events_subset, Stdlib.List.In | **New:** conjunction mass bounded by each required member |
+| `finite_all_events_at_most_member` (theorem) | **Refactored:** direct event monotonicity plus extraction of a required member from standard forallb | finite_prob_event_monotone, Stdlib.List.forallb_forall | Same inequality without singleton/list-subset intermediate transformations |
 | `finite_all_events_mass_at_most_union` (theorem) | Compose checked intersection/member and member/union inequalities | finite_all_events_at_most_member, arbitrary_union_contains_every_member, Rle_trans | **New:** unconditional intersection mass ≤ union mass under nonempty-family membership |
 | `finite_conditional_all_events_mass_at_most_union` (theorem) | Compose existing conditional intersection/member and member/union inequalities | finite_conditional_all_events_at_most_member, finite_conditional_union_contains_member, Rle_trans | **New:** positive-conditioner intersection mass ≤ union mass |
 | `all_events_pair` (lemma) | Reduce two-element forallb and use the true identity of Boolean conjunction | Stdlib.List.forallb, Stdlib.Bool.andb_true_r | **New:** shared exact two-event conjunction semantics |
@@ -792,6 +792,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prob_zero_iff_joint_zero` (theorem) | Zero-divisor real algebra with a strictly positive common reciprocal | Stdlib.Reals.Rmult_integral, Rinv_0_lt_compat, Stdlib.Lra, ring | **New:** conditional mass zero iff exact joint numerator zero |
 | `finite_conditional_prob_zero_iff_no_positive_joint_support` (theorem) | Reuse generic joint zero and finite-event support iff | finite_conditional_prob_zero_iff_joint_zero, finite_prob_zero_iff_no_positive_mass_support, Stdlib.Bool.andb_true_iff | **New:** conditional mass zero iff no positive-weight sampled given-and-target witness |
 | `finite_conditional_union_zero_iff_each_member_zero` (theorem) | Support iff in both directions using standard existsb witness | finite_conditional_prob_zero_iff_no_positive_joint_support, event_member_implies_union, Stdlib.List.existsb_exists | **New:** conditional union zero iff every member conditional mass zero, under common positive conditioner |
+| `finite_all_events_zero_of_zero_member` (theorem) | Existing finite-event support iff plus standard forallb member extraction | finite_prob_zero_iff_no_positive_mass_support, Stdlib.List.forallb_forall | **New:** one zero-mass required member forces finite conjunction mass to zero |
+| `finite_conditional_all_events_zero_of_zero_member` (theorem) | Existing conditional zero joint-support iff plus standard forallb member extraction | finite_conditional_prob_zero_iff_no_positive_joint_support, Stdlib.List.forallb_forall | **New:** one zero conditional mass required member forces conditional conjunction mass to zero |
+
 
 
 

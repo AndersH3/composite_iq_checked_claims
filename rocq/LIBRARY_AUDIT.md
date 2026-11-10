@@ -1863,6 +1863,17 @@ a conditional finite union. The shared base lemmas replace
 a new quotient algebra, event recursion or finite-sum induction.
 No abstract conditional measure is silently inferred.
 
+## Shared finite-intersection support and membership reasoning
+
+`Stdlib.List.forallb_forall` is now reused both to prove
+intersection mass is bounded by each required member and
+to propagate zero mass from a member to the whole conjunction.
+The unconditional and conditional zero-mass corollaries reduce
+to their existing support iff lemmas; the direct member bound
+avoids the older singleton/subset detour. No source-specific
+Boolean-list traversal, finite-sum argument or conditional
+quotient proof is duplicated.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

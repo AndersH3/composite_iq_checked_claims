@@ -4737,11 +4737,12 @@ Section FiniteOutcomeSpace.
    Premises and side conditions: Total mass need not be one.
    Empty samples and duplicated events/outcomes are allowed; no
    independence premise is introduced.
-   Proof/definition method: Rewrite the member mass as a singleton
-   conjunction and apply finite_all_events_subset to the list
-   inclusion established by Stdlib.List.In simplification.
-   Library reuse: finite_all_events_subset,
-   finite_all_events_singleton and Stdlib.List.In.
+   Proof/definition method: Apply the existing finite-event mass
+   monotonicity theorem directly and use Stdlib.List.forallb_forall
+   to extract the listed member's truth from the conjunction. This
+   eliminates the earlier singleton-list and subset-law detour.
+   Library reuse: finite_prob_event_monotone,
+   Stdlib.List.forallb_forall and Stdlib.List.In.
    Boundary: This is an upper bound, not equality or product law.
    *)
   Theorem finite_all_events_at_most_member :
@@ -4752,13 +4753,14 @@ Section FiniteOutcomeSpace.
       finite_prob weights samples member.
   Proof.
     intros weights samples events member Hmember Hw.
-    rewrite <- (finite_all_events_singleton weights samples member).
-    apply (finite_all_events_subset weights samples [member] events).
-    - intros e Hin.
-      simpl in Hin.
-      destruct Hin as [He | []].
-      subst e; exact Hmember.
-    - exact Hw.
+    apply finite_prob_event_monotone; [exact Hw|].
+    intros x _ Hall.
+    unfold all_events in Hall.
+    pose proof (proj1
+      (@forallb_forall Event (fun e => e x) events) Hall)
+      as Hallmember.
+    apply Hallmember.
+    exact Hmember.
   Qed.
 
   (**
@@ -6306,6 +6308,103 @@ Section FiniteOutcomeSpace.
         (finite_conditional_prob_zero_iff_no_positive_joint_support
           weights samples member given Hw Hpositive))
         (Hmembers member Hmember) x Hx Hgiven Hevent).
+  Qed.
+
+
+  (**
+   [finite_all_events_zero_of_zero_member] (theorem) —
+   A zero-mass required event forces the whole finite conjunction
+   to have zero mass under nonnegative sampled weights.
+   Mathematical meaning: Outcomes satisfying every listed event
+   form a subset of the outcomes satisfying any chosen member.
+   If that member has no positive-weight sampled support, the
+   conjunction has no positive-weight sampled support either.
+   Exact checked proposition: With nonnegative sampled weights,
+   In member events and finite_prob weights samples member = 0
+   imply finite_prob weights samples (all_events events) = 0.
+   Premises and side conditions: The member must actually occur
+   in the event family. No normalization or independence is
+   assumed; duplicated event and sample entries are permitted.
+   Nonnegative sample weights prevent cancellation.
+   Proof/definition method: Convert zero event masses to support
+   conditions with the existing zero-support iff theorem and use
+   Stdlib.List.forallb_forall to recover the selected member
+   from the finite conjunction. No inequality sandwich or sum
+   induction is needed.
+   Library reuse: finite_prob_zero_iff_no_positive_mass_support,
+   Stdlib.List.forallb_forall and the existing all_events.
+   Boundary: This is an exact finite-support implication,
+   not a statement about independent event probabilities.
+   *)
+  Theorem finite_all_events_zero_of_zero_member :
+    forall weights samples (events : list Event) member,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      finite_prob weights samples member = 0 ->
+      finite_prob weights samples (all_events events) = 0.
+  Proof.
+    intros weights samples events member Hmember Hw Hzero.
+    apply (proj2 (finite_prob_zero_iff_no_positive_mass_support
+      weights samples (all_events events) Hw)).
+    intros x Hx Hall.
+    apply ((proj1 (finite_prob_zero_iff_no_positive_mass_support
+      weights samples member Hw)) Hzero x Hx).
+    unfold all_events in Hall.
+    apply (proj1
+      (@forallb_forall Event (fun e => e x) events) Hall).
+    exact Hmember.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_zero_of_zero_member] (theorem) —
+   Zero conditional mass of one required event implies zero
+   conditional mass of the entire finite conjunction.
+   Mathematical meaning: A positively conditioned outcome
+   satisfying all required events necessarily satisfies every
+   listed member. If one member has no positive-weight joint
+   support with the conditioner, neither does the conjunction.
+   Exact checked proposition: Under nonnegative sampled weights
+   and positive finite mass of given, In member events and
+   finite_conditional_prob weights samples member given = 0
+   imply finite_conditional_prob weights samples
+     (all_events events) given = 0.
+   Premises and side conditions: The same positive-mass
+   conditioning event is used for both target expressions.
+   The finite family need not be independent and the overall
+   weighted sample need not be normalized.
+   Proof/definition method: Reuse the checked zero-conditional
+   iff no positive joint-support theorem on both target events;
+   use Stdlib.List.forallb_forall to extract member truth.
+   The quotient-zero and nonnegative-sum arguments are not repeated.
+   Library reuse:
+   finite_conditional_prob_zero_iff_no_positive_joint_support,
+   Stdlib.List.forallb_forall and all_events.
+   Boundary: This implication is about finite enumerated
+   conditional mass, not arbitrary conditional measures.
+   *)
+  Theorem finite_conditional_all_events_zero_of_zero_member :
+    forall weights samples (events : list Event) member given,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples member given = 0 ->
+      finite_conditional_prob weights samples
+        (all_events events) given = 0.
+  Proof.
+    intros weights samples events member given
+      Hmember Hw Hpositive Hzero.
+    apply (proj2
+      (finite_conditional_prob_zero_iff_no_positive_joint_support
+        weights samples (all_events events) given Hw Hpositive)).
+    intros x Hx Hgiven Hall.
+    apply ((proj1
+      (finite_conditional_prob_zero_iff_no_positive_joint_support
+        weights samples member given Hw Hpositive))
+      Hzero x Hx Hgiven).
+    unfold all_events in Hall.
+    apply (proj1
+      (@forallb_forall Event (fun e => e x) events) Hall).
+    exact Hmember.
   Qed.
 
 End FiniteOutcomeSpace.

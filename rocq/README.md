@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **642 proof scripts** in seven
+for the two reports. **644 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **639 public claims, 642 proof scripts,
-705 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **641 public claims, 644 proof scripts,
+707 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **639 public claims,
-642 proof scripts, 705 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **641 public claims,
+644 proof scripts, 707 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2501,6 +2501,23 @@ Its only event-family witness conversion is
 `Stdlib.List.existsb_exists`. No additional
 independence, normalized-total-mass assumption, conditional
 measure implementation, or custom finite-sum recursion is used.
+
+### Zero mass propagates through finite intersections
+
+The new `finite_all_events_zero_of_zero_member` and
+`finite_conditional_all_events_zero_of_zero_member` state
+that a finite intersection cannot have positive finite mass
+when any listed required event has zero mass, unconditionally
+or under a common positive-mass conditioner. Both results
+reuse the existing zero-support equivalences and
+`Stdlib.List.forallb_forall`, rather than a new
+induction on the event family.
+
+The older `finite_all_events_at_most_member` has also been
+refactored to use generic event monotonicity and the same
+standard forallb membership theorem as its conditional
+counterpart. This removes its unnecessary singleton conversion
+while retaining the exact statement and side conditions.
 
 ## Research extensions
 
