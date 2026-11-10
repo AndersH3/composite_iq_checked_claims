@@ -5763,6 +5763,91 @@ Section FiniteOutcomeSpace.
       reflexivity.
   Qed.
 
+
+  (**
+   [finite_union_complement_partition] (theorem) — Unconditional
+   mass partition between a finite union and its Boolean complement.
+   Mathematical meaning: The outcomes satisfying at least one
+   event and those failing every event form a partition of the
+   enumerated sample with the same total signed weight.
+   Exact checked proposition: The finite mass of the conjunction
+   of every pointwise negated event plus union_prob of the
+   original family equals finite_sum weights samples.
+   Premises and side conditions: No sign, normalization,
+   independence or positive-denominator premise is needed for
+   this exact additive identity. The event family and sampled
+   outcome list may both contain duplicates.
+   Proof/definition method: Transport the all-negated-events
+   predicate to negated union by the checked finite De Morgan
+   bridge and then use the existing finite_prob_complement.
+   Library reuse: all_negated_events_eq_negated_any,
+   finite_prob_event_ext_on_samples, finite_prob_complement,
+   Stdlib.List.map and the shared FiniteSum implementation.
+   Boundary: This is a finite weighted partition identity,
+   not a product formula or a probabilistic independence claim.
+   *)
+  Theorem finite_union_complement_partition :
+    forall weights samples (events : list Event),
+      finite_prob weights samples
+        (all_events (map (fun event : Event =>
+          fun x => negb (event x)) events)) +
+      union_prob weights samples events =
+      finite_sum weights samples.
+  Proof.
+    intros weights samples events.
+    unfold union_prob.
+    rewrite (finite_prob_event_ext_on_samples weights samples
+      (all_events (map (fun event : Event =>
+        fun x => negb (event x)) events))
+      (fun x => negb (any_event events x))).
+    - apply finite_prob_complement.
+    - intros x _; apply all_negated_events_eq_negated_any.
+  Qed.
+
+  (**
+   [finite_conditional_union_complement_partition] (theorem) —
+   Conditional union plus complementary all-events mass equals one.
+   Mathematical meaning: Given a strictly positive-mass selector,
+   either some event in the family holds or every event fails.
+   The sum of their exact conditional finite masses is one.
+   Exact checked proposition: Under 0 < finite_prob given,
+   finite_conditional_prob (any_event events) given +
+   finite_conditional_prob
+   (all_events (map (fun e => negb o e) events)) given = 1.
+   Premises and side conditions: The positive conditioning
+   denominator is mandatory; event lists may be empty and weights
+   may have either sign for this algebraic identity. Interpreting
+   the conditional masses as probabilities also requires
+   nonnegative sampled weights.
+   Proof/definition method: Rewrite the complement-family
+   conjunction as the complement of the union with target-event
+   extensionality, then reuse finite_conditional_prob_complement.
+   Library reuse: all_negated_events_eq_negated_any,
+   finite_conditional_prob_event_ext_on_samples,
+   finite_conditional_prob_complement, Stdlib.Bool and Stdlib.List.
+   Boundary: Exact finite conditional partition only; no
+   independence, mutual exclusion among original events, or
+   continuous conditional probability is inferred.
+   *)
+  Theorem finite_conditional_union_complement_partition :
+    forall weights samples (events : list Event) given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_prob weights samples
+        (any_event events) given +
+      finite_conditional_prob weights samples
+        (all_events (map (fun event : Event =>
+          fun x => negb (event x)) events)) given = 1.
+  Proof.
+    intros weights samples events given Hpositive.
+    rewrite (finite_conditional_prob_event_ext_on_samples
+      weights samples
+      (all_events (map (fun event : Event =>
+        fun x => negb (event x)) events))
+      (fun x => negb (any_event events x)) given).
+    - apply finite_conditional_prob_complement; exact Hpositive.
+    - intros x _; apply all_negated_events_eq_negated_any.
+  Qed.
+
   (**
    [finite_conditional_union_complement_chain_product] (theorem) —
    Conditional finite-union probability by a checked chain of
@@ -5784,14 +5869,13 @@ Section FiniteOutcomeSpace.
    Signed weights satisfy the algebra, while nonnegative sampled
    weights are additionally needed for probabilistic interpretation.
    Proof/definition method: Reuse the generic finite conditional
-   intersection-product theorem for the mapped complement list,
-   transport its target via the preceding De Morgan identity,
-   and rewrite each individual complement mass by the established
-   conditional complement-sum theorem. Use Stdlib.List.map_map
-   and map_ext_in to avoid a custom real-product fold.
+   intersection-product theorem for the mapped complement family.
+   Rather than repeating the De Morgan transport, apply the checked
+   conditional union/complement partition; rewrite individual
+   complementary masses by the existing conditional complement
+   identity with Stdlib.List.map_map and map_ext_in.
    Library reuse: finite_conditional_all_events_product,
-   all_negated_events_eq_negated_any,
-   finite_conditional_prob_event_ext_on_samples,
+   finite_conditional_union_complement_partition,
    finite_conditional_prob_complement, Stdlib.List.map_map/map_ext_in,
    fold_right, Stdlib.Lra and Stdlib.Reals.
    Boundary: This does not derive mutual independence from
@@ -5812,27 +5896,16 @@ Section FiniteOutcomeSpace.
           events).
   Proof.
     intros weights samples events given Hpositive Hchain.
-    pose proof (finite_conditional_prob_complement weights samples
-      (any_event events) given Hpositive) as Hpartition.
+    pose proof (finite_conditional_union_complement_partition
+      weights samples events given Hpositive) as Hpartition.
     pose proof (finite_conditional_all_events_product weights samples
       (map (fun event : Event => fun x => negb (event x)) events)
       given Hpositive Hchain) as Hproduct.
-    assert (HdeMorgan :
-      finite_conditional_prob weights samples
-        (all_events (map (fun event : Event =>
-          fun x => negb (event x)) events)) given =
-      finite_conditional_prob weights samples
-        (fun x => negb (any_event events x)) given).
-    {
-      apply finite_conditional_prob_event_ext_on_samples.
-      intros x _.
-      apply all_negated_events_eq_negated_any.
-    }
-    rewrite HdeMorgan in Hproduct.
     rewrite map_map in Hproduct.
     change
       (finite_conditional_prob weights samples
-        (fun x => negb (any_event events x)) given =
+        (all_events (map (fun event : Event =>
+          fun x => negb (event x)) events)) given =
        fold_right Rmult 1
          (map (fun event : Event =>
            finite_conditional_prob weights samples

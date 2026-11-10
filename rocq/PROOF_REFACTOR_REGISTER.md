@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **630 public theorem/lemma/example claims**, plus
+The current branch has **632 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**633 proof scripts** across seven Rocq modules. The claims and scripts
+**635 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -606,7 +606,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 172 proof scripts
+## FiniteUnion.v — 174 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -781,7 +781,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_prefix_independent_cons_positive` (theorem) | First chain conjunct projection | finite_conditional_prefix_independent, finite_conditional_independent | **New:** nonempty chain already entails strictly positive conditioning mass |
 | `finite_conditional_nonempty_all_events_product` (theorem) | Existing general finite-list product, no duplicate induction | finite_conditional_all_events_product, finite_conditional_prefix_independent_cons_positive, Stdlib.List.map/fold_right | **New:** remove redundant explicitly supplied denominator premise for nonempty chain |
 | `all_negated_events_eq_negated_any` (lemma) | List structural induction bridging standard forallb and existsb with Stdlib Boolean De Morgan | Stdlib.List.map/forallb/existsb, Stdlib.Bool.negb_orb | **New:** finite-family De Morgan without custom Boolean operators |
-| `finite_conditional_union_complement_chain_product` (theorem) | General complement-family product plus conditional complement-sum identity | finite_conditional_all_events_product, all_negated_events_eq_negated_any, finite_conditional_prob_complement, Stdlib.List.map_map/map_ext_in, Stdlib.Lra | **New:** arbitrary finite conditional union formula with explicit non-pairwise complement chain |
+| `finite_union_complement_partition` (theorem) | Event complement extensionality followed by maintained finite-mass partition | all_negated_events_eq_negated_any, finite_prob_event_ext_on_samples, finite_prob_complement | **New:** finite union and universal-negation complement partition total signed weight |
+| `finite_conditional_union_complement_partition` (theorem) | Conditional target transport and existing conditional complement identity | all_negated_events_eq_negated_any, finite_conditional_prob_event_ext_on_samples, finite_conditional_prob_complement | **New:** conditional union plus all-failures mass equals one under positive conditioner |
+| `finite_conditional_union_complement_chain_product` (theorem) | **Refactored:** general complement-family product and reusable conditional partition, avoiding a second De Morgan transport | finite_conditional_all_events_product, finite_conditional_union_complement_partition, finite_conditional_prob_complement, Stdlib.List.map_map/map_ext_in, Stdlib.Lra | Arbitrary finite conditional union formula with explicit non-pairwise complement chain |
 | `finite_conditional_nonempty_union_complement_chain_product` (theorem) | General union formula and first-guard positivity projection | finite_conditional_union_complement_chain_product, finite_conditional_prefix_independent_cons_positive | **New:** positivity is a consequence of the nonempty complement chain, not an extra premise |
 
 

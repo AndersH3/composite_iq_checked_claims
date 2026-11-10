@@ -1826,6 +1826,18 @@ axiom or assumption that pairwise independence implies mutual
 independence. A nonempty complement chain provides its own
 positive denominator through the previously checked projection.
 
+## Union-complement partition reuse instead of repeated event algebra
+
+The verified finite De Morgan identity is transported through the
+already checked `finite_prob_event_ext_on_samples` and
+`finite_conditional_prob_event_ext_on_samples` interfaces.
+`finite_union_complement_partition` and its conditional
+counterpart use the maintained complement-sum theorems, not new
+set partitions or sum induction. The general conditional
+union-product theorem now invokes the conditional partition
+lemma directly, removing duplicate De Morgan transport
+from its proof script while retaining all side conditions.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

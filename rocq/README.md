@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **633 proof scripts** in seven
+for the two reports. **635 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **630 public claims, 633 proof scripts,
-696 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **632 public claims, 635 proof scripts,
+698 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **630 public claims,
-633 proof scripts, 696 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **632 public claims,
+635 proof scripts, 698 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2446,6 +2446,21 @@ to suffice. The empty-list case has a separate positive-denominator
 premise, while the nonempty corollary derives that premise from
 the first independence assertion. No new finite-sum or real-product
 implementation is introduced: products use `Stdlib.List.fold_right`.
+
+### Explicit unconditional and conditional union/complement partitions
+
+`finite_union_complement_partition` states that the weighted
+mass of a finite union plus the mass of outcomes failing
+**every** member equals the full enumerated sample mass, for
+arbitrary real weights. Its conditional companion establishes
+that these complementary conditional masses sum to one under
+a positive conditioning denominator.
+
+Both are direct applications of the existing complement mass
+identities after the finite-family De Morgan bridge. The
+general union product proof now reuses the new conditional
+partition theorem rather than repeating the De Morgan rewrite.
+No new independence premise or list-fold implementation is needed.
 
 ## Research extensions
 
