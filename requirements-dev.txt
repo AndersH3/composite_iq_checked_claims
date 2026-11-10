@@ -2,7 +2,11 @@
 deal[all,lint,integration]==4.24.6
 deal-solver==0.1.2
 typeguard==3.0.2
-astroid==4.3.4
+# Deal 4.24.6 / deal-solver 0.1.2 access astroid node classes via the
+# pre-v4 top-level API. Astroid 4 deprecates this legacy interface and
+# generates thousands of warnings without improving symbolic coverage.
+# Version 3.3.11 is the last 3.x release supporting Python 3.13.
+astroid==3.3.11
 pytest==8.4.2
 hypothesis==6.170.14
 scipy==1.18.1
