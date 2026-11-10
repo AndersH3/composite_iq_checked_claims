@@ -1889,6 +1889,18 @@ reuses the established positive conditional-witness and
 zero-quotient equivalences, with no second finite-sum
 or conditional-probability implementation.
 
+## Positivity proof refactor and event-family consequences
+
+The previously long `FiniteSum.finite_sum_positive_of_positive_member`
+proof is now an application of `finite_sum_member_le` and
+`Stdlib.Lra`; the nonnegative-sum and zero criterion are no
+longer recomputed. The finite conditional-union support iff
+delegates to the checked single-event joint-support theorem
+and `Stdlib.List.existsb_exists`, while the two necessary
+intersection positivity statements delegate to existing
+member upper bounds. No fresh sum recursion, Boolean-event
+traversal or conditional quotient is implemented.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

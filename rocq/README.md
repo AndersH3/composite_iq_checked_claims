@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **648 proof scripts** in seven
+for the two reports. **651 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **645 public claims, 648 proof scripts,
-711 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **648 public claims, 651 proof scripts,
+714 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **645 public claims,
-648 proof scripts, 711 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **648 public claims,
+651 proof scripts, 714 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2539,6 +2539,27 @@ requires a positive denominator and nonnegative sampled
 weights, and reuses the existing quotient-zero and
 conditional-witness results instead of reimplementing the
 conditional probability quotient.
+
+### Conditional-union witness and necessary intersection marginals
+
+The new `finite_conditional_union_positive_iff_positive_member_joint_support`
+extends the constructive conditional positive-support iff to a
+finite union. It identifies both a *listed event* and a *sampled
+outcome* satisfying that event and the conditioner with positive
+weight. The only family witness conversion is the standard
+`Stdlib.List.existsb_exists` lemma.
+
+Theorems `finite_all_events_positive_implies_member_positive`
+and `finite_conditional_all_events_positive_implies_member_positive`
+then reuse existing intersection-vs-member bounds to show that
+positive joint mass forces every required marginal positive,
+unconditionally and with a fixed positive conditioner.
+The converses are **not** asserted without overlap assumptions.
+
+The generic `FiniteSum.finite_sum_positive_of_positive_member`
+proof was also shortened to the existing
+`finite_sum_member_le` member bound and `Stdlib.Lra`.
+This removes the former redundant real-decision case analysis.
 
 ## Research extensions
 

@@ -6591,6 +6591,139 @@ Section FiniteOutcomeSpace.
         weights samples event given x Hw Hgiven Hx Hg He Hweight).
   Qed.
 
+
+  (**
+   [finite_conditional_union_positive_iff_positive_member_joint_support]
+   (theorem) — Strict positive conditional union probability has a
+   concrete member event and jointly satisfying weighted witness.
+   Mathematical meaning: Under nonnegative finite sample weights
+   and positive conditioning mass, the conditional union is
+   strictly positive exactly when one listed event is satisfied
+   together with the conditioner by a positive-weight outcome
+   in the sample.
+   Exact checked proposition: With sampled nonnegative weights
+   and 0 < finite_prob weights samples given, the assertion
+   0 < finite_conditional_prob weights samples
+     (any_event events) given is equivalent to existence of
+   member and x with In member events, In x samples,
+   given x=true, member x=true and weights x>0.
+   Premises and side conditions: The same conditioning event
+   applies throughout. Event and sample lists may be empty or
+   repeat members. Neither mutual independence nor total-mass
+   normalization is assumed.
+   Proof/definition method: Apply the existing conditional-event
+   positive joint-support equivalence to any_event; convert its
+   Boolean union witness to an actual event-family member using
+   Stdlib.List.existsb_exists, and use the established reverse
+   member-to-union implication for the converse.
+   Library reuse: finite_conditional_prob_positive_iff_joint_support,
+   Stdlib.List.existsb_exists, event_member_implies_union.
+   Boundary: This is exact finite weighted-list conditional
+   support, not a measure-theoretic event-family construction
+   or empirical evidence of a positive population probability.
+   *)
+  Theorem finite_conditional_union_positive_iff_positive_member_joint_support :
+    forall weights samples (events : list Event) given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      (0 < finite_conditional_prob weights samples
+        (any_event events) given <->
+       exists member x,
+         In member events /\ In x samples /\
+         given x = true /\ member x = true /\
+         0 < weights x).
+  Proof.
+    intros weights samples events given Hw Hpositive.
+    rewrite (finite_conditional_prob_positive_iff_joint_support
+      weights samples (any_event events) given Hw Hpositive).
+    split.
+    - intros [x [Hx [Hg [Hunion Hweight]]]].
+      unfold any_event in Hunion.
+      apply existsb_exists in Hunion.
+      destruct Hunion as [member [Hmember Hhit]].
+      exists member, x.
+      repeat split; assumption.
+    - intros [member [x [Hmember [Hx [Hg [Hhit Hweight]]]]]].
+      exists x.
+      repeat split; try assumption.
+      apply (event_member_implies_union events member x Hmember Hhit).
+  Qed.
+
+  (**
+   [finite_all_events_positive_implies_member_positive] (theorem) —
+   Strict positive mass of a finite conjunction forces every
+   listed required event to have strictly positive mass.
+   Mathematical meaning: Positive intersection mass cannot
+   arise if one required event has zero mass, and a positive
+   intersection is bounded by each of its member marginals.
+   Exact checked proposition: With nonnegative sampled weights,
+   In member events and 0 < finite_prob (all_events events)
+   imply 0 < finite_prob member on the same finite sample.
+   Premises and side conditions: All sample weights are
+   nonnegative; no normalization or independence premise is
+   needed. Repeated events or sampled outcomes are permitted.
+   Proof/definition method: Apply the maintained upper bound
+   finite_all_events_at_most_member directly, then use
+   Stdlib.Lra. No duplicated support argument is introduced.
+   Library reuse: finite_all_events_at_most_member, Stdlib.Lra.
+   Boundary: This necessary condition is not sufficient for
+   positive intersection mass when events can be disjoint.
+   *)
+  Theorem finite_all_events_positive_implies_member_positive :
+    forall weights samples (events : list Event) member,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples (all_events events) ->
+      0 < finite_prob weights samples member.
+  Proof.
+    intros weights samples events member Hmember Hw Hpositive.
+    pose proof (finite_all_events_at_most_member
+      weights samples events member Hmember Hw).
+    lra.
+  Qed.
+
+  (**
+   [finite_conditional_all_events_positive_implies_member_positive]
+   (theorem) — Strict positivity of a finite conditional
+   conjunction forces each listed conditional marginal positive.
+   Mathematical meaning: Under a common positive-mass
+   conditioning event, any required member contains the
+   intersection of all requirements. A positive conditional
+   intersection therefore makes every member conditionally
+   positive under the same conditioner.
+   Exact checked proposition: For nonnegative sampled weights,
+   0 < finite_prob weights samples given, In member events,
+   and 0 < finite_conditional_prob weights samples
+     (all_events events) given, conclude
+   0 < finite_conditional_prob weights samples member given.
+   Premises and side conditions: Every comparison uses
+   exactly the same conditioning event. Event lists and
+   sampled outcomes may repeat, while pairwise independence
+   and total normalization are not assumed.
+   Proof/definition method: Reuse the established conditional
+   all-events-at-most-member inequality and finish with
+   Stdlib.Lra, without repeating the Boolean fold or quotient.
+   Library reuse: finite_conditional_all_events_at_most_member,
+   Stdlib.Lra and the existing all_events representation.
+   Boundary: Positive individual conditional marginals
+   do not, by themselves, imply a positive joint conditional
+   mass if their accepted supports do not overlap.
+   *)
+  Theorem finite_conditional_all_events_positive_implies_member_positive :
+    forall weights samples (events : list Event) member given,
+      In member events ->
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      0 < finite_conditional_prob weights samples
+        (all_events events) given ->
+      0 < finite_conditional_prob weights samples member given.
+  Proof.
+    intros weights samples events member given Hmember Hw Hgiven Hpositive.
+    pose proof (finite_conditional_all_events_at_most_member
+      weights samples events member given Hmember Hw Hgiven).
+    lra.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

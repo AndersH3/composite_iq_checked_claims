@@ -713,11 +713,13 @@ Qed.
    0 < f x imply 0 < finite_sum f xs.
    Premises and side conditions: The witness x must occur in the list;
    all other listed terms must be nonnegative, and duplicates are counted.
-   Proof/definition method: Establish weak nonnegativity of the sum.
-   If the sum were nonpositive it would be zero, contradicting the
-   already checked zero-iff-pointwise-zero characterization.
-   Library reuse: finite_sum_nonnegative, finite_sum_nonnegative_zero_iff,
-   Stdlib.Reals.Rle_dec and Stdlib.Lra; no list recursion or new axiom.
+   Proof/definition method: Reuse the earlier
+   finite_sum_member_le theorem, which directly bounds the weight
+   of any enumerated member by the total nonnegative sum.
+   Finish by linear real arithmetic. This removes the previous
+   unnecessary real-order case split and zero-mass contradiction.
+   Library reuse: finite_sum_member_le and Stdlib.Lra;
+   no list recursion, extra decision procedure or new axiom.
    Boundary: No conclusion follows for signed sums where cancellation
    can occur, and the lemma says nothing about infinite sample spaces.
  *)
@@ -729,13 +731,8 @@ Lemma finite_sum_positive_of_positive_member {A : Type} :
     0 < finite_sum f xs.
 Proof.
   intros xs f x Hnonnegative Hin Hpositive.
-  pose proof (finite_sum_nonnegative xs f Hnonnegative) as Hsum_nonnegative.
-  destruct (Rle_dec (finite_sum f xs) 0) as [Hnonpositive | Hnot_nonpositive].
-  - assert (Hzero : finite_sum f xs = 0) by lra.
-    pose proof ((proj1 (finite_sum_nonnegative_zero_iff xs f Hnonnegative))
-      Hzero x Hin) as Hpoint_zero.
-    lra.
-  - lra.
+  pose proof (finite_sum_member_le xs f x Hnonnegative Hin).
+  lra.
 Qed.
 
 (**
