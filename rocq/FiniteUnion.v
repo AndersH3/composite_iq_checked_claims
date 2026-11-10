@@ -5599,16 +5599,15 @@ Section FiniteOutcomeSpace.
    pairwise independence of all three targets. Signed weights
    are allowed for the algebraic equality, but their probability
    interpretation requires nonnegative sampled weights.
-   Proof/definition method: Transport the triple Boolean fold
-   to the left-associated conjunction with all_events_triple;
-   project the second factorization assumption. Transport
-   the first conditional pair factorization through all_events_pair
-   and substitute it into the second, without repeating any
-   finite-sum, indicator or quotient calculations.
-   Library reuse: finite_conditional_two_event_family_product,
-   finite_conditional_prob_event_ext_on_samples, all_events_pair,
-   all_events_triple, Stdlib.Bool.andb_assoc and existing
-   finite_conditional_independent semantics.
+   Proof/definition method: Translate the all_events triple Boolean
+   fold to a right-associated conjunction by the already checked
+   all_events_triple lemma and standard Boolean associativity, then
+   invoke the existing finite_conditional_three_event_product theorem.
+   The factorization of the first pair and the pair-versus-third is
+   therefore not duplicated in this family-level wrapper.
+   Library reuse: finite_conditional_three_event_product,
+   finite_conditional_prob_event_ext_on_samples,
+   all_events_triple and Stdlib.Bool.andb_assoc.
    Boundary: Hierarchical factorization is a conditional finite
    event identity, not a proof that arbitrary three-event
    pairwise independence implies mutual independence or that a
@@ -5628,21 +5627,98 @@ Section FiniteOutcomeSpace.
   Proof.
     intros weights samples first second third given
       Hfirst_second Hjoint_third.
-    destruct Hjoint_third as [_ Hfactor].
     rewrite (finite_conditional_prob_event_ext_on_samples
       weights samples (all_events [first; second; third])
-      (fun x => andb (andb (first x) (second x)) (third x))
+      (fun x => andb (first x) (andb (second x) (third x)))
       given).
-    2: { intros x _; apply all_events_triple. }
-    rewrite Hfactor.
-    pose proof (finite_conditional_two_event_family_product
-      weights samples first second given Hfirst_second) as Hpair.
-    rewrite (finite_conditional_prob_event_ext_on_samples
-      weights samples (all_events [first; second])
-      (fun x => andb (first x) (second x)) given) in Hpair.
-    2: { intros x _; apply all_events_pair. }
-    rewrite Hpair.
-    reflexivity.
+    - apply finite_conditional_three_event_product; assumption.
+    - intros x _.
+      rewrite all_events_triple.
+      symmetry; apply andb_assoc.
+  Qed.
+
+
+  (**
+   [finite_conditional_prefix_independent_cons_positive] (theorem) —
+   Positivity of the common conditioner from a nonempty chain.
+   Mathematical meaning: Every nonempty conditional factorization
+   chain carries a strict-positivity obligation on its conditioning
+   event, because its first conditional-independence assertion
+   includes that same strictly positive denominator.
+   Exact checked proposition: For any first event, remaining events
+   and common conditioner G, the checked finite_conditional_prefix_independent
+   predicate for (first :: rest) implies 0 < finite_prob G.
+   Premises and side conditions: The list must be nonempty; the empty
+   chain is True and does not imply a nonzero conditioning mass.
+   No probability normalization or weight sign is required for the
+   logical implication, though nonnegative weights are needed for
+   its ordinary probability interpretation.
+   Proof/definition method: Reduce one constructor of the existing
+   chain predicate and project the positivity conjunct of the
+   existing finite_conditional_independent proposition. No recursion,
+   mass computation or separate positivity argument is needed.
+   Library reuse: finite_conditional_prefix_independent,
+   finite_conditional_independent and Rocq propositional projections.
+   Boundary: The result is a denominator-side condition, not a
+   statistical independence test or an assumption about observed data.
+   *)
+  Theorem finite_conditional_prefix_independent_cons_positive :
+    forall weights samples (first : Event) (rest : list Event) given,
+      finite_conditional_prefix_independent weights samples
+        (first :: rest) given ->
+      0 < finite_prob weights samples given.
+  Proof.
+    intros weights samples first rest given Hchain.
+    simpl in Hchain.
+    destruct Hchain as [Hindependent _].
+    exact (proj1 Hindependent).
+  Qed.
+
+  (**
+   [finite_conditional_nonempty_all_events_product] (theorem) —
+   Arbitrary nonempty conditional event-family factorization
+   without an independently stated denominator assumption.
+   Mathematical meaning: The existing suffix-independence chain
+   suffices to factor the finite conditional mass of a nonempty
+   conjunction into the product of its individual conditional masses.
+   Exact checked proposition: For an event first and any list rest,
+   finite_conditional_prefix_independent weights samples
+   (first :: rest) given implies that conditional(all_events
+   (first :: rest) | given) equals fold_right Rmult 1
+   (map (fun e => conditional(e | given)) (first :: rest)).
+   Premises and side conditions: The chain explicitly requires each
+   current event to be independent of the entire remaining
+   conjunction under the *same* conditioning event. Pairwise-only
+   independence is insufficient. The nonempty list ensures that
+   the chain itself supplies a strictly positive denominator.
+   No new assumption about sample uniqueness or normalization.
+   Proof/definition method: Apply the existing arbitrary-list
+   conditional product theorem. Discharge its separate positivity
+   premise with finite_conditional_prefix_independent_cons_positive;
+   pass the original chain premise through unchanged.
+   Library reuse: finite_conditional_all_events_product,
+   finite_conditional_prefix_independent_cons_positive,
+   Stdlib.List.map and fold_right, Stdlib.Reals.Rmult.
+   Boundary: This remains exact finite conditional mass algebra under
+   sufficient factorization hypotheses, not a converse or a proof
+   that these hypotheses hold in an empirical dataset.
+   *)
+  Theorem finite_conditional_nonempty_all_events_product :
+    forall weights samples (first : Event) (rest : list Event) given,
+      finite_conditional_prefix_independent weights samples
+        (first :: rest) given ->
+      finite_conditional_prob weights samples
+        (all_events (first :: rest)) given =
+      fold_right Rmult 1
+        (map (fun event =>
+          finite_conditional_prob weights samples event given)
+          (first :: rest)).
+  Proof.
+    intros weights samples first rest given Hchain.
+    apply finite_conditional_all_events_product.
+    - apply (finite_conditional_prefix_independent_cons_positive
+        weights samples first rest given); exact Hchain.
+    - exact Hchain.
   Qed.
 
 End FiniteOutcomeSpace.

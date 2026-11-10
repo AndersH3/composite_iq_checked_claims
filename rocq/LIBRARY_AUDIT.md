@@ -1801,6 +1801,17 @@ independence premise concerns the *conjunction* of the first two
 events versus the third, so the proof does **not** conflate
 pairwise independence with mutual independence.
 
+## Nonempty chain positivity and family factorization reuse
+
+The maintained arbitrary-event `finite_conditional_all_events_product`
+already uses `Stdlib.List.map`/`fold_right`, so no replacement product
+operator or induction is appropriate. The new nonempty-family corollary
+simply extracts the positive denominator from its first existing
+independence conjunct, then applies the checked arbitrary-list theorem.
+The three-event-family wrapper now invokes the earlier general
+`finite_conditional_three_event_product` rather than repeating
+the same factorization rewrites.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

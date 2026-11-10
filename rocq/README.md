@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **628 proof scripts** in seven
+for the two reports. **630 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **625 public claims, 628 proof scripts,
-691 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **627 public claims, 630 proof scripts,
+693 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **625 public claims,
-628 proof scripts, 691 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **627 public claims,
+630 proof scripts, 693 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2408,6 +2408,23 @@ pair's conjunction and the third event.
 The statement is a finite Boolean event identity under two explicit
 hierarchical conditional-factorization premises; it does not claim
 that the observed report data satisfies these premises.
+
+### Nonempty chain factorization and triple-proof consolidation
+
+`finite_conditional_prefix_independent_cons_positive` projects
+positive conditioning-event mass from the **first** independence
+assumption of any nonempty suffix-factorization chain.
+`finite_conditional_nonempty_all_events_product` thereby removes
+the otherwise redundant explicit denominator premise of
+`finite_conditional_all_events_product` for nonempty families.
+The empty-family theorem intentionally still requires a positive
+denominator: an empty chain alone is `True`.
+
+The earlier `finite_conditional_three_event_family_product` now
+delegates to the already checked `finite_conditional_three_event_product`
+after the standard Boolean associativity rewrite. This removes
+duplicated factorization algebra without weakening or changing either
+theorem's statement or hierarchical independence requirements.
 
 ## Research extensions
 
