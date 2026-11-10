@@ -6407,6 +6407,190 @@ Section FiniteOutcomeSpace.
     exact Hmember.
   Qed.
 
+
+  (**
+   [finite_prob_positive_iff_positive_support] (theorem) —
+   Strict finite Boolean-event mass is equivalent to one positive
+   enumerated contribution satisfying the event predicate.
+   Mathematical meaning: For nonnegative sampled weights, an event
+   has strictly positive finite mass exactly when some listed
+   positive-weight outcome satisfies its Boolean membership.
+   Exact checked proposition: Under nonnegative sampled weights,
+   0 < finite_prob weights samples event iff there exists x with
+   In x samples, event x = true and 0 < weights x.
+   Premises and side conditions: Empty and repeated sample entries
+   are permitted. No normalization, event independence or global
+   decidable equality on outcomes is needed. Signed cancellation
+   would invalidate the forward implication.
+   Proof/definition method: Reduce the event mass to the shared
+   finite sum of weighted indicators and apply the newly checked
+   generic positive-member iff. Use the established indicator
+   nonnegativity and simple Boolean cases to expose the witness.
+   Library reuse: FiniteSum.finite_sum_positive_iff_positive_member,
+   indicator_nonnegative, Stdlib.Reals.Rmult_le_pos, Stdlib.Psatz.nra.
+   Boundary: This gives an exact witness in an enumerated finite
+   weighted sample, not a claim about unsampled population outcomes.
+   *)
+  Theorem finite_prob_positive_iff_positive_support :
+    forall weights samples (event : Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      (0 < finite_prob weights samples event <->
+       exists x, In x samples /\ event x = true /\ 0 < weights x).
+  Proof.
+    intros weights samples event Hw.
+    unfold finite_prob, finite_sum.
+    assert (Hnonnegative :
+      forall y, In y samples ->
+        0 <= weights y * indicator (event y)).
+    { intros y Hy; apply Rmult_le_pos.
+      - apply Hw; exact Hy.
+      - apply indicator_nonnegative. }
+    pose proof (FiniteSum.finite_sum_positive_iff_positive_member
+      samples (fun y => weights y * indicator (event y))
+      Hnonnegative) as Hiff.
+    split.
+    - intros Hpositive.
+      destruct ((proj1 Hiff) Hpositive) as [x [Hx Hterm]].
+      destruct (event x) eqn:Hevent.
+      + exists x; repeat split; try assumption.
+        change (0 < weights x * 1) in Hterm.
+        nra.
+      + change (0 < weights x * 0) in Hterm.
+        nra.
+    - intros [x [Hx [Hevent Hweight]]].
+      apply (proj2 Hiff).
+      exists x; split.
+      + exact Hx.
+      + change (0 < weights x * indicator (event x)).
+        rewrite Hevent.
+        unfold indicator.
+        nra.
+  Qed.
+
+  (**
+   [union_prob_positive_iff_positive_member_support] (theorem) —
+   Positive finite event-family union mass has an actual listed
+   member and sampled outcome providing a positive-weight witness.
+   Mathematical meaning: A union of Boolean events is positive
+   precisely when some listed event holds on a listed outcome
+   carrying positive weight, assuming all sample weights are
+   nonnegative.
+   Exact checked proposition: 0 < union_prob weights samples events
+   iff there exist member and x with In member events,
+   In x samples, member x = true and 0 < weights x.
+   Premises and side conditions: The list of events may be empty
+   or contain repetitions; so may the sample. No independence
+   or total-mass normalization is assumed.
+   Proof/definition method: Apply the new generic finite-event
+   positive-support iff to the existing any_event union predicate,
+   then convert Stdlib.List.existsb truth into a named member
+   via Stdlib.List.existsb_exists. For the converse, reuse the
+   existing event_member_implies_union rather than implementing
+   any separate event-list search.
+   Library reuse: finite_prob_positive_iff_positive_support,
+   Stdlib.List.existsb_exists, event_member_implies_union,
+   any_event and union_prob.
+   Boundary: This is a finite weighted support equivalence,
+   not a probability factorization or empirical support estimate.
+   *)
+  Theorem union_prob_positive_iff_positive_member_support :
+    forall weights samples (events : list Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      (0 < union_prob weights samples events <->
+       exists member x,
+         In member events /\ In x samples /\
+         member x = true /\ 0 < weights x).
+  Proof.
+    intros weights samples events Hw.
+    unfold union_prob.
+    rewrite (finite_prob_positive_iff_positive_support
+      weights samples (any_event events) Hw).
+    split.
+    - intros [x [Hx [Hunion Hweight]]].
+      unfold any_event in Hunion.
+      apply existsb_exists in Hunion.
+      destruct Hunion as [member [Hmember Hhit]].
+      exists member, x.
+      repeat split; assumption.
+    - intros [member [x [Hmember [Hx [Hhit Hweight]]]]].
+      exists x.
+      repeat split; try assumption.
+      apply (event_member_implies_union events member x
+        Hmember Hhit).
+  Qed.
+
+  (**
+   [finite_conditional_prob_positive_iff_joint_support] (theorem) —
+   Constructive positive joint-support characterization of an
+   exact finite conditional event mass.
+   Mathematical meaning: A target's finite probability conditional
+   on a positive-mass event is strictly positive precisely when
+   some positive-weight sampled outcome satisfies both the
+   conditioner and the target.
+   Exact checked proposition: Under nonnegative sampled weights and
+   0 < finite_prob weights samples given, conditional(event|given)>0
+   iff there exists x in samples with given x=true,
+   event x=true, and weights x>0.
+   Premises and side conditions: The conditioner mass is positive
+   and the sample weights are nonnegative. Sample outcomes may
+   repeat and total weight need not be normalized. No independence,
+   event-family disjointness or Gaussian model is assumed.
+   Proof/definition method: Use the previously checked quotient
+   zero iff joint-zero law together with unconditional mass
+   nonnegativity to show that a positive conditional numerator
+   must have a strictly positive finite joint mass. Apply
+   finite_prob_positive_iff_positive_support and split the
+   Boolean conjunction with Stdlib.Bool.andb_true_iff.
+   Conversely, delegate directly to the maintained conditional
+   positivity theorem for an explicit joint support witness.
+   Library reuse: finite_conditional_prob_zero_iff_joint_zero,
+   finite_prob_positive_iff_positive_support,
+   finite_prob_false, finite_prob_event_monotone,
+   finite_conditional_prob_positive_of_positive_joint_support,
+   Stdlib.Bool.andb_true_iff and Stdlib.Lra.
+   Boundary: The conclusion is an exact finite weighted-list
+   conditional support statement, not an inferential estimate
+   for a broader population or a zero-denominator convention.
+   *)
+  Theorem finite_conditional_prob_positive_iff_joint_support :
+    forall weights samples (event given : Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      (0 < finite_conditional_prob weights samples event given <->
+       exists x, In x samples /\ given x = true /\
+         event x = true /\ 0 < weights x).
+  Proof.
+    intros weights samples event given Hw Hgiven.
+    split.
+    - intros Hpositive.
+      assert (Hjoint_nonnegative :
+        0 <= finite_prob weights samples
+          (fun x => andb (given x) (event x))).
+      { rewrite <- (finite_prob_false weights samples).
+        apply finite_prob_event_monotone; [exact Hw|].
+        intros x _ Hfalse; discriminate Hfalse. }
+      assert (Hjoint_nonzero :
+        finite_prob weights samples
+          (fun x => andb (given x) (event x)) <> 0).
+      { intro Hjoint_zero.
+        pose proof ((proj2 (finite_conditional_prob_zero_iff_joint_zero
+          weights samples event given Hgiven)) Hjoint_zero).
+        lra. }
+      assert (Hjoint_positive :
+        0 < finite_prob weights samples
+          (fun x => andb (given x) (event x))) by lra.
+      destruct ((proj1 (finite_prob_positive_iff_positive_support
+        weights samples
+        (fun x => andb (given x) (event x)) Hw))
+        Hjoint_positive) as [x [Hx [Hjoint Hweight]]].
+      apply andb_true_iff in Hjoint.
+      destruct Hjoint as [Hg He].
+      exists x; repeat split; assumption.
+    - intros [x [Hx [Hg [He Hweight]]]].
+      apply (finite_conditional_prob_positive_of_positive_joint_support
+        weights samples event given x Hw Hgiven Hx Hg He Hweight).
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

@@ -778,3 +778,68 @@ Proof.
   rewrite finite_sum_sub in Hdiff.
   lra.
 Qed.
+
+(**
+   [finite_sum_positive_iff_positive_member] (lemma) —
+   Constructive positive-support characterization of a finite real sum.
+   Mathematical meaning: A finite sum of nonnegative listed terms is
+   strictly positive if and only if some enumerated term is strictly
+   positive. The witness is an actual list member, not merely an
+   abstract value of the summand function.
+   Exact checked proposition: If f x >= 0 for each In x xs,
+   then 0 < finite_sum f xs iff there exists x with In x xs
+   and 0 < f x.
+   Premises and side conditions: The list may be empty and may
+   contain repeated elements. Nonnegativity is required only
+   on enumerated entries; signed terms would admit cancellation.
+   No decidable equality or total ordering on the element type
+   A is required.
+   Proof/definition method: The backwards implication delegates
+   entirely to finite_sum_positive_of_positive_member. For the
+   forwards implication, induct on the standard list, using the
+   standard real-order decision Rlt_dec to select a positive head
+   or show that its nonnegative value must be zero, after which
+   the existing Stdlib.List.map/fold_right sum reduces to the tail.
+   Library reuse: finite_sum_positive_of_positive_member,
+   Stdlib.List.map/fold_right, Stdlib.Reals.Rlt_dec and Stdlib.Lra.
+   Boundary: This is a finite list-support theorem, not
+   countable additivity or a general measure-theoretic positivity law.
+ *)
+Lemma finite_sum_positive_iff_positive_member {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    (forall x, In x xs -> 0 <= f x) ->
+    (0 < finite_sum f xs <->
+      exists x, In x xs /\ 0 < f x).
+Proof.
+  intros xs f.
+  induction xs as [|a rest IH]; intros Hnonnegative.
+  - split.
+    + intro Hpositive.
+      change (0 < 0) in Hpositive.
+      lra.
+    + intros [x [Hin _]].
+      inversion Hin.
+  - split.
+    + intros Hpositive.
+      destruct (Rlt_dec 0 (f a)) as [Ha | Hnot].
+      * exists a; split.
+        -- left; reflexivity.
+        -- exact Ha.
+      * assert (Hhead_nonnegative : 0 <= f a).
+        { apply Hnonnegative; left; reflexivity. }
+        assert (Hhead_zero : f a = 0) by lra.
+        assert (Htail_positive : 0 < finite_sum f rest).
+        { change (0 < f a + finite_sum f rest) in Hpositive.
+          lra. }
+        assert (Htail_nonnegative :
+          forall y, In y rest -> 0 <= f y).
+        { intros y Hy; apply Hnonnegative; right; exact Hy. }
+        destruct ((proj1 (IH Htail_nonnegative)) Htail_positive)
+          as [y [Hy Hfy]].
+        exists y; split.
+        -- right; exact Hy.
+        -- exact Hfy.
+    + intros [x [Hin Hpositive]].
+      apply (finite_sum_positive_of_positive_member
+        (a :: rest) f x Hnonnegative Hin Hpositive).
+Qed.

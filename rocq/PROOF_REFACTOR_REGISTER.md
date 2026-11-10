@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **641 public theorem/lemma/example claims**, plus
+The current branch has **645 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**644 proof scripts** across seven Rocq modules. The claims and scripts
+**648 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -433,7 +433,7 @@ unchanged, *not* that every proof term was rewritten. The dependency
 column is a tactic-level heuristic; consult the actual source for
 full dependencies and the theorem-specific doc comment for hypotheses.
 
-## FiniteSum.v — 23 proof scripts
+## FiniteSum.v — 24 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -460,6 +460,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_sum_nonnegative_zero_iff` (lemma) | Zero-criterion equivalence via extensionality | finite_sum_nonnegative_zero, finite_sum_ext_in, finite_sum_zero | **New:** reversible zero condition on nonnegative finite support, without induction |
 | `finite_sum_positive_of_positive_member` (lemma) | Contradiction with zero criterion; Lra | finite_sum_nonnegative, finite_sum_nonnegative_zero_iff, Stdlib.Rle_dec | **New:** positive aggregate from any positive listed contribution |
 | `finite_sum_strict_monotone_at_member` (lemma) | Positive difference sum and linearity | finite_sum_positive_of_positive_member, finite_sum_sub, Stdlib.Lra | **New:** strict monotonicity of sums from one strict coordinate |
+| `finite_sum_positive_iff_positive_member` (lemma) | Constructive induction extracting a listed positive real term; converse via generic strict support theorem | finite_sum_positive_of_positive_member, Stdlib.Rlt_dec, Stdlib.List.map/fold_right, Lra | **New:** strict positivity of a nonnegative finite sum iff a positive listed term exists |
 
 
 ## Hoeflin.v — 65 proof scripts
@@ -606,7 +607,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 183 proof scripts
+## FiniteUnion.v — 186 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -794,6 +795,9 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_conditional_union_zero_iff_each_member_zero` (theorem) | Support iff in both directions using standard existsb witness | finite_conditional_prob_zero_iff_no_positive_joint_support, event_member_implies_union, Stdlib.List.existsb_exists | **New:** conditional union zero iff every member conditional mass zero, under common positive conditioner |
 | `finite_all_events_zero_of_zero_member` (theorem) | Existing finite-event support iff plus standard forallb member extraction | finite_prob_zero_iff_no_positive_mass_support, Stdlib.List.forallb_forall | **New:** one zero-mass required member forces finite conjunction mass to zero |
 | `finite_conditional_all_events_zero_of_zero_member` (theorem) | Existing conditional zero joint-support iff plus standard forallb member extraction | finite_conditional_prob_zero_iff_no_positive_joint_support, Stdlib.List.forallb_forall | **New:** one zero conditional mass required member forces conditional conjunction mass to zero |
+| `finite_prob_positive_iff_positive_support` (theorem) | Generic positive finite-sum iff and weighted Boolean indicator simplification | FiniteSum.finite_sum_positive_iff_positive_member, indicator_nonnegative, Rmult_le_pos, nra | **New:** positive event mass iff a positive-weight accepted sample exists |
+| `union_prob_positive_iff_positive_member_support` (theorem) | Event positive-support iff and standard list existential witness | finite_prob_positive_iff_positive_support, Stdlib.List.existsb_exists, event_member_implies_union | **New:** positive finite union iff some listed event accepts a positive-weight sample |
+| `finite_conditional_prob_positive_iff_joint_support` (theorem) | Positive quotient implies nonzero joint mass; positive-event support iff; converse by existing joint witness theorem | finite_conditional_prob_zero_iff_joint_zero, finite_prob_positive_iff_positive_support, finite_prob_false, finite_prob_event_monotone, finite_conditional_prob_positive_of_positive_joint_support, Stdlib.Lra | **New:** positive finite conditional event iff a positive-weight joint support sample exists |
 
 
 

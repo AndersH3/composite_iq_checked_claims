@@ -1874,6 +1874,21 @@ avoids the older singleton/subset detour. No source-specific
 Boolean-list traversal, finite-sum argument or conditional
 quotient proof is duplicated.
 
+## Constructive positive-support equivalences
+
+Rather than adding local search loops to the union/moment
+formalizations, the generic `FiniteSum.finite_sum_positive_iff_positive_member`
+uses `Stdlib.List.map`/`fold_right` and one minimal inductive
+witness extraction with `Stdlib.Reals.Rlt_dec`. Its converse
+is the existing generic one-member-positive law.
+`FiniteUnion.finite_prob_positive_iff_positive_support`
+specializes it to the shared weighted Boolean indicators;
+`Stdlib.List.existsb_exists` recovers the listed event for
+positive unions. The conditional joint-support equivalence
+reuses the established positive conditional-witness and
+zero-quotient equivalences, with no second finite-sum
+or conditional-probability implementation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
