@@ -2027,6 +2027,17 @@ The bounded coordinate result delegates to centered-score homogeneity.
 No new vector representation, sample-index conversion, or custom
 matrix algebra is introduced. Additivity and rank remain unproved.
 
+## Pointwise additivity of typed finite sample evaluation
+
+The `weighted_basis_sum_coefficients_zip_add` lemma handles the
+ordinary list-combine/truncation semantics with one proof induction,
+while `indexed_vector_to_list_map2_add` delegates to the maintained
+`Vector.rect2` paired induction principle. The centered score
+reuses `expectation_add`/`expectation_ext` and the earlier shared
+composite evaluator; its bounded index corollary is immediate.
+These results complement scalar homogeneity without introducing
+custom finite vectors, matrices, axioms or a rank formula.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

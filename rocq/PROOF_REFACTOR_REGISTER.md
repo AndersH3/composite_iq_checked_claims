@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 265 proof scripts
+## FiniteMoments.v — 269 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1086,6 +1086,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `weighted_basis_sum_coefficients_scale` (theorem) | Small list-combine induction plus established real finite sum and ring arithmetic | weighted_basis_sum, linear_combination, FiniteSum.finite_sum, Stdlib.List.combine/map, Stdlib.Ring | **New:** scalar homogeneity of coefficient-weighted composite scores, including unequal list lengths |
 | `indexed_basis_centered_weighted_score_scale` (theorem) | Vector/list mapping transport, composite/expectation scaling, ring normalization | VectorSpec.to_list_map, weighted_basis_sum_coefficients_scale, expectation_scale, expectation_ext, Stdlib.Ring | **New:** typed centered score is homogeneous in its coefficient direction |
 | `indexed_basis_centered_sample_evaluation_scale` (theorem) | Direct reuse of established centered score scaling for bounded indices | indexed_basis_centered_weighted_score_scale, Stdlib.Vectors.Fin/Vector | **New:** bounded centered sample evaluation is homogeneous in coefficient vectors |
+| `weighted_basis_sum_coefficients_zip_add` (theorem) | Equal-length paired coefficient induction retaining the shared sum tail | Stdlib.List.combine/map, weighted_basis_sum, FiniteSum.finite_sum, Stdlib.Ring | **New:** componentwise coefficient addition distributes over a finite weighted basis |
+| `indexed_vector_to_list_map2_add` (lemma) | Standard paired vector induction and list conversion, no vector implementation | Stdlib.Vectors.Vector.rect2/map2/to_list, Stdlib.List.combine/map | **New:** map2 plus corresponds to the paired coefficient list representation |
+| `indexed_basis_centered_weighted_score_add` (theorem) | Reuse list addition, vector transport and existing linear expectation | indexed_vector_to_list_map2_add, weighted_basis_sum_coefficients_zip_add, VectorSpec.length_to_list, expectation_add, expectation_ext | **New:** centered weighted score is additive in the typed coefficient direction |
+| `indexed_basis_centered_sample_evaluation_add` (theorem) | Unfold bounded wrapper and apply the existing centered-score additivity | indexed_basis_centered_weighted_score_add, Stdlib.Vectors.Vector.map2/nth | **New:** dimension-safe sample evaluation is pointwise additive |
 
 
 ## FiniteBridge.v — 37 proof scripts

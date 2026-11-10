@@ -2768,8 +2768,25 @@ while `expectation_scale` and `expectation_ext` avoid new
 expectation implementations. Vector additivity and a packaged
 rank-nullity theorem remain future targets.
 
-Current target inventory: **673 public claims, 676 proof scripts,
+Inventory for preceding scalar-homogeneity batch: **673 public claims, 676 proof scripts,
 741 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Pointwise additivity of the bounded sample evaluation (10 November 2026)
+
+The next four checked claims establish componentwise coefficient
+addition in the existing `weighted_basis_sum`, the structural
+`Vector.map2 Rplus`/list-pair bridge, additivity of the centered
+weighted score and additivity at each dimension-safe sample index.
+Combined with `indexed_basis_centered_sample_evaluation_scale`, the
+final coordinate evaluator now satisfies both pointwise real-linear
+identities for the maintained vector operations. The sole new
+representation bridge uses `Stdlib.Vectors.Vector.rect2` rather
+than a custom vector recursion. Both finite expectation additivity
+and composite sums reuse existing library laws, without a new matrix
+engine or numerical rank claim.
+
+Current target inventory: **677 public claims, 680 proof scripts,
+745 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

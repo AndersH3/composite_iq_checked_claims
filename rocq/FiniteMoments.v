@@ -9525,4 +9525,198 @@ Section FiniteProbabilityMoments.
     apply indexed_basis_centered_weighted_score_scale.
   Qed.
 
+
+  (**
+   [weighted_basis_sum_coefficients_zip_add] (theorem) —
+   Additivity of finite coefficient-weighted score lists.
+   Mathematical meaning: Adding two same-length lists of real
+   coefficients position by position adds their composite scores
+   at every outcome, even if the basis list is shorter than
+   either coefficient list.
+   Exact checked proposition: For left and right coefficient
+   lists of equal lengths, the score computed from
+   map (fun p => fst p + snd p) (combine left right) is
+   weighted_basis_sum left basis x + weighted_basis_sum right basis x.
+   Premises and side conditions: Only equal coefficient-list
+   lengths are required. The basis may have a different length,
+   and repeated scores, signed coefficients, and empty lists
+   are all allowed. Normalized outcome weights are irrelevant.
+   Proof/definition method: Match the two coefficient lists using
+   their given length equality and destruct the basis list
+   just far enough to expose the standard List.combine tail;
+   invoke the induction hypothesis on that tail and close
+   ordinary scalar distributivity with Stdlib.Ring.
+   Library reuse: Stdlib.List.combine/map/length,
+   weighted_basis_sum, FiniteSum.finite_sum and Stdlib.Ring.
+   Boundary: The result is exact additivity of the existing
+   finite score expression, not a general matrix rank law.
+   *)
+  Theorem weighted_basis_sum_coefficients_zip_add :
+    forall (left right : list R)
+           (basis : list (Outcome -> R)) (x : Outcome),
+      length left = length right ->
+      weighted_basis_sum
+        (map (fun p : R * R => fst p + snd p)
+             (combine left right)) basis x =
+      weighted_basis_sum left basis x +
+      weighted_basis_sum right basis x.
+  Proof.
+    intro left.
+    induction left as [|a left IH]; intros right basis x Hlength.
+    - destruct right as [|b right].
+      + destruct basis as [|f rest];
+          unfold weighted_basis_sum, linear_combination, FiniteSum.finite_sum;
+          simpl; ring.
+      + discriminate Hlength.
+    - destruct right as [|b right].
+      + discriminate Hlength.
+      + destruct basis as [|f rest].
+        * unfold weighted_basis_sum, linear_combination, FiniteSum.finite_sum.
+          simpl; ring.
+        * simpl in Hlength.
+          injection Hlength as Htail_length.
+          change
+            ((a + b) * f x +
+               weighted_basis_sum
+                 (map (fun p : R * R => fst p + snd p)
+                      (combine left right)) rest x =
+             (a * f x + weighted_basis_sum left rest x) +
+             (b * f x + weighted_basis_sum right rest x)).
+          rewrite (IH right rest x Htail_length).
+          ring.
+  Qed.
+
+  (**
+   [indexed_vector_to_list_map2_add] (lemma) —
+   Standard vector/list conversion for binary componentwise addition.
+   Mathematical meaning: The maintained length-indexed Vector.map2
+   pointwise sum has precisely the same coefficient list as zipping
+   the two original vector lists and adding corresponding entries.
+   Exact checked proposition: For each common vector dimension n
+   and two Vector.t R n values, converting their Vector.map2 Rplus
+   sum to a list equals map (fun p => fst p + snd p)
+   (combine (Vector.to_list left) (Vector.to_list right)).
+   Premises and side conditions: Vector.t enforces both input
+   lengths; no independent equal-length proof, positivity or
+   basis/sample assumption is needed. Empty vectors are supported.
+   Proof/definition method: Reuse the standard Vector.rect2
+   two-vector induction principle, with its empty and matched
+   cons cases. Both representations compute structurally, so
+   the tail equality follows by ordinary congruence.
+   Library reuse: Stdlib.Vectors.Vector.rect2/map2/to_list,
+   Stdlib.List.combine/map and congruence; no custom vector
+   recursion, coercion, or tuple machinery is introduced.
+   Boundary: This is a representation bridge, not a new
+   arithmetic theorem or finite-dimensional rank computation.
+   *)
+  Lemma indexed_vector_to_list_map2_add :
+    forall n (left right : Vector.t R n),
+      Vector.to_list (Vector.map2 Rplus left right) =
+      map (fun p : R * R => fst p + snd p)
+        (combine (Vector.to_list left) (Vector.to_list right)).
+  Proof.
+    intros n left right.
+    apply (fun P Hnil Hcons =>
+      Vector.rect2 P Hnil Hcons left right).
+    - reflexivity.
+    - cbn.
+      intros n' v1 v2 IH a b.
+      simpl.
+      now f_equal.
+  Qed.
+
+  (**
+   [indexed_basis_centered_weighted_score_add] (theorem) —
+   Pointwise additivity of a centered, type-correct score direction.
+   Mathematical meaning: The weighted centered composite evaluation
+   respects vector addition of coefficient directions at every
+   outcome, even before any probability normalization.
+   Exact checked proposition: The indexed_basis_centered_weighted_score
+   of Vector.map2 Rplus left right equals the sum of the
+   respective centered weighted scores of left and right.
+   Premises and side conditions: Each vector is typed at exactly
+   length basis. Outcome and coefficient weights may be signed;
+   the sample and basis may contain repeated entries.
+   Proof/definition method: Transport vector addition into the
+   shared list composite through indexed_vector_to_list_map2_add,
+   reuse weighted_basis_sum_coefficients_zip_add and the previously
+   proved expectation_add/expectation_ext for the centered mean.
+   Ring normalization closes the remaining weighted difference.
+   Library reuse: Stdlib.Vectors.Vector.map2/to_list,
+   indexed_vector_to_list_map2_add,
+   weighted_basis_sum_coefficients_zip_add,
+   VectorSpec.length_to_list, expectation_add/expectation_ext,
+   Stdlib.Ring.
+   Boundary: This is an algebraic additivity theorem, not a
+   packaged linear map, kernel dimension or covariance rank law.
+   *)
+  Theorem indexed_basis_centered_weighted_score_add :
+    forall basis (left right : Vector.t R (length basis))
+           (x : Outcome),
+      indexed_basis_centered_weighted_score
+        basis (Vector.map2 Rplus left right) x =
+      indexed_basis_centered_weighted_score basis left x +
+      indexed_basis_centered_weighted_score basis right x.
+  Proof.
+    intros basis left right x.
+    assert (Hlength :
+        length (Vector.to_list left) = length (Vector.to_list right)).
+    { now rewrite !VectorSpec.length_to_list. }
+    unfold indexed_basis_centered_weighted_score.
+    rewrite indexed_vector_to_list_map2_add.
+    rewrite (weighted_basis_sum_coefficients_zip_add
+      (Vector.to_list left) (Vector.to_list right) basis x Hlength).
+    assert (Hexpect :
+        expect (weighted_basis_sum
+          (map (fun p : R * R => fst p + snd p)
+             (combine (Vector.to_list left) (Vector.to_list right)))
+          basis) =
+        expect (weighted_basis_sum (Vector.to_list left) basis) +
+        expect (weighted_basis_sum (Vector.to_list right) basis)).
+    { rewrite <- expectation_add.
+      apply expectation_ext.
+      intro y.
+      apply weighted_basis_sum_coefficients_zip_add.
+      exact Hlength. }
+    rewrite Hexpect.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_evaluation_add] (theorem) —
+   Additivity at all dimension-safe, bounded sample positions.
+   Mathematical meaning: At every sample index, evaluating the
+   pointwise vector sum of two coefficient directions equals
+   the sum of their respective sample evaluations.
+   Exact checked proposition: For every basis, left and right
+   vectors of length basis, and i : Fin.t (length samples),
+   E_basis(Vector.map2 Rplus left right,i) equals
+   E_basis(left,i) + E_basis(right,i), where E_basis is
+   indexed_basis_centered_sample_evaluation.
+   Premises and side conditions: Sample and coefficient dimensions
+   may differ, including zero; no mass normalization, positive
+   weights, Gaussianity or pairwise score independence is assumed.
+   Proof/definition method: Unfold only the bounded-index wrapper
+   and apply the centered weighted score additivity theorem at
+   the existing Vector.nth outcome lookup.
+   Library reuse: indexed_basis_centered_weighted_score_add,
+   indexed_basis_centered_sample_evaluation,
+   Stdlib.Vectors.Vector.map2/nth and Fin.t.
+   Boundary: Together with the scalar homogeneity theorem this
+   verifies both pointwise linearity axioms, but a reusable
+   linear-map record and rank-nullity proof remain separate.
+   *)
+  Theorem indexed_basis_centered_sample_evaluation_add :
+    forall basis (left right : Vector.t R (length basis))
+           (i : Fin.t (length samples)),
+      indexed_basis_centered_sample_evaluation
+        basis (Vector.map2 Rplus left right) i =
+      indexed_basis_centered_sample_evaluation basis left i +
+      indexed_basis_centered_sample_evaluation basis right i.
+  Proof.
+    intros basis left right i.
+    unfold indexed_basis_centered_sample_evaluation.
+    apply indexed_basis_centered_weighted_score_add.
+  Qed.
+
 End FiniteProbabilityMoments.
