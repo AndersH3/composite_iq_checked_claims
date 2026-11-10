@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **639 proof scripts** in seven
+for the two reports. **642 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **636 public claims, 639 proof scripts,
-702 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **639 public claims, 642 proof scripts,
+705 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **636 public claims,
-639 proof scripts, 702 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **639 public claims,
+642 proof scripts, 705 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2480,6 +2480,27 @@ The positive counterparts,
 reuse single-event positivity and show that one positive-weight
 sampled witness suffices. These results require no independence
 or normalized total mass and remain specific to finite lists.
+
+### Conditional zero mass and union-member support
+
+`finite_conditional_prob_zero_iff_joint_zero` proves that an
+exact finite conditional quotient is zero precisely when its
+joint numerator is zero, when the conditioning marginal
+is strictly positive. It reuses Rocq's real-product
+zero-divisor and positive-reciprocal lemmas.
+
+With nonnegative sampled weights,
+`finite_conditional_prob_zero_iff_no_positive_joint_support`
+then characterizes the same zero conditional mass by the absence
+of positively weighted sampled outcomes satisfying both
+the condition and the target. Finally,
+`finite_conditional_union_zero_iff_each_member_zero`
+extends the unconditional union support equivalence to
+**conditional** union masses under the same positive conditioner.
+Its only event-family witness conversion is
+`Stdlib.List.existsb_exists`. No additional
+independence, normalized-total-mass assumption, conditional
+measure implementation, or custom finite-sum recursion is used.
 
 ## Research extensions
 

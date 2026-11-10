@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **636 public theorem/lemma/example claims**, plus
+The current branch has **639 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**639 proof scripts** across seven Rocq modules. The claims and scripts
+**642 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -606,7 +606,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## FiniteUnion.v — 178 proof scripts
+## FiniteUnion.v — 181 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -789,6 +789,10 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `union_prob_zero_iff_each_member_zero` (theorem) | Support iff in both directions; existsb witness extraction and member inclusion | union_prob_zero_iff_no_positive_support, finite_prob_zero_iff_no_positive_mass_support, Stdlib.List.existsb_exists, event_member_implies_union | **New:** nonnegative union mass vanishes iff every member event mass vanishes |
 | `union_prob_positive_of_positive_support` (theorem) | Immediate reuse of single-event positive witness criterion | finite_prob_positive_of_positive_support, any_event | **New:** positive-weight union support implies strictly positive union mass |
 | `union_prob_positive_of_positive_member_support` (theorem) | Member-to-union witness then generic union positivity | event_member_implies_union, union_prob_positive_of_positive_support | **New:** any listed event with a positive-weight sampled witness makes union mass positive |
+| `finite_conditional_prob_zero_iff_joint_zero` (theorem) | Zero-divisor real algebra with a strictly positive common reciprocal | Stdlib.Reals.Rmult_integral, Rinv_0_lt_compat, Stdlib.Lra, ring | **New:** conditional mass zero iff exact joint numerator zero |
+| `finite_conditional_prob_zero_iff_no_positive_joint_support` (theorem) | Reuse generic joint zero and finite-event support iff | finite_conditional_prob_zero_iff_joint_zero, finite_prob_zero_iff_no_positive_mass_support, Stdlib.Bool.andb_true_iff | **New:** conditional mass zero iff no positive-weight sampled given-and-target witness |
+| `finite_conditional_union_zero_iff_each_member_zero` (theorem) | Support iff in both directions using standard existsb witness | finite_conditional_prob_zero_iff_no_positive_joint_support, event_member_implies_union, Stdlib.List.existsb_exists | **New:** conditional union zero iff every member conditional mass zero, under common positive conditioner |
+
 
 
 

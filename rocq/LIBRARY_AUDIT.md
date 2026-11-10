@@ -1850,6 +1850,19 @@ theorem in the reverse direction. No new probability fold,
 finite-list recursion or event enumeration is needed.
 Nonnegative weights explicitly prevent signed cancellation.
 
+## Conditional zero masses and finite union members
+
+Strictly positive conditioning mass makes the maintained quotient
+zero exactly when the joint numerator is zero; the proof uses
+`Stdlib.Reals.Rmult_integral` and `Rinv_0_lt_compat`.
+The existing nonnegative finite-event support iff converts the
+joint zero to a supported-outcome criterion with
+`Stdlib.Bool.andb_true_iff`, and
+`Stdlib.List.existsb_exists` transfers it to every member of
+a conditional finite union. The shared base lemmas replace
+a new quotient algebra, event recursion or finite-sum induction.
+No abstract conditional measure is silently inferred.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

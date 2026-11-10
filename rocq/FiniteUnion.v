@@ -6140,6 +6140,174 @@ Section FiniteOutcomeSpace.
     - exact Hweight.
   Qed.
 
+
+  (**
+   [finite_conditional_prob_zero_iff_joint_zero] (theorem) —
+   A finite conditional mass vanishes exactly when its joint
+   numerator vanishes under a positive conditioning denominator.
+   Mathematical meaning: Dividing an event's joint mass by a
+   strictly positive finite conditioning mass neither creates nor
+   removes zeros. This is an exact algebraic equivalence.
+   Exact checked proposition: If
+   0 < finite_prob weights samples given, then
+   finite_conditional_prob weights samples event given = 0 iff
+   finite_prob weights samples
+     (fun x => andb (given x) (event x)) = 0.
+   Premises and side conditions: Strictly positive conditioning
+   mass is indispensable for the nonzero reciprocal. Sample
+   weights need not be nonnegative for the algebraic equivalence,
+   but nonnegativity is needed to interpret the quotient as a
+   genuine probability rather than a signed mass.
+   Proof/definition method: Unfold the maintained quotient,
+   use the standard real-product zero-divisor lemma, and rule
+   out a zero inverse with the standard positive-inverse lemma.
+   The converse follows from the library's ring normalization.
+   Library reuse: Stdlib.Reals.Rmult_integral,
+   Stdlib.Reals.Rinv_0_lt_compat, Stdlib.Lra, ring and the
+   existing finite_conditional_prob/finite_prob definitions.
+   Boundary: This is zero preservation under nonzero division;
+   it does not claim a meaningful conditional distribution
+   when the conditioning denominator is zero.
+   *)
+  Theorem finite_conditional_prob_zero_iff_joint_zero :
+    forall weights samples (event given : Event),
+      0 < finite_prob weights samples given ->
+      (finite_conditional_prob weights samples event given = 0 <->
+       finite_prob weights samples
+         (fun x => andb (given x) (event x)) = 0).
+  Proof.
+    intros weights samples event given Hpositive.
+    unfold finite_conditional_prob, Rdiv.
+    split.
+    - intros Hzero.
+      apply Rmult_integral in Hzero.
+      destruct Hzero as [Hnumerator | Hinverse].
+      + exact Hnumerator.
+      + pose proof (Rinv_0_lt_compat
+          (finite_prob weights samples given) Hpositive).
+        lra.
+    - intros Hnumerator.
+      rewrite Hnumerator.
+      ring.
+  Qed.
+
+  (**
+   [finite_conditional_prob_zero_iff_no_positive_joint_support]
+   (theorem) — Support characterization of zero conditional mass.
+   Mathematical meaning: For nonnegative finite outcome weights
+   and a positive conditioning marginal, the conditional target
+   has zero mass precisely when every enumerated outcome inside
+   both target and conditioner has zero weight.
+   Exact checked proposition: Given sampled nonnegative weights
+   and 0 < finite_prob weights samples given,
+   finite_conditional_prob weights samples event given = 0 iff
+   every In x samples with given x=true and event x=true has
+   weights x=0.
+   Premises and side conditions: Positive conditioning mass
+   excludes the zero-denominator case. Nonnegative weights
+   exclude cancellation in the joint numerator. Duplicate
+   sample occurrences and nonnormalized masses are permitted.
+   Proof/definition method: Rewrite zero conditional mass into
+   zero joint mass using the previous quotient lemma, then use
+   the checked finite-event zero-support equivalence. Boolean
+   joint membership is reduced by Stdlib.Bool.andb_true_iff.
+   Library reuse: finite_conditional_prob_zero_iff_joint_zero,
+   finite_prob_zero_iff_no_positive_mass_support,
+   Stdlib.Bool.andb_true_iff and FiniteSum.
+   Boundary: This is finite weighted support in a fixed sample,
+   not a population-level conditional-probability estimate.
+   *)
+  Theorem finite_conditional_prob_zero_iff_no_positive_joint_support :
+    forall weights samples (event given : Event),
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      (finite_conditional_prob weights samples event given = 0 <->
+       forall x, In x samples ->
+         given x = true -> event x = true -> weights x = 0).
+  Proof.
+    intros weights samples event given Hw Hpositive.
+    rewrite (finite_conditional_prob_zero_iff_joint_zero
+      weights samples event given Hpositive).
+    rewrite (finite_prob_zero_iff_no_positive_mass_support
+      weights samples
+      (fun x => andb (given x) (event x)) Hw).
+    split.
+    - intros Hzero x Hx Hgiven Hevent.
+      apply (Hzero x Hx).
+      rewrite Hgiven, Hevent.
+      reflexivity.
+    - intros Hzero x Hx Hjoint.
+      apply andb_true_iff in Hjoint.
+      destruct Hjoint as [Hgiven Hevent].
+      exact (Hzero x Hx Hgiven Hevent).
+  Qed.
+
+  (**
+   [finite_conditional_union_zero_iff_each_member_zero] (theorem) —
+   Finite union conditional mass vanishes exactly when every
+   individual listed event has zero mass under the same conditioner.
+   Mathematical meaning: With nonnegative sampled weights and
+   a strictly positive common conditioning mass, a union of
+   conditional events is impossible precisely when each listed
+   conditional event is impossible, even if events overlap.
+   Exact checked proposition: With nonnegative sampled weights
+   and 0 < finite_prob weights samples given,
+   finite_conditional_prob weights samples
+     (any_event events) given = 0 iff
+   forall member, In member events ->
+     finite_conditional_prob weights samples member given = 0.
+   Premises and side conditions: The conditioning predicate is
+   identical for every member. Empty event lists satisfy the
+   equivalence. Duplicate outcomes or events are allowed;
+   no event independence or normalized total sample mass is used.
+   Proof/definition method: Use the established joint-support
+   characterization in both directions, and move between a
+   Boolean family union and its listed witnesses with
+   Stdlib.List.existsb_exists and event_member_implies_union.
+   No second finite-sum induction or conditional division proof.
+   Library reuse:
+   finite_conditional_prob_zero_iff_no_positive_joint_support,
+   event_member_implies_union and Stdlib.List.existsb_exists.
+   Boundary: The equivalence concerns only exact enumerated
+   nonnegative finite masses; signed cancellation is excluded.
+   *)
+  Theorem finite_conditional_union_zero_iff_each_member_zero :
+    forall weights samples (events : list Event) given,
+      (forall x, In x samples -> 0 <= weights x) ->
+      0 < finite_prob weights samples given ->
+      (finite_conditional_prob weights samples
+         (any_event events) given = 0 <->
+       forall member, In member events ->
+         finite_conditional_prob weights samples member given = 0).
+  Proof.
+    intros weights samples events given Hw Hpositive.
+    split.
+    - intros Hunion member Hmember.
+      apply (proj2
+        (finite_conditional_prob_zero_iff_no_positive_joint_support
+          weights samples member given Hw Hpositive)).
+      intros x Hx Hgiven Hevent.
+      apply ((proj1
+        (finite_conditional_prob_zero_iff_no_positive_joint_support
+          weights samples (any_event events) given Hw Hpositive))
+        Hunion x Hx Hgiven).
+      apply (event_member_implies_union events member x).
+      + exact Hmember.
+      + exact Hevent.
+    - intros Hmembers.
+      apply (proj2
+        (finite_conditional_prob_zero_iff_no_positive_joint_support
+          weights samples (any_event events) given Hw Hpositive)).
+      intros x Hx Hgiven Hunion.
+      unfold any_event in Hunion.
+      apply existsb_exists in Hunion.
+      destruct Hunion as [member [Hmember Hevent]].
+      exact ((proj1
+        (finite_conditional_prob_zero_iff_no_positive_joint_support
+          weights samples member given Hw Hpositive))
+        (Hmembers member Hmember) x Hx Hgiven Hevent).
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;
