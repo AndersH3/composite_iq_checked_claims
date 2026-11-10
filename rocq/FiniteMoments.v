@@ -9051,12 +9051,14 @@ Section FiniteProbabilityMoments.
         basis Hmass Hw).
     split; intros Hproperty coefficients Hnonzero Hkernel.
     - apply (Hproperty coefficients Hnonzero).
-      apply (proj2
+      (* The indexwise-zero premise implies zero at every listed sample. *)
+      apply (proj1
         (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
           basis coefficients)).
       exact Hkernel.
     - apply (Hproperty coefficients Hnonzero).
-      apply (proj1
+      (* Conversely, listwise zero implies zero at every bounded index. *)
+      apply (proj2
         (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
           basis coefficients)).
       exact Hkernel.
