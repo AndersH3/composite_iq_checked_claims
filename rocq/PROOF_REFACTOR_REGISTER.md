@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 262 proof scripts
+## FiniteMoments.v — 265 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1083,6 +1083,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `finite_expectation_nonnegative_positive_iff_positive_support_witness` (theorem) | Strict-order specialization at the zero score, no new induction | finite_expectation_strict_monotone_iff_positive_support_witness, expectation_zero | **New:** strict positivity iff a positive-weight positive-score listed witness exists |
 | `finite_expectation_square_zero_iff_zero_on_positive_support` (theorem) | Nonnegative expectation zero support, zero-product reduction, no recursion | finite_expectation_nonnegative_zero_iff_positive_support, Stdlib.Reals.Rmult_integral/Rle_0_sqr | **New:** expected square is zero precisely when every positively weighted listed score is zero |
 | `finite_expectation_square_positive_iff_nonzero_positive_support` (theorem) | Strict expected-square support witness and standard real square inequalities | finite_expectation_nonnegative_positive_iff_positive_support_witness, Stdlib.Psatz.nra | **New:** positive expected square iff a nonzero positively weighted sample score exists |
+| `weighted_basis_sum_coefficients_scale` (theorem) | Small list-combine induction plus established real finite sum and ring arithmetic | weighted_basis_sum, linear_combination, FiniteSum.finite_sum, Stdlib.List.combine/map, Stdlib.Ring | **New:** scalar homogeneity of coefficient-weighted composite scores, including unequal list lengths |
+| `indexed_basis_centered_weighted_score_scale` (theorem) | Vector/list mapping transport, composite/expectation scaling, ring normalization | VectorSpec.to_list_map, weighted_basis_sum_coefficients_scale, expectation_scale, expectation_ext, Stdlib.Ring | **New:** typed centered score is homogeneous in its coefficient direction |
+| `indexed_basis_centered_sample_evaluation_scale` (theorem) | Direct reuse of established centered score scaling for bounded indices | indexed_basis_centered_weighted_score_scale, Stdlib.Vectors.Fin/Vector | **New:** bounded centered sample evaluation is homogeneous in coefficient vectors |
 
 
 ## FiniteBridge.v — 37 proof scripts

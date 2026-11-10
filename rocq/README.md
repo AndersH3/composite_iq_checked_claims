@@ -2751,8 +2751,25 @@ support facts, obtained from the preceding expectation sign
 characterizations and Rocq standard real-arithmetic libraries.
 No fresh sum induction, matrix engine or rank claim is introduced.
 
-Current target inventory: **670 public claims, 673 proof scripts,
+Inventory for preceding expected-square batch: **670 public claims, 673 proof scripts,
 738 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Homogeneity of dimension-checked finite sample evaluation (10 November 2026)
+
+Three new lemmas connect the coefficient list, typed coefficient
+vector, and typed sample index representations: coefficient-wise
+scaling of `weighted_basis_sum`, centered weighted-score scaling,
+and bounded indexed sample-evaluation scaling. The latter establishes
+`E(a*c)[i] = a*E(c)[i]` for every real `a` and bounded sample index
+`i`, with no mass normalization or nonnegative-weight condition.
+The library bridge `VectorSpec.to_list_map` transfers the
+type-indexed vector operation to the existing finite list sum,
+while `expectation_scale` and `expectation_ext` avoid new
+expectation implementations. Vector additivity and a packaged
+rank-nullity theorem remain future targets.
+
+Current target inventory: **673 public claims, 676 proof scripts,
+741 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

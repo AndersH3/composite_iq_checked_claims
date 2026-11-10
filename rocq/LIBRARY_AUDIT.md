@@ -2017,6 +2017,16 @@ without separate sample traversal, custom vector algebra, or
 an unsupported covariance rank conclusion. These facts provide
 reusable finite quadratic support predicates for later work.
 
+## Homogeneity of the typed centered sample evaluation map
+
+The coefficient-list scaling identity reuses `weighted_basis_sum` and
+the shared `FiniteSum.finite_sum`; the type-indexed bridge is the
+maintained standard lemma `VectorSpec.to_list_map`. Centering uses
+the already checked `expectation_scale` and `expectation_ext`.
+The bounded coordinate result delegates to centered-score homogeneity.
+No new vector representation, sample-index conversion, or custom
+matrix algebra is introduced. Additivity and rank remain unproved.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

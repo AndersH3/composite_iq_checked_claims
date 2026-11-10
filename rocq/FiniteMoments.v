@@ -9388,4 +9388,129 @@ Section FiniteProbabilityMoments.
       nra.
   Qed.
 
+
+  (**
+   [weighted_basis_sum_coefficients_scale] (theorem) —
+   Scalar homogeneity of the existing list-based composite evaluator.
+   Mathematical meaning: Multiplying each real coefficient by a common
+   scalar multiplies the complete score by that scalar at every outcome.
+   Exact checked proposition: For arbitrary coefficient and basis lists,
+   scalar a and outcome x, weighted_basis_sum (map (fun c => a*c)
+   coefficients) basis x = a * weighted_basis_sum coefficients basis x.
+   Premises and side conditions: Signed scalars and scores, unequal list
+   lengths, repeated functions and empty lists are all supported.
+   The standard combine operation consistently truncates both sides.
+   No probability normalization or weight positivity is required.
+   Proof/definition method: Induct only over the coefficient list
+   while destructing the score list to align the existing pairwise
+   combine. The numerical fold is the established FiniteSum.finite_sum,
+   and the remaining real distributivity is closed with Stdlib.Ring.
+   Library reuse: weighted_basis_sum, linear_combination,
+   Stdlib.List.map/combine, FiniteSum.finite_sum and Stdlib.Ring.
+   Boundary: This is a finite-list linearity law, not a new
+   implementation of a vector space or a matrix rank theorem.
+   *)
+  Theorem weighted_basis_sum_coefficients_scale :
+    forall (coefficients : list R) (basis : list (Outcome -> R))
+           (a : R) (x : Outcome),
+      weighted_basis_sum
+        (map (fun c => a * c) coefficients) basis x =
+      a * weighted_basis_sum coefficients basis x.
+  Proof.
+    intro coefficients.
+    induction coefficients as [|c cs IH]; intros [|f fs] a x;
+      unfold weighted_basis_sum, linear_combination in *;
+      simpl; try ring.
+    rewrite (IH fs a x).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_weighted_score_scale] (theorem) —
+   Homogeneity of the dimension-checked centered weighted evaluator.
+   Mathematical meaning: Scaling the coefficient vector of a
+   centered finite composite score by a real scalar scales its
+   centered weighted sample value by the same scalar.
+   Exact checked proposition: For any basis, coefficient vector
+   of length basis, scalar a and outcome x, the centered weighted
+   score of Vector.map (fun c => a*c) coefficients equals a times
+   the centered weighted score of the original coefficients.
+   Premises and side conditions: No unit total-mass condition,
+   nonnegative weight, distinct sample or nonzero scalar is needed;
+   all equalities hold algebraically for arbitrary signed weights.
+   Proof/definition method: Use the maintained VectorSpec.to_list_map
+   transport law and the preceding generic composite-score scaling
+   identity. Expectation scaling comes from the already proved
+   expectation_scale and expectation_ext, not a duplicated fold.
+   Distributivity of weight and centering is closed by Stdlib.Ring.
+   Library reuse: Stdlib.Vectors.Vector.map,
+   VectorSpec.to_list_map, weighted_basis_sum_coefficients_scale,
+   expectation_scale/expectation_ext, Stdlib.Ring.
+   Boundary: This certifies homogeneous coordinates of the
+   evaluation map; additivity and rank-nullity are separate goals.
+   *)
+  Theorem indexed_basis_centered_weighted_score_scale :
+    forall basis (coefficients : Vector.t R (length basis))
+           (a : R) (x : Outcome),
+      indexed_basis_centered_weighted_score
+        basis (Vector.map (fun c => a * c) coefficients) x =
+      a * indexed_basis_centered_weighted_score
+        basis coefficients x.
+  Proof.
+    intros basis coefficients a x.
+    unfold indexed_basis_centered_weighted_score.
+    rewrite VectorSpec.to_list_map.
+    rewrite (weighted_basis_sum_coefficients_scale
+      (Vector.to_list coefficients) basis a x).
+    assert (Hexpect :
+        expect (weighted_basis_sum
+          (map (fun c => a * c) (Vector.to_list coefficients)) basis) =
+        a * expect (weighted_basis_sum
+          (Vector.to_list coefficients) basis)).
+    { rewrite <- (expectation_scale a
+        (weighted_basis_sum (Vector.to_list coefficients) basis)).
+      apply expectation_ext.
+      intro y.
+      apply weighted_basis_sum_coefficients_scale. }
+    rewrite Hexpect.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_evaluation_scale] (theorem) —
+   Scalar homogeneity at every bounded sample index.
+   Mathematical meaning: The existing map from a coefficient
+   vector of basis length to a real coordinate at each sample
+   position respects multiplication by any real scalar.
+   Exact checked proposition: At every i : Fin.t (length samples),
+   indexed_basis_centered_sample_evaluation basis
+   (Vector.map (fun c => a*c) coefficients) i
+   equals a times the same evaluation at coefficients.
+   Premises and side conditions: Basis and sample list lengths
+   are independent; the vector and index sizes are enforced
+   by Vector.t and Fin.t, including zero-dimensional cases.
+   All mass normalization, sign and Gaussian assumptions are absent.
+   Proof/definition method: Unfold only the bounded-index wrapper,
+   and delegate the algebra to the existing centered-score
+   homogeneity theorem. No fresh indexing, list recursion, or
+   matrix construction enters the checked proof.
+   Library reuse: indexed_basis_centered_weighted_score_scale,
+   indexed_basis_centered_sample_evaluation,
+   Stdlib.Vectors.Vector.map/Vector.nth and Fin.t.
+   Boundary: This proves one linear-map axiom (homogeneity),
+   not yet full additivity, injectivity, or a rank formula.
+   *)
+  Theorem indexed_basis_centered_sample_evaluation_scale :
+    forall basis (coefficients : Vector.t R (length basis))
+           (a : R) (i : Fin.t (length samples)),
+      indexed_basis_centered_sample_evaluation
+        basis (Vector.map (fun c => a * c) coefficients) i =
+      a * indexed_basis_centered_sample_evaluation
+        basis coefficients i.
+  Proof.
+    intros basis coefficients a i.
+    unfold indexed_basis_centered_sample_evaluation.
+    apply indexed_basis_centered_weighted_score_scale.
+  Qed.
+
 End FiniteProbabilityMoments.
