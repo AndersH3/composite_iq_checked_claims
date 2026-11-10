@@ -5721,6 +5721,189 @@ Section FiniteOutcomeSpace.
     - exact Hchain.
   Qed.
 
+
+  (**
+   [all_negated_events_eq_negated_any] (lemma) — Finite De Morgan
+   law between the maintained all-events and any-event folds.
+   Mathematical meaning: An outcome fails every event in a finite
+   list precisely when the union of that list is false, including
+   empty, repeated or overlapping event lists.
+   Exact checked proposition: For every list events and outcome x,
+   all_events (map (fun event => fun y => negb (event y)) events) x
+   = negb (any_event events x).
+   Premises and side conditions: No sample, weight, normalization,
+   independence or positivity assumption is required. Event identity
+   is extensional at the actual Boolean outcome rather than requiring
+   decidable equality of event functions.
+   Proof/definition method: Induct on the event list only to bridge
+   the Stdlib.List.forallb and existsb structures. The cons step
+   delegates Boolean De Morgan to Stdlib.Bool.negb_orb instead of
+   proving an independent Boolean truth-table theorem.
+   Library reuse: Stdlib.List.map, forallb, existsb,
+   Stdlib.Bool.negb_orb, and the existing all_events/any_event.
+   Boundary: This is a Boolean finite-family identity, not a
+   probabilistic independence or complement-mass theorem.
+   *)
+  Lemma all_negated_events_eq_negated_any :
+    forall (events : list Event) x,
+      all_events (map (fun event : Event =>
+        fun y => negb (event y)) events) x =
+      negb (any_event events x).
+  Proof.
+    intros events x.
+    induction events as [|event rest IH].
+    - reflexivity.
+    - change
+        (andb (negb (event x))
+          (all_events (map (fun member : Event =>
+            fun y => negb (member y)) rest) x) =
+         negb (orb (event x) (any_event rest x))).
+      rewrite IH.
+      rewrite negb_orb.
+      reflexivity.
+  Qed.
+
+  (**
+   [finite_conditional_union_complement_chain_product] (theorem) —
+   Conditional finite-union probability by a checked chain of
+   independence assumptions on the complementary event family.
+   Mathematical meaning: The chance that at least one event in a
+   finite family holds under G is one minus the product of the
+   conditional failure probabilities if the complementary event
+   family satisfies the existing suffix-factorization chain.
+   Exact checked proposition: For positive finite mass of given,
+   and finite_conditional_prefix_independent of the pointwise
+   negated event list, conditional(any_event events | given)
+   = 1 - fold_right Rmult 1
+   (map (fun event => 1 - conditional(event | given)) events).
+   Premises and side conditions: The chain condition concerns each
+   complement versus the conjunction of all later complements,
+   not merely pairwise independence. The positive denominator
+   is explicit because the event list may be empty; empty
+   products equal one, and the empty union has zero mass.
+   Signed weights satisfy the algebra, while nonnegative sampled
+   weights are additionally needed for probabilistic interpretation.
+   Proof/definition method: Reuse the generic finite conditional
+   intersection-product theorem for the mapped complement list,
+   transport its target via the preceding De Morgan identity,
+   and rewrite each individual complement mass by the established
+   conditional complement-sum theorem. Use Stdlib.List.map_map
+   and map_ext_in to avoid a custom real-product fold.
+   Library reuse: finite_conditional_all_events_product,
+   all_negated_events_eq_negated_any,
+   finite_conditional_prob_event_ext_on_samples,
+   finite_conditional_prob_complement, Stdlib.List.map_map/map_ext_in,
+   fold_right, Stdlib.Lra and Stdlib.Reals.
+   Boundary: This does not derive mutual independence from
+   pairwise independence or prove any empirical distributional
+   model, and it is restricted to enumerated finite outcome masses.
+   *)
+  Theorem finite_conditional_union_complement_chain_product :
+    forall weights samples (events : list Event) given,
+      0 < finite_prob weights samples given ->
+      finite_conditional_prefix_independent weights samples
+        (map (fun event : Event => fun x => negb (event x)) events)
+        given ->
+      finite_conditional_prob weights samples
+        (any_event events) given =
+      1 - fold_right Rmult 1
+        (map (fun event =>
+          1 - finite_conditional_prob weights samples event given)
+          events).
+  Proof.
+    intros weights samples events given Hpositive Hchain.
+    pose proof (finite_conditional_prob_complement weights samples
+      (any_event events) given Hpositive) as Hpartition.
+    pose proof (finite_conditional_all_events_product weights samples
+      (map (fun event : Event => fun x => negb (event x)) events)
+      given Hpositive Hchain) as Hproduct.
+    assert (HdeMorgan :
+      finite_conditional_prob weights samples
+        (all_events (map (fun event : Event =>
+          fun x => negb (event x)) events)) given =
+      finite_conditional_prob weights samples
+        (fun x => negb (any_event events x)) given).
+    {
+      apply finite_conditional_prob_event_ext_on_samples.
+      intros x _.
+      apply all_negated_events_eq_negated_any.
+    }
+    rewrite HdeMorgan in Hproduct.
+    rewrite map_map in Hproduct.
+    change
+      (finite_conditional_prob weights samples
+        (fun x => negb (any_event events x)) given =
+       fold_right Rmult 1
+         (map (fun event : Event =>
+           finite_conditional_prob weights samples
+             (fun x => negb (event x)) given) events)) in Hproduct.
+    assert (Hmap :
+      map (fun event : Event =>
+        finite_conditional_prob weights samples
+          (fun x => negb (event x)) given) events =
+      map (fun event : Event =>
+        1 - finite_conditional_prob weights samples event given) events).
+    {
+      apply map_ext_in.
+      intros event _.
+      pose proof (finite_conditional_prob_complement weights samples
+        event given Hpositive) as Hevent.
+      lra.
+    }
+    rewrite Hmap in Hproduct.
+    lra.
+  Qed.
+
+  (**
+   [finite_conditional_nonempty_union_complement_chain_product]
+   (theorem) — Finite union product with positivity deduced from
+   a nonempty family of complementary independence assumptions.
+   Mathematical meaning: For a nonempty list of candidate events,
+   the existing chain-factorization assumptions on their complements
+   also guarantee that the common conditioning denominator is
+   positive, so the union product formula needs no separate
+   positivity hypothesis.
+   Exact checked proposition: If the complement map of
+   (first :: rest) satisfies finite_conditional_prefix_independent,
+   then conditional(any_event (first :: rest) | given)
+   equals one minus the product of 1 - conditional(event | given)
+   for the full nonempty event list.
+   Premises and side conditions: The chain refers to the complement
+   of every candidate under the same given selector. It is stronger
+   than pairwise independence and forces strict positivity only
+   because the mapped family is nonempty; samples may repeat.
+   Proof/definition method: Apply the general complement-chain union
+   formula, obtaining the required positive denominator from the
+   first independence conjunct via the existing nonempty-chain lemma.
+   Library reuse: finite_conditional_union_complement_chain_product,
+   finite_conditional_prefix_independent_cons_positive and
+   Stdlib.List.map; no extra Boolean induction or product algebra.
+   Boundary: Exact finite conditional identity only; the claimed
+   factorization must still be verified or separately assumed in
+   any application with real sample data.
+   *)
+  Theorem finite_conditional_nonempty_union_complement_chain_product :
+    forall weights samples (first : Event) (rest : list Event) given,
+      finite_conditional_prefix_independent weights samples
+        (map (fun event : Event => fun x => negb (event x))
+          (first :: rest)) given ->
+      finite_conditional_prob weights samples
+        (any_event (first :: rest)) given =
+      1 - fold_right Rmult 1
+        (map (fun event =>
+          1 - finite_conditional_prob weights samples event given)
+          (first :: rest)).
+  Proof.
+    intros weights samples first rest given Hchain.
+    apply finite_conditional_union_complement_chain_product.
+    - apply (finite_conditional_prefix_independent_cons_positive
+        weights samples (fun x => negb (first x))
+        (map (fun event : Event => fun x => negb (event x)) rest)
+        given).
+      exact Hchain.
+    - exact Hchain.
+  Qed.
+
 End FiniteOutcomeSpace.
 
 (* The inequalities remain valid for a list with repeated sample points;

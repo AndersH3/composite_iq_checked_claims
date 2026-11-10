@@ -1812,6 +1812,20 @@ The three-event-family wrapper now invokes the earlier general
 `finite_conditional_three_event_product` rather than repeating
 the same factorization rewrites.
 
+## Complement-chain finite union formula from verified general laws
+
+The standard `Stdlib.List.map`, `forallb` and `existsb`
+represent complement families, intersections and unions; a
+short De Morgan bridge uses `Stdlib.Bool.negb_orb`.
+The arbitrary conditional union product delegates to the
+already kernel-checked arbitrary-list conditional intersection
+product theorem, `Stdlib.List.map_map` and `map_ext_in`,
+plus the existing complement-sum identity. There is no new
+probability recursion, custom real product, independent-family
+axiom or assumption that pairwise independence implies mutual
+independence. A nonempty complement chain provides its own
+positive denominator through the previously checked projection.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **630 proof scripts** in seven
+for the two reports. **633 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **627 public claims, 630 proof scripts,
-693 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **630 public claims, 633 proof scripts,
+696 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **627 public claims,
-630 proof scripts, 693 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **630 public claims,
+633 proof scripts, 696 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2425,6 +2425,27 @@ delegates to the already checked `finite_conditional_three_event_product`
 after the standard Boolean associativity rewrite. This removes
 duplicated factorization algebra without weakening or changing either
 theorem's statement or hierarchical independence requirements.
+
+### Arbitrary finite conditional union from complement-family independence
+
+`all_negated_events_eq_negated_any` proves the pointwise
+Boolean De Morgan bridge between `Stdlib.List.forallb` on
+pointwise complements and `Stdlib.List.existsb` on the
+original family. The proof uses the standard `negb_orb` lemma.
+
+`finite_conditional_union_complement_chain_product` applies
+the pre-existing arbitrary-list conditional intersection product
+to this complement list, and transports each complement mass via
+the already checked conditional complement identity, obtaining
+
+`P(A_1 ∪ ... ∪ A_n | G) = 1 - ∏_(i=1)^n (1 - P(A_i | G))`.
+
+The explicit premise is **suffix conditional factorization of the
+complementary events**; pairwise independence alone is not asserted
+to suffice. The empty-list case has a separate positive-denominator
+premise, while the nonempty corollary derives that premise from
+the first independence assertion. No new finite-sum or real-product
+implementation is introduced: products use `Stdlib.List.fold_right`.
 
 ## Research extensions
 
