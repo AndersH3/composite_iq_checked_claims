@@ -880,10 +880,12 @@ Proof.
   - intro Hequal.
     assert (Hzero : finite_sum (fun x => g x - f x) xs = 0).
     { rewrite finite_sum_sub; lra. }
-    apply (proj1 (finite_sum_nonnegative_zero_iff
-      xs (fun x => g x - f x) Hnonnegative)) in Hzero.
+    pose proof
+      ((proj1 (finite_sum_nonnegative_zero_iff
+        xs (fun y => g y - f y) Hnonnegative)) Hzero)
+      as Hzero_at_member.
     intros x Hx.
-    specialize (Hzero x Hx).
+    specialize (Hzero_at_member x Hx).
     lra.
   - intro Hpointwise.
     assert (Hzero : finite_sum (fun x => g x - f x) xs = 0).
@@ -936,9 +938,11 @@ Proof.
   - intro Hstrict.
     assert (Hpositive : 0 < finite_sum (fun x => g x - f x) xs).
     { rewrite finite_sum_sub; lra. }
-    apply (proj1 (finite_sum_positive_iff_positive_member
-      xs (fun x => g x - f x) Hnonnegative)) in Hpositive.
-    destruct Hpositive as [x [Hx Hdiff]].
+    pose proof
+      ((proj1 (finite_sum_positive_iff_positive_member
+        xs (fun y => g y - f y) Hnonnegative)) Hpositive)
+      as Hpositive_at_member.
+    destruct Hpositive_at_member as [x [Hx Hdiff]].
     exists x; split; [exact Hx | lra].
   - intros [x [Hx Hstrict]].
     exact (finite_sum_strict_monotone_at_member
