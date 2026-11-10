@@ -101,9 +101,16 @@ def validate_calculations(path):
         raise ValueError("Unexpected threshold table row labels")
     q = float(norm.isf(1e-6))
     max_error = 0.0
+    # The exact label sequence above is already validated against COUNTS.
+    # Build the variance map only from these known-positive integer counts,
+    # so neither runtime code nor the Deal linter passes Optional[int] into
+    # _positive_ratio's strictly positive denominator contract.
+    variance_factors = {str(count): .6 + _positive_ratio(.4, count)
+                        for count in COUNTS}
+    variance_factors["infinity"] = .6
     for row in rows:
         n = None if row["tests"] == "infinity" else int(row["tests"])
-        factor = .6 if n is None else .6 + _positive_ratio(.4, n)
+        factor = variance_factors[row["tests"]]
         z = q * math.sqrt(factor)
         for field, expected in (("variance_factor", factor), ("mean_z", z),
                                 ("mean_score_sd16", 100 + 16*z)):
