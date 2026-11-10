@@ -1912,6 +1912,18 @@ another proof about list-matrix multiplication or vector
 index arithmetic. This is a support-witness bridge for
 later rank/kernel statements, not a spectral library replacement.
 
+## Full typed positive-definiteness from supported deviations
+
+The existing indexed positive-definiteness predicate quantifies
+over every nonzero `Vector.t R (length basis)`. The constructive
+positive-quadratic iff is now lifted through that predicate,
+producing an actual positive-weight sampled deviation witness
+for each nonzero direction without computing matrix entries.
+The proof is a direct logical consequence of reusable checked
+lemmas; future finite rank theorems still require an actual
+linear-map/dimension library bridge rather than another
+independent handwritten matrix library.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

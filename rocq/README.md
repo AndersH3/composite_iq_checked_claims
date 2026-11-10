@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **653 proof scripts** in seven
+for the two reports. **654 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **650 public claims, 653 proof scripts,
-716 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **651 public claims, 654 proof scripts,
+717 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **650 public claims,
-653 proof scripts, 716 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **651 public claims,
+654 proof scripts, 717 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2579,6 +2579,23 @@ any `Vector.t R (length basis)` coefficient direction by
 positive-weight sampled deviation. This is useful evidence
 for later kernel and rank reasoning but **does not yet
 compute rank or prove a rank-nullity dimension formula**.
+
+### Positive definiteness through constructive support separation
+
+`indexed_basis_covariance_positive_definite_iff_all_nonzero_supported_deviations`
+lifts the previous typed quadratic positivity iff pointwise
+to **all nonzero coefficient directions**. For normalized
+nonnegative weights, a covariance basis is positive definite
+precisely when each nonzero typed linear combination deviates
+from its finite mean on some *actual positive-weight sampled
+outcome*. The proof invokes the already checked quadratic
+support-witness iff and does not introduce a matrix implementation,
+rank function or classical-existence assumption.
+
+The result is a constructive bridge toward finite covariance
+kernel and rank questions. A dimension or numerical eigenvalue
+claim would still require a separately checked linear-algebra
+formalization with its own explicit assumptions.
 
 ## Research extensions
 

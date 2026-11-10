@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **650 public theorem/lemma/example claims**, plus
+The current branch has **651 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**653 proof scripts** across seven Rocq modules. The claims and scripts
+**654 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -815,7 +815,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 244 proof scripts
+## FiniteMoments.v — 245 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1063,6 +1063,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_not_positive_definite_of_nonzero_zero_quadratic` (theorem) | Use existing positive-definite iff no nonzero quadratic zeros to refute positive definiteness | indexed_basis_covariance_positive_definite_iff_no_nonzero_zero_quadratic | **New:** An explicit nonzero zero-quadratic coefficient vector refutes typed covariance positive definiteness |
 | `variance_positive_iff_exists_positive_weight_deviation` (theorem) | Generic constructive positive finite-sum witness applied to weighted squared deviations | centered_second_moment_identity, FiniteSum.finite_sum_positive_iff_positive_member, Stdlib.Reals.Rle_0_sqr/Rmult_lt_0_compat, Lra/Psatz | **New:** strictly positive variance iff a listed positive-weight sample deviates from its expectation |
 | `indexed_basis_covariance_quadratic_positive_iff_supported_deviation` (theorem) | Transfer generic positive variance witness through an existing typed quadratic/variance equality | indexed_basis_covariance_quadratic_as_variance, variance_positive_iff_exists_positive_weight_deviation, Stdlib.Vector.to_list | **New:** positive typed covariance quadratic iff a listed positive-weight composite score deviates from its mean |
+| `indexed_basis_covariance_positive_definite_iff_all_nonzero_supported_deviations` (theorem) | Pointwise lifting of constructive positive quadratic iff to every nonzero typed vector | indexed_basis_covariance_quadratic_positive_iff_supported_deviation, indexed_basis_covariance_positive_definite, Stdlib.Vector.to_list, Stdlib.List.repeat | **New:** positive definiteness iff every nonzero direction has a real enumerated positive-weight deviation witness |
+
 
 
 ## FiniteBridge.v — 37 proof scripts

@@ -8283,4 +8283,70 @@ Section FiniteProbabilityMoments.
       assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_all_nonzero_supported_deviations]
+   (theorem) — Positive definiteness as a constructive
+   positive-weight sample-separation condition on every
+   nonzero typed coefficient direction.
+   Mathematical meaning: For normalized nonnegative finite
+   weights, the covariance quadratic is positive for all
+   nonzero coefficient vectors precisely when each such vector
+   produces a composite basis score that differs from its own
+   finite mean on some positively weighted sampled outcome.
+   Exact checked proposition: Under total_mass=1 and weight>=0
+   on samples, indexed_basis_covariance_positive_definite basis
+   iff for every coefficients : Vector.t R (length basis)
+   with Vector.to_list coefficients <> repeat 0 (length basis),
+   there exists x in samples with weight x>0 and
+   weighted_basis_sum coefficient_list basis x <>
+   expect (weighted_basis_sum coefficient_list basis).
+   Premises and side conditions: The coefficient vector's
+   length is enforced by Stdlib.Vector.t, and positive
+   definiteness still ranges over *all nonzero* directions.
+   This proposition allows empty or repeated sample/basis
+   elements; its truth depends on the specified finite weights.
+   It assumes neither a Gaussian population nor independence
+   among the basis scores.
+   Proof/definition method: Unfold the maintained typed
+   positive-definiteness predicate. For each nonzero
+   coefficient vector, apply the previously checked
+   constructive iff between positive covariance quadratic
+   and an actual positive-weight score-deviation witness.
+   The same fixed coefficients are preserved in both
+   directions, with no new matrix or rank algorithm.
+   Library reuse:
+   indexed_basis_covariance_quadratic_positive_iff_supported_deviation,
+   indexed_basis_covariance_positive_definite,
+   Stdlib.Vectors.Vector.to_list and Stdlib.List.repeat.
+   Boundary: This characterizes strict finite covariance
+   curvature by sampled witnesses; it is not a numerical
+   rank computation, spectral decomposition, or rank-nullity
+   dimension theorem.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_all_nonzero_supported_deviations :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         exists x, In x samples /\ 0 < weight x /\
+           weighted_basis_sum (Vector.to_list coefficients) basis x <>
+           expect (weighted_basis_sum
+             (Vector.to_list coefficients) basis)).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_covariance_positive_definite.
+    split; intros Hproperty coefficients Hnonzero.
+    - apply (proj1
+        (indexed_basis_covariance_quadratic_positive_iff_supported_deviation
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+    - apply (proj2
+        (indexed_basis_covariance_quadratic_positive_iff_supported_deviation
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+  Qed.
+
 End FiniteProbabilityMoments.
