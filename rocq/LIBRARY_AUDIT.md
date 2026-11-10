@@ -1951,6 +1951,19 @@ kernel characterization. This reduces the later rank problem
 to an explicitly zero-sum finite evaluation family, but
 makes no unproved assertion about dimension or linearity.
 
+## Constructive detection of nonzero centered sample evaluations
+
+The strict positivity of the covariance quadratic is
+translated to a concrete nonzero centered evaluation by
+reusing the existing positive-weight deviation witness.
+The converse is the maintained positive-semidefinite bound
+plus the previously checked exact centered-evaluation kernel
+criterion; the proof requires neither matrix diagonalization
+nor a new numerical rank algorithm. Lifting this to the
+already defined positive-definite predicate gives a
+finite observational detection criterion for every
+nonzero typed direction.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

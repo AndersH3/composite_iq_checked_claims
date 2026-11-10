@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **657 public theorem/lemma/example claims**, plus
+The current branch has **659 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**660 proof scripts** across seven Rocq modules. The claims and scripts
+**662 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -815,7 +815,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 251 proof scripts
+## FiniteMoments.v — 253 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1070,6 +1070,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_weighted_score_sum_zero` (theorem) | Identify centered weighted finite sum as existing centered expectation and apply earlier result | centered_score_has_zero_expectation, FiniteSum.finite_sum | **New:** centered weighted sample evaluation lies in exact zero-sum hyperplane when mass=1 |
 | `indexed_basis_centered_weighted_score_nonnegative_implies_quadratic_zero` (theorem) | Generic finite nonnegative-zero sum criterion plus centered kernel equivalence | FiniteSum.finite_sum_nonnegative_zero_iff, indexed_basis_centered_weighted_score_sum_zero, indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero | **New:** all nonnegative centered evaluations force a null covariance direction |
 | `indexed_basis_centered_weighted_score_nonpositive_implies_quadratic_zero` (theorem) | Negate sample evaluations using the maintained sum-negation theorem then apply generic nonnegative-zero iff | FiniteSum.finite_sum_neg, FiniteSum.finite_sum_nonnegative_zero_iff, indexed_basis_centered_weighted_score_sum_zero, indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero | **New:** all nonpositive centered evaluations likewise force covariance nullity |
+| `indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample` (theorem) | Positive-score witness gives nonzero centered product; reverse uses quadratic PSD and zero-kernel iff | indexed_basis_covariance_quadratic_positive_iff_supported_deviation, indexed_basis_covariance_quadratic_nonnegative, indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero, Stdlib.Rmult_integral | **New:** positive quadratic iff some sampled centered weighted evaluation is nonzero |
+| `indexed_basis_covariance_positive_definite_iff_every_nonzero_direction_detected` (theorem) | Pointwise lift of the constructive nonzero centered evaluation iff to each nonzero typed vector | indexed_basis_covariance_positive_definite, indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample | **New:** positive definite iff every nonzero typed direction has a detecting sampled evaluation |
+
 
 
 

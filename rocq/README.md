@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **660 proof scripts** in seven
+for the two reports. **662 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -2305,8 +2305,8 @@ independent two-event union proof. It parallels the already checked
 `all_events_pair` helper and reuses only maintained Rocq 9.2
 standard-library operations.
 
-Current intended inventory: **657 public claims, 660 proof scripts,
-724 documented declarations** across seven modules, subject to CI.
+Current intended inventory: **659 public claims, 662 proof scripts,
+726 documented declarations** across seven modules, subject to CI.
 
 ## Generic positive finite sums and strict monotonicity (9 November 2026)
 
@@ -2325,8 +2325,8 @@ admitted proofs. The new statements require their explicit
 support-membership and sign/order hypotheses. Multiplicities of
 repeated sample entries are retained.
 
-Inventory after these generic sum additions and strict event bounds: **657 public claims,
-660 proof scripts, 724 documented declarations** across seven
+Inventory after these generic sum additions and strict event bounds: **659 public claims,
+662 proof scripts, 726 documented declarations** across seven
 Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
 and source-documentation audits.
 
@@ -2644,6 +2644,24 @@ Geometrically, this is the explicit zero-total constraint
 needed before constructing a finite-dimensional centered
 evaluation linear map. No codomain dimension, covariance
 rank bound, or rank-nullity theorem is claimed yet.
+
+### Detecting nonnull covariance directions by sampled evaluations
+
+`indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample`
+characterizes strictly positive indexed covariance quadratic
+curvature by an actual sample where the existing weighted
+centered score is nonzero. Its forward direction reuses the
+constructive supported-deviation witness, and its backward
+direction uses the maintained positive-semidefinite bound
+and zero-evaluation kernel iff. Both directions retain
+normalized nonnegative sample assumptions.
+
+`indexed_basis_covariance_positive_definite_iff_every_nonzero_direction_detected`
+lifts the result to all nonzero typed coefficient vectors.
+Together with the zero-sum image and row-kernel bridge,
+this supplies a concrete input-to-observation interface
+for subsequent dimension/rank work, without treating
+the interface itself as a full linear-map/rank theorem.
 
 ## Research extensions
 

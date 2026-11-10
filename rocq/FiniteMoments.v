@@ -8728,4 +8728,133 @@ Section FiniteProbabilityMoments.
     lra.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample]
+   (theorem) — Constructive detection of strictly positive
+   covariance curvature by one nonzero centered weighted sample.
+   Mathematical meaning: In a normalized nonnegative finite
+   sample, an indexed covariance quadratic is strictly positive
+   precisely when there exists an actual sampled outcome where
+   the associated centered weighted composite score is nonzero.
+   Exact checked proposition: Under total_mass=1 and nonnegative
+   sample weights, Q(basis,coefficients)>0 iff there exists x
+   with In x samples and
+   indexed_basis_centered_weighted_score basis coefficients x <> 0.
+   Premises and side conditions: The coefficient length equals
+   length basis by its Vector.t type. The sample or basis may
+   contain repeated entries and weights may vanish; no
+   Gaussian, independence or nonsingular-matrix premise appears.
+   Proof/definition method: For strict positivity, extract the
+   known positive-weight sample deviation witness and show its
+   weighted product cannot vanish using the standard real
+   zero-product lemma. Conversely use existing covariance
+   quadratic nonnegativity and the centered sample evaluation
+   zero-kernel equivalence to rule out zero quadratic when an
+   actual sample evaluation is nonzero.
+   Library reuse:
+   indexed_basis_covariance_quadratic_positive_iff_supported_deviation,
+   indexed_basis_covariance_quadratic_nonnegative,
+   indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero,
+   Stdlib.Reals.Rmult_integral and Stdlib.Lra.
+   Boundary: This is strict positivity for one coefficient
+   direction; it does not compute a full covariance matrix rank.
+   *)
+  Theorem indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_quadratic_form basis coefficients <->
+       exists x, In x samples /\
+         indexed_basis_centered_weighted_score
+           basis coefficients x <> 0).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    split.
+    - intros Hpositive.
+      destruct ((proj1
+        (indexed_basis_covariance_quadratic_positive_iff_supported_deviation
+          basis coefficients Hmass Hw)) Hpositive)
+        as [x [Hx [Hweight Hdeviation]]].
+      exists x; split.
+      + exact Hx.
+      + unfold indexed_basis_centered_weighted_score.
+        intro Hzero.
+        apply Rmult_integral in Hzero.
+        destruct Hzero as [Hweight_zero | Hcenter_zero].
+        * lra.
+        * apply Hdeviation; lra.
+    - intros [x [Hx Hnonzero]].
+      assert (Hnonnegative :
+        0 <= indexed_basis_covariance_quadratic_form
+          basis coefficients).
+      { apply indexed_basis_covariance_quadratic_nonnegative;
+          assumption. }
+      assert (Hquadratic_nonzero :
+        indexed_basis_covariance_quadratic_form
+          basis coefficients <> 0).
+      { intro Hquadratic_zero.
+        apply Hnonzero.
+        apply ((proj1
+          (indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero
+            basis coefficients Hmass Hw))
+          Hquadratic_zero x Hx). }
+      lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_every_nonzero_direction_detected]
+   (theorem) — Positive definiteness as a constructive detection
+   property of the finite centered sample evaluation operator.
+   Mathematical meaning: A normalized nonnegative finite
+   covariance basis is positive definite precisely when every
+   nonzero dimension-correct real coefficient vector has an
+   actual sampled outcome where its centered weighted
+   composite evaluation differs from zero.
+   Exact checked proposition: For total_mass=1 and sampled
+   weight>=0, indexed_basis_covariance_positive_definite basis
+   iff forall coefficients:Vector.t R(length basis), a nonzero
+   Vector.to_list coefficient list entails existence of x with
+   In x samples and centered_weighted_score basis coefficients x<>0.
+   Premises and side conditions: Nonzeroness uses the maintained
+   comparison with repeat 0 (length basis). The statement
+   does not require individual strictly positive weights,
+   independent scores or Gaussian factors; empty bases are
+   handled by the typed quantification.
+   Proof/definition method: Unfold the existing positive-definite
+   predicate and specialize the immediately preceding
+   constructive positive quadratic iff to each nonzero
+   typed coefficient vector. No fresh matrix calculations
+   or additional finite-sample traversal are introduced.
+   Library reuse:
+   indexed_basis_covariance_positive_definite,
+   indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample,
+   Stdlib.Vectors.Vector.to_list and Stdlib.List.repeat.
+   Boundary: This is an exact kernel-detection theorem,
+   not a certified dimension count or rank-nullity formula.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_every_nonzero_direction_detected :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         exists x, In x samples /\
+           indexed_basis_centered_weighted_score
+             basis coefficients x <> 0).
+  Proof.
+    intros basis Hmass Hw.
+    unfold indexed_basis_covariance_positive_definite.
+    split; intros Hproperty coefficients Hnonzero.
+    - apply (proj1
+        (indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+    - apply (proj2
+        (indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample
+          basis coefficients Hmass Hw)).
+      apply Hproperty; exact Hnonzero.
+  Qed.
+
 End FiniteProbabilityMoments.
