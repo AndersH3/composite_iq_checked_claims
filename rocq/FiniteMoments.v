@@ -11942,10 +11942,12 @@ Section FiniteProbabilityMoments.
     split.
     - intros Hquadratic right.
       unfold indexed_basis_covariance_bilinear_form.
-      apply (proj1
-        (indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score
-          basis coefficients Hmass Hw)) in Hquadratic.
-      apply Hquadratic.
+      exact
+        ((proj1
+          (indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score
+            basis coefficients Hmass Hw))
+          Hquadratic
+          (weighted_basis_sum (Vector.to_list right) basis)).
     - intros Hradical.
       specialize (Hradical coefficients).
       rewrite (indexed_basis_covariance_bilinear_diagonal
