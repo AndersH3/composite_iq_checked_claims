@@ -2094,6 +2094,18 @@ reimplements vector equality, sample iteration, a quadratic form, or
 finite probability. Existing normalized-weight restrictions remain
 attached only to covariance bridges, not this purely algebraic map.
 
+## Full-output sample vector linearity and covariance kernel
+
+Whole-vector scaling and addition are now proved using the maintained
+`Stdlib.Vectors.VectorSpec.eq_nth_iff` coordinate equality criterion
+and `nth_map`/`nth_map2`, reducing directly to existing sample
+coordinate linearity. The concrete output-zero kernel criterion
+transports the prior covariance quadratic-nullity and positive-definite
+characterizations, without restating or recomputing the covariance
+matrix. This makes the algebraic input/output dimensions explicit
+while preserving the boundary that no general linear-algebra rank
+infrastructure is implemented or claimed.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

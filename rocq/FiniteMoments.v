@@ -10494,4 +10494,205 @@ Section FiniteProbabilityMoments.
       apply Hcoordinates.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_sample_vector_scale] (theorem) —
+   Real scalar homogeneity of the complete typed sample-output vector.
+   Mathematical meaning: Scaling a coefficient direction by a real
+   number scales the entire vector of centered weighted sample scores
+   coordinatewise by that same number.
+   Exact checked proposition: For basis and coefficients typed at
+   length basis and scalar a, indexed_basis_centered_sample_vector
+   basis (Vector.map (fun c => a * c) coefficients) equals
+   Vector.map (fun y => a * y)
+     (indexed_basis_centered_sample_vector basis coefficients).
+   Premises and side conditions: Both output vectors have length
+   samples. No mass normalization, sign restriction on weights,
+   nonempty-list assumption, or nonzero-scalar restriction is used.
+   Proof/definition method: Invoke the maintained vector equality
+   criterion VectorSpec.eq_nth_iff, unfold every output coordinate
+   with indexed_basis_centered_sample_vector_nth and VectorSpec.nth_map,
+   then apply the already-checked indexed sample scalar homogeneity.
+   Library reuse: Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map,
+   indexed_basis_centered_sample_vector_nth,
+   indexed_basis_centered_sample_evaluation_scale.
+   Boundary: Proves the scalar-linear law for the concrete vector map,
+   not a spectral rank result or a packaged linear-map structure.
+   *)
+  Theorem indexed_basis_centered_sample_vector_scale :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      indexed_basis_centered_sample_vector
+        basis (Vector.map (fun c => a * c) coefficients) =
+      Vector.map (fun y => a * y)
+        (indexed_basis_centered_sample_vector basis coefficients).
+  Proof.
+    intros basis coefficients a.
+    apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
+      (indexed_basis_centered_sample_vector
+        basis (Vector.map (fun c => a * c) coefficients))
+      (Vector.map (fun y => a * y)
+        (indexed_basis_centered_sample_vector basis coefficients)))).
+    intros i j Hij.
+    subst j.
+    rewrite (indexed_basis_centered_sample_vector_nth
+      basis (Vector.map (fun c => a * c) coefficients) i).
+    rewrite (VectorSpec.nth_map (fun y => a * y)
+      (indexed_basis_centered_sample_vector basis coefficients)
+      i i eq_refl).
+    rewrite (indexed_basis_centered_sample_vector_nth
+      basis coefficients i).
+    apply indexed_basis_centered_sample_evaluation_scale.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_add] (theorem) —
+   Additivity of the complete centered finite sample-output vector.
+   Mathematical meaning: The vector of centered weighted evaluations
+   for the componentwise sum of two coefficient directions equals
+   the componentwise sum of their two output vectors.
+   Exact checked proposition: For left and right coefficient vectors
+   each indexed by length basis, the output at Vector.map2 Rplus
+   left right equals Vector.map2 Rplus of the respective full
+   indexed_basis_centered_sample_vector outputs.
+   Premises and side conditions: Both output dimensions are
+   length samples regardless of the basis length; score and
+   probability weights may be signed, and repeated samples
+   are allowed. No normalization or independence assumption.
+   Proof/definition method: Use standard VectorSpec.eq_nth_iff
+   for equality of two output vectors, VectorSpec.nth_map2 to
+   expose the componentwise sum at any bounded index, and the
+   existing coordinate additivity theorem to finish directly.
+   Library reuse: Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map2,
+   indexed_basis_centered_sample_vector_nth,
+   indexed_basis_centered_sample_evaluation_add.
+   Boundary: A vector-to-vector additivity theorem; there is
+   still no certified nullity dimension or rank formula.
+   *)
+  Theorem indexed_basis_centered_sample_vector_add :
+    forall basis (left right : Vector.t R (length basis)),
+      indexed_basis_centered_sample_vector
+        basis (Vector.map2 Rplus left right) =
+      Vector.map2 Rplus
+        (indexed_basis_centered_sample_vector basis left)
+        (indexed_basis_centered_sample_vector basis right).
+  Proof.
+    intros basis left right.
+    apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
+      (indexed_basis_centered_sample_vector
+        basis (Vector.map2 Rplus left right))
+      (Vector.map2 Rplus
+        (indexed_basis_centered_sample_vector basis left)
+        (indexed_basis_centered_sample_vector basis right)))).
+    intros i j Hij.
+    subst j.
+    rewrite (indexed_basis_centered_sample_vector_nth
+      basis (Vector.map2 Rplus left right) i).
+    rewrite (VectorSpec.nth_map2 Rplus
+      (indexed_basis_centered_sample_vector basis left)
+      (indexed_basis_centered_sample_vector basis right)
+      i i i eq_refl eq_refl).
+    rewrite (indexed_basis_centered_sample_vector_nth
+      basis left i).
+    rewrite (indexed_basis_centered_sample_vector_nth
+      basis right i).
+    apply indexed_basis_centered_sample_evaluation_add.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero]
+   (theorem) — Quadratic covariance nullity as a zero output vector.
+   Mathematical meaning: A real coefficient direction produces a
+   zero finite covariance quadratic exactly when its entire typed
+   vector of centered weighted sample evaluations is the zero vector.
+   Exact checked proposition: If total_mass = 1 and the listed sample
+   weights are nonnegative, then the indexed covariance quadratic
+   form at coefficients equals zero iff indexed_basis_centered_sample_vector
+   basis coefficients = Vector.const 0 (length samples).
+   Premises and side conditions: The score basis may be dependent,
+   duplicate, or empty; sample and score dimensions are independent.
+   Nonnegative unit total mass is required for the earlier quadratic
+   zero-support criterion and is not silently inferred here.
+   Proof/definition method: Compose the previously proved covariance
+   quadratic iff named sample-kernel result with the new concrete
+   output-zero iff named sample-kernel result. No sum or covariance
+   matrix entry is expanded, and no extra positivity axiom is used.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel,
+   indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel,
+   Stdlib.Logic.tauto, Stdlib.Vectors.Vector.const.
+   Boundary: This is a finite exact nullspace result, not a rank,
+   spectral decomposition, or general continuous-probability theorem.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       indexed_basis_centered_sample_vector basis coefficients =
+         Vector.const 0 (length samples)).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof (indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel
+      basis coefficients Hmass Hw) as Hquadratic.
+    pose proof (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+      basis coefficients) as Houtput.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero]
+   (theorem) — Positive definiteness as zero-kernel injectivity
+   of the complete finite sample-output vector.
+   Mathematical meaning: The finite covariance quadratic is strictly
+   positive in every nonzero coefficient direction exactly when
+   no nonzero coefficient vector maps to the all-zero output vector.
+   Exact checked proposition: With unit total mass and
+   nonnegative listed weights, indexed_basis_covariance_positive_definite
+   basis iff, for every typed coefficients whose Vector.to_list
+   differs from repeat 0 (length basis), its entire output
+   indexed_basis_centered_sample_vector differs from
+   Vector.const 0 (length samples).
+   Premises and side conditions: No equality of sample/basis lengths
+   or Gaussian assumption is required. Empty lists and dependent
+   bases retain their formal semantics. The normalization and
+   nonnegative weights are explicit.
+   Proof/definition method: Unfold neither matrix nor score.
+   Transport the already checked positive-definite iff
+   named-sample-kernel-trivial criterion through the output-zero
+   iff named sample-kernel equivalence in both directions.
+   Library reuse:
+   indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial,
+   indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel,
+   Stdlib.Vectors.Vector.to_list/const and Stdlib.List.repeat.
+   Boundary: This characterizes injectivity of the concrete linear
+   evaluator via a kernel test but does not establish rank-nullity.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         indexed_basis_centered_sample_vector basis coefficients <>
+           Vector.const 0 (length samples)).
+  Proof.
+    intros basis Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial
+        basis Hmass Hw) as Hcriterion.
+    split.
+    - intros Hpositive coefficients Hnonzero Houtput.
+      apply ((proj1 Hcriterion) Hpositive coefficients Hnonzero).
+      apply (proj1 (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+        basis coefficients)).
+      exact Houtput.
+    - intros Hdetected.
+      apply (proj2 Hcriterion).
+      intros coefficients Hnonzero Hkernel.
+      apply (Hdetected coefficients Hnonzero).
+      apply (proj2 (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+        basis coefficients)).
+      exact Hkernel.
+  Qed.
+
 End FiniteProbabilityMoments.

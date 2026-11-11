@@ -2866,8 +2866,25 @@ bounded sample-kernel predicate holds, proved using the standard
 This is a concrete dimension-preserving representation bridge and
 not yet a library-packaged linear map or rank calculation.
 
-Current target inventory: **693 public claims, 696 proof scripts,
+Inventory for preceding typed output-vector bridge: **693 public claims, 696 proof scripts,
 764 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Real-linearity and covariance nullity of the full sample vector (11 November 2026)
+
+Two new checked `Vector.t` identities establish full-output real scalar
+homogeneity and componentwise additivity of the existing typed
+coefficient-to-sample-vector function. Rather than adding a second
+summation or vector-recursion implementation, each proof uses Rocq's
+standard `VectorSpec.eq_nth_iff` and `nth_map`/`nth_map2` laws,
+then delegates to the previously checked coordinate linearity results.
+Two further equivalences identify exact zero covariance quadratic form
+with an all-zero output vector, and positive definiteness with the
+absence of a nonzero coefficient vector mapping to the zero output.
+The latter characterizes injectivity through the kernel, but no
+finite-dimensional rank, nullity, or library linear-map record is claimed.
+
+Current target inventory: **697 public claims, 700 proof scripts,
+768 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

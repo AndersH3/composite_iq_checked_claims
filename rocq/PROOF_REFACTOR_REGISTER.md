@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 285 proof scripts
+## FiniteMoments.v — 289 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1106,6 +1106,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_quadratic_zero_iff_named_row_kernel` (theorem) | Propositional composition of named quadratic/sample and named row/sample iff | indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel, indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel | **New:** zero covariance quadratic iff named bounded covariance-row nullspace membership |
 | `indexed_basis_centered_sample_vector_nth` (theorem) | Unfold maintained vector wrapper; standard nth-of-Vector.map law | Stdlib.Vectors.VectorSpec.nth_map, indexed_basis_centered_sample_evaluation | **New:** full output vector has exactly the established bounded coordinates |
 | `indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel` (theorem) | Standard vector coordinate extensionality and constant-vector nth equality | Stdlib.Vectors.VectorSpec.eq_nth_iff/const_nth, indexed_basis_centered_sample_vector_nth | **New:** concrete sample-output vector equals zero iff named sample-kernel membership |
+| `indexed_basis_centered_sample_vector_scale` (theorem) | Vector coordinate equality via standard extensionality/nth-map and prior scalar law | VectorSpec.eq_nth_iff/nth_map, indexed_basis_centered_sample_vector_nth, indexed_basis_centered_sample_evaluation_scale | **New:** typed real output vector respects coefficient scalar multiplication |
+| `indexed_basis_centered_sample_vector_add` (theorem) | Vector coordinate equality and standard nth-map2, prior sample coordinate additivity | VectorSpec.eq_nth_iff/nth_map2, indexed_basis_centered_sample_vector_nth, indexed_basis_centered_sample_evaluation_add | **New:** concrete vector-to-vector evaluator is additive |
+| `indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero` (theorem) | Compose named quadratic-nullity and typed-output-zero equivalences | indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel, Stdlib.Logic.tauto | **New:** zero quadratic iff concrete sample output vector is zero |
+| `indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero` (theorem) | Transport named kernel triviality through concrete vector zero predicate | indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel | **New:** finite covariance positive-definiteness iff concrete typed evaluation detects every nonzero coefficient vector |
 
 
 ## FiniteBridge.v — 37 proof scripts
