@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **716 public theorem/lemma/example claims**, plus
+The current branch has **718 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**719 proof scripts** across seven Rocq modules. The claims and scripts
+**721 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 305 proof scripts
+## FiniteMoments.v — 307 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1130,6 +1130,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_quadratic_zero_nonzero_scale_iff` (theorem) | Compose scaled/unscaled quadratic-output bridges with checked sample-vector scale kernel iff | indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero, indexed_basis_centered_sample_vector_nonzero_scale_zero_iff, tauto | **New:** covariance quadratic nullity invariant under nonzero coefficient scale |
 | `indexed_basis_covariance_quadratic_scale` (theorem) | Full quadratic scaling through typed vector/list bridge and preexisting variance scaling | indexed_basis_covariance_quadratic_as_variance, VectorSpec.to_list_map, weighted_basis_sum_coefficients_scale, variance_extensional, variance_of_scaled_score | **New:** exact Q(a*c)=a^2 Q(c) without sign restrictions on sample weights |
 | `indexed_basis_covariance_quadratic_add_polarization` (theorem) | Full coefficient-vector additivity through shared weighted-score and variance-of-sum identities | indexed_basis_covariance_quadratic_as_variance, indexed_vector_to_list_map2_add, weighted_basis_sum_coefficients_zip_add, VectorSpec.length_to_list, variance_extensional, variance_of_two_score_sum | **New:** exact covariance quadratic polarization for two typed coefficient directions |
+| `indexed_basis_covariance_quadratic_nonzero_scale_zero_iff_unit_mass` (theorem) | Simplify exact quadratic homogeneity and use standard real zero-product splitting | indexed_basis_covariance_quadratic_scale, Reals.Rmult_integral, Ring | **New:** nonzero coefficient scaling preserves quadratic nullity even for signed normalized weights |
+| `indexed_basis_covariance_cross_cauchy_schwarz_squared` (theorem) | Replace typed quadratic by previously verified variance and instantiate the generic finite Cauchy-Schwarz inequality | indexed_basis_covariance_quadratic_as_variance, finite_covariance_cauchy_schwarz_squared | **New:** squared covariance of typed composite scores bounded by the product of their indexed quadratic values |
 
 
 ## FiniteBridge.v — 37 proof scripts

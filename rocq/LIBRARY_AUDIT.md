@@ -2192,6 +2192,21 @@ matrix representation, quadratic expansion, rank claim or proof
 axiom is added. Both identities preserve the explicit unit-mass
 assumption under which matrix quadratic and variance agree.
 
+## Signed-weight-safe quadratic kernel and typed Cauchy-Schwarz
+
+Exact quadratic homogeneity yields a strictly stronger nonzero
+coefficient-scaling kernel equivalence under unit mass alone, without
+the earlier theorem's unnecessary nonnegative-weight requirement.
+The proof uses only Rocq's standard real zero-product law and
+does not infer positive semidefiniteness from signed weights.
+
+The existing finite Cauchy-Schwarz result is reused directly for
+two coefficient-weighted composite-score functions. The two typed
+quadratic quantities on its right side are identified with the
+corresponding variances via the existing checked bridge. This
+adds an exact composite quadratic inequality without duplicating
+the generic discriminant or any matrix or vector machinery.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

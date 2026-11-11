@@ -2990,6 +2990,25 @@ Current target inventory: **716 public checked claims,
 719 proof scripts, 787 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 kernel CI.
 
+## Composite coefficient Cauchy-Schwarz and sign-free scale nullity (11 November 2026)
+
+Exact quadratic homogeneity now gives a nonzero scalar nullity iff
+with only normalized total mass, even when individual weights are
+signed. This strictly weakens the hypotheses of the earlier
+nonnegative-weight-specific kernel bridge while retaining it
+for backwards compatibility.
+
+A further theorem bounds squared covariance between two
+dimension-correct composite score functions by the product
+of their covariance quadratic values. The implementation
+delegates to the existing generic finite Cauchy-Schwarz
+theorem and quadratic-as-variance bridge, without any new
+discriminant, matrix, or summation proof.
+
+Current target inventory: **718 public checked claims,
+721 proof scripts, 789 documented declarations** over seven
+Rocq modules, pending Rocq 9.2 verification.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

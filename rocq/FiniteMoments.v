@@ -11407,4 +11407,95 @@ Section FiniteProbabilityMoments.
     - apply variance_of_two_score_sum.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_quadratic_nonzero_scale_zero_iff_unit_mass]
+   (theorem) — Signed-weight-safe invariance of quadratic nullity.
+   Mathematical meaning: For a normalized finite moment model,
+   multiplying a coefficient direction by a nonzero real scalar
+   cannot create or destroy a zero covariance quadratic, even
+   when some individual sample weights are negative.
+   Exact checked proposition: Under total_mass=1 and a<>0,
+   Q(Vector.map (fun c => a*c) coefficients)=0 iff Q(coefficients)=0.
+   Premises and side conditions: The only probability-related
+   requirement is unit total mass. No nonnegative weights,
+   nonempty sample list, basis independence or invertibility.
+   The coefficient vector is dimension-checked by Vector.t.
+   Proof/definition method: Rewrite using the stronger exact
+   quadratic homogeneity theorem. The standard Rmult_integral
+   zero-product criterion and nonzero scalar premise show
+   a*a cannot vanish; the reverse implication uses ring.
+   Library reuse: indexed_basis_covariance_quadratic_scale,
+   Stdlib.Reals.Rmult_integral and Stdlib.Ring.
+   Boundary: Exact algebraic nullity under unit mass, not an
+   assertion of positive semidefiniteness for signed weights.
+   *)
+  Theorem indexed_basis_covariance_quadratic_nonzero_scale_zero_iff_unit_mass :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      total_mass = 1 ->
+      a <> 0 ->
+      (indexed_basis_covariance_quadratic_form
+        basis (Vector.map (fun c => a * c) coefficients) = 0 <->
+       indexed_basis_covariance_quadratic_form basis coefficients = 0).
+  Proof.
+    intros basis coefficients a Hmass Ha.
+    rewrite (indexed_basis_covariance_quadratic_scale
+      basis coefficients a Hmass).
+    split.
+    - intro Hscaled.
+      apply Rmult_integral in Hscaled.
+      destruct Hscaled as [Hsquared | Hquadratic].
+      + apply Rmult_integral in Hsquared.
+        destruct Hsquared as [Hzero | Hzero]; contradiction.
+      + exact Hquadratic.
+    - intro Hzero.
+      rewrite Hzero.
+      ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_cross_cauchy_schwarz_squared]
+   (theorem) — Cauchy-Schwarz for two typed coefficient directions.
+   Mathematical meaning: The squared covariance of two composite
+   score functions is at most the product of their two associated
+   covariance quadratic values.
+   Exact checked proposition: With unit total mass and
+   nonnegative listed sample weights, Cov(S_left,S_right)^2
+   is bounded by Q(left)*Q(right), using multiplication rather
+   than a square-root formulation.
+   Premises and side conditions: Both coefficient directions
+   have type Vector.t R (length basis); the score basis can
+   be duplicated, dependent or empty. Nonnegative weights
+   and normalized mass are explicitly assumed. No strictly
+   positive covariance or basis independence is required.
+   Proof/definition method: Rewrite both typed quadratic values
+   using the checked indexed quadratic-as-variance bridge, then
+   apply the earlier finite covariance Cauchy-Schwarz theorem.
+   No new discriminant, inequality proof, summation or matrix.
+   Library reuse: indexed_basis_covariance_quadratic_as_variance,
+   finite_covariance_cauchy_schwarz_squared and Stdlib.Reals.
+   Boundary: An exact finite covariance inequality, not a
+   numeric covariance rank, condition number or Gaussian result.
+   *)
+  Theorem indexed_basis_covariance_cross_cauchy_schwarz_squared :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      covariance
+        (weighted_basis_sum (Vector.to_list left) basis)
+        (weighted_basis_sum (Vector.to_list right) basis) *
+      covariance
+        (weighted_basis_sum (Vector.to_list left) basis)
+        (weighted_basis_sum (Vector.to_list right) basis) <=
+      indexed_basis_covariance_quadratic_form basis left *
+      indexed_basis_covariance_quadratic_form basis right.
+  Proof.
+    intros basis left right Hmass Hw.
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis left Hmass).
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis right Hmass).
+    apply finite_covariance_cauchy_schwarz_squared; assumption.
+  Qed.
+
 End FiniteProbabilityMoments.
