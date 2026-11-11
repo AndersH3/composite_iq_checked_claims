@@ -2973,6 +2973,23 @@ Current target inventory: **714 public checked claims,
 717 proof scripts, 785 documented declarations** across seven
 Rocq modules, subject to Rocq 9.2 and documentation CI.
 
+## Exact typed covariance quadratic homogeneity and polarization (11 November 2026)
+
+The indexed coefficient-vector covariance quadratic now has
+two stronger checked interfaces under unit total sample mass:
+`Q(a*c)=a*a*Q(c)` for all real scalars and
+`Q(u+v)=Q(u)+Q(v)+2*Cov(score(u),score(v))`.
+These are composed from the existing vector/list transport
+and the checked variance scaling and sum formulas.
+They require no nonnegative sample weights or new custom
+matrix, vector or finite-sum implementation. Rank, kernel
+dimension, numerical covariance rank and Gaussian inferences
+are not claimed.
+
+Current target inventory: **716 public checked claims,
+719 proof scripts, 787 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 kernel CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

@@ -11300,4 +11300,111 @@ Section FiniteProbabilityMoments.
     tauto.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_quadratic_scale] (theorem) —
+   Exact quadratic homogeneity of typed covariance directions.
+   Mathematical meaning: Rescaling the coefficient direction by
+   a real scalar a rescales its covariance quadratic by a squared,
+   including a = 0 and signed a. No positivity condition is needed.
+   Exact checked proposition: If total_mass = 1, then the
+   indexed covariance quadratic of Vector.map (fun c => a*c)
+   coefficients equals (a*a) times the original quadratic value.
+   Premises and side conditions: The score basis and typed
+   coefficient vector have the same length. Only unit total
+   mass is assumed; sampled weights can have either sign, and
+   the basis may be empty, duplicated or linearly dependent.
+   Proof/definition method: Replace both quadratic forms by their
+   already checked variance representation, convert Vector.map
+   with the maintained VectorSpec.to_list_map law, and use the
+   generic coefficient-weighted score scaling identity.
+   Extensionality and the earlier variance-of-scaled-score law
+   finish the proof; there is no new matrix calculation.
+   Library reuse: indexed_basis_covariance_quadratic_as_variance,
+   VectorSpec.to_list_map, weighted_basis_sum_coefficients_scale,
+   variance_extensional and variance_of_scaled_score.
+   Boundary: An exact finite quadratic homogeneity identity,
+   not a general matrix rank or spectrum theorem.
+   *)
+  Theorem indexed_basis_covariance_quadratic_scale :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      total_mass = 1 ->
+      indexed_basis_covariance_quadratic_form
+        basis (Vector.map (fun c => a * c) coefficients) =
+      (a * a) *
+        indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients a Hmass.
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis (Vector.map (fun c => a * c) coefficients) Hmass).
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis coefficients Hmass).
+    rewrite VectorSpec.to_list_map.
+    transitivity
+      (variance (fun x => a *
+        weighted_basis_sum (Vector.to_list coefficients) basis x)).
+    - apply variance_extensional.
+      intro x.
+      apply weighted_basis_sum_coefficients_scale.
+    - apply variance_of_scaled_score.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_add_polarization] (theorem) —
+   Variance-of-sum identity for dimension-safe covariance directions.
+   Mathematical meaning: The quadratic value at a componentwise
+   sum of two coefficient directions is the sum of their own
+   quadratic values and twice the cross-covariance of their
+   original composite scores.
+   Exact checked proposition: Under total_mass = 1, quadratic
+   at Vector.map2 Rplus left right equals quadratic at left
+   plus quadratic at right plus 2 times covariance between
+   the corresponding weighted_basis_sum score functions.
+   Premises and side conditions: Both coefficient vectors have
+   type Vector.t R (length basis). No nonnegative weights,
+   independent scores, invertibility, or distinctness assumption
+   is required; empty dimensions are supported.
+   Proof/definition method: Reuse indexed_basis_covariance_quadratic_as_variance
+   and the maintained vector/list additivity bridge, then
+   apply the existing weighted composite score zip-add theorem.
+   The established variance_of_two_score_sum identity completes
+   the polarization. No bespoke covariance-matrix recursion.
+   Library reuse: indexed_basis_covariance_quadratic_as_variance,
+   indexed_vector_to_list_map2_add,
+   weighted_basis_sum_coefficients_zip_add,
+   VectorSpec.length_to_list, variance_extensional,
+   variance_of_two_score_sum and Stdlib.Reals.
+   Boundary: Quadratic polarization of the existing finite
+   model, not a rank-nullity, determinant or Gaussian theorem.
+   *)
+  Theorem indexed_basis_covariance_quadratic_add_polarization :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      indexed_basis_covariance_quadratic_form
+        basis (Vector.map2 Rplus left right) =
+      indexed_basis_covariance_quadratic_form basis left +
+      indexed_basis_covariance_quadratic_form basis right +
+      2 * covariance
+        (weighted_basis_sum (Vector.to_list left) basis)
+        (weighted_basis_sum (Vector.to_list right) basis).
+  Proof.
+    intros basis left right Hmass.
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis (Vector.map2 Rplus left right) Hmass).
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis left Hmass).
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      basis right Hmass).
+    rewrite indexed_vector_to_list_map2_add.
+    transitivity
+      (variance (fun x =>
+        weighted_basis_sum (Vector.to_list left) basis x +
+        weighted_basis_sum (Vector.to_list right) basis x)).
+    - apply variance_extensional.
+      intro x.
+      apply weighted_basis_sum_coefficients_zip_add.
+      now rewrite !VectorSpec.length_to_list.
+    - apply variance_of_two_score_sum.
+  Qed.
+
 End FiniteProbabilityMoments.

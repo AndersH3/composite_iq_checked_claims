@@ -2175,6 +2175,23 @@ The code reuses existing finite indexed vector equivalences and
 standard propositional reasoning, with no new sum, matrix, rank
 engine, axioms or empirical inference.
 
+## Exact indexed covariance quadratic scaling and polarization (11 November 2026)
+
+Two stronger algebraic identities now replace the need to infer
+only nullity invariance from the named kernel bridges. Exact
+quadratic homogeneity `Q(a*c) = a*a*Q(c)` is obtained from the
+existing unit-mass quadratic-as-variance lemma, `VectorSpec.to_list_map`,
+the weighted composite-score scaling identity, and the generic
+variance-of-scaled-score theorem. Signed sample weights remain allowed.
+
+The typed coefficient-addition polarization identity
+`Q(u+v)=Q(u)+Q(v)+2*Cov(score(u),score(v))` composes
+`indexed_vector_to_list_map2_add`, the shared coefficient zip-add
+score law, and `variance_of_two_score_sum`. No new sum induction,
+matrix representation, quadratic expansion, rank claim or proof
+axiom is added. Both identities preserve the explicit unit-mass
+assumption under which matrix quadratic and variance agree.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
