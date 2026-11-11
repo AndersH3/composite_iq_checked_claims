@@ -10695,4 +10695,136 @@ Section FiniteProbabilityMoments.
       exact Hkernel.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_sample_vector_to_list] (theorem) —
+   The standard vector-to-list representation preserves all sample entries.
+   Mathematical meaning: Converting the complete typed centered-sample
+   output vector to an ordinary list produces exactly the mapping of
+   the already checked centered weighted score over the original
+   sample list, retaining duplicates and their original order.
+   Exact checked proposition: For every basis and coefficient vector,
+   Vector.to_list (indexed_basis_centered_sample_vector basis coeff) =
+   map (indexed_basis_centered_weighted_score basis coeff) samples.
+   Premises and side conditions: The coefficient dimension is length
+   basis and the output dimension is length samples; arbitrary signed
+   sample weights, empty lists and duplicate occurrences are allowed.
+   No total-mass or probability positivity assumption is necessary.
+   Proof/definition method: Unfold the transparent output-vector
+   definition; apply the maintained VectorSpec.to_list_map and
+   VectorSpec.to_list_of_list_opp laws. No list recursion, custom
+   vector conversion or duplicated evaluator is introduced.
+   Library reuse: Stdlib.Vectors.VectorSpec.to_list_map/
+   to_list_of_list_opp and Stdlib.List.map.
+   Boundary: A representation identity, not a matrix rank theorem.
+   *)
+  Theorem indexed_basis_centered_sample_vector_to_list :
+    forall basis (coefficients : Vector.t R (length basis)),
+      Vector.to_list
+        (indexed_basis_centered_sample_vector basis coefficients) =
+      map (indexed_basis_centered_weighted_score
+        basis coefficients) samples.
+  Proof.
+    intros basis coefficients.
+    unfold indexed_basis_centered_sample_vector.
+    rewrite VectorSpec.to_list_map.
+    rewrite VectorSpec.to_list_of_list_opp.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
+   Every normalized centered sample-output vector has coordinate sum zero.
+   Mathematical meaning: Under total sample mass one, adding all
+   components of the centered weighted sample-evaluation vector
+   yields exactly zero. This linear constraint holds for every
+   coefficient direction and all finite score bases.
+   Exact checked proposition: If total_mass = 1, then
+   FiniteSum.finite_sum (fun y : R => y)
+     (Vector.to_list (indexed_basis_centered_sample_vector
+       basis coefficients)) = 0.
+   Premises and side conditions: Normalized total mass is required,
+   but sample weights need not be nonnegative; samples may repeat
+   and both basis and sample dimensions may be zero. Finite sums
+   count each occurrence without deduplication or normalization.
+   Proof/definition method: Use the preceding output-to-list
+   representation bridge and the generic FiniteSum.finite_sum_map
+   rule to reduce the claim to the already proved exact
+   indexed_basis_centered_weighted_score_sum_zero theorem.
+   No new centering calculation, list induction or matrix operation.
+   Library reuse: indexed_basis_centered_sample_vector_to_list,
+   FiniteSum.finite_sum_map,
+   indexed_basis_centered_weighted_score_sum_zero.
+   Boundary: A verified zero-sum image constraint, not a proved
+   image-dimension bound, rank-nullity or covariance rank formula.
+   *)
+  Theorem indexed_basis_centered_sample_vector_sum_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      FiniteSum.finite_sum (fun y : R => y)
+        (Vector.to_list
+          (indexed_basis_centered_sample_vector basis coefficients)) = 0.
+  Proof.
+    intros basis coefficients Hmass.
+    rewrite indexed_basis_centered_sample_vector_to_list.
+    rewrite FiniteSum.finite_sum_map.
+    change
+      (FiniteSum.finite_sum
+        (indexed_basis_centered_weighted_score basis coefficients)
+        samples = 0).
+    apply indexed_basis_centered_weighted_score_sum_zero.
+    exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_single_sample_zero]
+   (theorem) — A normalized sample with exactly one listed outcome
+   has no nonzero centered sample-output direction.
+   Mathematical meaning: When the finite sample list has one
+   occurrence and total mass one, every centered weighted composite
+   score evaluates to zero at that sole sample, for any finite basis
+   and coefficient vector. Consequently the complete typed output
+   is the all-zero length-one vector.
+   Exact checked proposition: If total_mass = 1 and
+   length samples = 1, then indexed_basis_centered_sample_vector
+   basis coefficients = Vector.const 0 (length samples).
+   Premises and side conditions: No nonnegative-weight assumption
+   is necessary beyond normalized total mass, and the basis may
+   be empty or dependent. The statement does not assert any
+   positive definiteness when the coefficient dimension is zero.
+   Proof/definition method: Use the verified zero-sum output-vector
+   theorem, split the original sample list by its given length,
+   and observe that the only remaining coordinate equals its
+   one-term finite sum. Standard vector computation and Stdlib.Lra
+   discharge the sole scalar equality; no extra probability axiom.
+   Library reuse: indexed_basis_centered_sample_vector_sum_zero,
+   indexed_basis_centered_sample_vector_to_list,
+   Stdlib.Vectors.Vector.const/of_list/map, FiniteSum.finite_sum,
+   Stdlib.List.length and Stdlib.Lra.
+   Boundary: Certifies a concrete one-sample degeneracy only,
+   rather than a general finite-dimensional nullity formula.
+   *)
+  Theorem indexed_basis_centered_sample_vector_single_sample_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      length samples = 1%nat ->
+      indexed_basis_centered_sample_vector basis coefficients =
+        Vector.const 0 (length samples).
+  Proof.
+    intros basis coefficients Hmass Hlength.
+    destruct samples as [|x [|y rest]].
+    - discriminate Hlength.
+    - pose proof
+        (indexed_basis_centered_sample_vector_sum_zero
+          basis coefficients Hmass) as Hsum.
+      rewrite indexed_basis_centered_sample_vector_to_list in Hsum.
+      unfold FiniteSum.finite_sum in Hsum.
+      simpl in Hsum.
+      unfold indexed_basis_centered_sample_vector.
+      simpl.
+      f_equal.
+      lra.
+    - discriminate Hlength.
+  Qed.
+
 End FiniteProbabilityMoments.

@@ -2883,8 +2883,24 @@ absence of a nonzero coefficient vector mapping to the zero output.
 The latter characterizes injectivity through the kernel, but no
 finite-dimensional rank, nullity, or library linear-map record is claimed.
 
-Current target inventory: **697 public claims, 700 proof scripts,
+Inventory for preceding full-vector linearity batch: **697 public claims, 700 proof scripts,
 768 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Normalized sample-vector image has coordinate sum zero (11 November 2026)
+
+The full centered sample-output vector now has a checked `Vector.to_list`
+representation equal to mapping the established centered weighted score
+across the original samples. Under unit total mass, the sum of all
+output coordinates is exactly zero; this proof is delegated to the
+existing centered-score sum theorem through the generic
+`FiniteSum.finite_sum_map` lemma. A further result proves that a
+normalized sample of length one has identically zero centered output
+for all coefficient vectors. This is a genuine zero-sum image
+constraint and concrete one-sample degeneracy, but no numeric
+rank bound, image-dimension or rank-nullity identity is asserted.
+
+Current target inventory: **700 public claims, 703 proof scripts,
+771 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

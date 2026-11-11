@@ -2106,6 +2106,18 @@ matrix. This makes the algebraic input/output dimensions explicit
 while preserving the boundary that no general linear-algebra rank
 infrastructure is implemented or claimed.
 
+## Zero-sum image constraint for the typed sample vector
+
+The maintained `VectorSpec.to_list_map` and
+`to_list_of_list_opp` rules identify the concrete output list,
+while `FiniteSum.finite_sum_map` reduces its coordinate sum to
+the earlier `indexed_basis_centered_weighted_score_sum_zero`
+result. This proves that the normalized evaluator image lies in
+the kernel of the coordinate-sum functional, and yields the
+single-sample degeneracy using standard list/vector computation.
+No second finite-sum implementation or unverified dimension
+argument is added.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

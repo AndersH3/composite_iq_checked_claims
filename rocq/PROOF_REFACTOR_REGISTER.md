@@ -817,7 +817,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 289 proof scripts
+## FiniteMoments.v — 292 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1110,6 +1110,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_vector_add` (theorem) | Vector coordinate equality and standard nth-map2, prior sample coordinate additivity | VectorSpec.eq_nth_iff/nth_map2, indexed_basis_centered_sample_vector_nth, indexed_basis_centered_sample_evaluation_add | **New:** concrete vector-to-vector evaluator is additive |
 | `indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero` (theorem) | Compose named quadratic-nullity and typed-output-zero equivalences | indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel, Stdlib.Logic.tauto | **New:** zero quadratic iff concrete sample output vector is zero |
 | `indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero` (theorem) | Transport named kernel triviality through concrete vector zero predicate | indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel | **New:** finite covariance positive-definiteness iff concrete typed evaluation detects every nonzero coefficient vector |
+| `indexed_basis_centered_sample_vector_to_list` (theorem) | Standard Vector.to_list/map and of_list inverse laws, no recursion | VectorSpec.to_list_map, VectorSpec.to_list_of_list_opp | **New:** output list is exactly the centered weighted score map over samples |
+| `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
+| `indexed_basis_centered_sample_vector_single_sample_zero` (theorem) | One-element sample list computation and established zero-sum image constraint | indexed_basis_centered_sample_vector_sum_zero, indexed_basis_centered_sample_vector_to_list, Stdlib.List, Stdlib.Lra | **New:** length-one normalized sample yields identically zero centered output vector |
 
 
 ## FiniteBridge.v — 37 proof scripts
