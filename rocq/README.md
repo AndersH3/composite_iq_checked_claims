@@ -2945,6 +2945,19 @@ Current target inventory: **710 public checked claims,
 713 proof scripts, 781 documented declarations** across seven
 Rocq modules, subject to Rocq 9.2 CI for this batch.
 
+## Two-sample positive definiteness as scalar detection (11 November 2026)
+
+For a normalized two-outcome sample with nonnegative weights,
+positive definiteness of the indexed covariance quadratic form
+is equivalent to requiring a nonzero first centered score for
+every nonzero typed coefficient direction. The new proof composes
+the existing positive-definite/zero-output equivalence with the
+two-outcome kernel test, without recomputing covariance entries.
+
+Current target inventory: **711 public checked claims,
+714 proof scripts, 782 documented declarations** across seven
+Rocq modules, subject to Rocq 9.2 CI for this commit.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

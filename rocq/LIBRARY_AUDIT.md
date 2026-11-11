@@ -2155,6 +2155,15 @@ result sends every coefficient to the zero output. We reuse
 positive-definiteness/zero-output equivalence, without introducing
 a new vector construction or matrix rank API.
 
+## Two-sample covariance positivity as scalar detection
+
+The existing normalized, nonnegative-weight positive-definiteness
+criterion is expressed directly through the first centered score on a
+two-outcome sample. The proof combines two previously checked
+equivalences, not a new covariance calculation. The resulting criterion
+retains an explicit coefficient nonzero condition and introduces no
+new matrix construction, image dimension claim, or probability axiom.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

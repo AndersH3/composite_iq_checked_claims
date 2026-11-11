@@ -11123,4 +11123,66 @@ Section FiniteProbabilityMoments.
         assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_positive_definite_two_samples_iff_first_score_detects_nonzero]
+   (theorem) — A single score detection test characterizes positive
+   definiteness of a normalized two-sample covariance.
+   Mathematical meaning: Because the centered two-sample output
+   is [s; -s], covariance strict positivity in every nonzero
+   coefficient direction holds exactly when the first centered
+   evaluation detects every such direction by a nonzero scalar.
+   Exact checked proposition: For samples = [x; y], unit total mass
+   and nonnegative listed weights, the indexed covariance is
+   positive definite iff every coefficient vector unequal to
+   the zero coefficient list has a nonzero centered score at x.
+   Premises and side conditions: Input coefficient dimension
+   equals length basis. The score basis can be empty or
+   dependent, and x may equal y. Nonnegative weight and mass
+   assumptions are explicit requirements of the checked
+   covariance quadratic/kernel equivalence.
+   Proof/definition method: Compose the existing positive-
+   definiteness iff typed output detects nonzero coefficients
+   theorem with the immediately preceding two-sample output-
+   zero iff first listed score-zero equivalence.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero,
+   indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero,
+   Stdlib.Vectors.Vector.to_list/const and Stdlib.Logic.
+   Boundary: An exact two-sample scalar detection criterion,
+   not a general covariance rank calculation or Gaussian claim.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_two_samples_iff_first_score_detects_nonzero :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         indexed_basis_centered_weighted_score basis coefficients x <> 0).
+  Proof.
+    intros basis x y Hsamples Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero
+        basis Hmass Hw) as Hpositive_iff.
+    split.
+    - intros Hpositive coefficients Hnonzero Hscore_zero.
+      pose proof
+        ((proj1 Hpositive_iff) Hpositive coefficients Hnonzero)
+        as Houtput_nonzero.
+      apply Houtput_nonzero.
+      apply (proj2
+        (indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero
+          basis coefficients x y Hsamples Hmass)).
+      exact Hscore_zero.
+    - intros Hdetect.
+      apply (proj2 Hpositive_iff).
+      intros coefficients Hnonzero Houtput_zero.
+      apply (Hdetect coefficients Hnonzero).
+      apply (proj1
+        (indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero
+          basis coefficients x y Hsamples Hmass)).
+      exact Houtput_zero.
+  Qed.
+
 End FiniteProbabilityMoments.
