@@ -948,3 +948,37 @@ Proof.
     exact (finite_sum_strict_monotone_at_member
       xs f g x Hle Hx Hstrict).
 Qed.
+
+(**
+   [finite_sum_singleton_zero_iff] (lemma) — Zero sum on a singleton.
+   Mathematical meaning: A list with one real summand has zero sum
+   exactly when that summand is zero; cancellation is impossible.
+   Exact checked proposition: If length xs = 1, finite_sum f xs = 0
+   iff forall x, In x xs -> f x = 0.
+   Premises and side conditions: Arbitrary element type, arbitrary
+   real summand, no nonnegativity or normalization requirements.
+   Proof/definition method: Analyze the ordinary list using its
+   length-one constraint and discharge the real sum by linear
+   arithmetic; avoid implementing another finite sum.
+   Library reuse: Stdlib.List.In, length; Stdlib.Reals and Lra.
+   Boundary: Finite one-element fold; no continuous integral claim.
+ *)
+Lemma finite_sum_singleton_zero_iff {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    length xs = 1%nat ->
+    (finite_sum f xs = 0 <-> forall x, In x xs -> f x = 0).
+Proof.
+  intros xs f Hlength.
+  destruct xs as [| head [| next rest]].
+  - discriminate Hlength.
+  - unfold finite_sum; simpl.
+    split.
+    + intros Hsum x Hmember.
+      destruct Hmember as [Heq | []].
+      subst x.
+      lra.
+    + intro Hzero.
+      specialize (Hzero head (or_introl eq_refl)).
+      lra.
+  - discriminate Hlength.
+Qed.

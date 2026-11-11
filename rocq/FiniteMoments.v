@@ -10496,6 +10496,111 @@ Section FiniteProbabilityMoments.
 
 
   (**
+   [indexed_basis_centered_sample_vector_zero_coefficients] (theorem)
+   — The typed centered evaluator preserves the zero vector.
+   Mathematical meaning: The additive identity in coefficient space
+   is sent to the additive identity in sample-score space.
+   Exact checked proposition: The output for Vector.const 0 at
+   length basis is Vector.const 0 at length samples.
+   Premises and side conditions: No restrictions on mass, weight
+   signs, list lengths or independence of the score functions.
+   Proof/definition method: Transport the already checked zero
+   indexed evaluation through the named kernel/vector equivalence.
+   Library reuse: indexed_basis_centered_sample_evaluation_zero_coefficients,
+   indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel,
+   Stdlib.Vectors.Vector.const.
+   Boundary: Zero preservation is not a numerical rank assertion.
+   *)
+  Theorem indexed_basis_centered_sample_vector_zero_coefficients :
+    forall basis,
+      indexed_basis_centered_sample_vector
+        basis (Vector.const 0 (length basis)) =
+      Vector.const 0 (length samples).
+  Proof.
+    intro basis.
+    apply (proj2
+      (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+        basis (Vector.const 0 (length basis)))).
+    unfold indexed_basis_bounded_sample_kernel.
+    intro i.
+    apply indexed_basis_centered_sample_evaluation_zero_coefficients.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero]
+   (theorem) — Bridge full output nullity to listed sample scores.
+   Mathematical meaning: The concrete output is zero precisely if
+   its centered score is zero for every enumerated sample outcome.
+   Exact checked proposition: Output equals Vector.const 0 iff
+   all x satisfying In x samples have centered weighted score 0.
+   Premises and side conditions: Empty/repeated lists are permitted;
+   no normalization, nonnegativity, or basis independence required.
+   Proof/definition method: Compose two already checked equivalences
+   through the transparent named bounded sample-kernel predicate.
+   Library reuse: indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel,
+   indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero,
+   Stdlib.Logic.tauto and Stdlib.List.In.
+   Boundary: An exact finite-list result, not a rank-nullity formula.
+   *)
+  Theorem indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      (indexed_basis_centered_sample_vector basis coefficients =
+         Vector.const 0 (length samples) <->
+       forall x, In x samples ->
+         indexed_basis_centered_weighted_score basis coefficients x = 0).
+  Proof.
+    intros basis coefficients.
+    pose proof
+      (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+        basis coefficients) as Hvector.
+    pose proof
+      (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
+        basis coefficients) as Hscores.
+    unfold indexed_basis_bounded_sample_kernel in Hvector.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_nonzero_scale_zero_iff]
+   (theorem) — Zero output survives precisely nonzero rescalings.
+   Mathematical meaning: Scaling a coefficient direction by a
+   nonzero real cannot create or destroy a zero sample output.
+   Exact checked proposition: For a <> 0, the output of
+   Vector.map (fun c => a*c) coefficients is zero iff the
+   original output vector is zero.
+   Premises and side conditions: Scalar nonzero is required;
+   sample weights, basis dimensions, and mass are unrestricted.
+   Proof/definition method: Reuse the two typed vector/kernel iff
+   results and the previously proved indexed kernel scale iff.
+   Library reuse: indexed_basis_centered_sample_kernel_nonzero_scale_iff,
+   indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel,
+   Stdlib.Vectors.Vector.map and Stdlib.Logic.tauto.
+   Boundary: Kernel equivalence only; no dimension or rank claim.
+   *)
+  Theorem indexed_basis_centered_sample_vector_nonzero_scale_zero_iff :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      a <> 0 ->
+      (indexed_basis_centered_sample_vector
+         basis (Vector.map (fun c => a * c) coefficients) =
+           Vector.const 0 (length samples) <->
+       indexed_basis_centered_sample_vector basis coefficients =
+         Vector.const 0 (length samples)).
+  Proof.
+    intros basis coefficients a Hnonzero.
+    pose proof
+      (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+        basis (Vector.map (fun c => a * c) coefficients)) as Hscaled.
+    pose proof
+      (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+        basis coefficients) as Horiginal.
+    pose proof
+      (indexed_basis_centered_sample_kernel_nonzero_scale_iff
+        basis coefficients a Hnonzero) as Hkernel.
+    unfold indexed_basis_bounded_sample_kernel in Hscaled, Horiginal.
+    tauto.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_scale] (theorem) —
    Real scalar homogeneity of the complete typed sample-output vector.
    Mathematical meaning: Scaling a coefficient direction by a real
@@ -10815,38 +10920,16 @@ Section FiniteProbabilityMoments.
         Vector.const 0 (length samples).
   Proof.
     intros basis coefficients Hmass Hlength.
-    (* Handle the singleton arithmetic separately: directly destructing
-       samples in the typed vector equality would obscure the output
-       vector's length index and block dependent generalization. *)
-    assert (Hsingleton :
-      forall (f : Outcome -> R),
-        FiniteSum.finite_sum f samples = 0 ->
-        forall x, In x samples -> f x = 0).
-    {
-      intros f Hsum x Hx.
-      destruct samples as [|head [|other rest]].
-      - discriminate Hlength.
-      - simpl in Hx.
-        destruct Hx as [Heq | []].
-        subst x.
-        unfold FiniteSum.finite_sum in Hsum.
-        simpl in Hsum.
-        lra.
-      - discriminate Hlength.
-    }
+    (* Reuse the generic scalar singleton fact, avoiding elimination
+       of the dependently typed sample-output vector. *)
     apply (proj2
-      (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+      (indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero
         basis coefficients)).
-    unfold indexed_basis_bounded_sample_kernel.
-    apply (proj2
-      (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
-        basis coefficients)).
-    intros x Hx.
-    apply (Hsingleton
-      (indexed_basis_centered_weighted_score basis coefficients)).
-    - apply indexed_basis_centered_weighted_score_sum_zero.
-      exact Hmass.
-    - exact Hx.
+    apply (proj1 (FiniteSum.finite_sum_singleton_zero_iff
+      samples (indexed_basis_centered_weighted_score basis coefficients)
+      Hlength)).
+    apply indexed_basis_centered_weighted_score_sum_zero.
+    exact Hmass.
   Qed.
 
 End FiniteProbabilityMoments.

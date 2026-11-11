@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **662 public theorem/lemma/example claims**, plus
+The current branch has **704 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**665 proof scripts** across seven Rocq modules. The claims and scripts
+**707 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -433,7 +433,7 @@ unchanged, *not* that every proof term was rewritten. The dependency
 column is a tactic-level heuristic; consult the actual source for
 full dependencies and the theorem-specific doc comment for hypotheses.
 
-## FiniteSum.v — 26 proof scripts
+## FiniteSum.v — 27 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -464,6 +464,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `finite_sum_monotone_equality_iff_pointwise` (lemma) | Generic nonnegative difference zero criterion and linear arithmetic | finite_sum_nonnegative_zero_iff, finite_sum_sub, Stdlib.Lra | **New:** equality of ordered finite sums exactly when all enumerated terms agree; no duplicated induction |
 | `finite_sum_strict_monotone_iff_strict_member` (lemma) | Constructive positive-difference support witness plus established strict-order converse | finite_sum_positive_iff_positive_member, finite_sum_strict_monotone_at_member, finite_sum_sub, Stdlib.Lra | **New:** strict inequality iff a listed strict comparison exists; reuses maintained generic theorems |
 
+
+| `finite_sum_singleton_zero_iff` (lemma) | Singleton-list elimination and linear arithmetic; reusable formerly local argument | Stdlib.List.In/length, Lra, shared finite_sum | **New:** generic singleton zero iff member-zero characterization |
 
 ## Hoeflin.v — 65 proof scripts
 
@@ -817,7 +819,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 292 proof scripts
+## FiniteMoments.v — 295 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1106,13 +1108,16 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_quadratic_zero_iff_named_row_kernel` (theorem) | Propositional composition of named quadratic/sample and named row/sample iff | indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel, indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel | **New:** zero covariance quadratic iff named bounded covariance-row nullspace membership |
 | `indexed_basis_centered_sample_vector_nth` (theorem) | Unfold maintained vector wrapper; standard nth-of-Vector.map law | Stdlib.Vectors.VectorSpec.nth_map, indexed_basis_centered_sample_evaluation | **New:** full output vector has exactly the established bounded coordinates |
 | `indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel` (theorem) | Standard vector coordinate extensionality and constant-vector nth equality | Stdlib.Vectors.VectorSpec.eq_nth_iff/const_nth, indexed_basis_centered_sample_vector_nth | **New:** concrete sample-output vector equals zero iff named sample-kernel membership |
+| `indexed_basis_centered_sample_vector_zero_coefficients` (theorem) | Transport indexed zero coordinates through named kernel iff | indexed_basis_centered_sample_evaluation_zero_coefficients, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel | **New:** zero coefficients produce zero output |
+| `indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero` (theorem) | Compose bounded-index/list-score and vector/kernel iff lemmas | indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel, tauto | **New:** zero vector output iff every listed score zero |
+| `indexed_basis_centered_sample_vector_nonzero_scale_zero_iff` (theorem) | Compose two output/kernel iff and pre-existing scale iff | indexed_basis_centered_sample_kernel_nonzero_scale_iff, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel | **New:** nonzero scaling preserves output nullity |
 | `indexed_basis_centered_sample_vector_scale` (theorem) | Vector coordinate equality via standard extensionality/nth-map and prior scalar law | VectorSpec.eq_nth_iff/nth_map, indexed_basis_centered_sample_vector_nth, indexed_basis_centered_sample_evaluation_scale | **New:** typed real output vector respects coefficient scalar multiplication |
 | `indexed_basis_centered_sample_vector_add` (theorem) | Vector coordinate equality and standard nth-map2, prior sample coordinate additivity | VectorSpec.eq_nth_iff/nth_map2, indexed_basis_centered_sample_vector_nth, indexed_basis_centered_sample_evaluation_add | **New:** concrete vector-to-vector evaluator is additive |
 | `indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero` (theorem) | Compose named quadratic-nullity and typed-output-zero equivalences | indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel, Stdlib.Logic.tauto | **New:** zero quadratic iff concrete sample output vector is zero |
 | `indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero` (theorem) | Transport named kernel triviality through concrete vector zero predicate | indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel | **New:** finite covariance positive-definiteness iff concrete typed evaluation detects every nonzero coefficient vector |
 | `indexed_basis_centered_sample_vector_to_list` (theorem) | Standard Vector.to_list/map and of_list inverse laws, no recursion | VectorSpec.to_list_map, VectorSpec.to_list_of_list_opp | **New:** output list is exactly the centered weighted score map over samples |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
-| `indexed_basis_centered_sample_vector_single_sample_zero` (theorem) | Isolated singleton finite-sum argument; transport centered-score zero through maintained kernel equivalences, avoiding dependent list elimination | indexed_basis_centered_weighted_score_sum_zero, indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel, Stdlib.Lra | **New:** length-one normalized sample yields identically zero centered output vector |
+| `indexed_basis_centered_sample_vector_single_sample_zero` (theorem) | Shared singleton sum-zero iff plus new typed vector/list-score equivalence | FiniteSum.finite_sum_singleton_zero_iff, indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero, indexed_basis_centered_weighted_score_sum_zero | **Refactored:** no local singleton sum or dependent vector induction |
 
 
 ## FiniteBridge.v — 37 proof scripts

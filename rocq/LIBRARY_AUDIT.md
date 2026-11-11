@@ -2120,6 +2120,16 @@ without dependent elimination of a vector's length index.
 No second finite-sum implementation or unverified dimension
 argument is added.
 
+## Reused singleton sum and typed output-kernel laws (11 November 2026)
+
+The former embedded singleton-sum list argument is now exported as
+`FiniteSum.finite_sum_singleton_zero_iff`, without probabilistic or
+sign assumptions. The typed evaluator now explicitly preserves zero,
+equates zero vector output with pointwise centered score nullity,
+and preserves kernel membership under nonzero scalar rescaling.
+The original singleton degeneracy theorem reuses these shared
+results; no new matrix or finite-sum machinery is introduced.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

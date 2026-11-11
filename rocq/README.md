@@ -2904,6 +2904,19 @@ rank bound, image-dimension or rank-nullity identity is asserted.
 Current target inventory: **700 public claims, 703 proof scripts,
 771 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
+## Shared singleton sum and typed output nullity (11 November 2026)
+
+The singleton centered-score degeneracy proof now reuses a generic
+`FiniteSum` length-one sum-zero equivalence instead of a local
+list induction. New dimension-correct corollaries prove zero
+preservation, a direct zero-vector/list-score iff, and invariance of
+zero output under nonzero scalar rescaling. All covariance and rank
+boundaries remain unchanged; no numeric rank or rank-nullity
+theorem is asserted.
+
+Target inventory: **704 public checked claims, 707 proof scripts,
+775 documented declarations**, subject to Rocq 9.2 CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
