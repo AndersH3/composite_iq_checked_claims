@@ -3036,6 +3036,22 @@ Current target inventory: **721 public checked claims,
 724 proof scripts, 793 documented declarations** across
 seven Rocq modules, pending Rocq 9.2 CI.
 
+## Complete typed covariance pairing algebra (11 November 2026)
+
+Second-argument homogeneity and additivity now follow by
+symmetry, completing the four bilinearity laws for arbitrary
+signed finite weights without a unit-mass requirement.
+Three additional checked bridges state that under unit mass
+`B(c,c)=Q(c)` and `Q(u+v)=Q(u)+Q(v)+2*B(u,v)`,
+and under normalized nonnegative weights
+`B(u,v)^2 <= Q(u)*Q(v)`. Each proof delegates to prior
+checked covariance/variance theorems; there is no custom
+vector-space, matrix, determinant or rank algorithm.
+
+Current target inventory: **726 public checked claims,
+729 proof scripts, 798 documented declarations** across
+seven Rocq modules, subject to the Rocq 9.2 CI check.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

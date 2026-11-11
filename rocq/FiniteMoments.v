@@ -11634,4 +11634,183 @@ Section FiniteProbabilityMoments.
     - apply covariance_add_first.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_bilinear_scale_second] (theorem) —
+   Scalar linearity in the second coefficient direction.
+   Mathematical meaning: Scaling the second composite score's
+   coefficient vector scales the covariance pairing exactly
+   by the same real scalar.
+   Exact checked proposition: B_basis(left,Vector.map (a*.) right)
+   equals a * B_basis(left,right) for every real scalar a.
+   Premises and side conditions: Both typed coefficient vectors
+   have the basis length. Signed sample weights and all
+   finite lists are allowed; there is no unit-mass condition.
+   Proof/definition method: Swap arguments with the previously
+   checked symmetry lemma, apply first-argument scalar
+   homogeneity, and restore the original argument order.
+   Library reuse: indexed_basis_covariance_bilinear_symmetric,
+   indexed_basis_covariance_bilinear_scale_first,
+   Stdlib.Vectors.Vector.map and Stdlib.Reals.
+   Boundary: An exact second-argument bilinearity axiom,
+   without assumptions or claims about covariance rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_scale_second :
+    forall basis (left right : Vector.t R (length basis)) (a : R),
+      indexed_basis_covariance_bilinear_form
+        basis left (Vector.map (fun c => a * c) right) =
+      a * indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis left right a.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis left (Vector.map (fun c => a * c) right)).
+    rewrite indexed_basis_covariance_bilinear_scale_first.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis right left).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_add_second] (theorem) —
+   Additivity in the second typed covariance direction.
+   Mathematical meaning: Pairing a fixed first direction
+   against the sum of two coefficient vectors gives the
+   sum of the individual covariance pairings.
+   Exact checked proposition: B_basis(left,Vector.map2 Rplus
+   right other) = B_basis(left,right) + B_basis(left,other).
+   Premises and side conditions: All vectors are typed at
+   exactly length basis. No normalization, positive weights,
+   independence, distinct outcomes or invertibility needed.
+   Proof/definition method: Apply covariance pairing
+   symmetry once, reuse the checked first-argument
+   additivity, then apply symmetry to both result terms.
+   Library reuse: indexed_basis_covariance_bilinear_symmetric,
+   indexed_basis_covariance_bilinear_add_first,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Reals.Rplus.
+   Boundary: Establishes the remaining additivity axiom;
+   this does not introduce a custom linear-map or matrix API.
+   *)
+  Theorem indexed_basis_covariance_bilinear_add_second :
+    forall basis (left right other : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form
+        basis left (Vector.map2 Rplus right other) =
+      indexed_basis_covariance_bilinear_form basis left right +
+      indexed_basis_covariance_bilinear_form basis left other.
+  Proof.
+    intros basis left right other.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis left (Vector.map2 Rplus right other)).
+    rewrite indexed_basis_covariance_bilinear_add_first.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis right left).
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis other left).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_diagonal] (theorem) —
+   Recover the established covariance quadratic from the pairing.
+   Mathematical meaning: Self-pairing a coefficient vector
+   gives its finite score variance, which equals the
+   indexed covariance matrix quadratic under unit total mass.
+   Exact checked proposition: If total_mass = 1, then
+   B_basis(coefficients,coefficients)=Q_basis(coefficients).
+   Premises and side conditions: The coefficient dimension
+   matches the basis. No individual weight nonnegativity,
+   distinct basis scores or positive definiteness is needed.
+   Proof/definition method: Unfold the thin covariance pairing
+   and identify self-covariance with existing variance;
+   apply the already checked quadratic-as-variance identity.
+   Library reuse: indexed_basis_covariance_quadratic_as_variance,
+   existing variance and covariance definitions, Stdlib.Reals.
+   Boundary: Exact diagonal identity, not a statement that
+   signed-weight covariance is positive semidefinite.
+   *)
+  Theorem indexed_basis_covariance_bilinear_diagonal :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form
+        basis coefficients coefficients =
+      indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients Hmass.
+    unfold indexed_basis_covariance_bilinear_form.
+    change
+      (variance (weighted_basis_sum (Vector.to_list coefficients) basis) =
+       indexed_basis_covariance_quadratic_form basis coefficients).
+    symmetry.
+    apply indexed_basis_covariance_quadratic_as_variance.
+    exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_polarization] (theorem) —
+   Polarization through the public typed covariance pairing.
+   Mathematical meaning: The covariance quadratic of the
+   sum of coefficient vectors differs from the sum of their
+   quadratics by twice the covariance bilinear pairing.
+   Exact checked proposition: Under total_mass=1,
+   Q(Vector.map2 Rplus left right)=Q(left)+Q(right)+2*B(left,right).
+   Premises and side conditions: Both vectors have basis
+   length; signed sample weights and dependent basis scores
+   remain allowed, and no independence or positivity required.
+   Proof/definition method: Unfold only the new pairing and
+   invoke the previously checked quadratic-add polarization.
+   Library reuse: indexed_basis_covariance_quadratic_add_polarization,
+   indexed_basis_covariance_bilinear_form,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Reals.
+   Boundary: A typed quadratic/pairing bridge, not a
+   covariance eigenvalue, matrix rank or rank-nullity proof.
+   *)
+  Theorem indexed_basis_covariance_bilinear_polarization :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      indexed_basis_covariance_quadratic_form
+        basis (Vector.map2 Rplus left right) =
+      indexed_basis_covariance_quadratic_form basis left +
+      indexed_basis_covariance_quadratic_form basis right +
+      2 * indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis left right Hmass.
+    unfold indexed_basis_covariance_bilinear_form.
+    apply indexed_basis_covariance_quadratic_add_polarization.
+    exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_cauchy_schwarz_squared]
+   (theorem) — Positive-semidefinite finite covariance bound.
+   Mathematical meaning: The square of the composite
+   covariance pairing is no greater than the product
+   of the two corresponding diagonal covariance quadratics.
+   Exact checked proposition: B(left,right)*B(left,right)
+   <= Q(left)*Q(right) for normalized nonnegative finite weights.
+   Premises and side conditions: Unit total mass and
+   nonnegative weights on all listed outcomes are required.
+   The basis need not have independent or distinct scores,
+   and its dimension may be zero.
+   Proof/definition method: Unfold the pairing and apply the
+   existing indexed cross-covariance Cauchy-Schwarz theorem;
+   no discriminant argument or square-root machinery is copied.
+   Library reuse: indexed_basis_covariance_cross_cauchy_schwarz_squared,
+   indexed_basis_covariance_bilinear_form and Stdlib.Reals.
+   Boundary: The result bounds covariance; it does not
+   establish positive definiteness or covariance rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_cauchy_schwarz_squared :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis left right *
+      indexed_basis_covariance_bilinear_form basis left right <=
+      indexed_basis_covariance_quadratic_form basis left *
+      indexed_basis_covariance_quadratic_form basis right.
+  Proof.
+    intros basis left right Hmass Hw.
+    unfold indexed_basis_covariance_bilinear_form.
+    apply indexed_basis_covariance_cross_cauchy_schwarz_squared;
+      assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

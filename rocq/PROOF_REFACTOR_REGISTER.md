@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **721 public theorem/lemma/example claims**, plus
+The current branch has **726 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**724 proof scripts** across seven Rocq modules. The claims and scripts
+**729 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 310 proof scripts
+## FiniteMoments.v — 315 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1135,6 +1135,11 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_symmetric` (theorem) | Thin wrapper over covariance symmetry; no score or matrix re-expansion | covariance_symmetric, indexed_basis_covariance_bilinear_form | **New:** typed coefficient pairing is symmetric |
 | `indexed_basis_covariance_bilinear_scale_first` (theorem) | Transport coefficient scaling through standard vector-to-list law and score homogeneity, then reuse finite covariance scaling | VectorSpec.to_list_map, weighted_basis_sum_coefficients_scale, covariance_extensional, covariance_scale_first | **New:** first-argument scalar linearity |
 | `indexed_basis_covariance_bilinear_add_first` (theorem) | Standard map2/list bridge, shared score zip-add, covariance extensionality and generic covariance additivity | indexed_vector_to_list_map2_add, weighted_basis_sum_coefficients_zip_add, VectorSpec.length_to_list, covariance_extensional, covariance_add_first | **New:** first-argument additive linearity |
+| `indexed_basis_covariance_bilinear_scale_second` (theorem) | Symmetry reduces to first-argument homogeneity; no duplicate coefficient transport | indexed_basis_covariance_bilinear_symmetric, indexed_basis_covariance_bilinear_scale_first | **New:** second-argument scalar linearity |
+| `indexed_basis_covariance_bilinear_add_second` (theorem) | Symmetry reduces to checked first-argument additivity; no additional list induction | indexed_basis_covariance_bilinear_symmetric, indexed_basis_covariance_bilinear_add_first | **New:** second-argument additive linearity |
+| `indexed_basis_covariance_bilinear_diagonal` (theorem) | Identify self-covariance with variance and reuse original indexed quadratic bridge | indexed_basis_covariance_quadratic_as_variance, variance | **New:** B(c,c)=Q(c) under unit mass |
+| `indexed_basis_covariance_bilinear_polarization` (theorem) | Thin pairing wrapper of existing typed quadratic polarization theorem | indexed_basis_covariance_quadratic_add_polarization | **New:** Q(u+v)=Q(u)+Q(v)+2 B(u,v) |
+| `indexed_basis_covariance_bilinear_cauchy_schwarz_squared` (theorem) | Thin pairing wrapper over checked typed finite covariance Cauchy-Schwarz | indexed_basis_covariance_cross_cauchy_schwarz_squared | **New:** B(u,v)^2<=Q(u)Q(v) with nonnegative normalized weights |
 
 
 ## FiniteBridge.v — 37 proof scripts

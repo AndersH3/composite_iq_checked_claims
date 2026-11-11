@@ -2237,6 +2237,23 @@ packaging the covariance pairing and its kernel without
 inventing a second linear algebra implementation. These
 results do not yet establish a general rank-nullity theorem.
 
+## Complete covariance pairing linearity and quadratic bridge (11 November 2026)
+
+Symmetry now supplies second-argument scalar homogeneity and
+additivity directly from the first-argument proofs. Both
+new proofs reuse the earlier checked pairing laws and avoid
+a second vector/list conversion or score-sum induction.
+
+The pairing diagonal is identified with the existing indexed
+covariance quadratic for unit-mass finite weights. Its
+polarization identity and squared Cauchy-Schwarz bound are
+thin wrappers around prior verified covariance identities.
+The polarization and diagonal law remain valid for signed
+normalized weights; the Cauchy-Schwarz inequality correctly
+retains the nonnegative-weight assumption. Together these
+give a reusable symmetric bilinear interface without a new
+matrix multiplication, rank computation or axiom.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
