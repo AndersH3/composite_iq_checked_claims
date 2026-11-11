@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **704 public theorem/lemma/example claims**, plus
+The current branch has **708 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**707 proof scripts** across seven Rocq modules. The claims and scripts
+**711 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -433,7 +433,7 @@ unchanged, *not* that every proof term was rewritten. The dependency
 column is a tactic-level heuristic; consult the actual source for
 full dependencies and the theorem-specific doc comment for hypotheses.
 
-## FiniteSum.v — 27 proof scripts
+## FiniteSum.v — 29 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -466,6 +466,8 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 
 
 | `finite_sum_singleton_zero_iff` (lemma) | Singleton-list elimination and linear arithmetic; reusable formerly local argument | Stdlib.List.In/length, Lra, shared finite_sum | **New:** generic singleton zero iff member-zero characterization |
+| `finite_sum_pair` (lemma) | Unfold existing map/fold for exactly two values, normalize by ring | Shared finite_sum, Stdlib.List, Stdlib.Reals ring | **New:** two-term finite sum computation |
+| `finite_sum_pair_zero_iff_opposite` (lemma) | Rewrite pair fold identity; linear arithmetic | finite_sum_pair, Stdlib.Lra | **New:** zero pair sum iff opposite scores |
 
 ## Hoeflin.v — 65 proof scripts
 
@@ -819,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 295 proof scripts
+## FiniteMoments.v — 297 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1118,6 +1120,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_vector_to_list` (theorem) | Standard Vector.to_list/map and of_list inverse laws, no recursion | VectorSpec.to_list_map, VectorSpec.to_list_of_list_opp | **New:** output list is exactly the centered weighted score map over samples |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_single_sample_zero` (theorem) | Shared singleton sum-zero iff plus new typed vector/list-score equivalence | FiniteSum.finite_sum_singleton_zero_iff, indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero, indexed_basis_centered_weighted_score_sum_zero | **Refactored:** no local singleton sum or dependent vector induction |
+| `indexed_basis_centered_weighted_score_two_samples_opposite` (theorem) | Normalize sample-list sum-zero using generic pair iff | indexed_basis_centered_weighted_score_sum_zero, FiniteSum.finite_sum_pair_zero_iff_opposite | **New:** two centered scores are additive opposites |
+| `indexed_basis_centered_sample_vector_two_samples_opposite` (theorem) | Vector-to-list map plus prior paired-score cancellation | indexed_basis_centered_sample_vector_to_list, indexed_basis_centered_weighted_score_two_samples_opposite, Stdlib.Lra | **New:** complete two-sample vector output equals [s; -s] |
 
 
 ## FiniteBridge.v — 37 proof scripts

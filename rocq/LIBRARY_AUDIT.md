@@ -2130,6 +2130,16 @@ and preserves kernel membership under nonzero scalar rescaling.
 The original singleton degeneracy theorem reuses these shared
 results; no new matrix or finite-sum machinery is introduced.
 
+## Reused pair fold and two-outcome cancellation (11 November 2026)
+
+Two small reusable FiniteSum results evaluate a two-element list
+with the established map/fold and characterize a zero sum by opposite
+real values. Normalized two-sample centered scores are consequently
+additive opposites, as is the ordinary list representation of the
+complete typed centered output vector. Both moment corollaries reuse
+the existing centered sum-zero result and vector-to-list bridge.
+No new summation algorithm, matrix engine or rank assertion was added.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

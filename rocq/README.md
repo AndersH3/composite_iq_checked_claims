@@ -2917,6 +2917,20 @@ theorem is asserted.
 Target inventory: **704 public checked claims, 707 proof scripts,
 775 documented declarations**, subject to Rocq 9.2 CI.
 
+## Normalized two-sample centered output (11 November 2026)
+
+The shared FiniteSum module now provides two-element sum evaluation
+and the corresponding zero iff opposite-scores lemma. In FiniteMoments,
+the previously verified normalized centered-score sum-zero theorem
+implies that the two listed centered scores are additive inverses.
+The complete typed sample vector also has list coordinates [s; -s].
+This handles repeated sample outcomes and signed weights without
+introducing new matrix infrastructure.
+
+Current target inventory: **708 public checked claims,
+711 proof scripts, 779 documented declarations**, subject
+to Rocq 9.2 kernel and documentation checks for this commit.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

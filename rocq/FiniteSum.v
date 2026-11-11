@@ -982,3 +982,51 @@ Proof.
       lra.
   - discriminate Hlength.
 Qed.
+ 
+(**
+   [finite_sum_pair] (lemma) — Exact evaluation of a two-element
+   list by the shared real finite sum.
+   Mathematical meaning: An enumerated pair of samples contributes
+   precisely the sum of its two real values, including duplicates.
+   Exact checked proposition: finite_sum f [x; y] = f x + f y.
+   Premises and side conditions: The element type and values are
+   arbitrary; no sign, normalization or equality hypotheses.
+   Proof/definition method: Unfold the existing list map/fold,
+   simplify, and apply the maintained ring tactic.
+   Library reuse: Stdlib.List.map/fold_right and Stdlib.Reals ring.
+   Boundary: A finite two-occurrence computation, not a
+   general continuous integral or covariance formula.
+ *)
+Lemma finite_sum_pair {A : Type} :
+  forall (f : A -> R) x y,
+    finite_sum f [x; y] = f x + f y.
+Proof.
+  intros f x y.
+  unfold finite_sum.
+  simpl.
+  ring.
+Qed.
+
+(**
+   [finite_sum_pair_zero_iff_opposite] (lemma) — Zero sum
+   characterization for a pair of listed real scores.
+   Mathematical meaning: Exactly two finite summands cancel iff
+   their values are real additive inverses of one another.
+   Exact checked proposition: finite_sum f [x; y] = 0 iff
+   f x = - f y, whether or not x and y are distinct.
+   Premises and side conditions: No nonnegative or positive
+   score assumptions and no probability normalization.
+   Proof/definition method: Apply finite_sum_pair then
+   the standard real linear arithmetic tactic in both directions.
+   Library reuse: finite_sum_pair and Stdlib.Lra.
+   Boundary: This two-element cancellation criterion does
+   not hold as stated for arbitrary-length signed lists.
+ *)
+Lemma finite_sum_pair_zero_iff_opposite {A : Type} :
+  forall (f : A -> R) x y,
+    (finite_sum f [x; y] = 0 <-> f x = - f y).
+Proof.
+  intros f x y.
+  rewrite finite_sum_pair.
+  split; intro H; lra.
+Qed.

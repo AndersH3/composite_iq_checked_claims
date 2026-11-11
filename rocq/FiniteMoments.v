@@ -10897,18 +10897,12 @@ Section FiniteProbabilityMoments.
    is necessary beyond normalized total mass, and the basis may
    be empty or dependent. The statement does not assert any
    positive definiteness when the coefficient dimension is zero.
-   Proof/definition method: Isolate the one-element list argument
-   as a scalar finite-sum lemma, rather than destructing a list
-   inside a dependently typed vector equality. Apply the earlier
-   centered-score sum-zero theorem to show every listed centered
-   score vanishes, then transport that universal statement through
-   the maintained bounded-index kernel and typed output-zero iff.
-   Standard finite-sum computation and Stdlib.Lra prove the sole
-   scalar case; no custom vector recursion or probability axiom.
+   Proof/definition method: Apply the shared singleton zero-sum iff
+   and the direct output-vector/finite-list score equivalence,
+   avoiding dependent-vector elimination or a new sum calculation.
    Library reuse: indexed_basis_centered_weighted_score_sum_zero,
-   indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero,
-   indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel,
-   FiniteSum.finite_sum, Stdlib.List.In/length and Stdlib.Lra.
+   indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero,
+   FiniteSum.finite_sum_singleton_zero_iff and Stdlib.List.In.
    Boundary: Certifies a concrete one-sample degeneracy only,
    rather than a general finite-dimensional nullity formula.
    *)
@@ -10930,6 +10924,88 @@ Section FiniteProbabilityMoments.
       Hlength)).
     apply indexed_basis_centered_weighted_score_sum_zero.
     exact Hmass.
+  Qed.
+
+
+  (**
+   [indexed_basis_centered_weighted_score_two_samples_opposite]
+   (theorem) — Real cancellation of two normalized sample scores.
+   Mathematical meaning: For exactly two listed samples with
+   total weight one, any centered composite score at the first
+   outcome is the additive inverse of its value at the second.
+   Exact checked proposition: If samples = [x; y] and
+   total_mass = 1, score basis coefficients x equals
+   minus score basis coefficients y.
+   Premises and side conditions: Outcomes may be identical;
+   weights may be signed, and bases may be empty or dependent.
+   Only unit total mass is required for the centered sum-zero law.
+   Proof/definition method: Rewrite the existing centered-score
+   zero sum with the two-item sample equality, then apply the
+   generic finite_sum_pair_zero_iff_opposite lemma.
+   Library reuse: indexed_basis_centered_weighted_score_sum_zero,
+   FiniteSum.finite_sum_pair_zero_iff_opposite and Stdlib.List.
+   Boundary: Two-sample cancellation, not a rank formula or
+   an assertion about sampled Gaussian distributions.
+   *)
+  Theorem indexed_basis_centered_weighted_score_two_samples_opposite :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_centered_weighted_score basis coefficients x =
+        - indexed_basis_centered_weighted_score basis coefficients y.
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_centered_weighted_score_sum_zero
+        basis coefficients Hmass) as Hzero.
+    rewrite Hsamples in Hzero.
+    apply (proj1 (FiniteSum.finite_sum_pair_zero_iff_opposite
+      (indexed_basis_centered_weighted_score basis coefficients) x y)).
+    exact Hzero.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_two_samples_opposite]
+   (theorem) — The complete two-sample output is an opposite pair.
+   Mathematical meaning: Under normalized two-sample centering,
+   the typed output vector represented as a list has coordinates
+   s and -s for the same real centered score s.
+   Exact checked proposition: If samples = [x; y] and
+   total_mass = 1, the output list equals
+   [centered_score coefficients x; - centered_score coefficients x].
+   Premises and side conditions: Nonnegative individual weights
+   and distinct sample entries are unnecessary. The input
+   coefficient vector always has length equal to the basis.
+   Proof/definition method: Rewrite the existing Vector.to_list
+   map identity and the sample-list equality; use the previous
+   opposite-scores theorem plus linear arithmetic, without
+   implementing another finite map or vector recursion.
+   Library reuse: indexed_basis_centered_sample_vector_to_list,
+   indexed_basis_centered_weighted_score_two_samples_opposite,
+   Stdlib.List.map and Stdlib.Lra.
+   Boundary: A concrete two-coordinate image identity only;
+   no general kernel dimension or rank-nullity statement.
+   *)
+  Theorem indexed_basis_centered_sample_vector_two_samples_opposite :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      Vector.to_list
+        (indexed_basis_centered_sample_vector basis coefficients) =
+        [indexed_basis_centered_weighted_score basis coefficients x;
+         - indexed_basis_centered_weighted_score basis coefficients x].
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_centered_weighted_score_two_samples_opposite
+        basis coefficients x y Hsamples Hmass) as Hopp.
+    rewrite indexed_basis_centered_sample_vector_to_list.
+    rewrite Hsamples.
+    simpl.
+    replace (indexed_basis_centered_weighted_score basis coefficients y)
+      with (- indexed_basis_centered_weighted_score basis coefficients x)
+      by lra.
+    reflexivity.
   Qed.
 
 End FiniteProbabilityMoments.
