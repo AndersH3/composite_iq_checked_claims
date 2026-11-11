@@ -10382,4 +10382,116 @@ Section FiniteProbabilityMoments.
     tauto.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_sample_vector] (definition) —
+   A complete, dimension-checked vector of centered sample evaluations.
+   Mathematical meaning: For every real coefficient vector of exactly
+   the score-basis length, assemble the centered weighted scores at all
+   enumerated sample positions into a standard finite real Vector.t.
+   Exact declaration: Vector.map
+   (indexed_basis_centered_weighted_score basis coefficients)
+   (Vector.of_list samples), whose output dimension is length samples.
+   Premises and side conditions: The input and output dimensions are
+   independently tracked by Vector.t; arbitrary signed sample weights,
+   duplicate occurrences and empty lists are permitted. This
+   construction does not assume normalized total mass.
+   Proof/definition method: Reuse the previously checked single-outcome
+   score evaluator and Stdlib.Vectors.Vector.map/of_list rather than
+   introducing an independent fold, sample lookup or matrix product.
+   Library reuse: indexed_basis_centered_weighted_score,
+   Stdlib.Vectors.Vector.map/of_list and Fin.t.
+   Boundary: An actual typed vector-to-vector function, but not yet
+   a packaged module morphism, finite-dimensional rank or image basis.
+   *)
+  Definition indexed_basis_centered_sample_vector
+      (basis : list (Outcome -> R))
+      (coefficients : Vector.t R (length basis))
+      : Vector.t R (length samples) :=
+    Vector.map
+      (indexed_basis_centered_weighted_score basis coefficients)
+      (Vector.of_list samples).
+
+  (**
+   [indexed_basis_centered_sample_vector_nth] (theorem) —
+   The new output vector agrees exactly with the earlier indexed evaluator.
+   Mathematical meaning: Reading any bounded coordinate of the
+   vectorized finite sample map gives the centered weighted score
+   already certified by indexed_basis_centered_sample_evaluation.
+   Exact checked proposition: For every basis, typed coefficient vector
+   and i : Fin.t (length samples), Vector.nth of the new output vector
+   at i equals indexed_basis_centered_sample_evaluation basis coeff i.
+   Premises and side conditions: No weight-sign, normalization,
+   nonemptiness or unique-sample assumption is needed; each repeated
+   sample occurrence retains its own bounded position.
+   Proof/definition method: Unfold the vector/map wrappers and use the
+   maintained VectorSpec.nth_map equation. No induction on indices,
+   custom vector accessor, or new score evaluation algorithm.
+   Library reuse: Stdlib.Vectors.VectorSpec.nth_map,
+   Stdlib.Vectors.Vector.nth/map/of_list and the original evaluator.
+   Boundary: A coordinate representation identity, not a rank theorem.
+   *)
+  Theorem indexed_basis_centered_sample_vector_nth :
+    forall basis (coefficients : Vector.t R (length basis))
+           (i : Fin.t (length samples)),
+      Vector.nth (indexed_basis_centered_sample_vector
+        basis coefficients) i =
+      indexed_basis_centered_sample_evaluation
+        basis coefficients i.
+  Proof.
+    intros basis coefficients i.
+    unfold indexed_basis_centered_sample_vector,
+      indexed_basis_centered_sample_evaluation.
+    apply VectorSpec.nth_map.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel]
+   (theorem) — Typed zero-output vector is equivalent to the
+   previously named bounded sample-evaluation kernel predicate.
+   Mathematical meaning: The entire centered sample vector is zero
+   exactly when every separately bounded sample evaluation is zero.
+   Exact checked proposition: For any basis and correctly sized real
+   coefficient vector, indexed_basis_centered_sample_vector basis
+   coefficients = Vector.const 0 (length samples) iff
+   indexed_basis_bounded_sample_kernel basis coefficients.
+   Premises and side conditions: Empty sample lists and duplicate
+   occurrences are supported, and no normalization, nonnegative
+   weight, or positive definiteness hypothesis is required.
+   Proof/definition method: Use the shared coordinate equality above,
+   the standard nth-of-constant theorem, and VectorSpec.eq_nth_iff
+   for full-vector extensionality. The named kernel is unfolded
+   only for the universal-index predicate; no duplicate list scan.
+   Library reuse: indexed_basis_centered_sample_vector_nth,
+   Stdlib.Vectors.VectorSpec.eq_nth_iff/const_nth and Fin.t.
+   Boundary: This proves the concrete output-vector kernel equality
+   but does not compute its dimension or construct a matrix rank.
+   *)
+  Theorem indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel :
+    forall basis (coefficients : Vector.t R (length basis)),
+      (indexed_basis_centered_sample_vector basis coefficients =
+         Vector.const 0 (length samples) <->
+       indexed_basis_bounded_sample_kernel basis coefficients).
+  Proof.
+    intros basis coefficients.
+    unfold indexed_basis_bounded_sample_kernel.
+    split.
+    - intros Hzero i.
+      rewrite <-
+        (indexed_basis_centered_sample_vector_nth basis coefficients i).
+      rewrite Hzero.
+      apply VectorSpec.const_nth.
+    - intros Hcoordinates.
+      apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
+        (indexed_basis_centered_sample_vector basis coefficients)
+        (Vector.const 0 (length samples)))).
+      intros i j Hij.
+      subst j.
+      rewrite
+        (indexed_basis_centered_sample_vector_nth basis coefficients i).
+      rewrite (VectorSpec.const_nth R 0 (length samples) i).
+      apply Hcoordinates.
+  Qed.
+
 End FiniteProbabilityMoments.

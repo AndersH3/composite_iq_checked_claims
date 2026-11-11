@@ -2849,8 +2849,25 @@ nonnegative listed weights and permit degenerate or repeated score
 bases. No additional covariance formula, new real-sum induction or
 spectral/rank arithmetic is introduced.
 
-Current target inventory: **691 public claims, 694 proof scripts,
+Inventory for preceding covariance-nullity batch: **691 public claims, 694 proof scripts,
 761 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Full typed centered sample output vector (11 November 2026)
+
+The `indexed_basis_centered_sample_vector` definition maps each length-typed
+coefficient vector into a standard `Vector.t R (length samples)` using the
+existing single-outcome centered score and `Vector.map`/`Vector.of_list`.
+`indexed_basis_centered_sample_vector_nth` identifies every Fin.t-indexed
+coordinate with the previously checked sample evaluator through the
+standard `VectorSpec.nth_map` rule. The typed output equals
+`Vector.const 0 (length samples)` exactly when the existing named
+bounded sample-kernel predicate holds, proved using the standard
+`VectorSpec.eq_nth_iff` extensionality theorem and `const_nth`.
+This is a concrete dimension-preserving representation bridge and
+not yet a library-packaged linear map or rank calculation.
+
+Current target inventory: **693 public claims, 696 proof scripts,
+764 documented declarations** across seven modules, pending Rocq 9.2 CI.
 
 ## Research extensions
 

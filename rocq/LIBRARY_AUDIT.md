@@ -2083,6 +2083,17 @@ reuses the verified row/sample kernel iff. This preserves the exact
 normalization and nonnegative-weight hypotheses and avoids new
 matrix operations, spectral arguments or duplicate sum inductions.
 
+## Centered sample evaluation as a standard typed output vector
+
+A concrete `Vector.t R (length samples)` codomain is now provided by
+`Stdlib.Vectors.Vector.map` of the existing centered weighted score
+across `Vector.of_list samples`. Its coordinate bridge reuses
+`VectorSpec.nth_map`; the exact output-zero/kernel iff delegates to
+`VectorSpec.eq_nth_iff` and `VectorSpec.const_nth`. Neither theorem
+reimplements vector equality, sample iteration, a quadratic form, or
+finite probability. Existing normalized-weight restrictions remain
+attached only to covariance bridges, not this purely algebraic map.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
