@@ -12047,4 +12047,141 @@ Section FiniteProbabilityMoments.
       exact Hrow.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_zero_coefficients]
+   (theorem) — The typed zero coefficient vector lies in the radical.
+   Mathematical meaning: A zero linear composite score has zero
+   finite covariance against every composite score, irrespective
+   of the weights on the enumerated outcomes.
+   Exact checked proposition: For every basis, the standard
+   Vector.const 0 coefficient vector of length basis belongs
+   to indexed_basis_covariance_bilinear_radical basis.
+   Premises and side conditions: No normalization, nonnegative
+   weights, nonempty basis, or independence is required.
+   Signed and repeated sample weights are permitted.
+   Proof/definition method: Convert the standard constant vector
+   to a zero list using VectorSpec.to_list_const and reuse the
+   preexisting weighted_basis_sum_repeat_zero theorem.
+   Covariance extensionality transports to an identically
+   zero scaled score, then covariance_scale_first eliminates it.
+   Library reuse: Stdlib.Vectors.Vector.const,
+   VectorSpec.to_list_const, weighted_basis_sum_repeat_zero,
+   covariance_extensional, covariance_scale_first, Stdlib.Ring.
+   Boundary: Exhibits the radical's zero vector, not its
+   dimension, rank, or a general vector-space implementation.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_zero_coefficients :
+    forall basis,
+      indexed_basis_covariance_bilinear_radical
+        basis (Vector.const 0 (length basis)).
+  Proof.
+    intros basis.
+    unfold indexed_basis_covariance_bilinear_radical.
+    intro right.
+    unfold indexed_basis_covariance_bilinear_form.
+    rewrite VectorSpec.to_list_const.
+    transitivity
+      (covariance
+        (fun x => 0 * weighted_basis_sum
+          (Vector.to_list right) basis x)
+        (weighted_basis_sum (Vector.to_list right) basis)).
+    - apply covariance_extensional.
+      + intro x.
+        rewrite weighted_basis_sum_repeat_zero.
+        ring.
+      + intro x; reflexivity.
+    - rewrite covariance_scale_first.
+      ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_nonzero_scale_iff]
+   (theorem) — Exact scale-invariance of the finite covariance radical.
+   Mathematical meaning: Rescaling a coefficient vector by a
+   nonzero real scalar does not change whether it has zero
+   covariance against all other composite score directions.
+   Exact checked proposition: For basis, coefficients and a<>0,
+   radical(Vector.map (fun c => a*c) coefficients) iff
+   radical(coefficients), in the same typed coefficient space.
+   Premises and side conditions: No unit-mass, weight sign,
+   score independence, or sample size assumptions are imposed.
+   The scalar must be nonzero; otherwise the reverse implication
+   is generally false.
+   Proof/definition method: Instantiate the already checked
+   covariance pairing homogeneity at an arbitrary right vector.
+   In the reverse direction, its zero product is immediate;
+   in the forward direction, use Stdlib's Rmult_integral
+   zero-product lemma and exclude the zero scalar branch.
+   Library reuse: indexed_basis_covariance_bilinear_scale_first,
+   Stdlib.Reals.Rmult_integral and Stdlib.Ring.
+   Boundary: A radical membership equivalence, not a
+   covariance quadratic identity or a rank-nullity statement.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_nonzero_scale_iff :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      a <> 0 ->
+      (indexed_basis_covariance_bilinear_radical
+         basis (Vector.map (fun c => a * c) coefficients) <->
+       indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis coefficients a Ha.
+    unfold indexed_basis_covariance_bilinear_radical.
+    split.
+    - intros Hscaled right.
+      pose proof (Hscaled right) as Horth.
+      rewrite indexed_basis_covariance_bilinear_scale_first in Horth.
+      apply Rmult_integral in Horth.
+      destruct Horth as [Hzero | Horth].
+      + contradiction.
+      + exact Horth.
+    - intros Hradical right.
+      rewrite indexed_basis_covariance_bilinear_scale_first.
+      rewrite (Hradical right).
+      ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero]
+   (theorem) — Connect the covariance radical to actual sample output.
+   Mathematical meaning: A coefficient vector is orthogonal in
+   covariance to all directions exactly when its concrete
+   centered-sample evaluation vector is identically zero.
+   Exact checked proposition: With unit total mass and
+   nonnegative weights at every listed outcome, membership
+   of coefficients in the bilinear radical iff
+   indexed_basis_centered_sample_vector basis coefficients
+   equals Vector.const 0 (length samples).
+   Premises and side conditions: Unit mass and nonnegative
+   listed weights are explicit requirements of the existing
+   quadratic/nullity and sample-output bridge. Basis and
+   sample lengths can be zero or include duplicate scores.
+   Proof/definition method: Compose two prior kernel-checked
+   equivalences through their common zero covariance
+   quadratic proposition. Use propositional reasoning rather
+   than duplicating sample-by-sample finite-sum arguments.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_bilinear_radical,
+   indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero,
+   Stdlib.Logic.tauto and Stdlib.Vectors.Vector.const.
+   Boundary: Equality of exact kernel predicates, not the
+   number of independent sample directions or matrix rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_bilinear_radical basis coefficients <->
+       indexed_basis_centered_sample_vector basis coefficients =
+         Vector.const 0 (length samples)).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_bilinear_radical
+        basis coefficients Hmass Hw) as Hradical.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero
+        basis coefficients Hmass Hw) as Hsamples.
+    tauto.
+  Qed.
+
 End FiniteProbabilityMoments.

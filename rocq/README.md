@@ -3073,6 +3073,25 @@ Current target inventory: **731 public checked claims,
 734 proof scripts, 804 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI.
 
+## Covariance radical zero and centered sample-output kernel (11 November 2026)
+
+The canonical typed zero coefficient vector is now proved to
+lie in the covariance bilinear radical without sample-weight
+restrictions. Radical membership is invariant under every
+nonzero real coefficient scaling, again without requiring
+normalized probability weights. Both proofs reuse previously
+checked covariance identities and maintained vector/list laws.
+
+For normalized nonnegative finite weights, radical membership
+is exactly equivalent to a zero concrete centered sample
+output vector. This links the bilinear pairing's kernel to
+the existing typed data-evaluation map without claiming
+numerical rank or abstract rank-nullity.
+
+Current target inventory: **734 public checked claims,
+737 proof scripts, 807 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 kernel verification.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

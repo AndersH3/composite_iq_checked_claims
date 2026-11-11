@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **731 public theorem/lemma/example claims**, plus
+The current branch has **734 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**734 proof scripts** across seven Rocq modules. The claims and scripts
+**737 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 320 proof scripts
+## FiniteMoments.v — 323 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1145,6 +1145,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_quadratic_zero_iff_bilinear_radical` (theorem) | Compose existing orthogonality to arbitrary scores with diagonal self-pairing | indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score, indexed_basis_covariance_bilinear_diagonal | **New:** finite covariance quadratic nullspace equals the typed bilinear radical |
 | `indexed_basis_covariance_bilinear_radical_iff_row_kernel` (theorem) | Compose already checked two quadratic-zero kernel bridges | indexed_basis_covariance_quadratic_zero_iff_bilinear_radical, indexed_basis_covariance_quadratic_zero_iff_named_row_kernel, tauto | **New:** typed covariance radical equals existing bounded row kernel |
 | `indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial` (theorem) | Reuse positive-definite iff trivial named row kernel and the new radical/row iff | indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial, indexed_basis_covariance_bilinear_radical_iff_row_kernel | **New:** positive definiteness iff the typed covariance radical has no nonzero coefficient direction |
+| `indexed_basis_covariance_bilinear_radical_zero_coefficients` (theorem) | Standard zero-vector list and existing weighted-score zero identity, covariance extensionality and homogeneity | VectorSpec.to_list_const, weighted_basis_sum_repeat_zero, covariance_extensional, covariance_scale_first, Stdlib.Ring | **New:** canonical typed coefficient zero lies in covariance radical even with signed unnormalized weights |
+| `indexed_basis_covariance_bilinear_radical_nonzero_scale_iff` (theorem) | First-argument covariance homogeneity and standard real zero-product elimination | indexed_basis_covariance_bilinear_scale_first, Stdlib.Reals.Rmult_integral, Stdlib.Ring | **New:** radical membership invariant under every nonzero scalar, without probability assumptions |
+| `indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero` (theorem) | Compose the existing typed zero-quadratic iff radical and zero-quadratic iff sample-output-zero equivalences | indexed_basis_covariance_quadratic_zero_iff_bilinear_radical, indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero, tauto | **New:** radical exactly equals the kernel of the concrete centered-sample output vector under finite probability assumptions |
 
 
 ## FiniteBridge.v — 37 proof scripts

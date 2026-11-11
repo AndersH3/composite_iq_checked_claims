@@ -2279,6 +2279,27 @@ These results are exact finite-dimensional *kernel
 characterizations*, not assertions about kernel dimension,
 matrix rank, rank-nullity, or arbitrary signed-weight PSD.
 
+## Radical zero, nonzero scaling, and centered sample output (11 November 2026)
+
+The canonical zero coefficient direction belongs to the
+covariance bilinear radical without any probability assumption.
+The proof deliberately reuses Stdlib VectorSpec.to_list_const,
+the already checked zero-weighted-score list lemma, covariance
+extensionality, and covariance homogeneity; no new dependent
+vector recursion or covariance definition was introduced.
+
+The radical is unchanged by nonzero coefficient rescaling for
+arbitrary signed, unnormalized finite outcome weights. This
+uses the maintained first-argument homogeneity law and Stdlib
+Rmult_integral, rather than repeating the probability-specific
+quadratic-to-output kernel transport.
+
+Finally, under unit total mass and nonnegative sample weights,
+the bilinear radical is identified with the exact kernel of
+the previously constructed centered sample-output vector.
+This composes two earlier checked kernel iff theorems without
+duplicating a sample enumeration or matrix calculation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
