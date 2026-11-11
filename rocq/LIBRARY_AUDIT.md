@@ -2300,6 +2300,25 @@ the previously constructed centered sample-output vector.
 This composes two earlier checked kernel iff theorems without
 duplicating a sample enumeration or matrix calculation.
 
+## Radical-shift invariance of covariance pairing and quadratic (11 November 2026)
+
+The covariance bilinear pairing is constant along radical
+shifts in its first argument for arbitrary finite signed,
+unnormalized weights. Its second-argument analogue follows
+from symmetry and reuses the existing first-argument theorem,
+rather than repeating coefficient-list induction or variance
+manipulations.
+
+When finite sample total mass is one, the indexed covariance
+quadratic is similarly constant along radical directions.
+The proof identifies each quadratic with its existing
+self-pairing and rewrites the first and second arguments
+using the newly verified radical-shift laws. This strictly
+avoids any nonnegative-weight premise and introduces no
+new matrix, vector-space quotient or rank algorithm.
+These results document exact algebraic invariance along
+kernel cosets, not a dimension or rank-nullity computation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

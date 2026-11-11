@@ -12184,4 +12184,131 @@ Section FiniteProbabilityMoments.
     tauto.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_bilinear_add_radical_first_invariant]
+   (theorem) — Adding a radical direction leaves the pairing unchanged.
+   Mathematical meaning: Any coefficient direction orthogonal
+   to every other finite composite score can be added to the
+   first argument of covariance without changing the result.
+   Exact checked proposition: If radical belongs to the typed
+   covariance pairing's radical, B(coefficients+radical,right)
+   equals B(coefficients,right) for all same-dimension vectors.
+   Premises and side conditions: No weight normalization,
+   sample nonnegativity, basis independence or nonzero vector
+   requirement; all coefficient dimensions are typed.
+   Proof/definition method: Rewrite by already verified
+   first-argument additive bilinearity and specialize the
+   radical's defining orthogonality at the right vector.
+   Standard ring arithmetic removes the zero summand.
+   Library reuse: indexed_basis_covariance_bilinear_add_first,
+   indexed_basis_covariance_bilinear_radical, Stdlib.Ring
+   and Stdlib.Vectors.Vector.map2.
+   Boundary: Exact invariance of the finite covariance
+   pairing, not an abstract quotient-space or rank theorem.
+   *)
+  Theorem indexed_basis_covariance_bilinear_add_radical_first_invariant :
+    forall basis (coefficients radical right :
+                  Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_radical basis radical ->
+      indexed_basis_covariance_bilinear_form
+        basis (Vector.map2 Rplus coefficients radical) right =
+      indexed_basis_covariance_bilinear_form
+        basis coefficients right.
+  Proof.
+    intros basis coefficients radical right Hradical.
+    rewrite indexed_basis_covariance_bilinear_add_first.
+    rewrite (Hradical right).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_add_radical_second_invariant]
+   (theorem) — Radical shifts are invisible in the second direction.
+   Mathematical meaning: Covariance with a composite score
+   does not change if its second coefficient direction
+   is shifted by a vector belonging to the radical.
+   Exact checked proposition: If radical is orthogonal to
+   all typed coefficient vectors, B(right,coefficients+radical)
+   equals B(right,coefficients) for every right vector.
+   Premises and side conditions: Works for arbitrary finite
+   signed, unnormalized weights and any typed score basis.
+   No probability or matrix invertibility assumptions.
+   Proof/definition method: Swap covariance arguments using
+   symmetry, invoke the first-argument radical shift theorem,
+   then restore the original argument order by symmetry.
+   Library reuse: indexed_basis_covariance_bilinear_symmetric,
+   indexed_basis_covariance_bilinear_add_radical_first_invariant,
+   Stdlib.Vectors.Vector.map2; no duplicate score expansion.
+   Boundary: Exact covariance pairing invariance only.
+   *)
+  Theorem indexed_basis_covariance_bilinear_add_radical_second_invariant :
+    forall basis (coefficients radical right :
+                  Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_radical basis radical ->
+      indexed_basis_covariance_bilinear_form
+        basis right (Vector.map2 Rplus coefficients radical) =
+      indexed_basis_covariance_bilinear_form
+        basis right coefficients.
+  Proof.
+    intros basis coefficients radical right Hradical.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis right (Vector.map2 Rplus coefficients radical)).
+    rewrite (indexed_basis_covariance_bilinear_add_radical_first_invariant
+      basis coefficients radical right Hradical).
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis coefficients right).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_add_radical_invariant]
+   (theorem) — A covariance quadratic is constant along radical shifts.
+   Mathematical meaning: Adding any coefficient direction
+   that is covariance-orthogonal to all other composite scores
+   leaves the indexed covariance quadratic of a direction
+   unchanged. Such radical shifts are indistinguishable
+   to the exact covariance quadratic.
+   Exact checked proposition: Under unit total mass,
+   radical membership of radical entails
+   Q(Vector.map2 Rplus coefficients radical)=Q(coefficients).
+   Premises and side conditions: Individual finite sample
+   weights may be negative; nonnegative weights are not
+   required because the argument only uses symmetry,
+   bilinearity and the unit-mass B(c,c)=Q(c) identity.
+   Coefficient vectors may be zero, dependent or empty.
+   Proof/definition method: Rewrite both quadratic values as
+   self-pairings using the previously checked diagonal law;
+   invoke the two already proved radical-shift invariance
+   laws once each. No new covariance, variance or matrix
+   expansion is performed.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_covariance_bilinear_add_radical_first_invariant,
+   indexed_basis_covariance_bilinear_add_radical_second_invariant,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Reals.
+   Boundary: An exact finite covariance quotient invariance;
+   it does not construct a quotient vector space or assert rank.
+   *)
+  Theorem indexed_basis_covariance_quadratic_add_radical_invariant :
+    forall basis (coefficients radical :
+                  Vector.t R (length basis)),
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_radical basis radical ->
+      indexed_basis_covariance_quadratic_form
+        basis (Vector.map2 Rplus coefficients radical) =
+      indexed_basis_covariance_quadratic_form basis coefficients.
+  Proof.
+    intros basis coefficients radical Hmass Hradical.
+    rewrite <- (indexed_basis_covariance_bilinear_diagonal
+      basis (Vector.map2 Rplus coefficients radical) Hmass).
+    rewrite <- (indexed_basis_covariance_bilinear_diagonal
+      basis coefficients Hmass).
+    rewrite (indexed_basis_covariance_bilinear_add_radical_first_invariant
+      basis coefficients radical
+      (Vector.map2 Rplus coefficients radical) Hradical).
+    rewrite (indexed_basis_covariance_bilinear_add_radical_second_invariant
+      basis coefficients radical coefficients Hradical).
+    reflexivity.
+  Qed.
+
 End FiniteProbabilityMoments.

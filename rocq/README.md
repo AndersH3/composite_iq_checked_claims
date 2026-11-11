@@ -3092,6 +3092,24 @@ Current target inventory: **734 public checked claims,
 737 proof scripts, 807 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 kernel verification.
 
+## Exact covariance invariance along radical shifts (11 November 2026)
+
+Under arbitrary signed and unnormalized finite weights,
+adding a coefficient vector in the covariance bilinear
+radical to either argument leaves the covariance pairing
+unchanged. The second-argument proof delegates to the
+first-argument theorem via symmetry.
+
+Under unit total mass, the indexed covariance quadratic
+likewise satisfies `Q(c+r)=Q(c)` for radical coefficients
+`r`. This is proved solely from the preexisting diagonal
+and radical-shift pairing laws; it does not assume
+nonnegative weights or build a quotient-space/rank library.
+
+Current target inventory: **737 public checked claims,
+740 proof scripts, 810 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 verification.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
