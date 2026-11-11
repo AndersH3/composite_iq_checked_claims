@@ -2895,7 +2895,9 @@ output coordinates is exactly zero; this proof is delegated to the
 existing centered-score sum theorem through the generic
 `FiniteSum.finite_sum_map` lemma. A further result proves that a
 normalized sample of length one has identically zero centered output
-for all coefficient vectors. This is a genuine zero-sum image
+for all coefficient vectors; the proof isolates the singleton scalar sum
+and transports it through the checked kernel equivalences to avoid
+destructing the dependent sample-vector index. This is a genuine zero-sum image
 constraint and concrete one-sample degeneracy, but no numeric
 rank bound, image-dimension or rank-nullity identity is asserted.
 

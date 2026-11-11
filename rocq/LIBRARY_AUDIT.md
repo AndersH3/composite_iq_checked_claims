@@ -2114,7 +2114,9 @@ while `FiniteSum.finite_sum_map` reduces its coordinate sum to
 the earlier `indexed_basis_centered_weighted_score_sum_zero`
 result. This proves that the normalized evaluator image lies in
 the kernel of the coordinate-sum functional, and yields the
-single-sample degeneracy using standard list/vector computation.
+single-sample degeneracy through a one-element scalar list proof
+and the established bounded sample-kernel/output-vector equivalences,
+without dependent elimination of a vector's length index.
 No second finite-sum implementation or unverified dimension
 argument is added.
 

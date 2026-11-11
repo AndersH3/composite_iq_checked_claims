@@ -10792,15 +10792,18 @@ Section FiniteProbabilityMoments.
    is necessary beyond normalized total mass, and the basis may
    be empty or dependent. The statement does not assert any
    positive definiteness when the coefficient dimension is zero.
-   Proof/definition method: Use the verified zero-sum output-vector
-   theorem, split the original sample list by its given length,
-   and observe that the only remaining coordinate equals its
-   one-term finite sum. Standard vector computation and Stdlib.Lra
-   discharge the sole scalar equality; no extra probability axiom.
-   Library reuse: indexed_basis_centered_sample_vector_sum_zero,
-   indexed_basis_centered_sample_vector_to_list,
-   Stdlib.Vectors.Vector.const/of_list/map, FiniteSum.finite_sum,
-   Stdlib.List.length and Stdlib.Lra.
+   Proof/definition method: Isolate the one-element list argument
+   as a scalar finite-sum lemma, rather than destructing a list
+   inside a dependently typed vector equality. Apply the earlier
+   centered-score sum-zero theorem to show every listed centered
+   score vanishes, then transport that universal statement through
+   the maintained bounded-index kernel and typed output-zero iff.
+   Standard finite-sum computation and Stdlib.Lra prove the sole
+   scalar case; no custom vector recursion or probability axiom.
+   Library reuse: indexed_basis_centered_weighted_score_sum_zero,
+   indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero,
+   indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel,
+   FiniteSum.finite_sum, Stdlib.List.In/length and Stdlib.Lra.
    Boundary: Certifies a concrete one-sample degeneracy only,
    rather than a general finite-dimensional nullity formula.
    *)
@@ -10812,19 +10815,38 @@ Section FiniteProbabilityMoments.
         Vector.const 0 (length samples).
   Proof.
     intros basis coefficients Hmass Hlength.
-    destruct samples as [|x [|y rest]].
-    - discriminate Hlength.
-    - pose proof
-        (indexed_basis_centered_sample_vector_sum_zero
-          basis coefficients Hmass) as Hsum.
-      rewrite indexed_basis_centered_sample_vector_to_list in Hsum.
-      unfold FiniteSum.finite_sum in Hsum.
-      simpl in Hsum.
-      unfold indexed_basis_centered_sample_vector.
-      simpl.
-      f_equal.
-      lra.
-    - discriminate Hlength.
+    (* Handle the singleton arithmetic separately: directly destructing
+       samples in the typed vector equality would obscure the output
+       vector's length index and block dependent generalization. *)
+    assert (Hsingleton :
+      forall (f : Outcome -> R),
+        FiniteSum.finite_sum f samples = 0 ->
+        forall x, In x samples -> f x = 0).
+    {
+      intros f Hsum x Hx.
+      destruct samples as [|head [|other rest]].
+      - discriminate Hlength.
+      - simpl in Hx.
+        destruct Hx as [Heq | []].
+        subst x.
+        unfold FiniteSum.finite_sum in Hsum.
+        simpl in Hsum.
+        lra.
+      - discriminate Hlength.
+    }
+    apply (proj2
+      (indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel
+        basis coefficients)).
+    unfold indexed_basis_bounded_sample_kernel.
+    apply (proj2
+      (indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero
+        basis coefficients)).
+    intros x Hx.
+    apply (Hsingleton
+      (indexed_basis_centered_weighted_score basis coefficients)).
+    - apply indexed_basis_centered_weighted_score_sum_zero.
+      exact Hmass.
+    - exact Hx.
   Qed.
 
 End FiniteProbabilityMoments.
