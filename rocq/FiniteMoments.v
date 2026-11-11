@@ -11185,4 +11185,119 @@ Section FiniteProbabilityMoments.
       exact Houtput_zero.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_two_samples_first_score_zero]
+   (theorem) — An exact scalar test for two-sample covariance nullity.
+   Mathematical meaning: Under two normalized nonnegative-weight
+   samples, the composite covariance quadratic is zero exactly when
+   the first listed centered score is zero.
+   Exact checked proposition: For samples = [x; y], total_mass = 1
+   and nonnegative sample weights, indexed covariance quadratic
+   at coefficients equals zero iff its centered score at x is zero.
+   Premises and side conditions: The two outcomes may coincide,
+   and the score basis may be empty or dependent. Nonnegative weights
+   are required by the existing covariance quadratic kernel bridge.
+   Proof/definition method: Compose the previously verified
+   quadratic-zero iff typed output-zero result with the checked
+   two-sample output-zero iff first-score-zero theorem.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero,
+   indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero,
+   Stdlib.Logic.tauto.
+   Boundary: An exact finite two-sample criterion, not matrix rank.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_two_samples_first_score_zero :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (forall z, In z samples -> 0 <= weight z) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       indexed_basis_centered_weighted_score basis coefficients x = 0).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero
+        basis coefficients Hmass Hw) as Hquadratic.
+    pose proof
+      (indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero
+        basis coefficients x y Hsamples Hmass) as Hvector.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_single_sample_zero]
+   (theorem) — All normalized singleton covariance quadratics vanish.
+   Mathematical meaning: One listed observation has an identically
+   zero centered output, so all typed covariance directions are null.
+   Exact checked proposition: With unit total sample mass,
+   nonnegative listed weights, and length samples = 1, every
+   indexed covariance quadratic at any coefficient vector equals 0.
+   Premises and side conditions: Score bases may be empty,
+   repeated or dependent. The probability assumptions required
+   for covariance/output nullity are explicit.
+   Proof/definition method: Reuse the verified singleton
+   sample-output vector degeneracy and the reverse direction
+   of the covariance quadratic/output zero equivalence.
+   Library reuse: indexed_basis_centered_sample_vector_single_sample_zero,
+   indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero.
+   Boundary: Singleton degeneracy, not a general covariance rank bound.
+   *)
+  Theorem indexed_basis_covariance_quadratic_single_sample_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      length samples = 1%nat ->
+      indexed_basis_covariance_quadratic_form basis coefficients = 0.
+  Proof.
+    intros basis coefficients Hmass Hw Hlength.
+    apply (proj2
+      (indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero
+        basis coefficients Hmass Hw)).
+    apply indexed_basis_centered_sample_vector_single_sample_zero;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_nonzero_scale_iff]
+   (theorem) — Nonzero scalar coefficient rescaling preserves
+   exact covariance quadratic nullity in both directions.
+   Mathematical meaning: A nonzero change in coefficient units
+   cannot create or remove a zero centered sample response.
+   Exact checked proposition: For normalized nonnegative weights
+   and a <> 0, the covariance quadratic after Vector.map scaling
+   by a is zero iff the original covariance quadratic equals zero.
+   Premises and side conditions: The basis length is tracked by
+   the standard typed vector; no nonempty basis, sample uniqueness,
+   Gaussianity or positive-definiteness assumption is introduced.
+   Proof/definition method: Apply the checked covariance quadratic
+   output-zero equivalence to scaled and original coefficients,
+   then use the existing nonzero-scale sample-vector nullity iff.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero,
+   indexed_basis_centered_sample_vector_nonzero_scale_zero_iff,
+   Stdlib.Vectors.Vector.map, Stdlib.Logic.tauto.
+   Boundary: Nullity invariance, not a full scaling/rank formula.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_nonzero_scale_iff :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      a <> 0 ->
+      (indexed_basis_covariance_quadratic_form
+         basis (Vector.map (fun c => a * c) coefficients) = 0 <->
+       indexed_basis_covariance_quadratic_form basis coefficients = 0).
+  Proof.
+    intros basis coefficients a Hmass Hw Hnonzero.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero
+        basis (Vector.map (fun c => a * c) coefficients)
+        Hmass Hw) as Hscaled.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero
+        basis coefficients Hmass Hw) as Horiginal.
+    pose proof
+      (indexed_basis_centered_sample_vector_nonzero_scale_zero_iff
+        basis coefficients a Hnonzero) as Hkernel.
+    tauto.
+  Qed.
+
 End FiniteProbabilityMoments.

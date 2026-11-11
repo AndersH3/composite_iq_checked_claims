@@ -2164,6 +2164,17 @@ equivalences, not a new covariance calculation. The resulting criterion
 retains an explicit coefficient nonzero condition and introduces no
 new matrix construction, image dimension claim, or probability axiom.
 
+## Small-sample quadratic kernel and scaling bridge (11 November 2026)
+
+Three further compositional proofs establish the scalar first-score
+criterion for zero two-sample covariance quadratic, zero covariance
+quadratic in every normalized single-sample coefficient direction,
+and nonzero coefficient-scaling invariance of quadratic nullity.
+All conditions for the covariance/output kernel iff are explicit.
+The code reuses existing finite indexed vector equivalences and
+standard propositional reasoning, with no new sum, matrix, rank
+engine, axioms or empirical inference.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

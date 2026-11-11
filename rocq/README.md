@@ -2958,6 +2958,21 @@ Current target inventory: **711 public checked claims,
 714 proof scripts, 782 documented declarations** across seven
 Rocq modules, subject to Rocq 9.2 CI for this commit.
 
+## Two-sample quadratic nullity and nonzero scaling (11 November 2026)
+
+Three new finite-moment equivalences/corollaries transport prior
+typed kernel results to the covariance quadratic. For two
+normalized nonnegative-weight samples, zero quadratic equals zero
+centered score at the first sample; a normalized singleton always
+has zero quadratic in every coefficient direction; and nonzero
+scalar coefficient scaling preserves exact quadratic nullity.
+These are finite exact results, not numerical rank-nullity or
+Gaussian conclusions.
+
+Current target inventory: **714 public checked claims,
+717 proof scripts, 785 documented declarations** across seven
+Rocq modules, subject to Rocq 9.2 and documentation CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

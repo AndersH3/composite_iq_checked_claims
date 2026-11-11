@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **711 public theorem/lemma/example claims**, plus
+The current branch has **714 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**714 proof scripts** across seven Rocq modules. The claims and scripts
+**717 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 300 proof scripts
+## FiniteMoments.v — 303 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1125,6 +1125,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero` (theorem) | Two-element list membership plus existing opposite-score and vector-zero equivalences | indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero, indexed_basis_centered_weighted_score_two_samples_opposite, Stdlib.List.In, Lra | **New:** first centered score completely tests two-sample output nullity |
 | `indexed_basis_covariance_not_positive_definite_single_sample` (theorem) | Nonzero constant-one typed coefficient witness contradicts singleton output zero via positivity/kernel criterion | indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_single_sample_zero, VectorSpec.to_list_const, Stdlib.List.hd, Lra | **New:** covariance of normalized singleton cannot be positive definite for nonempty basis |
 | `indexed_basis_covariance_positive_definite_two_samples_iff_first_score_detects_nonzero` (theorem) | Compose typed positive-definite/output test with the two-sample first-score kernel iff | indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero | **New:** two-sample covariance is positive definite iff every nonzero coefficient direction gives a nonzero first centered score |
+| `indexed_basis_covariance_quadratic_zero_iff_two_samples_first_score_zero` (theorem) | Compose existing quadratic/output and two-sample first-centered-score equivalences | indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero, indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero, tauto | **New:** zero quadratic iff first centered score zero with two samples |
+| `indexed_basis_covariance_quadratic_single_sample_zero` (theorem) | Transport singleton typed output degeneracy via quadratic/output iff | indexed_basis_centered_sample_vector_single_sample_zero, indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero | **New:** single normalized sample has zero covariance quadratic in all directions |
+| `indexed_basis_covariance_quadratic_zero_nonzero_scale_iff` (theorem) | Compose scaled/unscaled quadratic-output bridges with checked sample-vector scale kernel iff | indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero, indexed_basis_centered_sample_vector_nonzero_scale_zero_iff, tauto | **New:** covariance quadratic nullity invariant under nonzero coefficient scale |
 
 
 ## FiniteBridge.v — 37 proof scripts
