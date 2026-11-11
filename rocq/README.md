@@ -3009,6 +3009,17 @@ Current target inventory: **718 public checked claims,
 721 proof scripts, 789 documented declarations** over seven
 Rocq modules, pending Rocq 9.2 verification.
 
+## Refactored old covariance scaling nullity proof (11 November 2026)
+
+The exact quadratic scaling theorem and the stronger unit-mass-only
+nonzero-scaling nullity criterion were moved ahead of the older
+nonnegative-weight-specific criterion. The old theorem keeps its
+original interface but now delegates to the stronger algebraic
+equivalence in one step instead of repeating covariance/output
+kernel transports. No additional claim, axiom or matrix operation
+was introduced; the inventory remains **718 public claims,
+721 proof scripts, 789 documented declarations**.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

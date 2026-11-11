@@ -2207,6 +2207,18 @@ corresponding variances via the existing checked bridge. This
 adds an exact composite quadratic inequality without duplicating
 the generic discriminant or any matrix or vector machinery.
 
+## Scaling-proof dependency order and wrapper simplification (11 November 2026)
+
+The stronger signed-weight-safe exact quadratic scaling and
+unit-mass nullity laws are now declared before the older
+nonnegative-weight-specific nullity theorem. Its redundant
+proof previously transported two quadratic/output equivalences
+and a separate vector sample-kernel scaling iff.
+The older public theorem is now a short wrapper of the stronger
+unit-mass theorem and retains exactly its prior statement, so
+downstream formalizations need no interface change. The proof
+register was reordered to match the source declaration order.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
