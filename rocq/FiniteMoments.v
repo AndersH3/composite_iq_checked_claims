@@ -11491,4 +11491,147 @@ Section FiniteProbabilityMoments.
     apply finite_covariance_cauchy_schwarz_squared; assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_bilinear_form] (definition) —
+   Dimension-safe covariance pairing between coefficient directions.
+   Mathematical meaning: Pair two coefficient directions in the
+   same score basis by the exact finite covariance of their
+   existing weighted composite-score functions.
+   Exact checked proposition: This is the covariance of
+   weighted_basis_sum (Vector.to_list left) basis and
+   weighted_basis_sum (Vector.to_list right) basis.
+   Premises and side conditions: Both Vector.t arguments have
+   length basis by their types, but sampled outcome weights
+   need not be normalized or nonnegative. Duplicate basis
+   scores, empty vectors, and signed coefficients are allowed.
+   Proof/definition method: Thin wrapper of the existing finite
+   covariance and coefficient-weighted score operations.
+   Library reuse: covariance, weighted_basis_sum,
+   Stdlib.Vectors.Vector.to_list; no custom matrix or fold.
+   Boundary: Introduces a pairing interface only. Positive
+   semidefiniteness, matrix rank, and kernel dimensions are
+   separate theorems with additional hypotheses.
+   *)
+  Definition indexed_basis_covariance_bilinear_form
+      (basis : list (Outcome -> R))
+      (left right : Vector.t R (length basis)) : R :=
+    covariance
+      (weighted_basis_sum (Vector.to_list left) basis)
+      (weighted_basis_sum (Vector.to_list right) basis).
+
+  (**
+   [indexed_basis_covariance_bilinear_symmetric] (theorem) —
+   Exact symmetry of the typed finite covariance pairing.
+   Mathematical meaning: Exchanging coefficient directions
+   leaves their composite-score covariance unchanged.
+   Exact checked proposition: For all basis, left and right,
+   B_basis(left,right)=B_basis(right,left).
+   Premises and side conditions: No unit mass, positive
+   sample weights, independence, or nonempty basis is required.
+   The vectors have basis length by their types.
+   Proof/definition method: Unfold only the new pairing
+   wrapper and invoke the already proved covariance symmetry.
+   Library reuse: covariance_symmetric, Stdlib.Reals and
+   Stdlib.Vectors.Vector.t.
+   Boundary: Symmetry alone does not assert positivity
+   or a finite-dimensional rank or spectrum.
+   *)
+  Theorem indexed_basis_covariance_bilinear_symmetric :
+    forall basis (left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis left right =
+      indexed_basis_covariance_bilinear_form basis right left.
+  Proof.
+    intros basis left right.
+    unfold indexed_basis_covariance_bilinear_form.
+    apply covariance_symmetric.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_scale_first] (theorem) —
+   Homogeneity of the first typed covariance direction.
+   Mathematical meaning: Multiplying the first coefficient
+   vector by any real a multiplies its covariance with the
+   second composite score by exactly the same scalar.
+   Exact checked proposition: B_basis(Vector.map (a*.) left,
+   right) = a * B_basis(left,right), for all real a.
+   Premises and side conditions: Both vectors have basis
+   length. No normalized mass, nonnegative sample weights,
+   independent scores or nonzero-scalar hypothesis is needed.
+   Proof/definition method: Use standard VectorSpec.to_list_map
+   and existing weighted_basis_sum_coefficients_scale to
+   replace the first score by its pointwise scaled form,
+   through covariance_extensional; finish with the proven
+   covariance_scale_first law.
+   Library reuse: VectorSpec.to_list_map, covariance_extensional,
+   weighted_basis_sum_coefficients_scale,
+   covariance_scale_first and Stdlib.Vectors.Vector.map.
+   Boundary: One bilinearity axiom, not a packaged vector-space
+   linear map or a covariance-matrix rank computation.
+   *)
+  Theorem indexed_basis_covariance_bilinear_scale_first :
+    forall basis (left right : Vector.t R (length basis)) (a : R),
+      indexed_basis_covariance_bilinear_form
+        basis (Vector.map (fun c => a * c) left) right =
+      a * indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis left right a.
+    unfold indexed_basis_covariance_bilinear_form.
+    rewrite VectorSpec.to_list_map.
+    transitivity
+      (covariance
+        (fun x => a * weighted_basis_sum (Vector.to_list left) basis x)
+        (weighted_basis_sum (Vector.to_list right) basis)).
+    - apply covariance_extensional.
+      + intro x; apply weighted_basis_sum_coefficients_scale.
+      + intro x; reflexivity.
+    - apply covariance_scale_first.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_add_first] (theorem) —
+   Additivity of the first typed covariance direction.
+   Mathematical meaning: The covariance of a composite-score
+   sum with a fixed second composite score is the sum of
+   the two corresponding covariances.
+   Exact checked proposition: B_basis(Vector.map2 Rplus
+   left other, right) = B_basis(left,right)+B_basis(other,right).
+   Premises and side conditions: All three coefficient vectors
+   are typed at length basis. No total mass, weight positivity,
+   independent scores, or invertibility assumption is needed.
+   Proof/definition method: Use existing vector/list map2
+   transport, the coefficient-zip score additivity theorem,
+   and covariance_extensional to rewrite the first argument
+   as a pointwise sum; then apply covariance_add_first.
+   Library reuse: indexed_vector_to_list_map2_add,
+   weighted_basis_sum_coefficients_zip_add,
+   VectorSpec.length_to_list, covariance_extensional,
+   covariance_add_first and Stdlib.Vectors.Vector.map2.
+   Boundary: First-argument additivity is an algebraic finite
+   statement, not a kernel dimension or rank-nullity result.
+   *)
+  Theorem indexed_basis_covariance_bilinear_add_first :
+    forall basis (left other right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form
+        basis (Vector.map2 Rplus left other) right =
+      indexed_basis_covariance_bilinear_form basis left right +
+      indexed_basis_covariance_bilinear_form basis other right.
+  Proof.
+    intros basis left other right.
+    unfold indexed_basis_covariance_bilinear_form.
+    rewrite indexed_vector_to_list_map2_add.
+    transitivity
+      (covariance
+        (fun x =>
+          weighted_basis_sum (Vector.to_list left) basis x +
+          weighted_basis_sum (Vector.to_list other) basis x)
+        (weighted_basis_sum (Vector.to_list right) basis)).
+    - apply covariance_extensional.
+      + intro x.
+        apply weighted_basis_sum_coefficients_zip_add.
+        now rewrite !VectorSpec.length_to_list.
+      + intro x; reflexivity.
+    - apply covariance_add_first.
+  Qed.
+
 End FiniteProbabilityMoments.

@@ -3020,6 +3020,22 @@ kernel transports. No additional claim, axiom or matrix operation
 was introduced; the inventory remains **718 public claims,
 721 proof scripts, 789 documented declarations**.
 
+## First covariance bilinear-form interface (11 November 2026)
+
+A dimension-correct `indexed_basis_covariance_bilinear_form`
+pairs two coefficient vectors through their existing
+weighted composite-score covariance. The first checked
+laws establish symmetry, homogeneity and additivity in the
+first argument, using maintained vector/list bridges and
+previously verified finite covariance formulas. These
+identities permit arbitrary signed sample weights and do
+not depend on mass normalization, score independence,
+or a custom matrix representation.
+
+Current target inventory: **721 public checked claims,
+724 proof scripts, 793 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **718 public theorem/lemma/example claims**, plus
+The current branch has **721 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**721 proof scripts** across seven Rocq modules. The claims and scripts
+**724 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 307 proof scripts
+## FiniteMoments.v — 310 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1132,6 +1132,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_quadratic_zero_nonzero_scale_iff` (theorem) | **Refactored:** direct legacy-compatible wrapper of unit-mass-only algebraic scaling equivalence; redundant kernel transports eliminated | indexed_basis_covariance_quadratic_nonzero_scale_zero_iff_unit_mass, indexed_basis_covariance_quadratic_scale | **Simplified:** preserved exact old statement and assumptions while reducing proof to one library-backed theorem application |
 | `indexed_basis_covariance_quadratic_add_polarization` (theorem) | Full coefficient-vector additivity through shared weighted-score and variance-of-sum identities | indexed_basis_covariance_quadratic_as_variance, indexed_vector_to_list_map2_add, weighted_basis_sum_coefficients_zip_add, VectorSpec.length_to_list, variance_extensional, variance_of_two_score_sum | **New:** exact covariance quadratic polarization for two typed coefficient directions |
 | `indexed_basis_covariance_cross_cauchy_schwarz_squared` (theorem) | Replace typed quadratic by previously verified variance and instantiate the generic finite Cauchy-Schwarz inequality | indexed_basis_covariance_quadratic_as_variance, finite_covariance_cauchy_schwarz_squared | **New:** squared covariance of typed composite scores bounded by the product of their indexed quadratic values |
+| `indexed_basis_covariance_bilinear_symmetric` (theorem) | Thin wrapper over covariance symmetry; no score or matrix re-expansion | covariance_symmetric, indexed_basis_covariance_bilinear_form | **New:** typed coefficient pairing is symmetric |
+| `indexed_basis_covariance_bilinear_scale_first` (theorem) | Transport coefficient scaling through standard vector-to-list law and score homogeneity, then reuse finite covariance scaling | VectorSpec.to_list_map, weighted_basis_sum_coefficients_scale, covariance_extensional, covariance_scale_first | **New:** first-argument scalar linearity |
+| `indexed_basis_covariance_bilinear_add_first` (theorem) | Standard map2/list bridge, shared score zip-add, covariance extensionality and generic covariance additivity | indexed_vector_to_list_map2_add, weighted_basis_sum_coefficients_zip_add, VectorSpec.length_to_list, covariance_extensional, covariance_add_first | **New:** first-argument additive linearity |
 
 
 ## FiniteBridge.v — 37 proof scripts

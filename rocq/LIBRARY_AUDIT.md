@@ -2219,6 +2219,24 @@ unit-mass theorem and retains exactly its prior statement, so
 downstream formalizations need no interface change. The proof
 register was reordered to match the source declaration order.
 
+## Typed finite covariance bilinear interface (11 November 2026)
+
+A thin `indexed_basis_covariance_bilinear_form` definition
+now pairs two length-indexed coefficient directions through
+the existing covariance of their weighted composite-score
+functions. This introduces no bespoke matrix multiplication
+or duplicate finite summation, and its evaluation is meaningful
+before imposing sample weight sign or mass restrictions.
+
+The first three basic interface lemmas verify symmetry,
+first-argument scalar homogeneity and first-argument
+additivity. These call existing finite covariance identities
+and the earlier `VectorSpec` list transport and coefficient
+score add/scale lemmas. They are building blocks for
+packaging the covariance pairing and its kernel without
+inventing a second linear algebra implementation. These
+results do not yet establish a general rank-nullity theorem.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
