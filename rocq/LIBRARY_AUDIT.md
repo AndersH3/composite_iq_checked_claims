@@ -2254,6 +2254,31 @@ retains the nonnegative-weight assumption. Together these
 give a reusable symmetric bilinear interface without a new
 matrix multiplication, rank computation or axiom.
 
+## Covariance bilinear radical and matrix row kernel (11 November 2026)
+
+The typed covariance pairing now has an explicit radical
+predicate: every same-dimension coefficient direction has
+zero covariance with the specified coefficient vector.
+Its closure under coefficient scalar multiplication and
+addition follows directly from the existing verified
+first-argument bilinearity laws. No new scalar-vector
+structure or matrix recursion is introduced.
+
+The quadratic-zero iff radical equivalence is established
+with two existing results: covariance quadratic zero means
+orthogonality to every score for normalized nonnegative
+sample weights, and self-pairing equals the quadratic.
+Composition with the previously verified quadratic-zero
+iff bounded covariance row-kernel theorem identifies
+the radical with the existing row-dot kernel.
+Positive-definiteness iff trivial radical is then derived
+from the maintained row-kernel criterion, with all its
+hypotheses preserved.
+
+These results are exact finite-dimensional *kernel
+characterizations*, not assertions about kernel dimension,
+matrix rank, rank-nullity, or arbitrary signed-weight PSD.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

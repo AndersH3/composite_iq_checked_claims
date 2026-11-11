@@ -3052,6 +3052,27 @@ Current target inventory: **726 public checked claims,
 729 proof scripts, 798 documented declarations** across
 seven Rocq modules, subject to the Rocq 9.2 CI check.
 
+## Typed bilinear radical and row-kernel identification (11 November 2026)
+
+The covariance bilinear radical is now defined as the
+coefficient directions with zero pairing against every
+same-dimension coefficient vector. Its closure under
+coefficient addition and arbitrary real scalar scaling
+is proved by reusing the new bilinearity lemmas.
+
+For normalized nonnegative weights, zero covariance
+quadratic is equivalent to radical membership, which
+is equivalent to the existing bounded covariance
+row kernel. Consequently covariance positive definiteness
+is equivalent to the absence of nonzero radical directions.
+The proofs reuse the earlier score-orthogonality,
+self-pairing, row-kernel, and positive-definiteness
+results, not a new matrix or rank implementation.
+
+Current target inventory: **731 public checked claims,
+734 proof scripts, 804 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

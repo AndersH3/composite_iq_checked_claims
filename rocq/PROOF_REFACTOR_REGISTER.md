@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **726 public theorem/lemma/example claims**, plus
+The current branch has **731 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**729 proof scripts** across seven Rocq modules. The claims and scripts
+**734 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 315 proof scripts
+## FiniteMoments.v — 320 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1140,6 +1140,11 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_diagonal` (theorem) | Identify self-covariance with variance and reuse original indexed quadratic bridge | indexed_basis_covariance_quadratic_as_variance, variance | **New:** B(c,c)=Q(c) under unit mass |
 | `indexed_basis_covariance_bilinear_polarization` (theorem) | Thin pairing wrapper of existing typed quadratic polarization theorem | indexed_basis_covariance_quadratic_add_polarization | **New:** Q(u+v)=Q(u)+Q(v)+2 B(u,v) |
 | `indexed_basis_covariance_bilinear_cauchy_schwarz_squared` (theorem) | Thin pairing wrapper over checked typed finite covariance Cauchy-Schwarz | indexed_basis_covariance_cross_cauchy_schwarz_squared | **New:** B(u,v)^2<=Q(u)Q(v) with nonnegative normalized weights |
+| `indexed_basis_covariance_bilinear_radical_closed_under_scale` (theorem) | One rewrite by established first-argument scalar homogeneity and zero substitution | indexed_basis_covariance_bilinear_scale_first, Stdlib.Ring | **New:** algebraic radical closed under all scalar multiplication |
+| `indexed_basis_covariance_bilinear_radical_closed_under_add` (theorem) | One rewrite by established first-argument additivity and zero substitutions | indexed_basis_covariance_bilinear_add_first, Stdlib.Ring | **New:** algebraic radical closed under coefficient addition |
+| `indexed_basis_covariance_quadratic_zero_iff_bilinear_radical` (theorem) | Compose existing orthogonality to arbitrary scores with diagonal self-pairing | indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score, indexed_basis_covariance_bilinear_diagonal | **New:** finite covariance quadratic nullspace equals the typed bilinear radical |
+| `indexed_basis_covariance_bilinear_radical_iff_row_kernel` (theorem) | Compose already checked two quadratic-zero kernel bridges | indexed_basis_covariance_quadratic_zero_iff_bilinear_radical, indexed_basis_covariance_quadratic_zero_iff_named_row_kernel, tauto | **New:** typed covariance radical equals existing bounded row kernel |
+| `indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial` (theorem) | Reuse positive-definite iff trivial named row kernel and the new radical/row iff | indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial, indexed_basis_covariance_bilinear_radical_iff_row_kernel | **New:** positive definiteness iff the typed covariance radical has no nonzero coefficient direction |
 
 
 ## FiniteBridge.v — 37 proof scripts

@@ -11813,4 +11813,236 @@ Section FiniteProbabilityMoments.
       assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_bilinear_radical] (definition) —
+   Radical of the finite typed covariance pairing.
+   Mathematical meaning: A coefficient direction belongs to
+   the covariance radical when it is orthogonal, in finite
+   covariance, to every coefficient direction in the same basis.
+   Exact checked proposition: For each fixed basis and typed
+   coefficient vector left, every typed right satisfies
+   indexed_basis_covariance_bilinear_form basis left right = 0.
+   Premises and side conditions: The predicate is defined
+   algebraically with no probability normalization or
+   nonnegative-weight hypothesis. All coefficient dimensions
+   are constrained by Stdlib.Vectors.Vector.t.
+   Proof/definition method: A quantified predicate over the
+   preexisting checked finite covariance bilinear pairing.
+   Library reuse: indexed_basis_covariance_bilinear_form,
+   Stdlib.Vectors.Vector.t, Stdlib.Logic.Forall.
+   Boundary: The radical is defined as a predicate only;
+   no subspace dimension or abstract dual-space rank is claimed.
+   *)
+  Definition indexed_basis_covariance_bilinear_radical
+      (basis : list (Outcome -> R))
+      (left : Vector.t R (length basis)) : Prop :=
+    forall right : Vector.t R (length basis),
+      indexed_basis_covariance_bilinear_form basis left right = 0.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_closed_under_scale]
+   (theorem) — Scalar stability of the covariance radical.
+   Mathematical meaning: Rescaling any coefficient direction
+   orthogonal to every other composite score leaves it
+   orthogonal to every direction, even if the scalar is zero.
+   Exact checked proposition: For any basis, left and scalar a,
+   radical(left) implies radical(Vector.map (a*.) left).
+   Premises and side conditions: Arbitrary real and possibly
+   signed outcome weights are allowed, as are empty or dependent
+   bases. Unit mass and nonnegative weights are not needed.
+   Proof/definition method: Unfold only the radical predicate,
+   use the checked first-argument covariance homogeneity,
+   substitute the original zero covariance and close by ring.
+   Library reuse: indexed_basis_covariance_bilinear_scale_first,
+   Stdlib.Vectors.Vector.map, Stdlib.Ring and the shared pairing.
+   Boundary: Kernel closure under scaling, not a dimension theorem.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_closed_under_scale :
+    forall basis (left : Vector.t R (length basis)) (a : R),
+      indexed_basis_covariance_bilinear_radical basis left ->
+      indexed_basis_covariance_bilinear_radical
+        basis (Vector.map (fun c => a * c) left).
+  Proof.
+    intros basis left a Hrad.
+    unfold indexed_basis_covariance_bilinear_radical in *.
+    intro right.
+    rewrite indexed_basis_covariance_bilinear_scale_first.
+    rewrite (Hrad right).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_closed_under_add]
+   (theorem) — Additive stability of the covariance radical.
+   Mathematical meaning: The componentwise sum of two
+   coefficient directions orthogonal to every composite
+   direction is itself orthogonal to every composite direction.
+   Exact checked proposition: radical(left) and radical(other)
+   imply radical(Vector.map2 Rplus left other) for typed vectors.
+   Premises and side conditions: No mass normalization,
+   weight positivity, independent basis or nonzero assumption.
+   The standard vectors ensure identical coefficient lengths.
+   Proof/definition method: Unfold the radical predicate,
+   apply the checked covariance pairing first-argument
+   additivity, and rewrite both component covariances to zero.
+   Library reuse: indexed_basis_covariance_bilinear_add_first,
+   Stdlib.Vectors.Vector.map2, Stdlib.Ring and the shared pairing.
+   Boundary: Algebraic closure only; no rank-nullity conclusion.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_closed_under_add :
+    forall basis (left other : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_radical basis left ->
+      indexed_basis_covariance_bilinear_radical basis other ->
+      indexed_basis_covariance_bilinear_radical
+        basis (Vector.map2 Rplus left other).
+  Proof.
+    intros basis left other Hleft Hother.
+    unfold indexed_basis_covariance_bilinear_radical in *.
+    intro right.
+    rewrite indexed_basis_covariance_bilinear_add_first.
+    rewrite (Hleft right), (Hother right).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_bilinear_radical]
+   (theorem) — Finite covariance quadratic kernel equals the radical.
+   Mathematical meaning: Exactly the coefficient directions
+   with zero indexed covariance quadratic are orthogonal
+   under covariance to every other coefficient direction.
+   Exact checked proposition: With total_mass=1 and
+   nonnegative listed weights, Q(coefficients)=0 iff every
+   right coefficient vector has B(coefficients,right)=0.
+   Premises and side conditions: Both normalization and
+   nonnegative weights are required for the existing
+   zero-quadratic/orthogonal-to-every-score implication.
+   Empty and dependent bases and repeated sample entries
+   remain permitted.
+   Proof/definition method: Forward implication specializes
+   the existing quadratic-nullity iff covariance-orthogonal-to-
+   every-score law to each weighted basis composite score.
+   Reverse implication chooses the same coefficient vector as
+   the right argument and uses the previously proved diagonal.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score,
+   indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_covariance_bilinear_radical and Stdlib.Logic.
+   Boundary: A finite covariance kernel equivalence, not a
+   proof of kernel dimension or abstract rank-nullity.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_bilinear_radical :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    unfold indexed_basis_covariance_bilinear_radical.
+    split.
+    - intros Hquadratic right.
+      unfold indexed_basis_covariance_bilinear_form.
+      apply (proj1
+        (indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score
+          basis coefficients Hmass Hw)) in Hquadratic.
+      apply Hquadratic.
+    - intros Hradical.
+      specialize (Hradical coefficients).
+      rewrite (indexed_basis_covariance_bilinear_diagonal
+        basis coefficients Hmass) in Hradical.
+      exact Hradical.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_iff_row_kernel]
+   (theorem) — Equate the covariance radical with the row kernel.
+   Mathematical meaning: Requiring covariance zero against
+   every coefficient direction is equivalent to the existing
+   dimension-indexed zero-dot-product condition against every
+   row of the indexed basis covariance matrix.
+   Exact checked proposition: For normalized nonnegative finite
+   weights, radical(coefficients) iff
+   indexed_basis_bounded_covariance_row_kernel basis coefficients.
+   Premises and side conditions: The basis and vector dimensions
+   agree; zero-weight samples, repeated outcomes, zero-dimensional
+   coefficient spaces and dependent scores are allowed.
+   Proof/definition method: Compose the previously verified
+   covariance quadratic/nullity-to-row-kernel equivalence
+   with the new quadratic-nullity-to-radical equivalence;
+   propositional logic performs only the final transport.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_named_row_kernel,
+   indexed_basis_covariance_quadratic_zero_iff_bilinear_radical,
+   Stdlib.Logic.tauto; no row-dot implementation is duplicated.
+   Boundary: Kernel identification, not a claim about matrix rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_iff_row_kernel :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_bilinear_radical basis coefficients <->
+       indexed_basis_bounded_covariance_row_kernel basis coefficients).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_bilinear_radical
+        basis coefficients Hmass Hw) as Hradical.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_named_row_kernel
+        basis coefficients Hmass Hw) as Hrows.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial]
+   (theorem) — Positive definiteness detects the covariance radical.
+   Mathematical meaning: The finite indexed covariance matrix
+   is strictly positive definite exactly when no nonzero
+   typed coefficient direction lies in its bilinear radical.
+   Exact checked proposition: Under unit mass and nonnegative
+   sample weights, indexed_basis_covariance_positive_definite
+   basis iff every coefficient whose list is not repeat 0 has
+   a nonzero pairing against at least one typed direction.
+   Premises and side conditions: The basis may be empty or
+   dependent. Unit mass and nonnegative weights are essential
+   for the earlier row-kernel/positive-definiteness criterion.
+   Proof/definition method: Reuse the already verified
+   positive-definite iff trivial row kernel theorem and
+   the just established row-kernel iff radical bridge.
+   No new nonzero witness construction or matrix algebra.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel,
+   Stdlib.Vectors.Vector.to_list and Stdlib.Logic.
+   Boundary: Triviality of the finite covariance radical, not
+   the rank/dimension of its orthogonal complement.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         ~ indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial
+        basis Hmass Hw) as Hpositive.
+    split.
+    - intros Hpd coefficients Hnonzero Hradical.
+      apply ((proj1 Hpositive) Hpd coefficients Hnonzero).
+      apply (proj1
+        (indexed_basis_covariance_bilinear_radical_iff_row_kernel
+          basis coefficients Hmass Hw)).
+      exact Hradical.
+    - intros Hdetect.
+      apply (proj2 Hpositive).
+      intros coefficients Hnonzero Hrow.
+      apply (Hdetect coefficients Hnonzero).
+      apply (proj2
+        (indexed_basis_covariance_bilinear_radical_iff_row_kernel
+          basis coefficients Hmass Hw)).
+      exact Hrow.
+  Qed.
+
 End FiniteProbabilityMoments.
