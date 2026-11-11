@@ -2931,6 +2931,20 @@ Current target inventory: **708 public checked claims,
 711 proof scripts, 779 documented declarations**, subject
 to Rocq 9.2 kernel and documentation checks for this commit.
 
+## Two-sample kernel test and one-sample non-positive-definiteness (11 November 2026)
+
+A new checked two-sample criterion states that its entire centered
+output vector vanishes iff the first listed centered score is zero.
+The existing two-outcome opposite-score theorem supplies the second
+coordinate automatically. A separate explicit witness (the
+standard all-ones coefficient vector) establishes that no normalized
+single sample has positive definite covariance for a nonempty basis,
+under the original nonnegative-weight assumption.
+
+Current target inventory: **710 public checked claims,
+713 proof scripts, 781 documented declarations** across seven
+Rocq modules, subject to Rocq 9.2 CI for this batch.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

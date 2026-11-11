@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **708 public theorem/lemma/example claims**, plus
+The current branch has **710 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**711 proof scripts** across seven Rocq modules. The claims and scripts
+**713 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 297 proof scripts
+## FiniteMoments.v — 299 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1122,6 +1122,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_vector_single_sample_zero` (theorem) | Shared singleton sum-zero iff plus new typed vector/list-score equivalence | FiniteSum.finite_sum_singleton_zero_iff, indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero, indexed_basis_centered_weighted_score_sum_zero | **Refactored:** no local singleton sum or dependent vector induction |
 | `indexed_basis_centered_weighted_score_two_samples_opposite` (theorem) | Normalize sample-list sum-zero using generic pair iff | indexed_basis_centered_weighted_score_sum_zero, FiniteSum.finite_sum_pair_zero_iff_opposite | **New:** two centered scores are additive opposites |
 | `indexed_basis_centered_sample_vector_two_samples_opposite` (theorem) | Vector-to-list map plus prior paired-score cancellation | indexed_basis_centered_sample_vector_to_list, indexed_basis_centered_weighted_score_two_samples_opposite, Stdlib.Lra | **New:** complete two-sample vector output equals [s; -s] |
+| `indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero` (theorem) | Two-element list membership plus existing opposite-score and vector-zero equivalences | indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero, indexed_basis_centered_weighted_score_two_samples_opposite, Stdlib.List.In, Lra | **New:** first centered score completely tests two-sample output nullity |
+| `indexed_basis_covariance_not_positive_definite_single_sample` (theorem) | Nonzero constant-one typed coefficient witness contradicts singleton output zero via positivity/kernel criterion | indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_single_sample_zero, VectorSpec.to_list_const, Stdlib.List.hd, Lra | **New:** covariance of normalized singleton cannot be positive definite for nonempty basis |
 
 
 ## FiniteBridge.v — 37 proof scripts

@@ -11008,4 +11008,119 @@ Section FiniteProbabilityMoments.
     reflexivity.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero]
+   (theorem) — A single listed score tests zero output on a pair.
+   Mathematical meaning: Under normalization, the two centered
+   scores are opposites. Thus both vanish exactly when the first
+   one vanishes, reducing the full typed output-zero test to one
+   scalar equality for a two-outcome sample.
+   Exact checked proposition: If samples = [x; y] and total_mass=1,
+   the typed output equals Vector.const 0 (length samples) iff
+   indexed_basis_centered_weighted_score basis coefficients x = 0.
+   Premises and side conditions: The outcomes may coincide and
+   the individual weights may be signed; basis and coefficient
+   vector lengths must agree by the standard Vector.t type.
+   Proof/definition method: Reuse the generic vector-zero iff
+   all listed scores vanish bridge, enumerate membership in
+   a two-element Stdlib.List, and apply the already checked
+   two-sample opposite-score theorem to the second occurrence.
+   Library reuse: indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero,
+   indexed_basis_centered_weighted_score_two_samples_opposite,
+   Stdlib.List.In and Stdlib.Lra.
+   Boundary: This is a two-coordinate kernel membership test,
+   not a general finite-dimensional rank-nullity result.
+   *)
+  Theorem indexed_basis_centered_sample_vector_two_samples_zero_iff_first_score_zero :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_centered_sample_vector basis coefficients =
+         Vector.const 0 (length samples) <->
+       indexed_basis_centered_weighted_score basis coefficients x = 0).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero
+        basis coefficients) as Hvector.
+    split.
+    - intro Hzero.
+      apply ((proj1 Hvector) Hzero).
+      rewrite Hsamples.
+      simpl.
+      left; reflexivity.
+    - intro Hfirst.
+      apply (proj2 Hvector).
+      intros z Hz.
+      rewrite Hsamples in Hz.
+      simpl in Hz.
+      destruct Hz as [Heq | [Heq | []]].
+      + subst z. exact Hfirst.
+      + subst z.
+        pose proof
+          (indexed_basis_centered_weighted_score_two_samples_opposite
+            basis coefficients x y Hsamples Hmass) as Hopp.
+        lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_not_positive_definite_single_sample]
+   (theorem) — One sample excludes positive definite covariance
+   on every nonempty score basis.
+   Mathematical meaning: A normalized singleton has identically
+   zero centered sample output. A nonempty basis admits a nonzero
+   coefficient direction, so a positive-definite covariance
+   quadratic would contradict this explicitly zero output.
+   Exact checked proposition: If total_mass=1, listed weights
+   are nonnegative, length samples=1, and basis <> [], then
+   indexed_basis_covariance_positive_definite basis is false.
+   Premises and side conditions: The nonempty-basis hypothesis
+   prevents vacuous positive definiteness in dimension zero.
+   Normalization and nonnegative weights are explicitly required
+   to invoke the checked covariance/output-kernel equivalence.
+   Proof/definition method: Use the standard constant-one vector
+   as a typed nonzero coefficient witness; Stdlib.Vectors.VectorSpec
+   converts it to an ordinary repeat list, while Stdlib.List.hd
+   distinguishes its first element from the zero vector.
+   Contradict the existing positivity/kernel test using the
+   previously proved one-sample output degeneracy theorem.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero,
+   indexed_basis_centered_sample_vector_single_sample_zero,
+   Stdlib.Vectors.Vector.const, VectorSpec.to_list_const,
+   Stdlib.List.hd/repeat and Stdlib.Lra.
+   Boundary: A proven singleton non-positivity result only,
+   not a generic numerical covariance rank or spectral formula.
+   *)
+  Theorem indexed_basis_covariance_not_positive_definite_single_sample :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      length samples = 1%nat ->
+      basis <> [] ->
+      ~ indexed_basis_covariance_positive_definite basis.
+  Proof.
+    intros basis Hmass Hw Hlength Hnonempty Hpositive.
+    destruct basis as [| g gs].
+    - contradiction.
+    - assert (Hnonzero :
+        Vector.to_list (Vector.const (1 : R) (S (length gs))) <>
+          repeat 0 (S (length gs))).
+      {
+        rewrite VectorSpec.to_list_const.
+        intro Hequal.
+        apply (f_equal (fun ys : list R => hd 0 ys)) in Hequal.
+        simpl in Hequal.
+        lra.
+      }
+      pose proof
+        ((proj1 (indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero
+          (g :: gs) Hmass Hw)) Hpositive
+          (Vector.const (1 : R) (S (length gs))) Hnonzero)
+        as Hdetect.
+      apply Hdetect.
+      apply indexed_basis_centered_sample_vector_single_sample_zero;
+        assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

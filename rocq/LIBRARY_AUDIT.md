@@ -2140,6 +2140,21 @@ complete typed centered output vector. Both moment corollaries reuse
 the existing centered sum-zero result and vector-to-list bridge.
 No new summation algorithm, matrix engine or rank assertion was added.
 
+## Pair-output kernel test and singleton positive-definiteness obstruction
+
+A direct two-sample nullity criterion now reduces full output-vector
+zero equality to the first centered sample score's vanishing.
+The proof composes the previously checked two-sample opposite-score
+relation with the existing vector/list-score kernel equivalence.
+
+A normalized singleton cannot produce positive definite covariance
+for a nonempty score basis, because the standard constant-one
+coefficient vector is nonzero yet the already verified singleton
+result sends every coefficient to the zero output. We reuse
+`VectorSpec.to_list_const`, `Stdlib.List.hd` and the earlier
+positive-definiteness/zero-output equivalence, without introducing
+a new vector construction or matrix rank API.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
