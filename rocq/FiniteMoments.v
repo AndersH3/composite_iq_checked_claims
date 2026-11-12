@@ -12779,8 +12779,8 @@ Section FiniteProbabilityMoments.
    Reconstruction commutes with real scalar multiplication.
    Mathematical meaning: Scaling both the free tail and total by a
    scalar scales every reconstructed coordinate by the same scalar.
-   Exact proposition: reconstruct (map (a *) tail) (a * total) =
-   map (a *) (reconstruct tail total).
+   Exact proposition: reconstruct (map (a times each coordinate) tail) (a * total) =
+   map (a times each coordinate) (reconstruct tail total).
    Premises and side conditions: Any real a, any tail length, and arbitrary signed totals.
    Proof/definition method: Reuse coordinate-sum homogeneity, then scalar Ring normalization.
    Library reuse: Vector.map/cons, indexed_real_vector_coordinate_sum_scale,
@@ -12862,8 +12862,8 @@ Section FiniteProbabilityMoments.
    The concrete encoding preserves finite vector scalar multiplication.
    Mathematical meaning: Both stored tail entries and the total are
    multiplied by the same real scalar.
-   Exact proposition: encode (map (a *) v) =
-   (map (a *) (tl v), a * sum v).
+   Exact proposition: encode (map (a times each coordinate) v) =
+   (map (a times each coordinate) (tl v), a * sum v).
    Premises and side conditions: All real a and finite n, with no positivity restriction.
    Proof/definition method: Reuse coordinate-sum homogeneity and the standard cons
    decomposition (VectorSpec.eta) for tail-map compatibility.
@@ -12939,8 +12939,8 @@ Section FiniteProbabilityMoments.
    Decoding scalar-multiplied product coordinates is homogeneous.
    Mathematical meaning: Scaling the tail and total before decoding
    equals scaling every coordinate of the reconstructed vector.
-   Exact proposition: decode (map (a *) tail, a * total) =
-   map (a *) (decode (tail,total)).
+   Exact proposition: decode (map (a times each coordinate) tail, a * total) =
+   map (a times each coordinate) (decode (tail,total)).
    Premises and side conditions: Every real a, all finite n, signed entries/totals permitted.
    Proof/definition method: Reduce maintained fst/snd and reuse reconstruction_scale.
    Library reuse: Stdlib.Datatypes.prod, Vector.map,
