@@ -11131,6 +11131,120 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_coordinate_sum_cons] (lemma) —
+   Coordinate summation respects the standard nonempty-vector constructor.
+   Mathematical meaning: The coordinate sum of a vector with first
+   entry head and remaining vector tail is head plus the sum of tail.
+   Exact checked proposition: For every n, head:R and
+   tail:Vector.t R n, coordinate_sum(cons head tail) =
+   head + coordinate_sum tail.
+   Premises and side conditions: n may be zero, entries may have
+   either sign, and no sample weights or probability assumptions apply.
+   Proof/definition method: Definitional reduction of the existing
+   FiniteSum.finite_sum list fold after Stdlib.Vector.to_list of cons.
+   Library reuse: Stdlib.Vectors.Vector.cons/to_list and
+   Stdlib.List.map/fold_right via FiniteSum.finite_sum.
+   Boundary: A concrete coordinate identity, not a dimension theorem.
+   *)
+  Lemma indexed_real_vector_coordinate_sum_cons :
+    forall n (head : R) (tail : Vector.t R n),
+      indexed_real_vector_coordinate_sum
+        (Vector.cons R head n tail) =
+      head + indexed_real_vector_coordinate_sum tail.
+  Proof.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_cons_iff] (lemma) —
+   The first coordinate of a zero-sum vector is fixed by its tail.
+   Mathematical meaning: A vector built from head and tail lies in
+   the zero-coordinate-sum family exactly when head is the additive
+   inverse of the sum of all entries in tail.
+   Exact checked proposition: zero_sum(cons head tail) iff
+   head = -coordinate_sum tail, for arbitrary n, head and tail.
+   Premises and side conditions: Handles n=0, signed entries and
+   arbitrary vectors without normalization or weight positivity.
+   Proof/definition method: Rewrite the shared coordinate-sum cons
+   law and solve the equivalent scalar equality by Stdlib.Lra.
+   Library reuse: indexed_real_vector_coordinate_sum_cons,
+   Stdlib.Vectors.Vector.cons and Stdlib.Lra.
+   Boundary: An explicit defining equation, not an assertion that
+   the zero-sum family has abstract dimension n.
+   *)
+  Lemma indexed_real_vector_zero_sum_cons_iff :
+    forall n (head : R) (tail : Vector.t R n),
+      (indexed_real_vector_zero_sum (Vector.cons R head n tail) <->
+       head = - indexed_real_vector_coordinate_sum tail).
+  Proof.
+    intros n head tail.
+    unfold indexed_real_vector_zero_sum.
+    rewrite indexed_real_vector_coordinate_sum_cons.
+    lra.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_from_tail] (lemma) —
+   Every typed tail has a canonical zero-sum extension.
+   Mathematical meaning: Choose the first entry as the negative
+   sum of the freely supplied n remaining coordinates; the resulting
+   (n+1)-coordinate vector has coordinate sum zero.
+   Exact checked proposition: For every n and tail:Vector.t R n,
+   zero_sum(cons (-coordinate_sum tail) tail).
+   Premises and side conditions: No probability, finite-support,
+   linear-independence or sign hypotheses are required.
+   Proof/definition method: Apply the reverse implication of the
+   preceding exact cons iff; no fresh vector induction is needed.
+   Library reuse: indexed_real_vector_zero_sum_cons_iff
+   and Stdlib.Vectors.Vector.cons.
+   Boundary: A concrete parametrization witness, not an abstract
+   isomorphism or codimension-one certificate.
+   *)
+  Lemma indexed_real_vector_zero_sum_from_tail :
+    forall n (tail : Vector.t R n),
+      indexed_real_vector_zero_sum
+        (Vector.cons R
+          (- indexed_real_vector_coordinate_sum tail) n tail).
+  Proof.
+    intros n tail.
+    apply (proj2 (indexed_real_vector_zero_sum_cons_iff
+      n (- indexed_real_vector_coordinate_sum tail) tail)).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_coordinate_sum_surjective] (lemma) —
+   Every real scalar is the sum of some positive-length typed vector.
+   Mathematical meaning: The coordinate-sum functional has a direct
+   right inverse, obtained by placing the desired scalar first and
+   filling the remaining n coordinates with real zeros.
+   Exact checked proposition: For all n and target:R, there exists
+   v:Vector.t R (S n) with coordinate_sum v = target.
+   Premises and side conditions: Nonempty vector dimension is
+   essential; the zero-dimensional sum is always zero. No normalized
+   mass, positive weights, or classical choice principle is required.
+   Proof/definition method: Supply Stdlib.Vector.cons of target
+   and Vector.const 0; rewrite the previously checked cons and
+   zero-vector coordinate-sum laws, then use Stdlib.Ring.
+   Library reuse: indexed_real_vector_coordinate_sum_cons,
+   indexed_real_vector_coordinate_sum_zero, Stdlib.Vector.const
+   and Stdlib.Ring.
+   Boundary: Surjectivity of this concrete scalar functional does
+   not establish a covariance rank or rank-nullity identity.
+   *)
+  Lemma indexed_real_vector_coordinate_sum_surjective :
+    forall n (target : R),
+      exists v : Vector.t R (S n),
+        indexed_real_vector_coordinate_sum v = target.
+  Proof.
+    intros n target.
+    exists (Vector.cons R target n (Vector.const 0 n)).
+    rewrite indexed_real_vector_coordinate_sum_cons.
+    rewrite indexed_real_vector_coordinate_sum_zero.
+    ring.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
