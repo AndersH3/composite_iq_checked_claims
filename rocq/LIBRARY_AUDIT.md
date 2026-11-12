@@ -2643,6 +2643,24 @@ family. Formalizing that isomorphism as a maintained linear algebra
 library object and extracting a certified dimension/rank statement
 remain separate work.
 
+## Zero preservation and unique-tail equality (12 November 2026)
+
+The typed canonical zero-sum extension now has an explicit zero
+preservation theorem, proved without another scalar sum calculation
+by reusing the previously checked inverse on the zero-sum target
+and the constant-zero coordinate-sum law. A second lemma proves
+that two vectors of positive length in the zero-sum family agree
+if and only if their ordinary `Vector.tl` coordinates agree.
+The third proves that the canonical extension is the zero vector
+exactly when the original tail is zero.
+
+These statements reuse the maintained `Stdlib.Vectors.Vector.tl`,
+`Stdlib.Logic.f_equal` and earlier extension inverse/retraction
+theorems. They avoid custom recursion and coordinate induction.
+They make the concrete bijection more directly reusable for
+future linear-map kernel arguments, but do not assert any abstract
+subspace dimension or covariance rank.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
