@@ -2487,6 +2487,24 @@ and the earlier equal-output iff difference-radical theorem.
 Its source and proof-register positions were synchronized.
 The change is proof reuse, not a new rank-nullity result.
 
+## Generic vector cancellation and two targeted proof refactors (12 November 2026)
+
+The centered finite sample-evaluator proof has been simplified
+using a generic dimension-polymorphic real-vector equality iff
+signed-difference-zero lemma. Its proof uses Rocq Stdlib
+`VectorSpec.eq_nth_iff`, `nth_map2`, `nth_map`, and
+`const_nth` rather than implementing coefficient subtraction.
+A second general lemma identifies the typed zero vector with
+the repeated-zero list via Stdlib's `to_list_const` and
+`to_list_inj` laws rather than a custom list/vector induction.
+
+Both the prior finite sample-output difference criterion and
+the positive-definite separation result preserve their exact
+theorem propositions; the latter now uses the earlier checked
+sample-map nonzero detection theorem instead of re-entering
+the bilinear radical. This is a consolidation of proof code,
+not a new matrix, spectral, rank or nullity implementation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

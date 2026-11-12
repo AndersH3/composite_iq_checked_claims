@@ -12622,6 +12622,109 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_equal_iff_signed_difference_zero]
+   (lemma) — Reusable cancellation of equal-length real vectors.
+   Mathematical meaning: Two finite real vectors are equal exactly
+   when their componentwise sum with the negative of the second
+   vector equals the all-zero vector of the same length.
+   Exact checked proposition: For any natural n and real vectors
+   left,right : Vector.t R n, left=right iff
+   Vector.map2 Rplus left (Vector.map (fun c => (-1)*c) right)
+   equals Vector.const 0 n. No relation to samples or basis
+   indices is required for this generic identity.
+   Premises and side conditions: All dimensions including zero
+   are admitted; there are no probability or covariance premises.
+   Proof/definition method: Invoke the maintained
+   VectorSpec.eq_nth_iff vector extensionality theorem, expose
+   corresponding entries with VectorSpec.nth_map2/nth_map,
+   and reduce cancellation to Stdlib.Ring and Stdlib.Lra.
+   This hoists the former duplicated coordinate argument out of
+   the specialized finite sample-output equivalence.
+   Library reuse: Stdlib.Vectors.VectorSpec.eq_nth_iff, nth_map2,
+   nth_map, const_nth; Stdlib.Ring, Stdlib.Lra.
+   Boundary: An exact componentwise real-vector identity, not a
+   new vector type, subtraction algorithm, or dimension theorem.
+   *)
+  Lemma indexed_real_vector_equal_iff_signed_difference_zero :
+    forall n (left right : Vector.t R n),
+      (left = right <->
+       Vector.map2 Rplus left (Vector.map (fun c => (-1) * c) right) =
+         Vector.const 0 n).
+  Proof.
+    intros n left right.
+    split.
+    - intro Hequal.
+      rewrite Hequal.
+      apply (proj1 (VectorSpec.eq_nth_iff R n
+        (Vector.map2 Rplus
+          right (Vector.map (fun y => (-1) * y) right))
+        (Vector.const 0 n))).
+      intros i j Hij.
+      subst j.
+      rewrite (VectorSpec.nth_map2 Rplus
+        right (Vector.map (fun y => (-1) * y) right)
+        i i i eq_refl eq_refl).
+      rewrite (VectorSpec.nth_map (fun y => (-1) * y)
+        right i i eq_refl).
+      rewrite (VectorSpec.const_nth R 0 n i).
+      ring.
+    - intro Hzero.
+      apply (proj1 (VectorSpec.eq_nth_iff R n left right)).
+      intros i j Hij.
+      subst j.
+      pose proof
+        ((proj2 (VectorSpec.eq_nth_iff R n
+          (Vector.map2 Rplus
+            left (Vector.map (fun y => (-1) * y) right))
+          (Vector.const 0 n)))
+          Hzero i i eq_refl) as Hcoord.
+      rewrite (VectorSpec.nth_map2 Rplus
+        left (Vector.map (fun y => (-1) * y) right)
+        i i i eq_refl eq_refl) in Hcoord.
+      rewrite (VectorSpec.nth_map (fun y => (-1) * y)
+        right i i eq_refl) in Hcoord.
+      rewrite (VectorSpec.const_nth R 0 n i) in Hcoord.
+      lra.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_iff_to_list_repeat]
+   (lemma) — Equivalence of typed and list-form zero coefficients.
+   Mathematical meaning: A typed finite real vector is identically
+   zero precisely when its standard Vector.to_list representation
+   is the same-length list of repeated zero real coefficients.
+   Exact checked proposition: For n and v : Vector.t R n,
+   v = Vector.const 0 n iff Vector.to_list v = repeat 0 n.
+   Premises and side conditions: The result is valid in all finite
+   dimensions, including the empty vector; no samples, basis
+   functions, nonzero scalar, or probability assumptions appear.
+   Proof/definition method: Apply the maintained standard-library
+   constant-vector-to-list law in the forward direction and the
+   maintained to_list injectivity theorem in reverse. No induction
+   on vectors, lists, or dimensional indices is added.
+   Library reuse: Stdlib.Vectors.VectorSpec.to_list_const and
+   Stdlib.Vectors.VectorSpec.to_list_inj, Stdlib.List.repeat.
+   Boundary: This connects two representations of the same
+   finite zero direction; it does not construct a kernel dimension.
+   *)
+  Lemma indexed_real_vector_zero_iff_to_list_repeat :
+    forall n (coefficients : Vector.t R n),
+      (coefficients = Vector.const 0 n <->
+       Vector.to_list coefficients = repeat 0 n).
+  Proof.
+    intros n coefficients.
+    split.
+    - intro Hzero.
+      rewrite Hzero.
+      apply VectorSpec.to_list_const.
+    - intro Hlist.
+      apply (VectorSpec.to_list_inj R n
+        coefficients (Vector.const 0 n)).
+      rewrite VectorSpec.to_list_const.
+      exact Hlist.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_equal_iff_difference_zero]
    (theorem) — Equality of two full sample outputs is zero
    evaluation of their signed coefficient difference.
@@ -12634,15 +12737,16 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: Both coefficient vectors have
    the same basis length. All finite weights may be signed and
    unnormalized; samples may repeat or be empty.
-   Proof/definition method: Rewrite the full output of the signed
-   difference using existing additivity and scalar homogeneity.
-   Compare each bounded coordinate with the standard
-   VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth laws.
-   Ordinary real linear arithmetic supplies cancellation.
+   Proof/definition method: Rewrite the full sample-output map
+   using the already checked additivity and scalar homogeneity
+   laws, then delegate real vector cancellation to the reusable
+   generic signed-difference equality theorem. This replaces
+   duplicated bounded-coordinate extensionality calculations
+   without changing the original proposition or assumptions.
    Library reuse: indexed_basis_centered_sample_vector_add,
    indexed_basis_centered_sample_vector_scale,
-   Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth,
-   and Stdlib.Lra; no new list fold or vector recursion.
+   indexed_real_vector_equal_iff_signed_difference_zero,
+   Stdlib.Vectors.VectorSpec.eq_nth_iff; no new recursion.
    Boundary: This is an exact finite linear-evaluation identity,
    not a statement about matrix rank, injectivity or Gaussian data.
    *)
@@ -12658,53 +12762,8 @@ Section FiniteProbabilityMoments.
     intros basis left right.
     rewrite indexed_basis_centered_sample_vector_add.
     rewrite indexed_basis_centered_sample_vector_scale.
-    split.
-    - intro Hequal.
-      rewrite Hequal.
-      apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
-        (Vector.map2 Rplus
-          (indexed_basis_centered_sample_vector basis right)
-          (Vector.map (fun y => (-1) * y)
-            (indexed_basis_centered_sample_vector basis right)))
-        (Vector.const 0 (length samples)))).
-      intros i j Hij.
-      subst j.
-      rewrite (VectorSpec.nth_map2 Rplus
-        (indexed_basis_centered_sample_vector basis right)
-        (Vector.map (fun y => (-1) * y)
-          (indexed_basis_centered_sample_vector basis right))
-        i i i eq_refl eq_refl).
-      rewrite (VectorSpec.nth_map (fun y => (-1) * y)
-        (indexed_basis_centered_sample_vector basis right)
-        i i eq_refl).
-      rewrite (VectorSpec.const_nth R 0 (length samples) i).
-      ring.
-    - intro Hzero.
-      apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
-        (indexed_basis_centered_sample_vector basis left)
-        (indexed_basis_centered_sample_vector basis right))).
-      intros i j Hij.
-      subst j.
-      pose proof
-        ((proj2 (VectorSpec.eq_nth_iff R (length samples)
-          (Vector.map2 Rplus
-            (indexed_basis_centered_sample_vector basis left)
-            (Vector.map (fun y => (-1) * y)
-              (indexed_basis_centered_sample_vector basis right)))
-          (Vector.const 0 (length samples))))
-          Hzero i i eq_refl) as Hcoord.
-      rewrite (VectorSpec.nth_map2 Rplus
-        (indexed_basis_centered_sample_vector basis left)
-        (Vector.map (fun y => (-1) * y)
-          (indexed_basis_centered_sample_vector basis right))
-        i i i eq_refl eq_refl) in Hcoord.
-      rewrite (VectorSpec.nth_map (fun y => (-1) * y)
-        (indexed_basis_centered_sample_vector basis right)
-        i i eq_refl) in Hcoord.
-      rewrite (VectorSpec.const_nth R 0 (length samples) i) in Hcoord.
-      lra.
+    apply indexed_real_vector_equal_iff_signed_difference_zero.
   Qed.
-
   (**
    [indexed_basis_centered_sample_vector_equal_iff_difference_radical]
    (theorem) — Identify coincident sample evaluations by the radical.
@@ -12766,12 +12825,15 @@ Section FiniteProbabilityMoments.
    every listed outcome weight is nonnegative. Basis vectors
    may have length zero, outcomes may repeat, and no assumption
    of statistical score independence is silently introduced.
-   Proof/definition method: Convert hypothetical equal outputs
-   into radical membership of their signed coefficient difference.
-   Instantiate the existing positive-definite iff trivial-radical
-   criterion with exactly that nonzero direction to contradict it.
-   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_radical,
-   indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial,
+   Proof/definition method: Apply the already checked criterion
+   that positive definiteness detects every nonzero coefficient
+   direction through the complete centered sample evaluator.
+   Transform equal outputs to zero output for their signed
+   difference using the existing linear-evaluation identity.
+   This removes a redundant radical-predicate detour while
+   preserving the exact previously checked theorem proposition.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero,
+   indexed_basis_centered_sample_vector_equal_iff_difference_zero,
    Stdlib.Vectors.Vector.map/map2/to_list and Stdlib.Logic.
    Boundary: An exact sample-evaluation separation statement,
    not a dimension theorem, numerical covariance rank, or
@@ -12792,7 +12854,7 @@ Section FiniteProbabilityMoments.
     intros basis left right Hmass Hw Hpositive Hnonzero Hequal.
     apply
       ((proj1
-        (indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial
+        (indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero
           basis Hmass Hw))
         Hpositive
         (Vector.map2 Rplus left
@@ -12800,11 +12862,10 @@ Section FiniteProbabilityMoments.
         Hnonzero).
     apply
       (proj1
-        (indexed_basis_centered_sample_vector_equal_iff_difference_radical
-          basis left right Hmass Hw)).
+        (indexed_basis_centered_sample_vector_equal_iff_difference_zero
+          basis left right)).
     exact Hequal.
   Qed.
-
   (**
    [indexed_basis_centered_sample_vector_equal_iff_difference_quadratic_zero]
    (theorem) — Equal complete sample outputs detect a zero covariance

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **760 proof scripts** in seven
+for the two reports. **762 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3295,6 +3295,29 @@ axioms or unchecked rank claims were introduced.
 Current intended inventory: **757 public checked claims,
 760 proof scripts, 830 documented declarations** in seven
 modules, subject to Rocq 9.2 kernel and contract CI.
+
+## Generic real-vector cancellation and proof consolidation (12 November 2026)
+
+Two reusable Stdlib-based lemmas now characterize equality of
+equal-length real vectors by zero signed difference, and typed
+zero real vectors by their zero repeated-list representation.
+Both are dimension-generic, including the empty vector, and
+require no sample-weight or probabilistic assumptions.
+
+The existing centered-sample-output equality iff zero difference
+theorem has an unchanged statement but now consists solely of
+the maintained evaluator additivity/scaling rewrites and a
+single application of generic real-vector cancellation; its
+previous duplicated coordinate-level proof was eliminated.
+The previously checked positive-definite sample-output
+separation theorem also has an unchanged statement and now
+delegates directly to the original nonzero-direction detection
+criterion and signed-difference zero-output equivalence,
+rather than detouring through a separate covariance radical.
+
+Current intended inventory: **759 public checked claims,
+762 proof scripts, 832 documented declarations** across seven
+Rocq modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
 
 ## Research extensions
 
