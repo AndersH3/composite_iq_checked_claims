@@ -11245,6 +11245,171 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_extension] (definition) —
+   Canonical finite-vector embedding into the zero-sum family.
+   Mathematical meaning: Retain all n tail coordinates unchanged and
+   prepend the unique scalar that makes their total sum zero.
+   Exact declaration: For tail:Vector.t R n, cons (-sum tail) tail
+   is a vector of dimension S n.
+   Premises and side conditions: Supports n=0 and any signed real
+   coordinates; it does not use any finite probability assumptions.
+   Proof/definition method: Compose the standard Vector.cons
+   constructor with the previously checked coordinate-sum function;
+   neither a new recursion nor a custom vector type is introduced.
+   Library reuse: Stdlib.Vectors.Vector.cons and
+   indexed_real_vector_coordinate_sum.
+   Boundary: A concrete embedding awaiting an abstract maintained
+   linear-subspace interpretation, not a dimension calculation.
+   *)
+  Definition indexed_real_vector_zero_sum_extension
+      {n : nat} (tail : Vector.t R n) : Vector.t R (S n) :=
+    Vector.cons R (- indexed_real_vector_coordinate_sum tail) n tail.
+
+  (**
+   [indexed_real_vector_zero_sum_extension_zero_sum] (lemma) —
+   The canonical extension always meets its target constraint.
+   Mathematical meaning: The constructed nonempty vector has total
+   coordinate sum zero for any freely chosen tail.
+   Exact checked proposition: For every n and tail:Vector.t R n,
+   zero_sum(zero_sum_extension tail).
+   Premises and side conditions: Arbitrary n and real entries;
+   normalization, sample size and covariance conditions are absent.
+   Proof/definition method: Unfold only the constructor wrapper and
+   reuse the existing tail-to-zero-sum construction theorem.
+   Library reuse: indexed_real_vector_zero_sum_from_tail and
+   Stdlib.Vectors.Vector.cons.
+   Boundary: Target membership, not a rank or dimension result.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_zero_sum :
+    forall n (tail : Vector.t R n),
+      indexed_real_vector_zero_sum
+        (indexed_real_vector_zero_sum_extension tail).
+  Proof.
+    intros n tail.
+    unfold indexed_real_vector_zero_sum_extension.
+    apply indexed_real_vector_zero_sum_from_tail.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_extension_tail] (lemma) —
+   Dropping the new first coordinate recovers the original vector.
+   Mathematical meaning: Standard Vector.tl is a left inverse of
+   the zero-sum extension map on every finite dimension.
+   Exact checked proposition: tl(extension tail) = tail for
+   all n and tail:Vector.t R n.
+   Premises and side conditions: Works for n=0; no restriction on
+   real entries or probabilistic data is imposed.
+   Proof/definition method: Definitional reduction of the standard
+   Vector.cons/tl equation, with no bespoke destructors or induction.
+   Library reuse: Stdlib.Vectors.Vector.cons and Vector.tl.
+   Boundary: A concrete retraction, not an abstract vector-space
+   equivalence or a dimension theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_tail :
+    forall n (tail : Vector.t R n),
+      Vector.tl (indexed_real_vector_zero_sum_extension tail) = tail.
+  Proof.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_extension_add] (lemma) —
+   Canonical zero-sum extension preserves finite-vector addition.
+   Mathematical meaning: Extending a componentwise sum is the same
+   as extending both tails and adding the resulting whole vectors.
+   Exact checked proposition: For left,right:Vector.t R n,
+   extension(map2 Rplus left right) =
+   map2 Rplus (extension left) (extension right).
+   Premises and side conditions: No normalization, positivity,
+   nonempty-tail or covariance assumptions are required.
+   Proof/definition method: Reuse the checked coordinate-sum
+   additivity theorem; standard Vector.map2 computes on cons and
+   the first-coordinate identity follows from Stdlib.Ring.
+   Library reuse: indexed_real_vector_coordinate_sum_add,
+   Stdlib.Vectors.Vector.map2/cons, and Stdlib.Ring.
+   Boundary: Concrete additive linearity of an embedding, not
+   generic module structure or matrix rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_add :
+    forall n (left right : Vector.t R n),
+      indexed_real_vector_zero_sum_extension
+        (Vector.map2 Rplus left right) =
+      Vector.map2 Rplus
+        (indexed_real_vector_zero_sum_extension left)
+        (indexed_real_vector_zero_sum_extension right).
+  Proof.
+    intros n left right.
+    unfold indexed_real_vector_zero_sum_extension.
+    rewrite indexed_real_vector_coordinate_sum_add.
+    cbn [Vector.map2].
+    f_equal.
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_extension_scale] (lemma) —
+   Canonical zero-sum extension commutes with scalar multiplication.
+   Mathematical meaning: Scaling the n coordinates before extension
+   gives the same (n+1)-vector as scaling after extension.
+   Exact checked proposition: For any a:R and tail:Vector.t R n,
+   extension(map (a*.) tail) = map (a*.) (extension tail).
+   Premises and side conditions: Includes zero/negative scalars
+   and n=0; no probability or vector-independence premise.
+   Proof/definition method: Rewrite the already proved coordinate
+   sum homogeneity law, reduce Stdlib.Vector.map on cons, and apply
+   standard real ring normalization to the new first coordinate.
+   Library reuse: indexed_real_vector_coordinate_sum_scale,
+   Stdlib.Vectors.Vector.map/cons and Stdlib.Ring.
+   Boundary: Concrete scalar homogeneity, not an abstract linear-map
+   instance or rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_scale :
+    forall n (tail : Vector.t R n) (a : R),
+      indexed_real_vector_zero_sum_extension
+        (Vector.map (fun c => a * c) tail) =
+      Vector.map (fun c => a * c)
+        (indexed_real_vector_zero_sum_extension tail).
+  Proof.
+    intros n tail a.
+    unfold indexed_real_vector_zero_sum_extension.
+    rewrite indexed_real_vector_coordinate_sum_scale.
+    cbn [Vector.map].
+    f_equal.
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_extension_injective] (lemma) —
+   The canonical extension does not identify distinct tails.
+   Mathematical meaning: Equality of complete extended vectors
+   forces equality of their original n tail coordinates.
+   Exact checked proposition: For left,right:Vector.t R n,
+   extension left = extension right implies left = right.
+   Premises and side conditions: All finite n and arbitrary
+   real entries; no choice, positive weights or covariance needed.
+   Proof/definition method: Apply congruence for maintained
+   Vector.tl to the given equality, then use the verified retraction
+   equation twice. No real-number equality decision is needed.
+   Library reuse: Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.tl,
+   and indexed_real_vector_zero_sum_extension_tail.
+   Boundary: A proved injection into the zero-sum family; it does
+   not yet assert surjectivity onto that family or its dimension.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_injective :
+    forall n (left right : Vector.t R n),
+      indexed_real_vector_zero_sum_extension left =
+      indexed_real_vector_zero_sum_extension right ->
+      left = right.
+  Proof.
+    intros n left right Hequal.
+    pose proof
+      (f_equal (fun v : Vector.t R (S n) => Vector.tl v)
+        Hequal) as Htails.
+    rewrite !indexed_real_vector_zero_sum_extension_tail in Htails.
+    exact Htails.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
