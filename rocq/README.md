@@ -3531,6 +3531,21 @@ across seven Rocq modules, subject to final CI. The concrete
 linear retraction does not, by itself, certify the hyperplane's
 abstract dimension or a covariance-matrix rank formula.
 
+## Projection fixed points and head-coordinate erasure (12 November 2026)
+
+Three new documented and registered lemmas prove that every
+canonical zero-sum extension is fixed by projection, that
+projection ignores arbitrary differences in the first coordinate,
+and that no positive-length nonzero constant vector is fixed.
+Each proof composes the previously checked projection and
+extension interface with standard `Vector.cons/tl`, without
+additional vector induction or hand-written linear algebra.
+
+Current intended inventory: **801 public checked claims,
+804 proof scripts and 878 documented declarations**
+across seven Rocq modules, pending pinned Rocq 9.2 and
+Python/SPARK CI verification.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
