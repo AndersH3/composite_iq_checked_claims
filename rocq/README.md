@@ -3482,6 +3482,21 @@ Current intended inventory: **786 public checked claims,
 across the seven Rocq modules, subject to Rocq 9.2 kernel and
 documentation CI verification.
 
+## Automatic nonempty-sample exclusion under unit mass (12 November 2026)
+
+Two checked results now eliminate an unnecessary caller premise.
+Any sample list with total mass one is nonempty, because the
+empty shared finite sum is exactly zero, irrespective of weight
+signs. Consequently, a normalized centered evaluator cannot
+produce a nonzero constant sample-output vector without also
+requiring the caller to supply a positive sample-length witness.
+The proof reuses the existing nonzero-constant result rather
+than repeating the centering or zero-sum calculation.
+
+Current intended inventory: **788 public checked claims,
+791 proof scripts and 864 documented declarations**
+across seven Rocq modules, subject to pinned CI checks.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
