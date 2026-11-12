@@ -12087,6 +12087,130 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_extension_unique_tail] (lemma) —
+   Uniqueness of the canonical tail parametrization.
+   Mathematical meaning: For a target vector whose total coordinate
+   sum vanishes, the only shorter vector that extends to that target
+   consists of the target's own standard tail coordinates.
+   Exact checked proposition: For n, v:Vector.t R (S n) satisfying
+   zero_sum v, and any tail:Vector.t R n,
+   extension tail = v iff tail = Vector.tl v.
+   Premises and side conditions: Every natural n, including n=0,
+   and all signed real coordinates are admitted. The zero-sum
+   condition on the target is required in the reverse direction.
+   Proof/definition method: Apply congruence under maintained
+   Vector.tl to an extension equality and reuse the verified
+   extension/tail retraction. Conversely substitute the equal
+   tails and apply the verified inverse on the zero-sum family.
+   Library reuse: Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.tl,
+   indexed_real_vector_zero_sum_extension_tail, and
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+   Boundary: Concrete uniqueness of a parametrization, not a
+   formal abstract dimension or matrix-rank calculation.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_unique_tail :
+    forall n (v : Vector.t R (S n)) (tail : Vector.t R n),
+      indexed_real_vector_zero_sum v ->
+      (indexed_real_vector_zero_sum_extension tail = v <->
+       tail = Vector.tl v).
+  Proof.
+    intros n v tail Hzero.
+    split.
+    - intro Hequal.
+      pose proof
+        (f_equal (fun w : Vector.t R (S n) => Vector.tl w)
+           Hequal) as Htail.
+      rewrite indexed_real_vector_zero_sum_extension_tail in Htail.
+      exact Htail.
+    - intro Htail.
+      rewrite Htail.
+      apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+      exact Hzero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_fiber_iff] (lemma) —
+   Complete characterization of all preimages under the projection.
+   Mathematical meaning: Projecting an arbitrary vector gives a
+   prescribed output precisely when that output already has zero
+   coordinate sum and its tail agrees with the input's tail.
+   Exact checked proposition: For n and input,output both of type
+   Vector.t R (S n), projection input = output iff
+   zero_sum output and Vector.tl input = Vector.tl output.
+   Premises and side conditions: No initial zero-sum assumption on
+   the input; signed real entries and n=0 are allowed. The image
+   condition on the output cannot be omitted.
+   Proof/definition method: Forward: transport zero-sum membership
+   through the equality and apply standard projection-tail
+   preservation. Reverse: rewrite with the common tail, then
+   apply the already proven extension inverse for zero-sum outputs.
+   Library reuse: indexed_real_vector_zero_sum_projection_zero_sum,
+   indexed_real_vector_zero_sum_projection_tail,
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum,
+   and Stdlib.Vectors.Vector.tl.
+   Boundary: Exact fiber description, but no quotient dimension,
+   matrix image or rank-nullity theorem is inferred.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_fiber_iff :
+    forall n (input output : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection input = output <->
+       indexed_real_vector_zero_sum output /\
+       Vector.tl input = Vector.tl output).
+  Proof.
+    intros n input output.
+    split.
+    - intro Hequal.
+      split.
+      + rewrite <- Hequal.
+        apply indexed_real_vector_zero_sum_projection_zero_sum.
+      + rewrite <- Hequal.
+        symmetry.
+        apply indexed_real_vector_zero_sum_projection_tail.
+    - intros [Hzero Htails].
+      unfold indexed_real_vector_zero_sum_projection.
+      rewrite Htails.
+      apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+      exact Hzero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_image_iff_zero_sum]
+   (lemma) — Exact range of the canonical projection.
+   Mathematical meaning: A real vector of positive length occurs
+   as a canonical projection output if and only if its coordinate
+   sum is zero; no other output vectors can occur.
+   Exact checked proposition: For every n and target:Vector.t R
+   (S n), there exists a preimage whose projection is target iff
+   indexed_real_vector_zero_sum target holds.
+   Premises and side conditions: Every n, including n=0, and all
+   real inputs are admitted. No statistical normalization, choice
+   principle, matrix basis or covariance premise is needed.
+   Proof/definition method: Forward direction substitutes the
+   explicit preimage equation into established image membership.
+   Reverse direction directly invokes the already checked
+   surjectivity-on-zero-sum theorem; no second construction.
+   Library reuse: indexed_real_vector_zero_sum_projection_zero_sum
+   and indexed_real_vector_zero_sum_projection_surjective_on_zero_sum.
+   Boundary: Exact set-theoretic image characterization; no claim
+   about an abstract image dimension, nullity or covariance rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_image_iff_zero_sum :
+    forall n (target : Vector.t R (S n)),
+      ((exists input : Vector.t R (S n),
+          indexed_real_vector_zero_sum_projection input = target) <->
+       indexed_real_vector_zero_sum target).
+  Proof.
+    intros n target.
+    split.
+    - intros [input Himage].
+      rewrite <- Himage.
+      apply indexed_real_vector_zero_sum_projection_zero_sum.
+    - intro Hzero.
+      apply indexed_real_vector_zero_sum_projection_surjective_on_zero_sum.
+      exact Hzero.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

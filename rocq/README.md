@@ -3561,6 +3561,23 @@ across seven Rocq modules, pending final pinned CI.
 The concrete normal form alone does not establish an abstract
 kernel dimension or covariance rank theorem.
 
+## Exact projection range and preimage fibers (12 November 2026)
+
+Three new checked results establish uniqueness of the tail
+representing any zero-sum extension target, characterize every
+projection preimage by zero-sum target membership and equality
+of standard input/output tails, and prove that the projection's
+range is exactly the zero-sum family. These follow by composing
+the already kernel-checked inverse, retraction, target-membership
+and surjectivity lemmas with Rocq Stdlib `Vector.tl` and
+`f_equal`. No matrix API or new vector recursion is introduced.
+
+Current intended inventory: **805 public checked claims,
+808 proof scripts and 882 documented declarations**
+across seven Rocq modules, subject to pinned CI verification.
+No abstract subspace dimension, covariance rank or rank-nullity
+formula is claimed.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

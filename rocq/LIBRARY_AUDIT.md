@@ -2746,6 +2746,25 @@ concrete kernel. An abstract one-dimensional subspace theorem,
 or an application of rank-nullity to covariance matrices, is
 still a separate unproved obligation.
 
+## Exact projection fibers and range (12 November 2026)
+
+The canonical extension now has an explicit unique-witness theorem:
+when the target vector has zero coordinate sum, it equals the
+extension of a shorter vector if and only if that shorter vector
+is its ordinary `Vector.tl`. The canonical projection now has
+a complete **fiber** criterion: `projection input = output` if and
+only if `output` has zero coordinate sum and the two ordinary
+tails agree. The projection's image is, constructively, precisely
+the zero-sum family.
+
+These three proofs reuse the maintained `Stdlib.Vectors.Vector.tl`
+and `Stdlib.Logic.f_equal`, the verified zero-sum extension
+inverse/retraction, and the earlier projection membership,
+tail-preservation and surjectivity results. They add no new
+vector recursion, matrix abstraction, or summation implementation.
+They are a concrete range/fiber specification only; an abstract
+dimension/rank-nullity theorem remains a separate proof obligation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
