@@ -2806,6 +2806,30 @@ This is a concrete bijective coordinate parametrization, not
 yet a maintained abstract finite-dimensional vector-space
 isomorphism or an abstract dimension/rank-nullity theorem.
 
+## Standard product encoding of nonempty real vectors (12 November 2026)
+
+The explicit tail-plus-total reconstruction is now packaged
+using the maintained Rocq `prod` type, rather than a custom
+pair or vector-space library imitation. The transparent
+`indexed_real_vector_tail_total_encode` map sends a
+nonempty real vector to its ordinary `Vector.tl` and its
+full coordinate sum. The transparent decoder passes those
+two standard product projections to the already verified
+reconstruction constructor.
+
+Four kernel-checkable lemmas establish both two-sided inverse
+laws and both injection consequences. The proofs reuse
+`Stdlib.Datatypes.prod/fst/snd`, `Stdlib.Logic.f_equal`,
+and the established reconstruction round-trip, tail-preservation
+and full-sum laws. They introduce no vector induction or
+new finite summation logic.
+
+This certifies a concrete bijection of underlying types
+`Vector.t R (S n)` and `(Vector.t R n * R)%type`.
+The abstract field-linear isomorphism, dimension identity,
+and covariance rank/nullity results remain separate
+formal obligations.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

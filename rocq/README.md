@@ -3614,6 +3614,22 @@ across seven Rocq modules, subject to final pinned CI.
 The abstract vector-space dimension and covariance-rank proofs
 remain separate outstanding obligations.
 
+## A two-sided standard-product correspondence (12 November 2026)
+
+The concrete tail-and-total encoding now uses the ordinary
+Rocq product `(Vector.t R n * R)%type`, with two transparent
+encode/decode wrappers. Both compositions have been proved
+the identity, and the resulting injectivity laws are separately
+registered. Every proof composes previously checked reconstruction
+results, standard product projections and `f_equal`, without
+repeating vector calculations or implementing a bespoke algebra.
+
+Current intended inventory: **817 public checked claims,
+820 proof scripts and 897 documented declarations**
+across seven Rocq modules, subject to pinned Rocq 9.2 CI.
+The certified type-level bijection is not asserted to be an
+abstract linear isomorphism or a rank-nullity/dimension theorem.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

@@ -12542,6 +12542,178 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_tail_total_encode] (definition) —
+   Represent a nonempty vector by its tail and total coordinate sum.
+   Mathematical meaning: A length-(n+1) real vector can be encoded
+   without loss of information as the standard product of a
+   length-n real vector and one real number. The product uses the
+   maintained Stdlib type, not a custom sum/vector representation.
+   Exact declaration: encode v = (Vector.tl v, coordinate_sum v).
+   Premises and side conditions: All n including zero, arbitrary
+   signed reals, and no sample or probability constraints.
+   Proof/definition method: Pair standard Vector.tl with the
+   existing verified finite-coordinate-sum functional.
+   Library reuse: Stdlib.Datatypes.prod and Stdlib.Vectors.Vector.tl.
+   Boundary: A concrete encoding, not an abstract vector-space
+   isomorphism or a dimension formula by itself.
+   *)
+  Definition indexed_real_vector_tail_total_encode
+      {n : nat} (v : Vector.t R (S n)) :
+      (Vector.t R n * R)%type :=
+    (Vector.tl v, indexed_real_vector_coordinate_sum v).
+
+  (**
+   [indexed_real_vector_tail_total_decode] (definition) —
+   Recover a nonempty vector from a tail/total product pair.
+   Mathematical meaning: The decoding map supplies its stored
+   real total to the canonical tail-plus-total reconstruction.
+   Exact declaration: decode data = reconstruct (fst data) (snd data).
+   Premises and side conditions: All n and all real values,
+   without zero-sum or nonnegativity assumptions on either field.
+   Proof/definition method: Reuse the established reconstruction
+   definition and the standard product projections fst and snd.
+   Library reuse: Stdlib.Datatypes.prod/fst/snd and
+   indexed_real_vector_projection_sum_reconstruct.
+   Boundary: A concrete decoding function; abstract linearity,
+   dimension and matrix-rank results are not inferred.
+   *)
+  Definition indexed_real_vector_tail_total_decode
+      {n : nat} (data : (Vector.t R n * R)%type) :
+      Vector.t R (S n) :=
+    indexed_real_vector_projection_sum_reconstruct
+      (fst data) (snd data).
+
+  (**
+   [indexed_real_vector_tail_total_decode_encode] (lemma) —
+   Decoding an encoded nonempty vector is exactly the identity.
+   Mathematical meaning: Tail and full coordinate sum retain
+   all information about the original vector.
+   Exact checked proposition: For every n and v:Vector.t R (S n),
+   decode (encode v) = v.
+   Premises and side conditions: All n including a singleton and
+   signed real entries; no probability weights or sample assumptions.
+   Proof/definition method: Reduce the two transparent product
+   wrappers definitionally and apply the already verified
+   reconstruction round-trip theorem, without coordinate arithmetic.
+   Library reuse: Stdlib.Datatypes.fst/snd, the prior
+   indexed_real_vector_projection_sum_reconstruct_roundtrip lemma.
+   Boundary: A concrete inverse direction, not yet a certified
+   abstract finite-dimensional linear equivalence.
+   *)
+  Lemma indexed_real_vector_tail_total_decode_encode :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_tail_total_decode
+        (indexed_real_vector_tail_total_encode v) = v.
+  Proof.
+    intros n v.
+    change
+      (indexed_real_vector_projection_sum_reconstruct
+        (Vector.tl v) (indexed_real_vector_coordinate_sum v) = v).
+    apply indexed_real_vector_projection_sum_reconstruct_roundtrip.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_encode_decode] (lemma) —
+   Encoding a decoded standard product pair is exactly the identity.
+   Mathematical meaning: Every pair of n tail coordinates and
+   real total is realized by a vector; decoding and re-encoding
+   yields precisely that same pair.
+   Exact checked proposition: For all n and
+   data:(Vector.t R n * R)%type, encode(decode data)=data.
+   Premises and side conditions: Any finite n and arbitrary
+   real total, with no zero-sum or normalized-mass requirement.
+   Proof/definition method: Eliminate only the standard product
+   pair, reduce transparent encode/decode to tail and coordinate
+   sum, and invoke existing reconstruction tail and total theorems.
+   No induction on finite vectors, lists or real arithmetic.
+   Library reuse: Stdlib.Datatypes.prod, fst/snd,
+   indexed_real_vector_projection_sum_reconstruct_tail,
+   indexed_real_vector_projection_sum_reconstruct_coordinate_sum.
+   Boundary: Concrete surjective decoding; abstract dimension
+   and rank-nullity remain unproved.
+   *)
+  Lemma indexed_real_vector_tail_total_encode_decode :
+    forall n (data : (Vector.t R n * R)%type),
+      indexed_real_vector_tail_total_encode
+        (indexed_real_vector_tail_total_decode data) = data.
+  Proof.
+    intros n [tail total].
+    change
+      ((Vector.tl
+          (indexed_real_vector_projection_sum_reconstruct tail total),
+        indexed_real_vector_coordinate_sum
+          (indexed_real_vector_projection_sum_reconstruct tail total)) =
+       (tail, total)).
+    rewrite indexed_real_vector_projection_sum_reconstruct_tail.
+    rewrite indexed_real_vector_projection_sum_reconstruct_coordinate_sum.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_encode_injective] (lemma) —
+   The tail-plus-total encoding cannot identify distinct vectors.
+   Mathematical meaning: If the standard product data agree,
+   the original length-(n+1) vectors agree exactly.
+   Exact checked proposition: For all n and left,right,
+   encode left = encode right implies left = right.
+   Premises and side conditions: Arbitrary real vectors of positive
+   length; no sample, weight or statistical premise.
+   Proof/definition method: Apply maintained f_equal using the
+   established decoder, then rewrite the proved decode/encode
+   identity on both sides. No new vector equality derivation.
+   Library reuse: Stdlib.Logic.f_equal and
+   indexed_real_vector_tail_total_decode_encode.
+   Boundary: Concrete injectivity only, not abstract rank.
+   *)
+  Lemma indexed_real_vector_tail_total_encode_injective :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_tail_total_encode left =
+        indexed_real_vector_tail_total_encode right ->
+      left = right.
+  Proof.
+    intros n left right Hequal.
+    pose proof
+      (f_equal
+        (fun data : (Vector.t R n * R)%type =>
+          indexed_real_vector_tail_total_decode data)
+        Hequal) as Hdecoded.
+    rewrite !indexed_real_vector_tail_total_decode_encode in Hdecoded.
+    exact Hdecoded.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_decode_injective] (lemma) —
+   The reconstruction map from pairs cannot identify distinct data.
+   Mathematical meaning: Two different (tail,total) product pairs
+   cannot reconstruct to the same typed real vector.
+   Exact checked proposition: For all n and left,right product data,
+   decode left = decode right implies left = right.
+   Premises and side conditions: Every n and all signed reals;
+   no positive weights, matrix or statistical assumptions.
+   Proof/definition method: Apply standard f_equal under the
+   already checked encoder; rewrite encode/decode identities.
+   Library reuse: Stdlib.Logic.f_equal and
+   indexed_real_vector_tail_total_encode_decode.
+   Boundary: Concrete injectivity of the inverse encoding,
+   not a proof of a vector-space dimension or covariance rank.
+   *)
+  Lemma indexed_real_vector_tail_total_decode_injective :
+    forall n (left right : (Vector.t R n * R)%type),
+      indexed_real_vector_tail_total_decode left =
+        indexed_real_vector_tail_total_decode right ->
+      left = right.
+  Proof.
+    intros n left right Hequal.
+    pose proof
+      (f_equal
+        (fun v : Vector.t R (S n) =>
+          indexed_real_vector_tail_total_encode v)
+        Hequal) as Hencoded.
+    rewrite !indexed_real_vector_tail_total_encode_decode in Hencoded.
+    exact Hencoded.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
