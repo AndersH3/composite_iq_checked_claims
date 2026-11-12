@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **745 public theorem/lemma/example claims**, plus
+The current branch has **746 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**748 proof scripts** across seven Rocq modules. The claims and scripts
+**749 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 334 proof scripts
+## FiniteMoments.v — 335 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1159,6 +1159,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_radical_add_radical_iff` (theorem) | Rewrite both implications using established first-slot covariance radical-shift invariance; avoid vector/list induction | indexed_basis_covariance_bilinear_add_radical_first_invariant, indexed_basis_covariance_bilinear_radical, Stdlib.Vectors.Vector.map2 | **New:** radical(c+r) iff radical(c) whenever radical(r), even for signed unnormalized weights |
 | `indexed_basis_centered_sample_vector_equal_iff_difference_zero` (theorem) | Reuse full-vector additivity/scaling, then extensionality at each bounded sample coordinate and real cancellation | indexed_basis_centered_sample_vector_add, indexed_basis_centered_sample_vector_scale, VectorSpec.eq_nth_iff/nth_map2/nth_map/const_nth, Stdlib.Lra | **New:** full outputs agree iff the signed coefficient difference evaluates to the zero vector for arbitrary finite weights |
 | `indexed_basis_centered_sample_vector_equal_iff_difference_radical` (theorem) | Compose signed-difference zero-output iff with maintained radical/zero-output equivalence | indexed_basis_centered_sample_vector_equal_iff_difference_zero, indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero, Stdlib.Logic.tauto | **New:** normalized nonnegative finite sample outputs agree iff their signed coefficient difference lies in the covariance radical |
+| `indexed_basis_covariance_positive_definite_separates_sample_outputs` (theorem) | Contradict positive-definite trivial radical using the new equal-output iff difference-radical theorem | indexed_basis_centered_sample_vector_equal_iff_difference_radical, indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial | **New:** positive definite covariance separates full sample outputs whenever their signed coefficient difference is nonzero |
 
 
 ## FiniteBridge.v — 37 proof scripts

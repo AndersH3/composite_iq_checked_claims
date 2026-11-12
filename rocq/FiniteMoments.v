@@ -12750,4 +12750,59 @@ Section FiniteProbabilityMoments.
     tauto.
   Qed.
 
+  (**
+   [indexed_basis_covariance_positive_definite_separates_sample_outputs]
+   (theorem) — Positive definite finite covariance separates
+   coefficient directions with nonzero signed differences.
+   Mathematical meaning: When the indexed finite covariance is
+   strictly positive definite, a pair of coefficient vectors
+   differing by a nonzero signed coefficient difference cannot
+   have equal complete centered sample evaluations.
+   Exact checked proposition: If Q is positive definite and
+   Vector.to_list (left + (-1)*right) differs from the all-zero
+   list of matching basis length, the two typed sample-output
+   vectors E(left) and E(right) cannot be equal.
+   Premises and side conditions: Total weight equals one and
+   every listed outcome weight is nonnegative. Basis vectors
+   may have length zero, outcomes may repeat, and no assumption
+   of statistical score independence is silently introduced.
+   Proof/definition method: Convert hypothetical equal outputs
+   into radical membership of their signed coefficient difference.
+   Instantiate the existing positive-definite iff trivial-radical
+   criterion with exactly that nonzero direction to contradict it.
+   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_radical,
+   indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial,
+   Stdlib.Vectors.Vector.map/map2/to_list and Stdlib.Logic.
+   Boundary: An exact sample-evaluation separation statement,
+   not a dimension theorem, numerical covariance rank, or
+   assertion that the empirical IQ covariance is invertible.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_separates_sample_outputs :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_positive_definite basis ->
+      Vector.to_list
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right)) <>
+        repeat 0 (length basis) ->
+      indexed_basis_centered_sample_vector basis left <>
+      indexed_basis_centered_sample_vector basis right.
+  Proof.
+    intros basis left right Hmass Hw Hpositive Hnonzero Hequal.
+    apply
+      ((proj1
+        (indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial
+          basis Hmass Hw))
+        Hpositive
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))
+        Hnonzero).
+    apply
+      (proj1
+        (indexed_basis_centered_sample_vector_equal_iff_difference_radical
+          basis left right Hmass Hw)).
+    exact Hequal.
+  Qed.
+
 End FiniteProbabilityMoments.

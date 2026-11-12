@@ -2408,6 +2408,16 @@ criterion under explicit unit-mass, nonnegative-weight hypotheses.
 These are concrete finite kernel/fiber statements, not abstract
 rank-nullity, quotient, or Gaussian probability claims.
 
+## Positive-definite evaluation separation (12 November 2026)
+
+The previously checked positive-definite iff trivial-radical
+criterion and the new same-output iff difference-radical theorem
+now compose directly. Under normalized nonnegative finite weights,
+any nonzero signed coefficient difference forces distinct full
+centered sample-output vectors. The proof is a contradiction
+at the already maintained list-level coefficient nonzero criterion,
+not a new finite matrix inversion or dimension algorithm.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

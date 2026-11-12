@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **748 proof scripts** in seven
+for the two reports. **749 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3187,6 +3187,21 @@ ranks or quotient structures.
 
 Current target inventory: **745 public checked claims,
 748 proof scripts, 818 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Positive-definite covariance separates nonzero coefficient differences (12 November 2026)
+
+A further typed consequence of the sample-equality/radical bridge
+states that positive definite indexed covariance forbids equal full
+centered sample-output vectors when the signed coefficient
+difference is nonzero. This proof is a direct contradiction using
+the earlier positive-definite iff trivial-radical criterion; it
+introduces neither another evaluator nor new covariance arithmetic.
+Its probability hypotheses and the list-level nonzero criterion
+remain explicit.
+
+Current target inventory: **746 public checked claims,
+749 proof scripts, 819 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI verification.
 
 ## Research extensions
