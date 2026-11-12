@@ -11951,6 +11951,100 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_projection_extension_fixed] (lemma) —
+   The canonical zero-sum extension is fixed by the projection.
+   Mathematical meaning: Starting with any n freely chosen tail
+   coordinates, the unique zero-sum completion needs no further
+   correction by the projection of nonempty vectors.
+   Exact checked proposition: For all n and tail:Vector.t R n,
+   projection (extension tail) = extension tail.
+   Premises and side conditions: Arbitrary finite n, including
+   zero, and arbitrary signed reals; no normalized sample mass.
+   Proof/definition method: Apply the proved fixed-point iff and
+   the already verified zero-sum membership of the extension.
+   Library reuse: indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
+   and indexed_real_vector_zero_sum_extension_zero_sum.
+   Boundary: This is the concrete retraction-on-image law, not
+   an abstract subspace dimension or matrix-rank result.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_extension_fixed :
+    forall n (tail : Vector.t R n),
+      indexed_real_vector_zero_sum_projection
+        (indexed_real_vector_zero_sum_extension tail) =
+      indexed_real_vector_zero_sum_extension tail.
+  Proof.
+    intros n tail.
+    apply (proj2 (indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
+      n (indexed_real_vector_zero_sum_extension tail))).
+    apply indexed_real_vector_zero_sum_extension_zero_sum.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_ignores_head] (lemma) —
+   Changing only the first coordinate does not affect projection.
+   Mathematical meaning: Both nonempty vectors have the same n
+   tail coordinates; the projection reconstructs the same uniquely
+   determined first coordinate from that common tail.
+   Exact checked proposition: For any n, head_left, head_right:R
+   and tail:Vector.t R n, the projections of
+   Vector.cons R head_left n tail and
+   Vector.cons R head_right n tail are equal.
+   Premises and side conditions: No zero-sum assumption on either
+   original vector and no restrictions on the head values or n.
+   Proof/definition method: Invoke the already proved iff that
+   projections agree precisely when their standard tails agree;
+   reduce the maintained Vector.tl of each Vector.cons by reflexivity.
+   Library reuse: indexed_real_vector_zero_sum_projection_equal_iff_tails_equal
+   and Stdlib.Vectors.Vector.cons/tl.
+   Boundary: This proves information loss in one coordinate,
+   not an abstract quotient-space classification.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_ignores_head :
+    forall n (head_left head_right : R) (tail : Vector.t R n),
+      indexed_real_vector_zero_sum_projection
+        (Vector.cons R head_left n tail) =
+      indexed_real_vector_zero_sum_projection
+        (Vector.cons R head_right n tail).
+  Proof.
+    intros n head_left head_right tail.
+    apply (proj2 (indexed_real_vector_zero_sum_projection_equal_iff_tails_equal
+      n (Vector.cons R head_left n tail)
+        (Vector.cons R head_right n tail))).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_changes_nonzero_constant]
+   (lemma) — A nonzero constant positive-length vector is not fixed.
+   Mathematical meaning: A constant vector with nonzero entries
+   has nonzero total coordinate sum, whereas the projection
+   fixes exactly zero-sum vectors. The output must therefore differ.
+   Exact checked proposition: For all n and c:R with c <> 0,
+   projection (Vector.const c (S n)) <> Vector.const c (S n).
+   Premises and side conditions: Positive vector length is explicit;
+   arbitrary real c is allowed except zero. No empirical weights.
+   Proof/definition method: Convert the hypothetical fixed point
+   to zero-sum membership via the verified projection fixed-point
+   iff, then apply the established constant-vector exclusion.
+   Library reuse: indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum,
+   indexed_real_vector_zero_sum_const_nonzero and Stdlib.Vector.const.
+   Boundary: An explicit non-fixed-point certificate; this is not
+   a dimension, rank, or covariance theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_changes_nonzero_constant :
+    forall n (c : R),
+      c <> 0 ->
+      indexed_real_vector_zero_sum_projection (Vector.const c (S n)) <>
+        Vector.const c (S n).
+  Proof.
+    intros n c Hnonzero Hfixed.
+    apply (indexed_real_vector_zero_sum_const_nonzero n c Hnonzero).
+    apply (proj1 (indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
+      n (Vector.const c (S n)))).
+    exact Hfixed.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
