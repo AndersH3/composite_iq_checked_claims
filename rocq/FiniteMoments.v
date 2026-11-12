@@ -12311,4 +12311,131 @@ Section FiniteProbabilityMoments.
     reflexivity.
   Qed.
 
+
+  (**
+   [indexed_basis_centered_sample_vector_add_radical_invariant]
+   (theorem) — Radical shifts do not change the entire sample output.
+   Mathematical meaning: Adding a covariance-radical coefficient
+   direction to any other coefficient vector leaves all weighted
+   centered sample scores unchanged, coordinate by coordinate.
+   Exact checked proposition: Under normalized nonnegative finite
+   weights, radical(shift) implies the output vectors
+   sample_vector(coefficients + shift) and
+   sample_vector(coefficients) are exactly equal.
+   Premises and side conditions: The two input vectors have the
+   common length of the score basis. Samples and basis may be
+   empty, repeated, or linearly dependent; weight signs and
+   total mass are constrained exactly as in the existing
+   radical iff zero-sample-vector kernel theorem.
+   Proof/definition method: Use the already checked radical
+   iff zero-output equivalence and vector-valued additivity.
+   Prove resulting vector equality through the standard
+   VectorSpec.eq_nth_iff coordinate criterion, then reduce
+   addition with a zero coordinate using Stdlib.Ring.
+   Library reuse: indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero,
+   indexed_basis_centered_sample_vector_add,
+   Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map2/const_nth
+   and Stdlib.Ring; no custom vector recursion.
+   Boundary: Exact finite sample-map invariance, not an image
+   dimension, matrix rank, or quotient-space construction.
+   *)
+  Theorem indexed_basis_centered_sample_vector_add_radical_invariant :
+    forall basis (coefficients radical : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_radical basis radical ->
+      indexed_basis_centered_sample_vector
+        basis (Vector.map2 Rplus coefficients radical) =
+      indexed_basis_centered_sample_vector basis coefficients.
+  Proof.
+    intros basis coefficients radical Hmass Hw Hradical.
+    pose proof
+      ((proj1 (indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero
+        basis radical Hmass Hw)) Hradical) as Hzero.
+    rewrite indexed_basis_centered_sample_vector_add.
+    apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
+      (Vector.map2 Rplus
+        (indexed_basis_centered_sample_vector basis coefficients)
+        (indexed_basis_centered_sample_vector basis radical))
+      (indexed_basis_centered_sample_vector basis coefficients))).
+    intros i j Hij.
+    subst j.
+    rewrite (VectorSpec.nth_map2 Rplus
+      (indexed_basis_centered_sample_vector basis coefficients)
+      (indexed_basis_centered_sample_vector basis radical)
+      i i i eq_refl eq_refl).
+    rewrite Hzero.
+    rewrite (VectorSpec.const_nth R 0 (length samples) i).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_add_radical_iff]
+   (theorem) — Exact finite sample-map detection of the radical.
+   Mathematical meaning: A coefficient shift leaves the full
+   centered sample output unchanged exactly when that shift
+   belongs to the bilinear covariance radical. This is an
+   operational kernel characterization via observable coordinates.
+   Exact checked proposition: Under unit total mass and
+   nonnegative sampled weights, output(coefficients + shift)
+   equals output(coefficients) iff radical(shift).
+   Premises and side conditions: Coefficients and shift are
+   standard typed vectors of basis length; there is no
+   coefficient nonzero requirement and the basis can be
+   dependent. For signed weights the required covariance
+   radical/zero-output iff is not assumed to hold.
+   Proof/definition method: For necessity, take a bounded
+   coordinate of the output equality with standard f_equal,
+   use existing per-coordinate score additivity, and cancel
+   the shared first score by linear arithmetic. Reassemble
+   the zero output through VectorSpec.eq_nth_iff and apply
+   the checked radical iff zero-output bridge. Sufficiency
+   is the immediately preceding radical-shift invariant law.
+   Library reuse: indexed_basis_centered_sample_vector_nth,
+   indexed_basis_centered_sample_evaluation_add,
+   indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero,
+   indexed_basis_centered_sample_vector_add_radical_invariant,
+   VectorSpec.eq_nth_iff/const_nth and Stdlib.Lra.
+   Boundary: Equality of all finite weighted centered outputs,
+   not a general linear-map injectivity or rank-nullity theorem.
+   *)
+  Theorem indexed_basis_centered_sample_vector_add_radical_iff :
+    forall basis (coefficients shift : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_centered_sample_vector
+        basis (Vector.map2 Rplus coefficients shift) =
+       indexed_basis_centered_sample_vector basis coefficients <->
+       indexed_basis_covariance_bilinear_radical basis shift).
+  Proof.
+    intros basis coefficients shift Hmass Hw.
+    split.
+    - intro Hsame.
+      apply (proj2
+        (indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero
+          basis shift Hmass Hw)).
+      apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
+        (indexed_basis_centered_sample_vector basis shift)
+        (Vector.const 0 (length samples)))).
+      intros i j Hij.
+      subst j.
+      rewrite (VectorSpec.const_nth R 0 (length samples) i).
+      pose proof
+        (f_equal
+          (fun v : Vector.t R (length samples) => Vector.nth v i)
+          Hsame) as Hcoord.
+      rewrite (indexed_basis_centered_sample_vector_nth
+        basis (Vector.map2 Rplus coefficients shift) i) in Hcoord.
+      rewrite (indexed_basis_centered_sample_evaluation_add
+        basis coefficients shift i) in Hcoord.
+      rewrite <- (indexed_basis_centered_sample_vector_nth
+        basis coefficients i) in Hcoord.
+      rewrite <- (indexed_basis_centered_sample_vector_nth
+        basis shift i) in Hcoord.
+      lra.
+    - intro Hradical.
+      apply indexed_basis_centered_sample_vector_add_radical_invariant;
+        assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

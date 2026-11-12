@@ -3110,6 +3110,22 @@ Current target inventory: **737 public checked claims,
 740 proof scripts, 810 documented declarations** across
 seven Rocq modules, pending Rocq 9.2 verification.
 
+## Sample-output invariance precisely characterizes radical shifts (12 November 2026)
+
+Two new checked results connect the typed covariance radical
+to the full sample-output map in an operational way. With
+normalized nonnegative weights, adding a radical coefficient
+direction leaves every weighted centered sample score
+unchanged. Conversely, if the full output is invariant under
+a coefficient shift, that shift is a radical direction.
+Only the maintained VectorSpec coordinate lemmas, existing
+output additivity, and the checked radical/zero-output kernel
+equivalence are used; no custom vector or matrix operations.
+
+Current target inventory: **739 public checked claims,
+742 proof scripts, 812 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 verification.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

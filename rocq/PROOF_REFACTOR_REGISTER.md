@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **737 public theorem/lemma/example claims**, plus
+The current branch has **739 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**740 proof scripts** across seven Rocq modules. The claims and scripts
+**742 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 326 proof scripts
+## FiniteMoments.v — 328 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1151,6 +1151,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_add_radical_first_invariant` (theorem) | Reuse first-argument additivity and radical orthogonality; ordinary zero-summand ring reduction | indexed_basis_covariance_bilinear_add_first, indexed_basis_covariance_bilinear_radical, Stdlib.Ring | **New:** adding radical coefficients leaves pairing's first argument unchanged |
 | `indexed_basis_covariance_bilinear_add_radical_second_invariant` (theorem) | Reduce second argument to previously checked first-argument invariance by symmetry | indexed_basis_covariance_bilinear_symmetric, indexed_basis_covariance_bilinear_add_radical_first_invariant | **New:** radical shifts are invisible in either argument |
 | `indexed_basis_covariance_quadratic_add_radical_invariant` (theorem) | Replace covariance quadratics with diagonal pairing and apply both radical-shift invariances | indexed_basis_covariance_bilinear_diagonal, indexed_basis_covariance_bilinear_add_radical_first_invariant, indexed_basis_covariance_bilinear_add_radical_second_invariant | **New:** Q(c+r)=Q(c) for normalized finite weights even when individual weights are signed |
+| `indexed_basis_centered_sample_vector_add_radical_invariant` (theorem) | Compose radical/zero-sample-output iff with existing typed output additivity and standard coordinate extensionality | indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero, indexed_basis_centered_sample_vector_add, VectorSpec.eq_nth_iff/nth_map2/const_nth, Ring | **New:** coefficient radical shifts leave the complete typed sample output invariant |
+| `indexed_basis_centered_sample_vector_add_radical_iff` (theorem) | Coordinate projection and cancellation for necessity; previous radical-shift theorem for sufficiency | indexed_basis_centered_sample_vector_nth, indexed_basis_centered_sample_evaluation_add, indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero, indexed_basis_centered_sample_vector_add_radical_invariant, VectorSpec.eq_nth_iff/const_nth, Lra | **New:** full sample-output invariance under a shift iff that shift lies in covariance radical |
 
 
 ## FiniteBridge.v — 37 proof scripts

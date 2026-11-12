@@ -2319,6 +2319,24 @@ new matrix, vector-space quotient or rank algorithm.
 These results document exact algebraic invariance along
 kernel cosets, not a dimension or rank-nullity computation.
 
+## Exact sample-map invariance under radical shifts (12 November 2026)
+
+The covariance radical is now characterized operationally by the
+full centered weighted sample output: under normalized nonnegative
+weights, adding a radical direction to any coefficient vector
+leaves every output coordinate unchanged. Conversely, equality
+of the output before and after a coefficient shift forces the
+shift's output to be zero by sample-evaluation additivity and
+ordinary real cancellation. The existing radical iff zero-output
+kernel bridge then identifies the shift with the radical.
+
+Both proofs use `VectorSpec.eq_nth_iff`, `nth_map2`, and
+`const_nth` to transport between the maintained typed
+vector interfaces. No new vector iteration, finite sum, matrix
+algorithm or rank calculation is introduced. The new iff
+preserves the normalization and nonnegative-weight hypotheses
+needed for the radical/output kernel equivalence.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
