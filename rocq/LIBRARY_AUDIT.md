@@ -2617,6 +2617,32 @@ precursors to—but not yet replacements for—a maintained abstract
 vector-space isomorphism, subspace dimension, covariance rank bound,
 or rank-nullity theorem.
 
+## Exact canonical recovery of all positive-dimensional zero-sum vectors (12 November 2026)
+
+The previous concrete linear embedding now has an exact converse on
+its intended zero-sum target. Using maintained
+`Stdlib.Vectors.VectorSpec.eta`, any vector of positive length
+decomposes into its head and tail. The checked cons iff forces its
+head to equal the negative sum of the tail exactly when its
+coordinate sum is zero. Three further lemmas establish canonical
+extension of the tail equals the original zero-sum vector,
+surjectivity onto the positive-dimensional zero-sum family, and
+the corresponding iff fixed-point characterization.
+
+The new proofs reuse the existing first-coordinate characterization,
+the standard `Vector.hd`/`Vector.tl` pair,
+`VectorSpec.eta`, and previously checked extension membership.
+There is no new vector constructor or induction, no repeated
+finite-sum calculation and no axiom, numerical rank claim or
+unchecked proof placeholder.
+
+Together with the verified injectivity, addition, and scalar laws
+for extension, these are concrete algebraic ingredients for an
+isomorphism between `R^n` and the length-`n+1` zero-sum
+family. Formalizing that isomorphism as a maintained linear algebra
+library object and extracting a certified dimension/rank statement
+remain separate work.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
