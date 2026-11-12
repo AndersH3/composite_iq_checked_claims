@@ -12358,7 +12358,7 @@ Section FiniteProbabilityMoments.
    Vector.cons R (total - coordinate_sum tail) n tail.
    Premises and side conditions: Every finite n and arbitrary
    signed real entries and total; no positivity or normalization.
-   Definition method: Direct use of the standard Vector.cons
+   Proof/definition method: Direct use of the standard Vector.cons
    constructor and the existing coordinate-sum functional, with
    no new recursion, list summation, or custom vector representation.
    Library reuse: Stdlib.Vectors.Vector.cons and the already
