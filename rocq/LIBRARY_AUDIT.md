@@ -2554,6 +2554,21 @@ numerical covariance calculation or second summation
 algorithm is introduced. An abstract finite-dimensional
 linear-algebra bridge remains a separate migration.
 
+## Properness of the normalized centered sample image (12 November 2026)
+
+The generic zero-coordinate-sum target is now shown to
+exclude every positive-length nonzero constant real vector.
+The proof uses the existing FiniteSum fold, standard
+VectorSpec.to_list_const conversion, the real natural-number
+injection laws `S_INR`/`pos_INR`, and `Rmult_integral`.
+The centered sample evaluator therefore never outputs a
+nonzero constant vector when total sample mass is one and
+the enumerated sample list is nonempty, regardless of
+weight signs or repeated outcomes. This proves a concrete
+proper-image restriction; the zero-sum target's abstract
+codimension and the covariance matrix's rank are not
+yet established.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

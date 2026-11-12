@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **771 proof scripts** in seven
+for the two reports. **774 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3381,6 +3381,27 @@ codimension one or that the covariance rank is bounded.
 Current intended inventory: **768 public checked claims,
 771 proof scripts and 843 documented declarations**
 across seven Rocq modules, subject to pinned CI verification.
+
+## Nonzero constant outputs excluded by the zero-sum constraint (12 November 2026)
+
+Three further checked results expose the constant-vector
+coordinate-sum formula, show that a nonzero constant vector
+of positive dimension cannot be zero-sum, and apply this to
+the existing normalized centered sample evaluator.
+Consequently, when the sample enumeration is nonempty and
+has unit mass, **no nonzero constant sample vector is in
+the evaluator's image**. This remains true for signed weights
+and repeated sample entries.
+
+The proof reuses the same generic coordinate functional,
+Rocq Stdlib `VectorSpec.to_list_const`, `S_INR`,
+`pos_INR` and `Rmult_integral`. It gives an explicit
+obstruction to surjectivity but deliberately does not infer
+a matrix rank, abstract dimension or rank-nullity formula.
+
+Current intended inventory: **771 public checked claims,
+774 proof scripts and 846 documented declarations**
+in seven Rocq modules, subject to pinned Rocq 9.2 CI.
 
 ## Research extensions
 

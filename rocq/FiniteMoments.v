@@ -11058,6 +11058,78 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_coordinate_sum_const] (lemma) —
+   A constant real vector has its coordinate sum given by
+   its dimension multiplied by the repeated real entry.
+   Mathematical meaning: The sum of n copies of c is n*c,
+   represented exactly as the standard real injection INR n.
+   Exact checked proposition: For n and c:R,
+   indexed_real_vector_coordinate_sum (Vector.const c n)
+   equals INR n * c, including n=0 and signed c.
+   Premises and side conditions: No finite sample model,
+   probability normalization or positive coordinates required.
+   Proof/definition method: Use the standard to_list_const
+   equation to reduce to the existing finite sum of a repeated
+   list, then induct only over its length. Preserve the shared
+   finite-sum tail as a named expression for the induction rewrite
+   and finish with Stdlib.Reals.S_INR and ring.
+   Library reuse: VectorSpec.to_list_const, Stdlib.List.repeat,
+   FiniteSum.finite_sum, Stdlib.Reals.S_INR and Stdlib.Ring.
+   Boundary: A generic finite vector identity, not a
+   numerical stability result or dimension/rank theorem.
+   *)
+  Lemma indexed_real_vector_coordinate_sum_const :
+    forall n (c : R),
+      indexed_real_vector_coordinate_sum (Vector.const c n) =
+      INR n * c.
+  Proof.
+    intros n c.
+    unfold indexed_real_vector_coordinate_sum.
+    rewrite VectorSpec.to_list_const.
+    induction n as [|n IH].
+    - simpl.
+      ring.
+    - change (c + FiniteSum.finite_sum (fun y : R => y)
+        (repeat c n) = INR (S n) * c).
+      rewrite IH, S_INR.
+      ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_const_nonzero] (lemma) —
+   No nonzero constant vector of positive length has zero sum.
+   Mathematical meaning: A nonzero real constant repeated at
+   least once cannot satisfy the zero-coordinate-sum constraint.
+   Exact checked proposition: For any n and c<>0,
+   ~indexed_real_vector_zero_sum (Vector.const c (S n)).
+   Premises and side conditions: S n is nonempty and c is
+   nonzero. No probability, sample weight or independence premise.
+   Proof/definition method: Rewrite using the generic constant
+   coordinate sum formula and Stdlib.Reals.S_INR. Apply the
+   maintained real zero-product theorem Rmult_integral;
+   positive INR (S n) follows from pos_INR and Stdlib.Lra.
+   Library reuse: indexed_real_vector_coordinate_sum_const,
+   Stdlib.Reals.Rmult_integral/pos_INR/S_INR and Stdlib.Lra.
+   Boundary: Exhibits a vector outside a zero-sum family,
+   without asserting its abstract codimension or rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_const_nonzero :
+    forall n (c : R),
+      c <> 0 ->
+      ~ indexed_real_vector_zero_sum (Vector.const c (S n)).
+  Proof.
+    intros n c Hnonzero Hzero.
+    unfold indexed_real_vector_zero_sum in Hzero.
+    rewrite indexed_real_vector_coordinate_sum_const in Hzero.
+    rewrite S_INR in Hzero.
+    apply Rmult_integral in Hzero.
+    destruct Hzero as [Hlength | Hc].
+    - pose proof (pos_INR n).
+      lra.
+    - exact (Hnonzero Hc).
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
@@ -11138,6 +11210,51 @@ Section FiniteProbabilityMoments.
       indexed_real_vector_coordinate_sum.
     apply indexed_basis_centered_sample_vector_sum_zero.
     exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_omits_nonzero_constant]
+   (theorem) — A normalized centered finite evaluator cannot
+   output a nonzero constant vector at nonempty sample length.
+   Mathematical meaning: Every centered sample-evaluation
+   output has sum zero, while a nonzero constant vector of
+   positive sample length has a nonzero coordinate sum.
+   Exact checked proposition: For any basis, compatible
+   coefficients, n and c<>0, if length samples = S n and
+   total_mass = 1, the complete centered sample-output
+   vector differs from Vector.const c (length samples).
+   Premises and side conditions: The sample enumeration is
+   nonempty and has unit total weight; individual finite
+   sample weights may be signed or zero and outcomes can repeat.
+   No covariance positive definiteness or linear independence.
+   Proof/definition method: Apply the checked zero-sum image
+   membership theorem, substitute a hypothetical constant
+   output, transport the known sample length and contradict the
+   reusable nonzero-constant exclusion lemma directly.
+   Library reuse: indexed_basis_centered_sample_vector_in_zero_sum,
+   indexed_real_vector_zero_sum_const_nonzero and
+   Stdlib.Vectors.Vector.const.
+   Boundary: Establishes properness of the image constraint
+   for nonempty samples, but not a dimension, rank or nullity
+   formula, or a numerical covariance estimate.
+   *)
+  Theorem indexed_basis_centered_sample_vector_omits_nonzero_constant :
+    forall basis (coefficients : Vector.t R (length basis))
+           n (c : R),
+      length samples = S n ->
+      total_mass = 1 ->
+      c <> 0 ->
+      indexed_basis_centered_sample_vector basis coefficients <>
+        Vector.const c (length samples).
+  Proof.
+    intros basis coefficients n c Hlength Hmass Hnonzero Hequal.
+    pose proof
+      (indexed_basis_centered_sample_vector_in_zero_sum
+        basis coefficients Hmass) as Hsum.
+    rewrite Hequal in Hsum.
+    rewrite Hlength in Hsum.
+    exact ((indexed_real_vector_zero_sum_const_nonzero
+      n c Hnonzero) Hsum).
   Qed.
 
   (**
