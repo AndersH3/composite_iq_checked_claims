@@ -2730,6 +2730,22 @@ maintained `Stdlib.Vectors.Vector.cons/tl`. They do not rederive
 coordinate sums, define vector recursion, or assert a rank/nullity
 or dimensional formula.
 
+## Explicit projection-kernel normal form (12 November 2026)
+
+The projection kernel has a fully concrete normal form: a nonempty
+typed vector is annihilated by the canonical zero-sum projection
+exactly when it is `Vector.cons R h n (Vector.const 0 n)` for
+some scalar `h`. The proof reuses the earlier iff between
+projection-zero and zero tail, then the standard
+`Stdlib.Vectors.VectorSpec.eta` decomposition. No new
+coordinate induction, bespoke vector construction, or matrix
+API is introduced.
+
+This theorem exhibits a single free coordinate in the
+concrete kernel. An abstract one-dimensional subspace theorem,
+or an application of rank-nullity to covariance matrices, is
+still a separate unproved obligation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
