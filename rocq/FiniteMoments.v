@@ -11608,8 +11608,8 @@ Section FiniteProbabilityMoments.
       + intro Hequal.
         now rewrite Hequal.
       + intro Hlist.
-        apply (proj2 (VectorSpec.eq_nth_iff R 0 left right)).
-        intro i.
+        apply (proj1 (VectorSpec.eq_nth_iff R 0 left right)).
+        intros i j Hij.
         inversion i.
     - assert (Hleft_tail :
         List.tl (Vector.to_list left) =
