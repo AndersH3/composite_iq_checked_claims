@@ -11511,6 +11511,120 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_extension_zero] (lemma) —
+   The canonical zero-sum extension preserves the additive identity.
+   Mathematical meaning: Extending the n-dimensional all-zero real
+   vector produces the (n+1)-dimensional all-zero vector.
+   Exact checked proposition: For every natural n,
+   extension (Vector.const 0 n) = Vector.const 0 (S n).
+   Premises and side conditions: The length n may be zero; no
+   probability weights, normalization, or nonzero coordinates are
+   required. This is a statement about exact real numbers.
+   Proof/definition method: The standard tail of a nonempty
+   constant vector is definitionally the shorter constant vector.
+   Apply the already proved extension inverse on zero-sum vectors
+   to the zero vector and discharge zero-sum membership by the
+   previously proved coordinate-sum-of-zero law.
+   Library reuse: Stdlib.Vectors.Vector.const and Vector.tl,
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum,
+   indexed_real_vector_coordinate_sum_zero.
+   Boundary: Preservation of zero is not a proof of a general
+   vector-space structure, rank, or dimension identity.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_zero :
+    forall n,
+      indexed_real_vector_zero_sum_extension (Vector.const 0 n) =
+      Vector.const 0 (S n).
+  Proof.
+    intro n.
+    change
+      (indexed_real_vector_zero_sum_extension
+         (Vector.tl (Vector.const 0 (S n))) =
+       Vector.const 0 (S n)).
+    apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+    unfold indexed_real_vector_zero_sum.
+    apply indexed_real_vector_coordinate_sum_zero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_equal_iff_tails_equal] (lemma) —
+   The tail uniquely determines a positive-length zero-sum vector.
+   Mathematical meaning: Any two vectors satisfying the same
+   zero-sum constraint are equal precisely when all coordinates
+   beyond the first agree; the first coordinate is not free.
+   Exact checked proposition: For n and left,right of type
+   Vector.t R (S n), zero_sum left and zero_sum right imply
+   (left = right <-> Vector.tl left = Vector.tl right).
+   Premises and side conditions: Both zero-sum assumptions are
+   necessary. Entries may have either sign; n may be zero.
+   No sample enumeration or positive weights are involved.
+   Proof/definition method: Forward implication uses congruence
+   under standard Vector.tl. Reverse implication replaces both
+   vectors with the already proved canonical extensions of
+   their tails, then rewrites the assumed equality of tails.
+   Library reuse: Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.tl,
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+   Boundary: Equality inside a concrete hyperplane, not a new
+   representation, abstract subspace dimension, or covariance rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_equal_iff_tails_equal :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_zero_sum left ->
+      indexed_real_vector_zero_sum right ->
+      (left = right <-> Vector.tl left = Vector.tl right).
+  Proof.
+    intros n left right Hleft Hright.
+    split.
+    - intro Hequal.
+      now rewrite Hequal.
+    - intro Htails.
+      rewrite <- (indexed_real_vector_zero_sum_extension_inverse_on_zero_sum
+        n left Hleft).
+      rewrite <- (indexed_real_vector_zero_sum_extension_inverse_on_zero_sum
+        n right Hright).
+      now rewrite Htails.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_extension_zero_iff_tail_zero]
+   (lemma) — The canonical extension preserves and reflects zero.
+   Mathematical meaning: A zero-sum extension is the all-zero
+   (n+1)-vector exactly when its original n coordinates are zero.
+   Exact checked proposition: For every n and typed tail,
+   extension tail = Vector.const 0 (S n) iff
+   tail = Vector.const 0 n.
+   Premises and side conditions: Allows n=0 and signed real
+   entries, with no probabilistic, basis or covariance assumptions.
+   Proof/definition method: The forward direction applies the
+   standard Vector.tl congruence and uses the maintained left
+   inverse of extension. The converse is substitution followed
+   by the generic extension-zero theorem immediately above.
+   Library reuse: Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.tl,
+   indexed_real_vector_zero_sum_extension_tail,
+   indexed_real_vector_zero_sum_extension_zero.
+   Boundary: A zero-kernel preservation law for this explicit
+   injection, not the abstract rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_zero_iff_tail_zero :
+    forall n (tail : Vector.t R n),
+      (indexed_real_vector_zero_sum_extension tail =
+         Vector.const 0 (S n) <->
+       tail = Vector.const 0 n).
+  Proof.
+    intros n tail.
+    split.
+    - intro Hequal.
+      pose proof
+        (f_equal (fun v : Vector.t R (S n) => Vector.tl v)
+           Hequal) as Htail.
+      rewrite indexed_real_vector_zero_sum_extension_tail in Htail.
+      exact Htail.
+    - intro Hzero.
+      rewrite Hzero.
+      apply indexed_real_vector_zero_sum_extension_zero.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
