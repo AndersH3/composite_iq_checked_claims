@@ -2934,6 +2934,22 @@ matrix implementation, axioms, or admitted proof obligations.
 Inventory targeted for CI: 860 public claims, 863 proofs, and
 941 documented declarations in seven Rocq modules.
 
+## Affine projection fibers and unique scalar normalization (12 November 2026)
+
+Four generic real-vector lemmas show injectivity of axis shifts at a
+fixed base vector, classify equal-projection fibers as affine axis
+translates, characterize the unique scalar shift producing zero sum,
+and express the canonical projection as that normalization.
+Every argument reuses verified projection/sum injectivity,
+idempotence, zero-sum membership and axis-shift laws with Stdlib
+Lra and Ring. No new vector traversal, matrix implementation,
+axioms, admitted proofs, or numerical inferences are introduced.
+
+Intended inventory: 864 public claims, 867 proof scripts and
+945 documented declarations across seven Rocq modules, subject
+to pinned Rocq 9.2 kernel and Python-contract workflow checks.
+These concrete facts do not establish a dimension/rank theorem.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

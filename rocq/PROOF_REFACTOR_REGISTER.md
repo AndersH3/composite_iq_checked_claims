@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **860 public theorem/lemma/example claims**, plus
+The current branch has **864 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**863 proof scripts** across seven Rocq modules. The claims and scripts
+**867 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 449 proof scripts
+## FiniteMoments.v — 453 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1204,6 +1204,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_axis_shift_projection` (lemma) | Rewrite the projection of the sum with the already established projection additivity, replace the projection of the scalar axis with the zero vector, and eliminate the zero summand using the generic VectorSpec-based add-zero-right lemma. | indexed_real_vector_zero_sum_projection_add, indexed_real_vector_total_axis_projection_zero, indexed_real_vector_add_zero_right. | **New:** Adding any scalar-axis vector to a finite real vector leaves its canonical zero-sum projection unchanged. |
 | `indexed_real_vector_zero_sum_axis_shift_coordinate_sum` (lemma) | Reuse the exact coordinate_sum_add theorem and the existing axis coordinate-sum identity; no finite-list fold or vector traversal is repeated. | indexed_real_vector_coordinate_sum_add, indexed_real_vector_total_axis_coordinate_sum. | **New:** Adding a scalar-axis vector changes the full coordinate sum by precisely the embedded scalar. |
 | `indexed_real_vector_zero_sum_axis_shift_decomposition` (lemma) | Rewrite the shifted vector by the already proved unique canonical axis decomposition, then reuse the immediately preceding projection-invariance and coordinate-sum-shift lemmas. Do not reassociate or recurse on vector addition. | indexed_real_vector_zero_sum_axis_decomposition, indexed_real_vector_zero_sum_axis_shift_projection, indexed_real_vector_zero_sum_axis_shift_coordinate_sum, Stdlib.Vectors.Vector.map2. | **New:** Translating a real vector along the head-only scalar axis changes only the scalar coordinate in its unique zero-sum plus axis decomposition. |
+| `indexed_real_vector_zero_sum_axis_shift_injective` (lemma) | Apply coordinate sums to equal translated vectors, rewrite both shift-sum identities and cancel with Lra. | Stdlib.Logic.f_equal, indexed_real_vector_zero_sum_axis_shift_coordinate_sum, Stdlib.Lra. | **New:** Fixed-vector scalar-axis translation is injective. |
+| `indexed_real_vector_zero_sum_projection_equal_iff_axis_shift` (lemma) | Choose the difference of totals and apply projection/sum pair-injectivity; converse follows by shift-invariance. | indexed_real_vector_zero_sum_projection_and_sum_injective, indexed_real_vector_zero_sum_axis_shift_projection/coordinate_sum, Stdlib.Ring. | **New:** Projection fibers are exactly affine head-axis translates. |
+| `indexed_real_vector_zero_sum_axis_shift_zero_sum_iff` (lemma) | Unfold zero-sum membership and solve the shift-sum identity with Lra. | indexed_real_vector_zero_sum, indexed_real_vector_zero_sum_axis_shift_coordinate_sum, Stdlib.Lra. | **New:** Unique scalar normalization to a zero-sum vector. |
+| `indexed_real_vector_zero_sum_projection_as_axis_normalization` (lemma) | Compare projection and coordinate sum via injectivity, using idempotence, zero-sum membership and shift formulas. | indexed_real_vector_zero_sum_projection_and_sum_injective/idempotent/zero_sum, indexed_real_vector_zero_sum_axis_shift_projection/coordinate_sum, Stdlib.Ring. | **New:** The canonical projection is the minus-total head-axis shift. |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |

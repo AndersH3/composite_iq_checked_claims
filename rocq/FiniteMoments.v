@@ -13724,6 +13724,167 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_axis_shift_injective] (lemma) —
+   Scalar-axis shifts of any fixed finite real vector are injective.
+   Mathematical meaning: Adding an axis carrying one real total
+   produces the same vector as another axis iff the totals agree.
+   Exact checked proposition: For all n, v:Vector.t R (S n), a,b:R,
+   map2 Rplus v (total_axis a) = map2 Rplus v (total_axis b)
+   iff a=b.
+   Premises and side conditions: This includes singleton vectors
+   and all signed real entries and shifts. No probability assumptions.
+   Proof/definition method: Apply the coordinate-sum functional to
+   the equality and use the previously checked shift-sum law.
+   Conclude by Lra; reverse direction substitutes equal scalars.
+   Library reuse: Stdlib.Logic.f_equal, Stdlib.Lra and
+   indexed_real_vector_zero_sum_axis_shift_coordinate_sum.
+   Boundary: Concrete affine injectivity, not dimension/rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_shift_injective :
+    forall n (v : Vector.t R (S n)) (a b : R),
+      (Vector.map2 Rplus v (indexed_real_vector_total_axis a) =
+         Vector.map2 Rplus v (indexed_real_vector_total_axis b) <->
+       a = b).
+  Proof.
+    intros n v a b.
+    split.
+    - intro Hequal.
+      pose proof
+        (f_equal
+          (fun x : Vector.t R (S n) =>
+             indexed_real_vector_coordinate_sum x) Hequal) as Hsum.
+      rewrite !indexed_real_vector_zero_sum_axis_shift_coordinate_sum
+        in Hsum.
+      lra.
+    - intro Hequal.
+      subst b.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_equal_iff_axis_shift]
+   (lemma) — Equal-projection fibers are precisely the affine
+   translates along the head-only scalar axis.
+   Mathematical meaning: Two real vectors share their zero-sum
+   projection iff they differ by adding one head-axis vector.
+   Exact checked proposition: For n and v,w:Vector.t R (S n),
+   projection v = projection w iff exists total:R,
+   v = map2 Rplus w (total_axis total).
+   Premises and side conditions: Arbitrary finite nonempty
+   dimensions and signed coordinates; no normalization or positive
+   weights are assumed, and the scalar may be negative.
+   Proof/definition method: Choose the difference of coordinate
+   sums and invoke pair-injectivity of projection and total.
+   Projection and sum of the shifted candidate are identified by
+   the earlier shift laws. Conversely use shift-invariance.
+   Library reuse: indexed_real_vector_zero_sum_projection_and_sum_injective,
+   indexed_real_vector_zero_sum_axis_shift_projection/coordinate_sum,
+   Stdlib.Reals and Stdlib.Ring.
+   Boundary: An explicit fiber criterion, not a generic quotient
+   or abstract linear map rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_equal_iff_axis_shift :
+    forall n (v w : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection v =
+         indexed_real_vector_zero_sum_projection w <->
+       exists total : R,
+         v = Vector.map2 Rplus w
+           (indexed_real_vector_total_axis total)).
+  Proof.
+    intros n v w.
+    split.
+    - intro Hprojection.
+      exists (indexed_real_vector_coordinate_sum v -
+              indexed_real_vector_coordinate_sum w).
+      apply (indexed_real_vector_zero_sum_projection_and_sum_injective
+        n v
+        (Vector.map2 Rplus w
+          (indexed_real_vector_total_axis
+            (indexed_real_vector_coordinate_sum v -
+             indexed_real_vector_coordinate_sum w)))).
+      + rewrite indexed_real_vector_zero_sum_axis_shift_projection.
+        exact Hprojection.
+      + rewrite indexed_real_vector_zero_sum_axis_shift_coordinate_sum.
+        ring.
+    - intros [total Hequal].
+      rewrite Hequal.
+      apply indexed_real_vector_zero_sum_axis_shift_projection.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_shift_zero_sum_iff]
+   (lemma) — Exactly one scalar axis shift produces a zero-sum vector.
+   Mathematical meaning: The necessary and sufficient shift is the
+   additive inverse of the starting coordinate total.
+   Exact checked proposition: For n, v:Vector.t R (S n), total:R,
+   zero_sum (map2 Rplus v (total_axis total)) iff
+   total = - coordinate_sum v.
+   Premises and side conditions: All signed real coordinates and
+   positive finite vector lengths; no statistical assumptions.
+   Proof/definition method: Unfold zero-sum membership and rewrite
+   using the existing coordinate-sum shift lemma; finish with Lra.
+   Library reuse: indexed_real_vector_zero_sum,
+   indexed_real_vector_zero_sum_axis_shift_coordinate_sum, Stdlib.Lra.
+   Boundary: Algebraic normalization, not orthogonal projection.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_shift_zero_sum_iff :
+    forall n (v : Vector.t R (S n)) (total : R),
+      (indexed_real_vector_zero_sum
+         (Vector.map2 Rplus v (indexed_real_vector_total_axis total)) <->
+       total = - indexed_real_vector_coordinate_sum v).
+  Proof.
+    intros n v total.
+    unfold indexed_real_vector_zero_sum.
+    rewrite indexed_real_vector_zero_sum_axis_shift_coordinate_sum.
+    split; intro Hsum; lra.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_as_axis_normalization]
+   (lemma) — Canonical projection is exactly the scalar-axis shift
+   which cancels the input vector's coordinate total.
+   Mathematical meaning: A previously defined canonical projection
+   can be expressed using standard vector addition with the head axis.
+   Exact checked proposition: For n, v:Vector.t R (S n),
+   projection v = map2 Rplus v (total_axis (-coordinate_sum v)).
+   Premises and side conditions: Applies to singleton and all longer
+   finite real vectors, with no restrictions on signed coordinates.
+   Proof/definition method: Compare projection and total via the
+   existing pair-injectivity theorem: idempotence and axis invariance
+   show matching projections; the projection-zero-sum property and
+   the scalar-shift total identity yield matching zero totals.
+   Library reuse: indexed_real_vector_zero_sum_projection_and_sum_injective,
+   indexed_real_vector_zero_sum_projection_idempotent/zero_sum,
+   indexed_real_vector_zero_sum_axis_shift_projection/coordinate_sum,
+   Stdlib.Ring.
+   Boundary: A new characterization of old verified operations,
+   not an alternate vector or matrix implementation or rank formula.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_as_axis_normalization :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum_projection v =
+      Vector.map2 Rplus v
+        (indexed_real_vector_total_axis
+          (- indexed_real_vector_coordinate_sum v)).
+  Proof.
+    intros n v.
+    apply (indexed_real_vector_zero_sum_projection_and_sum_injective
+      n (indexed_real_vector_zero_sum_projection v)
+      (Vector.map2 Rplus v
+        (indexed_real_vector_total_axis
+          (- indexed_real_vector_coordinate_sum v)))).
+    - rewrite indexed_real_vector_zero_sum_axis_shift_projection.
+      apply indexed_real_vector_zero_sum_projection_idempotent.
+    - pose proof
+        (indexed_real_vector_zero_sum_projection_zero_sum n v)
+        as Hzero.
+      unfold indexed_real_vector_zero_sum in Hzero.
+      rewrite Hzero.
+      rewrite indexed_real_vector_zero_sum_axis_shift_coordinate_sum.
+      ring.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

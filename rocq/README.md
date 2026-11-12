@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **863 proof scripts** in seven
+for the two reports. **867 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3739,6 +3739,22 @@ The intended inventory is **860 public claims, 863 proof scripts and
 9.2 kernel checks and Python/Deal/SPARK CI. This is an exact
 concrete linearity interface, not an abstract vector-space
 dimension or covariance rank certificate.
+
+## Affine projection fibers and scalar normalization (12 November 2026)
+
+Four new commented finite-vector lemmas reuse the canonical
+zero-sum projection and head-axis embedding. They establish
+injectivity of scalar-axis shifts, characterize projection fibers,
+identify the unique axis shift that makes a vector zero-sum, and
+show that this normalization is exactly the existing projection.
+Proofs use established pair-injectivity, idempotence, coordinate
+sums and the maintained Stdlib Lra/Ring tactics, without
+additional recursive vector or matrix code.
+
+Intended inventory: **864 public claims, 867 proof scripts
+and 945 documented declarations**, subject to pinned Rocq 9.2
+and Python/Deal/SPARK CI. The abstract rank-nullity and covariance
+rank extensions remain unproved.
 
 ## Research extensions
 
