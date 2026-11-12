@@ -11818,10 +11818,10 @@ Section FiniteProbabilityMoments.
     intros basis coefficients c Hmass Hnonzero.
     assert (Hsuccessor : exists n, length samples = S n).
     {
-      destruct samples as [|x xs].
+      destruct samples as [|x xs] eqn:Hsamples.
       - exfalso.
         apply (normalized_total_mass_implies_samples_nonempty Hmass).
-        reflexivity.
+        exact Hsamples.
       - exists (length xs).
         reflexivity.
     }
