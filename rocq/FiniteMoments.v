@@ -12577,4 +12577,48 @@ Section FiniteProbabilityMoments.
       exact Hradical.
   Qed.
 
+  (**
+   [indexed_basis_covariance_bilinear_radical_add_radical_iff]
+   (theorem) — Radical membership is stable under radical shifts.
+   Mathematical meaning: A coefficient vector lies in the
+   covariance radical exactly when its translate by any
+   separately radical coefficient vector lies in that radical.
+   Thus radical membership is constant on additive radical cosets.
+   Exact checked proposition: For any basis, coefficients and
+   shift of equal vector length, if radical(shift), then
+   radical(coefficients + shift) iff radical(coefficients).
+   Premises and side conditions: No sample-weight normalization,
+   sign condition, covariance positivity, nonempty basis, or
+   assumption of distinct outcomes is required.
+   Proof/definition method: Unfold only radical membership, then
+   rewrite the covariance pairing using the already checked
+   first-slot radical-shift invariance in both directions.
+   The two implications retain the identical right-hand test.
+   Library reuse: indexed_basis_covariance_bilinear_add_radical_first_invariant,
+   the shared indexed_basis_covariance_bilinear_radical predicate,
+   and Stdlib.Vectors.Vector.map2. No quotient or kernel
+   implementation and no coefficient-list induction is added.
+   Boundary: This is an elementary radical-coset membership law,
+   not a proof of an abstract subspace quotient or a rank formula.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_add_radical_iff :
+    forall basis (coefficients shift : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_radical basis shift ->
+      (indexed_basis_covariance_bilinear_radical
+         basis (Vector.map2 Rplus coefficients shift) <->
+       indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis coefficients shift Hshift.
+    unfold indexed_basis_covariance_bilinear_radical.
+    split.
+    - intros Hshifted right.
+      rewrite <- (indexed_basis_covariance_bilinear_add_radical_first_invariant
+        basis coefficients shift right Hshift).
+      exact (Hshifted right).
+    - intros Horiginal right.
+      rewrite (indexed_basis_covariance_bilinear_add_radical_first_invariant
+        basis coefficients shift right Hshift).
+      exact (Horiginal right).
+  Qed.
+
 End FiniteProbabilityMoments.

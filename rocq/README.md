@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **745 proof scripts** in seven
+for the two reports. **746 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3155,6 +3155,20 @@ signed-weight positive-definiteness assumptions were introduced.
 
 Current target inventory: **742 public checked claims,
 745 proof scripts, 815 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Radical membership is invariant under radical translation (12 November 2026)
+
+A follow-on theorem establishes that, when `r` belongs to the
+finite covariance bilinear radical, `c+r` belongs to that radical
+**if and only if** `c` does. Both implications use the existing
+first-slot pairing invariance rather than a new coefficient
+subtraction, custom vector construction or matrix nullspace
+algorithm. The equivalence holds for signed and unnormalized
+finite sample weights.
+
+Current target inventory: **743 public checked claims,
+746 proof scripts, 816 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI verification.
 
 ## Research extensions

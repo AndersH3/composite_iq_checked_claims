@@ -2381,6 +2381,17 @@ duplicated argument-level rewrites while preserving the exact
 original theorem and assumptions. The only vector operation
 remains Stdlib's maintained `Vector.map2`.
 
+## Radical-coset membership preservation (12 November 2026)
+
+The radical membership predicate itself is now proved invariant
+under addition of any existing radical direction. Its forward
+and reverse implications are both immediate consequences of the
+checked first-slot covariance pairing invariance law applied to
+each right-hand test vector. This adds a useful exact equivalence
+without requiring negation of typed vectors, quotient construction,
+or another covariance matrix implementation. Signed and
+unnormalized sample weights remain explicitly permitted.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
