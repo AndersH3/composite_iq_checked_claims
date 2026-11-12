@@ -11416,6 +11416,101 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_extension_inverse_on_zero_sum]
+   (lemma) — Every zero-sum vector is recovered from its own tail.
+   Mathematical meaning: In positive dimension, the zero-sum
+   condition forces the head to equal minus the tail coordinate sum.
+   Exact checked proposition: For every n and v:Vector.t R (S n),
+   zero_sum v implies extension (Vector.tl v) = v.
+   Premises and side conditions: Covers n=0, zero and signed
+   entries. No sample, weight, normalized mass or covariance premise.
+   Proof/definition method: Use maintained VectorSpec.eta to
+   decompose v into its head and tail, apply the previously checked
+   zero-sum-cons iff to identify its head, and reconstruct v by eta.
+   Library reuse: Stdlib.Vectors.VectorSpec.eta, Vector.hd,
+   Vector.tl, indexed_real_vector_zero_sum_cons_iff.
+   Boundary: A concrete inverse on the zero-sum family, not a
+   completed abstract vector-space dimension or rank-nullity proof.
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_inverse_on_zero_sum :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum v ->
+      indexed_real_vector_zero_sum_extension (Vector.tl v) = v.
+  Proof.
+    intros n v Hzero.
+    assert (Hhead : Vector.hd v =
+      - indexed_real_vector_coordinate_sum (Vector.tl v)).
+    {
+      apply (proj1 (indexed_real_vector_zero_sum_cons_iff
+        n (Vector.hd v) (Vector.tl v))).
+      rewrite <- (VectorSpec.eta v).
+      exact Hzero.
+    }
+    unfold indexed_real_vector_zero_sum_extension.
+    rewrite <- Hhead.
+    symmetry.
+    apply VectorSpec.eta.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_extension_surjective_on_zero_sum]
+   (lemma) — Every positive-length zero-sum vector has a tail witness.
+   Mathematical meaning: The canonical extension reaches every
+   element of the zero-sum family, not arbitrary vectors outside it.
+   Exact checked proposition: For all n, v:Vector.t R (S n),
+   zero_sum v -> exists tail:Vector.t R n, extension tail = v.
+   Premises and side conditions: Signed entries, n=0, and arbitrary
+   finite vector values are supported; probability is irrelevant.
+   Proof/definition method: Choose the maintained Vector.tl v as
+   witness and apply the previously checked exact inverse lemma.
+   Library reuse: Stdlib.Vectors.Vector.tl and
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+   Boundary: Surjectivity onto a concretely defined family, not a
+   claim that the extension is onto all of R^(n+1).
+   *)
+  Lemma indexed_real_vector_zero_sum_extension_surjective_on_zero_sum :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum v ->
+      exists tail : Vector.t R n,
+        indexed_real_vector_zero_sum_extension tail = v.
+  Proof.
+    intros n v Hzero.
+    exists (Vector.tl v).
+    apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+    exact Hzero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_iff_extension_of_tail]
+   (lemma) — Fixed-point characterization of nonempty zero-sum vectors.
+   Mathematical meaning: A vector has zero coordinate sum exactly
+   when canonical re-extension of its own tail reproduces it.
+   Exact checked proposition: For every n and v:Vector.t R (S n),
+   zero_sum v iff extension (Vector.tl v) = v.
+   Premises and side conditions: Arbitrary signed real coordinates,
+   including a singleton vector; no statistical assumptions.
+   Proof/definition method: Forward direction is the verified inverse;
+   reverse direction transports extension target membership along
+   the given equality. Neither direction redoes coordinate arithmetic.
+   Library reuse: indexed_real_vector_zero_sum_extension_inverse_on_zero_sum
+   and indexed_real_vector_zero_sum_extension_zero_sum.
+   Boundary: A verified concrete equivalence, not a packaged
+   linear isomorphism in an external finite-dimensional algebra API.
+   *)
+  Lemma indexed_real_vector_zero_sum_iff_extension_of_tail :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum v <->
+       indexed_real_vector_zero_sum_extension (Vector.tl v) = v).
+  Proof.
+    intros n v.
+    split.
+    - apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+    - intro Hequal.
+      rewrite <- Hequal.
+      apply indexed_real_vector_zero_sum_extension_zero_sum.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
