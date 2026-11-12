@@ -2714,6 +2714,22 @@ the zero-sum family**. Its image, fixed points and concrete kernel
 were already characterized, but abstract dimension, covariance
 matrix rank, and rank-nullity remain open proof obligations.
 
+## Projection, extension, and first-coordinate erasure (12 November 2026)
+
+Three further generic lemmas expose consequences of the already verified
+linear canonical zero-sum projection. First, the canonical zero-sum
+extension is pointwise fixed by projection. Second, two nonempty
+vectors that share a tail have identical projections, regardless of
+their first coordinates. Third, a positive-length nonzero constant
+vector cannot be fixed by projection.
+
+The proofs exclusively compose established zero-sum extension
+membership, projection fixed-point and equality characterizations,
+the previously checked nonzero-constant exclusion, and Rocq's
+maintained `Stdlib.Vectors.Vector.cons/tl`. They do not rederive
+coordinate sums, define vector recursion, or assert a rank/nullity
+or dimensional formula.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
