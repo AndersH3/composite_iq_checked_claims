@@ -11853,6 +11853,104 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_projection_zero] (lemma) —
+   The canonical projection preserves the zero vector.
+   Mathematical meaning: A vector with no nonzero coordinates
+   is already zero-sum and must be fixed by the projection.
+   Exact checked proposition: For all n, projection (const 0 (S n))
+   = const 0 (S n).
+   Premises and side conditions: All n, including n=0, and exact
+   real-number coordinates; no sample or covariance assumptions.
+   Proof/definition method: Use the checked projection fixed-point
+   iff and its target zero-sum condition for constant zero vectors.
+   Library reuse: indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum,
+   indexed_real_vector_coordinate_sum_zero, Stdlib.Vectors.Vector.const.
+   Boundary: Zero preservation alone does not establish
+   arbitrary linearity, subspace dimension or covariance rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_zero :
+    forall n,
+      indexed_real_vector_zero_sum_projection
+        (Vector.const 0 (S n)) =
+      Vector.const 0 (S n).
+  Proof.
+    intro n.
+    apply (proj2
+      (indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
+        n (Vector.const 0 (S n)))).
+    unfold indexed_real_vector_zero_sum.
+    apply indexed_real_vector_coordinate_sum_zero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_add] (lemma) —
+   The canonical projection is additive under standard vector addition.
+   Mathematical meaning: Projecting the componentwise sum of two
+   nonempty real vectors equals the componentwise sum of their
+   individually projected vectors.
+   Exact checked proposition: projection (Vector.map2 Rplus left right)
+   = Vector.map2 Rplus (projection left) (projection right).
+   Premises and side conditions: Every natural n; neither input
+   needs zero sum. There are no weight-sign or normalization premises.
+   Proof/definition method: Rewrite the right-hand side using
+   the previously proved extension additivity, reduce the resulting
+   argument equality to a standard Vector.tl/map2 identity by
+   expanding each nonempty input via maintained VectorSpec.eta.
+   Library reuse: indexed_real_vector_zero_sum_extension_add,
+   Stdlib.Vectors.Vector.map2/tl, VectorSpec.eta and f_equal.
+   Boundary: Concrete additive law, not an abstract matrix
+   representation or covariance-matrix rank statement.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_add :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_zero_sum_projection
+        (Vector.map2 Rplus left right) =
+      Vector.map2 Rplus
+        (indexed_real_vector_zero_sum_projection left)
+        (indexed_real_vector_zero_sum_projection right).
+  Proof.
+    intros n left right.
+    unfold indexed_real_vector_zero_sum_projection.
+    rewrite <- indexed_real_vector_zero_sum_extension_add.
+    f_equal.
+    rewrite (VectorSpec.eta left).
+    rewrite (VectorSpec.eta right).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_scale] (lemma) —
+   The canonical projection respects every real scalar.
+   Mathematical meaning: Projecting a uniformly scaled
+   nonempty vector equals uniformly scaling its projection.
+   Exact checked proposition: projection (Vector.map (a *.) v)
+   = Vector.map (a *.) (projection v), for every a:R and v.
+   Premises and side conditions: Allows zero and negative scalars,
+   all signed coordinates and n=0; no statistical assumptions.
+   Proof/definition method: Rewrite standard scaling of the
+   extension backward, then reduce the remaining typed tail
+   equation by maintained VectorSpec.eta and reflexivity.
+   Library reuse: indexed_real_vector_zero_sum_extension_scale,
+   Stdlib.Vectors.Vector.map/tl and VectorSpec.eta.
+   Boundary: This homogeneous law and additive law certify
+   concrete linearity, not a dimension or rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_scale :
+    forall n (v : Vector.t R (S n)) (a : R),
+      indexed_real_vector_zero_sum_projection
+        (Vector.map (fun c => a * c) v) =
+      Vector.map (fun c => a * c)
+        (indexed_real_vector_zero_sum_projection v).
+  Proof.
+    intros n v a.
+    unfold indexed_real_vector_zero_sum_projection.
+    rewrite <- indexed_real_vector_zero_sum_extension_scale.
+    f_equal.
+    rewrite (VectorSpec.eta v).
+    reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

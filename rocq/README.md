@@ -3515,6 +3515,22 @@ across seven Rocq modules, subject to final Rocq 9.2 and
 Python/SPARK CI. These concrete projection identities do not
 yet establish a subspace dimension or covariance rank formula.
 
+## Linearity of the canonical zero-sum projection (12 November 2026)
+
+The explicit projection now also preserves the zero vector,
+componentwise real-vector addition, and multiplication by any
+real scalar. The proofs reuse the checked extension additivity
+and homogeneity plus standard `VectorSpec.eta` to expose
+`Vector.tl` of `Vector.map2` and `Vector.map`.
+No custom vector data structure, matrix library imitation,
+additional summation or new induction was introduced.
+
+Current intended inventory: **798 public checked claims,
+801 proof scripts and 875 documented declarations**
+across seven Rocq modules, subject to final CI. The concrete
+linear retraction does not, by itself, certify the hyperplane's
+abstract dimension or a covariance-matrix rank formula.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

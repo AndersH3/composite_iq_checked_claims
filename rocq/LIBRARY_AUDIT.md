@@ -2698,6 +2698,22 @@ The concrete kernel corresponds to vectors whose tails are zero,
 but **no abstract vector-space dimension, rank-nullity,
 orthogonal projection or covariance matrix rank** is certified.
 
+## Additive and homogeneous zero-sum projection (12 November 2026)
+
+Three further lemmas certify that the explicit idempotent projection
+preserves the typed zero vector, is additive under standard
+`Vector.map2 Rplus`, and is homogeneous under standard
+`Vector.map (fun c => a * c)` for arbitrary real scalars.
+The addition and scaling proofs reuse the previously kernel-checked
+linearity of the extension map and maintained `VectorSpec.eta`
+for the tail of mapped nonempty vectors; they do not repeat
+coordinate summation or introduce a bespoke map recursion.
+
+This establishes a **concrete linear idempotent projection onto
+the zero-sum family**. Its image, fixed points and concrete kernel
+were already characterized, but abstract dimension, covariance
+matrix rank, and rank-nullity remain open proof obligations.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 384 proof scripts
+## FiniteMoments.v — 387 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1147,6 +1147,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_projection_surjective_on_zero_sum` (lemma) | Choose each zero-sum vector as its own preimage by the fixed-point iff | indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum | **New:** projection is onto its zero-sum target |
 | `indexed_real_vector_zero_sum_projection_zero_iff_tail_zero` (lemma) | Unfold projection and apply earlier extension-zero/input-zero iff | indexed_real_vector_zero_sum_extension_zero_iff_tail_zero, Stdlib.Vectors.Vector.const/tl | **New:** projection is zero precisely when its input tail vanishes |
 | `indexed_real_vector_zero_sum_projection_equal_iff_tails_equal` (lemma) | Congruence of standard Vector.tl and projection-tail retraction forward; rewrite tails in extension backward | Stdlib.Logic.f_equal, indexed_real_vector_zero_sum_projection_tail, Stdlib.Vectors.Vector.tl | **New:** images under projection agree iff input tails agree |
+| `indexed_real_vector_zero_sum_projection_zero` (lemma) | Apply projection fixed-point iff to the already verified constant-zero coordinate sum | indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum, indexed_real_vector_coordinate_sum_zero, Stdlib.Vectors.Vector.const | **New:** canonical projection preserves zero |
+| `indexed_real_vector_zero_sum_projection_add` (lemma) | Rewrite RHS by existing extension additivity, then expand nonempty vectors via standard VectorSpec.eta to reduce tl/map2 equality | indexed_real_vector_zero_sum_extension_add, Stdlib.Vectors.VectorSpec.eta, Vector.map2/tl | **New:** additive linearity of the canonical projection |
+| `indexed_real_vector_zero_sum_projection_scale` (lemma) | Rewrite RHS by extension scalar homogeneity, then use VectorSpec.eta to reduce tl/map equality | indexed_real_vector_zero_sum_extension_scale, Stdlib.Vectors.VectorSpec.eta, Vector.map/tl | **New:** real scalar homogeneity of the projection |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |
