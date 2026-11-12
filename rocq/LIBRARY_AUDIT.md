@@ -2661,6 +2661,23 @@ They make the concrete bijection more directly reusable for
 future linear-map kernel arguments, but do not assert any abstract
 subspace dimension or covariance rank.
 
+## Normalized mass eliminates the explicit nonempty-sample premise (12 November 2026)
+
+The finite sample model now records that unit total mass forces
+the enumerated sample list to be nonempty. This is an exact
+property of the shared `FiniteSum.finite_sum` empty fold and
+requires no nonnegative-weight premise. A second theorem reuses
+the earlier nonzero-constant exclusion for positive sample
+length and eliminates the redundant length witness by splitting
+the ordinary list into empty and nonempty cases.
+
+Both proofs reuse the maintained `Stdlib.List`, `Stdlib.Lra`
+and existing centered-evaluator theorem. In particular, they
+add no custom summation or vector recursion. The result
+strengthens the concrete obstruction to surjectivity under unit
+mass, but does not establish a covariance rank/nullity or
+general hyperplane dimension theorem.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
