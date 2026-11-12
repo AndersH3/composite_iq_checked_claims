@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 364 proof scripts
+## FiniteMoments.v — 369 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1129,6 +1129,12 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_cons_iff` (lemma) | Rewrite the shared cons law then use scalar linear arithmetic | indexed_real_vector_coordinate_sum_cons, Stdlib.Lra | **New:** zero sum iff head equals negative coordinate sum of tail |
 | `indexed_real_vector_zero_sum_from_tail` (lemma) | Instantiate converse of cons iff with the uniquely determined first coordinate | indexed_real_vector_zero_sum_cons_iff, Stdlib.Vectors.Vector.cons | **New:** any n-coordinate tail extends constructively to an (n+1)-coordinate zero-sum vector |
 | `indexed_real_vector_coordinate_sum_surjective` (lemma) | Construct cons target (const zero), then rewrite earlier generic cons and zero-vector sum laws | indexed_real_vector_coordinate_sum_cons, indexed_real_vector_coordinate_sum_zero, Stdlib.Vectors.Vector.const, Stdlib.Ring | **New:** coordinate sum maps every positive vector dimension onto all real scalars, with explicit witness |
+| `indexed_real_vector_zero_sum_extension` (definition) | Standard Vector.cons of negative tail sum and original tail | Stdlib.Vectors.Vector.cons, indexed_real_vector_coordinate_sum | **New:** canonical typed zero-sum embedding with no custom recursion |
+| `indexed_real_vector_zero_sum_extension_zero_sum` (lemma) | Unfold wrapper and reuse prior canonical tail-extension theorem | indexed_real_vector_zero_sum_from_tail | **New:** map image belongs to the zero-sum family for every tail |
+| `indexed_real_vector_zero_sum_extension_tail` (lemma) | Definitional reduction of standard vector tail destructor after cons | Stdlib.Vectors.Vector.cons/tl | **New:** Vector.tl is an exact left inverse to the zero-sum extension |
+| `indexed_real_vector_zero_sum_extension_add` (lemma) | Rewrite shared coordinate-sum additivity, compute standard Vector.map2 on cons, close with ring | indexed_real_vector_coordinate_sum_add, Stdlib.Vectors.Vector.map2, Stdlib.Ring | **New:** additive linearity of canonical zero-sum extension |
+| `indexed_real_vector_zero_sum_extension_scale` (lemma) | Rewrite existing coordinate-sum homogeneity, compute Vector.map on cons and normalize with ring | indexed_real_vector_coordinate_sum_scale, Stdlib.Vectors.Vector.map, Stdlib.Ring | **New:** scalar homogeneity of canonical zero-sum extension |
+| `indexed_real_vector_zero_sum_extension_injective` (lemma) | Apply f_equal Vector.tl, then rewrite both recovered tails using standard retraction | Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.tl, indexed_real_vector_zero_sum_extension_tail | **New:** distinct original coefficient tails have distinct zero-sum extensions |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |
