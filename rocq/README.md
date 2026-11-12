@@ -3595,6 +3595,25 @@ across seven Rocq modules, subject to pinned CI. This
 concrete equality criterion does not establish abstract
 dimension, matrix rank or rank-nullity.
 
+## Constructive inverse to projection-plus-total data (12 November 2026)
+
+A transparent standard-vector constructor now reconstructs a
+nonempty real vector from its freely chosen tail and prescribed
+coordinate sum. Five additional kernel-checkable lemmas establish
+the exact reconstructed tail, full sum, canonical projection,
+round-trip of every input vector, and the uniqueness of an input
+having any specified zero-sum projection and real total.
+
+The implementation composes prior verified projection and sum laws
+with Rocq Stdlib `Vector.cons/tl` and `Ring`; no custom vector
+recursion or matrix code has been introduced.
+
+Current intended inventory: **813 public checked claims,
+816 proof scripts and 891 documented declarations**
+across seven Rocq modules, subject to final pinned CI.
+The abstract vector-space dimension and covariance-rank proofs
+remain separate outstanding obligations.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

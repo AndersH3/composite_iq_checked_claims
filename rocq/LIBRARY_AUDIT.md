@@ -2784,6 +2784,28 @@ matrix API is introduced. The resulting paired representation
 is concrete; an abstract linear isomorphism and dimension/rank
 theorem still require independent formalization.
 
+## Reconstruction of a vector from a zero-sum projection and total (12 November 2026)
+
+The generic typed-vector API now includes a transparent
+`indexed_real_vector_projection_sum_reconstruct` constructor.
+It prepends `total - coordinate_sum tail` to a tail supplied
+through the maintained `Stdlib.Vectors.Vector.cons` constructor.
+Five registered lemmas prove that the tail and full coordinate sum
+are recovered exactly, that projection gives the canonical zero-sum
+extension, and that reconstruction round-trips from every nonempty
+vector. For a zero-sum target, the full set of inputs with that
+projection and a prescribed total is proved to consist of a
+single explicitly reconstructed vector.
+
+The proofs reuse `Vector.tl`/`Vector.cons`, the checked finite
+coordinate-sum cons law, `Stdlib.Ring`, and the already verified
+projection-plus-total injectivity and extension inverse. No new
+vector recursion, parallel summation implementation, matrix
+abstraction, axioms, or admitted gaps are introduced.
+This is a concrete bijective coordinate parametrization, not
+yet a maintained abstract finite-dimensional vector-space
+isomorphism or an abstract dimension/rank-nullity theorem.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

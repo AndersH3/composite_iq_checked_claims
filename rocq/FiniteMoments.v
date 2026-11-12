@@ -12348,6 +12348,200 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_projection_sum_reconstruct] (definition) —
+   Construct a real vector from its ordinary tail and total sum.
+   Mathematical meaning: The n tail coordinates are free; the
+   first coordinate is chosen as total minus the tail coordinate
+   sum. This is the canonical representative with the specified
+   tail and the specified full coordinate sum.
+   Exact declaration: reconstruct tail total =
+   Vector.cons R (total - coordinate_sum tail) n tail.
+   Premises and side conditions: Every finite n and arbitrary
+   signed real entries and total; no positivity or normalization.
+   Definition method: Direct use of the standard Vector.cons
+   constructor and the existing coordinate-sum functional, with
+   no new recursion, list summation, or custom vector representation.
+   Library reuse: Stdlib.Vectors.Vector.cons and the already
+   verified indexed_real_vector_coordinate_sum.
+   Boundary: An explicit coordinate constructor, not by itself
+   an abstract linear isomorphism or dimension/rank claim.
+   *)
+  Definition indexed_real_vector_projection_sum_reconstruct
+      {n : nat} (tail : Vector.t R n) (total : R) :
+      Vector.t R (S n) :=
+    Vector.cons R (total - indexed_real_vector_coordinate_sum tail)
+      n tail.
+
+  (**
+   [indexed_real_vector_projection_sum_reconstruct_tail] (lemma) —
+   Exact preservation of the supplied ordinary tail.
+   Mathematical meaning: The reconstruction operation leaves
+   all n specified tail coordinates unchanged.
+   Exact checked proposition: tl (reconstruct tail total) = tail.
+   Premises and side conditions: Supports n=0 and all real totals;
+   no zero-sum target, sample weights, or probability constraints.
+   Proof/definition method: Reduce Stdlib.Vector.tl directly
+   on its maintained Vector.cons constructor.
+   Library reuse: Stdlib.Vectors.Vector.tl and Vector.cons.
+   Boundary: A concrete structural retraction only.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_tail :
+    forall n (tail : Vector.t R n) (total : R),
+      Vector.tl
+        (indexed_real_vector_projection_sum_reconstruct tail total) =
+      tail.
+  Proof.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_projection_sum_reconstruct_coordinate_sum]
+   (lemma) — The reconstructed vector has the prescribed total.
+   Mathematical meaning: Setting the new first entry to total
+   minus the tail sum makes the complete coordinate sum total.
+   Exact checked proposition: coordinate_sum (reconstruct tail total)
+   = total for every n, tail and real-valued total.
+   Premises and side conditions: Signed coordinates and arbitrary
+   real totals are allowed, including dimension one (n=0).
+   Proof/definition method: Unfold only the constructor wrapper,
+   reuse the checked generic coordinate-sum cons rule, and close
+   the scalar cancellation by the maintained Stdlib.Ring tactic.
+   Library reuse: indexed_real_vector_coordinate_sum_cons,
+   Stdlib.Vectors.Vector.cons and Stdlib.Ring.
+   Boundary: Exact finite arithmetic, not a matrix rank result.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_coordinate_sum :
+    forall n (tail : Vector.t R n) (total : R),
+      indexed_real_vector_coordinate_sum
+        (indexed_real_vector_projection_sum_reconstruct tail total) =
+      total.
+  Proof.
+    intros n tail total.
+    unfold indexed_real_vector_projection_sum_reconstruct.
+    rewrite indexed_real_vector_coordinate_sum_cons.
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_projection_sum_reconstruct_projection]
+   (lemma) — Projecting reconstructed data gives canonical extension.
+   Mathematical meaning: The zero-sum projection discards the
+   supplied total and completes the same tail with its unique
+   zero-sum head. Thus the projected output is independent of
+   the original total.
+   Exact checked proposition: projection (reconstruct tail total)
+   = zero_sum_extension tail for every finite n, tail and total.
+   Premises and side conditions: No zero-sum assumption on the
+   reconstructed input, and no restrictions on the real total.
+   Proof/definition method: Unfold the established projection
+   definition and constructor wrapper, then reduce the standard
+   Vector.tl/Vector.cons pair by computation.
+   Library reuse: indexed_real_vector_zero_sum_projection,
+   indexed_real_vector_zero_sum_extension and Stdlib.Vector.tl.
+   Boundary: An explicit projection identity, not orthogonality.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_projection :
+    forall n (tail : Vector.t R n) (total : R),
+      indexed_real_vector_zero_sum_projection
+        (indexed_real_vector_projection_sum_reconstruct tail total) =
+      indexed_real_vector_zero_sum_extension tail.
+  Proof.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_projection_sum_reconstruct_roundtrip]
+   (lemma) — Every nonempty vector is recovered by its tail and sum.
+   Mathematical meaning: Taking a vector's standard tail and
+   full coordinate sum, then reconstructing, returns exactly
+   that vector. This is one side of a concrete coordinate bijection.
+   Exact checked proposition: For all n, v:Vector.t R (S n),
+   reconstruct (Vector.tl v) (coordinate_sum v) = v.
+   Premises and side conditions: n can be zero and entries can
+   have either sign. No normalized probability premise occurs.
+   Proof/definition method: Apply the already checked injectivity
+   of the pair (canonical projection, coordinate sum). The
+   reconstructed vector's projection equals extension(tl v),
+   which is definitionally the original vector's projection,
+   while its coordinate sum equals the supplied total.
+   Library reuse: indexed_real_vector_zero_sum_projection_and_sum_injective,
+   indexed_real_vector_projection_sum_reconstruct_projection,
+   indexed_real_vector_projection_sum_reconstruct_coordinate_sum.
+   Boundary: Concrete exact recovery; no abstract dimensional
+   or covariance-matrix theorem is asserted.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_roundtrip :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_projection_sum_reconstruct
+        (Vector.tl v) (indexed_real_vector_coordinate_sum v) = v.
+  Proof.
+    intros n v.
+    apply (indexed_real_vector_zero_sum_projection_and_sum_injective
+      n (indexed_real_vector_projection_sum_reconstruct
+        (Vector.tl v) (indexed_real_vector_coordinate_sum v)) v).
+    - rewrite indexed_real_vector_projection_sum_reconstruct_projection.
+      reflexivity.
+    - apply indexed_real_vector_projection_sum_reconstruct_coordinate_sum.
+  Qed.
+
+  (**
+   [indexed_real_vector_projection_sum_reconstruct_unique_fiber]
+   (lemma) — Explicit unique preimage for a zero-sum target and total.
+   Mathematical meaning: For a zero-sum target z and scalar t,
+   exactly one vector has projection z and coordinate sum t,
+   namely reconstruct(tl z,t). This combines the established
+   projection-fiber characterization with the exact sum witness.
+   Exact checked proposition: For every n, zero-sum z, total t,
+   and candidate v:Vector.t R (S n),
+   (projection v = z and sum v = t) iff
+   v = reconstruct (Vector.tl z) t.
+   Premises and side conditions: Zero-sum membership of z is
+   essential. No restriction on t, n or the entries of v.
+   Proof/definition method: Forward apply the checked paired
+   projection/sum injectivity theorem; both reconstruction
+   properties reduce to prior lemmas and the verified inverse
+   of extension on zero-sum vectors. Reverse substitute the
+   reconstruction and reuse its exact projection/sum laws.
+   Library reuse: indexed_real_vector_zero_sum_projection_and_sum_injective,
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum,
+   and the reconstruction projection/coordinate-sum theorems.
+   Boundary: A constructive singleton-fiber result, not a
+   general abstract linear-isomorphism or rank theorem.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_unique_fiber :
+    forall n (z : Vector.t R (S n)) (total : R)
+           (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum z ->
+      ((indexed_real_vector_zero_sum_projection v = z /\
+        indexed_real_vector_coordinate_sum v = total) <->
+       v = indexed_real_vector_projection_sum_reconstruct
+         (Vector.tl z) total).
+  Proof.
+    intros n z total v Hzero.
+    split.
+    - intros [Hprojection Hsum].
+      apply (indexed_real_vector_zero_sum_projection_and_sum_injective
+        n v
+        (indexed_real_vector_projection_sum_reconstruct
+          (Vector.tl z) total)).
+      + rewrite Hprojection.
+        rewrite indexed_real_vector_projection_sum_reconstruct_projection.
+        symmetry.
+        apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+        exact Hzero.
+      + rewrite Hsum.
+        symmetry.
+        apply indexed_real_vector_projection_sum_reconstruct_coordinate_sum.
+    - intro Hequal.
+      rewrite Hequal.
+      split.
+      + rewrite indexed_real_vector_projection_sum_reconstruct_projection.
+        apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+        exact Hzero.
+      + apply indexed_real_vector_projection_sum_reconstruct_coordinate_sum.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
