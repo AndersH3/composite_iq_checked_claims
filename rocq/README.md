@@ -3403,6 +3403,28 @@ Current intended inventory: **771 public checked claims,
 774 proof scripts and 846 documented declarations**
 in seven Rocq modules, subject to pinned Rocq 9.2 CI.
 
+## Explicit zero-sum coordinate parametrization (12 November 2026)
+
+Four additional generic Rocq lemmas establish the first-coordinate
+formula for a nonempty real vector, the precise zero-sum condition
+`head = -coordinate_sum tail`, a canonical zero-sum extension of
+each arbitrary tail, and constructive surjectivity of the nonempty
+coordinate-sum functional onto `R`. These are exact properties of
+the existing finite-dimensional typed vector representation.
+
+The implementation reuses standard `Vector.cons`/`Vector.const`,
+the existing `FiniteSum.finite_sum`, the proven zero-vector
+coordinate-sum identity, and Rocq `Lra`/`Ring`, without creating
+new matrix, fold, or vector-recursion code. These lemmas give
+explicit witnesses for the functional and its zero-sum fibers; a
+maintained linear-algebra package is still needed to turn these
+identities into a kernel-dimension or rank-nullity certificate.
+
+Current intended inventory: **775 public checked claims,
+778 proof scripts and 850 documented declarations**
+across seven Rocq modules. The final branch CI result, not the
+documentation, determines whether these counts are verified.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
