@@ -3546,6 +3546,21 @@ Current intended inventory: **801 public checked claims,
 across seven Rocq modules, pending pinned Rocq 9.2 and
 Python/SPARK CI verification.
 
+## Explicit head-only projection-kernel normal form (12 November 2026)
+
+The zero-sum projection's kernel is now characterized in both
+directions by an explicit normal form: precisely vectors with
+one arbitrary first coordinate and a zero tail. The proof
+composes the checked projection-zero criterion with
+`Stdlib.Vectors.VectorSpec.eta`, rather than defining
+additional vector algebra.
+
+Current intended inventory: **802 public checked claims,
+805 proof scripts and 879 documented declarations**
+across seven Rocq modules, pending final pinned CI.
+The concrete normal form alone does not establish an abstract
+kernel dimension or covariance rank theorem.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
