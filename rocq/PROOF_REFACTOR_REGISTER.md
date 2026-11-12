@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 360 proof scripts
+## FiniteMoments.v — 364 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1125,6 +1125,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_closed_under_add` (lemma) | Rewrite common functional additivity and both input zero sums | indexed_real_vector_coordinate_sum_add, Stdlib.Ring | **New:** zero-sum vector family is addition closed |
 | `indexed_real_vector_coordinate_sum_const` (lemma) | Reuse VectorSpec.to_list_const and the existing finite-sum fold on a repeated list; dimensional induction with S_INR and ring | VectorSpec.to_list_const, FiniteSum.finite_sum, Stdlib.List.repeat, Stdlib.Reals.S_INR, Stdlib.Ring | **New:** constant vector coordinate sum equals INR n times its entry |
 | `indexed_real_vector_zero_sum_const_nonzero` (lemma) | Apply constant-sum identity, real zero-product and natural INR nonnegativity | indexed_real_vector_coordinate_sum_const, Stdlib.Reals.Rmult_integral/pos_INR/S_INR, Stdlib.Lra | **New:** a nonzero constant vector of positive dimension is outside the zero-sum family |
+| `indexed_real_vector_coordinate_sum_cons` (lemma) | Definitional reduction of the standard Vector.cons-to-list conversion and shared fold | Stdlib.Vectors.Vector.cons/to_list, FiniteSum.finite_sum, Stdlib.List.fold_right | **New:** nonempty vector coordinate sum equals head plus tail sum, without custom recursion |
+| `indexed_real_vector_zero_sum_cons_iff` (lemma) | Rewrite the shared cons law then use scalar linear arithmetic | indexed_real_vector_coordinate_sum_cons, Stdlib.Lra | **New:** zero sum iff head equals negative coordinate sum of tail |
+| `indexed_real_vector_zero_sum_from_tail` (lemma) | Instantiate converse of cons iff with the uniquely determined first coordinate | indexed_real_vector_zero_sum_cons_iff, Stdlib.Vectors.Vector.cons | **New:** any n-coordinate tail extends constructively to an (n+1)-coordinate zero-sum vector |
+| `indexed_real_vector_coordinate_sum_surjective` (lemma) | Construct cons target (const zero), then rewrite earlier generic cons and zero-vector sum laws | indexed_real_vector_coordinate_sum_cons, indexed_real_vector_coordinate_sum_zero, Stdlib.Vectors.Vector.const, Stdlib.Ring | **New:** coordinate sum maps every positive vector dimension onto all real scalars, with explicit witness |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |
