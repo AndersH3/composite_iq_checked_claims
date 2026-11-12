@@ -12211,6 +12211,143 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_projection_head] (lemma) —
+   Exact first-coordinate correction imposed by projection.
+   Mathematical meaning: The canonical projection leaves the
+   ordinary tail unchanged and adjusts the first coordinate by
+   subtracting the full original vector's coordinate sum.
+   Exact checked proposition: For n and v:Vector.t R (S n),
+   Vector.hd (projection v) =
+   Vector.hd v - indexed_real_vector_coordinate_sum v.
+   Premises and side conditions: Works in every positive vector
+   length, including a singleton, for arbitrary signed real
+   values. No sample weights or covariance assumptions are used.
+   Proof/definition method: Express the input's total sum as its
+   standard head plus the sum of its ordinary tail, using the
+   previously checked cons identity and Stdlib.VectorSpec.eta.
+   Reduce the transparent canonical projection's head coordinate
+   and close the resulting scalar equality with Stdlib.Ring.
+   Library reuse: indexed_real_vector_coordinate_sum_cons,
+   Stdlib.Vectors.VectorSpec.eta, Vector.hd/tl, Stdlib.Ring.
+   Boundary: A scalar coordinate formula only; it is not an
+   orthogonal-projection assertion or rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_head :
+    forall n (v : Vector.t R (S n)),
+      Vector.hd (indexed_real_vector_zero_sum_projection v) =
+      Vector.hd v - indexed_real_vector_coordinate_sum v.
+  Proof.
+    intros n v.
+    assert (Hsum : indexed_real_vector_coordinate_sum v =
+      Vector.hd v +
+        indexed_real_vector_coordinate_sum (Vector.tl v)).
+    {
+      rewrite <- (VectorSpec.eta v) at 1.
+      apply indexed_real_vector_coordinate_sum_cons.
+    }
+    unfold indexed_real_vector_zero_sum_projection,
+      indexed_real_vector_zero_sum_extension.
+    change
+      (- indexed_real_vector_coordinate_sum (Vector.tl v) =
+       Vector.hd v - indexed_real_vector_coordinate_sum v).
+    rewrite Hsum.
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_and_sum_injective]
+   (lemma) — Projection plus original total sum determines its input.
+   Mathematical meaning: The projection retains all tail entries.
+   Its corrected first entry, together with the original total
+   coordinate sum, recovers the input's original first entry.
+   Thus equality of both data determines the whole vector.
+   Exact checked proposition: For any n and left,right of type
+   Vector.t R (S n), equal projections and equal coordinate sums
+   imply left = right.
+   Premises and side conditions: No zero-sum hypotheses on inputs,
+   no nonnegativity assumptions, and no statistical normalization.
+   Proof/definition method: Obtain equality of tails from the
+   already checked projection-equality iff. Apply maintained
+   f_equal Vector.hd to projection equality, rewrite both heads
+   with the preceding exact correction law, and use Stdlib.Lra
+   with the equal total sums. Finish by Stdlib.VectorSpec.eta,
+   reusing the equality of heads and tails without vector induction.
+   Library reuse: indexed_real_vector_zero_sum_projection_equal_iff_tails_equal,
+   indexed_real_vector_zero_sum_projection_head, Stdlib.Logic.f_equal,
+   Stdlib.Vectors.VectorSpec.eta and Stdlib.Lra.
+   Boundary: Concrete injectivity of paired observations, not
+   an abstract linear isomorphism or rank/nullity calculation.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_and_sum_injective :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_zero_sum_projection left =
+        indexed_real_vector_zero_sum_projection right ->
+      indexed_real_vector_coordinate_sum left =
+        indexed_real_vector_coordinate_sum right ->
+      left = right.
+  Proof.
+    intros n left right Hprojection Hsum.
+    assert (Htails : Vector.tl left = Vector.tl right).
+    {
+      apply (proj1
+        (indexed_real_vector_zero_sum_projection_equal_iff_tails_equal
+          n left right)).
+      exact Hprojection.
+    }
+    assert (Hheads : Vector.hd left = Vector.hd right).
+    {
+      pose proof
+        (f_equal (fun w : Vector.t R (S n) => Vector.hd w)
+          Hprojection) as Hprojected_heads.
+      rewrite !indexed_real_vector_zero_sum_projection_head
+        in Hprojected_heads.
+      lra.
+    }
+    rewrite <- (VectorSpec.eta left) at 1.
+    rewrite <- (VectorSpec.eta right) at 1.
+    now rewrite Hheads, Htails.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_and_sum_equal_iff]
+   (lemma) — Exact equality criterion for the paired representation.
+   Mathematical meaning: Two real vectors of the same positive
+   length agree exactly when both their canonical projections
+   and their original coordinate sums agree.
+   Exact checked proposition: For any n and left,right of type
+   Vector.t R (S n),
+   (projection left = projection right and
+   coordinate_sum left = coordinate_sum right) iff left = right.
+   Premises and side conditions: Every n including zero and every
+   signed real input are included. No probabilistic premise.
+   Proof/definition method: Forward implication directly invokes
+   the previous checked injectivity theorem. For the reverse
+   implication, substitute equal vectors and use reflexivity on
+   both components. No new coordinate calculation is repeated.
+   Library reuse: indexed_real_vector_zero_sum_projection_and_sum_injective,
+   Stdlib.Logic.eq_ind, and the maintained projection/sum definitions.
+   Boundary: Concrete equality representation, not a claim of
+   abstract dimension, matrix rank, or numerical invertibility.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_and_sum_equal_iff :
+    forall n (left right : Vector.t R (S n)),
+      ((indexed_real_vector_zero_sum_projection left =
+          indexed_real_vector_zero_sum_projection right /\
+        indexed_real_vector_coordinate_sum left =
+          indexed_real_vector_coordinate_sum right) <->
+       left = right).
+  Proof.
+    intros n left right.
+    split.
+    - intros [Hprojection Hsum].
+      apply (indexed_real_vector_zero_sum_projection_and_sum_injective
+        n left right Hprojection Hsum).
+    - intro Hequal.
+      rewrite Hequal.
+      split; reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

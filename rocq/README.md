@@ -3578,6 +3578,23 @@ across seven Rocq modules, subject to pinned CI verification.
 No abstract subspace dimension, covariance rank or rank-nullity
 formula is claimed.
 
+## Projection plus total sum uniquely recovers a vector (12 November 2026)
+
+Three further generic Rocq lemmas show that the projected head
+is the input head minus the input's total coordinate sum,
+that equal projections and total sums force equality of
+the original nonempty vectors, and that this recovery
+criterion holds in both directions. These proofs use
+`VectorSpec.eta`, the checked coordinate-sum cons identity,
+the existing projection tail law, and standard
+`Ring`/`Lra` normalization; there is no new vector recursion.
+
+Current intended inventory: **808 public checked claims,
+811 proof scripts and 885 documented declarations**
+across seven Rocq modules, subject to pinned CI. This
+concrete equality criterion does not establish abstract
+dimension, matrix rank or rank-nullity.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

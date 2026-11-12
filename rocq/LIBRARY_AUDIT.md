@@ -2765,6 +2765,25 @@ vector recursion, matrix abstraction, or summation implementation.
 They are a concrete range/fiber specification only; an abstract
 dimension/rank-nullity theorem remains a separate proof obligation.
 
+## Recovering the head from projection and total sum (12 November 2026)
+
+The projection's first coordinate is now proved to equal the
+original first coordinate minus the original coordinate sum.
+Together with the existing exact tail-preservation law, this
+provides a simple, constructive recovery criterion: two
+positive-length real vectors are equal if and only if their
+canonical zero-sum projections and original total coordinate
+sums agree.
+
+The three documented proofs compose the existing finite
+coordinate-sum cons identity, projection-tail equality,
+`Stdlib.Vectors.VectorSpec.eta`, `Stdlib.Logic.f_equal`
+and the maintained `Stdlib.Ring`/`Stdlib.Lra` tactics.
+No new vector recursion, summation implementation or custom
+matrix API is introduced. The resulting paired representation
+is concrete; an abstract linear isomorphism and dimension/rank
+theorem still require independent formalization.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
