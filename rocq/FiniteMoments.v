@@ -11634,7 +11634,7 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: Every n, including n=0, is
    supported. Real entries may be signed; no sample weights, mass
    normalization, covariance definiteness or choice is assumed.
-   Definition method: Direct composition of the previously verified
+   Proof/definition method: Direct composition of the previously verified
    canonical extension and Stdlib's ordinary Vector.tl.
    Library reuse: Stdlib.Vectors.Vector.tl and
    indexed_real_vector_zero_sum_extension; no new recursion.
@@ -11655,7 +11655,7 @@ Section FiniteProbabilityMoments.
    zero_sum (projection v).
    Premises and side conditions: All real entries and n=0 are
    allowed; no probabilistic assumptions are introduced.
-   Proof method: Unfold the projection wrapper and reuse the
+   Proof/definition method: Unfold the projection wrapper and reuse the
    already checked zero-sum-extension target-membership theorem.
    Library reuse: indexed_real_vector_zero_sum_extension_zero_sum,
    Stdlib.Vectors.Vector.tl; no coordinate-sum recalculation.
@@ -11679,7 +11679,7 @@ Section FiniteProbabilityMoments.
    Exact checked proposition: tl (projection v) = tl v.
    Premises and side conditions: Arbitrary n, signed real entries;
    no constraints on the first coordinate are needed.
-   Proof method: Unfold only the projection and apply the checked
+   Proof/definition method: Unfold only the projection and apply the checked
    extension/tail retraction; no vector induction is required.
    Library reuse: Stdlib.Vectors.Vector.tl and
    indexed_real_vector_zero_sum_extension_tail.
@@ -11705,7 +11705,7 @@ Section FiniteProbabilityMoments.
    Exact checked proposition: projection v = v iff zero_sum v.
    Premises and side conditions: Every n and arbitrary real vector;
    no mass normalization, weight positivity or covariance premise.
-   Proof method: Use target membership in the forward implication,
+   Proof/definition method: Use target membership in the forward implication,
    transporting across the fixed-point equation. The converse
    reuses the exact verified inverse of extension on zero-sum data.
    Library reuse: indexed_real_vector_zero_sum_projection_zero_sum
@@ -11738,7 +11738,7 @@ Section FiniteProbabilityMoments.
    projection v, for all n and v of positive length.
    Premises and side conditions: Includes n=0 and signed entries.
    No sample or inner-product structure is needed.
-   Proof method: Reuse the fixed-point characterization and target
+   Proof/definition method: Reuse the fixed-point characterization and target
    membership, instead of evaluating coordinates again.
    Library reuse: indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
    and indexed_real_vector_zero_sum_projection_zero_sum.
@@ -11767,7 +11767,7 @@ Section FiniteProbabilityMoments.
    exists preimage:Vector.t R (S n), projection preimage = v.
    Premises and side conditions: n may be zero; real entries may
    be negative. There are no normalized sample assumptions.
-   Proof method: Choose the vector itself and use the previously
+   Proof/definition method: Choose the vector itself and use the previously
    proved fixed-point iff, without introducing a choice axiom.
    Library reuse: indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum.
    Boundary: Surjectivity holds onto the zero-sum subset, not
@@ -11796,7 +11796,7 @@ Section FiniteProbabilityMoments.
    iff tl v = const 0 n.
    Premises and side conditions: Works for any natural n,
    including the empty tail; no sample-weight assumptions.
-   Proof method: Unfold the projection and apply the already
+   Proof/definition method: Unfold the projection and apply the already
    verified extension-zero iff its input is zero theorem.
    Library reuse: Stdlib.Vectors.Vector.const/tl and
    indexed_real_vector_zero_sum_extension_zero_iff_tail_zero.
@@ -11824,7 +11824,7 @@ Section FiniteProbabilityMoments.
    iff Vector.tl left = Vector.tl right.
    Premises and side conditions: Any n and any signed real
    coordinates; no zero-sum restriction on either input.
-   Proof method: Apply congruence of the standard Vector.tl to
+   Proof/definition method: Apply congruence of the standard Vector.tl to
    projected-vector equality and the checked projection-tail
    lemma. Conversely rewrite equality of tails in the common
    extension expression.
