@@ -11087,7 +11087,8 @@ Section FiniteProbabilityMoments.
     unfold indexed_real_vector_coordinate_sum.
     rewrite VectorSpec.to_list_const.
     induction n as [|n IH].
-    - simpl.
+    - change (0 = INR 0 * c).
+      rewrite INR_0.
       ring.
     - change (c + FiniteSum.finite_sum (fun y : R => y)
         (repeat c n) = INR (S n) * c).
