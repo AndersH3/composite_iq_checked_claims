@@ -3425,6 +3425,28 @@ Current intended inventory: **775 public checked claims,
 across seven Rocq modules. The final branch CI result, not the
 documentation, determines whether these counts are verified.
 
+## Linear zero-sum extension and left inverse (12 November 2026)
+
+A transparent `indexed_real_vector_zero_sum_extension` now
+uses Stdlib `Vector.cons` to embed any real vector of length
+`n` as a zero-sum vector of length `n+1`. Five documented
+proofs establish target membership, exact recovery of the tail
+with Stdlib `Vector.tl`, preservation of componentwise addition
+and real scalar multiplication, and injectivity. This constructs
+a concrete, linear embedding, using the existing finite coordinate
+sum and standard vector operations without another vector algebra.
+
+The left-inverse and linearity properties prepare the zero-sum
+interface for a maintained abstract finite-dimensional linear
+algebra library. The embedding alone does not establish an
+abstract subspace dimension, its surjectivity onto all zero-sum
+vectors, or a covariance-matrix rank/nullity result.
+
+Current intended inventory: **780 public checked claims,
+783 proof scripts and 856 documented declarations**
+across seven Rocq modules, subject to final Rocq 9.2 and
+Python/SPARK CI checks.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
