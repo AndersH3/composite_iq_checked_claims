@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **845 proof scripts** in seven
+for the two reports. **854 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3697,6 +3697,25 @@ Intended inventory after this change: **842 public checked claims,
 seven modules, subject to pinned Rocq 9.2 CI. Concrete
 zero-total coordinate equivalences do not by themselves prove
 abstract vector-space dimension or rank-nullity results.
+
+## Explicit zero-sum plus scalar-axis additive decomposition (12 November 2026)
+
+A new standard-vector head-only axis constructor embeds any real total
+as `Vector.cons R total n (Vector.const 0 n)`. Nine generic
+kernel-checkable candidates connect it to the existing finite-vector
+coordinate sum and canonical zero-sum projection. These show the axis's
+exact sum and injectivity, its annihilation under the projection,
+the projection's kernel as a uniquely prescribed scalar-axis vector,
+and an explicit additive decomposition with unique zero-sum and total
+coordinates. The one generic vector identity used in the new proofs,
+addition with the zero vector, follows from Stdlib `VectorSpec`
+extensionality and `Ring` rather than custom recursive vector code.
+
+Intended inventory: **851 public claims, 854 proof scripts and
+932 documented declarations** across seven Rocq modules, subject to
+pinned Rocq 9.2 verification and independent Deal/SPARK CI.
+No abstract finite-dimensional vector-space isomorphism, dimension
+formula or covariance-matrix rank theorem is claimed here.
 
 ## Research extensions
 

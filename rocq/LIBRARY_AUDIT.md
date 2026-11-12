@@ -2897,6 +2897,25 @@ vector class, new linear algebra operations or a custom vector type.
 Proposed post-change inventory: 842 public claims, 845 proof scripts,
 922 documented declarations, pending Rocq kernel and CI results.
 
+## Scalar-axis complement and unique additive zero-sum decomposition (12 November 2026)
+
+One transparent `Vector.cons`/`Vector.const` constructor and nine
+generic finite-vector lemmas establish a head-only axis complementary
+to the existing canonical zero-sum projection. The key proofs reuse
+`indexed_real_vector_zero_sum_projection_and_sum_injective`,
+projection additivity and fixed-point characterization, coordinate-sum
+additivity, plus the maintained `VectorSpec.eq_nth_iff`,
+`VectorSpec.nth_map2`, `VectorSpec.const_nth` and `Ring`
+to handle vector addition with zero without custom recursion.
+A unique explicit additive representative and a decomposition of
+every nonempty real vector are obtained without invoking excluded
+middle, new axioms, ad hoc matrix code or a new vector datatype.
+
+Intended inventory after change: 851 public checked claims, 854 proof
+scripts, 932 documented declarations; subject to pinned CI.
+This is an explicit additive splitting, not a library-level rank
+or dimension calculation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
