@@ -2593,6 +2593,30 @@ library-backed subspace identification, but does **not** itself
 claim an abstract zero-sum dimension, general linear-map rank,
 rank-nullity theorem, or covariance rank formula.
 
+## Canonical linear embedding into the typed zero-sum family (12 November 2026)
+
+The explicit first-coordinate constraint is now packaged as a small
+transparent `indexed_real_vector_zero_sum_extension` definition:
+prepend the negative tail-coordinate sum using Stdlib `Vector.cons`.
+Five verified helper propositions specify that its output has zero
+sum, that `Vector.tl` recovers the tail, that the extension commutes
+with `Vector.map2 Rplus` and real scalar `Vector.map`, and that
+the extension is injective.
+
+Proofs reuse the earlier coordinate-sum addition/homogeneity laws,
+the existing canonical tail-extension membership result, standard
+`Vector.map`, `Vector.map2`, `Vector.cons`, `Vector.tl` and
+`f_equal`, plus `Stdlib.Ring` for scalar rearrangements.
+No independent vector constructor, list recursion, summation fold,
+matrix implementation, or new axiom is present.
+
+Together these laws furnish a concrete additive, homogeneous,
+injective map from `R^n` into the zero-sum vectors of length
+`n+1` with a verified left inverse on the domain. They are
+precursors to—but not yet replacements for—a maintained abstract
+vector-space isomorphism, subspace dimension, covariance rank bound,
+or rank-nullity theorem.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
