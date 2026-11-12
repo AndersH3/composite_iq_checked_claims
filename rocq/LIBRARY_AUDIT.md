@@ -2569,6 +2569,30 @@ proper-image restriction; the zero-sum target's abstract
 codimension and the covariance matrix's rank are not
 yet established.
 
+## Explicit zero-sum coordinates and scalar-sum surjectivity (12 November 2026)
+
+The maintained finite-vector layer now records four generic, fully
+documented laws for nonempty typed real vectors. Vector coordinate
+summation respects the standard `Vector.cons` constructor; a vector
+composed of head and tail has zero sum exactly when the head is minus
+the coordinate sum of the tail. The latter iff gives a canonical
+zero-sum extension for every freely chosen tail. Conversely, placing
+an arbitrary scalar in the first coordinate and using a constant
+zero tail proves that the coordinate-sum functional maps every
+positive vector dimension onto all real scalars.
+
+This increment reuses `Stdlib.Vectors.Vector.cons/const/to_list`,
+`Stdlib.List.fold_right` through the existing
+`FiniteSum.finite_sum`, the previously checked zero-vector
+coordinate-sum law, `Stdlib.Lra`, and `Stdlib.Ring`.
+It introduces no independent vector recursion, matrix operations,
+new axioms, numerical statistical inference, or proof placeholders.
+
+The explicit first-coordinate formula is useful for a later
+library-backed subspace identification, but does **not** itself
+claim an abstract zero-sum dimension, general linear-map rank,
+rank-nullity theorem, or covariance rank formula.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
