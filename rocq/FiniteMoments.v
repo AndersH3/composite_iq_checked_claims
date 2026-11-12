@@ -12714,6 +12714,252 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_projection_sum_reconstruct_zero] (lemma) —
+   The explicit tail-plus-total decoder preserves the additive identity.
+   Mathematical meaning: Reconstructing from a zero tail and zero total
+   yields the standard zero vector in every positive finite length.
+   Exact proposition: reconstruct (Vector.const 0 n) 0 =
+   Vector.const 0 (S n).
+   Premises: Any natural n, including zero; no sample or weight premise.
+   Proof: Reuse the coordinate-sum-zero law and standard constructors;
+   the residual scalar identity is normalized by Stdlib.Ring.
+   Library reuse: Vector.const/cons, indexed_real_vector_coordinate_sum_zero.
+   Boundary: Concrete zero preservation, not an abstract vector-space instance.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_zero :
+    forall n,
+      indexed_real_vector_projection_sum_reconstruct
+        (Vector.const 0 n) 0 = Vector.const 0 (S n).
+  Proof.
+    intro n.
+    unfold indexed_real_vector_projection_sum_reconstruct.
+    rewrite indexed_real_vector_coordinate_sum_zero.
+    replace (0 - 0) with 0 by ring.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_projection_sum_reconstruct_add] (lemma) —
+   Reconstruction preserves componentwise tail addition and total addition.
+   Mathematical meaning: The first corrected coordinate distributes
+   over sums, so reconstructing summed data equals adding reconstructions.
+   Exact proposition: reconstruct (left + right) (tl + tr) =
+   reconstruct left tl + reconstruct right tr, with Vector.map2 Rplus.
+   Premises: All finite n and arbitrary signed real coordinates/totals.
+   Proof: Rewrite the established finite coordinate-sum additivity and
+   normalize only the first-coordinate scalar expression with Ring.
+   Library reuse: Vector.map2/cons, indexed_real_vector_coordinate_sum_add,
+   and Stdlib.Ring; no new induction or finite summation implementation.
+   Boundary: Concrete addition preservation, not a registered linear map.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_add :
+    forall n (left right : Vector.t R n) (total_left total_right : R),
+      indexed_real_vector_projection_sum_reconstruct
+        (Vector.map2 Rplus left right) (total_left + total_right) =
+      Vector.map2 Rplus
+        (indexed_real_vector_projection_sum_reconstruct left total_left)
+        (indexed_real_vector_projection_sum_reconstruct right total_right).
+  Proof.
+    intros n left right total_left total_right.
+    unfold indexed_real_vector_projection_sum_reconstruct.
+    rewrite indexed_real_vector_coordinate_sum_add.
+    replace
+      (total_left + total_right -
+        (indexed_real_vector_coordinate_sum left +
+         indexed_real_vector_coordinate_sum right))
+      with
+      ((total_left - indexed_real_vector_coordinate_sum left) +
+       (total_right - indexed_real_vector_coordinate_sum right))
+      by ring.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_projection_sum_reconstruct_scale] (lemma) —
+   Reconstruction commutes with real scalar multiplication.
+   Mathematical meaning: Scaling both the free tail and total by a
+   scalar scales every reconstructed coordinate by the same scalar.
+   Exact proposition: reconstruct (map (a *) tail) (a * total) =
+   map (a *) (reconstruct tail total).
+   Premises: Any real a, any tail length, and arbitrary signed totals.
+   Proof: Reuse coordinate-sum homogeneity, then scalar Ring normalization.
+   Library reuse: Vector.map/cons, indexed_real_vector_coordinate_sum_scale,
+   Stdlib.Ring; no bespoke vector recursion.
+   Boundary: Concrete homogeneity only, not an abstract dimension claim.
+   *)
+  Lemma indexed_real_vector_projection_sum_reconstruct_scale :
+    forall n (tail : Vector.t R n) (total a : R),
+      indexed_real_vector_projection_sum_reconstruct
+        (Vector.map (fun c => a * c) tail) (a * total) =
+      Vector.map (fun c => a * c)
+        (indexed_real_vector_projection_sum_reconstruct tail total).
+  Proof.
+    intros n tail total a.
+    unfold indexed_real_vector_projection_sum_reconstruct.
+    rewrite indexed_real_vector_coordinate_sum_scale.
+    replace
+      (a * total - a * indexed_real_vector_coordinate_sum tail)
+      with
+      (a * (total - indexed_real_vector_coordinate_sum tail))
+      by ring.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_encode_zero] (lemma) —
+   The standard product encoding sends a zero vector to zero data.
+   Mathematical meaning: Both the ordinary tail and coordinate sum
+   vanish on the full zero vector.
+   Exact proposition: encode (Vector.const 0 (S n)) = (const 0 n, 0).
+   Premises: Every finite n; no probability model assumptions.
+   Proof: Reuse zero coordinate sum and constructor reduction.
+   Library reuse: Vector.const/tl and indexed_real_vector_coordinate_sum_zero.
+   Boundary: Componentwise zero preservation, not an abstract module law.
+   *)
+  Lemma indexed_real_vector_tail_total_encode_zero :
+    forall n,
+      indexed_real_vector_tail_total_encode (Vector.const 0 (S n)) =
+      (Vector.const 0 n, 0).
+  Proof.
+    intro n.
+    unfold indexed_real_vector_tail_total_encode.
+    rewrite indexed_real_vector_coordinate_sum_zero.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_encode_add] (lemma) —
+   The concrete encoding preserves finite vector addition componentwise.
+   Mathematical meaning: The tail of a sum is the sum of the tails,
+   and its stored coordinate total is the sum of the stored totals.
+   Exact proposition: encode (map2 Rplus left right) equals the
+   pair (map2 Rplus (tl left) (tl right), sum left + sum right).
+   Premises: Any n and arbitrary real vectors, without sample hypotheses.
+   Proof: Reuse the checked coordinate-sum additivity; decompose each
+   nonempty vector using standard VectorSpec.eta to prove the tail law.
+   Library reuse: VectorSpec.eta, Vector.tl/map2 and coordinate_sum_add.
+   Boundary: Explicit product addition behavior, not a rank formula.
+   *)
+  Lemma indexed_real_vector_tail_total_encode_add :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_tail_total_encode
+        (Vector.map2 Rplus left right) =
+      (Vector.map2 Rplus (Vector.tl left) (Vector.tl right),
+       indexed_real_vector_coordinate_sum left +
+       indexed_real_vector_coordinate_sum right).
+  Proof.
+    intros n left right.
+    unfold indexed_real_vector_tail_total_encode.
+    rewrite indexed_real_vector_coordinate_sum_add.
+    f_equal.
+    rewrite (VectorSpec.eta left).
+    rewrite (VectorSpec.eta right).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_encode_scale] (lemma) —
+   The concrete encoding preserves finite vector scalar multiplication.
+   Mathematical meaning: Both stored tail entries and the total are
+   multiplied by the same real scalar.
+   Exact proposition: encode (map (a *) v) =
+   (map (a *) (tl v), a * sum v).
+   Premises: All real a and finite n, with no positivity restriction.
+   Proof: Reuse coordinate-sum homogeneity and the standard cons
+   decomposition (VectorSpec.eta) for tail-map compatibility.
+   Library reuse: VectorSpec.eta, Vector.map/tl and coordinate_sum_scale.
+   Boundary: Componentwise homogeneity, not a maintained linear-map object.
+   *)
+  Lemma indexed_real_vector_tail_total_encode_scale :
+    forall n (v : Vector.t R (S n)) (a : R),
+      indexed_real_vector_tail_total_encode
+        (Vector.map (fun c => a * c) v) =
+      (Vector.map (fun c => a * c) (Vector.tl v),
+       a * indexed_real_vector_coordinate_sum v).
+  Proof.
+    intros n v a.
+    unfold indexed_real_vector_tail_total_encode.
+    rewrite indexed_real_vector_coordinate_sum_scale.
+    f_equal.
+    rewrite (VectorSpec.eta v).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_decode_zero] (lemma) —
+   The standard pair decoder maps zero tail/total data to the zero vector.
+   Mathematical meaning: Its explicit inverse respects additive identities.
+   Exact proposition: decode (const 0 n, 0) = const 0 (S n).
+   Premises: Any n; no normalization or empirical observations.
+   Proof: Reduce the pair projections, then apply established
+   reconstruction-zero preservation without repeating arithmetic.
+   Library reuse: Stdlib.Datatypes.fst/snd and reconstruct_zero.
+   Boundary: Concrete zero preservation, not abstract dimension.
+   *)
+  Lemma indexed_real_vector_tail_total_decode_zero :
+    forall n,
+      indexed_real_vector_tail_total_decode
+        (Vector.const 0 n, 0) = Vector.const 0 (S n).
+  Proof.
+    intro n.
+    change
+      (indexed_real_vector_projection_sum_reconstruct
+        (Vector.const 0 n) 0 = Vector.const 0 (S n)).
+    apply indexed_real_vector_projection_sum_reconstruct_zero.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_decode_add] (lemma) —
+   Decoding sums of standard product coordinates preserves addition.
+   Mathematical meaning: Add tails by Vector.map2 and totals by Rplus;
+   the reconstructed result is the componentwise sum of the inputs.
+   Exact proposition: decode (map2 Rplus left right, tl+tr) =
+   map2 Rplus (decode (left,tl)) (decode (right,tr)).
+   Premises: Every finite n and real totals with no sample assumptions.
+   Proof: Reduce product projections and delegate to reconstruction_add.
+   Library reuse: Stdlib.Datatypes.fst/snd, Vector.map2,
+   indexed_real_vector_projection_sum_reconstruct_add.
+   Boundary: Concrete additive inverse encoding, not matrix rank.
+   *)
+  Lemma indexed_real_vector_tail_total_decode_add :
+    forall n (left right : Vector.t R n) (total_left total_right : R),
+      indexed_real_vector_tail_total_decode
+        (Vector.map2 Rplus left right, total_left + total_right) =
+      Vector.map2 Rplus
+        (indexed_real_vector_tail_total_decode (left, total_left))
+        (indexed_real_vector_tail_total_decode (right, total_right)).
+  Proof.
+    intros n left right total_left total_right.
+    unfold indexed_real_vector_tail_total_decode.
+    apply indexed_real_vector_projection_sum_reconstruct_add.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_decode_scale] (lemma) —
+   Decoding scalar-multiplied product coordinates is homogeneous.
+   Mathematical meaning: Scaling the tail and total before decoding
+   equals scaling every coordinate of the reconstructed vector.
+   Exact proposition: decode (map (a *) tail, a * total) =
+   map (a *) (decode (tail,total)).
+   Premises: Every real a, all finite n, signed entries/totals permitted.
+   Proof: Reduce maintained fst/snd and reuse reconstruction_scale.
+   Library reuse: Stdlib.Datatypes.prod, Vector.map,
+   indexed_real_vector_projection_sum_reconstruct_scale.
+   Boundary: Concrete homogeneous inverse encoding, not abstract rank.
+   *)
+  Lemma indexed_real_vector_tail_total_decode_scale :
+    forall n (tail : Vector.t R n) (total a : R),
+      indexed_real_vector_tail_total_decode
+        (Vector.map (fun c => a * c) tail, a * total) =
+      Vector.map (fun c => a * c)
+        (indexed_real_vector_tail_total_decode (tail, total)).
+  Proof.
+    intros n tail total a.
+    unfold indexed_real_vector_tail_total_decode.
+    apply indexed_real_vector_projection_sum_reconstruct_scale.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

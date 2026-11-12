@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **771 public theorem/lemma/example claims**, plus
+The current branch has **826 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**774 proof scripts** across seven Rocq modules. The claims and scripts
+**829 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 406 proof scripts
+## FiniteMoments.v — 415 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1169,6 +1169,15 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_tail_total_encode_decode` (lemma) | Destruct only the standard pair and reuse checked reconstruction tail and coordinate-sum laws | Stdlib.Datatypes.prod/fst/snd, indexed_real_vector_projection_sum_reconstruct_tail, indexed_real_vector_projection_sum_reconstruct_coordinate_sum | **New:** encoder is a left inverse of decoder for every tail/total pair |
 | `indexed_real_vector_tail_total_encode_injective` (lemma) | Apply maintained f_equal to the decoder and rewrite both verified decode/encode identities | Stdlib.Logic.f_equal, indexed_real_vector_tail_total_decode_encode | **New:** standard product encoding is injective |
 | `indexed_real_vector_tail_total_decode_injective` (lemma) | Apply maintained f_equal to the encoder and rewrite both verified encode/decode identities | Stdlib.Logic.f_equal, indexed_real_vector_tail_total_encode_decode | **New:** standard product reconstruction is injective |
+| `indexed_real_vector_projection_sum_reconstruct_zero` (lemma) | Apply the established zero coordinate-sum theorem and standard cons/const reduction | indexed_real_vector_coordinate_sum_zero, Vector.const/cons, Ring | **New:** zero tail and total reconstruct exactly the zero vector |
+| `indexed_real_vector_projection_sum_reconstruct_add` (lemma) | Rewrite finite coordinate-sum additivity and normalize only the reconstructed first entry | indexed_real_vector_coordinate_sum_add, Vector.map2/cons, Ring | **New:** reconstruction preserves tail and total addition |
+| `indexed_real_vector_projection_sum_reconstruct_scale` (lemma) | Rewrite sum homogeneity and normalize the first-coordinate scalar distribution | indexed_real_vector_coordinate_sum_scale, Vector.map/cons, Ring | **New:** reconstruction preserves real scaling |
+| `indexed_real_vector_tail_total_encode_zero` (lemma) | Use coordinate-sum zero and standard Vector.const/tl reduction | indexed_real_vector_coordinate_sum_zero, Vector.const/tl | **New:** zero vector encodes to zero tail/total product |
+| `indexed_real_vector_tail_total_encode_add` (lemma) | Reuse coordinate-sum addition and standard VectorSpec.eta to establish tail addition | indexed_real_vector_coordinate_sum_add, VectorSpec.eta, Vector.map2/tl | **New:** encoding preserves componentwise product addition |
+| `indexed_real_vector_tail_total_encode_scale` (lemma) | Reuse sum scaling and standard VectorSpec.eta for tail scaling | indexed_real_vector_coordinate_sum_scale, VectorSpec.eta, Vector.map/tl | **New:** encoding is homogeneous |
+| `indexed_real_vector_tail_total_decode_zero` (lemma) | Reduce product projections and delegate to reconstruction zero | indexed_real_vector_projection_sum_reconstruct_zero, Stdlib.Datatypes.fst/snd | **New:** decoder preserves zero |
+| `indexed_real_vector_tail_total_decode_add` (lemma) | Reduce product projections and delegate to reconstruction addition | indexed_real_vector_projection_sum_reconstruct_add, Stdlib.Datatypes.fst/snd | **New:** decoder preserves addition |
+| `indexed_real_vector_tail_total_decode_scale` (lemma) | Reduce product projections and delegate to reconstruction scaling | indexed_real_vector_projection_sum_reconstruct_scale, Stdlib.Datatypes.fst/snd | **New:** decoder preserves scaling |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |

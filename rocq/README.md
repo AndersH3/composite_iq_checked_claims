@@ -3630,6 +3630,23 @@ across seven Rocq modules, subject to pinned Rocq 9.2 CI.
 The certified type-level bijection is not asserted to be an
 abstract linear isomorphism or a rank-nullity/dimension theorem.
 
+## Additive and homogeneous tail/total correspondence (12 November 2026)
+
+Nine additional generic finite-real-vector lemmas establish that the
+reconstruction constructor, ordinary product encoder and ordinary
+product decoder each preserve the zero vector, componentwise
+addition and real scalar multiplication. The source proofs use
+the existing coordinate-sum zero/add/scale laws, standard
+`Vector.map/map2/cons/tl` and `VectorSpec.eta`, and `Ring`.
+No new recursive vector implementation, matrix algorithm or axiom is needed.
+
+Current intended inventory: **826 public checked claims, 829 proof
+scripts and 906 documented declarations** across seven Rocq modules,
+subject to pinned Rocq 9.2 CI. These concrete homomorphism laws plus
+the previous two-sided inverse show an additive and homogeneous
+coordinate correspondence, but do not instantiate a maintained
+abstract linear-isomorphism API or prove dimension/rank-nullity.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

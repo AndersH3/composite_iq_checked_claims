@@ -2830,6 +2830,21 @@ The abstract field-linear isomorphism, dimension identity,
 and covariance rank/nullity results remain separate
 formal obligations.
 
+## Linear structure of standard tail/total encoding (12 November 2026)
+
+The concrete tail-plus-total correspondence is now checked to
+preserve zero, addition and real scaling **in both directions**.
+Nine explicitly commented lemmas state these properties for the
+reconstruction constructor, the standard-product encoder and
+its decoder. Every proof composes maintained `Vector` operations,
+the checked coordinate-sum homomorphism, `VectorSpec.eta`, and
+`Ring` where scalar normalization is necessary. No custom
+vector folds, matrix implementation, module axioms or shortcuts are
+introduced. These are explicit linearity laws, not a library-level
+vector-space isomorphism nor an abstract dimension/covariance-rank
+certificate. Exact current inventory after the changes: 826 public
+claims, 829 proof scripts and 906 documented declarations, pending CI.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
