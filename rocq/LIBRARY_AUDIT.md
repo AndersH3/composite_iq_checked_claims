@@ -2435,6 +2435,17 @@ positive-definite covariance nor general rank-nullity follows
 without further arguments. This is an exact finite-model
 extension, not an empirical IQ inference.
 
+## Covariance annihilation tests for observational equality (12 November 2026)
+
+The concrete centered sample-output equality predicate now has
+first-slot and second-slot universal covariance annihilation
+characterizations. They follow by unfolding the established
+covariance radical and applying the existing bilinear symmetry,
+rather than introducing a new covariance operator or matrix code.
+The statements preserve the normalized nonnegative finite-weight
+assumptions and do not imply arbitrary signed-weight positivity,
+matrix rank, or quotient construction.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

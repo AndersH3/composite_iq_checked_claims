@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **752 proof scripts** in seven
+for the two reports. **754 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3223,6 +3223,23 @@ assumption or numeric covariance approximation is introduced.
 Current target inventory: **749 public checked claims,
 752 proof scripts, 822 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Equal sample outputs as universal covariance annihilation (12 November 2026)
+
+Two further theorems characterize equal centered sample-output
+vectors through zero covariance pairing of their signed coefficient
+difference against every test coefficient direction. First-slot
+annihilation is the definition of the already verified covariance
+bilinear radical, so the proof reuses the checked equality-to-radical
+bridge; the second-slot result follows by covariance symmetry.
+
+Both retain the explicit normalized nonnegative sample-weight
+premises of the radical-to-output equivalence, allow degenerate
+or repeated outcomes, and add no new matrix, sum, or vector library.
+
+Current target inventory: **751 public checked claims,
+754 proof scripts, 824 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI.
 
 ## Research extensions
 

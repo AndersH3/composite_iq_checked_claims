@@ -12959,4 +12959,97 @@ Section FiniteProbabilityMoments.
       lra.
   Qed.
 
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_first]
+   (theorem) — Observationally equal coefficient vectors have a
+   covariance-orthogonal signed difference.
+   Mathematical meaning: Two coefficient directions yield the
+   same entire centered weighted sample output exactly when
+   their signed difference has zero covariance pairing against
+   every typed score-basis coefficient direction.
+   Exact checked proposition: Under normalized nonnegative sample
+   weights, equality of the complete outputs of left and right
+   is equivalent to B(left + (-1)*right, test) = 0 for all test.
+   Premises and side conditions: Both coefficient vectors have
+   length basis. No score independence, positive definiteness,
+   distinct samples or nonempty coefficient basis is assumed.
+   Unit mass and nonnegative weights are needed only to
+   identify the concrete output kernel with the covariance radical.
+   Proof/definition method: Reuse the previously verified
+   equal-output iff radical-of-difference theorem, then unfold
+   only the radical predicate. No covariance is recomputed.
+   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_radical,
+   indexed_basis_covariance_bilinear_radical and Stdlib.Logic.
+   Boundary: This is exact finite covariance orthogonality, not
+   a certified rank computation or a continuous probability claim.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_first :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_centered_sample_vector basis left =
+       indexed_basis_centered_sample_vector basis right <->
+       forall test : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form
+           basis (Vector.map2 Rplus left
+             (Vector.map (fun c => (-1) * c) right)) test = 0).
+  Proof.
+    intros basis left right Hmass Hw.
+    exact
+      (indexed_basis_centered_sample_vector_equal_iff_difference_radical
+        basis left right Hmass Hw).
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_second]
+   (theorem) — Universal covariance orthogonality also characterizes
+   sample equality with the signed difference in the second slot.
+   Mathematical meaning: Because finite covariance is symmetric,
+   a signed coefficient difference is observationally invisible
+   precisely when all composite directions pair to zero against it.
+   Exact checked proposition: Under unit mass and nonnegative
+   listed weights, equal full sample outputs iff every test
+   direction satisfies B(test, left + (-1)*right) = 0.
+   Premises and side conditions: Same typed finite basis and
+   sample-probability assumptions as the first-slot criterion;
+   no invertibility, independence, rank or nonempty-list premise.
+   Proof/definition method: Transport the first-slot universal
+   orthogonality criterion through already checked bilinear
+   symmetry, once for each implication.
+   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_first,
+   indexed_basis_covariance_bilinear_symmetric and Stdlib.Logic.
+   Boundary: Both-slot annihilation is a finite exact identity;
+   it does not construct an abstract quotient or spectral theorem.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_second :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_centered_sample_vector basis left =
+       indexed_basis_centered_sample_vector basis right <->
+       forall test : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form
+           basis test
+           (Vector.map2 Rplus left
+             (Vector.map (fun c => (-1) * c) right)) = 0).
+  Proof.
+    intros basis left right Hmass Hw.
+    pose proof
+      (indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_first
+        basis left right Hmass Hw) as Hfirst.
+    split.
+    - intros Hequal test.
+      rewrite (indexed_basis_covariance_bilinear_symmetric
+        basis test (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))).
+      exact ((proj1 Hfirst) Hequal test).
+    - intro Hsecond.
+      apply (proj2 Hfirst).
+      intro test.
+      rewrite (indexed_basis_covariance_bilinear_symmetric
+        basis (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right)) test).
+      exact (Hsecond test).
+  Qed.
+
 End FiniteProbabilityMoments.
