@@ -11607,7 +11607,7 @@ Section FiniteProbabilityMoments.
     - split.
       + intro Hequal.
         now rewrite Hequal.
-      + intro _.
+      + intro Hlist.
         apply (proj2 (VectorSpec.eq_nth_iff R 0 left right)).
         intro i.
         inversion i.
