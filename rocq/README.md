@@ -3126,6 +3126,22 @@ Current target inventory: **739 public checked claims,
 742 proof scripts, 812 documented declarations** across
 seven Rocq modules, pending Rocq 9.2 verification.
 
+## Radical membership by universal covariance shift invariance (12 November 2026)
+
+Two additional typed covariance pairing results characterize
+the bilinear radical without any sample weight normalization
+or nonnegative-weight requirement. A coefficient shift
+preserves the pairing against every test direction in the
+first slot if and only if the shift is radical. The same
+criterion holds for the second slot, derived directly by
+covariance symmetry. The proofs use previously checked
+bilinearity and radical-shift laws, not duplicate score
+or finite-matrix implementations.
+
+Current target inventory: **741 public checked claims,
+744 proof scripts, 814 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 verification.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

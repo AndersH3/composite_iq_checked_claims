@@ -2348,6 +2348,23 @@ The subsequent score additivity and `Stdlib.Lra` cancellation
 remain unchanged; the theorem statement and dependencies are
 preserved. This refinement was prompted by Rocq 9.2 CI.
 
+## Covariance pairing universal radical tests in both slots (12 November 2026)
+
+For all finite outcome weights, including signed and unnormalized
+weights, universal invariance of the covariance bilinear pairing
+under a coefficient shift is equivalent to radical membership.
+For the first slot the converse of the existing shift-invariance
+theorem is now established by the checked pairing additivity law
+and real cancellation. For the second slot, maintained symmetry
+transports the first-slot criterion; no additional vector zip or
+finite covariance expansion is introduced.
+
+Unlike the centered sample-output shift criterion, these
+bilinear universal invariance equivalences need no probability
+normalization or weight nonnegativity. They identify the
+radical by its intrinsic annihilation behavior but do not
+calculate rank, kernel dimension or construct a quotient space.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

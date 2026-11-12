@@ -12440,4 +12440,104 @@ Section FiniteProbabilityMoments.
         assumption.
   Qed.
 
+
+  (**
+   [indexed_basis_covariance_bilinear_first_shift_iff_radical]
+   (theorem) — Covariance pairing detects exactly its radical shifts.
+   Mathematical meaning: Adding a coefficient direction to the first
+   covariance argument leaves its pairing with *every* other typed
+   coefficient direction unchanged precisely when the added direction
+   is in the covariance bilinear radical.
+   Exact checked proposition: For every finite score basis, coefficient
+   vector and shift, the universally quantified equality
+   B(coefficients + shift, right) = B(coefficients, right) for all
+   right vectors is equivalent to radical(shift).
+   Premises and side conditions: No unit total mass, weight sign,
+   covariance positivity, nonempty basis or basis independence is
+   assumed. Every coefficient argument is dimension-checked using
+   the maintained standard Vector.t representation.
+   Proof/definition method: The forward implication rewrites the
+   invariant pairing with the previously checked first-argument
+   additivity law and cancels its common term using Stdlib.Lra.
+   The reverse implication is exactly the already checked radical
+   shift invariance theorem; no covariance is re-expanded.
+   Library reuse: indexed_basis_covariance_bilinear_add_first,
+   indexed_basis_covariance_bilinear_add_radical_first_invariant,
+   indexed_basis_covariance_bilinear_radical and Stdlib.Lra.
+   Boundary: This is an exact test for covariance-pairing invariance,
+   not a rank, dimension or quotient-space existence theorem.
+   *)
+  Theorem indexed_basis_covariance_bilinear_first_shift_iff_radical :
+    forall basis (coefficients shift : Vector.t R (length basis)),
+      ((forall right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form
+           basis (Vector.map2 Rplus coefficients shift) right =
+         indexed_basis_covariance_bilinear_form
+           basis coefficients right) <->
+       indexed_basis_covariance_bilinear_radical basis shift).
+  Proof.
+    intros basis coefficients shift.
+    split.
+    - intro Hinvariant.
+      unfold indexed_basis_covariance_bilinear_radical.
+      intro right.
+      specialize (Hinvariant right).
+      rewrite indexed_basis_covariance_bilinear_add_first in Hinvariant.
+      lra.
+    - intros Hradical right.
+      apply indexed_basis_covariance_bilinear_add_radical_first_invariant.
+      exact Hradical.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_second_shift_iff_radical]
+   (theorem) — Exact covariance radical detection in the second slot.
+   Mathematical meaning: A coefficient shift is invisible to the
+   covariance pairing against every first argument exactly when
+   that coefficient shift lies in its bilinear radical.
+   Exact checked proposition: For all basis, coefficients and shift,
+   universally B(right,coefficients + shift) = B(right,coefficients)
+   iff radical(shift).
+   Premises and side conditions: Signed and unnormalized outcome
+   weights are explicitly allowed, as are repeated samples, empty
+   dimensions and linearly dependent basis functions. No probability
+   assumption, covariance rank or nonzero coefficient premise.
+   Proof/definition method: In the forward direction, apply the
+   already checked first-shift iff and transport the two arguments
+   using bilinear symmetry. The reverse direction delegates to
+   existing second-argument radical-shift invariance without
+   reproducing score algebra or coefficient zip recursion.
+   Library reuse: indexed_basis_covariance_bilinear_symmetric,
+   indexed_basis_covariance_bilinear_first_shift_iff_radical,
+   indexed_basis_covariance_bilinear_add_radical_second_invariant,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Logic.
+   Boundary: This completes the two-slot universal invariance test;
+   it does not compute covariance rank or kernel dimension.
+   *)
+  Theorem indexed_basis_covariance_bilinear_second_shift_iff_radical :
+    forall basis (coefficients shift : Vector.t R (length basis)),
+      ((forall right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form
+           basis right (Vector.map2 Rplus coefficients shift) =
+         indexed_basis_covariance_bilinear_form
+           basis right coefficients) <->
+       indexed_basis_covariance_bilinear_radical basis shift).
+  Proof.
+    intros basis coefficients shift.
+    split.
+    - intro Hinvariant.
+      apply (proj1
+        (indexed_basis_covariance_bilinear_first_shift_iff_radical
+          basis coefficients shift)).
+      intro right.
+      rewrite (indexed_basis_covariance_bilinear_symmetric
+        basis (Vector.map2 Rplus coefficients shift) right).
+      rewrite (indexed_basis_covariance_bilinear_symmetric
+        basis coefficients right).
+      apply Hinvariant.
+    - intros Hradical right.
+      apply indexed_basis_covariance_bilinear_add_radical_second_invariant.
+      exact Hradical.
+  Qed.
+
 End FiniteProbabilityMoments.
