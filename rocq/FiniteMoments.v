@@ -11795,10 +11795,13 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: No explicit sample-length witness
    is required; listed weights may be signed, zero or duplicated.
    The result neither assumes nor asserts covariance definiteness.
-   Proof/definition method: Split the standard list into its empty
-   and cons cases. Exclude the empty case by the preceding unit-mass
-   lemma. For the cons case, instantiate the existing checked
-   nonzero-constant exclusion theorem with the tail list length.
+   Proof/definition method: First isolate a successor-length witness
+   in a separate proposition: split the standard sample list into
+   empty and cons cases, exclude the empty one by unit mass, and
+   choose the tail length in the cons case. Then invoke the existing
+   nonzero-constant exclusion theorem using that witness. This
+   keeps the dependent sample-output vector equality unchanged
+   during list elimination; no custom transport is introduced.
    Library reuse: normalized_total_mass_implies_samples_nonempty,
    indexed_basis_centered_sample_vector_omits_nonzero_constant,
    Stdlib.List and Stdlib.Vectors.Vector.const.
@@ -11813,15 +11816,18 @@ Section FiniteProbabilityMoments.
         Vector.const c (length samples).
   Proof.
     intros basis coefficients c Hmass Hnonzero.
-    destruct samples as [|x xs].
-    - exfalso.
-      apply (normalized_total_mass_implies_samples_nonempty Hmass).
-      reflexivity.
-    - apply (indexed_basis_centered_sample_vector_omits_nonzero_constant
-        basis coefficients (length xs) c).
-      + reflexivity.
-      + exact Hmass.
-      + exact Hnonzero.
+    assert (Hsuccessor : exists n, length samples = S n).
+    {
+      destruct samples as [|x xs].
+      - exfalso.
+        apply (normalized_total_mass_implies_samples_nonempty Hmass).
+        reflexivity.
+      - exists (length xs).
+        reflexivity.
+    }
+    destruct Hsuccessor as [n Hlength].
+    exact (indexed_basis_centered_sample_vector_omits_nonzero_constant
+      basis coefficients n c Hlength Hmass Hnonzero).
   Qed.
 
   (**
