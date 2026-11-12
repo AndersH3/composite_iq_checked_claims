@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **752 public theorem/lemma/example claims**, plus
+The current branch has **756 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**755 proof scripts** across seven Rocq modules. The claims and scripts
+**759 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 341 proof scripts
+## FiniteMoments.v — 345 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1166,6 +1166,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_first` (theorem) | Unfold only the already-checked covariance radical predicate after applying the existing sample-output equality iff signed-difference radical lemma | indexed_basis_centered_sample_vector_equal_iff_difference_radical, indexed_basis_covariance_bilinear_radical | **New:** equal outputs iff the signed difference pairs to zero against every test in the first slot |
 | `indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_second` (theorem) | Compose the previous first-slot criterion with covariance symmetry in each direction | indexed_basis_centered_sample_vector_equal_iff_difference_covariance_orthogonal_first, indexed_basis_covariance_bilinear_symmetric | **New:** equal outputs iff every test pairs to zero against the signed difference in the second slot |
 | `indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs` (theorem) | Rewrite signed-difference self-pairing using the checked diagonal law and apply existing quadratic difference strict positivity iff outputs differ | indexed_basis_covariance_bilinear_diagonal, indexed_basis_covariance_quadratic_difference_positive_iff_distinct_outputs | **New:** strictly positive self-covariance of the coefficient difference iff the two complete sample outputs are distinct |
+| `indexed_basis_covariance_bilinear_self_nonnegative` (theorem) | Rewrite diagonal pairing to the established nonnegative indexed quadratic | indexed_basis_covariance_bilinear_diagonal, indexed_basis_covariance_quadratic_nonnegative | **New:** PSD self-pairing for arbitrary same-basis vectors under normalized nonnegative weights |
+| `indexed_basis_covariance_bilinear_self_zero_iff_radical` (theorem) | Rewrite bilinear self-pairing to Q and reuse checked quadratic zero iff radical | indexed_basis_covariance_bilinear_diagonal, indexed_basis_covariance_quadratic_zero_iff_bilinear_radical | **New:** zero bilinear self-pairing exactly characterizes radical membership |
+| `indexed_basis_covariance_bilinear_self_positive_iff_not_radical` (theorem) | Compose new bilinear PSD and zero-iff-radical laws with Stdlib.Lra | indexed_basis_covariance_bilinear_self_nonnegative, indexed_basis_covariance_bilinear_self_zero_iff_radical, Stdlib.Lra | **New:** strictly positive self-covariance iff direction is outside the radical |
+| `indexed_basis_covariance_bilinear_cauchy_schwarz_self_squared` (theorem) | Rewrite both PSD diagonal factors to existing Q and reuse checked Cauchy-Schwarz | indexed_basis_covariance_bilinear_diagonal, indexed_basis_covariance_bilinear_cauchy_schwarz_squared | **New:** B(u,v)^2<=B(u,u)B(v,v) entirely in the bilinear interface |
 
 
 ## FiniteBridge.v — 37 proof scripts

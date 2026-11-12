@@ -13101,4 +13101,161 @@ Section FiniteProbabilityMoments.
       assumption.
   Qed.
 
+  (**
+   [indexed_basis_covariance_bilinear_self_nonnegative]
+   (theorem) — The finite covariance pairing has nonnegative diagonal.
+   Mathematical meaning: Under genuine finite probability weights,
+   covariance of any coefficient-weighted composite score with itself
+   is nonnegative, even when the score basis is linearly dependent.
+   Exact checked proposition: For each basis and same-length vector c,
+   normalized nonnegative sample weights imply 0 <= B(c,c).
+   Premises and side conditions: The listed weights have total mass
+   one and each listed sample has nonnegative weight. Duplicate and
+   zero-weight samples and empty coefficient bases are permitted.
+   Proof/definition method: Rewrite the bilinear diagonal to the
+   already checked indexed covariance quadratic, then invoke the
+   existing positive-semidefinite quadratic theorem directly.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_covariance_quadratic_nonnegative and Stdlib.Reals.
+   Boundary: Positive semidefiniteness is not positive definiteness
+   and does not establish a covariance matrix rank or spectrum.
+   *)
+  Theorem indexed_basis_covariance_bilinear_self_nonnegative :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= indexed_basis_covariance_bilinear_form
+        basis coefficients coefficients.
+  Proof.
+    intros basis coefficients Hmass Hw.
+    rewrite (indexed_basis_covariance_bilinear_diagonal
+      basis coefficients Hmass).
+    apply indexed_basis_covariance_quadratic_nonnegative;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_self_zero_iff_radical]
+   (theorem) — Zero finite covariance self-pairing detects the radical.
+   Mathematical meaning: In a normalized nonnegative finite model,
+   covariance with itself vanishes precisely for directions that
+   have zero covariance with every coefficient-score direction.
+   Exact checked proposition: B(c,c)=0 iff radical(c), for each
+   basis-length coefficient vector c and finite probability weights.
+   Premises and side conditions: Unit total mass and nonnegative
+   listed sample weights are required for the existing exact
+   quadratic-zero/radical equivalence; signed weights are excluded.
+   No basis-independence, nonempty dimension or positive-definiteness
+   assumption is made; repeated outcomes remain valid.
+   Proof/definition method: Rewrite the self-pairing to Q(c) through
+   the existing diagonal theorem and apply the prior kernel-checked
+   quadratic-zero iff radical equivalence, without reproving it.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_covariance_quadratic_zero_iff_bilinear_radical.
+   Boundary: This identifies a zero set, not its dimension,
+   eigenstructure, or the rank of a general covariance matrix.
+   *)
+  Theorem indexed_basis_covariance_bilinear_self_zero_iff_radical :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_bilinear_form
+         basis coefficients coefficients = 0 <->
+       indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    rewrite (indexed_basis_covariance_bilinear_diagonal
+      basis coefficients Hmass).
+    apply indexed_basis_covariance_quadratic_zero_iff_bilinear_radical;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_self_positive_iff_not_radical]
+   (theorem) — Exact strict positivity test outside the radical.
+   Mathematical meaning: For a positive-semidefinite finite covariance
+   pairing, a direction has strictly positive self-covariance exactly
+   when it is not orthogonal to every same-basis coefficient direction.
+   Exact checked proposition: With normalized nonnegative listed
+   weights, B(c,c)>0 iff the covariance radical predicate fails at c.
+   Premises and side conditions: The normalization and weight-sign
+   hypotheses are explicit; no positive-definite matrix is assumed.
+   The basis can be empty or dependent, and samples may be repeated.
+   Proof/definition method: Combine the new diagonal nonnegativity
+   and zero-self-pairing iff radical laws, then use Stdlib.Lra
+   to turn nonnegative nonzero real values into strict positivity.
+   Library reuse: indexed_basis_covariance_bilinear_self_nonnegative,
+   indexed_basis_covariance_bilinear_self_zero_iff_radical,
+   Stdlib.Lra; no score or matrix expansion is introduced.
+   Boundary: This detects one non-radical direction; it does
+   not assert that every nonzero coefficient is non-radical.
+   *)
+  Theorem indexed_basis_covariance_bilinear_self_positive_iff_not_radical :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_bilinear_form
+         basis coefficients coefficients <->
+       ~ indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_bilinear_self_nonnegative
+        basis coefficients Hmass Hw) as Hnonnegative.
+    pose proof
+      (indexed_basis_covariance_bilinear_self_zero_iff_radical
+        basis coefficients Hmass Hw) as Hzero.
+    split.
+    - intros Hpositive Hradical.
+      apply (proj2 Hzero) in Hradical.
+      lra.
+    - intro Hnotradical.
+      assert (Hnonzero :
+        indexed_basis_covariance_bilinear_form
+          basis coefficients coefficients <> 0).
+      { intro Hvanish.
+        apply Hnotradical.
+        exact ((proj1 Hzero) Hvanish). }
+      lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_cauchy_schwarz_self_squared]
+   (theorem) — Cauchy–Schwarz expressed solely through the pairing.
+   Mathematical meaning: The squared covariance between two finite
+   composite score directions is bounded by the product of their
+   covariance self-pairings, a standard symmetric PSD-form interface.
+   Exact checked proposition: For all basis-typed u and v,
+   B(u,v)*B(u,v) <= B(u,u)*B(v,v), under unit mass and nonnegative
+   listed sample weights, including dependent score bases.
+   Premises and side conditions: Individual weights must be
+   nonnegative and total mass one. Zero-dimensional and repeated
+   samples are admitted; no nonsingularity is required.
+   Proof/definition method: Rewrite the two self-pairings using
+   the established diagonal identity, then invoke the existing
+   quadratic-form Cauchy–Schwarz bound without algebraic duplication.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_covariance_bilinear_cauchy_schwarz_squared,
+   Stdlib.Reals; no new discriminant or square-root argument.
+   Boundary: A finite positive-semidefinite pairing bound, not
+   a numerical correlation estimate or general rank-nullity law.
+   *)
+  Theorem indexed_basis_covariance_bilinear_cauchy_schwarz_self_squared :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis left right *
+      indexed_basis_covariance_bilinear_form basis left right <=
+      indexed_basis_covariance_bilinear_form basis left left *
+      indexed_basis_covariance_bilinear_form basis right right.
+  Proof.
+    intros basis left right Hmass Hw.
+    rewrite (indexed_basis_covariance_bilinear_diagonal
+      basis left Hmass).
+    rewrite (indexed_basis_covariance_bilinear_diagonal
+      basis right Hmass).
+    apply indexed_basis_covariance_bilinear_cauchy_schwarz_squared;
+      assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

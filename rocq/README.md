@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **755 proof scripts** in seven
+for the two reports. **759 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3254,6 +3254,25 @@ All nonnegative normalized finite-weight premises remain explicit.
 Current target inventory: **752 public checked claims,
 755 proof scripts, 825 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI.
+
+## Positive-semidefinite bilinear covariance interface (12 November 2026)
+
+Four new lemmas expose the existing normalized nonnegative finite
+covariance results directly through the typed symmetric bilinear
+pairing. Self-pairing is nonnegative; it vanishes precisely on
+the bilinear radical; it is strictly positive exactly outside
+that radical; and the squared Cauchy–Schwarz inequality can now
+be stated wholly as `B(u,v)^2 <= B(u,u) B(v,v)`.
+
+Each theorem delegates to existing checked indexed quadratic,
+diagonal, kernel and Cauchy–Schwarz lemmas and Rocq Stdlib real
+arithmetic. No new vector-space, matrix, finite-sum, eigenvalue,
+rank or dimension implementation is introduced. Weight sign and
+normalization assumptions remain visible in each statement.
+
+Current intended inventory: **756 public checked claims,
+759 proof scripts, 829 documented declarations** in seven
+modules, subject to Rocq 9.2 kernel and contract CI.
 
 ## Research extensions
 

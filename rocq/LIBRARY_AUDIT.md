@@ -2458,6 +2458,19 @@ expansion or any new matrix/finite-sum machinery. This
 direction-wise positivity is not asserted as global positive
 definiteness or covariance rank.
 
+## Symmetric covariance pairing as an explicit PSD form (12 November 2026)
+
+The indexed finite covariance pairing now has direct positive-
+semidefinite self-pairing, zero diagonal iff radical, strict
+positive diagonal iff non-radical, and self-pairing Cauchy–Schwarz
+theorems. They use the existing quadratic representation and
+covariance Cauchy–Schwarz bound through `indexed_basis_covariance_bilinear_diagonal`.
+The strict positivity proof is a small Stdlib.Lra combination of
+nonnegative and exact-zero characterizations. This moves the
+finite covariance interface closer to a standard symmetric PSD form
+without introducing another matrix library, abstraction, proof axiom,
+or unverified rank-nullity claim.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
