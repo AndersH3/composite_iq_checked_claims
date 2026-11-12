@@ -11753,6 +11753,78 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [normalized_total_mass_implies_samples_nonempty] (lemma) —
+   Unit finite mass excludes the empty sample enumeration.
+   Mathematical meaning: The empty list has total weighted mass zero
+   under the shared finite-sum fold, so it cannot have total mass one.
+   Exact checked proposition: total_mass = 1 -> samples <> [].
+   Premises and side conditions: This holds for arbitrary real
+   weights, including negative weights, and requires no score basis
+   or nonnegative-weight hypothesis. Duplicate sample entries do
+   not matter to the empty-list contradiction.
+   Proof/definition method: Assume samples is empty, unfold the
+   existing total_mass/sum_finite aliases, evaluate the shared
+   FiniteSum.finite_sum empty fold, and use Stdlib.Lra to refute 0=1.
+   Library reuse: FiniteSum.finite_sum, Stdlib.List.fold_right/map,
+   and Stdlib.Lra. No separate finite summation is introduced.
+   Boundary: This establishes only nonemptiness of a normalized
+   enumerated sample, not positivity of individual weights or a
+   dimension/rank statement about the centered evaluator.
+   *)
+  Lemma normalized_total_mass_implies_samples_nonempty :
+    total_mass = 1 -> samples <> [].
+  Proof.
+    intros Hmass Hempty.
+    unfold total_mass, sum_finite, FiniteSum.finite_sum in Hmass.
+    rewrite Hempty in Hmass.
+    simpl in Hmass.
+    lra.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_omits_nonzero_constant_normalized]
+   (theorem) — Unit mass alone rules out nonzero constant outputs.
+   Mathematical meaning: Every centered sample vector under a
+   normalized finite mass has zero coordinate sum, and normalized
+   total mass already guarantees the sample vector is nonempty.
+   Therefore no nonzero constant vector is attained.
+   Exact checked proposition: For each finite score basis and typed
+   coefficient vector, total_mass=1 and c<>0 imply
+   centered_sample_vector basis coefficients <>
+   Vector.const c (length samples).
+   Premises and side conditions: No explicit sample-length witness
+   is required; listed weights may be signed, zero or duplicated.
+   The result neither assumes nor asserts covariance definiteness.
+   Proof/definition method: Split the standard list into its empty
+   and cons cases. Exclude the empty case by the preceding unit-mass
+   lemma. For the cons case, instantiate the existing checked
+   nonzero-constant exclusion theorem with the tail list length.
+   Library reuse: normalized_total_mass_implies_samples_nonempty,
+   indexed_basis_centered_sample_vector_omits_nonzero_constant,
+   Stdlib.List and Stdlib.Vectors.Vector.const.
+   Boundary: A strengthened non-surjectivity witness; no abstract
+   codimension, rank-nullity or matrix invertibility is deduced.
+   *)
+  Theorem indexed_basis_centered_sample_vector_omits_nonzero_constant_normalized :
+    forall basis (coefficients : Vector.t R (length basis)) (c : R),
+      total_mass = 1 ->
+      c <> 0 ->
+      indexed_basis_centered_sample_vector basis coefficients <>
+        Vector.const c (length samples).
+  Proof.
+    intros basis coefficients c Hmass Hnonzero.
+    destruct samples as [|x xs].
+    - exfalso.
+      apply (normalized_total_mass_implies_samples_nonempty Hmass).
+      reflexivity.
+    - apply (indexed_basis_centered_sample_vector_omits_nonzero_constant
+        basis coefficients (length xs) c).
+      + reflexivity.
+      + exact Hmass.
+      + exact Hnonzero.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_single_sample_zero]
    (theorem) — A normalized sample with exactly one listed outcome
    has no nonzero centered sample-output direction.
