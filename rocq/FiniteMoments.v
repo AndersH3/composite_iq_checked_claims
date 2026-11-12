@@ -11625,6 +11625,234 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_projection] (definition) —
+   Canonical projection of a nonempty typed real vector to zero sum.
+   Mathematical meaning: Discard the unconstrained first entry and
+   reconstruct the unique zero-sum vector having the same n tail
+   coordinates. The resulting vector has length S n.
+   Exact declaration: projection v = extension (Vector.tl v).
+   Premises and side conditions: Every n, including n=0, is
+   supported. Real entries may be signed; no sample weights, mass
+   normalization, covariance definiteness or choice is assumed.
+   Definition method: Direct composition of the previously verified
+   canonical extension and Stdlib's ordinary Vector.tl.
+   Library reuse: Stdlib.Vectors.Vector.tl and
+   indexed_real_vector_zero_sum_extension; no new recursion.
+   Boundary: This explicit map is not yet packaged as a linear
+   projection in an abstract subspace library, and no dimension
+   or covariance rank theorem is asserted.
+   *)
+  Definition indexed_real_vector_zero_sum_projection
+      {n : nat} (v : Vector.t R (S n)) : Vector.t R (S n) :=
+    indexed_real_vector_zero_sum_extension (Vector.tl v).
+
+  (**
+   [indexed_real_vector_zero_sum_projection_zero_sum] (lemma) —
+   The canonical projection always belongs to its target family.
+   Mathematical meaning: Replacing the first coordinate with minus
+   the tail sum forces the total finite coordinate sum to zero.
+   Exact checked proposition: For every n and v:Vector.t R (S n),
+   zero_sum (projection v).
+   Premises and side conditions: All real entries and n=0 are
+   allowed; no probabilistic assumptions are introduced.
+   Proof method: Unfold the projection wrapper and reuse the
+   already checked zero-sum-extension target-membership theorem.
+   Library reuse: indexed_real_vector_zero_sum_extension_zero_sum,
+   Stdlib.Vectors.Vector.tl; no coordinate-sum recalculation.
+   Boundary: Membership is not a numerical covariance claim.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_zero_sum :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum
+        (indexed_real_vector_zero_sum_projection v).
+  Proof.
+    intros n v.
+    unfold indexed_real_vector_zero_sum_projection.
+    apply indexed_real_vector_zero_sum_extension_zero_sum.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_tail] (lemma) —
+   The projection preserves all coordinates beyond the first.
+   Mathematical meaning: Applying the standard tail destructor to
+   the projected vector returns the original n coordinates.
+   Exact checked proposition: tl (projection v) = tl v.
+   Premises and side conditions: Arbitrary n, signed real entries;
+   no constraints on the first coordinate are needed.
+   Proof method: Unfold only the projection and apply the checked
+   extension/tail retraction; no vector induction is required.
+   Library reuse: Stdlib.Vectors.Vector.tl and
+   indexed_real_vector_zero_sum_extension_tail.
+   Boundary: Tail preservation does not imply the map preserves
+   the original head or that it is the identity on all vectors.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_tail :
+    forall n (v : Vector.t R (S n)),
+      Vector.tl (indexed_real_vector_zero_sum_projection v) =
+      Vector.tl v.
+  Proof.
+    intros n v.
+    unfold indexed_real_vector_zero_sum_projection.
+    apply indexed_real_vector_zero_sum_extension_tail.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum]
+   (lemma) — The fixed points are precisely the zero-sum vectors.
+   Mathematical meaning: A vector is unchanged by reconstruction
+   from its tail exactly when its first coordinate already has
+   the unique zero-sum value.
+   Exact checked proposition: projection v = v iff zero_sum v.
+   Premises and side conditions: Every n and arbitrary real vector;
+   no mass normalization, weight positivity or covariance premise.
+   Proof method: Use target membership in the forward implication,
+   transporting across the fixed-point equation. The converse
+   reuses the exact verified inverse of extension on zero-sum data.
+   Library reuse: indexed_real_vector_zero_sum_projection_zero_sum
+   and indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+   Boundary: Concrete fixed-point identity, not an abstract
+   projector spectrum, dimension formula or rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection v = v <->
+       indexed_real_vector_zero_sum v).
+  Proof.
+    intros n v.
+    split.
+    - intro Hfixed.
+      rewrite <- Hfixed.
+      apply indexed_real_vector_zero_sum_projection_zero_sum.
+    - intro Hzero.
+      unfold indexed_real_vector_zero_sum_projection.
+      apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+      exact Hzero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_idempotent] (lemma) —
+   Applying the canonical projection twice changes nothing.
+   Mathematical meaning: The first application already produces
+   a zero-sum vector, so the second is the identity there.
+   Exact checked proposition: projection (projection v) =
+   projection v, for all n and v of positive length.
+   Premises and side conditions: Includes n=0 and signed entries.
+   No sample or inner-product structure is needed.
+   Proof method: Reuse the fixed-point characterization and target
+   membership, instead of evaluating coordinates again.
+   Library reuse: indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
+   and indexed_real_vector_zero_sum_projection_zero_sum.
+   Boundary: Algebraic idempotence does not assert orthogonality,
+   a specific norm, or an abstract matrix-rank theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_idempotent :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum_projection
+        (indexed_real_vector_zero_sum_projection v) =
+      indexed_real_vector_zero_sum_projection v.
+  Proof.
+    intros n v.
+    apply (proj2
+      (indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
+        n (indexed_real_vector_zero_sum_projection v))).
+    apply indexed_real_vector_zero_sum_projection_zero_sum.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_surjective_on_zero_sum]
+   (lemma) — Every zero-sum vector is attained by the projection.
+   Mathematical meaning: Every constrained vector is a fixed
+   point and can serve as its own explicit preimage.
+   Exact checked proposition: zero_sum v implies
+   exists preimage:Vector.t R (S n), projection preimage = v.
+   Premises and side conditions: n may be zero; real entries may
+   be negative. There are no normalized sample assumptions.
+   Proof method: Choose the vector itself and use the previously
+   proved fixed-point iff, without introducing a choice axiom.
+   Library reuse: indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum.
+   Boundary: Surjectivity holds onto the zero-sum subset, not
+   onto every positive-length real vector.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_surjective_on_zero_sum :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum v ->
+      exists preimage : Vector.t R (S n),
+        indexed_real_vector_zero_sum_projection preimage = v.
+  Proof.
+    intros n v Hzero.
+    exists v.
+    apply (proj2
+      (indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum n v)).
+    exact Hzero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_zero_iff_tail_zero]
+   (lemma) — The projection's kernel is detected by the tail.
+   Mathematical meaning: The projected vector is all zeros if
+   and only if the input's n tail entries are all zero; its
+   original first entry can be arbitrary.
+   Exact checked proposition: projection v = const 0 (S n)
+   iff tl v = const 0 n.
+   Premises and side conditions: Works for any natural n,
+   including the empty tail; no sample-weight assumptions.
+   Proof method: Unfold the projection and apply the already
+   verified extension-zero iff its input is zero theorem.
+   Library reuse: Stdlib.Vectors.Vector.const/tl and
+   indexed_real_vector_zero_sum_extension_zero_iff_tail_zero.
+   Boundary: This is a concrete kernel characterization, not
+   a proved abstract kernel dimension or rank-nullity formula.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_zero_iff_tail_zero :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection v =
+         Vector.const 0 (S n) <->
+       Vector.tl v = Vector.const 0 n).
+  Proof.
+    intros n v.
+    unfold indexed_real_vector_zero_sum_projection.
+    apply indexed_real_vector_zero_sum_extension_zero_iff_tail_zero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_equal_iff_tails_equal]
+   (lemma) — Projection equality is exactly tail equality.
+   Mathematical meaning: Two vectors give the same projected
+   zero-sum result precisely when all coordinates other than
+   their first ones agree. Thus no head information is retained.
+   Exact checked proposition: projection left = projection right
+   iff Vector.tl left = Vector.tl right.
+   Premises and side conditions: Any n and any signed real
+   coordinates; no zero-sum restriction on either input.
+   Proof method: Apply congruence of the standard Vector.tl to
+   projected-vector equality and the checked projection-tail
+   lemma. Conversely rewrite equality of tails in the common
+   extension expression.
+   Library reuse: Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.tl,
+   indexed_real_vector_zero_sum_projection_tail and extension.
+   Boundary: Concrete equality of images, not a claim about
+   general linear quotient spaces or their dimensions.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_equal_iff_tails_equal :
+    forall n (left right : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection left =
+       indexed_real_vector_zero_sum_projection right <->
+       Vector.tl left = Vector.tl right).
+  Proof.
+    intros n left right.
+    split.
+    - intro Hequal.
+      pose proof
+        (f_equal (fun v : Vector.t R (S n) => Vector.tl v)
+          Hequal) as Htails.
+      rewrite !indexed_real_vector_zero_sum_projection_tail in Htails.
+      exact Htails.
+    - intro Htails.
+      unfold indexed_real_vector_zero_sum_projection.
+      now rewrite Htails.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

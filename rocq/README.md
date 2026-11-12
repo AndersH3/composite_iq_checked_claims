@@ -3497,6 +3497,24 @@ Current intended inventory: **788 public checked claims,
 791 proof scripts and 864 documented declarations**
 across seven Rocq modules, subject to pinned CI checks.
 
+## Canonical zero-sum projection (12 November 2026)
+
+A transparent projection now maps any real vector of length `n+1`
+to its uniquely determined zero-sum reconstruction with the same
+ordinary tail. Seven checked lemmas show that it maps into zero
+sum, preserves the tail, fixes exactly the zero-sum family, is
+idempotent, reaches every zero-sum vector, vanishes precisely
+for zero-tail inputs, and gives equal outputs exactly for equal
+input tails. All proofs reuse maintained `Vector.tl`/`Vector.const`
+and the existing extension/retraction laws, rather than implementing
+matrix or coordinate-recursion code.
+
+Current intended inventory: **795 public checked claims,
+798 proof scripts and 872 documented declarations**
+across seven Rocq modules, subject to final Rocq 9.2 and
+Python/SPARK CI. These concrete projection identities do not
+yet establish a subspace dimension or covariance rank formula.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

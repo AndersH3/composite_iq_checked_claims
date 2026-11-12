@@ -2678,6 +2678,26 @@ strengthens the concrete obstruction to surjectivity under unit
 mass, but does not establish a covariance rank/nullity or
 general hyperplane dimension theorem.
 
+## Canonical zero-sum projection and concrete kernel (12 November 2026)
+
+A transparent `indexed_real_vector_zero_sum_projection` now
+projects a positive-length real vector onto the zero-sum family
+by retaining its standard `Vector.tl` and using the already
+verified canonical extension. Seven documented proofs establish:
+the target zero-sum constraint, exact tail preservation, fixed
+points iff zero-sum membership, idempotence, surjectivity onto
+the zero-sum family, the zero-output iff zero-tail condition,
+and equality of projected outputs iff equality of input tails.
+
+Proofs are compositions of the previously checked extension
+inverse/retraction, zero preservation, and Stdlib
+`Vector.tl`, `Vector.const` and `f_equal`.
+No new vector recursion, matrix implementation, sum fold,
+unreviewed axiom, proof placeholder or classical choice is used.
+The concrete kernel corresponds to vectors whose tails are zero,
+but **no abstract vector-space dimension, rank-nullity,
+orthogonal projection or covariance matrix rank** is certified.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
