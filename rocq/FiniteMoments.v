@@ -13053,55 +13053,6 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
-   [indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs]
-   (theorem) — A positive self-covariance of the signed difference
-   exactly detects distinct full centered sample outputs.
-   Mathematical meaning: Two coefficient directions differ in their
-   complete centered weighted sample evaluations precisely when
-   the covariance bilinear pairing of their signed difference with
-   itself is strictly positive.
-   Exact checked proposition: Under normalized nonnegative listed
-   weights, 0 < B(left + (-1)*right, left + (-1)*right) if and only if
-   indexed_basis_centered_sample_vector basis left differs from its
-   value at right.
-   Premises and side conditions: The basis and samples can contain
-   repeated outcomes and dependent scores. There is no global
-   covariance positive-definiteness or nonempty-basis premise.
-   The normalized nonnegative weight conditions are essential for
-   the previously checked strict-positivity characterization.
-   Proof/definition method: Replace the bilinear self-pairing with
-   the existing indexed covariance quadratic using its unit-mass
-   diagonal identity, then invoke the already checked strict
-   quadratic difference iff distinct sample-output theorem.
-   Library reuse: indexed_basis_covariance_bilinear_diagonal,
-   indexed_basis_covariance_quadratic_difference_positive_iff_distinct_outputs
-   and Stdlib.Vectors.Vector.map/map2. No direct covariance expansion,
-   matrix recursion or custom sum is required.
-   Boundary: Finite exact sample-output separation, not a proof
-   of positive definiteness for all directions or covariance rank.
-   *)
-  Theorem indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs :
-    forall basis (left right : Vector.t R (length basis)),
-      total_mass = 1 ->
-      (forall x, In x samples -> 0 <= weight x) ->
-      (0 < indexed_basis_covariance_bilinear_form
-         basis
-         (Vector.map2 Rplus left
-           (Vector.map (fun c => (-1) * c) right))
-         (Vector.map2 Rplus left
-           (Vector.map (fun c => (-1) * c) right)) <->
-       indexed_basis_centered_sample_vector basis left <>
-       indexed_basis_centered_sample_vector basis right).
-  Proof.
-    intros basis left right Hmass Hw.
-    rewrite (indexed_basis_covariance_bilinear_diagonal
-      basis (Vector.map2 Rplus left
-        (Vector.map (fun c => (-1) * c) right)) Hmass).
-    apply indexed_basis_covariance_quadratic_difference_positive_iff_distinct_outputs;
-      assumption.
-  Qed.
-
-  (**
    [indexed_basis_covariance_bilinear_self_nonnegative]
    (theorem) — The finite covariance pairing has nonnegative diagonal.
    Mathematical meaning: Under genuine finite probability weights,
@@ -13256,6 +13207,114 @@ Section FiniteProbabilityMoments.
       basis right Hmass).
     apply indexed_basis_covariance_bilinear_cauchy_schwarz_squared;
       assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_strict_bilinear_self]
+   (theorem) — Positive definiteness in the standard PSD-pairing interface.
+   Mathematical meaning: The finite indexed covariance matrix is strictly
+   positive definite exactly when every nonzero typed coefficient direction
+   has strictly positive covariance self-pairing. This exposes the existing
+   finite quadratic criterion through the maintained bilinear interface.
+   Exact checked proposition: With normalized nonnegative sample weights,
+   indexed_basis_covariance_positive_definite basis iff, for every
+   coefficients of length basis whose to_list is not repeat 0,
+   0 < B_basis(coefficients,coefficients).
+   Premises and side conditions: Unit total mass and nonnegative weights
+   are explicit. The basis may be empty, dependent or contain repeated
+   scores; positive definiteness is not assumed on the right-hand side.
+   Proof/definition method: Compose the already checked positive-definite
+   iff trivial radical criterion with the new self-pairing positivity iff
+   not-radical theorem, preserving the exact list-level nonzero condition.
+   This requires only propositional transport and no matrix operations.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial,
+   indexed_basis_covariance_bilinear_self_positive_iff_not_radical,
+   Stdlib.Vectors.Vector.to_list and Stdlib.Logic.
+   Boundary: Equivalent formulations of finite positive definiteness,
+   not a general abstract rank, injectivity, dimension or spectrum theorem.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_strict_bilinear_self :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         0 < indexed_basis_covariance_bilinear_form
+           basis coefficients coefficients).
+  Proof.
+    intros basis Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial
+        basis Hmass Hw) as Hpositive.
+    split.
+    - intros Hpd coefficients Hnonzero.
+      apply (proj2
+        (indexed_basis_covariance_bilinear_self_positive_iff_not_radical
+          basis coefficients Hmass Hw)).
+      exact ((proj1 Hpositive) Hpd coefficients Hnonzero).
+    - intro Hstrict.
+      apply (proj2 Hpositive).
+      intros coefficients Hnonzero.
+      apply (proj1
+        (indexed_basis_covariance_bilinear_self_positive_iff_not_radical
+          basis coefficients Hmass Hw)).
+      exact (Hstrict coefficients Hnonzero).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs]
+   (theorem) — A positive self-covariance of the signed difference
+   exactly detects distinct full centered sample outputs.
+   Mathematical meaning: Two coefficient directions differ in their
+   complete centered weighted sample evaluations precisely when
+   the covariance bilinear pairing of their signed difference with
+   itself is strictly positive.
+   Exact checked proposition: Under normalized nonnegative listed
+   weights, 0 < B(left + (-1)*right, left + (-1)*right) if and only if
+   indexed_basis_centered_sample_vector basis left differs from its
+   value at right.
+   Premises and side conditions: The basis and samples can contain
+   repeated outcomes and dependent scores. There is no global
+   covariance positive-definiteness or nonempty-basis premise.
+   The normalized nonnegative weight conditions are essential for
+   the previously checked strict-positivity characterization.
+   Proof/definition method: Reuse the generic finite PSD-form
+   criterion B(c,c)>0 iff c is outside the covariance radical,
+   and compose it with the checked equality of full sample outputs
+   iff the signed coefficient difference lies in that radical.
+   This eliminates a redundant detour through quadratic covariance
+   and retains the exact original theorem statement.
+   Library reuse: indexed_basis_covariance_bilinear_self_positive_iff_not_radical,
+   indexed_basis_centered_sample_vector_equal_iff_difference_radical,
+   Stdlib.Logic.tauto and Stdlib.Vectors.Vector.map/map2.
+   No new covariance or matrix arithmetic is performed.
+   Boundary: Finite exact sample-output separation, not a proof
+   of positive definiteness for all directions or covariance rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_bilinear_form
+         basis
+         (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right))
+         (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right)) <->
+       indexed_basis_centered_sample_vector basis left <>
+       indexed_basis_centered_sample_vector basis right).
+  Proof.
+    intros basis left right Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_bilinear_self_positive_iff_not_radical
+        basis (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))
+        Hmass Hw) as Hpositive.
+    pose proof
+      (indexed_basis_centered_sample_vector_equal_iff_difference_radical
+        basis left right Hmass Hw) as Houtputs.
+    tauto.
   Qed.
 
 End FiniteProbabilityMoments.

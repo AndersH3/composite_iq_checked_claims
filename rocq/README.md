@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **759 proof scripts** in seven
+for the two reports. **760 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3272,6 +3272,28 @@ normalization assumptions remain visible in each statement.
 
 Current intended inventory: **756 public checked claims,
 759 proof scripts, 829 documented declarations** in seven
+modules, subject to Rocq 9.2 kernel and contract CI.
+
+## Positive definiteness as strict bilinear self-pairing (12 November 2026)
+
+The project now states and proves that finite covariance positive
+definiteness is equivalent to strictly positive bilinear
+self-covariance for **every nonzero typed coefficient direction**,
+under unit total mass and nonnegative sample weights.
+This characterization is a direct composition of the existing
+trivial-radical positive-definiteness criterion and the new
+strict-self-pairing iff not-radical theorem.
+
+In the same refactoring batch, the older distinct-sample-output
+self-covariance theorem was moved after the generic PSD-form laws
+and its proof was rewritten to compose the new self-positivity/
+radical bridge with the already checked full-output-equality
+iff difference-radical result. Its proposition and premises
+are unchanged. No new finite sums, vectors, covariance matrices,
+axioms or unchecked rank claims were introduced.
+
+Current intended inventory: **757 public checked claims,
+760 proof scripts, 830 documented declarations** in seven
 modules, subject to Rocq 9.2 kernel and contract CI.
 
 ## Research extensions

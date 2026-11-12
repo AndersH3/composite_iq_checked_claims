@@ -2471,6 +2471,22 @@ finite covariance interface closer to a standard symmetric PSD form
 without introducing another matrix library, abstraction, proof axiom,
 or unverified rank-nullity claim.
 
+## Positive definiteness and reuse-based difference-proof refactor (12 November 2026)
+
+The new PSD-form interface now supports a direct positive-definite
+iff all nonzero typed coefficients have strictly positive self-
+covariance statement. It composes the existing positive-definiteness
+iff trivial-radical and self-positivity iff non-radical equivalences
+without a second quadratic or matrix implementation.
+
+The older theorem characterizing distinct sample-output vectors
+by positive covariance of a signed coefficient difference has
+an unchanged mathematical proposition and premises, but now its
+proof delegates entirely to the new PSD self-positivity criterion
+and the earlier equal-output iff difference-radical theorem.
+Its source and proof-register positions were synchronized.
+The change is proof reuse, not a new rank-nullity result.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
