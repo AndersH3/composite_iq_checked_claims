@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **749 proof scripts** in seven
+for the two reports. **752 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3202,6 +3202,26 @@ remain explicit.
 
 Current target inventory: **746 public checked claims,
 749 proof scripts, 819 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Covariance separation by quadratic nullity and bounded row kernel (12 November 2026)
+
+Three further exact consequences reuse the existing finite sample-output
+map and covariance algebra. Under normalized nonnegative finite weights,
+two full centered sample outputs agree exactly when the signed coefficient
+difference (1) has zero indexed covariance quadratic and (2) belongs to
+the existing bounded covariance row kernel. Strict positivity of that
+difference quadratic, together with its established nonnegativity, is
+equivalent to the two full sample outputs being distinct.
+
+The two equivalence proofs use only the previously checked
+difference-output, covariance radical, quadratic-zero and row-kernel
+bridges. The strict positivity result additionally uses Stdlib.Lra.
+No new matrix representation, rank assertion, score independence
+assumption or numeric covariance approximation is introduced.
+
+Current target inventory: **749 public checked claims,
+752 proof scripts, 822 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI verification.
 
 ## Research extensions

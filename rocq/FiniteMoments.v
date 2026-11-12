@@ -12805,4 +12805,158 @@ Section FiniteProbabilityMoments.
     exact Hequal.
   Qed.
 
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_difference_quadratic_zero]
+   (theorem) — Equal complete sample outputs detect a zero covariance
+   quadratic of the signed coefficient difference.
+   Mathematical meaning: Two composite coefficient directions produce
+   the same centered weighted outputs at all enumerated samples exactly
+   when the covariance quadratic of their signed difference vanishes.
+   Exact checked proposition: Under unit total mass and nonnegative
+   weights on listed samples, E(left) = E(right) if and only if
+   Q(left + (-1) * right) = 0, using typed Vector.map2/Vector.map.
+   Premises and side conditions: The coefficient directions share the
+   basis length; listed outcomes and score basis may be empty,
+   repeated or linearly dependent. Signed weights are excluded here,
+   since zero quadratic need not detect the sample kernel otherwise.
+   Proof/definition method: Compose the preexisting sample equality
+   iff zero output of difference with the previously verified
+   zero covariance quadratic iff zero concrete sample vector.
+   Propositional equivalence composition completes the proof.
+   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_zero,
+   indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero,
+   Stdlib.Logic.tauto, and Stdlib.Vectors.Vector.map2/map.
+   Boundary: This is finite exact quadratic nullity, not a numerical
+   rank or an unqualified signed-weight covariance conclusion.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_difference_quadratic_zero :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_centered_sample_vector basis left =
+       indexed_basis_centered_sample_vector basis right <->
+       indexed_basis_covariance_quadratic_form
+         basis (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right)) = 0).
+  Proof.
+    intros basis left right Hmass Hw.
+    pose proof
+      (indexed_basis_centered_sample_vector_equal_iff_difference_zero
+        basis left right) as Houtputs.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero
+        basis (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))
+        Hmass Hw) as Hquadratic.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_difference_row_kernel]
+   (theorem) — Equal sample outputs exactly detect the covariance
+   matrix's already-defined bounded row kernel.
+   Mathematical meaning: Two centered composite-score evaluations
+   agree on all listed samples precisely when the signed coefficient
+   difference is annihilated by each finite covariance matrix row.
+   Exact checked proposition: Under normalized nonnegative weights,
+   E(left) = E(right) iff the existing predicate
+   indexed_basis_bounded_covariance_row_kernel basis
+   (left + (-1) * right) holds for typed coefficient vectors.
+   Premises and side conditions: The signed difference uses the
+   standard Vector.map2/Vector.map operations with no new
+   implementation. The nonnegative and unit-mass premises are
+   required by the established radical/row-kernel equivalence.
+   Proof/definition method: Compose the maintained equality of
+   sample outputs iff radical-of-difference criterion with the
+   existing bilinear radical iff bounded covariance row kernel.
+   No matrix multiplication or row sum is unfolded.
+   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_radical,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel,
+   Stdlib.Logic.tauto and Stdlib.Vectors.Vector.map2/map.
+   Boundary: Characterizes a concrete finite row kernel, without
+   computing its dimension or proving a general rank-nullity law.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_difference_row_kernel :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_centered_sample_vector basis left =
+       indexed_basis_centered_sample_vector basis right <->
+       indexed_basis_bounded_covariance_row_kernel
+         basis (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right))).
+  Proof.
+    intros basis left right Hmass Hw.
+    pose proof
+      (indexed_basis_centered_sample_vector_equal_iff_difference_radical
+        basis left right Hmass Hw) as Houtputs.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel
+        basis (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))
+        Hmass Hw) as Hrows.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_quadratic_difference_positive_iff_distinct_outputs]
+   (theorem) — Strictly positive difference covariance detects
+   exactly when two centered sample outputs are distinct.
+   Mathematical meaning: In a normalized nonnegative finite
+   probability model, the covariance quadratic of a signed
+   coefficient difference is strictly positive if and only if
+   the two complete centered sample-output vectors are unequal.
+   Exact checked proposition: Q(left + (-1) * right) > 0 iff
+   E(left) <> E(right) for equal-length coefficient directions.
+   Premises and side conditions: Unit total sample weight and
+   nonnegative weight on every listed outcome are essential for
+   quadratic nonnegativity and exact zero-output detection.
+   No independence, positive definiteness or nonempty basis
+   assumption is required; repeated samples are permitted.
+   Proof/definition method: Reuse the established nonnegative
+   quadratic bound and the new zero-quadratic iff equal-output
+   result. In either direction, Stdlib.Lra proves cancellation
+   or strict positivity from nonnegativity and nonzero value.
+   Library reuse: indexed_basis_covariance_quadratic_nonnegative,
+   indexed_basis_centered_sample_vector_equal_iff_difference_quadratic_zero,
+   Stdlib.Lra and Stdlib.Vectors.Vector.map2/map.
+   Boundary: Strict positivity for a particular difference,
+   not global covariance positive definiteness or empirical
+   identification of any IQ measurement parameters.
+   *)
+  Theorem indexed_basis_covariance_quadratic_difference_positive_iff_distinct_outputs :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_quadratic_form
+         basis (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right)) <->
+       indexed_basis_centered_sample_vector basis left <>
+       indexed_basis_centered_sample_vector basis right).
+  Proof.
+    intros basis left right Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_nonnegative
+        basis (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))
+        Hmass Hw) as Hnonnegative.
+    pose proof
+      (indexed_basis_centered_sample_vector_equal_iff_difference_quadratic_zero
+        basis left right Hmass Hw) as Hzero.
+    split.
+    - intros Hpositive Hequal.
+      apply (proj1 Hzero) in Hequal.
+      lra.
+    - intros Hdistinct.
+      assert (Hnonzero :
+        indexed_basis_covariance_quadratic_form
+          basis (Vector.map2 Rplus left
+            (Vector.map (fun c => (-1) * c) right)) <> 0).
+      { intro Hquadratic_zero.
+        apply Hdistinct.
+        apply (proj2 Hzero).
+        exact Hquadratic_zero. }
+      lra.
+  Qed.
+
 End FiniteProbabilityMoments.

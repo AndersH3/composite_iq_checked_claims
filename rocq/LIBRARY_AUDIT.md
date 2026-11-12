@@ -2418,6 +2418,23 @@ centered sample-output vectors. The proof is a contradiction
 at the already maintained list-level coefficient nonzero criterion,
 not a new finite matrix inversion or dimension algorithm.
 
+## Signed differences: covariance quadratic, row kernel and positivity (12 November 2026)
+
+Equality of the existing typed centered sample-output vectors is now
+reexpressed as zero covariance quadratic and as bounded covariance
+row-kernel membership of the signed coefficient difference. These
+results are obtained by composing already checked equivalences,
+without re-expanding weighted finite sums or introducing a new
+finite matrix implementation. Under the same normalized nonnegative
+sample-weight conditions, the existing nonnegative covariance
+quadratic makes *strictly positive quadratic difference* equivalent
+to *distinct full sample outputs*. The last step uses Stdlib.Lra.
+
+The probability hypotheses are retained explicitly; neither
+positive-definite covariance nor general rank-nullity follows
+without further arguments. This is an exact finite-model
+extension, not an empirical IQ inference.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
