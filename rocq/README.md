@@ -3651,7 +3651,7 @@ abstract linear-isomorphism API or prove dimension/rank-nullity.
 
 Five new checked finite-vector results use Rocq Stdlib `List.tl`,
 `Vector.to_list`, `VectorSpec.eta`, and the existing zero-sum
-and covariance-injectivity theorems. A zero-sum nonempty real vector
+and covariance-injectivity theorems. A zero-sum real vector (including the empty vector)
 is uniquely determined by its ordinary post-head list tail; its
 vanishing can be tested on those same entries. Under unit sample
 mass this applies to all centered sample outputs, yielding exact

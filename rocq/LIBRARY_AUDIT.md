@@ -2851,8 +2851,9 @@ Five new extensively commented results expose the existing
 normalized zero-sum constraint through the ordinary `List.tl`
 of the maintained `Vector.to_list` representation. Two generic lemmas
 lift zero-sum typed-tail equality to ordinary list-tail equality
-and zero detection. Two sample-specific theorems reuse the existing
-unit-mass nonempty-sample fact and zero-sum image membership.
+and zero detection, treating zero length through the standard
+empty Fin index. Two sample-specific theorems reuse the existing
+zero-sum image membership without dependent sample elimination.
 The last theorem composes the established positive-definiteness iff
 full centered evaluator injectivity with the shorter list-tail equality
 criterion. Reuses `VectorSpec.eta`, `VectorSpec.to_list_inj`
