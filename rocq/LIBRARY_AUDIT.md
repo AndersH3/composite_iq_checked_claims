@@ -2916,6 +2916,24 @@ scripts, 932 documented declarations; subject to pinned CI.
 This is an explicit additive splitting, not a library-level rank
 or dimension calculation.
 
+## Scalar-axis homomorphism and normalized decomposition updates (12 November 2026)
+
+Nine generic declarations reuse the existing head-only axis embedding
+and its projection-plus-total uniqueness theorem to show exact
+additivity, homogeneity and zero preservation. The proof of
+`Vector.map` on the all-zero vector uses only the standard
+`VectorSpec.eq_nth_iff`, `VectorSpec.nth_map`,
+`VectorSpec.const_nth`, and `Ring` facilities. More specialized
+results characterize the projection kernel by an explicit scalar-axis
+witness and establish affine shift invariance and sum updates.
+The canonical zero-sum plus scalar-axis decomposition is then
+reused directly to derive the shifted decomposition.
+
+No custom recursion, alternate finite-vector type, ad hoc
+matrix implementation, axioms, or admitted proof obligations.
+Inventory targeted for CI: 860 public claims, 863 proofs, and
+941 documented declarations in seven Rocq modules.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

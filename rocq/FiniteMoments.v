@@ -13483,6 +13483,247 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_scale_zero] (lemma) — Scaling a standard all-zero finite real vector remains zero in every dimension.
+   Mathematical meaning: Scaling a standard all-zero finite real vector remains zero in every dimension. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For any n and scalar a, Vector.map (fun c => a*c) (Vector.const 0 n) = Vector.const 0 n.
+   Premises and side conditions: The length can be zero and the scalar can be any real, including zero and negative values; no finite-probability assumptions are present.
+   Proof/definition method: Use the maintained VectorSpec.eq_nth_iff and VectorSpec.nth_map extensionality tools and VectorSpec.const_nth; finish the scalar multiplication by Stdlib.Ring rather than writing an induction or bespoke map implementation.
+   Library reuse: VectorSpec.eq_nth_iff, VectorSpec.nth_map, VectorSpec.const_nth, Stdlib.Ring.
+   Boundary: A componentwise scalar identity, not a subspace dimension or matrix-rank calculation.
+   *)
+  Lemma indexed_real_vector_scale_zero :
+    forall n (a : R),
+      Vector.map (fun c => a * c) (Vector.const 0 n) =
+      Vector.const 0 n.
+  Proof.
+    intros n a.
+    apply (proj1
+      (VectorSpec.eq_nth_iff R n
+        (Vector.map (fun c => a * c) (Vector.const 0 n))
+        (Vector.const 0 n))).
+    intros i j Hij.
+    subst j.
+    rewrite (VectorSpec.nth_map
+      (fun c => a * c) (Vector.const 0 n)
+      i i eq_refl).
+    rewrite ! (VectorSpec.const_nth R 0 n i).
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_total_axis_zero] (lemma) — The total-axis embedding maps the additive identity of real scalars to the standard all-zero vector.
+   Mathematical meaning: The total-axis embedding maps the additive identity of real scalars to the standard all-zero vector. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For all n, total_axis (n:=n) 0 = Vector.const 0 (S n).
+   Premises and side conditions: Every natural tail length including zero is permitted. This identity does not rely on a sample model, normalized mass, or vector-space hierarchy.
+   Proof/definition method: Reduce the already-defined head-only axis constructor and the maintained standard constant vector by computation; no custom induction or theorem about matrix coordinates is introduced.
+   Library reuse: Stdlib.Vectors.Vector.cons and Vector.const, indexed_real_vector_total_axis.
+   Boundary: An exact zero-preservation law for a concrete embedding.
+   *)
+  Lemma indexed_real_vector_total_axis_zero :
+    forall n,
+      indexed_real_vector_total_axis (n:=n) 0 =
+      Vector.const 0 (S n).
+  Proof.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_total_axis_add] (lemma) — Adding real totals before the head-only embedding equals componentwise addition of the two embedded vectors.
+   Mathematical meaning: Adding real totals before the head-only embedding equals componentwise addition of the two embedded vectors. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For all n and a,b:R, total_axis (a+b)=Vector.map2 Rplus (total_axis a) (total_axis b).
+   Premises and side conditions: Every positive vector length, arbitrary signed real parameters, and no probability or score constraints.
+   Proof/definition method: Prove both sides have equal zero-sum projections using projector additivity, axis annihilation and the existing generic vector addition-with-zero lemma; show both sides have the same coordinate sum using the checked sum-addition law; conclude from the existing projection-plus-sum injectivity theorem.
+   Library reuse: indexed_real_vector_zero_sum_projection_and_sum_injective, indexed_real_vector_zero_sum_projection_add, indexed_real_vector_total_axis_projection_zero/coordinate_sum, indexed_real_vector_add_zero_right, indexed_real_vector_coordinate_sum_add.
+   Boundary: A concrete homomorphism law rather than an abstract linear-map or matrix-rank theorem.
+   *)
+  Lemma indexed_real_vector_total_axis_add :
+    forall n (a b : R),
+      indexed_real_vector_total_axis (n:=n) (a + b) =
+      Vector.map2 Rplus
+        (indexed_real_vector_total_axis a)
+        (indexed_real_vector_total_axis b).
+  Proof.
+    intros n a b.
+    apply (indexed_real_vector_zero_sum_projection_and_sum_injective
+      n
+      (indexed_real_vector_total_axis (a + b))
+      (Vector.map2 Rplus
+        (indexed_real_vector_total_axis a)
+        (indexed_real_vector_total_axis b))).
+    - rewrite indexed_real_vector_total_axis_projection_zero.
+      rewrite indexed_real_vector_zero_sum_projection_add.
+      rewrite !indexed_real_vector_total_axis_projection_zero.
+      symmetry.
+      apply indexed_real_vector_add_zero_right.
+    - rewrite indexed_real_vector_total_axis_coordinate_sum.
+      rewrite indexed_real_vector_coordinate_sum_add.
+      rewrite !indexed_real_vector_total_axis_coordinate_sum.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_total_axis_scale] (lemma) — Embedding a scaled real total is the same as scaling every coordinate of its embedded vector.
+   Mathematical meaning: Embedding a scaled real total is the same as scaling every coordinate of its embedded vector. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For n, total:R and a:R, total_axis (a*total) = Vector.map (fun c => a*c) (total_axis total).
+   Premises and side conditions: All finite positive lengths and scalars including zero and negative values. No covariance definiteness, sample enumeration or probability normalization is involved.
+   Proof/definition method: Apply the existing joint projection-and-coordinate-sum injectivity theorem. Projection homogeneity and scalar-axis annihilation reduce to the preceding maintained-vector scale-zero identity; total-sum homogeneity and the axis sum theorem close the scalar condition.
+   Library reuse: indexed_real_vector_zero_sum_projection_and_sum_injective/scale, indexed_real_vector_coordinate_sum_scale, indexed_real_vector_total_axis_projection_zero/coordinate_sum, indexed_real_vector_scale_zero.
+   Boundary: Concrete homogeneity, without a packaged abstract linear equivalence or dimension assertion.
+   *)
+  Lemma indexed_real_vector_total_axis_scale :
+    forall n (total a : R),
+      indexed_real_vector_total_axis (n:=n) (a * total) =
+      Vector.map (fun c => a * c)
+        (indexed_real_vector_total_axis total).
+  Proof.
+    intros n total a.
+    apply (indexed_real_vector_zero_sum_projection_and_sum_injective
+      n
+      (indexed_real_vector_total_axis (a * total))
+      (Vector.map (fun c => a * c)
+        (indexed_real_vector_total_axis total))).
+    - rewrite indexed_real_vector_total_axis_projection_zero.
+      rewrite indexed_real_vector_zero_sum_projection_scale.
+      rewrite indexed_real_vector_total_axis_projection_zero.
+      symmetry.
+      apply indexed_real_vector_scale_zero.
+    - rewrite indexed_real_vector_total_axis_coordinate_sum.
+      rewrite indexed_real_vector_coordinate_sum_scale.
+      rewrite indexed_real_vector_total_axis_coordinate_sum.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_total_axis_zero_iff_total_zero] (lemma) — A real total is zero exactly when its head-only embedded finite vector is the all-zero vector.
+   Mathematical meaning: A real total is zero exactly when its head-only embedded finite vector is the all-zero vector. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For every n and total:R, total_axis total = Vector.const 0 (S n) iff total=0.
+   Premises and side conditions: The scalar and vector length are unrestricted; there are no sample weights or basis assumptions.
+   Proof/definition method: Forward direction uses the already certified injectivity of the head-only axis and the newly proved axis-zero law. Reverse direction rewrites the scalar and uses the axis-zero theorem, so no coordinate-level argument is repeated.
+   Library reuse: indexed_real_vector_total_axis_injective, indexed_real_vector_total_axis_zero, Stdlib.Logic.
+   Boundary: A zero-kernel characterization for the scalar embedding, not a rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_total_axis_zero_iff_total_zero :
+    forall n (total : R),
+      (indexed_real_vector_total_axis (n:=n) total =
+         Vector.const 0 (S n) <->
+       total = 0).
+  Proof.
+    intros n total.
+    split.
+    - intro Hzero.
+      apply (indexed_real_vector_total_axis_injective n total 0).
+      rewrite indexed_real_vector_total_axis_zero.
+      exact Hzero.
+    - intro Hzero.
+      rewrite Hzero.
+      apply indexed_real_vector_total_axis_zero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_kernel_iff_exists_total_axis] (lemma) — The zero-sum projection kernel consists exactly of the head-only scalar-axis vectors.
+   Mathematical meaning: The zero-sum projection kernel consists exactly of the head-only scalar-axis vectors. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For n and v:Vector.t R (S n), projection v = Vector.const 0 (S n) iff exists total:R, v=total_axis total.
+   Premises and side conditions: All vector lengths S n, n including zero, and all signed real coordinates are allowed. No covariance or finite-weight assumptions are used.
+   Proof/definition method: For a kernel vector use the previously checked stronger characterization that identifies the unique scalar as coordinate_sum v. Conversely substitute an axis witness and apply the previously proved axis projection-annihilation law.
+   Library reuse: indexed_real_vector_zero_sum_projection_kernel_iff_total_axis, indexed_real_vector_total_axis_projection_zero, Stdlib.Logic.
+   Boundary: A fully explicit kernel image and witness; the dimension of the kernel is not formalized as a library-level dimension.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_kernel_iff_exists_total_axis :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection v =
+         Vector.const 0 (S n) <->
+       exists total : R, v = indexed_real_vector_total_axis total).
+  Proof.
+    intros n v.
+    split.
+    - intro Hkernel.
+      exists (indexed_real_vector_coordinate_sum v).
+      apply (proj1
+        (indexed_real_vector_zero_sum_projection_kernel_iff_total_axis
+          n v)).
+      exact Hkernel.
+    - intros [total Hequal].
+      rewrite Hequal.
+      apply indexed_real_vector_total_axis_projection_zero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_shift_projection] (lemma) — Adding any scalar-axis vector to a finite real vector leaves its canonical zero-sum projection unchanged.
+   Mathematical meaning: Adding any scalar-axis vector to a finite real vector leaves its canonical zero-sum projection unchanged. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For n, v:Vector.t R (S n) and total:R, projection (Vector.map2 Rplus v (total_axis total)) = projection v.
+   Premises and side conditions: No hypothesis that v itself is zero-sum; the scalar total is unrestricted and no probability model is required.
+   Proof/definition method: Rewrite the projection of the sum with the already established projection additivity, replace the projection of the scalar axis with the zero vector, and eliminate the zero summand using the generic VectorSpec-based add-zero-right lemma.
+   Library reuse: indexed_real_vector_zero_sum_projection_add, indexed_real_vector_total_axis_projection_zero, indexed_real_vector_add_zero_right.
+   Boundary: An exact affine-fiber invariance, not a claim of orthogonal projection.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_shift_projection :
+    forall n (v : Vector.t R (S n)) (total : R),
+      indexed_real_vector_zero_sum_projection
+        (Vector.map2 Rplus v (indexed_real_vector_total_axis total)) =
+      indexed_real_vector_zero_sum_projection v.
+  Proof.
+    intros n v total.
+    rewrite indexed_real_vector_zero_sum_projection_add.
+    rewrite indexed_real_vector_total_axis_projection_zero.
+    apply indexed_real_vector_add_zero_right.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_shift_coordinate_sum] (lemma) — Adding a scalar-axis vector changes the full coordinate sum by precisely the embedded scalar.
+   Mathematical meaning: Adding a scalar-axis vector changes the full coordinate sum by precisely the embedded scalar. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For n, v:Vector.t R (S n) and total:R, sum (Vector.map2 Rplus v (total_axis total)) = sum v + total.
+   Premises and side conditions: All finite dimensions and signed real coordinates, including arbitrary positive, zero and negative shifts, are allowed.
+   Proof/definition method: Reuse the exact coordinate_sum_add theorem and the existing axis coordinate-sum identity; no finite-list fold or vector traversal is repeated.
+   Library reuse: indexed_real_vector_coordinate_sum_add, indexed_real_vector_total_axis_coordinate_sum.
+   Boundary: A finite-vector coordinate functional identity, not a numerical inference about a covariance matrix.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_shift_coordinate_sum :
+    forall n (v : Vector.t R (S n)) (total : R),
+      indexed_real_vector_coordinate_sum
+        (Vector.map2 Rplus v (indexed_real_vector_total_axis total)) =
+      indexed_real_vector_coordinate_sum v + total.
+  Proof.
+    intros n v total.
+    rewrite indexed_real_vector_coordinate_sum_add.
+    rewrite indexed_real_vector_total_axis_coordinate_sum.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_shift_decomposition] (lemma) — Translating a real vector along the head-only scalar axis changes only the scalar coordinate in its unique zero-sum plus axis decomposition.
+   Mathematical meaning: Translating a real vector along the head-only scalar axis changes only the scalar coordinate in its unique zero-sum plus axis decomposition. This is a statement about
+   exact typed finite real vectors, not empirical measurements.
+   Exact checked proposition: For every n, v:Vector.t R (S n), total:R, v+axis total = projection v + axis(sum v+total), where addition is standard Vector.map2 Rplus.
+   Premises and side conditions: No normalization or positivity assumptions, and all finite nonempty real vectors and real shifts are admitted.
+   Proof/definition method: Rewrite the shifted vector by the already proved unique canonical axis decomposition, then reuse the immediately preceding projection-invariance and coordinate-sum-shift lemmas. Do not reassociate or recurse on vector addition.
+   Library reuse: indexed_real_vector_zero_sum_axis_decomposition, indexed_real_vector_zero_sum_axis_shift_projection, indexed_real_vector_zero_sum_axis_shift_coordinate_sum, Stdlib.Vectors.Vector.map2.
+   Boundary: An explicit affine-coordinate shift law; not a generic linear-space direct-sum API or rank-nullity theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_shift_decomposition :
+    forall n (v : Vector.t R (S n)) (total : R),
+      Vector.map2 Rplus v (indexed_real_vector_total_axis total) =
+      Vector.map2 Rplus
+        (indexed_real_vector_zero_sum_projection v)
+        (indexed_real_vector_total_axis
+          (indexed_real_vector_coordinate_sum v + total)).
+  Proof.
+    intros n v total.
+    rewrite (indexed_real_vector_zero_sum_axis_decomposition
+      n (Vector.map2 Rplus v (indexed_real_vector_total_axis total))) at 1.
+    rewrite indexed_real_vector_zero_sum_axis_shift_projection.
+    rewrite indexed_real_vector_zero_sum_axis_shift_coordinate_sum.
+    reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

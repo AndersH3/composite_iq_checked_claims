@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **854 proof scripts** in seven
+for the two reports. **863 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3716,6 +3716,29 @@ Intended inventory: **851 public claims, 854 proof scripts and
 pinned Rocq 9.2 verification and independent Deal/SPARK CI.
 No abstract finite-dimensional vector-space isomorphism, dimension
 formula or covariance-matrix rank theorem is claimed here.
+
+## Scalar-axis homomorphism and affine shifts (12 November 2026)
+
+Nine new generic finite-real-vector lemmas continue the checked
+zero-sum plus head-axis decomposition. They prove scalar-axis
+preservation of zero, addition and scaling; a zero-sum projection
+kernel characterization using an existential scalar witness; and
+zero detection of the axis embedding. They also certify that adding
+a head-only axis vector preserves the zero-sum projection, changes
+the coordinate total by exactly its scalar, and updates only the
+scalar component of the existing unique decomposition.
+
+All arguments reuse maintained Rocq Stdlib `VectorSpec`, `Ring`,
+`Vector.map`/`Vector.map2`, and the existing zero-sum projection,
+coordinate sum and pair-injectivity lemmas. The single generic
+scale-zero vector identity is proved via library extensionality;
+no new recursive vector code or matrix operations are introduced.
+
+The intended inventory is **860 public claims, 863 proof scripts and
+941 documented declarations** across seven modules, pending Rocq
+9.2 kernel checks and Python/Deal/SPARK CI. This is an exact
+concrete linearity interface, not an abstract vector-space
+dimension or covariance rank certificate.
 
 ## Research extensions
 
