@@ -3447,6 +3447,26 @@ Current intended inventory: **780 public checked claims,
 across seven Rocq modules, subject to final Rocq 9.2 and
 Python/SPARK CI checks.
 
+## Exact inverse on the zero-sum target (12 November 2026)
+
+Three checked lemmas now complete the concrete tail representation
+of the zero-sum family in every positive dimension. The canonical
+extension of the standard `Vector.tl` of a zero-sum vector equals
+that vector; consequently the extension is surjective onto the
+zero-sum family. An iff result characterizes zero-sum membership
+as equality to this canonical extension.
+
+The converse uses maintained `Stdlib.Vectors.VectorSpec.eta`
+rather than implementing vector decomposition or new induction.
+Together with previously proved injectivity and linearity, it
+gives explicit algebraic witnesses on both sides of a concrete
+finite zero-sum correspondence. No abstract dimension or covariance
+rank/nullity claim is made.
+
+Current intended inventory: **783 public checked claims,
+786 proof scripts and 859 documented declarations**
+across seven Rocq modules, subject to the final CI results.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
