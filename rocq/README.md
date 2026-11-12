@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **673 proof scripts** in seven
+for the two reports. **745 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3141,6 +3141,21 @@ or finite-matrix implementations.
 Current target inventory: **741 public checked claims,
 744 proof scripts, 814 documented declarations** across
 seven Rocq modules, pending Rocq 9.2 verification.
+
+## Simultaneous covariance-radical shifts and proof reuse (12 November 2026)
+
+The covariance pairing is now proved invariant under **independent**
+radical shifts of both coefficient arguments. It is an exact
+arbitrary-weight identity, obtained by composing the two previously
+checked single-slot invariance lemmas. The earlier unit-mass covariance
+quadratic-shift theorem is refactored to invoke this single new
+two-sided result after reducing its quadratic terms to self-pairings.
+No new matrix algorithm, vector recursion, axioms, or unsound
+signed-weight positive-definiteness assumptions were introduced.
+
+Current target inventory: **742 public checked claims,
+745 proof scripts, 815 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
 
 ## Research extensions
 

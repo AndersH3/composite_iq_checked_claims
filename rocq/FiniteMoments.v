@@ -12262,6 +12262,47 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_basis_covariance_bilinear_add_radicals_both_invariant]
+   (theorem) — Covariance depends only on the two radical cosets.
+   Mathematical meaning: Simultaneously changing each coefficient
+   argument by an independently chosen covariance-radical direction
+   cannot change the finite covariance pairing.
+   Exact checked proposition: For every basis and four same-length
+   coefficient vectors, if left_shift and right_shift belong to the
+   covariance radical, then
+   B(left + left_shift, right + right_shift) = B(left, right).
+   Premises and side conditions: The two shifts need not coincide.
+   All finite sample weights may be signed or unnormalized, and
+   samples, coefficient bases and vectors may have zero length.
+   Proof/definition method: Apply the already checked first-slot
+   radical-shift invariance at the shifted second argument, then
+   apply second-slot invariance at the original first argument.
+   This composes established results rather than expanding a sum.
+   Library reuse: indexed_basis_covariance_bilinear_add_radical_first_invariant,
+   indexed_basis_covariance_bilinear_add_radical_second_invariant
+   and Stdlib.Vectors.Vector.map2; no custom matrix code is added.
+   Boundary: Constancy on representatives of radical cosets does
+   not construct a quotient space or calculate covariance rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_add_radicals_both_invariant :
+    forall basis (left right left_shift right_shift :
+                  Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_radical basis left_shift ->
+      indexed_basis_covariance_bilinear_radical basis right_shift ->
+      indexed_basis_covariance_bilinear_form
+        basis (Vector.map2 Rplus left left_shift)
+              (Vector.map2 Rplus right right_shift) =
+      indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis left right left_shift right_shift Hleft Hright.
+    rewrite (indexed_basis_covariance_bilinear_add_radical_first_invariant
+      basis left left_shift (Vector.map2 Rplus right right_shift) Hleft).
+    rewrite (indexed_basis_covariance_bilinear_add_radical_second_invariant
+      basis right right_shift left Hright).
+    reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_covariance_quadratic_add_radical_invariant]
    (theorem) — A covariance quadratic is constant along radical shifts.
    Mathematical meaning: Adding any coefficient direction
@@ -12278,13 +12319,12 @@ Section FiniteProbabilityMoments.
    bilinearity and the unit-mass B(c,c)=Q(c) identity.
    Coefficient vectors may be zero, dependent or empty.
    Proof/definition method: Rewrite both quadratic values as
-   self-pairings using the previously checked diagonal law;
-   invoke the two already proved radical-shift invariance
-   laws once each. No new covariance, variance or matrix
-   expansion is performed.
+   self-pairings using the previously checked diagonal law,
+   then apply the single two-sided radical-shift invariance
+   theorem. The duplicated per-slot rewrites are eliminated;
+   no covariance, variance or matrix expansion is performed.
    Library reuse: indexed_basis_covariance_bilinear_diagonal,
-   indexed_basis_covariance_bilinear_add_radical_first_invariant,
-   indexed_basis_covariance_bilinear_add_radical_second_invariant,
+   indexed_basis_covariance_bilinear_add_radicals_both_invariant,
    Stdlib.Vectors.Vector.map2 and Stdlib.Reals.
    Boundary: An exact finite covariance quotient invariance;
    it does not construct a quotient vector space or assert rank.
@@ -12303,11 +12343,8 @@ Section FiniteProbabilityMoments.
       basis (Vector.map2 Rplus coefficients radical) Hmass).
     rewrite <- (indexed_basis_covariance_bilinear_diagonal
       basis coefficients Hmass).
-    rewrite (indexed_basis_covariance_bilinear_add_radical_first_invariant
-      basis coefficients radical
-      (Vector.map2 Rplus coefficients radical) Hradical).
-    rewrite (indexed_basis_covariance_bilinear_add_radical_second_invariant
-      basis coefficients radical coefficients Hradical).
+    rewrite (indexed_basis_covariance_bilinear_add_radicals_both_invariant
+      basis coefficients coefficients radical radical Hradical Hradical).
     reflexivity.
   Qed.
 

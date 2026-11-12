@@ -2365,6 +2365,22 @@ normalization or weight nonnegativity. They identify the
 radical by its intrinsic annihilation behavior but do not
 calculate rank, kernel dimension or construct a quotient space.
 
+## Independent radical shifts in both pairing slots (12 November 2026)
+
+The new two-sided covariance invariance theorem composes the
+previously checked first-slot and second-slot radical-shift laws.
+For arbitrary finite weights (including signed and unnormalized
+weights), covariance depends only on the representatives modulo
+the radical in **both** arguments. This is a statement about
+invariance, not a claim that a quotient vector space was built.
+
+The existing normalized quadratic radical-shift proof was
+simplified to use the new shared theorem once, after the
+established pairing diagonal identities. This removes
+duplicated argument-level rewrites while preserving the exact
+original theorem and assumptions. The only vector operation
+remains Stdlib's maintained `Vector.map2`.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
