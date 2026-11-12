@@ -2518,6 +2518,22 @@ law. The implication is constructive and requires no new excluded-
 middle axiom; it is not a generic linear-algebra injectivity or
 rank-nullity package.
 
+## Exact sample-evaluator injectivity under positive definiteness (12 November 2026)
+
+The earlier separation-of-distinct-coefficients theorem now
+supports an exact iff criterion between indexed finite covariance
+positive definiteness and injectivity of the explicit centered
+sample-vector evaluator. The only new reusable component is
+length-polymorphic real-vector equality stability, obtained from
+Rocq Stdlib `VectorSpec.eq_nth_iff` and `Reals.Req_dec`.
+No bespoke coordinate recursion, classical-logic import, or
+new axiom declaration is introduced. The real-order dichotomy
+belongs to the existing classical real-number interface.
+
+The theorem is about the injectivity property of the already
+constructed finite typed function. It does not assign a rank,
+build an abstract linear-map instance or prove rank-nullity.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

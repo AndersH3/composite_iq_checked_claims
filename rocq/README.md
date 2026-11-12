@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **763 proof scripts** in seven
+for the two reports. **765 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3338,6 +3338,26 @@ new matrix infrastructure or general dimension/rank calculation.
 Current intended inventory: **760 public checked claims,
 763 proof scripts, 833 documented declarations** in seven
 modules, subject to Rocq 9.2 and Python/SPARK CI verification.
+
+## Exact injectivity of the centered finite sample evaluator (12 November 2026)
+
+The finite covariance model now proves the usual **injectivity**
+statement: with normalized nonnegative weights, covariance is
+positive definite if and only if equality of the complete
+centered sample-output vectors forces equality of their
+coefficient vectors. The proof composes the previously checked
+strict separation-of-distinct-coefficients criterion with a
+reusable real-vector equality stability result.
+
+The supporting equality-stability lemma uses Rocq's maintained
+`VectorSpec.eq_nth_iff` and `Reals.Req_dec` rather than
+introducing a vector induction or a new classical axiom
+declaration. The result concerns the existing Rocq axiomatized
+real numbers and has no numerical decision or rank content.
+
+Current intended inventory: **762 public checked claims,
+765 proof scripts, 835 documented declarations** across seven
+modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
 
 ## Research extensions
 

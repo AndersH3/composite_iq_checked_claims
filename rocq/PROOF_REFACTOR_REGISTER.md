@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **760 public theorem/lemma/example claims**, plus
+The current branch has **762 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**763 proof scripts** across seven Rocq modules. The claims and scripts
+**765 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 349 proof scripts
+## FiniteMoments.v — 351 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1159,6 +1159,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_radical_add_radical_iff` (theorem) | Rewrite both implications using established first-slot covariance radical-shift invariance; avoid vector/list induction | indexed_basis_covariance_bilinear_add_radical_first_invariant, indexed_basis_covariance_bilinear_radical, Stdlib.Vectors.Vector.map2 | **New:** radical(c+r) iff radical(c) whenever radical(r), even for signed unnormalized weights |
 | `indexed_real_vector_equal_iff_signed_difference_zero` (lemma) | Factor out generic equal-length real-vector cancellation by VectorSpec.eq_nth_iff and coordinate nth_map2/nth_map laws | Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map2/nth_map/const_nth, Stdlib.Ring, Stdlib.Lra | **New reusable helper:** x=y iff x+(-1)*y=0 for all finite real-vector dimensions |
 | `indexed_real_vector_zero_iff_to_list_repeat` (lemma) | Reuse Stdlib VectorSpec.to_list_const and to_list_inj; no custom induction or real-vector conversion | Stdlib.Vectors.VectorSpec.to_list_const/to_list_inj, Stdlib.List.repeat | **New reusable helper:** typed real zero vector iff its standard coefficient list is repeat 0 |
+| `indexed_real_vector_equality_stable` (lemma) | Use VectorSpec.eq_nth_iff and the maintained Req_dec real equality dichotomy at each bounded coordinate | Stdlib.Reals.Req_dec, Stdlib.Vectors.VectorSpec.eq_nth_iff, Vector.nth | **New reusable helper:** double-negation stability of equality of length-indexed real vectors; no new axiom declarations |
 | `indexed_basis_centered_sample_vector_equal_iff_difference_zero` (theorem) | **Refactored:** rewrite full sample evaluator through existing additivity/scaling, then apply generic vector difference-zero iff equality | indexed_basis_centered_sample_vector_add/scale, indexed_real_vector_equal_iff_signed_difference_zero | **Refactored:** theorem statement unchanged; removed duplicated coordinate-extensionality proof |
 | `indexed_basis_centered_sample_vector_equal_iff_difference_radical` (theorem) | Compose signed-difference zero-output iff with maintained radical/zero-output equivalence | indexed_basis_centered_sample_vector_equal_iff_difference_zero, indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero, Stdlib.Logic.tauto | **New:** normalized nonnegative finite sample outputs agree iff their signed coefficient difference lies in the covariance radical |
 | `indexed_basis_covariance_positive_definite_separates_sample_outputs` (theorem) | **Refactored:** detect the nonzero signed coefficient difference with the preexisting positive-definite sample-vector detection criterion, then use the already checked equal-output iff zero-difference-output law | indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_equal_iff_difference_zero | **Refactored:** original separation statement and hypotheses preserved; radical detour removed |
@@ -1174,6 +1175,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_positive_definite_iff_strict_bilinear_self` (theorem) | Compose positive definite iff trivial radical with strict self-pairing positivity iff not radical for every typed nonzero direction | indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial, indexed_basis_covariance_bilinear_self_positive_iff_not_radical | **New:** positive definiteness iff every nonzero coefficient has strictly positive bilinear self-covariance |
 | `indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs` (theorem) | **Refactored and relocated after generic PSD self-pairing:** compose self-positive iff not radical with equal-output iff difference-radical, then tauto; preserve exact original proposition | indexed_basis_covariance_bilinear_self_positive_iff_not_radical, indexed_basis_centered_sample_vector_equal_iff_difference_radical, Stdlib.Logic.tauto | **Refactored:** same strict self-covariance iff distinct complete centered sample outputs statement, without a redundant quadratic conversion |
 | `indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients` (theorem) | Prove a bidirectional nonzero-direction detection vs distinct-coefficient-output separation equivalence using generic signed-difference cancellation, zero list characterization and zero-output preservation | indexed_real_vector_equal_iff_signed_difference_zero, indexed_real_vector_zero_iff_to_list_repeat, indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_equal_iff_difference_zero, indexed_basis_centered_sample_vector_zero_coefficients, VectorSpec.to_list_const | **New:** positive definiteness iff the centered sample evaluator distinguishes every pair of unequal typed coefficient vectors, without classical equality axioms |
+| `indexed_basis_covariance_positive_definite_iff_sample_vector_injective` (theorem) | Compose the checked separation equivalence with a generic Stdlib-based real-vector equality stability lemma; reverse implication directly contradicts separation failure | indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients, indexed_real_vector_equality_stable, Stdlib.Logic | **New:** positive definiteness iff complete centered sample-vector equality implies coefficient equality for every typed pair |
 
 
 ## FiniteBridge.v — 37 proof scripts

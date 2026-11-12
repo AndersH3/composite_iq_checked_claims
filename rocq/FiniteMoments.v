@@ -12725,6 +12725,48 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_equality_stable]
+   (lemma) — Double-negation stability of finite real-vector equality.
+   Mathematical meaning: If equality of two typed real vectors
+   cannot be refuted, the vectors are equal at each bounded
+   coordinate and therefore equal as length-indexed objects.
+   Exact checked proposition: For all n and left,right of type
+   Vector.t R n, ~~(left=right) implies left=right.
+   Premises and side conditions: Holds for zero or nonzero finite
+   dimensions with no probability, covariance or sample assumptions.
+   Proof/definition method: Use maintained VectorSpec.eq_nth_iff
+   to reduce vector equality to the equality of corresponding
+   real entries. The standard Reals.Req_dec provides the
+   coordinate equality-or-inequality dichotomy; an unequal
+   coordinate contradicts the hypothesis after substituting
+   a hypothetical vector equality. No custom vector recursion,
+   extra equality algorithm or new axiom declaration is introduced.
+   Library reuse: Stdlib.Reals.Req_dec, Stdlib.Vectors.VectorSpec.eq_nth_iff,
+   Stdlib.Vectors.Vector.nth and Rocq equality substitution.
+   Boundary: Logical equality stability for the existing classical
+   axiomatized real numbers, not a computable decision procedure
+   for approximate numerical vectors or matrix invertibility.
+   *)
+  Lemma indexed_real_vector_equality_stable :
+    forall n (left right : Vector.t R n),
+      ~~ (left = right) -> left = right.
+  Proof.
+    intros n left right Hnotnot.
+    apply (proj1 (VectorSpec.eq_nth_iff R n left right)).
+    intros i j Hij.
+    subst j.
+    destruct (Req_dec (Vector.nth left i) (Vector.nth right i))
+      as [Hequal | Hunequal].
+    - exact Hequal.
+    - exfalso.
+      apply Hnotnot.
+      intro Hvector.
+      rewrite Hvector in Hunequal.
+      apply Hunequal.
+      reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_equal_iff_difference_zero]
    (theorem) — Equality of two full sample outputs is zero
    evaluation of their signed coefficient difference.
@@ -13471,6 +13513,62 @@ Section FiniteProbabilityMoments.
       + rewrite (indexed_basis_centered_sample_vector_zero_coefficients
           basis).
         exact Hzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_sample_vector_injective]
+   (theorem) — Positive definiteness exactly characterizes
+   injectivity of the finite centered sample-evaluation map.
+   Mathematical meaning: Under normalized nonnegative finite
+   weights, the covariance quadratic is positive definite if
+   and only if equality of complete centered sample-output
+   vectors forces equality of their typed coefficient vectors.
+   Exact checked proposition: For all bases, under unit total
+   mass and nonnegative listed weights, indexed covariance
+   positive definite iff forall left,right:Vector.t R (length basis),
+   E_basis(left)=E_basis(right) -> left=right.
+   Premises and side conditions: Repeated samples, zero weights,
+   dependent or empty bases, and distinct coefficient/sample
+   dimensions remain allowed. The finite probability assumptions
+   are explicit in this theorem; there is no Gaussian premise.
+   Proof/definition method: Compose the immediately preceding
+   positive-definite iff separation-of-distinct-coefficients
+   equivalence with the reusable finite real-vector equality
+   stability lemma. In the forward direction, a hypothesized
+   coefficient inequality would contradict equal sample outputs;
+   real-vector stability closes the equality goal. Conversely,
+   apply injectivity to contradict any asserted distinct
+   coefficients with equal full sample outputs.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients,
+   indexed_real_vector_equality_stable and Stdlib.Logic.
+   Boundary: Genuine injectivity of this explicit typed finite
+   evaluator, not a dimension/rank formula, a linear-map instance,
+   or an empirical statement about IQ score identifiability.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_sample_vector_injective :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall (left right : Vector.t R (length basis)),
+         indexed_basis_centered_sample_vector basis left =
+         indexed_basis_centered_sample_vector basis right ->
+         left = right).
+  Proof.
+    intros basis Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients
+        basis Hmass Hw) as Hseparation.
+    split.
+    - intros Hpositive left right Hequal.
+      apply indexed_real_vector_equality_stable.
+      intro Hdistinct.
+      exact ((proj1 Hseparation) Hpositive left right Hdistinct Hequal).
+    - intro Hinjective.
+      apply (proj2 Hseparation).
+      intros left right Hdistinct Hequal.
+      apply Hdistinct.
+      exact (Hinjective left right Hequal).
   Qed.
 
 End FiniteProbabilityMoments.
