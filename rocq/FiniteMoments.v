@@ -10907,7 +10907,8 @@ Section FiniteProbabilityMoments.
     rewrite VectorSpec.to_list_const.
     induction n as [|n IH].
     - reflexivity.
-    - simpl.
+    - change (0 + FiniteSum.finite_sum (fun y : R => y)
+        (repeat 0 n) = 0).
       rewrite IH.
       ring.
   Qed.
