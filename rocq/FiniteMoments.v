@@ -12242,7 +12242,7 @@ Section FiniteProbabilityMoments.
       Vector.hd v +
         indexed_real_vector_coordinate_sum (Vector.tl v)).
     {
-      rewrite <- (VectorSpec.eta v) at 1.
+      rewrite (VectorSpec.eta v) at 1.
       apply indexed_real_vector_coordinate_sum_cons.
     }
     unfold indexed_real_vector_zero_sum_projection,
@@ -12303,8 +12303,8 @@ Section FiniteProbabilityMoments.
         in Hprojected_heads.
       lra.
     }
-    rewrite <- (VectorSpec.eta left) at 1.
-    rewrite <- (VectorSpec.eta right) at 1.
+    rewrite (VectorSpec.eta left) at 1.
+    rewrite (VectorSpec.eta right) at 1.
     now rewrite Hheads, Htails.
   Qed.
 
