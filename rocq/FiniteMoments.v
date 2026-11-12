@@ -12045,6 +12045,48 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_projection_kernel_normal_form]
+   (lemma) — Explicit head-only normal form for the projection kernel.
+   Mathematical meaning: The canonical projection annihilates
+   exactly vectors having an arbitrary first coordinate and zero
+   in every tail coordinate. This gives a concrete description
+   of the one-coordinate direction lost by the projection.
+   Exact checked proposition: For all n and v:Vector.t R (S n),
+   projection v = Vector.const 0 (S n) iff there exists h:R with
+   v = Vector.cons R h n (Vector.const 0 n).
+   Premises and side conditions: Every n, including n=0, and
+   all signed real coordinates are allowed. No positive weights,
+   sample normalization or abstract subspace assumptions occur.
+   Proof/definition method: Rewrite kernel membership using the
+   already proved projection-zero iff tail-zero lemma. For the
+   forward implication use Stdlib.VectorSpec.eta to reconstruct
+   v from its standard head/tail, substituting its zero tail.
+   For the reverse implication reduce the tail of the standard
+   Vector.cons and conclude by reflexivity.
+   Library reuse: indexed_real_vector_zero_sum_projection_zero_iff_tail_zero,
+   Stdlib.Vectors.VectorSpec.eta, Vector.hd/tl/cons/const.
+   Boundary: Exact concrete kernel normal form; it does not
+   certify an abstract kernel dimension, rank, or rank-nullity.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_kernel_normal_form :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection v =
+         Vector.const 0 (S n) <->
+       exists h : R, v = Vector.cons R h n (Vector.const 0 n)).
+  Proof.
+    intros n v.
+    rewrite indexed_real_vector_zero_sum_projection_zero_iff_tail_zero.
+    split.
+    - intro Htail.
+      exists (Vector.hd v).
+      rewrite (VectorSpec.eta v).
+      now rewrite Htail.
+    - intros [h Heq].
+      rewrite Heq.
+      reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
