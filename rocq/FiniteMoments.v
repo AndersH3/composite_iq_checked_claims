@@ -11341,9 +11341,13 @@ Section FiniteProbabilityMoments.
     intros n left right.
     unfold indexed_real_vector_zero_sum_extension.
     rewrite indexed_real_vector_coordinate_sum_add.
-    cbn [Vector.map2].
-    f_equal.
-    ring.
+    replace
+      (- (indexed_real_vector_coordinate_sum left +
+          indexed_real_vector_coordinate_sum right))
+      with
+      ((- indexed_real_vector_coordinate_sum left) +
+       (- indexed_real_vector_coordinate_sum right)) by ring.
+    reflexivity.
   Qed.
 
   (**
@@ -11373,9 +11377,11 @@ Section FiniteProbabilityMoments.
     intros n tail a.
     unfold indexed_real_vector_zero_sum_extension.
     rewrite indexed_real_vector_coordinate_sum_scale.
-    cbn [Vector.map].
-    f_equal.
-    ring.
+    replace
+      (- (a * indexed_real_vector_coordinate_sum tail))
+      with
+      (a * (- indexed_real_vector_coordinate_sum tail)) by ring.
+    reflexivity.
   Qed.
 
   (**
