@@ -12621,4 +12621,133 @@ Section FiniteProbabilityMoments.
       exact (Horiginal right).
   Qed.
 
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_difference_zero]
+   (theorem) — Equality of two full sample outputs is zero
+   evaluation of their signed coefficient difference.
+   Mathematical meaning: The linear sample evaluator cannot
+   distinguish two coefficient directions exactly when it
+   annihilates the first direction plus minus one times the second.
+   Exact checked proposition: Equality of the two sample vectors
+   is equivalent to the zero vector being the output of
+   Vector.map2 Rplus left (Vector.map (fun c => (-1) * c) right).
+   Premises and side conditions: Both coefficient vectors have
+   the same basis length. All finite weights may be signed and
+   unnormalized; samples may repeat or be empty.
+   Proof/definition method: Rewrite the full output of the signed
+   difference using existing additivity and scalar homogeneity.
+   Compare each bounded coordinate with the standard
+   VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth laws.
+   Ordinary real linear arithmetic supplies cancellation.
+   Library reuse: indexed_basis_centered_sample_vector_add,
+   indexed_basis_centered_sample_vector_scale,
+   Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth,
+   and Stdlib.Lra; no new list fold or vector recursion.
+   Boundary: This is an exact finite linear-evaluation identity,
+   not a statement about matrix rank, injectivity or Gaussian data.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_difference_zero :
+    forall basis (left right : Vector.t R (length basis)),
+      (indexed_basis_centered_sample_vector basis left =
+       indexed_basis_centered_sample_vector basis right <->
+       indexed_basis_centered_sample_vector
+         basis (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right)) =
+       Vector.const 0 (length samples)).
+  Proof.
+    intros basis left right.
+    rewrite indexed_basis_centered_sample_vector_add.
+    rewrite indexed_basis_centered_sample_vector_scale.
+    split.
+    - intro Hequal.
+      rewrite Hequal.
+      apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
+        (Vector.map2 Rplus
+          (indexed_basis_centered_sample_vector basis right)
+          (Vector.map (fun y => (-1) * y)
+            (indexed_basis_centered_sample_vector basis right)))
+        (Vector.const 0 (length samples)))).
+      intros i j Hij.
+      subst j.
+      rewrite (VectorSpec.nth_map2 Rplus
+        (indexed_basis_centered_sample_vector basis right)
+        (Vector.map (fun y => (-1) * y)
+          (indexed_basis_centered_sample_vector basis right))
+        i i i eq_refl eq_refl).
+      rewrite (VectorSpec.nth_map (fun y => (-1) * y)
+        (indexed_basis_centered_sample_vector basis right)
+        i i eq_refl).
+      rewrite (VectorSpec.const_nth R 0 (length samples) i).
+      ring.
+    - intro Hzero.
+      apply (proj1 (VectorSpec.eq_nth_iff R (length samples)
+        (indexed_basis_centered_sample_vector basis left)
+        (indexed_basis_centered_sample_vector basis right))).
+      intros i j Hij.
+      subst j.
+      pose proof
+        ((proj2 (VectorSpec.eq_nth_iff R (length samples)
+          (Vector.map2 Rplus
+            (indexed_basis_centered_sample_vector basis left)
+            (Vector.map (fun y => (-1) * y)
+              (indexed_basis_centered_sample_vector basis right)))
+          (Vector.const 0 (length samples))))
+          Hzero i i eq_refl) as Hcoord.
+      rewrite (VectorSpec.nth_map2 Rplus
+        (indexed_basis_centered_sample_vector basis left)
+        (Vector.map (fun y => (-1) * y)
+          (indexed_basis_centered_sample_vector basis right))
+        i i i eq_refl eq_refl) in Hcoord.
+      rewrite (VectorSpec.nth_map (fun y => (-1) * y)
+        (indexed_basis_centered_sample_vector basis right)
+        i i eq_refl) in Hcoord.
+      rewrite (VectorSpec.const_nth R 0 (length samples) i) in Hcoord.
+      lra.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_difference_radical]
+   (theorem) — Identify coincident sample evaluations by the radical.
+   Mathematical meaning: Under a genuine finite probability model,
+   two coefficient directions produce identical weighted centered
+   sample vectors if and only if their signed difference belongs
+   to the bilinear covariance radical.
+   Exact checked proposition: E(left)=E(right) iff the typed
+   coefficient vector left + (-1)*right belongs to the covariance
+   bilinear radical for the same score basis.
+   Premises and side conditions: Total sample weight is one and
+   every listed sample weight is nonnegative. Basis and sample
+   lengths are arbitrary, with repeated outcomes allowed.
+   Proof/definition method: Compose the immediately preceding
+   general signed-difference zero-output equivalence with the
+   already checked radical iff zero output theorem.
+   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_zero,
+   indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero,
+   and Stdlib.Logic.tauto; no custom matrix operations.
+   Boundary: Equality of exact finite evaluation fibers, not
+   their dimension, covariance rank, or statistical identifiability.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_difference_radical :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_centered_sample_vector basis left =
+       indexed_basis_centered_sample_vector basis right <->
+       indexed_basis_covariance_bilinear_radical
+         basis (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right))).
+  Proof.
+    intros basis left right Hmass Hw.
+    pose proof
+      (indexed_basis_centered_sample_vector_equal_iff_difference_zero
+        basis left right) as Hdifference.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero
+        basis
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))
+        Hmass Hw) as Hradical.
+    tauto.
+  Qed.
+
 End FiniteProbabilityMoments.

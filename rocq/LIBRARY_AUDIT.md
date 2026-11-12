@@ -2392,6 +2392,22 @@ without requiring negation of typed vectors, quotient construction,
 or another covariance matrix implementation. Signed and
 unnormalized sample weights remain explicitly permitted.
 
+## Equal sample evaluations and their signed differences (12 November 2026)
+
+The existing centered finite sample evaluator has been extended
+with an exact equality criterion for two coefficient directions.
+The vector output for `left + (-1)*right` is shown to be zero
+precisely when the two original outputs agree, using existing
+typed vector additivity/homogeneity and maintained Stdlib
+`VectorSpec` coordinate laws. This is valid for arbitrary
+signed finite weights, without new vector subtraction code.
+
+Combining this result with the previously checked radical-to-zero
+sample map theorem gives the corresponding radical-membership
+criterion under explicit unit-mass, nonnegative-weight hypotheses.
+These are concrete finite kernel/fiber statements, not abstract
+rank-nullity, quotient, or Gaussian probability claims.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

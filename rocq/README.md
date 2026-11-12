@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **746 proof scripts** in seven
+for the two reports. **748 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3169,6 +3169,24 @@ finite sample weights.
 
 Current target inventory: **743 public checked claims,
 746 proof scripts, 816 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Coincident sample evaluations and coefficient differences (12 November 2026)
+
+Two exact theorems now identify when coefficient directions have the
+same complete centered-sample output. For arbitrary signed and
+unnormalized finite weights, equality of outputs is equivalent to
+zero output for the typed signed difference `left + (-1)*right`,
+using the existing vector additivity, scaling and Stdlib VectorSpec
+coordinate theorems. Under unit total mass and nonnegative weights,
+the difference lies exactly in the covariance bilinear radical.
+
+These results prepare an algebraic fiber/kernel characterization
+without defining custom subtraction, vector spaces, covariance
+ranks or quotient structures.
+
+Current target inventory: **745 public checked claims,
+748 proof scripts, 818 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI verification.
 
 ## Research extensions
