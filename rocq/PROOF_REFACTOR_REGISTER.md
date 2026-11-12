@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 369 proof scripts
+## FiniteMoments.v — 372 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1134,6 +1134,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_extension_add` (lemma) | Rewrite shared coordinate-sum additivity, compute standard Vector.map2 on cons, close with ring | indexed_real_vector_coordinate_sum_add, Stdlib.Vectors.Vector.map2, Stdlib.Ring | **New:** additive linearity of canonical zero-sum extension |
 | `indexed_real_vector_zero_sum_extension_scale` (lemma) | Rewrite existing coordinate-sum homogeneity, compute Vector.map on cons and normalize with ring | indexed_real_vector_coordinate_sum_scale, Stdlib.Vectors.Vector.map, Stdlib.Ring | **New:** scalar homogeneity of canonical zero-sum extension |
 | `indexed_real_vector_zero_sum_extension_injective` (lemma) | Apply f_equal Vector.tl, then rewrite both recovered tails using standard retraction | Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.tl, indexed_real_vector_zero_sum_extension_tail | **New:** distinct original coefficient tails have distinct zero-sum extensions |
+| `indexed_real_vector_zero_sum_extension_inverse_on_zero_sum` (lemma) | Apply standard VectorSpec.eta to derive the uniquely determined head from the zero-sum-cons iff and rebuild the vector | Stdlib.Vectors.VectorSpec.eta, Vector.hd/tl, indexed_real_vector_zero_sum_cons_iff | **New:** every positive-dimensional zero-sum vector equals the canonical extension of its tail |
+| `indexed_real_vector_zero_sum_extension_surjective_on_zero_sum` (lemma) | Witness arbitrary zero-sum vector by Vector.tl and reuse exact inverse result | Stdlib.Vectors.Vector.tl, indexed_real_vector_zero_sum_extension_inverse_on_zero_sum | **New:** extension surjective onto, but not beyond, the zero-sum target |
+| `indexed_real_vector_zero_sum_iff_extension_of_tail` (lemma) | Compose proven inverse with extension target membership under equality | indexed_real_vector_zero_sum_extension_inverse_on_zero_sum, indexed_real_vector_zero_sum_extension_zero_sum | **New:** zero-sum iff canonical re-extension of own tail fixes the vector |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |
