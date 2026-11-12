@@ -10980,7 +10980,9 @@ Section FiniteProbabilityMoments.
     intros n left right.
     apply (fun P Hnil Hcons =>
       Vector.rect2 P Hnil Hcons left right).
-    - reflexivity.
+    - unfold indexed_real_vector_coordinate_sum, FiniteSum.finite_sum.
+      simpl.
+      ring.
     - cbn.
       intros n' v1 v2 IH a b.
       unfold indexed_real_vector_coordinate_sum in *.
