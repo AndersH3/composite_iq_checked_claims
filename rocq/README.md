@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **762 proof scripts** in seven
+for the two reports. **763 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3318,6 +3318,26 @@ rather than detouring through a separate covariance radical.
 Current intended inventory: **759 public checked claims,
 762 proof scripts, 832 documented declarations** across seven
 Rocq modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
+
+## Positive definiteness iff the centered sample evaluator separates coefficient vectors (12 November 2026)
+
+Building on the generic signed-difference and zero-list vector lemmas,
+the project now proves a two-way separation criterion: with normalized,
+nonnegative finite weights, indexed covariance is positive definite
+if and only if every pair of **unequal typed coefficient vectors**
+has unequal full centered sample-output vectors. The forward argument
+uses the previously verified nonzero-direction detection theorem.
+The converse applies separation against the ordinary zero vector,
+using the already checked zero-output preservation theorem.
+
+The proof is constructive in its use of inequality implications,
+retains exact signed-difference and zero-list conversions through
+Rocq Stdlib's maintained VectorSpec theorems, and introduces no
+new matrix infrastructure or general dimension/rank calculation.
+
+Current intended inventory: **760 public checked claims,
+763 proof scripts, 833 documented declarations** in seven
+modules, subject to Rocq 9.2 and Python/SPARK CI verification.
 
 ## Research extensions
 

@@ -2505,6 +2505,19 @@ sample-map nonzero detection theorem instead of re-entering
 the bilinear radical. This is a consolidation of proof code,
 not a new matrix, spectral, rank or nullity implementation.
 
+## Coefficient separation as a finite positive-definiteness criterion (12 November 2026)
+
+A direct theorem now characterizes positive-definite indexed covariance
+by separation of any two unequal coefficient vectors through the
+existing complete centered sample evaluator. The proof relies on
+the already checked nonzero sample-direction detection criterion
+and on reusable standard-library real-vector cancellation and
+typed-zero/list-zero conversion. Its converse tests the ordinary
+zero coefficient vector and uses the previously proved zero-output
+law. The implication is constructive and requires no new excluded-
+middle axiom; it is not a generic linear-algebra injectivity or
+rank-nullity package.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

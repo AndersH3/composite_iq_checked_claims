@@ -13378,4 +13378,99 @@ Section FiniteProbabilityMoments.
     tauto.
   Qed.
 
+  (**
+   [indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients]
+   (theorem) — Positive definiteness exactly separates distinct
+   coefficient directions by the complete centered sample evaluator.
+   Mathematical meaning: In a finite probability model, the
+   indexed covariance is strictly positive definite if and only
+   if any two unequal typed coefficient vectors have unequal
+   complete vectors of centered weighted sample evaluations.
+   Exact checked proposition: For every basis, normalized
+   nonnegative sample weights imply positive_definite basis iff
+   forall (left right : Vector.t R (length basis)),
+   left <> right -> centered_sample_vector basis left <>
+                    centered_sample_vector basis right.
+   Premises and side conditions: The complete sample list may have
+   repeated or zero-weight outcomes; the coefficient basis may be
+   empty or dependent. All mass/sign assumptions are written in the
+   theorem statement. The unequal-vector implication avoids needing
+   classical excluded middle for vector equality.
+   Proof/definition method: In the forward direction, the generic
+   signed-difference cancellation and zero-list conversion lemmas
+   turn left<>right into a nonzero coefficient-list difference.
+   Reuse the earlier positive-definite iff nonzero directions
+   have nonzero sample output, and the checked equal-output
+   iff signed-difference zero-output theorem to contradict
+   equal outputs. Conversely, apply the separation property to
+   each nonzero direction and the standard zero coefficient vector;
+   the maintained zero-preservation and to_list_const theorems
+   show that nonzero coefficients cannot be annihilated.
+   Library reuse: indexed_real_vector_equal_iff_signed_difference_zero,
+   indexed_real_vector_zero_iff_to_list_repeat,
+   indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero,
+   indexed_basis_centered_sample_vector_equal_iff_difference_zero,
+   indexed_basis_centered_sample_vector_zero_coefficients,
+   Stdlib.Vectors.VectorSpec.to_list_const.
+   Boundary: A finite typed sample-evaluator separation criterion,
+   not an abstract vector-space isomorphism, rank/nullity formula,
+   or claim about empirical IQ covariance invertibility.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall (left right : Vector.t R (length basis)),
+         left <> right ->
+         indexed_basis_centered_sample_vector basis left <>
+         indexed_basis_centered_sample_vector basis right).
+  Proof.
+    intros basis Hmass Hw.
+    split.
+    - intros Hpositive left right Hdistinct Hequal.
+      assert (Hnonzero :
+        Vector.to_list
+          (Vector.map2 Rplus left
+            (Vector.map (fun c => (-1) * c) right)) <>
+        repeat 0 (length basis)).
+      { intro Hlist.
+        apply Hdistinct.
+        apply (proj2
+          (indexed_real_vector_equal_iff_signed_difference_zero
+            (length basis) left right)).
+        apply (proj2
+          (indexed_real_vector_zero_iff_to_list_repeat
+            (length basis)
+            (Vector.map2 Rplus left
+              (Vector.map (fun c => (-1) * c) right)))).
+        exact Hlist. }
+      apply
+        ((proj1
+          (indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero
+            basis Hmass Hw))
+          Hpositive
+          (Vector.map2 Rplus left
+            (Vector.map (fun c => (-1) * c) right))
+          Hnonzero).
+      apply (proj1
+        (indexed_basis_centered_sample_vector_equal_iff_difference_zero
+          basis left right)).
+      exact Hequal.
+    - intro Hseparates.
+      apply (proj2
+        (indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero
+          basis Hmass Hw)).
+      intros coefficients Hnonzero Hzero.
+      apply
+        (Hseparates coefficients (Vector.const 0 (length basis))).
+      + intro Hequal.
+        apply Hnonzero.
+        rewrite Hequal.
+        apply VectorSpec.to_list_const.
+      + rewrite (indexed_basis_centered_sample_vector_zero_coefficients
+          basis).
+        exact Hzero.
+  Qed.
+
 End FiniteProbabilityMoments.

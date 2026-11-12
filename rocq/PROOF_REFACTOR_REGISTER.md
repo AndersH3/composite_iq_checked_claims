@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **759 public theorem/lemma/example claims**, plus
+The current branch has **760 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**762 proof scripts** across seven Rocq modules. The claims and scripts
+**763 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 348 proof scripts
+## FiniteMoments.v — 349 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1173,6 +1173,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_cauchy_schwarz_self_squared` (theorem) | Rewrite both PSD diagonal factors to existing Q and reuse checked Cauchy-Schwarz | indexed_basis_covariance_bilinear_diagonal, indexed_basis_covariance_bilinear_cauchy_schwarz_squared | **New:** B(u,v)^2<=B(u,u)B(v,v) entirely in the bilinear interface |
 | `indexed_basis_covariance_positive_definite_iff_strict_bilinear_self` (theorem) | Compose positive definite iff trivial radical with strict self-pairing positivity iff not radical for every typed nonzero direction | indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial, indexed_basis_covariance_bilinear_self_positive_iff_not_radical | **New:** positive definiteness iff every nonzero coefficient has strictly positive bilinear self-covariance |
 | `indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs` (theorem) | **Refactored and relocated after generic PSD self-pairing:** compose self-positive iff not radical with equal-output iff difference-radical, then tauto; preserve exact original proposition | indexed_basis_covariance_bilinear_self_positive_iff_not_radical, indexed_basis_centered_sample_vector_equal_iff_difference_radical, Stdlib.Logic.tauto | **Refactored:** same strict self-covariance iff distinct complete centered sample outputs statement, without a redundant quadratic conversion |
+| `indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients` (theorem) | Prove a bidirectional nonzero-direction detection vs distinct-coefficient-output separation equivalence using generic signed-difference cancellation, zero list characterization and zero-output preservation | indexed_real_vector_equal_iff_signed_difference_zero, indexed_real_vector_zero_iff_to_list_repeat, indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_equal_iff_difference_zero, indexed_basis_centered_sample_vector_zero_coefficients, VectorSpec.to_list_const | **New:** positive definiteness iff the centered sample evaluator distinguishes every pair of unequal typed coefficient vectors, without classical equality axioms |
 
 
 ## FiniteBridge.v — 37 proof scripts
