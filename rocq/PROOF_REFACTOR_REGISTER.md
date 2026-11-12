@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 390 proof scripts
+## FiniteMoments.v — 391 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1153,6 +1153,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_projection_extension_fixed` (lemma) | Apply existing fixed-point iff to checked extension zero-sum membership | indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum, indexed_real_vector_zero_sum_extension_zero_sum | **New:** zero-sum extension image is pointwise fixed by canonical projection |
 | `indexed_real_vector_zero_sum_projection_ignores_head` (lemma) | Apply established projection equality iff equality of tails; Stdlib Vector.tl/cons reduces reflexively | indexed_real_vector_zero_sum_projection_equal_iff_tails_equal, Stdlib.Vectors.Vector.cons/tl | **New:** projection discards arbitrary initial-coordinate differences |
 | `indexed_real_vector_zero_sum_projection_changes_nonzero_constant` (lemma) | Hypothetical fixed point implies zero-sum; contradict checked nonzero-constant exclusion | indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum, indexed_real_vector_zero_sum_const_nonzero | **New:** nonzero constant vectors are never fixed by projection in positive length |
+| `indexed_real_vector_zero_sum_projection_kernel_normal_form` (lemma) | Rewrite checked projection-zero iff tail-zero; reconstruct vector from standard head/tail by VectorSpec.eta, with the arbitrary head as explicit witness | indexed_real_vector_zero_sum_projection_zero_iff_tail_zero, Stdlib.Vectors.VectorSpec.eta, Vector.hd/tl/cons/const | **New:** every projection-kernel vector is exactly a head-only vector, with explicit scalar witness |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |
