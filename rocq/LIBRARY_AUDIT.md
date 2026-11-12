@@ -2337,6 +2337,17 @@ algorithm or rank calculation is introduced. The new iff
 preserves the normalization and nonnegative-weight hypotheses
 needed for the radical/output kernel equivalence.
 
+## Stable coordinate projection refactor (12 November 2026)
+
+The converse radical-detection proof uses an explicitly typed
+coordinate-equality assertion transported from the complete
+sample-vector equality, rather than relying on tactical
+rewriting of the result of `f_equal`. This prevents unwanted
+definitional simplification from destroying a rewrite target.
+The subsequent score additivity and `Stdlib.Lra` cancellation
+remain unchanged; the theorem statement and dependencies are
+preserved. This refinement was prompted by Rocq 9.2 CI.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

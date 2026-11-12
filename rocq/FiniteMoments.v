@@ -12384,8 +12384,8 @@ Section FiniteProbabilityMoments.
    coefficient nonzero requirement and the basis can be
    dependent. For signed weights the required covariance
    radical/zero-output iff is not assumed to hold.
-   Proof/definition method: For necessity, take a bounded
-   coordinate of the output equality with standard f_equal,
+   Proof/definition method: For necessity, transport output
+   equality to a bounded indexed evaluation coordinate,
    use existing per-coordinate score additivity, and cancel
    the shared first score by linear arithmetic. Reassemble
    the zero output through VectorSpec.eq_nth_iff and apply
@@ -12420,16 +12420,18 @@ Section FiniteProbabilityMoments.
       intros i j Hij.
       subst j.
       rewrite (VectorSpec.const_nth R 0 (length samples) i).
-      pose proof
-        (f_equal
-          (fun v : Vector.t R (length samples) => Vector.nth v i)
-          Hsame) as Hcoord.
-      rewrite (indexed_basis_centered_sample_vector_nth
-        basis (Vector.map2 Rplus coefficients shift) i) in Hcoord.
+      assert (Hcoord :
+        indexed_basis_centered_sample_evaluation
+          basis (Vector.map2 Rplus coefficients shift) i =
+        indexed_basis_centered_sample_evaluation
+          basis coefficients i).
+      { rewrite <- (indexed_basis_centered_sample_vector_nth
+          basis (Vector.map2 Rplus coefficients shift) i).
+        rewrite <- (indexed_basis_centered_sample_vector_nth
+          basis coefficients i).
+        now rewrite Hsame. }
       rewrite (indexed_basis_centered_sample_evaluation_add
         basis coefficients shift i) in Hcoord.
-      rewrite <- (indexed_basis_centered_sample_vector_nth
-        basis coefficients i) in Hcoord.
       rewrite <- (indexed_basis_centered_sample_vector_nth
         basis shift i) in Hcoord.
       lra.
