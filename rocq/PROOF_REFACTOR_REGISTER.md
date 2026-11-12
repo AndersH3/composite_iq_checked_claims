@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **762 public theorem/lemma/example claims**, plus
+The current branch has **768 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**765 proof scripts** across seven Rocq modules. The claims and scripts
+**771 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 351 proof scripts
+## FiniteMoments.v — 357 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1118,7 +1118,13 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero` (theorem) | Compose named quadratic-nullity and typed-output-zero equivalences | indexed_basis_covariance_quadratic_zero_iff_named_sample_kernel, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel, Stdlib.Logic.tauto | **New:** zero quadratic iff concrete sample output vector is zero |
 | `indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero` (theorem) | Transport named kernel triviality through concrete vector zero predicate | indexed_basis_covariance_positive_definite_iff_named_sample_kernel_trivial, indexed_basis_centered_sample_vector_zero_iff_named_sample_kernel | **New:** finite covariance positive-definiteness iff concrete typed evaluation detects every nonzero coefficient vector |
 | `indexed_basis_centered_sample_vector_to_list` (theorem) | Standard Vector.to_list/map and of_list inverse laws, no recursion | VectorSpec.to_list_map, VectorSpec.to_list_of_list_opp | **New:** output list is exactly the centered weighted score map over samples |
+| `indexed_real_vector_coordinate_sum_zero` (lemma) | Apply VectorSpec.to_list_const, dimension induction over repeated-zero list, and existing FiniteSum sum | VectorSpec.to_list_const, Stdlib.List.repeat, FiniteSum.finite_sum, Stdlib.Ring | **New:** sum of typed zero real vector vanishes in all finite dimensions |
+| `indexed_real_vector_coordinate_sum_scale` (lemma) | Rewrite maintained vector-to-list map and reuse finite-sum map/scaling laws | VectorSpec.to_list_map, FiniteSum.finite_sum_map, FiniteSum.finite_sum_scale | **New:** common coordinate sum is homogeneous for arbitrary real scalars |
+| `indexed_real_vector_coordinate_sum_add` (lemma) | Standard Vector.rect2 matched-length eliminator and real ring arithmetic over existing shared finite sum | Vector.rect2/map2/to_list, FiniteSum.finite_sum, Stdlib.Ring | **New:** common coordinate sum preserves componentwise addition |
+| `indexed_real_vector_zero_sum_closed_under_scale` (lemma) | Rewrite common functional homogeneity and zero sum | indexed_real_vector_coordinate_sum_scale, Stdlib.Ring | **New:** zero-sum vector family is scalar closed |
+| `indexed_real_vector_zero_sum_closed_under_add` (lemma) | Rewrite common functional additivity and both input zero sums | indexed_real_vector_coordinate_sum_add, Stdlib.Ring | **New:** zero-sum vector family is addition closed |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
+| `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_single_sample_zero` (theorem) | Shared singleton sum-zero iff plus new typed vector/list-score equivalence | FiniteSum.finite_sum_singleton_zero_iff, indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero, indexed_basis_centered_weighted_score_sum_zero | **Refactored:** no local singleton sum or dependent vector induction |
 | `indexed_basis_centered_weighted_score_two_samples_opposite` (theorem) | Normalize sample-list sum-zero using generic pair iff | indexed_basis_centered_weighted_score_sum_zero, FiniteSum.finite_sum_pair_zero_iff_opposite | **New:** two centered scores are additive opposites |
 | `indexed_basis_centered_sample_vector_two_samples_opposite` (theorem) | Vector-to-list map plus prior paired-score cancellation | indexed_basis_centered_sample_vector_to_list, indexed_basis_centered_weighted_score_two_samples_opposite, Stdlib.Lra | **New:** complete two-sample vector output equals [s; -s] |

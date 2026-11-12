@@ -2534,6 +2534,26 @@ The theorem is about the injectivity property of the already
 constructed finite typed function. It does not assign a rank,
 build an abstract linear-map instance or prove rank-nullity.
 
+## Linear zero-sum sample-output target (12 November 2026)
+
+To move beyond repeated equivalences of covariance kernels,
+the formalization now makes the centered evaluator's
+already checked zero-coordinate-sum image restriction explicit.
+A generic real-vector coordinate-sum functional and zero-sum
+predicate reuse the existing FiniteSum fold, Vector.to_list,
+VectorSpec.to_list_map and standard matched-vector eliminator
+Vector.rect2. Checked laws establish zero preservation,
+additivity, homogeneity and zero-sum closure under the
+two typed vector operations.
+
+The existing normalized-mass sample-vector sum-zero theorem
+then yields the new target-membership statement directly,
+without any restriction on the signs of finite weights.
+No new subspace record, rank formula, codimension argument,
+numerical covariance calculation or second summation
+algorithm is introduced. An abstract finite-dimensional
+linear-algebra bridge remains a separate migration.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

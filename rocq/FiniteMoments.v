@@ -10838,6 +10838,219 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_coordinate_sum] (definition) —
+   Shared coordinate-sum functional for a typed real vector.
+   Mathematical meaning: Sum the real coordinates of any finite
+   length-indexed vector, preserving their position and multiplicity.
+   Exact declaration: For v : Vector.t R n, return the generic
+   FiniteSum.finite_sum identity over Vector.to_list v.
+   Premises and side conditions: Every finite n is permitted.
+   No sample weights, probability normalization or positivity
+   assumption enters this generic definition.
+   Proof/definition method: Delegate to the maintained Vector.to_list
+   conversion and the existing shared finite real summation operator.
+   Library reuse: Stdlib.Vectors.Vector.to_list and
+   FiniteSum.finite_sum. No new fold or recursion is introduced.
+   Boundary: A concrete finite coordinate functional, not an
+   abstract finite-dimensional dual-space construction.
+   *)
+  Definition indexed_real_vector_coordinate_sum
+      {n : nat} (v : Vector.t R n) : R :=
+    FiniteSum.finite_sum (fun y : R => y) (Vector.to_list v).
+
+  (**
+   [indexed_real_vector_zero_sum] (definition) —
+   The kernel predicate of the shared finite coordinate sum.
+   Mathematical meaning: A typed vector belongs to this
+   zero-sum family precisely when its coordinate sum vanishes.
+   Exact declaration: indexed_real_vector_zero_sum v is the
+   proposition indexed_real_vector_coordinate_sum v = 0.
+   Premises and side conditions: Arbitrary vector dimensions
+   and signed coordinates are supported; no probability
+   interpretation or proof of codimension is assumed here.
+   Proof/definition method: A transparent predicate over
+   the single shared coordinate-sum functional.
+   Library reuse: indexed_real_vector_coordinate_sum and
+   Stdlib.Vectors.Vector.t, with no duplicated summation.
+   Boundary: This is a concrete linear-kernel predicate;
+   no quotient, abstract subspace structure or rank is claimed.
+   *)
+  Definition indexed_real_vector_zero_sum
+      {n : nat} (v : Vector.t R n) : Prop :=
+    indexed_real_vector_coordinate_sum v = 0.
+
+  (**
+   [indexed_real_vector_coordinate_sum_zero] (lemma) —
+   The typed zero vector has zero coordinate sum.
+   Mathematical meaning: The additive identity is annihilated
+   by the coordinate-summation functional for every dimension.
+   Exact checked proposition: For all n, the coordinate sum
+   of Vector.const 0 n equals zero.
+   Premises and side conditions: No probability or score
+   assumptions, and n may be zero.
+   Proof/definition method: Convert the standard constant
+   vector using VectorSpec.to_list_const, then perform a
+   simple dimension induction on the resulting zero list.
+   The summation itself remains FiniteSum.finite_sum;
+   no new implementation is introduced.
+   Library reuse: VectorSpec.to_list_const,
+   Stdlib.List.repeat, FiniteSum.finite_sum and Stdlib.Ring.
+   Boundary: A zero-vector identity, not a kernel dimension.
+   *)
+  Lemma indexed_real_vector_coordinate_sum_zero :
+    forall n,
+      indexed_real_vector_coordinate_sum
+        (Vector.const 0 n) = 0.
+  Proof.
+    intro n.
+    unfold indexed_real_vector_coordinate_sum.
+    rewrite VectorSpec.to_list_const.
+    induction n as [|n IH].
+    - reflexivity.
+    - simpl.
+      rewrite IH.
+      ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_coordinate_sum_scale] (lemma) —
+   Coordinate summation is homogeneous in its typed vector.
+   Mathematical meaning: Scaling all coordinates by any real
+   scalar scales their finite coordinate sum by the same factor.
+   Exact checked proposition: For every n, v : Vector.t R n,
+   and real a, sum(Vector.map (a *.) v) = a * sum(v).
+   Premises and side conditions: The scalar may be zero or
+   negative; no weight normalization or nonempty dimension.
+   Proof/definition method: Reuse VectorSpec.to_list_map to
+   expose the standard list map and the existing
+   FiniteSum.finite_sum_map/finite_sum_scale laws directly.
+   Library reuse: VectorSpec.to_list_map,
+   FiniteSum.finite_sum_map and finite_sum_scale.
+   Boundary: Linear homogeneity of one concrete functional,
+   not a new vector-space abstraction or summation algorithm.
+   *)
+  Lemma indexed_real_vector_coordinate_sum_scale :
+    forall n (coefficients : Vector.t R n) (a : R),
+      indexed_real_vector_coordinate_sum
+        (Vector.map (fun c => a * c) coefficients) =
+      a * indexed_real_vector_coordinate_sum coefficients.
+  Proof.
+    intros n coefficients a.
+    unfold indexed_real_vector_coordinate_sum.
+    rewrite VectorSpec.to_list_map.
+    rewrite FiniteSum.finite_sum_map.
+    change
+      (FiniteSum.finite_sum (fun c : R => a * c)
+        (Vector.to_list coefficients) =
+       a * FiniteSum.finite_sum (fun c : R => c)
+        (Vector.to_list coefficients)).
+    rewrite FiniteSum.finite_sum_scale.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_coordinate_sum_add] (lemma) —
+   Coordinate summation is additive on typed vector sums.
+   Mathematical meaning: The sum of componentwise added
+   real vectors equals the sum of their two coordinate sums.
+   Exact checked proposition: For all equally sized real
+   vectors u and v, sum(Vector.map2 Rplus u v) =
+   sum(u) + sum(v), even for the zero dimension.
+   Premises and side conditions: Only Vector.t length typing
+   is used; signed entries and empty dimensions are allowed.
+   Proof/definition method: Use the maintained Vector.rect2
+   matched-vector eliminator to reduce to empty/cons cases.
+   The existing FiniteSum.finite_sum fold computes the cons
+   equation, and Stdlib.Ring closes the real additive law.
+   No new zip, vector recursion, or finite-sum algorithm is
+   defined; this establishes linearity of the existing fold.
+   Library reuse: Stdlib.Vectors.Vector.rect2/map2/to_list,
+   FiniteSum.finite_sum and Stdlib.Ring.
+   Boundary: A concrete finite linearity identity, not a
+   package of abstract vector-space or matrix rank laws.
+   *)
+  Lemma indexed_real_vector_coordinate_sum_add :
+    forall n (left right : Vector.t R n),
+      indexed_real_vector_coordinate_sum
+        (Vector.map2 Rplus left right) =
+      indexed_real_vector_coordinate_sum left +
+      indexed_real_vector_coordinate_sum right.
+  Proof.
+    intros n left right.
+    apply (fun P Hnil Hcons =>
+      Vector.rect2 P Hnil Hcons left right).
+    - reflexivity.
+    - cbn.
+      intros n' v1 v2 IH a b.
+      unfold indexed_real_vector_coordinate_sum in *.
+      simpl.
+      rewrite IH.
+      ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_closed_under_scale] (lemma) —
+   The zero-coordinate-sum family is closed under real scaling.
+   Mathematical meaning: Multiplying every coordinate of a
+   vector with vanishing sum by any scalar preserves zero sum.
+   Exact checked proposition: zero_sum(v) implies zero_sum
+   (Vector.map (fun c => a*c) v) for all n, v, a.
+   Premises and side conditions: No finite sample model or
+   probability assumptions; any real a and n are admitted.
+   Proof/definition method: Unfold the shared zero-sum predicate
+   and rewrite using the established coordinate-sum scaling
+   lemma; real zero multiplication follows by Stdlib.Ring.
+   Library reuse: indexed_real_vector_coordinate_sum_scale,
+   Stdlib.Ring and Stdlib.Vectors.Vector.map.
+   Boundary: Closure under scaling alone does not establish
+   a subspace dimension or rank theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_closed_under_scale :
+    forall n (coefficients : Vector.t R n) (a : R),
+      indexed_real_vector_zero_sum coefficients ->
+      indexed_real_vector_zero_sum
+        (Vector.map (fun c => a * c) coefficients).
+  Proof.
+    intros n coefficients a Hzero.
+    unfold indexed_real_vector_zero_sum in *.
+    rewrite indexed_real_vector_coordinate_sum_scale.
+    rewrite Hzero.
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_closed_under_add] (lemma) —
+   The zero-coordinate-sum family is closed under vector addition.
+   Mathematical meaning: The componentwise sum of any two
+   typed zero-sum real vectors also has vanishing coordinate sum.
+   Exact checked proposition: For every common dimension n,
+   zero_sum(left) and zero_sum(right) imply
+   zero_sum(Vector.map2 Rplus left right).
+   Premises and side conditions: Both arguments have the
+   same length by their types; no probability, nonnegativity,
+   or statistical independence hypotheses are needed.
+   Proof/definition method: Unfold the predicate and rewrite
+   the checked coordinate-sum additivity law. No extra
+   list folding or vector induction is required here.
+   Library reuse: indexed_real_vector_coordinate_sum_add,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Ring.
+   Boundary: A verified closure law, not a rank-nullity proof.
+   *)
+  Lemma indexed_real_vector_zero_sum_closed_under_add :
+    forall n (left right : Vector.t R n),
+      indexed_real_vector_zero_sum left ->
+      indexed_real_vector_zero_sum right ->
+      indexed_real_vector_zero_sum
+        (Vector.map2 Rplus left right).
+  Proof.
+    intros n left right Hleft Hright.
+    unfold indexed_real_vector_zero_sum in *.
+    rewrite indexed_real_vector_coordinate_sum_add.
+    rewrite Hleft, Hright.
+    ring.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
@@ -10878,6 +11091,45 @@ Section FiniteProbabilityMoments.
         (indexed_basis_centered_weighted_score basis coefficients)
         samples = 0).
     apply indexed_basis_centered_weighted_score_sum_zero.
+    exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_in_zero_sum]
+   (theorem) — Every normalized centered sample output lands
+   in the shared zero-coordinate-sum family.
+   Mathematical meaning: The concrete linear map from typed
+   coefficient directions to centered finite sample outputs
+   has its image constrained by a single coordinate-sum equation.
+   Exact checked proposition: For any finite basis and correctly
+   typed coefficient direction, total_mass = 1 implies
+   indexed_real_vector_zero_sum
+   (indexed_basis_centered_sample_vector basis coefficients).
+   Premises and side conditions: Only unit total mass is needed;
+   listed sample weights may be negative, outcomes repeated,
+   and both input and output vector dimensions may be empty.
+   No positive definiteness or independence is assumed.
+   Proof/definition method: Unfold the transparent zero-sum
+   predicate and coordinate-sum functional and apply the
+   previously checked full sample-vector coordinate-sum-zero
+   theorem. No second centering or covariance calculation.
+   Library reuse: indexed_basis_centered_sample_vector_sum_zero,
+   indexed_real_vector_zero_sum and
+   indexed_real_vector_coordinate_sum.
+   Boundary: This is a concrete proper-codomain constraint;
+   it does not yet prove the hyperplane's dimension, a
+   rank bound or a general rank-nullity identity.
+   *)
+  Theorem indexed_basis_centered_sample_vector_in_zero_sum :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      indexed_real_vector_zero_sum
+        (indexed_basis_centered_sample_vector basis coefficients).
+  Proof.
+    intros basis coefficients Hmass.
+    unfold indexed_real_vector_zero_sum,
+      indexed_real_vector_coordinate_sum.
+    apply indexed_basis_centered_sample_vector_sum_zero.
     exact Hmass.
   Qed.
 

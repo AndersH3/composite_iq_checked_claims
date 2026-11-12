@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **765 proof scripts** in seven
+for the two reports. **771 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3358,6 +3358,29 @@ real numbers and has no numerical decision or rank content.
 Current intended inventory: **762 public checked claims,
 765 proof scripts, 835 documented declarations** across seven
 modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
+
+## Linear zero-coordinate-sum target for finite centered sample outputs (12 November 2026)
+
+The finite model now exposes a shared typed real-vector
+coordinate-sum functional and its zero-sum kernel predicate.
+Six new checked results cover zero-vector preservation,
+coordinate-sum homogeneity and additivity, closure of the
+zero-sum family under scalar multiplication and addition,
+and membership of **every normalized centered sample output**
+in that zero-sum family. The final image-containment theorem
+requires only total mass one, not nonnegative weights.
+
+The generic functional reuses `FiniteSum.finite_sum` and
+`Vector.to_list`, with `VectorSpec.to_list_map`, the shared
+finite-sum map and scaling laws, and `Vector.rect2` for
+aligned addition. No second summation implementation, matrix
+library or dimension theorem has been introduced. In particular,
+this does **not** yet prove that the zero-sum target has
+codimension one or that the covariance rank is bounded.
+
+Current intended inventory: **768 public checked claims,
+771 proof scripts and 843 documented declarations**
+across seven Rocq modules, subject to pinned CI verification.
 
 ## Research extensions
 
