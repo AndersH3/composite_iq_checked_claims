@@ -10985,8 +10985,12 @@ Section FiniteProbabilityMoments.
       ring.
     - cbn.
       intros n' v1 v2 IH a b.
-      unfold indexed_real_vector_coordinate_sum in *.
-      simpl.
+      change
+        ((a + b) +
+           indexed_real_vector_coordinate_sum
+             (Vector.map2 Rplus v1 v2) =
+         (a + indexed_real_vector_coordinate_sum v1) +
+         (b + indexed_real_vector_coordinate_sum v2)).
       rewrite IH.
       ring.
   Qed.
