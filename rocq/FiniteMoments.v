@@ -16045,5 +16045,171 @@ Section FiniteProbabilityMoments.
       exact Hequal.
   Qed.
 
+  (**
+   [indexed_basis_covariance_quadratic_zero_iff_sample_list_tail_zero] (theorem) —
+   Exact covariance quadratic-form nullity from the shortened centered sample output.
+   Mathematical meaning: Exact covariance quadratic-form nullity from the shortened centered sample output. The claim concerns only
+   exact finite weighted vectors and concrete covariance kernels.
+   Exact checked proposition: Under total_mass=1 and nonnegative listed weights, indexed_basis_covariance_quadratic_form basis coefficients = 0 iff List.tl (Vector.to_list (indexed_basis_centered_sample_vector basis coefficients)) = repeat 0 (Nat.pred (length samples)).
+   Premises and side conditions: Normalization and listed nonnegative sample weights are required for the previously certified covariance quadratic-form kernel characterization. The sample list and basis are finite and can include repeated occurrences and dependent functions.
+   Proof/definition method: Obtain the already proven quadratic-form-zero iff complete centered output is zero and the normalized centered-output-zero iff list-tail-zero propositions. Compose the two iff statements with Stdlib.Logic.tauto rather than expanding the quadratic form.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero and Stdlib.Logic.tauto.
+   Boundary: This does not establish numerical eigenvalues, a matrix rank, or a rank-nullity formula.
+   *)
+  Theorem indexed_basis_covariance_quadratic_zero_iff_sample_list_tail_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       List.tl (Vector.to_list
+         (indexed_basis_centered_sample_vector basis coefficients)) =
+         repeat 0 (Nat.pred (length samples))).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero
+        basis coefficients Hmass Hw) as Hquadratic.
+    pose proof
+      (indexed_basis_centered_sample_vector_zero_iff_list_tail_zero
+        basis coefficients Hmass) as Htail.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_iff_sample_list_tail_zero] (theorem) —
+   Covariance bilinear radical membership from zero shortened centered output.
+   Mathematical meaning: Covariance bilinear radical membership from zero shortened centered output. The claim concerns only
+   exact finite weighted vectors and concrete covariance kernels.
+   Exact checked proposition: Under normalized total mass and nonnegative listed sample weights, indexed_basis_covariance_bilinear_radical basis coefficients iff the ordinary List.tl of its centered sample-output list equals repeat 0 (Nat.pred (length samples)).
+   Premises and side conditions: All finite basis sizes are allowed, including zero. Outcomes can repeat and sample weights may be zero. The finite-probability hypotheses are inherited from the existing exact covariance radical characterization.
+   Proof/definition method: Compose the established radical iff full sample-output-zero bridge and the general normalized centered-output list-tail-zero iff by tauto. Avoid recalculating either bilinear covariance entries or centered sample values.
+   Library reuse: indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero and Stdlib.Logic.tauto.
+   Boundary: This is a concrete radical membership test and does not certify abstract radical dimension or covariance rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_iff_sample_list_tail_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_bilinear_radical basis coefficients <->
+       List.tl (Vector.to_list
+         (indexed_basis_centered_sample_vector basis coefficients)) =
+         repeat 0 (Nat.pred (length samples))).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero
+        basis coefficients Hmass Hw) as Hradical.
+    pose proof
+      (indexed_basis_centered_sample_vector_zero_iff_list_tail_zero
+        basis coefficients Hmass) as Htail.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_iff_sample_list_tail_zero] (theorem) —
+   Named finite covariance-row kernel membership via shortened sample output.
+   Mathematical meaning: Named finite covariance-row kernel membership via shortened sample output. The claim concerns only
+   exact finite weighted vectors and concrete covariance kernels.
+   Exact checked proposition: Under unit total sample mass and nonnegative listed weights, indexed_basis_bounded_covariance_row_kernel basis coefficients iff the centered evaluator list tail equals repeat 0 (Nat.pred (length samples)).
+   Premises and side conditions: The named row kernel is the existing typed coefficient predicate. Empty or dependent bases, repeated sample outcomes, and zero weights remain allowed; the usual finite-probability conditions are explicit.
+   Proof/definition method: Compose the checked quadratic-form-zero iff named row-kernel bridge with the just established quadratic-form-zero iff shortened centered-output test. This avoids repeating the named sample-kernel or matrix-row expansions.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_named_row_kernel, indexed_basis_covariance_quadratic_zero_iff_sample_list_tail_zero, Stdlib.Logic.tauto.
+   Boundary: Kernel equivalence does not quantify nullity or construct a matrix kernel basis.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_iff_sample_list_tail_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_bounded_covariance_row_kernel basis coefficients <->
+       List.tl (Vector.to_list
+         (indexed_basis_centered_sample_vector basis coefficients)) =
+         repeat 0 (Nat.pred (length samples))).
+  Proof.
+    intros basis coefficients Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_named_row_kernel
+        basis coefficients Hmass Hw) as Hrow.
+    pose proof
+      (indexed_basis_covariance_quadratic_zero_iff_sample_list_tail_zero
+        basis coefficients Hmass Hw) as Htail.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_difference_list_tail_zero] (theorem) —
+   Equal finite centered sample outputs via the shortened image of the signed coefficient difference.
+   Mathematical meaning: Equal finite centered sample outputs via the shortened image of the signed coefficient difference. The claim concerns only
+   exact finite weighted vectors and concrete covariance kernels.
+   Exact checked proposition: If total_mass=1, E_basis(left)=E_basis(right) iff List.tl(to_list(E_basis(left+(-1)*right))) = repeat 0 (Nat.pred (length samples)), with typed map/map2 coefficient operations.
+   Premises and side conditions: Only normalized total sample mass is required. Negative or zero individual weights, repeated sample outcomes, and empty or dependent bases are allowed. No covariance-positive-definiteness premise is needed.
+   Proof/definition method: Combine the established full output equality iff signed-difference output zero proposition with the general normalized centered-output zero iff ordinary list tail zero proposition. Use tauto without any new vector arithmetic.
+   Library reuse: indexed_basis_centered_sample_vector_equal_iff_difference_zero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero, Stdlib.Vectors.Vector.map/map2, Stdlib.Logic.tauto.
+   Boundary: Describes exact affine fibers of a finite evaluator, without asserting an abstract quotient space, dimension or rank.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_difference_list_tail_zero :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (indexed_basis_centered_sample_vector basis left =
+         indexed_basis_centered_sample_vector basis right <->
+       List.tl (Vector.to_list
+         (indexed_basis_centered_sample_vector basis
+           (Vector.map2 Rplus left
+             (Vector.map (fun c => (-1) * c) right)))) =
+         repeat 0 (Nat.pred (length samples))).
+  Proof.
+    intros basis left right Hmass.
+    pose proof
+      (indexed_basis_centered_sample_vector_equal_iff_difference_zero
+        basis left right) as Hdifference.
+    pose proof
+      (indexed_basis_centered_sample_vector_zero_iff_list_tail_zero
+        basis (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right)) Hmass) as Htail.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_sample_list_tail_detects_nonzero] (theorem) —
+   Strict covariance positive definiteness as zero-kernel detection by n-1 listed sample components.
+   Mathematical meaning: Strict covariance positive definiteness as zero-kernel detection by n-1 listed sample components. The claim concerns only
+   exact finite weighted vectors and concrete covariance kernels.
+   Exact checked proposition: Under normalized nonnegative listed weights, indexed_basis_covariance_positive_definite basis iff for every typed coefficients with to_list coefficients <> repeat 0 (length basis), the shortened centered sample-output list tail differs from repeat 0 (Nat.pred (length samples)).
+   Premises and side conditions: Normalization and listed nonnegative sample weights are explicit; finite bases may be empty or dependent and sample outcomes may repeat. A zero-dimensional sample-output list cannot coexist with unit finite mass.
+   Proof/definition method: Apply the existing positive-definiteness iff complete evaluator detects every nonzero coefficient. Transport each nonvanishing assertion via the checked normalized full-output-zero iff shortened-list-tail-zero statement in both directions.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero and Stdlib.Logic.
+   Boundary: A concrete zero-kernel criterion, not a dimension bound, certified matrix rank, or statistical claim about IQ samples.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_sample_list_tail_detects_nonzero :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall coefficients : Vector.t R (length basis),
+         Vector.to_list coefficients <> repeat 0 (length basis) ->
+         List.tl (Vector.to_list
+           (indexed_basis_centered_sample_vector basis coefficients)) <>
+           repeat 0 (Nat.pred (length samples))).
+  Proof.
+    intros basis Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero
+        basis Hmass Hw) as Hnonzero.
+    split.
+    - intros Hpositive coefficients Hcoeff Htail.
+      apply ((proj1 Hnonzero) Hpositive coefficients Hcoeff).
+      apply (proj2
+        (indexed_basis_centered_sample_vector_zero_iff_list_tail_zero
+          basis coefficients Hmass)).
+      exact Htail.
+    - intro Hdetected.
+      apply (proj2 Hnonzero).
+      intros coefficients Hcoeff Houtput.
+      apply (Hdetected coefficients Hcoeff).
+      apply (proj1
+        (indexed_basis_centered_sample_vector_zero_iff_list_tail_zero
+          basis coefficients Hmass)).
+      exact Houtput.
+  Qed.
+
 
 End FiniteProbabilityMoments.

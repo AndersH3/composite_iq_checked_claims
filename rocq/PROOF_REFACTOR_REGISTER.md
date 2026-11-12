@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **831 public theorem/lemma/example claims**, plus
+The current branch has **836 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**834 proof scripts** across seven Rocq modules. The claims and scripts
+**839 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 420 proof scripts
+## FiniteMoments.v — 425 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1246,6 +1246,12 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_positive_definite_iff_sample_vector_injective` (theorem) | Compose the checked separation equivalence with a generic Stdlib-based real-vector equality stability lemma; reverse implication directly contradicts separation failure | indexed_basis_covariance_positive_definite_iff_sample_vector_separates_coefficients, indexed_real_vector_equality_stable, Stdlib.Logic | **New:** positive definiteness iff complete centered sample-vector equality implies coefficient equality for every typed pair |
 
 | `indexed_basis_covariance_positive_definite_iff_sample_list_tail_injective` (theorem) | Compose previous positive-definiteness/full-output-injectivity equivalence and normalized list-tail equality equivalence | indexed_basis_covariance_positive_definite_iff_sample_vector_injective, indexed_basis_centered_sample_vector_equal_iff_list_tails_equal | **New:** finite strict covariance positive definiteness iff the shortened centered evaluator is injective |
+
+| `indexed_basis_covariance_quadratic_zero_iff_sample_list_tail_zero` (theorem) | Obtain the already proven quadratic-form-zero iff complete centered output is zero and the normalized centered-output-zero iff list-tail-zero propositions. Compose the two iff statements with Stdlib.Logic.tauto rather than expanding the quadratic form. | indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero and Stdlib.Logic.tauto. | **New:** Exact covariance quadratic-form nullity from the shortened centered sample output. |
+| `indexed_basis_covariance_bilinear_radical_iff_sample_list_tail_zero` (theorem) | Compose the established radical iff full sample-output-zero bridge and the general normalized centered-output list-tail-zero iff by tauto. Avoid recalculating either bilinear covariance entries or centered sample values. | indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero and Stdlib.Logic.tauto. | **New:** Covariance bilinear radical membership from zero shortened centered output. |
+| `indexed_basis_bounded_covariance_row_kernel_iff_sample_list_tail_zero` (theorem) | Compose the checked quadratic-form-zero iff named row-kernel bridge with the just established quadratic-form-zero iff shortened centered-output test. This avoids repeating the named sample-kernel or matrix-row expansions. | indexed_basis_covariance_quadratic_zero_iff_named_row_kernel, indexed_basis_covariance_quadratic_zero_iff_sample_list_tail_zero, Stdlib.Logic.tauto. | **New:** Named finite covariance-row kernel membership via shortened sample output. |
+| `indexed_basis_centered_sample_vector_equal_iff_difference_list_tail_zero` (theorem) | Combine the established full output equality iff signed-difference output zero proposition with the general normalized centered-output zero iff ordinary list tail zero proposition. Use tauto without any new vector arithmetic. | indexed_basis_centered_sample_vector_equal_iff_difference_zero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero, Stdlib.Vectors.Vector.map/map2, Stdlib.Logic.tauto. | **New:** Equal finite centered sample outputs via the shortened image of the signed coefficient difference. |
+| `indexed_basis_covariance_positive_definite_iff_sample_list_tail_detects_nonzero` (theorem) | Apply the existing positive-definiteness iff complete evaluator detects every nonzero coefficient. Transport each nonvanishing assertion via the checked normalized full-output-zero iff shortened-list-tail-zero statement in both directions. | indexed_basis_covariance_positive_definite_iff_sample_vector_detects_nonzero, indexed_basis_centered_sample_vector_zero_iff_list_tail_zero and Stdlib.Logic. | **New:** Strict covariance positive definiteness as zero-kernel detection by n-1 listed sample components. |
 
 
 ## FiniteBridge.v — 37 proof scripts

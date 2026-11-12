@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **774 proof scripts** in seven
+for the two reports. **839 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3663,6 +3663,22 @@ Current intended inventory: **831 public checked claims, 834 proof
 scripts, and 911 documented declarations** in seven Rocq modules,
 subject to pinned Rocq 9.2 CI. No matrix rank, dimension, abstract
 isomorphism or rank-nullity formula is claimed.
+
+## Covariance kernels via truncated centered sample tails (12 November 2026)
+
+Five exact finite results connect the ordinary `List.tl` of the
+centered sample-evaluator output to existing covariance characterizations:
+quadratic-form nullity, bilinear radical membership, the named bounded
+covariance-row kernel, equality of outputs via the signed coefficient
+difference, and positive definiteness as detection of all nonzero
+coefficient directions. Each proof composes the previously checked
+full-vector criterion and normalized list-tail equivalence; the
+finite covariance form is not expanded again.
+
+The repository now contains **836 public claims, 839 proof scripts,
+and 916 documented declarations** across seven modules, subject to
+pinned Rocq 9.2 and Python/Deal/SPARK workflow verification.
+The results are not abstract dimension or matrix rank-nullity theorems.
 
 ## Research extensions
 

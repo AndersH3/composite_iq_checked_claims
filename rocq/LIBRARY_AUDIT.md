@@ -2865,6 +2865,23 @@ not abstract covariance rank or rank-nullity claims.
 Intended inventory after change: 831 public claims, 834 proof
 scripts, 911 documented declarations, pending pinned CI.
 
+## Truncated centered-evaluator covariance kernel bridges (12 November 2026)
+
+Five additional documented statements reduce previously certified exact
+covariance kernel conditions to `List.tl (Vector.to_list centered_output)`.
+These cover zero quadratic form, membership in the bilinear radical,
+membership in the named covariance-row kernel, evaluator equality via the
+signed coefficient difference, and positive definiteness via detection of
+every nonzero direction in the shortened output. Each proof composes
+established iff laws using Rocq Stdlib propositional reasoning. No new
+finite-sum, covariance, matrix, recursive vector, or rank implementation
+is added. Negative and repeated samples are permitted where the reused
+zero-sum theorem has no weight-positivity premise.
+
+Current intended inventory: 836 public claims, 839 proof scripts, 916
+documented declarations in seven Rocq modules; verification remains
+subject to pinned CI on the new commit.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
