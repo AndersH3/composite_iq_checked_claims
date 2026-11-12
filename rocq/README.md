@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **754 proof scripts** in seven
+for the two reports. **755 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3239,6 +3239,20 @@ or repeated outcomes, and add no new matrix, sum, or vector library.
 
 Current target inventory: **751 public checked claims,
 754 proof scripts, 824 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI.
+
+## Positive difference self-covariance exactly detects distinct outputs (12 November 2026)
+
+A further finite covariance result identifies strict positivity
+of `B(left-right,left-right)` with inequality of the two
+complete centered sample-output vectors. Its proof uses only the
+existing unit-mass bilinear diagonal law and the already verified
+strict covariance quadratic difference criterion; it does not
+presume positive definiteness of the entire covariance matrix.
+All nonnegative normalized finite-weight premises remain explicit.
+
+Current target inventory: **752 public checked claims,
+755 proof scripts, 825 documented declarations** across
 seven Rocq modules, subject to Rocq 9.2 CI.
 
 ## Research extensions

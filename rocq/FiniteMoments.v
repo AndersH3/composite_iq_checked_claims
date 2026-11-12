@@ -13052,4 +13052,53 @@ Section FiniteProbabilityMoments.
       exact (Hsecond test).
   Qed.
 
+  (**
+   [indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs]
+   (theorem) — A positive self-covariance of the signed difference
+   exactly detects distinct full centered sample outputs.
+   Mathematical meaning: Two coefficient directions differ in their
+   complete centered weighted sample evaluations precisely when
+   the covariance bilinear pairing of their signed difference with
+   itself is strictly positive.
+   Exact checked proposition: Under normalized nonnegative listed
+   weights, 0 < B(left + (-1)*right, left + (-1)*right) if and only if
+   indexed_basis_centered_sample_vector basis left differs from its
+   value at right.
+   Premises and side conditions: The basis and samples can contain
+   repeated outcomes and dependent scores. There is no global
+   covariance positive-definiteness or nonempty-basis premise.
+   The normalized nonnegative weight conditions are essential for
+   the previously checked strict-positivity characterization.
+   Proof/definition method: Replace the bilinear self-pairing with
+   the existing indexed covariance quadratic using its unit-mass
+   diagonal identity, then invoke the already checked strict
+   quadratic difference iff distinct sample-output theorem.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_covariance_quadratic_difference_positive_iff_distinct_outputs
+   and Stdlib.Vectors.Vector.map/map2. No direct covariance expansion,
+   matrix recursion or custom sum is required.
+   Boundary: Finite exact sample-output separation, not a proof
+   of positive definiteness for all directions or covariance rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_difference_positive_iff_distinct_outputs :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_bilinear_form
+         basis
+         (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right))
+         (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right)) <->
+       indexed_basis_centered_sample_vector basis left <>
+       indexed_basis_centered_sample_vector basis right).
+  Proof.
+    intros basis left right Hmass Hw.
+    rewrite (indexed_basis_covariance_bilinear_diagonal
+      basis (Vector.map2 Rplus left
+        (Vector.map (fun c => (-1) * c) right)) Hmass).
+    apply indexed_basis_covariance_quadratic_difference_positive_iff_distinct_outputs;
+      assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

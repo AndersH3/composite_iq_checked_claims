@@ -2446,6 +2446,18 @@ The statements preserve the normalized nonnegative finite-weight
 assumptions and do not imply arbitrary signed-weight positivity,
 matrix rank, or quotient construction.
 
+## Self-pairing positivity and distinct sample outputs (12 November 2026)
+
+The signed coefficient difference's strict bilinear
+self-covariance is now proved equivalent to differing full
+centered sample-output vectors, under normalized nonnegative
+finite sample weights. The theorem is a direct specialization
+of the existing bilinear diagonal equality and quadratic
+difference positivity criterion, avoiding duplicate covariance
+expansion or any new matrix/finite-sum machinery. This
+direction-wise positivity is not asserted as global positive
+definiteness or covariance rank.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
