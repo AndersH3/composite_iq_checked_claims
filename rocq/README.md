@@ -3467,6 +3467,21 @@ Current intended inventory: **783 public checked claims,
 786 proof scripts and 859 documented declarations**
 across seven Rocq modules, subject to the final CI results.
 
+## Zero preservation and equality by zero-sum tails (12 November 2026)
+
+Three further documented lemmas show that the canonical zero-sum
+extension maps the typed zero vector to zero, that any two
+positive-length zero-sum vectors are equal exactly when their
+standard vector tails are equal, and that an extension vanishes
+if and only if its input tail vanishes. These are small consequences
+of the already checked inverse/retraction and standard
+`Vector.tl` operations: no new summation or vector recursion.
+
+Current intended inventory: **786 public checked claims,
+789 proof scripts and 862 documented declarations**
+across the seven Rocq modules, subject to Rocq 9.2 kernel and
+documentation CI verification.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
