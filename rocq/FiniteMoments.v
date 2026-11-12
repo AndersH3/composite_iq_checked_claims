@@ -13049,6 +13049,161 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_iff_tail_total_encode_snd_zero] (lemma) —
+   The second component of the existing product encoding detects the exact zero-sum constraint.
+   Mathematical meaning: The second component of the existing product encoding detects the exact zero-sum constraint.
+   This exact real-vector identity is independent of empirical
+   measurement and is intended as a reusable formal interface.
+   Exact checked proposition: For any n and v:Vector.t R (S n), indexed_real_vector_zero_sum v iff snd (indexed_real_vector_tail_total_encode v) = 0.
+   Premises and side conditions: n can be zero and v can have arbitrary signed real entries. No probability normalization, sample enumeration or covariance premise is imposed.
+   Proof/definition method: Unfold only the maintained zero-sum predicate and product-encoding definition; standard snd reduction makes both propositions definitionally identical.
+   Library reuse: Stdlib.Datatypes.snd, indexed_real_vector_tail_total_encode, indexed_real_vector_zero_sum.
+   Boundary: This states a coordinate constraint; no abstract dimension or rank theorem is inferred.
+   *)
+  Lemma indexed_real_vector_zero_sum_iff_tail_total_encode_snd_zero :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum v <->
+       snd (indexed_real_vector_tail_total_encode v) = 0).
+  Proof.
+    intros n v.
+    unfold indexed_real_vector_zero_sum,
+      indexed_real_vector_tail_total_encode.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_iff_tail_total_encode_zero_total] (lemma) —
+   The zero-sum family is precisely the set of product encodings with second component zero.
+   Mathematical meaning: The zero-sum family is precisely the set of product encodings with second component zero.
+   This exact real-vector identity is independent of empirical
+   measurement and is intended as a reusable formal interface.
+   Exact checked proposition: For any n and nonempty typed vector v, zero_sum v iff tail_total_encode v = (Vector.tl v,0).
+   Premises and side conditions: Every finite n including n=0 and all real coordinates are allowed. No finite probability weights or basis are required.
+   Proof/definition method: In the forward implication unfold the encoding and rewrite the stored coordinate sum to zero. In the reverse implication take snd of the product equality by the checked preceding iff.
+   Library reuse: Stdlib.Datatypes.snd, Stdlib.Vectors.Vector.tl, indexed_real_vector_zero_sum_iff_tail_total_encode_snd_zero.
+   Boundary: A canonical product-data characterization rather than an abstract linear subspace equivalence.
+   *)
+  Lemma indexed_real_vector_zero_sum_iff_tail_total_encode_zero_total :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum v <->
+       indexed_real_vector_tail_total_encode v =
+         (Vector.tl v, 0)).
+  Proof.
+    intros n v.
+    split.
+    - intro Hzero.
+      unfold indexed_real_vector_tail_total_encode.
+      unfold indexed_real_vector_zero_sum in Hzero.
+      now rewrite Hzero.
+    - intro Hencode.
+      apply (proj2
+        (indexed_real_vector_zero_sum_iff_tail_total_encode_snd_zero
+          n v)).
+      rewrite Hencode.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_decode_zero_sum_iff_total_zero] (lemma) —
+   Decoding product coordinates gives a zero-sum vector exactly when the supplied real total is zero.
+   Mathematical meaning: Decoding product coordinates gives a zero-sum vector exactly when the supplied real total is zero.
+   This exact real-vector identity is independent of empirical
+   measurement and is intended as a reusable formal interface.
+   Exact checked proposition: For any tail:Vector.t R n and total:R, zero_sum (tail_total_decode (tail,total)) iff total=0.
+   Premises and side conditions: All dimensions including zero and all signed tails and totals are admitted; no covariance or normalization premise is used.
+   Proof/definition method: Unfold zero-sum and the standard-product decoder, then rewrite the checked reconstruction-coordinate-sum identity; the remaining equivalence is reflexive.
+   Library reuse: indexed_real_vector_projection_sum_reconstruct_coordinate_sum, indexed_real_vector_tail_total_decode, Stdlib.Logic.
+   Boundary: An exact zero-sum compatibility law rather than a rank computation.
+   *)
+  Lemma indexed_real_vector_tail_total_decode_zero_sum_iff_total_zero :
+    forall n (tail : Vector.t R n) (total : R),
+      (indexed_real_vector_zero_sum
+         (indexed_real_vector_tail_total_decode (tail, total)) <->
+       total = 0).
+  Proof.
+    intros n tail total.
+    unfold indexed_real_vector_zero_sum,
+      indexed_real_vector_tail_total_decode.
+    rewrite indexed_real_vector_projection_sum_reconstruct_coordinate_sum.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_decode_zero_total_extension] (lemma) —
+   The existing zero-total product decoder is exactly the canonical zero-sum extension.
+   Mathematical meaning: The existing zero-total product decoder is exactly the canonical zero-sum extension.
+   This exact real-vector identity is independent of empirical
+   measurement and is intended as a reusable formal interface.
+   Exact checked proposition: For any n and tail:Vector.t R n, tail_total_decode (tail,0)=indexed_real_vector_zero_sum_extension tail.
+   Premises and side conditions: Any n including zero, arbitrary signed real entries and no finite sample or covariance assumptions.
+   Proof/definition method: Unfold the transparent product decoder and both already maintained constructors. Apply congruence to standard Vector.cons and close 0 minus a sum equals the negative sum by Stdlib.Ring.
+   Library reuse: Stdlib.Vectors.Vector.cons, Stdlib.Ring, indexed_real_vector_projection_sum_reconstruct, indexed_real_vector_zero_sum_extension.
+   Boundary: Constructor compatibility only, without a new recursive vector implementation or abstract dimension theorem.
+   *)
+  Lemma indexed_real_vector_tail_total_decode_zero_total_extension :
+    forall n (tail : Vector.t R n),
+      indexed_real_vector_tail_total_decode (tail, 0) =
+      indexed_real_vector_zero_sum_extension tail.
+  Proof.
+    intros n tail.
+    unfold indexed_real_vector_tail_total_decode,
+      indexed_real_vector_projection_sum_reconstruct,
+      indexed_real_vector_zero_sum_extension.
+    simpl.
+    f_equal.
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_tail_total_encode_zero_sum_extension] (lemma) —
+   The canonical zero-sum extension encodes to the original tail paired with real zero.
+   Mathematical meaning: The canonical zero-sum extension encodes to the original tail paired with real zero.
+   This exact real-vector identity is independent of empirical
+   measurement and is intended as a reusable formal interface.
+   Exact checked proposition: For any n and tail:Vector.t R n, tail_total_encode (zero_sum_extension tail)=(tail,0).
+   Premises and side conditions: Works for n=0 and arbitrary signed real entries without normalized weights or a score basis.
+   Proof/definition method: Expand only the encoding, rewrite the verified extension-tail retraction, then use the previously proved zero-sum membership to rewrite the stored coordinate sum.
+   Library reuse: indexed_real_vector_zero_sum_extension_tail, indexed_real_vector_zero_sum_extension_zero_sum, Stdlib.Datatypes.prod.
+   Boundary: An explicit coordinate inverse on zero-total data, not a general matrix kernel dimension.
+   *)
+  Lemma indexed_real_vector_tail_total_encode_zero_sum_extension :
+    forall n (tail : Vector.t R n),
+      indexed_real_vector_tail_total_encode
+        (indexed_real_vector_zero_sum_extension tail) = (tail, 0).
+  Proof.
+    intros n tail.
+    unfold indexed_real_vector_tail_total_encode.
+    rewrite indexed_real_vector_zero_sum_extension_tail.
+    pose proof
+      (indexed_real_vector_zero_sum_extension_zero_sum n tail) as Hzero.
+    unfold indexed_real_vector_zero_sum in Hzero.
+    rewrite Hzero.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_as_zero_total_decode] (lemma) —
+   The canonical zero-sum projection factors through the existing standard-product zero-total decoder.
+   Mathematical meaning: The canonical zero-sum projection factors through the existing standard-product zero-total decoder.
+   This exact real-vector identity is independent of empirical
+   measurement and is intended as a reusable formal interface.
+   Exact checked proposition: For any n and v:Vector.t R (S n), zero_sum_projection v=tail_total_decode (Vector.tl v,0).
+   Premises and side conditions: All positive vector lengths including singleton and arbitrary real values are allowed; no zero-sum hypothesis on v is needed.
+   Proof/definition method: Rewrite the decoder at zero total by the preceding constructor-compatibility lemma; unfold the existing projection and conclude by reflexivity.
+   Library reuse: indexed_real_vector_tail_total_decode_zero_total_extension, indexed_real_vector_zero_sum_projection, Stdlib.Vectors.Vector.tl.
+   Boundary: Exact factorization of a linear projection, not an orthogonal projection, rank or dimension theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_as_zero_total_decode :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum_projection v =
+      indexed_real_vector_tail_total_decode (Vector.tl v, 0).
+  Proof.
+    intros n v.
+    rewrite indexed_real_vector_tail_total_decode_zero_total_extension.
+    reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

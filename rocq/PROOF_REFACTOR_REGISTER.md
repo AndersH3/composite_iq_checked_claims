@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **836 public theorem/lemma/example claims**, plus
+The current branch has **842 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**839 proof scripts** across seven Rocq modules. The claims and scripts
+**845 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 425 proof scripts
+## FiniteMoments.v — 431 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1180,6 +1180,12 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_tail_total_decode_zero` (lemma) | Reduce product projections and delegate to reconstruction zero | indexed_real_vector_projection_sum_reconstruct_zero, Stdlib.Datatypes.fst/snd | **New:** decoder preserves zero |
 | `indexed_real_vector_tail_total_decode_add` (lemma) | Reduce product projections and delegate to reconstruction addition | indexed_real_vector_projection_sum_reconstruct_add, Stdlib.Datatypes.fst/snd | **New:** decoder preserves addition |
 | `indexed_real_vector_tail_total_decode_scale` (lemma) | Reduce product projections and delegate to reconstruction scaling | indexed_real_vector_projection_sum_reconstruct_scale, Stdlib.Datatypes.fst/snd | **New:** decoder preserves scaling |
+| `indexed_real_vector_zero_sum_iff_tail_total_encode_snd_zero` (lemma) | Unfold only the maintained zero-sum predicate and product-encoding definition; standard snd reduction makes both propositions definitionally identical. | Stdlib.Datatypes.snd, indexed_real_vector_tail_total_encode, indexed_real_vector_zero_sum. | **New:** The second component of the existing product encoding detects the exact zero-sum constraint. |
+| `indexed_real_vector_zero_sum_iff_tail_total_encode_zero_total` (lemma) | In the forward implication unfold the encoding and rewrite the stored coordinate sum to zero. In the reverse implication take snd of the product equality by the checked preceding iff. | Stdlib.Datatypes.snd, Stdlib.Vectors.Vector.tl, indexed_real_vector_zero_sum_iff_tail_total_encode_snd_zero. | **New:** The zero-sum family is precisely the set of product encodings with second component zero. |
+| `indexed_real_vector_tail_total_decode_zero_sum_iff_total_zero` (lemma) | Unfold zero-sum and the standard-product decoder, then rewrite the checked reconstruction-coordinate-sum identity; the remaining equivalence is reflexive. | indexed_real_vector_projection_sum_reconstruct_coordinate_sum, indexed_real_vector_tail_total_decode, Stdlib.Logic. | **New:** Decoding product coordinates gives a zero-sum vector exactly when the supplied real total is zero. |
+| `indexed_real_vector_tail_total_decode_zero_total_extension` (lemma) | Unfold the transparent product decoder and both already maintained constructors. Apply congruence to standard Vector.cons and close 0 minus a sum equals the negative sum by Stdlib.Ring. | Stdlib.Vectors.Vector.cons, Stdlib.Ring, indexed_real_vector_projection_sum_reconstruct, indexed_real_vector_zero_sum_extension. | **New:** The existing zero-total product decoder is exactly the canonical zero-sum extension. |
+| `indexed_real_vector_tail_total_encode_zero_sum_extension` (lemma) | Expand only the encoding, rewrite the verified extension-tail retraction, then use the previously proved zero-sum membership to rewrite the stored coordinate sum. | indexed_real_vector_zero_sum_extension_tail, indexed_real_vector_zero_sum_extension_zero_sum, Stdlib.Datatypes.prod. | **New:** The canonical zero-sum extension encodes to the original tail paired with real zero. |
+| `indexed_real_vector_zero_sum_projection_as_zero_total_decode` (lemma) | Rewrite the decoder at zero total by the preceding constructor-compatibility lemma; unfold the existing projection and conclude by reflexivity. | indexed_real_vector_tail_total_decode_zero_total_extension, indexed_real_vector_zero_sum_projection, Stdlib.Vectors.Vector.tl. | **New:** The canonical zero-sum projection factors through the existing standard-product zero-total decoder. |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |

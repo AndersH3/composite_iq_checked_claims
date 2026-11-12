@@ -2882,6 +2882,21 @@ Current intended inventory: 836 public claims, 839 proof scripts, 916
 documented declarations in seven Rocq modules; verification remains
 subject to pinned CI on the new commit.
 
+## Zero-total product representation reuse (12 November 2026)
+
+Six generic finite-real-vector lemmas further unify existing zero-sum
+extension, projection and tail-plus-total encoding and decoding.
+Standard `prod` and `snd` expose the scalar sum coordinate.
+The zero-total decoder is shown identical to the existing zero-sum
+extension, and the existing projection is factored through the
+decoder with a zero scalar. All proofs reuse exact reconstruction,
+tail retraction, zero-sum membership, Rocq computation and Ring.
+The implementation deliberately does not define a second zero-sum
+vector class, new linear algebra operations or a custom vector type.
+
+Proposed post-change inventory: 842 public claims, 845 proof scripts,
+922 documented declarations, pending Rocq kernel and CI results.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

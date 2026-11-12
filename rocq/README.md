@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **839 proof scripts** in seven
+for the two reports. **845 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3679,6 +3679,24 @@ The repository now contains **836 public claims, 839 proof scripts,
 and 916 documented declarations** across seven modules, subject to
 pinned Rocq 9.2 and Python/Deal/SPARK workflow verification.
 The results are not abstract dimension or matrix rank-nullity theorems.
+
+## Zero-total product representation and projection factoring (12 November 2026)
+
+Six concrete kernel-checked candidates refine the earlier
+`Vector.t R (S n)` to `(Vector.t R n * R)%type` encoding:
+zero-sum membership is characterized by zero stored total;
+the decoder of `(tail,0)` is definitionally compatible with the
+canonical zero-sum extension; the extension encodes as `(tail,0)`;
+and the zero-sum projection factors through the same decoder.
+These results reuse Stdlib product, Vector.cons/tl, Ring and the
+existing verified reconstruction and zero-sum lemmas. No custom
+vector recursion or matrix library is introduced.
+
+Intended inventory after this change: **842 public checked claims,
+845 proof scripts and 922 documented declarations** across the
+seven modules, subject to pinned Rocq 9.2 CI. Concrete
+zero-total coordinate equivalences do not by themselves prove
+abstract vector-space dimension or rank-nullity results.
 
 ## Research extensions
 
