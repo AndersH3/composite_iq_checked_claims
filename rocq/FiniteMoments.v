@@ -12720,8 +12720,8 @@ Section FiniteProbabilityMoments.
    yields the standard zero vector in every positive finite length.
    Exact proposition: reconstruct (Vector.const 0 n) 0 =
    Vector.const 0 (S n).
-   Premises: Any natural n, including zero; no sample or weight premise.
-   Proof: Reuse the coordinate-sum-zero law and standard constructors;
+   Premises and side conditions: Any natural n, including zero; no sample or weight premise.
+   Proof/definition method: Reuse the coordinate-sum-zero law and standard constructors;
    the residual scalar identity is normalized by Stdlib.Ring.
    Library reuse: Vector.const/cons, indexed_real_vector_coordinate_sum_zero.
    Boundary: Concrete zero preservation, not an abstract vector-space instance.
@@ -12745,8 +12745,8 @@ Section FiniteProbabilityMoments.
    over sums, so reconstructing summed data equals adding reconstructions.
    Exact proposition: reconstruct (left + right) (tl + tr) =
    reconstruct left tl + reconstruct right tr, with Vector.map2 Rplus.
-   Premises: All finite n and arbitrary signed real coordinates/totals.
-   Proof: Rewrite the established finite coordinate-sum additivity and
+   Premises and side conditions: All finite n and arbitrary signed real coordinates/totals.
+   Proof/definition method: Rewrite the established finite coordinate-sum additivity and
    normalize only the first-coordinate scalar expression with Ring.
    Library reuse: Vector.map2/cons, indexed_real_vector_coordinate_sum_add,
    and Stdlib.Ring; no new induction or finite summation implementation.
@@ -12781,8 +12781,8 @@ Section FiniteProbabilityMoments.
    scalar scales every reconstructed coordinate by the same scalar.
    Exact proposition: reconstruct (map (a *) tail) (a * total) =
    map (a *) (reconstruct tail total).
-   Premises: Any real a, any tail length, and arbitrary signed totals.
-   Proof: Reuse coordinate-sum homogeneity, then scalar Ring normalization.
+   Premises and side conditions: Any real a, any tail length, and arbitrary signed totals.
+   Proof/definition method: Reuse coordinate-sum homogeneity, then scalar Ring normalization.
    Library reuse: Vector.map/cons, indexed_real_vector_coordinate_sum_scale,
    Stdlib.Ring; no bespoke vector recursion.
    Boundary: Concrete homogeneity only, not an abstract dimension claim.
@@ -12811,8 +12811,8 @@ Section FiniteProbabilityMoments.
    Mathematical meaning: Both the ordinary tail and coordinate sum
    vanish on the full zero vector.
    Exact proposition: encode (Vector.const 0 (S n)) = (const 0 n, 0).
-   Premises: Every finite n; no probability model assumptions.
-   Proof: Reuse zero coordinate sum and constructor reduction.
+   Premises and side conditions: Every finite n; no probability model assumptions.
+   Proof/definition method: Reuse zero coordinate sum and constructor reduction.
    Library reuse: Vector.const/tl and indexed_real_vector_coordinate_sum_zero.
    Boundary: Componentwise zero preservation, not an abstract module law.
    *)
@@ -12834,8 +12834,8 @@ Section FiniteProbabilityMoments.
    and its stored coordinate total is the sum of the stored totals.
    Exact proposition: encode (map2 Rplus left right) equals the
    pair (map2 Rplus (tl left) (tl right), sum left + sum right).
-   Premises: Any n and arbitrary real vectors, without sample hypotheses.
-   Proof: Reuse the checked coordinate-sum additivity; decompose each
+   Premises and side conditions: Any n and arbitrary real vectors, without sample hypotheses.
+   Proof/definition method: Reuse the checked coordinate-sum additivity; decompose each
    nonempty vector using standard VectorSpec.eta to prove the tail law.
    Library reuse: VectorSpec.eta, Vector.tl/map2 and coordinate_sum_add.
    Boundary: Explicit product addition behavior, not a rank formula.
@@ -12864,8 +12864,8 @@ Section FiniteProbabilityMoments.
    multiplied by the same real scalar.
    Exact proposition: encode (map (a *) v) =
    (map (a *) (tl v), a * sum v).
-   Premises: All real a and finite n, with no positivity restriction.
-   Proof: Reuse coordinate-sum homogeneity and the standard cons
+   Premises and side conditions: All real a and finite n, with no positivity restriction.
+   Proof/definition method: Reuse coordinate-sum homogeneity and the standard cons
    decomposition (VectorSpec.eta) for tail-map compatibility.
    Library reuse: VectorSpec.eta, Vector.map/tl and coordinate_sum_scale.
    Boundary: Componentwise homogeneity, not a maintained linear-map object.
@@ -12890,8 +12890,8 @@ Section FiniteProbabilityMoments.
    The standard pair decoder maps zero tail/total data to the zero vector.
    Mathematical meaning: Its explicit inverse respects additive identities.
    Exact proposition: decode (const 0 n, 0) = const 0 (S n).
-   Premises: Any n; no normalization or empirical observations.
-   Proof: Reduce the pair projections, then apply established
+   Premises and side conditions: Any n; no normalization or empirical observations.
+   Proof/definition method: Reduce the pair projections, then apply established
    reconstruction-zero preservation without repeating arithmetic.
    Library reuse: Stdlib.Datatypes.fst/snd and reconstruct_zero.
    Boundary: Concrete zero preservation, not abstract dimension.
@@ -12915,8 +12915,8 @@ Section FiniteProbabilityMoments.
    the reconstructed result is the componentwise sum of the inputs.
    Exact proposition: decode (map2 Rplus left right, tl+tr) =
    map2 Rplus (decode (left,tl)) (decode (right,tr)).
-   Premises: Every finite n and real totals with no sample assumptions.
-   Proof: Reduce product projections and delegate to reconstruction_add.
+   Premises and side conditions: Every finite n and real totals with no sample assumptions.
+   Proof/definition method: Reduce product projections and delegate to reconstruction_add.
    Library reuse: Stdlib.Datatypes.fst/snd, Vector.map2,
    indexed_real_vector_projection_sum_reconstruct_add.
    Boundary: Concrete additive inverse encoding, not matrix rank.
@@ -12941,8 +12941,8 @@ Section FiniteProbabilityMoments.
    equals scaling every coordinate of the reconstructed vector.
    Exact proposition: decode (map (a *) tail, a * total) =
    map (a *) (decode (tail,total)).
-   Premises: Every real a, all finite n, signed entries/totals permitted.
-   Proof: Reduce maintained fst/snd and reuse reconstruction_scale.
+   Premises and side conditions: Every real a, all finite n, signed entries/totals permitted.
+   Proof/definition method: Reduce maintained fst/snd and reuse reconstruction_scale.
    Library reuse: Stdlib.Datatypes.prod, Vector.map,
    indexed_real_vector_projection_sum_reconstruct_scale.
    Boundary: Concrete homogeneous inverse encoding, not abstract rank.
