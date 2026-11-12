@@ -3647,6 +3647,23 @@ the previous two-sided inverse show an additive and homogeneous
 coordinate correspondence, but do not instantiate a maintained
 abstract linear-isomorphism API or prove dimension/rank-nullity.
 
+## Shortened normalized centered-sample evaluator (12 November 2026)
+
+Five new checked finite-vector results use Rocq Stdlib `List.tl`,
+`Vector.to_list`, `VectorSpec.eta`, and the existing zero-sum
+and covariance-injectivity theorems. A zero-sum nonempty real vector
+is uniquely determined by its ordinary post-head list tail; its
+vanishing can be tested on those same entries. Under unit sample
+mass this applies to all centered sample outputs, yielding exact
+output equality and zero-output criteria. Combined with the existing
+covariance positive-definiteness iff full-output injectivity theorem,
+it yields a stricter, shorter list-tail evaluator criterion.
+
+Current intended inventory: **831 public checked claims, 834 proof
+scripts, and 911 documented declarations** in seven Rocq modules,
+subject to pinned Rocq 9.2 CI. No matrix rank, dimension, abstract
+isomorphism or rank-nullity formula is claimed.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

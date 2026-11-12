@@ -11586,6 +11586,75 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_equal_iff_list_tails_equal] (lemma) — Ordinary list tails uniquely identify nonempty zero-sum real vectors.
+   Mathematical meaning: Ordinary list tails uniquely identify nonempty zero-sum real vectors. This is a statement about
+   exact finite real vectors rather than observed measurements.
+   Exact checked proposition: For length S n and two zero-sum inputs, vector equality iff equality of List.tl after Vector.to_list.
+   Premises and side conditions: Both vectors must have coordinate sum zero; every n including zero and arbitrary signed entries are allowed.
+   Proof/definition method: Rewrite by the previously checked typed-tail equality equivalence; obtain list-tail laws from VectorSpec.eta and apply to_list_inj for the reverse implication.
+   Library reuse: Stdlib.List.tl, VectorSpec.eta/to_list_inj, indexed_real_vector_zero_sum_equal_iff_tails_equal.
+   Boundary: No abstract dimension, subspace rank, or covariance rank is established.
+   *)
+  Lemma indexed_real_vector_zero_sum_equal_iff_list_tails_equal :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_zero_sum left ->
+      indexed_real_vector_zero_sum right ->
+      (left = right <->
+       List.tl (Vector.to_list left) =
+       List.tl (Vector.to_list right)).
+  Proof.
+    intros n left right Hleft Hright.
+    assert (Hleft_tail :
+      List.tl (Vector.to_list left) =
+      Vector.to_list (Vector.tl left)).
+    { rewrite (VectorSpec.eta left) at 1. reflexivity. }
+    assert (Hright_tail :
+      List.tl (Vector.to_list right) =
+      Vector.to_list (Vector.tl right)).
+    { rewrite (VectorSpec.eta right) at 1. reflexivity. }
+    rewrite Hleft_tail, Hright_tail.
+    rewrite (indexed_real_vector_zero_sum_equal_iff_tails_equal
+      n left right Hleft Hright).
+    split.
+    - intro Htail.
+      now rewrite Htail.
+    - intro Hlist.
+      apply VectorSpec.to_list_inj.
+      exact Hlist.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_list_tail_zero_iff] (lemma) — The list tail alone detects a zero vector within the zero-sum family.
+   Mathematical meaning: The list tail alone detects a zero vector within the zero-sum family. This is a statement about
+   exact finite real vectors rather than observed measurements.
+   Exact checked proposition: For zero-sum v of length S n, v=Vector.const 0 (S n) iff List.tl (Vector.to_list v)=repeat 0 n.
+   Premises and side conditions: A zero-sum hypothesis is necessary; n may be zero, and no statistical probability or weight premise is imposed.
+   Proof/definition method: Apply the preceding list-tail equality criterion to the standard zero vector; use the known zero coordinate sum and simplify the standard repeat list.
+   Library reuse: indexed_real_vector_zero_sum_equal_iff_list_tails_equal, indexed_real_vector_coordinate_sum_zero, VectorSpec.to_list_const, Stdlib.List.repeat.
+   Boundary: A concrete vanishing test, not a matrix kernel dimension formula.
+   *)
+  Lemma indexed_real_vector_zero_sum_list_tail_zero_iff :
+    forall n (v : Vector.t R (S n)),
+      indexed_real_vector_zero_sum v ->
+      (v = Vector.const 0 (S n) <->
+       List.tl (Vector.to_list v) = repeat 0 n).
+  Proof.
+    intros n v Hzero.
+    assert (Hzero_const :
+      indexed_real_vector_zero_sum (Vector.const 0 (S n))).
+    {
+      unfold indexed_real_vector_zero_sum.
+      apply indexed_real_vector_coordinate_sum_zero.
+    }
+    pose proof
+      (indexed_real_vector_zero_sum_equal_iff_list_tails_equal
+        n v (Vector.const 0 (S n)) Hzero Hzero_const) as Hiff.
+    rewrite VectorSpec.to_list_const in Hiff.
+    simpl in Hiff.
+    exact Hiff.
+  Qed.
+
+  (**
    [indexed_real_vector_zero_sum_extension_zero_iff_tail_zero]
    (lemma) — The canonical extension preserves and reflects zero.
    Mathematical meaning: A zero-sum extension is the all-zero
@@ -13114,6 +13183,72 @@ Section FiniteProbabilityMoments.
     rewrite Hempty in Hmass.
     simpl in Hmass.
     lra.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_equal_iff_list_tails_equal] (theorem) — Under unit sample mass, all centered output coordinates are fixed by their list tail.
+   Mathematical meaning: Under unit sample mass, all centered output coordinates are fixed by their list tail. This is a statement about
+   exact finite real vectors rather than observed measurements.
+   Exact checked proposition: Full centered sample-output vectors from two coefficient directions agree iff their ordinary to_list tails agree.
+   Premises and side conditions: Unit total mass forces a nonempty sample list and zero-sum outputs. No nonnegative-weight assumption is needed; repeated outcomes and empty bases are permitted.
+   Proof/definition method: Exclude the empty sample list using the existing unit-mass lemma, then instantiate the generic zero-sum list-tail equality theorem with two centered outputs.
+   Library reuse: normalized_total_mass_implies_samples_nonempty, indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_equal_iff_list_tails_equal, Stdlib.List.tl.
+   Boundary: Finite coordinate redundancy only; covariance rank and general dimension remain unproved.
+   *)
+  Theorem indexed_basis_centered_sample_vector_equal_iff_list_tails_equal :
+    forall basis (left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (indexed_basis_centered_sample_vector basis left =
+         indexed_basis_centered_sample_vector basis right <->
+       List.tl
+         (Vector.to_list (indexed_basis_centered_sample_vector basis left)) =
+       List.tl
+         (Vector.to_list (indexed_basis_centered_sample_vector basis right))).
+  Proof.
+    intros basis left right Hmass.
+    destruct samples as [|x xs] eqn:Hsamples.
+    - exfalso.
+      apply (normalized_total_mass_implies_samples_nonempty Hmass).
+      exact Hsamples.
+    - apply (indexed_real_vector_zero_sum_equal_iff_list_tails_equal
+        (length xs)
+        (indexed_basis_centered_sample_vector basis left)
+        (indexed_basis_centered_sample_vector basis right)).
+      + apply indexed_basis_centered_sample_vector_in_zero_sum.
+        exact Hmass.
+      + apply indexed_basis_centered_sample_vector_in_zero_sum.
+        exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_centered_sample_vector_zero_iff_list_tail_zero] (theorem) — A centered sample output vanishes exactly when its post-head list tail vanishes.
+   Mathematical meaning: A centered sample output vanishes exactly when its post-head list tail vanishes. This is a statement about
+   exact finite real vectors rather than observed measurements.
+   Exact checked proposition: If total_mass=1, centered output equals const zero iff its ordinary list tail equals repeat 0 (Nat.pred (length samples)).
+   Premises and side conditions: Unit mass excludes empty samples; signed and repeated sample weights are allowed, and basis size is arbitrary.
+   Proof/definition method: Exclude empty sample lists, then apply the generic zero-sum list-tail-zero iff using the previously established zero-sum membership of centered outputs.
+   Library reuse: normalized_total_mass_implies_samples_nonempty, indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_list_tail_zero_iff.
+   Boundary: This is exact finite-sample annihilation, not an abstract rank/nullity statement.
+   *)
+  Theorem indexed_basis_centered_sample_vector_zero_iff_list_tail_zero :
+    forall basis (coefficients : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (indexed_basis_centered_sample_vector basis coefficients =
+         Vector.const 0 (length samples) <->
+       List.tl (Vector.to_list
+         (indexed_basis_centered_sample_vector basis coefficients)) =
+         repeat 0 (Nat.pred (length samples))).
+  Proof.
+    intros basis coefficients Hmass.
+    destruct samples as [|x xs] eqn:Hsamples.
+    - exfalso.
+      apply (normalized_total_mass_implies_samples_nonempty Hmass).
+      exact Hsamples.
+    - apply (indexed_real_vector_zero_sum_list_tail_zero_iff
+        (length xs)
+        (indexed_basis_centered_sample_vector basis coefficients)).
+      apply indexed_basis_centered_sample_vector_in_zero_sum.
+      exact Hmass.
   Qed.
 
   (**
@@ -15854,5 +15989,49 @@ Section FiniteProbabilityMoments.
       apply Hdistinct.
       exact (Hinjective left right Hequal).
   Qed.
+
+  (**
+   [indexed_basis_covariance_positive_definite_iff_sample_list_tail_injective] (theorem) — Strict finite covariance positive definiteness is equivalent to injectivity of the shortened sample-output list-tail evaluator.
+   Mathematical meaning: Strict finite covariance positive definiteness is equivalent to injectivity of the shortened sample-output list-tail evaluator. This is a statement about
+   exact finite real vectors rather than observed measurements.
+   Exact checked proposition: Under normalized nonnegative sample weights, positive-definite covariance iff equality of ordinary centered output list tails implies equality of coefficient vectors.
+   Premises and side conditions: Zero and repeated sample weights are permitted; normalization and nonnegativity are required for the established positive-definite/full-output criterion, not for the tail-equality reduction.
+   Proof/definition method: Compose the already checked positive-definiteness/full-output-injectivity equivalence with the normalized centered sample-output list-tail equality equivalence, using each iff direction.
+   Library reuse: indexed_basis_covariance_positive_definite_iff_sample_vector_injective, indexed_basis_centered_sample_vector_equal_iff_list_tails_equal, Stdlib.Logic, Stdlib.List.tl.
+   Boundary: Exact injectivity interface only; no numeric eigenvalue estimate or matrix rank-nullity formula follows.
+   *)
+  Theorem indexed_basis_covariance_positive_definite_iff_sample_list_tail_injective :
+    forall basis,
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_positive_definite basis <->
+       forall (left right : Vector.t R (length basis)),
+         List.tl
+           (Vector.to_list (indexed_basis_centered_sample_vector basis left)) =
+         List.tl
+           (Vector.to_list (indexed_basis_centered_sample_vector basis right)) ->
+         left = right).
+  Proof.
+    intros basis Hmass Hw.
+    pose proof
+      (indexed_basis_covariance_positive_definite_iff_sample_vector_injective
+        basis Hmass Hw) as Hfull.
+    split.
+    - intros Hpositive left right Htail.
+      apply ((proj1 Hfull) Hpositive left right).
+      apply (proj2
+        (indexed_basis_centered_sample_vector_equal_iff_list_tails_equal
+          basis left right Hmass)).
+      exact Htail.
+    - intro Htail_injective.
+      apply (proj2 Hfull).
+      intros left right Hequal.
+      apply Htail_injective.
+      apply (proj1
+        (indexed_basis_centered_sample_vector_equal_iff_list_tails_equal
+          basis left right Hmass)).
+      exact Hequal.
+  Qed.
+
 
 End FiniteProbabilityMoments.

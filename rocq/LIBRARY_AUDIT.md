@@ -2845,6 +2845,25 @@ vector-space isomorphism nor an abstract dimension/covariance-rank
 certificate. Exact current inventory after the changes: 826 public
 claims, 829 proof scripts and 906 documented declarations, pending CI.
 
+## Centered sample-vector coordinate redundancy via Stdlib lists (12 November 2026)
+
+Five new extensively commented results expose the existing
+normalized zero-sum constraint through the ordinary `List.tl`
+of the maintained `Vector.to_list` representation. Two generic lemmas
+lift zero-sum typed-tail equality to ordinary list-tail equality
+and zero detection. Two sample-specific theorems reuse the existing
+unit-mass nonempty-sample fact and zero-sum image membership.
+The last theorem composes the established positive-definiteness iff
+full centered evaluator injectivity with the shorter list-tail equality
+criterion. Reuses `VectorSpec.eta`, `VectorSpec.to_list_inj`
+and the current finite model interface: no duplicate finite sums,
+custom matrix algorithms, axioms, dependent cast libraries, or new
+data structures. These are exact finite-vector interface results,
+not abstract covariance rank or rank-nullity claims.
+
+Intended inventory after change: 831 public claims, 834 proof
+scripts, 911 documented declarations, pending pinned CI.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
