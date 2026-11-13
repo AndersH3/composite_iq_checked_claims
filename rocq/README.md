@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **941 proof scripts** in seven
+for the two reports. **950 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -4057,6 +4057,41 @@ scripts**, across seven modules. These figures and all proof theorems
 require Rocq 9.2 CI verification. This is a signed two-sample
 semidefinite classification, not general covariance inertia, an abstract
 rank-nullity theorem or empirical IQ inference.
+
+
+## Signed two-sample covariance isotropy and complete degeneracy (13 November 2026)
+
+Nine new fully documented Rocq theorems strengthen the already checked
+two-sample rank-one covariance factorization. The self-pairing of any
+typed coefficient direction vanishes exactly when the product of the two
+sample weights is zero or the coefficient composite has the same value
+on both outcomes. **Even for signed weights**, this is equivalent to
+membership in the full bilinear radical and to annihilating every
+indexed covariance row. The original typed covariance quadratic has
+exactly the same zero set under samples=[x;y] and unit mass, without
+requiring individual weights to be nonnegative.
+
+The results also characterize complete covariance degeneracy:
+all typed bilinear pairings vanish, all self-pairings vanish, or all
+typed quadratics vanish **if and only if** the sample weight product
+is zero or no listed score separates the two samples. This distinction
+matters because the checked signed *three*-sample counterexample
+admits an isotropic direction that is not in the bilinear radical.
+The new equivalences are explicitly confined to two outcomes.
+
+The proofs reuse the existing signed two-sample factorization,
+indexed-basis covariance/radical/row-kernel interfaces, the maintained
+typed basis-coordinate selector lemma, the bilinear diagonal identity,
+Stdlib.Reals.Rmult_integral/Req_EM_T, Lra, Ring and tauto.
+No competing finite-sum, matrix representation, generic rank algorithm,
+axiom or admitted lemma is introduced. No Python, Ada/SPARK or archived
+evidence source is modified.
+
+Intended inventory: **947 public checked claims, 950 proof scripts,
+1035 documented declarations**, including **536 FiniteMoments proof
+scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal/SPARK CI
+remain the verification authorities; these counts alone do not imply
+generic rank-nullity or empirical IQ-test validity.
 
 ## Research extensions
 

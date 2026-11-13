@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **938 public theorem/lemma/example claims**, plus
+The current branch has **947 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**941 proof scripts** across seven Rocq modules. The claims and scripts
+**950 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 527 proof scripts
+## FiniteMoments.v — 536 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1352,6 +1352,15 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_bilinear_psd_iff_nonnegative_weight_product` (theorem) | Combine PSD sufficiency with negative self-pairing witness to rule out a negative weight product. | indexed_basis_two_samples_bilinear_self_nonnegative_of_weight_product, indexed_basis_two_samples_bilinear_negative_self_witness, Rle_dec, lra. | **New: exact PSD sign classification for separating two-sample bases.** |
 | `indexed_basis_two_samples_bilinear_nsd_iff_nonpositive_weight_product` (theorem) | Combine NSD sufficiency with positive self-pairing witness to exclude positive weight product. | indexed_basis_two_samples_bilinear_self_nonpositive_of_weight_product, indexed_basis_two_samples_bilinear_positive_self_witness, Rle_dec, lra. | **New: exact NSD sign classification for separating two-sample bases.** |
 | `indexed_basis_two_samples_zero_matrix_of_nonseparating_basis` (theorem) | Use typed indexed-score membership, scalar covariance factorization and vanishing sample contrast. | vector_of_list_nth_error, nth_error_In, covariance_two_samples_rank_one_factorization, ring. | **New: a nonseparating score basis has identically zero covariance, even with signed weights.** |
+| `indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores` (theorem) | Factor the self-covariance and apply the standard zero-product lemma twice; solve equal-score differences with Lra. | indexed_basis_covariance_bilinear_two_samples_factorization, Rmult_integral, Lra, Ring. | **New: exact signed two-sample self-nullity as weight degeneracy or score constancy.** |
+| `indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed` (theorem) | Use the scalar self-zero characterization and exact bilinear factorization; converse tests the same vector. | indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores, indexed_basis_covariance_bilinear_two_samples_factorization, Ring. | **New: zero self-covariance iff full radical for signed two-sample weights.** |
+| `indexed_basis_two_samples_quadratic_zero_iff_radical_signed` (theorem) | Transport the strengthened signed self-zero/radical equivalence across the existing diagonal identity. | indexed_basis_covariance_bilinear_diagonal, indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed. | **New: typed quadratic nullity iff radical without nonnegative-weight assumptions.** |
+| `indexed_basis_two_samples_quadratic_zero_iff_row_kernel_signed` (theorem) | Compose signed quadratic/radical equivalence with the unconditional radical/row-kernel bridge. | indexed_basis_two_samples_quadratic_zero_iff_radical_signed, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional, tauto. | **New: two-sample zero quadratic iff every indexed covariance row dot is zero, signed weights permitted.** |
+| `indexed_basis_two_samples_radical_iff_zero_weight_or_equal_scores` (theorem) | Compose self-zero/radical and exact weight-or-contrast self-nullity tests. | indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed, indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores, tauto. | **New: full radical characterized by zero weight product or equal sampled composite scores.** |
+| `indexed_basis_two_samples_quadratic_zero_iff_weight_or_equal_scores` (theorem) | Compose typed quadratic/radical and explicit radical weight/contrast criteria. | indexed_basis_two_samples_quadratic_zero_iff_radical_signed, indexed_basis_two_samples_radical_iff_zero_weight_or_equal_scores, tauto. | **New: exact signed two-sample quadratic-zero classification.** |
+| `indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis` (theorem) | Use Req_EM_T and the existing typed basis coordinate witness for necessity; factorization and the unconditional basis/radical bridge for sufficiency. | Req_EM_T, indexed_basis_score_has_typed_coordinate_representation, indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional, covariance_two_samples_rank_one_factorization. | **New: all bilinear pairings vanish iff weight product zero or basis does not separate sampled outcomes.** |
+| `indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis` (theorem) | Convert every zero self-pairing into radical membership, then reuse exact full-zero-form classification. | indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed, indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis. | **New: all self-nullities characterize full two-sample covariance degeneracy even with signed weights.** |
+| `indexed_basis_two_samples_all_quadratics_zero_iff_weight_or_nonseparating_basis` (theorem) | Transport universal zero quadratics through the already verified bilinear diagonal theorem and all-self-nullity classification. | indexed_basis_covariance_bilinear_diagonal, indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis. | **New: exact criterion for a globally zero typed covariance quadratic under arbitrary signed two-sample weights.** |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1597,3 +1606,37 @@ scripts**, across seven modules. These figures and all proof theorems
 require Rocq 9.2 CI verification. This is a signed two-sample
 semidefinite classification, not general covariance inertia, an abstract
 rank-nullity theorem or empirical IQ inference.
+
+## Signed two-sample covariance isotropy and complete degeneracy (13 November 2026)
+
+Nine new fully documented Rocq theorems strengthen the already checked
+two-sample rank-one covariance factorization. The self-pairing of any
+typed coefficient direction vanishes exactly when the product of the two
+sample weights is zero or the coefficient composite has the same value
+on both outcomes. **Even for signed weights**, this is equivalent to
+membership in the full bilinear radical and to annihilating every
+indexed covariance row. The original typed covariance quadratic has
+exactly the same zero set under samples=[x;y] and unit mass, without
+requiring individual weights to be nonnegative.
+
+The results also characterize complete covariance degeneracy:
+all typed bilinear pairings vanish, all self-pairings vanish, or all
+typed quadratics vanish **if and only if** the sample weight product
+is zero or no listed score separates the two samples. This distinction
+matters because the checked signed *three*-sample counterexample
+admits an isotropic direction that is not in the bilinear radical.
+The new equivalences are explicitly confined to two outcomes.
+
+The proofs reuse the existing signed two-sample factorization,
+indexed-basis covariance/radical/row-kernel interfaces, the maintained
+typed basis-coordinate selector lemma, the bilinear diagonal identity,
+Stdlib.Reals.Rmult_integral/Req_EM_T, Lra, Ring and tauto.
+No competing finite-sum, matrix representation, generic rank algorithm,
+axiom or admitted lemma is introduced. No Python, Ada/SPARK or archived
+evidence source is modified.
+
+Intended inventory: **947 public checked claims, 950 proof scripts,
+1035 documented declarations**, including **536 FiniteMoments proof
+scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal/SPARK CI
+remain the verification authorities; these counts alone do not imply
+generic rank-nullity or empirical IQ-test validity.

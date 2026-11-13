@@ -20017,6 +20017,399 @@ Section FiniteProbabilityMoments.
 
 
 
+
+  (**
+   [indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores]
+   (theorem) — Exact scalar self-nullity for arbitrary signed two-sample weights.
+   Mathematical meaning: Self-covariance of any typed coefficient combination
+   vanishes exactly when the product of sampled weights vanishes or the
+   composite score takes the same value on the two sampled outcomes.
+   Exact checked proposition: For samples=[x;y] and total_mass=1,
+   B(c,c)=0 iff w(x)*w(y)=0 or Composite(c,x)=Composite(c,y).
+   Premises and side conditions: No individual-weight nonnegativity,
+   separating basis, independent scores, or nonempty dimension is assumed.
+   Proof/definition method: Apply the maintained exact rank-one formula to
+   B(c,c), use Stdlib.Reals.Rmult_integral twice, and simplify differences
+   with Lra and Ring. No additional covariance sum is implemented.
+   Library reuse: indexed_basis_covariance_bilinear_two_samples_factorization,
+   Stdlib.Reals.Rmult_integral, Stdlib.Lra and Stdlib.Ring.
+   Boundary: Two enumerated sample occurrences only; signed three-sample
+   isotropic directions need not belong to the covariance radical.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_bilinear_form
+         basis coefficients coefficients = 0 <->
+       weight x * weight y = 0 \/
+       weighted_basis_sum (Vector.to_list coefficients) basis x =
+       weighted_basis_sum (Vector.to_list coefficients) basis y).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis coefficients coefficients x y Hsamples Hmass).
+    split.
+    - intro Hzero.
+      apply Rmult_integral in Hzero.
+      destruct Hzero as [Hfirst | Hlast].
+      + apply Rmult_integral in Hfirst.
+        destruct Hfirst as [Hweight | Hcontrast].
+        * left; exact Hweight.
+        * right; lra.
+      + right; lra.
+    - intros [Hweight | Hscore].
+      + rewrite Hweight; ring.
+      + rewrite Hscore; ring.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed]
+   (theorem) — An isotropic two-sample covariance direction is radical.
+   Mathematical meaning: In two unit-mass sample occurrences, even signed
+   weights cannot produce a self-covariance-zero direction that still
+   covaries with another typed coefficient combination.
+   Exact checked proposition: B(c,c)=0 iff forall d, B(c,d)=0.
+   Premises and side conditions: Exactly two samples and total mass one;
+   no positivity, score independence, nonzero pivot or basis separation.
+   Proof/definition method: The scalar self-nullity criterion reduces a
+   zero self-pairing to zero weight product or zero composite contrast.
+   Either case annihilates every cross-pairing by the previously checked
+   two-sample factorization. The converse selects right=c in the radical.
+   Library reuse: indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores,
+   indexed_basis_covariance_bilinear_two_samples_factorization,
+   indexed_basis_covariance_bilinear_radical and Stdlib.Ring.
+   Boundary: A two-sample property, not the false general implication for
+   unit-mass signed weights with three or more sampled outcomes.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_bilinear_form
+         basis coefficients coefficients = 0 <->
+       indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    unfold indexed_basis_covariance_bilinear_radical.
+    split.
+    - intro Hself.
+      apply (proj1
+        (indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores
+          basis coefficients x y Hsamples Hmass)) in Hself.
+      intros test.
+      rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+        basis coefficients test x y Hsamples Hmass).
+      destruct Hself as [Hweight | Hequal].
+      + rewrite Hweight; ring.
+      + rewrite Hequal; ring.
+    - intro Hradical.
+      exact (Hradical coefficients).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_quadratic_zero_iff_radical_signed]
+   (theorem) — Signed two-sample quadratic nullity equals radical membership.
+   Mathematical meaning: The original typed covariance quadratic detects
+   exactly the full bilinear radical for two normalized samples, despite
+   signed weights, extending the preexisting nonnegative-weight theorem.
+   Exact checked proposition: Q(c)=0 iff Radical(c).
+   Premises and side conditions: samples=[x;y], total_mass=1; arbitrary
+   finite score bases, duplicated outcomes and signed weights are admitted.
+   Proof/definition method: Reuse the established bilinear diagonal
+   identity and the exact signed two-sample self-nullity equivalence,
+   rather than expanding a matrix or recomputing variance.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed.
+   Boundary: Does not replace normalization or positivity assumptions in
+   previously checked three-or-more-sample probability theorems.
+   *)
+  Theorem indexed_basis_two_samples_quadratic_zero_iff_radical_signed :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       indexed_basis_covariance_bilinear_radical basis coefficients).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    rewrite <-
+      (indexed_basis_covariance_bilinear_diagonal
+        basis coefficients Hmass).
+    exact
+      (indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed
+        basis coefficients x y Hsamples Hmass).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_quadratic_zero_iff_row_kernel_signed]
+   (theorem) — Quadratic nullity exactly characterizes the signed row kernel.
+   Mathematical meaning: In the normalized two-sample model, a typed
+   direction has zero indexed covariance quadratic iff it annihilates
+   every bounded covariance row, without assuming nonnegative weights.
+   Exact checked proposition: Q(c)=0 iff RowKernel(c) under two samples.
+   Premises and side conditions: Unit mass and exactly two sample
+   occurrences; the basis can be empty, dependent or duplicated.
+   Proof/definition method: Compose signed two-sample quadratic/radical
+   equivalence with the existing unconditional radical/row-kernel
+   equivalence, avoiding another row-dot or matrix implementation.
+   Library reuse: indexed_basis_two_samples_quadratic_zero_iff_radical_signed,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   Stdlib.Logic.tauto.
+   Boundary: The statement identifies kernels, not their dimension
+   or the rank of a general matrix or continuous covariance operator.
+   *)
+  Theorem indexed_basis_two_samples_quadratic_zero_iff_row_kernel_signed :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       indexed_basis_bounded_covariance_row_kernel basis coefficients).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_two_samples_quadratic_zero_iff_radical_signed
+        basis coefficients x y Hsamples Hmass) as Hquadratic.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis coefficients) as Hradical.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_radical_iff_zero_weight_or_equal_scores]
+   (theorem) — Explicit nonnegative-free radical membership criterion.
+   Mathematical meaning: A two-sample coefficient direction belongs to
+   the full covariance radical exactly when the common weight product
+   vanishes or its composite score has no contrast across the outcomes.
+   Exact checked proposition: Radical(c) iff w(x)w(y)=0 or
+   Composite(c,x)=Composite(c,y).
+   Premises and side conditions: Two sample occurrences and mass one;
+   no separating basis, positive weights, invertibility or rank assertion.
+   Proof/definition method: Compose the prior self-zero iff radical
+   equivalence with the scalar self-zero weight/contrast criterion.
+   Library reuse: indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed,
+   indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores,
+   Stdlib.Logic.tauto.
+   Boundary: Exact finite signed radical predicate, no dimension count.
+   *)
+  Theorem indexed_basis_two_samples_radical_iff_zero_weight_or_equal_scores :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_bilinear_radical basis coefficients <->
+       weight x * weight y = 0 \/
+       weighted_basis_sum (Vector.to_list coefficients) basis x =
+       weighted_basis_sum (Vector.to_list coefficients) basis y).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed
+        basis coefficients x y Hsamples Hmass) as Hradical.
+    pose proof
+      (indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores
+        basis coefficients x y Hsamples Hmass) as Hscores.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_quadratic_zero_iff_weight_or_equal_scores]
+   (theorem) — Exact typed quadratic nullity in the signed two-sample case.
+   Mathematical meaning: A zero covariance quadratic can arise from a
+   degenerate sample weight product or a constant composite score
+   contrast, and there are no other possibilities with two samples.
+   Exact checked proposition: Q(c)=0 iff w(x)w(y)=0 or the two
+   composite score values are equal.
+   Premises and side conditions: Exactly two outcomes and unit mass;
+   neither basis separation nor nonnegative signed weights is required.
+   Proof/definition method: Compose the already checked signed
+   quadratic/radical equivalence with the explicit radical criterion.
+   Library reuse: indexed_basis_two_samples_quadratic_zero_iff_radical_signed,
+   indexed_basis_two_samples_radical_iff_zero_weight_or_equal_scores,
+   Stdlib.Logic.tauto.
+   Boundary: No numerical covariance rank, Gaussianity or data inference.
+   *)
+  Theorem indexed_basis_two_samples_quadratic_zero_iff_weight_or_equal_scores :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_quadratic_form basis coefficients = 0 <->
+       weight x * weight y = 0 \/
+       weighted_basis_sum (Vector.to_list coefficients) basis x =
+       weighted_basis_sum (Vector.to_list coefficients) basis y).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_two_samples_quadratic_zero_iff_radical_signed
+        basis coefficients x y Hsamples Hmass) as Hquadratic.
+    pose proof
+      (indexed_basis_two_samples_radical_iff_zero_weight_or_equal_scores
+        basis coefficients x y Hsamples Hmass) as Hradical.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis]
+   (theorem) — Exact zero-form test for the entire coefficient covariance.
+   Mathematical meaning: Every typed bilinear covariance pairing
+   vanishes exactly when the sample weight product is zero or none
+   of the listed basis scores distinguishes the sampled outcomes.
+   Exact checked proposition: Under samples=[x;y], total_mass=1,
+   (forall left right, B(left,right)=0) iff
+   w(x)w(y)=0 or (forall g in basis, g(x)=g(y)).
+   Premises and side conditions: Signed weights and repeated outcomes
+   are supported; the empty-basis case is covered by vacuous typing.
+   Proof/definition method: Necessity uses the standard real equality
+   decision Req_EM_T, the already checked typed coordinate witness
+   for every listed score, and scalar self-nullity. Sufficiency either
+   cancels zero weights in the rank-one formula or uses the maintained
+   unconditional radical/basis-score equivalence on zero contrasts.
+   Library reuse: Stdlib.Reals.Req_EM_T, indexed_basis_score_has_typed_coordinate_representation,
+   indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores,
+   indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional,
+   covariance_two_samples_rank_one_factorization and Stdlib.Ring.
+   Boundary: Exact zero-form characterization, not a generic matrix
+   rank algorithm or an empirical covariance significance result.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      ((forall left right : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left right = 0) <->
+       weight x * weight y = 0 \/
+       forall g, In g basis -> g x = g y).
+  Proof.
+    intros basis x y Hsamples Hmass.
+    split.
+    - intro Hall.
+      destruct (Req_EM_T (weight x * weight y) 0)
+        as [Hweight | Hweight].
+      + left; exact Hweight.
+      + right.
+        intros g Hg.
+        destruct (indexed_basis_score_has_typed_coordinate_representation
+          basis g Hg) as [coefficients Hscore].
+        pose proof
+          ((proj1
+            (indexed_basis_two_samples_bilinear_self_zero_iff_weight_or_equal_scores
+              basis coefficients x y Hsamples Hmass))
+            (Hall coefficients coefficients)) as Hnull.
+        destruct Hnull as [Hcontradiction | Hsame].
+        * contradiction.
+        * rewrite (Hscore x), (Hscore y) in Hsame.
+          exact Hsame.
+    - intros [Hweight | Hsame] left right.
+      + rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+          basis left right x y Hsamples Hmass).
+        rewrite Hweight; ring.
+      + apply (proj2
+          (indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional
+            basis left)).
+        intros g Hg.
+        rewrite (covariance_two_samples_rank_one_factorization
+          (weighted_basis_sum (Vector.to_list left) basis)
+          g x y Hsamples Hmass).
+        rewrite (Hsame g Hg).
+        ring.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis]
+   (theorem) — All isotropic directions characterize the zero pairing.
+   Mathematical meaning: Even with signed two-sample weights, requiring
+   every typed coefficient direction to have zero self-covariance
+   is equivalent to the whole bilinear pairing being identically zero.
+   Exact checked proposition: (forall c, B(c,c)=0) iff
+   w(x)w(y)=0 or every listed score is constant across x,y.
+   Premises and side conditions: Exactly two unit-mass sample outcomes;
+   the necessity would not follow for arbitrary signed sample counts.
+   Proof/definition method: The signed two-sample self-zero iff radical
+   theorem converts every zero self-pairing to all cross-pairings;
+   then the exact full-bilinear-zero criterion is reused.
+   Library reuse: indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed,
+   indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis,
+   indexed_basis_covariance_bilinear_radical and Stdlib.Logic.
+   Boundary: A zero-bilinear-form classification, not a proof of rank-nullity.
+   *)
+  Theorem indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      ((forall coefficients : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form
+            basis coefficients coefficients = 0) <->
+       weight x * weight y = 0 \/
+       forall g, In g basis -> g x = g y).
+  Proof.
+    intros basis x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis
+        basis x y Hsamples Hmass) as Hzero.
+    split.
+    - intro Hself.
+      apply (proj1 Hzero).
+      intros left right.
+      pose proof
+        ((proj1
+          (indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed
+            basis left x y Hsamples Hmass))
+          (Hself left)) as Hradical.
+      exact (Hradical right).
+    - intro Hzero_basis.
+      intro coefficients.
+      exact ((proj2 Hzero) Hzero_basis coefficients coefficients).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_all_quadratics_zero_iff_weight_or_nonseparating_basis]
+   (theorem) — Every typed covariance quadratic vanishes exactly in the
+   completely degenerate two-sample score/weight configurations.
+   Mathematical meaning: The entire family of typed covariance
+   quadratic forms is zero if and only if the sample weight product
+   vanishes or the listed basis scores all have equal sample values.
+   Exact checked proposition: (forall c, Q(c)=0) iff
+   w(x)w(y)=0 or every basis g satisfies g(x)=g(y).
+   Premises and side conditions: Two unit-mass sampled occurrences,
+   possibly signed or repeated, and any finite score basis.
+   Proof/definition method: Transport universal quadratic nullity
+   through the existing bilinear-diagonal identity and reuse the
+   newly proved all-self-zero classification.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis
+   and Stdlib.Logic; no new matrix or finite-sum implementation.
+   Boundary: A finite full-degeneracy criterion, not a numerical rank
+   computation or an inference about empirical test reliability.
+   *)
+  Theorem indexed_basis_two_samples_all_quadratics_zero_iff_weight_or_nonseparating_basis :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      ((forall coefficients : Vector.t R (length basis),
+          indexed_basis_covariance_quadratic_form
+            basis coefficients = 0) <->
+       weight x * weight y = 0 \/
+       forall g, In g basis -> g x = g y).
+  Proof.
+    intros basis x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis
+        basis x y Hsamples Hmass) as Hself.
+    split.
+    - intro Hquadratic.
+      apply (proj1 Hself).
+      intro coefficients.
+      rewrite (indexed_basis_covariance_bilinear_diagonal
+        basis coefficients Hmass).
+      exact (Hquadratic coefficients).
+    - intro Hbasis.
+      intros coefficients.
+      rewrite <-
+        (indexed_basis_covariance_bilinear_diagonal
+          basis coefficients Hmass).
+      exact ((proj2 Hself) Hbasis coefficients).
+  Qed.
+
+
 End FiniteProbabilityMoments.
 
 
