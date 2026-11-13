@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **933 proof scripts** in seven
+for the two reports. **941 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -4027,6 +4027,36 @@ must validate the branch head before these counts are reported as
 verified. This is an entrywise rank-zero/rank-one certificate, not
 a general finite-dimensional rank-nullity theorem or a claim about
 empirical IQ covariance.
+
+
+## Typed two-sample covariance sign and nullity classification (13 November 2026)
+
+Eight carefully documented theorems extend the exact two-outcome rank-one
+factorization beyond matrix entries to every typed coefficient direction.
+Four-direction bilinear cross minors vanish without signed-weight restrictions.
+When the product of the two normalized sampled weights is nonnegative,
+all coefficient self-pairings are nonnegative; when nonpositive, they are
+nonpositive. An existing typed single-score coordinate representation gives
+strictly negative or positive self-pairing witnesses for strictly negative or
+positive weight products, provided a listed score separates the outcomes.
+Consequently, **in a separating basis**, the covariance bilinear form is
+positive semidefinite exactly when the weight product is nonnegative, and
+negative semidefinite exactly when it is nonpositive. If every listed score
+assigns equal values to the two sampled outcomes, every indexed covariance
+matrix entry is zero, independently of the signed weight product.
+
+The proofs reuse the already kernel-checked two-sample factorization,
+indexed_basis_score_has_typed_coordinate_representation, established vector
+nth_error/membership bridges, Stdlib.Reals square and sign laws, Psatz.nra
+and Ring. No additional finite sums, coordinate selectors, matrices, rank
+calculators, axioms or admitted proofs are introduced.
+
+Expected inventory: **938 public checked claims, 941 proof scripts,
+1026 documented declarations**, including **527 FiniteMoments proof
+scripts**, across seven modules. These figures and all proof theorems
+require Rocq 9.2 CI verification. This is a signed two-sample
+semidefinite classification, not general covariance inertia, an abstract
+rank-nullity theorem or empirical IQ inference.
 
 ## Research extensions
 

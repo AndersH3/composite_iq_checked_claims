@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **930 public theorem/lemma/example claims**, plus
+The current branch has **938 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**933 proof scripts** across seven Rocq modules. The claims and scripts
+**941 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 519 proof scripts
+## FiniteMoments.v — 527 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1344,6 +1344,14 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_cross_square_equals_diagonal_product` (theorem) | Specialize the established all-minors-zero law at (i,j,j,i); rewrite the reverse entry using covariance symmetry. | indexed_basis_covariance_two_samples_all_minors_zero, covariance_symmetric, Stdlib.Vectors.Fin. | **New:** M(i,j)^2=M(i,i)M(j,j) for normalized two-sample signed covariance. |
 | `indexed_basis_two_samples_cross_entry_nonzero_iff_diagonals_nonzero` (theorem) | Apply the shared square-diagonal identity and cancel nonzero real factors, without assuming PSD. | indexed_basis_two_samples_cross_square_equals_diagonal_product, Psatz.nra, Reals.Rmult_integral. | **New:** M(i,j) is nonzero iff both associated diagonals are nonzero. |
 | `indexed_basis_two_samples_zero_matrix_iff_all_diagonals_zero` (theorem) | Reduce all entry zeros to all diagonal zeros using the established cross-square law and real square-zero arithmetic. | indexed_basis_two_samples_cross_square_equals_diagonal_product, Psatz.nra, indexed_basis_cross_covariance_matrix. | **New:** Exact two-sample rank-zero certificate, valid for signed weights. |
+| `indexed_basis_two_samples_bilinear_all_minors_zero` (theorem) | Rewrite four typed bilinear pairings using the existing two-sample contrast factorization; close by ring. | indexed_basis_covariance_bilinear_two_samples_factorization, Stdlib.Ring. | **New: all rank-one minors vanish for arbitrary typed coefficient directions.** |
+| `indexed_basis_two_samples_bilinear_self_nonnegative_of_weight_product` (theorem) | Combine nonnegative sample-weight product with square nonnegativity through the typed rank-one formula. | indexed_basis_covariance_bilinear_two_samples_factorization, Rmult_le_pos, Rle_0_sqr. | **New: signed two-sample PSD sufficiency without separately nonnegative weights.** |
+| `indexed_basis_two_samples_bilinear_self_nonpositive_of_weight_product` (theorem) | Use a nonpositive sample-weight product and the standard nonnegative square. | indexed_basis_covariance_bilinear_two_samples_factorization, Rle_0_sqr, nra. | **New: signed two-sample negative semidefinite sufficiency.** |
+| `indexed_basis_two_samples_bilinear_negative_self_witness` (theorem) | Reuse a typed standard coordinate representation of a separating score and the squared contrast. | indexed_basis_score_has_typed_coordinate_representation, indexed_basis_covariance_bilinear_two_samples_factorization, nra. | **New: negative-product sign yields a strictly negative self-pairing.** |
+| `indexed_basis_two_samples_bilinear_positive_self_witness` (theorem) | Represent a separating score as a typed coefficient vector, and multiply its positive contrast square. | indexed_basis_score_has_typed_coordinate_representation, indexed_basis_covariance_bilinear_two_samples_factorization, nra. | **New: positive-product sign yields a strictly positive self-pairing.** |
+| `indexed_basis_two_samples_bilinear_psd_iff_nonnegative_weight_product` (theorem) | Combine PSD sufficiency with negative self-pairing witness to rule out a negative weight product. | indexed_basis_two_samples_bilinear_self_nonnegative_of_weight_product, indexed_basis_two_samples_bilinear_negative_self_witness, Rle_dec, lra. | **New: exact PSD sign classification for separating two-sample bases.** |
+| `indexed_basis_two_samples_bilinear_nsd_iff_nonpositive_weight_product` (theorem) | Combine NSD sufficiency with positive self-pairing witness to exclude positive weight product. | indexed_basis_two_samples_bilinear_self_nonpositive_of_weight_product, indexed_basis_two_samples_bilinear_positive_self_witness, Rle_dec, lra. | **New: exact NSD sign classification for separating two-sample bases.** |
+| `indexed_basis_two_samples_zero_matrix_of_nonseparating_basis` (theorem) | Use typed indexed-score membership, scalar covariance factorization and vanishing sample contrast. | vector_of_list_nth_error, nth_error_In, covariance_two_samples_rank_one_factorization, ring. | **New: a nonseparating score basis has identically zero covariance, even with signed weights.** |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1560,3 +1568,32 @@ must validate the branch head before these counts are reported as
 verified. This is an entrywise rank-zero/rank-one certificate, not
 a general finite-dimensional rank-nullity theorem or a claim about
 empirical IQ covariance.
+
+## Typed two-sample covariance sign and nullity classification (13 November 2026)
+
+Eight carefully documented theorems extend the exact two-outcome rank-one
+factorization beyond matrix entries to every typed coefficient direction.
+Four-direction bilinear cross minors vanish without signed-weight restrictions.
+When the product of the two normalized sampled weights is nonnegative,
+all coefficient self-pairings are nonnegative; when nonpositive, they are
+nonpositive. An existing typed single-score coordinate representation gives
+strictly negative or positive self-pairing witnesses for strictly negative or
+positive weight products, provided a listed score separates the outcomes.
+Consequently, **in a separating basis**, the covariance bilinear form is
+positive semidefinite exactly when the weight product is nonnegative, and
+negative semidefinite exactly when it is nonpositive. If every listed score
+assigns equal values to the two sampled outcomes, every indexed covariance
+matrix entry is zero, independently of the signed weight product.
+
+The proofs reuse the already kernel-checked two-sample factorization,
+indexed_basis_score_has_typed_coordinate_representation, established vector
+nth_error/membership bridges, Stdlib.Reals square and sign laws, Psatz.nra
+and Ring. No additional finite sums, coordinate selectors, matrices, rank
+calculators, axioms or admitted proofs are introduced.
+
+Expected inventory: **938 public checked claims, 941 proof scripts,
+1026 documented declarations**, including **527 FiniteMoments proof
+scripts**, across seven modules. These figures and all proof theorems
+require Rocq 9.2 CI verification. This is a signed two-sample
+semidefinite classification, not general covariance inertia, an abstract
+rank-nullity theorem or empirical IQ inference.

@@ -19661,6 +19661,362 @@ Section FiniteProbabilityMoments.
 
 
 
+
+  (**
+   [indexed_basis_two_samples_bilinear_all_minors_zero] (theorem) —
+   All two-by-two minors of the typed coefficient covariance pairing vanish.
+   Mathematical meaning: A covariance of arbitrary coefficient composites
+   is a product of two scalar sample contrasts with one shared weight factor;
+   therefore every cross-minor among four typed directions is exactly zero.
+   Exact checked proposition: With two unit-mass samples, B(a,b)*B(c,d)
+   equals B(a,d)*B(c,b) for every four length-correct coefficient vectors.
+   Premises and side conditions: Arbitrary real signed weights, dependent
+   basis scores, duplicate sample occurrences and empty bases are admitted.
+   Proof/definition method: Substitute the previously proved two-sample
+   factorization into four instances of B and close with real ring arithmetic.
+   Library reuse: indexed_basis_covariance_bilinear_two_samples_factorization,
+   Stdlib.Ring, Vector.t and the established covariance bilinear form.
+   Boundary: An exact typed rank-one identity, not abstract matrix dimension.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_all_minors_zero :
+    forall basis
+           (a b c d : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis a b *
+      indexed_basis_covariance_bilinear_form basis c d =
+      indexed_basis_covariance_bilinear_form basis a d *
+      indexed_basis_covariance_bilinear_form basis c b.
+  Proof.
+    intros basis a b c d x y Hsamples Hmass.
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis a b x y Hsamples Hmass).
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis c d x y Hsamples Hmass).
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis a d x y Hsamples Hmass).
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis c b x y Hsamples Hmass).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_self_nonnegative_of_weight_product]
+   (theorem) — Nonnegative weight product implies positive semidefiniteness.
+   Mathematical meaning: Even without individual nonnegative weights, the
+   two-sample covariance pairing has nonnegative self-pairings whenever
+   the product of the two sampled weights is nonnegative.
+   Exact checked proposition: Under samples=[x;y] and total_mass=1,
+   0<=weight(x)*weight(y) implies 0<=B(c,c) for every typed direction c.
+   Premises and side conditions: The basis may be empty, redundant or
+   nonseparating; no positive-definite or strict-weight premise is needed.
+   Proof/definition method: Rewrite the self-pairing by the existing
+   rank-one contrast factorization and multiply a nonnegative real
+   coefficient by the standard nonnegative square.
+   Library reuse: indexed_basis_covariance_bilinear_two_samples_factorization,
+   Stdlib.Reals.Rmult_le_pos, Rle_0_sqr and Stdlib.Ring.
+   Boundary: This is exact signed-weight two-sample PSD, not a general
+   signed-weight covariance PSD statement for three or more outcomes.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_self_nonnegative_of_weight_product :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      0 <= weight x * weight y ->
+      forall coefficients : Vector.t R (length basis),
+        0 <= indexed_basis_covariance_bilinear_form
+          basis coefficients coefficients.
+  Proof.
+    intros basis x y Hsamples Hmass Hproduct coefficients.
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis coefficients coefficients x y Hsamples Hmass).
+    set (delta :=
+      weighted_basis_sum (Vector.to_list coefficients) basis x -
+      weighted_basis_sum (Vector.to_list coefficients) basis y).
+    replace (weight x * weight y * delta * delta)
+      with ((weight x * weight y) * (delta * delta)) by ring.
+    apply Rmult_le_pos.
+    - exact Hproduct.
+    - apply Rle_0_sqr.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_self_nonpositive_of_weight_product]
+   (theorem) — Nonpositive weight product implies negative semidefiniteness.
+   Mathematical meaning: All typed coefficient self-covariances are
+   nonpositive if the two normalized sample weights have nonpositive
+   product, including the strictly signed case of opposite signs.
+   Exact checked proposition: Under samples=[x;y] and total_mass=1,
+   weight(x)*weight(y)<=0 implies B(c,c)<=0 for every typed direction.
+   Premises and side conditions: No positivity assumption on either
+   individual weight and no condition on the score basis are imposed.
+   Proof/definition method: Substitute the preexisting rank-one factor,
+   regroup by ring, and use the standard square bound and ordered-real
+   polynomial arithmetic to certify the nonpositive product.
+   Library reuse: indexed_basis_covariance_bilinear_two_samples_factorization,
+   Stdlib.Reals.Rle_0_sqr, Stdlib.Psatz.nra and Stdlib.Ring.
+   Boundary: Negative semidefiniteness is particular to this two-sample
+   factorization, not an arbitrary signed-mass covariance principle.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_self_nonpositive_of_weight_product :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      weight x * weight y <= 0 ->
+      forall coefficients : Vector.t R (length basis),
+        indexed_basis_covariance_bilinear_form
+          basis coefficients coefficients <= 0.
+  Proof.
+    intros basis x y Hsamples Hmass Hproduct coefficients.
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis coefficients coefficients x y Hsamples Hmass).
+    set (delta :=
+      weighted_basis_sum (Vector.to_list coefficients) basis x -
+      weighted_basis_sum (Vector.to_list coefficients) basis y).
+    replace (weight x * weight y * delta * delta)
+      with ((weight x * weight y) * (delta * delta)) by ring.
+    assert (Hsquare : 0 <= delta * delta) by apply Rle_0_sqr.
+    nra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_negative_self_witness]
+   (theorem) — A separating basis score detects negative curvature.
+   Mathematical meaning: A negative product of the two signed sample
+   weights forces a strictly negative covariance self-pairing whenever
+   at least one listed score distinguishes the two outcomes.
+   Exact checked proposition: If w(x)w(y)<0 and some listed g has
+   g(x)<>g(y), then there exists a typed coefficient c with B(c,c)<0.
+   Premises and side conditions: Exactly two unit-mass sample occurrences;
+   duplicate scores, arbitrary score-basis length and signed weights
+   are permitted, but a separating score is indispensable.
+   Proof/definition method: Reuse the maintained typed coordinate
+   representation of the listed score, substitute the checked
+   two-sample bilinear factorization, and establish strict negativity
+   of the weight product times the square of a nonzero contrast.
+   Library reuse: indexed_basis_score_has_typed_coordinate_representation,
+   indexed_basis_covariance_bilinear_two_samples_factorization,
+   Stdlib.Reals.Rlt_dec, Stdlib.Psatz.nra and Stdlib.Ring.
+   Boundary: One exact negative witness, not a count of eigenvalues.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_negative_self_witness :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      weight x * weight y < 0 ->
+      (exists g, In g basis /\ g x <> g y) ->
+      exists coefficients : Vector.t R (length basis),
+        indexed_basis_covariance_bilinear_form
+          basis coefficients coefficients < 0.
+  Proof.
+    intros basis x y Hsamples Hmass Hproduct [g [Hmember Hseparate]].
+    destruct (indexed_basis_score_has_typed_coordinate_representation
+      basis g Hmember) as [coefficients Hscore].
+    exists coefficients.
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis coefficients coefficients x y Hsamples Hmass).
+    rewrite (Hscore x), (Hscore y).
+    set (delta := g x - g y).
+    assert (Hsquare : 0 < delta * delta).
+    {
+      unfold delta.
+      destruct (Rlt_dec (g x) (g y)) as [Hlt | Hnotlt]; nra.
+    }
+    replace (weight x * weight y * delta * delta)
+      with ((weight x * weight y) * (delta * delta)) by ring.
+    nra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_positive_self_witness]
+   (theorem) — A separating basis score detects positive curvature.
+   Mathematical meaning: A positive product of the two sampled weights
+   gives a strictly positive covariance self-pairing in the direction
+   selecting any basis score that separates the two sampled outcomes.
+   Exact checked proposition: If w(x)w(y)>0 and a listed score g
+   satisfies g(x)<>g(y), some typed coefficient c has B(c,c)>0.
+   Premises and side conditions: Two samples with total mass one;
+   repeated score functions and arbitrary basis lengths are allowed.
+   Proof/definition method: Use the already proved typed selector
+   existence, not a newly implemented basis or coordinate algorithm;
+   apply bilinear factorization and strict square positivity.
+   Library reuse: indexed_basis_score_has_typed_coordinate_representation,
+   indexed_basis_covariance_bilinear_two_samples_factorization,
+   Stdlib.Psatz.nra, Reals.Rlt_dec and Stdlib.Ring.
+   Boundary: Existence of one positive direction is not positive
+   definiteness for an arbitrary multiple-score basis.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_positive_self_witness :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      0 < weight x * weight y ->
+      (exists g, In g basis /\ g x <> g y) ->
+      exists coefficients : Vector.t R (length basis),
+        0 < indexed_basis_covariance_bilinear_form
+          basis coefficients coefficients.
+  Proof.
+    intros basis x y Hsamples Hmass Hproduct [g [Hmember Hseparate]].
+    destruct (indexed_basis_score_has_typed_coordinate_representation
+      basis g Hmember) as [coefficients Hscore].
+    exists coefficients.
+    rewrite (indexed_basis_covariance_bilinear_two_samples_factorization
+      basis coefficients coefficients x y Hsamples Hmass).
+    rewrite (Hscore x), (Hscore y).
+    set (delta := g x - g y).
+    assert (Hsquare : 0 < delta * delta).
+    {
+      unfold delta.
+      destruct (Rlt_dec (g x) (g y)) as [Hlt | Hnotlt]; nra.
+    }
+    replace (weight x * weight y * delta * delta)
+      with ((weight x * weight y) * (delta * delta)) by ring.
+    nra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_psd_iff_nonnegative_weight_product]
+   (theorem) — Exact positive-semidefinite sign criterion in the
+   nondegenerate two-sample score basis.
+   Mathematical meaning: Once a listed score separates the two sample
+   outcomes, all coefficient self-covariances are nonnegative precisely
+   when the product of their signed weights is nonnegative.
+   Exact checked proposition: For samples=[x;y] with total_mass=1 and a
+   separating listed score, (forall c, 0<=B(c,c)) iff 0<=w(x)w(y).
+   Premises and side conditions: No nonnegative individual weight,
+   independence, basis size or full-rank assumption is required.
+   Proof/definition method: Sufficiency specializes the generic
+   two-sample nonnegative-product theorem. Necessity splits the real
+   sign using the maintained Rle_dec and refutes a negative product
+   by the newly constructed negative typed coefficient witness.
+   Library reuse: indexed_basis_two_samples_bilinear_self_nonnegative_of_weight_product,
+   indexed_basis_two_samples_bilinear_negative_self_witness,
+   Stdlib.Reals.Rle_dec and Stdlib.Lra.
+   Boundary: Classifies PSD of this finite bilinear form, not a
+   spectral rank or generic signed-mass positive-semidefiniteness.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_psd_iff_nonnegative_weight_product :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (exists g, In g basis /\ g x <> g y) ->
+      ((forall coefficients : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form
+            basis coefficients coefficients) <->
+       0 <= weight x * weight y).
+  Proof.
+    intros basis x y Hsamples Hmass Hseparating.
+    split.
+    - intro Hsemidefinite.
+      destruct (Rle_dec 0 (weight x * weight y))
+        as [Hnonnegative | Hnegative].
+      + exact Hnonnegative.
+      + assert (Hlt : weight x * weight y < 0) by lra.
+        destruct (indexed_basis_two_samples_bilinear_negative_self_witness
+          basis x y Hsamples Hmass Hlt Hseparating)
+          as [coefficients Hnegative_self].
+        specialize (Hsemidefinite coefficients).
+        lra.
+    - intros Hnonnegative coefficients.
+      exact
+        (indexed_basis_two_samples_bilinear_self_nonnegative_of_weight_product
+          basis x y Hsamples Hmass Hnonnegative coefficients).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_nsd_iff_nonpositive_weight_product]
+   (theorem) — Exact negative-semidefinite sign criterion in the
+   nondegenerate two-sample score basis.
+   Mathematical meaning: Once a listed score separates the outcomes,
+   all coefficient self-covariances are nonpositive precisely when
+   the product of the two sample weights is nonpositive.
+   Exact checked proposition: For samples=[x;y] with unit mass and a
+   separating basis score, (forall c, B(c,c)<=0) iff w(x)w(y)<=0.
+   Premises and side conditions: Signed weights and dependent bases
+   are allowed; the separating-score premise excludes the identically
+   zero covariance form from a strict sign converse.
+   Proof/definition method: Use the generic nonpositive-product
+   implication for one direction and the existing positive self-pairing
+   witness to refute any positive weight product in the other.
+   Library reuse: indexed_basis_two_samples_bilinear_self_nonpositive_of_weight_product,
+   indexed_basis_two_samples_bilinear_positive_self_witness,
+   Stdlib.Reals.Rle_dec and Stdlib.Lra.
+   Boundary: Exact two-sample NSD criterion, not a generic inertia
+   theorem, diagonalization or numerical covariance-rank computation.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_nsd_iff_nonpositive_weight_product :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (exists g, In g basis /\ g x <> g y) ->
+      ((forall coefficients : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form
+            basis coefficients coefficients <= 0) <->
+       weight x * weight y <= 0).
+  Proof.
+    intros basis x y Hsamples Hmass Hseparating.
+    split.
+    - intro Hnegative_semidefinite.
+      destruct (Rle_dec (weight x * weight y) 0)
+        as [Hnonpositive | Hpositive].
+      + exact Hnonpositive.
+      + assert (Hgt : 0 < weight x * weight y) by lra.
+        destruct (indexed_basis_two_samples_bilinear_positive_self_witness
+          basis x y Hsamples Hmass Hgt Hseparating)
+          as [coefficients Hpositive_self].
+        specialize (Hnegative_semidefinite coefficients).
+        lra.
+    - intros Hnonpositive coefficients.
+      exact
+        (indexed_basis_two_samples_bilinear_self_nonpositive_of_weight_product
+          basis x y Hsamples Hmass Hnonpositive coefficients).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_zero_matrix_of_nonseparating_basis]
+   (theorem) — Scores indistinguishable on both outcomes yield zero matrix.
+   Mathematical meaning: A basis that assigns the same value to each
+   of the two sampled outcomes has zero covariance in every bounded
+   matrix entry, whether or not its sample weights have zero product.
+   Exact checked proposition: With samples=[x;y], unit total mass and
+   (forall g in basis, g(x)=g(y)), all Fin-indexed entries M(i,j)=0.
+   Premises and side conditions: Signed weights, duplicate outcome
+   occurrences and an empty score basis are permitted; sample equality
+   is not required or decided.
+   Proof/definition method: Obtain membership of each indexed score
+   by the existing Vector.of_list nth_error bridge and Stdlib.List
+   nth_error_In, then cancel its contrast in scalar covariance
+   factorization rather than reimplementing list-indexing code.
+   Library reuse: covariance_two_samples_rank_one_factorization,
+   vector_of_list_nth_error, Stdlib.List.nth_error_In and Stdlib.Ring.
+   Boundary: A complete zero-covariance certificate, not a rank algorithm.
+   *)
+  Theorem indexed_basis_two_samples_zero_matrix_of_nonseparating_basis :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (forall g, In g basis -> g x = g y) ->
+      forall (i j : Fin.t (length basis)),
+        indexed_basis_cross_covariance_matrix basis basis i j = 0.
+  Proof.
+    intros basis x y Hsamples Hmass Hsame i j.
+    unfold indexed_basis_cross_covariance_matrix.
+    rewrite (covariance_two_samples_rank_one_factorization
+      (Vector.nth (Vector.of_list basis) i)
+      (Vector.nth (Vector.of_list basis) j)
+      x y Hsamples Hmass).
+    assert (Hmember :
+      In (Vector.nth (Vector.of_list basis) i) basis).
+    {
+      eapply nth_error_In.
+      apply vector_of_list_nth_error.
+    }
+    rewrite (Hsame _ Hmember).
+    ring.
+  Qed.
+
+
+
 End FiniteProbabilityMoments.
 
 
