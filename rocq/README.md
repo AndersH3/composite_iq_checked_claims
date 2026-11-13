@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **867 proof scripts** in seven
+for the two reports. **871 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3755,6 +3755,22 @@ Intended inventory: **864 public claims, 867 proof scripts
 and 945 documented declarations**, subject to pinned Rocq 9.2
 and Python/Deal/SPARK CI. The abstract rank-nullity and covariance
 rank extensions remain unproved.
+
+## Unique affine-fiber coordinates (13 November 2026)
+
+Four documented `FiniteMoments.v` lemmas advance the concrete
+zero-sum projection interface. Any scalar translation has a uniquely
+determined coordinate equal to the difference of the two sums;
+equality of two projections is equivalent to translation by that
+exact scalar and to existence of exactly one scalar witness.
+The projector itself is the unique minus-total axis shift.
+Each proof composes already verified affine-axis lemmas and Stdlib
+`f_equal`/`Lra`, avoiding a new vector or matrix package.
+
+Intended inventory: **868 public claims, 871 proof scripts and
+949 documented declarations**, pending pinned Rocq 9.2 and
+Python/Deal/SPARK CI. Abstract rank and dimension assertions remain
+out of scope at this stage.
 
 ## Research extensions
 

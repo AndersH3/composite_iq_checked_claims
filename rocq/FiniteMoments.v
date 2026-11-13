@@ -13885,6 +13885,179 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_axis_shift_scalar_unique] (lemma) —
+   The scalar of a given head-axis translation is determined by
+   the difference between the two vectors' coordinate totals.
+   Mathematical meaning: If v is obtained from w by adding the
+   head-only axis carrying t, then necessarily t=sum(v)-sum(w).
+   Exact checked proposition: For every n, v,w:Vector.t R (S n),
+   and t:R, v=map2 Rplus w (total_axis t) implies
+   t=coordinate_sum v-coordinate_sum w.
+   Premises and side conditions: Arbitrary signed coordinates and
+   scalars, including singleton vectors; no weights or normalization.
+   Proof/definition method: Apply the existing coordinate-sum
+   functional with Stdlib.Logic.f_equal, rewrite the checked
+   axis-shift sum law, and cancel the common sum with Lra.
+   Library reuse: Stdlib.Logic.f_equal, Stdlib.Lra,
+   indexed_real_vector_zero_sum_axis_shift_coordinate_sum.
+   Boundary: A concrete unique affine coordinate, not a rank theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_shift_scalar_unique :
+    forall n (v w : Vector.t R (S n)) (total : R),
+      v = Vector.map2 Rplus w
+        (indexed_real_vector_total_axis total) ->
+      total = indexed_real_vector_coordinate_sum v -
+              indexed_real_vector_coordinate_sum w.
+  Proof.
+    intros n v w total Hshift.
+    pose proof
+      (f_equal
+        (fun x : Vector.t R (S n) =>
+           indexed_real_vector_coordinate_sum x) Hshift) as Hsum.
+    rewrite indexed_real_vector_zero_sum_axis_shift_coordinate_sum in Hsum.
+    lra.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_equal_iff_exact_axis_shift]
+   (lemma) — Equal zero-sum projections are equivalent to a
+   translation by the *explicit* difference of coordinate sums.
+   Mathematical meaning: Among head-axis translations, the exact
+   axis amount relating two same-projection vectors is determined
+   without choosing an arbitrary existential witness.
+   Exact checked proposition: For n, v,w:Vector.t R (S n),
+   projection v=projection w iff
+   v=map2 Rplus w (total_axis (sum(v)-sum(w))).
+   Premises and side conditions: Positive finite length including
+   one, arbitrary real values, and no probability hypotheses.
+   Proof/definition method: Apply the already checked existential
+   affine-fiber criterion, extract its witness and identify it
+   with the sum difference via the preceding uniqueness lemma.
+   The reverse implication repackages the explicit witness.
+   Library reuse:
+   indexed_real_vector_zero_sum_projection_equal_iff_axis_shift,
+   indexed_real_vector_zero_sum_axis_shift_scalar_unique,
+   Stdlib.Logic.
+   Boundary: A concrete affine-fiber normal form; no abstract
+   quotient-space equivalence or matrix-rank assertion.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_equal_iff_exact_axis_shift :
+    forall n (v w : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection v =
+         indexed_real_vector_zero_sum_projection w <->
+       v = Vector.map2 Rplus w
+         (indexed_real_vector_total_axis
+           (indexed_real_vector_coordinate_sum v -
+            indexed_real_vector_coordinate_sum w))).
+  Proof.
+    intros n v w.
+    split.
+    - intro Hprojection.
+      destruct (proj1
+        (indexed_real_vector_zero_sum_projection_equal_iff_axis_shift
+          n v w) Hprojection) as [total Hshift].
+      pose proof
+        (indexed_real_vector_zero_sum_axis_shift_scalar_unique
+          n v w total Hshift) as Htotal.
+      rewrite Htotal in Hshift.
+      exact Hshift.
+    - intro Hshift.
+      apply (proj2
+        (indexed_real_vector_zero_sum_projection_equal_iff_axis_shift
+          n v w)).
+      exists (indexed_real_vector_coordinate_sum v -
+              indexed_real_vector_coordinate_sum w).
+      exact Hshift.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_equal_iff_unique_axis_shift]
+   (lemma) — Exactly one scalar-axis translation relates vectors
+   having identical canonical zero-sum projections.
+   Mathematical meaning: The projection fibers are affine axes
+   with a unique real translation coordinate for each ordered pair.
+   Exact checked proposition: For all n, v,w:Vector.t R (S n),
+   projection v=projection w iff exists! total:R,
+   v=map2 Rplus w (total_axis total).
+   Premises and side conditions: Arbitrary real vectors of length
+   at least one; signs, normalizations, and weights are unrestricted.
+   Proof/definition method: Existence comes directly from the
+   maintained affine-fiber theorem. For any two witnesses, the
+   preceding scalar-uniqueness lemma identifies both with the
+   same coordinate-sum difference, which Lra equates.
+   Library reuse: indexed_real_vector_zero_sum_projection_equal_iff_axis_shift,
+   indexed_real_vector_zero_sum_axis_shift_scalar_unique,
+   Stdlib.Logic, Stdlib.Lra.
+   Boundary: Unique existence of a concrete scalar witness, not
+   an asserted dimension for a vector-space kernel.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_equal_iff_unique_axis_shift :
+    forall n (v w : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum_projection v =
+         indexed_real_vector_zero_sum_projection w <->
+       exists! total : R,
+         v = Vector.map2 Rplus w
+           (indexed_real_vector_total_axis total)).
+  Proof.
+    intros n v w.
+    split.
+    - intro Hprojection.
+      destruct (proj1
+        (indexed_real_vector_zero_sum_projection_equal_iff_axis_shift
+          n v w) Hprojection) as [total Hshift].
+      exists total.
+      split.
+      + exact Hshift.
+      + intros other Hother.
+        pose proof
+          (indexed_real_vector_zero_sum_axis_shift_scalar_unique
+            n v w total Hshift) as Htotal.
+        pose proof
+          (indexed_real_vector_zero_sum_axis_shift_scalar_unique
+            n v w other Hother) as Hother_total.
+        lra.
+    - intros [total [Hshift _]].
+      apply (proj2
+        (indexed_real_vector_zero_sum_projection_equal_iff_axis_shift
+          n v w)).
+      exists total.
+      exact Hshift.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_projection_iff_unique_normalizing_shift]
+   (lemma) — A scalar-axis translation equals the canonical
+   zero-sum projection iff its scalar cancels the input's total.
+   Mathematical meaning: The projection is not only obtained from
+   minus the total; no different axis shift can represent it.
+   Exact checked proposition: For every n, v:Vector.t R (S n),
+   and t:R, map2 Rplus v (total_axis t)=projection v iff
+   t=-(coordinate_sum v).
+   Premises and side conditions: Nonempty real vectors, including
+   singleton vectors; arbitrary coordinates, no sample assumptions.
+   Proof/definition method: Rewrite the projection with the
+   verified axis-normalization identity and immediately apply
+   the existing injectivity equivalence for scalar axis shifts.
+   Library reuse: indexed_real_vector_zero_sum_projection_as_axis_normalization,
+   indexed_real_vector_zero_sum_axis_shift_injective.
+   Boundary: Unique normalization of a concrete affine projector,
+   not an abstract orthogonal projector or rank-nullity result.
+   *)
+  Lemma indexed_real_vector_zero_sum_projection_iff_unique_normalizing_shift :
+    forall n (v : Vector.t R (S n)) (total : R),
+      (Vector.map2 Rplus v
+         (indexed_real_vector_total_axis total) =
+         indexed_real_vector_zero_sum_projection v <->
+       total = - indexed_real_vector_coordinate_sum v).
+  Proof.
+    intros n v total.
+    rewrite (indexed_real_vector_zero_sum_projection_as_axis_normalization
+      n v).
+    apply (indexed_real_vector_zero_sum_axis_shift_injective
+      n v total (- indexed_real_vector_coordinate_sum v)).
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

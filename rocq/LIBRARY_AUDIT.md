@@ -2950,6 +2950,25 @@ Intended inventory: 864 public claims, 867 proof scripts and
 to pinned Rocq 9.2 kernel and Python-contract workflow checks.
 These concrete facts do not establish a dimension/rank theorem.
 
+## Exact affine-fiber coordinates and unique normalization (13 November 2026)
+
+Four further generic real-vector lemmas make the earlier scalar-axis
+fiber description constructive and unique. For a given translation,
+its scalar equals the difference of the coordinate totals; two
+vectors have equal projections iff the explicit difference-shift
+relates them; the existential axis witness is unique; and the
+canonical projection has the unique shift equal to minus the sum.
+The proofs reuse the established scalar-axis shift-sum rule,
+projection-fiber criterion, normalization identity and axis-shift
+injectivity, together with standard `f_equal` and `Lra`.
+No new vector traversal, linear-algebra implementation, axioms or
+admitted steps are introduced.
+
+Intended inventory: **868 public claims, 871 proof scripts and
+949 documented declarations** across seven Rocq modules. These
+are exact concrete affine properties, not image-dimension or rank
+claims. Verification is via the pinned Rocq/Python CI workflows.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
