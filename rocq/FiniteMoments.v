@@ -16390,7 +16390,9 @@ Section FiniteProbabilityMoments.
         {
           assert (Hmapped :
             In g (map snd (combine (Vector.to_list right) basis))).
-          { apply in_map; exact Hpair. }
+          { change (In (snd (a, g))
+              (map snd (combine (Vector.to_list right) basis))).
+            apply in_map; exact Hpair. }
           rewrite (basis_of_combine
             (Vector.to_list right) basis Hlength) in Hmapped.
           exact Hmapped.
