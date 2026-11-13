@@ -14200,9 +14200,8 @@ Section FiniteProbabilityMoments.
         exact Hzero.
       + intros other Hother.
         apply (indexed_real_vector_zero_sum_extension_injective
-          n other (Vector.tl v)).
+          n (Vector.tl v) other).
         rewrite Hother.
-        symmetry.
         apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
         exact Hzero.
     - intros [tail [Hequal _]].
