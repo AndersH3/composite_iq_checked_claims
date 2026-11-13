@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **897 public theorem/lemma/example claims**, plus
+The current branch has **899 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**900 proof scripts** across seven Rocq modules. The claims and scripts
+**902 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 486 proof scripts
+## FiniteMoments.v — 488 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1099,6 +1099,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_centered_sample_kernel_closed_under_scale` (theorem) | Rewrite checked pointwise homogeneity and zero premise | indexed_basis_centered_sample_evaluation_scale, Stdlib.Ring | **New:** the bounded evaluation kernel is closed under real scalar multiplication |
 | `indexed_basis_centered_sample_kernel_closed_under_add` (theorem) | Rewrite checked pointwise additivity and zero premises | indexed_basis_centered_sample_evaluation_add, Stdlib.Ring | **New:** the bounded evaluation kernel is closed under coefficient-vector addition |
 | `indexed_basis_centered_sample_kernel_nonzero_scale_iff` (theorem) | Zero-product lemma and existing scale-closure theorem | indexed_basis_centered_sample_evaluation_scale, indexed_basis_centered_sample_kernel_closed_under_scale, Stdlib.Reals.Rmult_integral | **New:** nonzero coefficient scaling preserves the sample kernel exactly |
+| `indexed_basis_bounded_covariance_row_kernel_of_sample_constant` (theorem) | Convert each row dot to covariance by existing unconditional basis identity, then use symmetry, support extensionality and constant covariance zero. | covariance_with_weighted_basis_as_row_dot, VectorSpec.length_to_list, covariance_symmetric, covariance_extensional_on_samples, covariance_with_constant_first. | **New:** Signed-weight normalized sample constancy entails exact bounded covariance row nullity. |
 | `indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel` (theorem) | Unfold two transparent kernel predicates, apply checked bounded kernel bridge | indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel, Stdlib.Vectors.Fin/Vector | **New:** reuse named covariance-row vs. centered-sample kernel equivalence |
 | `indexed_basis_bounded_covariance_row_kernel_zero` (theorem) | Transport canonical zero evaluation through named kernel equivalence | indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel, indexed_basis_centered_sample_evaluation_zero_coefficients | **New:** typed zero coefficient vector annihilates bounded covariance rows |
 | `indexed_basis_bounded_covariance_row_kernel_closed_under_add` (theorem) | Transport both hypotheses via iff; apply prior sample-kernel addition; transport conclusion | indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel, indexed_basis_centered_sample_kernel_closed_under_add | **New:** covariance-row kernel closed under vector addition |
@@ -1312,7 +1313,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_affine_prefix_covariance_not_positive_definite` (theorem) | Instantiate the existing positive-definiteness predicate with the nonzero witness and its zero quadratic; finish by Lra. | indexed_basis_covariance_positive_definite, indexed_basis_affine_prefix_null_direction_nonzero, indexed_basis_affine_prefix_covariance_quadratic_zero, Lra. | **New:** Adding other scores cannot restore strict covariance positive definiteness. |
 | `indexed_basis_affine_prefix_covariance_radical_signed` (theorem) | Compose established affine-prefix weighted-score equality with the constant-score radical lemma. | indexed_basis_affine_prefix_weighted_score, indexed_basis_covariance_bilinear_radical_of_sample_constant. | **New:** Signed-weight affine-prefix witness is radical. |
 | `indexed_basis_affine_prefix_covariance_radical` (theorem) | **Refactored:** Preserve public theorem assumptions, delegate to the signed-weight result. | indexed_basis_affine_prefix_covariance_radical_signed. | **Refactored:** Avoid unnecessary positivity-dependent quadratic bridge. |
-| `indexed_basis_affine_prefix_covariance_row_kernel` (theorem) | Use maintained quadratic-zero iff named row-kernel theorem and the explicit quadratic-null witness. | indexed_basis_covariance_quadratic_zero_iff_named_row_kernel, indexed_basis_affine_prefix_covariance_quadratic_zero. | **New:** Under nonnegative finite weights, the witness lies in every bounded covariance row kernel. |
+| `indexed_basis_affine_prefix_covariance_row_kernel_signed` (theorem) | Specialize sample-constant row-kernel theorem using maintained affine prefix score cancellation. | indexed_basis_bounded_covariance_row_kernel_of_sample_constant, indexed_basis_affine_prefix_weighted_score. | **New:** Affine-prefix row-kernel witness for normalized signed weights. |
+| `indexed_basis_affine_prefix_covariance_row_kernel` (theorem) | **Refactored:** Delegate original nonnegative-weight interface to stronger signed-weight row theorem. | indexed_basis_affine_prefix_covariance_row_kernel_signed. | **Refactored:** Algebraic row-dot proof replaces redundant positivity-dependent nullity bridge. |
 
 
 ## FiniteBridge.v — 37 proof scripts

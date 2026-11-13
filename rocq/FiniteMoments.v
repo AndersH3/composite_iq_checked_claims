@@ -9990,6 +9990,58 @@ Section FiniteProbabilityMoments.
           (Vector.nth (Vector.of_list basis) i) g) basis) = 0.
 
   (**
+   [indexed_basis_bounded_covariance_row_kernel_of_sample_constant]
+   (theorem) — Constant sampled composites annihilate every covariance row.
+   Mathematical meaning: If a score combination takes the same value
+   on all listed outcomes, its coefficient vector has zero dot product
+   with every bounded covariance row, including for signed weights.
+   Exact checked proposition: With total_mass=1 and a composite equal
+   to c at each In x samples, the coefficients satisfy the named
+   indexed_basis_bounded_covariance_row_kernel predicate.
+   Premises and side conditions: Individual weights may be signed
+   or zero; no independence, positive definiteness, or matching
+   number of basis scores and samples is assumed.
+   Proof/definition method: Turn each covariance row dot product
+   into covariance with the weighted basis score using the existing
+   unconditional row-dot theorem. Use symmetry and sampled-support
+   extensionality to replace the composite score by constant c,
+   then the normalized constant-first covariance theorem.
+   Library reuse: covariance_with_weighted_basis_as_row_dot,
+   VectorSpec.length_to_list, covariance_symmetric,
+   covariance_extensional_on_samples, covariance_with_constant_first.
+   Boundary: This proves exact typed row-kernel membership without
+   requiring quadratic-nullity or any matrix rank calculation.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_of_sample_constant :
+    forall basis (coefficients : Vector.t R (length basis)) (c : R),
+      total_mass = 1 ->
+      (forall x, In x samples ->
+        weighted_basis_sum (Vector.to_list coefficients) basis x = c) ->
+      indexed_basis_bounded_covariance_row_kernel basis coefficients.
+  Proof.
+    intros basis coefficients c Hmass Hconstant.
+    unfold indexed_basis_bounded_covariance_row_kernel.
+    intro i.
+    assert (Hlength :
+      length (Vector.to_list coefficients) = length basis).
+    { now rewrite VectorSpec.length_to_list. }
+    rewrite <- (covariance_with_weighted_basis_as_row_dot
+      (Vector.to_list coefficients) basis
+      (Vector.nth (Vector.of_list basis) i) Hlength).
+    rewrite (covariance_symmetric
+      (Vector.nth (Vector.of_list basis) i)
+      (weighted_basis_sum (Vector.to_list coefficients) basis)).
+    transitivity
+      (covariance (fun _ : Outcome => c)
+        (Vector.nth (Vector.of_list basis) i)).
+    - apply covariance_extensional_on_samples.
+      + exact Hconstant.
+      + intros x _; reflexivity.
+    - apply covariance_with_constant_first.
+      exact Hmass.
+  Qed.
+
+  (**
    [indexed_basis_bounded_covariance_row_kernel_iff_sample_kernel]
    (theorem) — The two reusable, dimension-safe kernel predicates
    coincide under the explicit finite-probability premises.
@@ -18411,26 +18463,66 @@ Section FiniteProbabilityMoments.
       f g rest a c Hmass Haffine).
   Qed.
 
+
+  (**
+   [indexed_basis_affine_prefix_covariance_row_kernel_signed] (theorem) —
+   Signed-weight covariance row annihilation by affine dependence.
+   Mathematical meaning: For any additional trailing basis scores,
+   the nonzero affine-prefix direction (1,-a,0,...,0) annihilates
+   each of the full finite covariance matrix's bounded rows.
+   Exact checked proposition: Total mass one and f=a*g+c on
+   every listed sample imply the named typed row-kernel predicate
+   for the affine prefix witness, including when weights are signed.
+   Premises and side conditions: There is no individual weight-sign
+   constraint; repeated sample outcomes and arbitrary extra scores
+   are allowed, as are all real affine slopes and intercepts.
+   Proof/definition method: Establish constant composite-score
+   evaluation from the existing prefix score identity, then apply
+   the general sampled-constant row-kernel theorem directly.
+   Library reuse: indexed_basis_affine_prefix_weighted_score,
+   indexed_basis_bounded_covariance_row_kernel_of_sample_constant,
+   Stdlib.Vectors.Vector.cons and Vector.const.
+   Boundary: An explicit matrix kernel direction; this is not
+   a general covariance rank or spectral decomposition theorem.
+   *)
+  Theorem indexed_basis_affine_prefix_covariance_row_kernel_signed :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      indexed_basis_bounded_covariance_row_kernel
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a).
+  Proof.
+    intros f g rest a c Hmass Haffine.
+    apply (indexed_basis_bounded_covariance_row_kernel_of_sample_constant
+      (f :: g :: rest)
+      (indexed_basis_affine_prefix_null_direction
+        (n:=length rest) a) c Hmass).
+    intros x Hx.
+    apply indexed_basis_affine_prefix_weighted_score.
+    apply Haffine; exact Hx.
+  Qed.
+
   (**
    [indexed_basis_affine_prefix_covariance_row_kernel] (theorem) —
-   The same explicit affinely dependent prefix direction
-   annihilates every bounded covariance row.
-   Mathematical meaning: Under finite probability assumptions
-   the direction (1,-a,0,...,0) is a genuine covariance
-   matrix kernel vector, even with additional basis functions.
-   Exact checked proposition: Under unit mass, nonnegative
-   listed weights and f=a*g+c on samples, the witness satisfies
-   indexed_basis_bounded_covariance_row_kernel (f::g::rest).
-   Premises and side conditions: No invertibility or
-   independence of the remaining score basis is assumed.
-   Proof/definition method: Apply the existing quadratic-null
-   iff named covariance-row-kernel criterion and the previously
-   verified exact witness quadratic-zero theorem.
-   Library reuse: indexed_basis_covariance_quadratic_zero_iff_named_row_kernel,
-   indexed_basis_affine_prefix_covariance_quadratic_zero,
-   Stdlib.Vectors.Fin.
-   Boundary: Constructed row-null witness; no general
-   determinant or rank computation.
+   Preserve the normalized nonnegative affine-prefix row-kernel API.
+   Mathematical meaning: An explicit affinely dependent prefix
+   direction annihilates all bounded rows of the covariance matrix.
+   Exact checked proposition: Under total_mass=1, nonnegative
+   listed weights and f=a*g+c on samples, the typed prefix
+   direction belongs to indexed_basis_bounded_covariance_row_kernel.
+   Premises and side conditions: Nonnegative weights are retained
+   only for original callers. The stronger signed-weight theorem
+   shows they are unnecessary for row-kernel membership.
+   Proof/definition method: Delegate directly to the signed-weight
+   affine-prefix row theorem, replacing a positivity-dependent
+   quadratic-nullity bridge with the unconditional row-dot identity.
+   Library reuse: indexed_basis_affine_prefix_covariance_row_kernel_signed,
+   indexed_basis_bounded_covariance_row_kernel_of_sample_constant.
+   Boundary: This preserves the prior proposition; no spectral
+   rank or nullspace-dimension conclusion is introduced.
    *)
   Theorem indexed_basis_affine_prefix_covariance_row_kernel :
     forall (f g : Outcome -> R) (rest : list (Outcome -> R))
@@ -18443,13 +18535,8 @@ Section FiniteProbabilityMoments.
         (indexed_basis_affine_prefix_null_direction
           (n:=length rest) a).
   Proof.
-    intros f g rest a c Hmass Hw Haffine.
-    apply (proj1
-      (indexed_basis_covariance_quadratic_zero_iff_named_row_kernel
-        (f :: g :: rest)
-        (indexed_basis_affine_prefix_null_direction
-          (n:=length rest) a) Hmass Hw)).
-    exact (indexed_basis_affine_prefix_covariance_quadratic_zero
+    intros f g rest a c Hmass _ Haffine.
+    exact (indexed_basis_affine_prefix_covariance_row_kernel_signed
       f g rest a c Hmass Haffine).
   Qed.
 

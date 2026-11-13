@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **900 proof scripts** in seven
+for the two reports. **902 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3878,6 +3878,21 @@ The intended inventory is **897 public claims, 900 proof scripts and
 979 documented declarations** across seven modules; Rocq 9.2 and
 Python/Deal/SPARK CI remain the verification authorities. No
 rank/nullity theorem or signed-weight positive-semidefiniteness is claimed.
+
+## Signed-weight covariance row-kernel witnesses (13 November 2026)
+
+The sampled-constant composite criterion now also implies exact annihilation
+of every typed covariance row for unit total mass, with no individual
+weight-sign restriction. The proof turns each row dot product into a
+covariance using the preexisting unconditional
+covariance_with_weighted_basis_as_row_dot theorem, then uses covariance
+symmetry and support extensionality to reduce to constant-first
+covariance zero. A second result instantiates the affine-prefix witness;
+the older nonnegative-weight row theorem now delegates to it. No
+new summation, matrix implementation or positivity assertion is made.
+The intended inventory is **899 public claims, 902 proof scripts, 981
+documented declarations** across seven modules, subject to Rocq 9.2
+kernel and existing Python/Deal/SPARK CI. Rank/nullity remains open.
 
 ## Research extensions
 
