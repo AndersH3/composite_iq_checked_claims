@@ -14571,6 +14571,8 @@ Section FiniteProbabilityMoments.
    [indexed_real_vector_zero_sum_axis_pair_unique_components] (lemma) —
    The zero-sum summand and scalar-axis coordinate of an explicit
    additive decomposition are jointly unique.
+   Mathematical meaning: Two such representatives coincide only
+   when their zero-sum parts and scalar totals coincide.
    Exact checked proposition: For zero-sum z1,z2 of length S n,
    z1+axis(a)=z2+axis(b) iff z1=z2 and a=b.
    Premises and side conditions: Any finite n and signed real
@@ -14621,6 +14623,8 @@ Section FiniteProbabilityMoments.
    [indexed_real_vector_zero_sum_axis_unique_decomposition] (lemma) —
    Every positive-length real vector admits one uniquely
    determined zero-sum summand and one scalar-axis coordinate.
+   Mathematical meaning: Canonical projection and full coordinate
+   sum provide the only compatible concrete decomposition.
    Exact checked proposition: For every v, there exist z and t
    such that zero_sum z and v=z+axis(t), and any other zero-sum
    z' and scalar t' satisfying v=z'+axis(t') must satisfy
@@ -14668,6 +14672,8 @@ Section FiniteProbabilityMoments.
    [indexed_real_vector_zero_sum_axis_pair_add_coordinates] (lemma) —
    Addition of two explicit zero-sum-plus-axis representatives
    adds their zero-sum coordinates and their scalar totals.
+   Mathematical meaning: The zero-sum and scalar-axis coordinates
+   behave as separate additive components.
    Exact checked proposition: If z1,z2 are zero-sum, then
    projection((z1+axis(a))+(z2+axis(b)))=z1+z2 and the
    coordinate total of that sum equals a+b.
@@ -14716,6 +14722,8 @@ Section FiniteProbabilityMoments.
    [indexed_real_vector_zero_sum_axis_pair_scale_coordinates] (lemma) —
    Uniform real scaling of an explicit zero-sum-plus-axis vector
    scales each of its two unique canonical coordinates.
+   Mathematical meaning: Both parts of the canonical splitting
+   transform homogeneously under real scalar multiplication.
    Exact checked proposition: For zero-sum z, projection
    (scale(c, z+axis(a)))=scale(c,z) and the coordinate total
    of that scaled vector equals c*a.
@@ -14761,6 +14769,8 @@ Section FiniteProbabilityMoments.
    [indexed_real_vector_zero_sum_axis_pair_add_reconstruct] (lemma) —
    Adding two canonical representatives is equivalent to
    reconstructing directly from the sums of their components.
+   Mathematical meaning: The explicit inverse of the coordinate
+   splitting preserves real-vector addition.
    Exact checked proposition: For zero-sum z1,z2,
    (z1+axis(a))+(z2+axis(b))=(z1+z2)+axis(a+b).
    Premises and side conditions: Every positive finite length,
@@ -14803,6 +14813,8 @@ Section FiniteProbabilityMoments.
    [indexed_real_vector_zero_sum_axis_pair_scale_reconstruct] (lemma) —
    Scaling an explicit canonical representative is equivalent
    to reconstructing from the scaled zero-sum and scalar coordinates.
+   Mathematical meaning: The explicit inverse of the coordinate
+   splitting preserves real scalar multiplication.
    Exact checked proposition: For zero-sum z, scale(c,z+axis(a))
    =scale(c,z)+axis(c*a).
    Premises and side conditions: Every n, signed coordinates,
