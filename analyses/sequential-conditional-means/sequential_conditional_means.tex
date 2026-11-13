@@ -14,7 +14,7 @@
 \usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,
   pdftitle={Sequential Conditional Means of Equicorrelated Scores},
   pdfauthor={Prepared with OpenAI Codex},
-  pdfsubject={A fixed starting score included in the average of standardized Gaussian scores}]{hyperref}
+  pdfsubject={One, two or three fixed starting scores included in the mean and its standard deviation}]{hyperref}
 \usepackage{bookmark}
 \usepackage{scrlayer-scrpage}
 \DeclareMathOperator{\E}{E}
@@ -32,7 +32,7 @@
 \cfoot*{\pagemark}
 \pagestyle{scrheadings}
 \title{Sequential Conditional Means of Equicorrelated Scores}
-\subtitle{Including the fixed starting score in the average}
+\subtitle{One, two or three fixed starting scores included in the average}
 \author{}
 \date{13 November 2026}
 
@@ -53,7 +53,9 @@ The actual \((k+1)\)-test average has population standard deviation
 standard deviation is \(\sqrt{k(1-c)(1+kc)}/(k+1)\).
 We derive the Gaussian conditional mean, solve the recursion,
 describe the admissible correlations and singular endpoints, and distinguish
-these sources of variation. A counterexample shows that means, variances and
+these sources of variation. A general derivation also gives the cases with
+two or three initial scores all fixed at \(a\), including every starting
+score in the average. A counterexample shows that means, variances and
 correlations alone do not determine the recursive conditional means.
 \end{abstract}
 
@@ -100,6 +102,8 @@ The quantity of interest is
 It contains \(k+1\) values: the starting score \(a\) is the first value,
 followed by the \(k\) predictions \(e_1,\ldots,e_k\). Thus \(k\) counts
 subsequent predictions, while \(k+1\) counts all values in the average.
+Section~\ref{sec:multiple-starts} extends this setup to \(r\) initial scores
+all fixed at \(a\), followed by \(k\) predictions, for \(r+k\) total values.
 
 For continuous distributions, conditioning on a particular score is not a
 ratio of probabilities of point events. A conditional mean is ordinarily
@@ -427,7 +431,220 @@ For the fixed starting score in this problem, the answer is
 mean \(0\) and standard deviation \(1\); the arithmetic average has its own
 distribution and is not rescaled to unit standard deviation.
 
-\section{Boundary cases}
+\section{Two or three initial scores equal to the starting value}
+\label{sec:multiple-starts}
+
+\subsection{General setup with several fixed starting scores}
+Let \(r\geq1\) be the number of starting scores and keep \(k\geq1\) for
+the number of subsequent predictions. There are now \(N=r+k\) jointly
+Gaussian scores \(X_0,\ldots,X_{N-1}\), each with population mean \(0\),
+standard deviation \(1\), and pairwise correlation \(c\). Fix the first
+\(r\) scores at the same value:
+\begin{equation}
+  X_0=X_1=\cdots=X_{r-1}=a.
+  \label{eq:multiple-history}
+\end{equation}
+These are \(r\) distinct tests with equal observed scores. Define
+\[
+  d_r=1+(r-1)c,\qquad d_N=1+(N-1)c.
+\]
+The covariance-matrix eigenvalues give the domain
+\begin{equation}
+  -\frac1{N-1}\leq c\leq1.
+  \label{eq:multiple-domain}
+\end{equation}
+For \(c<1\), all conditioning prefixes are nonsingular. In particular,
+\[
+  d_r\geq1-\frac{r-1}{N-1}=\frac{k}{N-1}>0.
+\]
+As before, evaluation at an exact history means the continuous Gaussian
+conditional-mean version. This specifies the equal-score histories even
+though their point probabilities are zero.
+
+\subsection{Every subsequent prediction and the inclusive average}
+Let \(e_j^{(r)}\) be the recursive prediction of \(X_{r+j-1}\), using the
+\(r\) fixed initial scores and the previous \(j-1\) predictions.
+Equation~\eqref{eq:conditional-mean}, applied to the \(r+j-1\) preceding
+scores, gives
+\begin{equation}
+  e_j^{(r)}=\frac{c}{d_r+(j-1)c}
+       \left(ra+\sum_{\ell=1}^{j-1}e_\ell^{(r)}\right),
+  \qquad 1\leq j\leq k.
+  \label{eq:multiple-recursion}
+\end{equation}
+The first prediction is \(b_r=rca/d_r\). If the previous predictions all
+equal \(b_r\), then
+\[
+  ra+\sum_{\ell=1}^{j-1}e_\ell^{(r)}
+  =ra+(j-1)\frac{rca}{d_r}
+  =\frac{ra}{d_r}\bigl[d_r+(j-1)c\bigr].
+\]
+Substituting into \eqref{eq:multiple-recursion} and cancelling the positive
+denominator establishes the induction step. Consequently
+\begin{equation}
+  \boxed{e_j^{(r)}=b_r=\frac{rc}{1+(r-1)c}\,a,
+  \qquad 1\leq j\leq k.}
+  \label{eq:multiple-predictions}
+\end{equation}
+The requested average includes all \(r\) starting values and all \(k\)
+subsequent predictions, so
+\begin{align}
+  B_{r,k}
+  &=\frac{ra+\sum_{j=1}^{k}e_j^{(r)}}{r+k}
+   =\frac{ra+k(rca/d_r)}{N}\notag\\
+  &=\boxed{\frac{r\,[1+(r+k-1)c]}{(r+k)[1+(r-1)c]}\,a.}
+  \label{eq:multiple-mean}
+\end{align}
+Putting \(r=1\) recovers \eqref{eq:answer}. Holding all starting scores,
+\(c\), and the counts fixed makes \(B_{r,k}\) deterministic, with
+\(\operatorname{SD}(B_{r,k})=0\).
+
+\subsection{Population and conditional standard deviations}
+Let the actual mean of the \(N=r+k\) test outcomes be
+\[
+  C_{r,k}=\frac1N\sum_{i=0}^{N-1}X_i.
+\]
+The covariance count in \eqref{eq:population-variance} gives
+\begin{equation}
+  \boxed{\operatorname{SD}(C_{r,k})
+    =\sqrt{\frac{1+(r+k-1)c}{r+k}}=\sqrt{\frac{d_N}{N}}.}
+  \label{eq:multiple-population-sd}
+\end{equation}
+This population formula does not require Gaussianity. The following
+conditional calculation does use the joint Gaussian model.
+
+Let \(Z=(X_0,\ldots,X_{r-1})^{\T}\). Since
+\(\Cov(Z)=(1-c)I_r+c\one_r\one_r^{\T}\), the projection of each future
+score onto the starting block is \((c/d_r)\sum_{i=0}^{r-1}X_i\).
+Define the future residuals
+\[
+  V_j=X_{r+j-1}-\frac{c}{d_r}\sum_{i=0}^{r-1}X_i,
+  \qquad 1\leq j\leq k.
+\]
+Each residual has zero covariance with every coordinate of \(Z\). Joint
+Gaussianity makes the residual vector independent of \(Z\). Its covariance
+entries are
+\begin{align*}
+  \Var(V_j)&=1-\frac{rc^2}{d_r},\\
+  \Cov(V_i,V_j)&=c-\frac{rc^2}{d_r}
+      =\frac{c(1-c)}{d_r}\qquad(i\ne j).
+\end{align*}
+Equivalently, the conditional covariance matrix of the future scores is
+\[
+  (1-c)I_k+\frac{c(1-c)}{d_r}\one_k\one_k^{\T}.
+\]
+Conditioning on \(Z=a\one_r\) fixes all \(r\) starting terms. The future
+conditional means are all \(rca/d_r\), so
+\(\E[C_{r,k}\given Z=a\one_r]=B_{r,k}\). Summing the residual covariance
+terms gives
+\begin{align}
+  \Var(C_{r,k}\given Z=a\one_r)
+  &=\frac1{N^2}\left[k(1-c)+\frac{k^2c(1-c)}{d_r}\right]\notag\\
+  &=\frac{k(1-c)(d_r+kc)}{N^2d_r}
+   =\frac{k(1-c)d_N}{N^2d_r}.
+   \label{eq:multiple-conditional-variance}
+\end{align}
+Thus the conditional standard deviation of the actual mean is
+\begin{equation}
+  \boxed{\operatorname{SD}(C_{r,k}\given Z=a\one_r)
+    =\frac1{r+k}
+      \sqrt{\frac{k(1-c)[1+(r+k-1)c]}{1+(r-1)c}}.}
+  \label{eq:multiple-conditional-sd}
+\end{equation}
+It is independent of the numerical value of \(a\). This is the spread of
+the actual mean after the starting block is observed; the fixed recursive
+mean itself has standard deviation zero. An across-population calculation
+with random initial scores uses a random starting \emph{block}. The single
+random-start interpretation in \eqref{eq:random-start} does not specify a
+distribution for several starting scores constrained to share one random value.
+
+\subsection{Special case: two starting scores equal to \texorpdfstring{\(a\)}{a}}
+Set \(r=2\). The initial values are \(a,a\), followed by \(k\)
+predictions, so \(N=k+2\) and \(-1/(k+1)\leq c\leq1\). Every prediction
+and the inclusive average are
+\begin{align}
+  e_j^{(2)}&=\boxed{\frac{2ca}{1+c}},\qquad 1\leq j\leq k,
+    \label{eq:two-predictions}\\
+  B_{2,k}&=\frac{2a+\sum_{j=1}^{k}e_j^{(2)}}{k+2}
+    =\boxed{\frac{2[1+(k+1)c]}{(k+2)(1+c)}\,a.}
+    \label{eq:two-mean}
+\end{align}
+The actual mean has population and conditional standard deviations
+\begin{align}
+  \operatorname{SD}(C_{2,k})
+    &=\boxed{\sqrt{\frac{1+(k+1)c}{k+2}}},
+      \label{eq:two-population-sd}\\
+  \operatorname{SD}(C_{2,k}\given X_0=X_1=a)
+    &=\boxed{\frac1{k+2}
+       \sqrt{\frac{k(1-c)[1+(k+1)c]}{1+c}}.}
+      \label{eq:two-conditional-sd}
+\end{align}
+
+\subsection{Special case: three starting scores equal to \texorpdfstring{\(a\)}{a}}
+Set \(r=3\). The initial values are \(a,a,a\), followed by \(k\)
+predictions, so \(N=k+3\) and \(-1/(k+2)\leq c\leq1\). The predictions
+and inclusive average are
+\begin{align}
+  e_j^{(3)}&=\boxed{\frac{3ca}{1+2c}},\qquad 1\leq j\leq k,
+    \label{eq:three-predictions}\\
+  B_{3,k}&=\frac{3a+\sum_{j=1}^{k}e_j^{(3)}}{k+3}
+    =\boxed{\frac{3[1+(k+2)c]}{(k+3)(1+2c)}\,a.}
+    \label{eq:three-mean}
+\end{align}
+The actual mean has standard deviations
+\begin{align}
+  \operatorname{SD}(C_{3,k})
+    &=\boxed{\sqrt{\frac{1+(k+2)c}{k+3}}},
+      \label{eq:three-population-sd}\\
+  \operatorname{SD}(C_{3,k}\given X_0=X_1=X_2=a)
+    &=\boxed{\frac1{k+3}
+       \sqrt{\frac{k(1-c)[1+(k+2)c]}{1+2c}}.}
+      \label{eq:three-conditional-sd}
+\end{align}
+For both special cases, the standard deviation of the fixed recursive
+average \(B_{r,k}\) is \(0\).
+
+\subsection{Checks, endpoints and an example}
+At \(c=0\), every subsequent prediction is zero,
+\(B_{r,k}=ra/(r+k)\), and the actual mean has population SD
+\(1/\sqrt{r+k}\) and conditional SD \(\sqrt{k}/(r+k)\).
+At \(c=1\), all test scores agree almost surely. The equal starting
+history is compatible with this support; all predictions and their
+inclusive mean equal \(a\). The population SD is \(1\), and the
+conditional SD is \(0\), establishing the endpoint directly.
+
+At \(c=-1/(N-1)\), the total score is zero almost surely. The initial
+block remains nonsingular because \(k\geq1\), and
+\[
+  e_j^{(r)}=-\frac{ra}{k},\qquad
+  ra+\sum_{j=1}^{k}e_j^{(r)}=0.
+\]
+Hence \(B_{r,k}=0\), and both actual-mean standard deviations are zero.
+If there are no subsequent predictions, the fixed list of \(r\) values
+\(a\) simply averages to \(a\), with conditional SD zero, provided the
+starting history is compatible with the model. The general derivation
+above assumes \(k\geq1\); it does not divide by a singular initial-block
+eigenvalue when \(k=0\).
+For \(r\geq2\) and \(k=0\), the lower endpoint \(c=-1/(r-1)\) permits
+equal starting scores only when \(a=0\).
+
+For \(a=2\), \(c=0.6\), and \(k=3\) subsequent predictions, the two
+special cases give the following values, rounded to six decimal places:
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+Quantity & Two initial scores & Three initial scores \\
+\hline
+Each subsequent prediction & \(1.500000\) & \(1.636364\) \\
+Mean including all starting scores & \(1.700000\) & \(1.818182\) \\
+Population SD of the actual mean & \(0.824621\) & \(0.816497\) \\
+Conditional SD of the actual mean & \(0.319374\) & \(0.246183\) \\
+SD of the fixed recursive mean & \(0\) & \(0\) \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Boundary cases with one starting score}
 
 At \(c=0\), joint Gaussianity makes the scores independent, and every
 subsequent prediction is zero. Including the starting score gives
