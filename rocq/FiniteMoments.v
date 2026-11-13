@@ -16277,27 +16277,244 @@ Section FiniteProbabilityMoments.
       exact Hradical.
   Qed.
 
+
+  (**
+   [indexed_basis_score_has_typed_coordinate_representation] (lemma) —
+   Select an arbitrary listed score using dimension-correct coefficients.
+   Mathematical meaning: Each basis occurrence has a coefficient
+   direction whose composite score equals that occurrence pointwise.
+   Exact checked proposition: If In g basis, some typed vector
+   evaluates via weighted_basis_sum to g at every outcome.
+   Premises and side conditions: Duplicate functions, empty bases and
+   signed weights are admitted; no equality decision is required.
+   Proof/definition method: Induct over the basis list, selecting its
+   head with Vector.cons 1 and Vector.const 0, or prepending zero to
+   a tail witness. Reduce only existing combination definitions.
+   Library reuse: Vector.cons/const, VectorSpec.to_list_const,
+   weighted_basis_sum_repeat_zero, Stdlib.List.In and Stdlib.Ring.
+   Boundary: A coordinate representation, not new matrix operations.
+   *)
+  Lemma indexed_basis_score_has_typed_coordinate_representation :
+    forall basis (g : Outcome -> R),
+      In g basis ->
+      exists right : Vector.t R (length basis),
+        forall x,
+          weighted_basis_sum (Vector.to_list right) basis x = g x.
+  Proof.
+    induction basis as [|f rest IH]; intros g Hg.
+    - contradiction.
+    - simpl in Hg.
+      destruct Hg as [Heq | Htail].
+      + subst g.
+        exists (Vector.cons R 1 (length rest)
+          (Vector.const 0 (length rest))).
+        intro x.
+        change
+          (1 * f x +
+            weighted_basis_sum
+              (Vector.to_list (Vector.const 0 (length rest)))
+              rest x = f x).
+        rewrite VectorSpec.to_list_const.
+        rewrite weighted_basis_sum_repeat_zero.
+        ring.
+      + destruct (IH g Htail) as [tail Hscore].
+        exists (Vector.cons R 0 (length rest) tail).
+        intro x.
+        change
+          (0 * f x +
+            weighted_basis_sum (Vector.to_list tail) rest x = g x).
+        rewrite Hscore.
+        ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional]
+   (theorem) — A finite basis suffices to test the full radical.
+   Mathematical meaning: A composite is orthogonal to every typed
+   coefficient direction exactly when it is orthogonal to all scores
+   enumerated by the basis.
+   Exact checked proposition: Radical(coefficients) iff each g with
+   In g basis has zero covariance against the coefficient composite.
+   Premises and side conditions: No normalized mass, positive weights,
+   basis independence, or outcome distinctness assumptions.
+   Proof/definition method: Forward direction represents each basis
+   score using a typed unit selector. Backward direction uses
+   unconditional covariance linearity over List.combine, plus shared
+   finite_sum_ext_in and finite_sum_zero.
+   Library reuse: indexed_basis_score_has_typed_coordinate_representation,
+   covariance_extensional, covariance_of_general_weighted_second_unconditional,
+   basis_of_combine, VectorSpec.length_to_list, FiniteSum.finite_sum_ext_in,
+   FiniteSum.finite_sum_zero and Stdlib.List.in_map.
+   Boundary: Algebraic orthogonality only, without PSD or matrix rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional :
+    forall basis (coefficients : Vector.t R (length basis)),
+      (indexed_basis_covariance_bilinear_radical basis coefficients <->
+       forall g, In g basis ->
+         covariance
+           (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0).
+  Proof.
+    intros basis coefficients.
+    unfold indexed_basis_covariance_bilinear_radical.
+    split.
+    - intros Hradical g Hg.
+      destruct (indexed_basis_score_has_typed_coordinate_representation
+        basis g Hg) as [right Hscore].
+      transitivity
+        (indexed_basis_covariance_bilinear_form
+          basis coefficients right).
+      + unfold indexed_basis_covariance_bilinear_form.
+        apply covariance_extensional.
+        * intro x; reflexivity.
+        * intro x; symmetry; apply Hscore.
+      + apply Hradical.
+    - intros Hbasis right.
+      unfold indexed_basis_covariance_bilinear_form.
+      change
+        (covariance
+          (weighted_basis_sum (Vector.to_list coefficients) basis)
+          (linear_combination (combine (Vector.to_list right) basis)) = 0).
+      rewrite covariance_of_general_weighted_second_unconditional.
+      unfold covariance_row.
+      transitivity
+        (FiniteSum.finite_sum
+          (fun _ : R * (Outcome -> R) => 0)
+          (combine (Vector.to_list right) basis)).
+      + apply FiniteSum.finite_sum_ext_in.
+        intros [a g] Hpair.
+        simpl.
+        assert (Hlength :
+          length (Vector.to_list right) = length basis).
+        { now rewrite VectorSpec.length_to_list. }
+        assert (Hg : In g basis).
+        {
+          assert (Hmapped :
+            In g (map snd (combine (Vector.to_list right) basis))).
+          { apply in_map; exact Hpair. }
+          rewrite (basis_of_combine
+            (Vector.to_list right) basis Hlength) in Hmapped.
+          exact Hmapped.
+        }
+        rewrite (Hbasis g Hg).
+        ring.
+      + apply FiniteSum.finite_sum_zero.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional]
+   (theorem) — Every bounded row vanishes iff all basis covariances do.
+   Mathematical meaning: Zero coordinate dot products against each
+   covariance matrix row equal covariance orthogonality to each score.
+   Exact checked proposition: Named bounded row-kernel membership iff
+   all scores g in basis have covariance zero with the composite.
+   Premises and side conditions: Signed and unnormalized weights,
+   zero-dimensional, duplicated or dependent bases are allowed.
+   Proof/definition method: Convert each row dot product using
+   unconditional covariance_with_weighted_basis_as_row_dot and symmetry.
+   Apply existing bounded-row surjectivity for forward coverage and
+   vector_of_list_nth_error with nth_error_In for reverse coverage.
+   Library reuse: indexed_basis_covariance_matrix_row_has_bounded_index,
+   vector_of_list_nth_error, covariance_with_weighted_basis_as_row_dot,
+   covariance_symmetric, Stdlib.List.in_map_iff/nth_error_In,
+   VectorSpec.length_to_list.
+   Boundary: No positivity, dimension or matrix-rank theorem is implied.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional :
+    forall basis (coefficients : Vector.t R (length basis)),
+      (indexed_basis_bounded_covariance_row_kernel basis coefficients <->
+       forall g, In g basis ->
+         covariance
+           (weighted_basis_sum (Vector.to_list coefficients) basis) g = 0).
+  Proof.
+    intros basis coefficients.
+    assert (Hlength :
+      length (Vector.to_list coefficients) = length basis).
+    { now rewrite VectorSpec.length_to_list. }
+    unfold indexed_basis_bounded_covariance_row_kernel.
+    split.
+    - intros Hrows g Hg.
+      assert (Hrow :
+        In (map (fun h => covariance g h) basis)
+           (basis_covariance_matrix basis)).
+      {
+        unfold basis_covariance_matrix.
+        apply in_map_iff.
+        exists g.
+        split; [reflexivity | exact Hg].
+      }
+      destruct (indexed_basis_covariance_matrix_row_has_bounded_index
+        basis (map (fun h => covariance g h) basis) Hrow)
+        as [i Hroweq].
+      specialize (Hrows i).
+      rewrite <- Hroweq in Hrows.
+      rewrite <- (covariance_with_weighted_basis_as_row_dot
+        (Vector.to_list coefficients) basis g Hlength) in Hrows.
+      rewrite (covariance_symmetric g
+        (weighted_basis_sum (Vector.to_list coefficients) basis))
+        in Hrows.
+      exact Hrows.
+    - intros Hbasis i.
+      rewrite <- (covariance_with_weighted_basis_as_row_dot
+        (Vector.to_list coefficients) basis
+        (Vector.nth (Vector.of_list basis) i) Hlength).
+      rewrite (covariance_symmetric
+        (Vector.nth (Vector.of_list basis) i)
+        (weighted_basis_sum (Vector.to_list coefficients) basis)).
+      apply Hbasis.
+      eapply nth_error_In.
+      apply vector_of_list_nth_error.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional]
+   (theorem) — Radical equals the bounded covariance row kernel
+   for arbitrary finite real weights.
+   Mathematical meaning: A direction is covariance-orthogonal to
+   every coefficient direction exactly when it annihilates every
+   indexed covariance row.
+   Exact checked proposition: Bilinear radical membership iff named
+   bounded covariance-row kernel membership for all typed coefficients.
+   Premises and side conditions: No weight positivity, normalization,
+   basis independence, or nonempty basis assumption.
+   Proof/definition method: Compose two independent equivalences to
+   uncorrelatedness with every listed basis score using tauto.
+   No quadratic nullity bridge or matrix computation is introduced.
+   Library reuse: indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional,
+   indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional,
+   Stdlib.Logic.tauto and Vector.t.
+   Boundary: Algebraic kernel equality; no covariance rank or PSD claim.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional :
+    forall basis (coefficients : Vector.t R (length basis)),
+      (indexed_basis_covariance_bilinear_radical basis coefficients <->
+       indexed_basis_bounded_covariance_row_kernel basis coefficients).
+  Proof.
+    intros basis coefficients.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional
+        basis coefficients) as Hradical.
+    pose proof
+      (indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional
+        basis coefficients) as Hrows.
+    tauto.
+  Qed.
+
   (**
    [indexed_basis_covariance_bilinear_radical_iff_row_kernel]
-   (theorem) — Equate the covariance radical with the row kernel.
-   Mathematical meaning: Requiring covariance zero against
-   every coefficient direction is equivalent to the existing
-   dimension-indexed zero-dot-product condition against every
-   row of the indexed basis covariance matrix.
-   Exact checked proposition: For normalized nonnegative finite
-   weights, radical(coefficients) iff
-   indexed_basis_bounded_covariance_row_kernel basis coefficients.
-   Premises and side conditions: The basis and vector dimensions
-   agree; zero-weight samples, repeated outcomes, zero-dimensional
-   coefficient spaces and dependent scores are allowed.
-   Proof/definition method: Compose the previously verified
-   covariance quadratic/nullity-to-row-kernel equivalence
-   with the new quadratic-nullity-to-radical equivalence;
-   propositional logic performs only the final transport.
-   Library reuse: indexed_basis_covariance_quadratic_zero_iff_named_row_kernel,
-   indexed_basis_covariance_quadratic_zero_iff_bilinear_radical,
-   Stdlib.Logic.tauto; no row-dot implementation is duplicated.
-   Boundary: Kernel identification, not a claim about matrix rank.
+   (theorem) — Preserved normalized finite-probability radical API.
+   Mathematical meaning: Every typed covariance bilinear radical
+   direction annihilates exactly the existing bounded covariance rows.
+   Exact checked proposition: Under mass one and nonnegative listed
+   sample weights, radical(coefficients) iff row-kernel(coefficients).
+   Premises and side conditions: Original weight assumptions remain
+   for backward compatibility but the stronger algebraic equivalence
+   does not require either of them.
+   Proof/definition method: Delegate directly to the unconditional
+   radical-row-kernel theorem instead of composing positivity-dependent
+   quadratic-zero equivalences.
+   Library reuse: indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   Stdlib.Logic and typed Vector.t covariance predicates.
+   Boundary: No general rank/nullity or signed-weight PSD claim.
    *)
   Theorem indexed_basis_covariance_bilinear_radical_iff_row_kernel :
     forall basis (coefficients : Vector.t R (length basis)),
@@ -16306,14 +16523,8 @@ Section FiniteProbabilityMoments.
       (indexed_basis_covariance_bilinear_radical basis coefficients <->
        indexed_basis_bounded_covariance_row_kernel basis coefficients).
   Proof.
-    intros basis coefficients Hmass Hw.
-    pose proof
-      (indexed_basis_covariance_quadratic_zero_iff_bilinear_radical
-        basis coefficients Hmass Hw) as Hradical.
-    pose proof
-      (indexed_basis_covariance_quadratic_zero_iff_named_row_kernel
-        basis coefficients Hmass Hw) as Hrows.
-    tauto.
+    intros basis coefficients _ _.
+    apply indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional.
   Qed.
 
   (**
@@ -18465,25 +18676,20 @@ Section FiniteProbabilityMoments.
 
 
   (**
-   [indexed_basis_affine_prefix_covariance_row_kernel_signed] (theorem) —
-   Signed-weight covariance row annihilation by affine dependence.
-   Mathematical meaning: For any additional trailing basis scores,
-   the nonzero affine-prefix direction (1,-a,0,...,0) annihilates
-   each of the full finite covariance matrix's bounded rows.
-   Exact checked proposition: Total mass one and f=a*g+c on
-   every listed sample imply the named typed row-kernel predicate
-   for the affine prefix witness, including when weights are signed.
-   Premises and side conditions: There is no individual weight-sign
-   constraint; repeated sample outcomes and arbitrary extra scores
-   are allowed, as are all real affine slopes and intercepts.
-   Proof/definition method: Establish constant composite-score
-   evaluation from the existing prefix score identity, then apply
-   the general sampled-constant row-kernel theorem directly.
-   Library reuse: indexed_basis_affine_prefix_weighted_score,
-   indexed_basis_bounded_covariance_row_kernel_of_sample_constant,
-   Stdlib.Vectors.Vector.cons and Vector.const.
-   Boundary: An explicit matrix kernel direction; this is not
-   a general covariance rank or spectral decomposition theorem.
+   [indexed_basis_affine_prefix_covariance_row_kernel_signed]
+   (theorem) — Signed-weight affine-prefix row kernel via the radical.
+   Mathematical meaning: Affine dependence f=a*g+c produces an
+   explicit nonzero coefficient vector (1,-a,0,...,0) annihilating
+   each covariance row, even with arbitrary additional basis scores.
+   Exact checked proposition: Under total_mass=1 and the sampled
+   affine relation, the witness lies in the named covariance row kernel.
+   Premises and side conditions: Negative and zero sample weights,
+   repeated outcomes and arbitrary trailing basis scores are allowed.
+   Proof/definition method: Reuse the existing signed affine-prefix
+   radical witness and the new unconditional radical-row equivalence.
+   Library reuse: indexed_basis_affine_prefix_covariance_radical_signed,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional.
+   Boundary: A kernel witness only, with no general rank calculation.
    *)
   Theorem indexed_basis_affine_prefix_covariance_row_kernel_signed :
     forall (f g : Outcome -> R) (rest : list (Outcome -> R))
@@ -18496,13 +18702,13 @@ Section FiniteProbabilityMoments.
           (n:=length rest) a).
   Proof.
     intros f g rest a c Hmass Haffine.
-    apply (indexed_basis_bounded_covariance_row_kernel_of_sample_constant
-      (f :: g :: rest)
-      (indexed_basis_affine_prefix_null_direction
-        (n:=length rest) a) c Hmass).
-    intros x Hx.
-    apply indexed_basis_affine_prefix_weighted_score.
-    apply Haffine; exact Hx.
+    apply (proj1
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a))).
+    apply (indexed_basis_affine_prefix_covariance_radical_signed
+      f g rest a c Hmass Haffine).
   Qed.
 
   (**

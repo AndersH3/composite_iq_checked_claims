@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **899 public theorem/lemma/example claims**, plus
+The current branch has **903 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**902 proof scripts** across seven Rocq modules. The claims and scripts
+**906 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 488 proof scripts
+## FiniteMoments.v — 492 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1264,7 +1264,11 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_radical_closed_under_scale` (theorem) | One rewrite by established first-argument scalar homogeneity and zero substitution | indexed_basis_covariance_bilinear_scale_first, Stdlib.Ring | **New:** algebraic radical closed under all scalar multiplication |
 | `indexed_basis_covariance_bilinear_radical_closed_under_add` (theorem) | One rewrite by established first-argument additivity and zero substitutions | indexed_basis_covariance_bilinear_add_first, Stdlib.Ring | **New:** algebraic radical closed under coefficient addition |
 | `indexed_basis_covariance_quadratic_zero_iff_bilinear_radical` (theorem) | Compose existing orthogonality to arbitrary scores with diagonal self-pairing | indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score, indexed_basis_covariance_bilinear_diagonal | **New:** finite covariance quadratic nullspace equals the typed bilinear radical |
-| `indexed_basis_covariance_bilinear_radical_iff_row_kernel` (theorem) | Compose already checked two quadratic-zero kernel bridges | indexed_basis_covariance_quadratic_zero_iff_bilinear_radical, indexed_basis_covariance_quadratic_zero_iff_named_row_kernel, tauto | **New:** typed covariance radical equals existing bounded row kernel |
+| `indexed_basis_score_has_typed_coordinate_representation` (lemma) | Induct on basis to construct a typed coordinate selector with Vector.cons 1/0 and Vector.const 0. | Vector.cons/const, VectorSpec.to_list_const, weighted_basis_sum_repeat_zero, ring. | **New:** Each listed basis score has a typed composite representation. |
+| `indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional` (theorem) | Unit basis selectors prove one direction; unconditional second-slot covariance linearity and finite-sum zero prove the other. | covariance_of_general_weighted_second_unconditional, basis_of_combine, FiniteSum.finite_sum_ext_in/zero. | **New:** Arbitrary-weight radical iff orthogonality to every basis score. |
+| `indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional` (theorem) | Row-dot covariance identity and symmetry; existing bounded-index surjectivity and vector-list nth_error membership. | covariance_with_weighted_basis_as_row_dot, indexed_basis_covariance_matrix_row_has_bounded_index, vector_of_list_nth_error. | **New:** Arbitrary-weight row kernel iff orthogonality to every basis score. |
+| `indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional` (theorem) | Compose the radical-vs-basis and row-vs-basis equivalences with tauto. | Both new unconditional basis-orthogonality bridges. | **New:** Algebraic radical iff row kernel without sign/mass conditions. |
+| `indexed_basis_covariance_bilinear_radical_iff_row_kernel` (theorem) | **Refactored:** Keep original API but delegate to unconditional algebraic radical-row equivalence. | indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **Refactored:** Remove unnecessary quadratic-nullity positivity bridge. |
 | `indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial` (theorem) | Reuse positive-definite iff trivial named row kernel and the new radical/row iff | indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial, indexed_basis_covariance_bilinear_radical_iff_row_kernel | **New:** positive definiteness iff the typed covariance radical has no nonzero coefficient direction |
 | `indexed_basis_covariance_bilinear_radical_zero_coefficients` (theorem) | Standard zero-vector list and existing weighted-score zero identity, covariance extensionality and homogeneity | VectorSpec.to_list_const, weighted_basis_sum_repeat_zero, covariance_extensional, covariance_scale_first, Stdlib.Ring | **New:** canonical typed coefficient zero lies in covariance radical even with signed unnormalized weights |
 | `indexed_basis_covariance_bilinear_radical_nonzero_scale_iff` (theorem) | First-argument covariance homogeneity and standard real zero-product elimination | indexed_basis_covariance_bilinear_scale_first, Stdlib.Reals.Rmult_integral, Stdlib.Ring | **New:** radical membership invariant under every nonzero scalar, without probability assumptions |
@@ -1313,7 +1317,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_affine_prefix_covariance_not_positive_definite` (theorem) | Instantiate the existing positive-definiteness predicate with the nonzero witness and its zero quadratic; finish by Lra. | indexed_basis_covariance_positive_definite, indexed_basis_affine_prefix_null_direction_nonzero, indexed_basis_affine_prefix_covariance_quadratic_zero, Lra. | **New:** Adding other scores cannot restore strict covariance positive definiteness. |
 | `indexed_basis_affine_prefix_covariance_radical_signed` (theorem) | Compose established affine-prefix weighted-score equality with the constant-score radical lemma. | indexed_basis_affine_prefix_weighted_score, indexed_basis_covariance_bilinear_radical_of_sample_constant. | **New:** Signed-weight affine-prefix witness is radical. |
 | `indexed_basis_affine_prefix_covariance_radical` (theorem) | **Refactored:** Preserve public theorem assumptions, delegate to the signed-weight result. | indexed_basis_affine_prefix_covariance_radical_signed. | **Refactored:** Avoid unnecessary positivity-dependent quadratic bridge. |
-| `indexed_basis_affine_prefix_covariance_row_kernel_signed` (theorem) | Specialize sample-constant row-kernel theorem using maintained affine prefix score cancellation. | indexed_basis_bounded_covariance_row_kernel_of_sample_constant, indexed_basis_affine_prefix_weighted_score. | **New:** Affine-prefix row-kernel witness for normalized signed weights. |
+| `indexed_basis_affine_prefix_covariance_row_kernel_signed` (theorem) | **Refactored:** Transport signed affine radical witness through unconditional radical-row equivalence. | indexed_basis_affine_prefix_covariance_radical_signed, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **Refactored:** Unify radical and row-kernel proof paths. |
 | `indexed_basis_affine_prefix_covariance_row_kernel` (theorem) | **Refactored:** Delegate original nonnegative-weight interface to stronger signed-weight row theorem. | indexed_basis_affine_prefix_covariance_row_kernel_signed. | **Refactored:** Algebraic row-dot proof replaces redundant positivity-dependent nullity bridge. |
 
 
@@ -1388,3 +1392,23 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `four_cell_generic_independence_iff_marginal_product` (theorem) | Definitional shared sum equality, existing mass bridges and iff rewriting | FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product, four_cell_total_mass, four_cell_intersection_mass, four_cell_first_marginal, four_cell_second_marginal | **New:** generic independence specializes exactly to four-cell joint=marginal product |
 | `four_cell_generic_independence_iff_cross_product_cells` (theorem) | Iff rewriting and pre-existing admissions criterion | four_cell_generic_independence_iff_marginal_product, Admissions.binary_independence_criterion | **New:** generic conditional independence iff cross-product of four cell weights |
 | `four_cell_generic_independence_iff_zero_indicator_covariance` (theorem) | Convert shared finite mass definitionally, instantiate general bridge | four_cell_total_mass, FiniteBridge.finite_normalized_conditional_independence_iff_zero_indicator_covariance | **New:** four-cell generic independence iff indicator covariance nullity |
+
+## Unconditional covariance radical and row-kernel equivalence (13 November 2026)
+
+Four documented results establish that the covariance bilinear radical
+is exactly the bounded covariance row kernel for arbitrary finite signed
+or unnormalized weights. A typed coordinate-selector lemma uses existing
+Vector.cons/const and the zero-composite theorem. Two other theorems
+characterize the radical and the row kernel separately through covariance
+orthogonality to every listed basis score, using shared FiniteSum laws,
+the unconditional covariance linearity, and existing bounded index bridges.
+The original normalized nonnegative theorem now delegates to the stronger
+result. The affine signed-weight row theorem likewise delegates to its
+already checked radical witness through the new equivalence.
+
+Intended inventory: **903 public claims, 906 proof scripts, 985 documented
+declarations** over seven modules, pending pinned Rocq 9.2 and Python
+CI. This is a purely algebraic kernel equivalence, not a general
+quadratic-nullity equivalence for signed weights, PSD claim or rank
+calculation.
+

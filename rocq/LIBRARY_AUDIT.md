@@ -3103,6 +3103,25 @@ The intended inventory is **899 public claims, 902 proof scripts, 981
 documented declarations** across seven modules, subject to Rocq 9.2
 kernel and existing Python/Deal/SPARK CI. Rank/nullity remains open.
 
+## Unconditional covariance radical and row-kernel equivalence (13 November 2026)
+
+Four documented results establish that the covariance bilinear radical
+is exactly the bounded covariance row kernel for arbitrary finite signed
+or unnormalized weights. A typed coordinate-selector lemma uses existing
+Vector.cons/const and the zero-composite theorem. Two other theorems
+characterize the radical and the row kernel separately through covariance
+orthogonality to every listed basis score, using shared FiniteSum laws,
+the unconditional covariance linearity, and existing bounded index bridges.
+The original normalized nonnegative theorem now delegates to the stronger
+result. The affine signed-weight row theorem likewise delegates to its
+already checked radical witness through the new equivalence.
+
+Intended inventory: **903 public claims, 906 proof scripts, 985 documented
+declarations** over seven modules, pending pinned Rocq 9.2 and Python
+CI. This is a purely algebraic kernel equivalence, not a general
+quadratic-nullity equivalence for signed weights, PSD claim or rank
+calculation.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
