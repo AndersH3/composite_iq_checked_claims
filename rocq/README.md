@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **879 proof scripts** in seven
+for the two reports. **884 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3806,6 +3806,23 @@ pinned kernel and Python/Deal/SPARK workflow checks. This concrete
 linear bijection is not yet a packaged algebra-library linear
 equivalence, hyperplane dimension calculation, covariance rank,
 or empirical psychometric proof.
+
+## Mixed affine translations in canonical coordinates (13 November 2026)
+
+Five new fully commented Rocq lemmas combine zero-sum shifts with
+head-axis scalar shifts. Their effects on the canonical projection
+and coordinate sum are independent; the existing decomposition
+produces an explicit normal form. A mixed shift is zero-sum, and
+equals its resulting projected component, exactly when the axis
+scalar cancels the original vector total. The scripts reuse
+established laws and Stdlib.Vector.map2 without new vector or
+matrix recursion or additional axioms.
+
+Intended inventory: **881 public claims, 884 proof scripts,
+962 documented declarations** across seven Rocq modules, pending
+pinned Rocq and Python/Deal/SPARK CI. These concrete coordinate
+identities do not constitute a maintained abstract vector-space
+direct-sum isomorphism or dimension/rank theorem.
 
 ## Research extensions
 

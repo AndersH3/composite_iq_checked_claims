@@ -3007,6 +3007,25 @@ across seven Rocq modules. Rocq 9.2 and Python/Deal/SPARK CI verify
 the implementation; no abstract linear-space isomorphism or
 dimension/rank-nullity result is asserted.
 
+## Mixed zero-sum and scalar-axis translations (13 November 2026)
+
+Five fully documented generic real-vector lemmas combine the earlier
+separately verified zero-sum and scalar-axis shift laws. Under a
+zero-sum displacement z and an independent axis scalar t, the
+projected component becomes P(v)+z, and the full coordinate total
+becomes S(v)+t. Consequently, the existing canonical decomposition
+gives (v+z)+axis(t) = (P(v)+z)+axis(S(v)+t). The resulting vector is
+zero-sum exactly when t=-S(v), at which value it equals P(v)+z.
+These proofs reuse only maintained canonical-projection, sum,
+normalization and decomposition theorems; there is no new vector
+recursion, numerical model, ad hoc matrix, axiom or admitted proof.
+
+Intended inventory: **881 public claims, 884 proof scripts and
+962 documented declarations** across seven Rocq modules. Rocq 9.2
+and Python/Deal/SPARK CI are required before describing the new
+statements as kernel-checked. No abstract dimension or covariance
+rank conclusion is asserted.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

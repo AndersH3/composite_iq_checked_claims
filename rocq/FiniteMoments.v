@@ -14368,6 +14368,206 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_mixed_translation_projection] (lemma) —
+   A zero-sum translation followed by a scalar-axis translation
+   changes the canonical zero-sum component only by the former.
+   Mathematical meaning: For a finite positive-length real vector
+   v, a zero-sum z, and any axis scalar t, the projection of
+   (v+z)+axis(t) is exactly projection(v)+z.
+   Exact checked proposition: For every n, v,z:Vector.t R (S n),
+   and t:R, zero_sum z implies
+   projection (map2 Rplus (map2 Rplus v z) (total_axis t)) =
+   map2 Rplus (projection v) z.
+   Premises and side conditions: All real signs and n=0 are
+   permitted; there is no finite-probability or covariance premise.
+   Proof/definition method: Use the established scalar-axis
+   projection invariance followed by the zero-sum translation law;
+   do not reassociate vector addition or unfold the projection.
+   Library reuse: Stdlib.Vectors.Vector.map2 and the checked
+   indexed_real_vector_zero_sum_axis_shift_projection and
+   indexed_real_vector_zero_sum_translation_projection lemmas.
+   Boundary: Concrete projection equivariance, not a quotient
+   algebra or abstract dimension/rank theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_mixed_translation_projection :
+    forall n (v z : Vector.t R (S n)) (total : R),
+      indexed_real_vector_zero_sum z ->
+      indexed_real_vector_zero_sum_projection
+        (Vector.map2 Rplus
+          (Vector.map2 Rplus v z)
+          (indexed_real_vector_total_axis total)) =
+      Vector.map2 Rplus
+        (indexed_real_vector_zero_sum_projection v) z.
+  Proof.
+    intros n v z total Hzero.
+    rewrite indexed_real_vector_zero_sum_axis_shift_projection.
+    apply indexed_real_vector_zero_sum_translation_projection.
+    exact Hzero.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_mixed_translation_coordinate_sum]
+   (lemma) — In a mixed zero-sum and scalar-axis translation, the
+   coordinate total changes only by the scalar-axis amount.
+   Mathematical meaning: Zero-sum directions contribute nothing
+   to the scalar coordinate, even when an independent axis shift
+   is applied afterward.
+   Exact checked proposition: For all n, v,z:Vector.t R (S n)
+   and t:R, zero_sum z implies
+   coordinate_sum ((v+z)+total_axis t)=coordinate_sum v+t.
+   Premises and side conditions: Arbitrary real coordinates and
+   scalar t, including zero and signed values, with positive length.
+   Proof/definition method: Compose the existing axis-shift sum
+   law with zero-sum-translation sum invariance, instead of
+   duplicating the list fold or finite vector induction.
+   Library reuse: indexed_real_vector_zero_sum_axis_shift_coordinate_sum,
+   indexed_real_vector_zero_sum_translation_coordinate_sum,
+   Stdlib.Vectors.Vector.map2.
+   Boundary: An exact linear-functional identity, not an
+   empirical moment equation or a dimension theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_mixed_translation_coordinate_sum :
+    forall n (v z : Vector.t R (S n)) (total : R),
+      indexed_real_vector_zero_sum z ->
+      indexed_real_vector_coordinate_sum
+        (Vector.map2 Rplus
+          (Vector.map2 Rplus v z)
+          (indexed_real_vector_total_axis total)) =
+      indexed_real_vector_coordinate_sum v + total.
+  Proof.
+    intros n v z total Hzero.
+    rewrite indexed_real_vector_zero_sum_axis_shift_coordinate_sum.
+    rewrite (indexed_real_vector_zero_sum_translation_coordinate_sum
+      n v z Hzero).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_mixed_translation_decomposition]
+   (lemma) — Both coordinates of a mixed translation are explicit
+   in the previously verified canonical affine decomposition.
+   Mathematical meaning: The translated vector is represented by
+   projection(v)+z and total(v)+t, with no cross-coordinate term.
+   Exact checked proposition: Under zero_sum z, (v+z)+axis(t) =
+   (projection(v)+z)+axis(coordinate_sum(v)+t).
+   Premises and side conditions: v,z have equal length S n, n
+   may be zero, and signed coordinates and shifts are permitted.
+   Proof/definition method: Apply the existing canonical
+   decomposition to the translated input and use the preceding
+   mixed-translation projection and coordinate-sum lemmas.
+   Library reuse: indexed_real_vector_zero_sum_axis_decomposition,
+   indexed_real_vector_zero_sum_mixed_translation_projection,
+   indexed_real_vector_zero_sum_mixed_translation_coordinate_sum,
+   Stdlib.Vectors.Vector.map2.
+   Boundary: A concrete coordinate normal form, without a
+   custom matrix, rank-nullity proof or abstract direct-sum type.
+   *)
+  Lemma indexed_real_vector_zero_sum_mixed_translation_decomposition :
+    forall n (v z : Vector.t R (S n)) (total : R),
+      indexed_real_vector_zero_sum z ->
+      Vector.map2 Rplus
+        (Vector.map2 Rplus v z)
+        (indexed_real_vector_total_axis total) =
+      Vector.map2 Rplus
+        (Vector.map2 Rplus
+          (indexed_real_vector_zero_sum_projection v) z)
+        (indexed_real_vector_total_axis
+          (indexed_real_vector_coordinate_sum v + total)).
+  Proof.
+    intros n v z total Hzero.
+    rewrite (indexed_real_vector_zero_sum_axis_decomposition n
+      (Vector.map2 Rplus
+        (Vector.map2 Rplus v z)
+        (indexed_real_vector_total_axis total))) at 1.
+    rewrite (indexed_real_vector_zero_sum_mixed_translation_projection
+      n v z total Hzero).
+    rewrite (indexed_real_vector_zero_sum_mixed_translation_coordinate_sum
+      n v z total Hzero).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_mixed_translation_zero_sum_iff]
+   (lemma) — A mixed translation is zero-sum exactly when the
+   axis scalar cancels the original, unchanged coordinate total.
+   Mathematical meaning: Translating by a zero-sum vector never
+   alters the unique normalizing axis scalar for any starting v.
+   Exact checked proposition: Under zero_sum z,
+   zero_sum ((v+z)+total_axis t) iff
+   t = - coordinate_sum v.
+   Premises and side conditions: All n, signed real vectors, and
+   axis scalars; no sample normalization or covariance hypotheses.
+   Proof/definition method: Use the existing scalar-axis
+   zero-sum iff and rewrite its coordinate total using the
+   zero-sum translation invariance established earlier.
+   Library reuse:
+   indexed_real_vector_zero_sum_axis_shift_zero_sum_iff,
+   indexed_real_vector_zero_sum_translation_coordinate_sum,
+   Stdlib.Logic.
+   Boundary: An exact zero-sum membership criterion only;
+   it does not assert orthogonality or covariance rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_mixed_translation_zero_sum_iff :
+    forall n (v z : Vector.t R (S n)) (total : R),
+      indexed_real_vector_zero_sum z ->
+      (indexed_real_vector_zero_sum
+         (Vector.map2 Rplus
+           (Vector.map2 Rplus v z)
+           (indexed_real_vector_total_axis total)) <->
+       total = - indexed_real_vector_coordinate_sum v).
+  Proof.
+    intros n v z total Hzero.
+    pose proof (indexed_real_vector_zero_sum_axis_shift_zero_sum_iff
+      n (Vector.map2 Rplus v z) total) as Hcriterion.
+    rewrite (indexed_real_vector_zero_sum_translation_coordinate_sum
+      n v z Hzero) in Hcriterion.
+    exact Hcriterion.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_mixed_translation_normalization_iff]
+   (lemma) — The mixed translation equals its predicted canonical
+   projected component precisely at the unique normalizing scalar.
+   Mathematical meaning: For zero-sum z, an arbitrary scalar-axis
+   shift of v+z equals projection(v)+z iff t=-sum(v).
+   Exact checked proposition: Under zero_sum z,
+   (v+z)+axis(t)=projection(v)+z iff
+   t=-coordinate_sum(v).
+   Premises and side conditions: Nonempty finite vectors, any
+   signed coordinates, any scalar; no probability assumptions.
+   Proof/definition method: Rewrite the target by the maintained
+   zero-sum projection translation law, then apply the existing
+   unique normalizing axis shift iff and sum invariance.
+   Library reuse:
+   indexed_real_vector_zero_sum_translation_projection,
+   indexed_real_vector_zero_sum_projection_iff_unique_normalizing_shift,
+   indexed_real_vector_zero_sum_translation_coordinate_sum,
+   Stdlib.Logic.
+   Boundary: Exact normalization in a concrete finite-vector
+   decomposition, not a packaged linear isomorphism or rank theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_mixed_translation_normalization_iff :
+    forall n (v z : Vector.t R (S n)) (total : R),
+      indexed_real_vector_zero_sum z ->
+      (Vector.map2 Rplus
+         (Vector.map2 Rplus v z)
+         (indexed_real_vector_total_axis total) =
+       Vector.map2 Rplus
+         (indexed_real_vector_zero_sum_projection v) z <->
+       total = - indexed_real_vector_coordinate_sum v).
+  Proof.
+    intros n v z total Hzero.
+    rewrite <- (indexed_real_vector_zero_sum_translation_projection
+      n v z Hzero).
+    pose proof
+      (indexed_real_vector_zero_sum_projection_iff_unique_normalizing_shift
+        n (Vector.map2 Rplus v z) total) as Hnormal.
+    rewrite (indexed_real_vector_zero_sum_translation_coordinate_sum
+      n v z Hzero) in Hnormal.
+    exact Hnormal.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

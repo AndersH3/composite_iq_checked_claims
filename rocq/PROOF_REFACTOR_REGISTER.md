@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **876 public theorem/lemma/example claims**, plus
+The current branch has **881 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**879 proof scripts** across seven Rocq modules. The claims and scripts
+**884 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 465 proof scripts
+## FiniteMoments.v — 470 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1220,6 +1220,11 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_tail_scale_linear` (lemma) | Combine existing zero-sum closure under scaling with fst congruence of the product encoder's checked homogeneity; avoid new Vector.map induction. | indexed_real_vector_zero_sum_closed_under_scale, indexed_real_vector_tail_total_encode_scale, Stdlib.Logic.f_equal, Stdlib.Datatypes.fst. | **New:** The tail inverse preserves scalar multiplication on zero-sum inputs, with closure. |
 | `indexed_real_vector_zero_sum_tail_add_reconstruct` (lemma) | Rewrite by the existing extension-add law and both inverse-on-zero-sum identities. | indexed_real_vector_zero_sum_extension_add/inverse_on_zero_sum, Vector.map2. | **New:** Adding tails then extending reconstructs the sum of two zero-sum vectors. |
 | `indexed_real_vector_zero_sum_tail_scale_reconstruct` (lemma) | Rewrite by the existing extension-scale law and inverse-on-zero-sum identity. | indexed_real_vector_zero_sum_extension_scale/inverse_on_zero_sum, Vector.map. | **New:** Scaling a tail then extending reconstructs scaling of its zero-sum vector. |
+| `indexed_real_vector_zero_sum_mixed_translation_projection` (lemma) | Compose the established scalar-axis projection invariance with zero-sum translation equivariance, with no vector induction. | indexed_real_vector_zero_sum_axis_shift_projection, indexed_real_vector_zero_sum_translation_projection, Stdlib.Vectors.Vector.map2. | **New:** Projection of a mixed zero-sum/axis translation depends only on the zero-sum shift. |
+| `indexed_real_vector_zero_sum_mixed_translation_coordinate_sum` (lemma) | Compose the scalar-axis total-shift identity with zero-sum total invariance, with no fold duplication. | indexed_real_vector_zero_sum_axis_shift_coordinate_sum, indexed_real_vector_zero_sum_translation_coordinate_sum. | **New:** Mixed translation alters the coordinate total by exactly the axis scalar. |
+| `indexed_real_vector_zero_sum_mixed_translation_decomposition` (lemma) | Apply canonical projection-plus-axis decomposition to the mixed shift and rewrite the two components by the preceding lemmas. | indexed_real_vector_zero_sum_axis_decomposition, indexed_real_vector_zero_sum_mixed_translation_projection/coordinate_sum. | **New:** An explicit normal form for both independent affine translation coordinates. |
+| `indexed_real_vector_zero_sum_mixed_translation_zero_sum_iff` (lemma) | Instantiate the established scalar-axis zero-sum iff on the zero-sum-shifted base and replace its sum using maintained invariance. | indexed_real_vector_zero_sum_axis_shift_zero_sum_iff, indexed_real_vector_zero_sum_translation_coordinate_sum. | **New:** The original negative coordinate total remains the unique normalizing scalar. |
+| `indexed_real_vector_zero_sum_mixed_translation_normalization_iff` (lemma) | Rewrite the projected target by existing zero-sum shift equivariance and apply the unique axis normalization iff; simplify totals. | indexed_real_vector_zero_sum_translation_projection, indexed_real_vector_zero_sum_projection_iff_unique_normalizing_shift, indexed_real_vector_zero_sum_translation_coordinate_sum. | **New:** The mixed translate equals its projected component iff the scalar cancels the original total. |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |
