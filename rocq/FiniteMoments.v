@@ -18926,6 +18926,279 @@ Section FiniteProbabilityMoments.
       f g rest a c Hmass Haffine).
   Qed.
 
+
+  (**
+   [covariance_two_samples_rank_one_factorization] (theorem) —
+   Exact rank-one factorization of two-sample covariance.
+   Mathematical meaning: Any two score covariances factor into the
+   same two outcome weights and the two score differences.
+   Exact checked proposition: For samples=[x;y], total_mass=1,
+   Cov(f,g)=w(x)w(y)(f(x)-f(y))(g(x)-g(y)).
+   Premises and side conditions: Signed, zero or larger-than-one
+   weights and identical outcomes are allowed; only mass one is needed.
+   Proof/definition method: Reduce the shared finite-sum fold for
+   two samples, derive w(x)+w(y)=1, eliminate w(y), then ring.
+   Library reuse: FiniteSum.finite_sum, Stdlib.List, Lra, Ring.
+   Boundary: Two-sample algebra, not general rank-nullity.
+   *)
+  Theorem covariance_two_samples_rank_one_factorization :
+    forall (f g : Outcome -> R) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      covariance f g =
+        weight x * weight y * (f x - f y) * (g x - g y).
+  Proof.
+    intros f g x y Hsamples Hmass.
+    assert (Hweights : weight x + weight y = 1).
+    {
+      unfold total_mass, sum_finite, FiniteSum.finite_sum in Hmass.
+      rewrite Hsamples in Hmass.
+      simpl in Hmass.
+      lra.
+    }
+    unfold covariance, expect, sum_finite, FiniteSum.finite_sum.
+    rewrite Hsamples.
+    simpl.
+    replace (weight y) with (1 - weight x) by lra.
+    ring.
+  Qed.
+
+  (**
+   [covariance_two_samples_all_cross_minors_zero] (theorem) —
+   All two-by-two covariance minors vanish with two samples.
+   Mathematical meaning: Four arbitrary scores obey the
+   rank-one covariance cross-product identity.
+   Exact checked proposition: Cov(f,h)*Cov(g,k)=Cov(f,k)*Cov(g,h).
+   Premises and side conditions: samples=[x;y], total_mass=1;
+   score functions and signed weights otherwise unrestricted.
+   Proof/definition method: Rewrite all four factors using
+   the previous scalar factorization; close by real ring algebra.
+   Library reuse: covariance_two_samples_rank_one_factorization,
+   Stdlib.Ring, existing finite covariance.
+   Boundary: An exact minor identity, not a determinant library.
+   *)
+  Theorem covariance_two_samples_all_cross_minors_zero :
+    forall (f g h k : Outcome -> R) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      covariance f h * covariance g k =
+        covariance f k * covariance g h.
+  Proof.
+    intros f g h k x y Hsamples Hmass.
+    rewrite (covariance_two_samples_rank_one_factorization
+      f h x y Hsamples Hmass).
+    rewrite (covariance_two_samples_rank_one_factorization
+      g k x y Hsamples Hmass).
+    rewrite (covariance_two_samples_rank_one_factorization
+      f k x y Hsamples Hmass).
+    rewrite (covariance_two_samples_rank_one_factorization
+      g h x y Hsamples Hmass).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_two_samples_all_minors_zero] (theorem) —
+   Rank-one cross-minor law for the maintained bounded matrix API.
+   Mathematical meaning: Every four bounded row/column indices
+   of an indexed finite covariance matrix obey a zero-minor identity.
+   Exact checked proposition: For M=indexed_basis_cross_covariance_matrix
+   basis basis, M(i,j)M(k,l)=M(i,l)M(k,j).
+   Premises and side conditions: Two samples of unit total mass,
+   arbitrary signed weights, possibly empty or dependent basis.
+   Proof/definition method: Unfold existing Fin-indexed entries
+   and specialize the generic four-score covariance minor theorem.
+   Library reuse: indexed_basis_cross_covariance_matrix,
+   covariance_two_samples_all_cross_minors_zero, Vector.nth/of_list,
+   Stdlib.Vectors.Fin.
+   Boundary: No custom matrix representation or rank algorithm.
+   *)
+  Theorem indexed_basis_covariance_two_samples_all_minors_zero :
+    forall basis x y
+           (i j k l : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_cross_covariance_matrix basis basis i j *
+      indexed_basis_cross_covariance_matrix basis basis k l =
+      indexed_basis_cross_covariance_matrix basis basis i l *
+      indexed_basis_cross_covariance_matrix basis basis k j.
+  Proof.
+    intros basis x y i j k l Hsamples Hmass.
+    unfold indexed_basis_cross_covariance_matrix.
+    apply covariance_two_samples_all_cross_minors_zero;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_bilinear_two_samples_factorization]
+   (theorem) — Rank-one factorization of the typed covariance pairing.
+   Mathematical meaning: Two composite score covariance directions
+   interact only through their scalar change between two samples.
+   Exact checked proposition: B(left,right)=w(x)w(y) times the
+   contrast of the left composite times the right contrast.
+   Premises and side conditions: samples=[x;y], mass one; signed
+   weights and arbitrary typed coefficient bases are admitted.
+   Proof/definition method: Unfold the prior bilinear covariance
+   pairing and use the scalar two-sample factorization.
+   Library reuse: indexed_basis_covariance_bilinear_form,
+   covariance_two_samples_rank_one_factorization, Vector.to_list,
+   weighted_basis_sum.
+   Boundary: A finite factorization, not a generic matrix-rank API.
+   *)
+  Theorem indexed_basis_covariance_bilinear_two_samples_factorization :
+    forall basis
+           (left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis left right =
+        weight x * weight y *
+        (weighted_basis_sum (Vector.to_list left) basis x -
+         weighted_basis_sum (Vector.to_list left) basis y) *
+        (weighted_basis_sum (Vector.to_list right) basis x -
+         weighted_basis_sum (Vector.to_list right) basis y).
+  Proof.
+    intros basis left right x y Hsamples Hmass.
+    unfold indexed_basis_covariance_bilinear_form.
+    apply covariance_two_samples_rank_one_factorization;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero]
+   (theorem) — Full two-sample row-kernel predicate using contrasts.
+   Mathematical meaning: Row nullity is equivalent to zero
+   covariance against each score's two-sample contrast.
+   Exact checked proposition: RowKernel(coefficients) iff
+   forall g in basis, w(x)w(y)DeltaComposite*Delta(g)=0.
+   Premises and side conditions: samples=[x;y] and mass one;
+   any real signed weights and duplicated or empty bases allowed.
+   Proof/definition method: Reuse unconditional row kernel iff
+   basis orthogonality and rewrite each covariance by its factor.
+   Library reuse: indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional,
+   covariance_two_samples_rank_one_factorization, Stdlib.Logic.
+   Boundary: Algebraic kernel criterion, not dimension count.
+   *)
+  Theorem indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_bounded_covariance_row_kernel basis coefficients <->
+       forall g, In g basis ->
+         weight x * weight y *
+         (weighted_basis_sum (Vector.to_list coefficients) basis x -
+          weighted_basis_sum (Vector.to_list coefficients) basis y) *
+         (g x - g y) = 0).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional
+        basis coefficients) as Hiff.
+    split.
+    - intros Hkernel g Hg.
+      pose proof ((proj1 Hiff) Hkernel g Hg) as Horth.
+      rewrite (covariance_two_samples_rank_one_factorization
+        (weighted_basis_sum (Vector.to_list coefficients) basis)
+        g x y Hsamples Hmass) in Horth.
+      exact Horth.
+    - intros Hcontrast.
+      apply (proj2 Hiff).
+      intros g Hg.
+      rewrite (covariance_two_samples_rank_one_factorization
+        (weighted_basis_sum (Vector.to_list coefficients) basis)
+        g x y Hsamples Hmass).
+      apply Hcontrast; exact Hg.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_row_kernel_iff_equal_composite_values]
+   (theorem) — A nondegenerate two-sample row kernel is one contrast.
+   Mathematical meaning: When both weights are nonzero and the
+   basis contains a separating score, every kernel direction
+   has exactly equal composite values on the two samples.
+   Exact checked proposition: With the stated conditions,
+   RowKernel(coefficients) iff Composite(x)=Composite(y).
+   Premises and side conditions: Unit total mass and samples=[x;y],
+   weight(x)*weight(y)<>0, and exists g in basis with g(x)<>g(y).
+   Sample weights may otherwise have either sign.
+   Proof/definition method: Apply the contrast-product kernel
+   iff and Stdlib.Rmult_integral twice to cancel nonzero factors.
+   Library reuse: indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero,
+   Stdlib.Reals.Rmult_integral and Stdlib.Lra/Ring.
+   Boundary: Exact kernel test, not a general rank-nullity theorem.
+   *)
+  Theorem indexed_basis_two_samples_row_kernel_iff_equal_composite_values :
+    forall basis (coefficients : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      weight x * weight y <> 0 ->
+      (exists g, In g basis /\ g x <> g y) ->
+      (indexed_basis_bounded_covariance_row_kernel basis coefficients <->
+       weighted_basis_sum (Vector.to_list coefficients) basis x =
+       weighted_basis_sum (Vector.to_list coefficients) basis y).
+  Proof.
+    intros basis coefficients x y Hsamples Hmass Hweights [g [Hg Hgdiff]].
+    pose proof
+      (indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero
+        basis coefficients x y Hsamples Hmass) as Hiff.
+    split.
+    - intro Hrow.
+      pose proof ((proj1 Hiff) Hrow g Hg) as Hzero.
+      apply Rmult_integral in Hzero.
+      destruct Hzero as [Hfirst | Hlast].
+      + apply Rmult_integral in Hfirst.
+        destruct Hfirst as [Hweight_zero | Hdiff_zero].
+        * contradiction.
+        * lra.
+      + exfalso.
+        apply Hgdiff.
+        lra.
+    - intro Hequal.
+      apply (proj2 Hiff).
+      intros h Hh.
+      rewrite Hequal.
+      ring.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_nonzero_diagonal_of_separating_score]
+   (theorem) — Nonzero rank-one certificate under a separating score.
+   Mathematical meaning: A separating basis score has nonzero
+   covariance diagonal when both signed sample weights are nonzero.
+   Exact checked proposition: With samples=[x;y], unit mass,
+   nonzero weight product and a separating basis score, exists
+   g in basis such that covariance g g <>0.
+   Premises and side conditions: The covariance diagonal can be
+   negative for signed weights; no positivity premise is inserted.
+   Proof/definition method: Specialize the two-sample covariance
+   factorization to g twice and eliminate zero products by
+   Stdlib.Rmult_integral and linear arithmetic.
+   Library reuse: covariance_two_samples_rank_one_factorization,
+   Stdlib.Reals.Rmult_integral and Stdlib.Lra.
+   Boundary: Nonzero diagonal plus all-minors-zero is a concrete
+   rank-one certificate, not a new determinant or rank implementation.
+   *)
+  Theorem indexed_basis_two_samples_nonzero_diagonal_of_separating_score :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      weight x * weight y <> 0 ->
+      (exists g, In g basis /\ g x <> g y) ->
+      exists g, In g basis /\ covariance g g <> 0.
+  Proof.
+    intros basis x y Hsamples Hmass Hweights [g [Hg Hgdiff]].
+    exists g.
+    split; [exact Hg |].
+    intro Hzero.
+    rewrite (covariance_two_samples_rank_one_factorization
+      g g x y Hsamples Hmass) in Hzero.
+    apply Rmult_integral in Hzero.
+    destruct Hzero as [Hfirst | Hlast].
+    - apply Rmult_integral in Hfirst.
+      destruct Hfirst as [Hweight_zero | Hdiff_zero].
+      + contradiction.
+      + apply Hgdiff; lra.
+    - apply Hgdiff; lra.
+  Qed.
+
 End FiniteProbabilityMoments.
 
 

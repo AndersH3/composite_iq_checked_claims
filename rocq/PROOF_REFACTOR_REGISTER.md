@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **913 public theorem/lemma/example claims**, plus
+The current branch has **920 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**916 proof scripts** across seven Rocq modules. The claims and scripts
+**923 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 502 proof scripts
+## FiniteMoments.v — 509 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1326,6 +1326,14 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_affine_prefix_covariance_row_kernel` (theorem) | **Refactored:** Delegate original nonnegative-weight interface to stronger signed-weight row theorem. | indexed_basis_affine_prefix_covariance_row_kernel_signed. | **Refactored:** Algebraic row-dot proof replaces redundant positivity-dependent nullity bridge. |
 
 
+| `covariance_two_samples_rank_one_factorization` (theorem) | Evaluate the shared two-sample FiniteSum fold, use unit mass to eliminate one weight, and close by ring. | FiniteSum.finite_sum, Stdlib.Lra/Ring. | **New:** Exact signed-weight two-sample covariance factors through score differences. |
+| `covariance_two_samples_all_cross_minors_zero` (theorem) | Rewrite four covariances by the rank-one factorization, finish with ring. | covariance_two_samples_rank_one_factorization, Stdlib.Ring. | **New:** Every two-by-two covariance cross-product minor vanishes. |
+| `indexed_basis_covariance_two_samples_all_minors_zero` (theorem) | Instantiate scalar cross-minor theorem at standard Fin-indexed covariance matrix entries. | indexed_basis_cross_covariance_matrix, covariance_two_samples_all_cross_minors_zero, Vector.nth/of_list. | **New:** Dimension-safe all-minors-zero certificate. |
+| `indexed_basis_covariance_bilinear_two_samples_factorization` (theorem) | Unfold existing bilinear covariance and instantiate scalar product factorization. | indexed_basis_covariance_bilinear_form, covariance_two_samples_rank_one_factorization. | **New:** Composite covariance pairing factors through a single score contrast. |
+| `indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero` (theorem) | Compose unconditional row/basis-orthogonality iff with rank-one factorization. | indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional, covariance_two_samples_rank_one_factorization. | **New:** Signed-weight row-kernel criterion for every basis score. |
+| `indexed_basis_two_samples_row_kernel_iff_equal_composite_values` (theorem) | Cancel nonzero weight and separating-score factors using Rmult_integral. | indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero, Stdlib.Reals.Rmult_integral/Lra. | **New:** Exact kernel equals the zero-contrast subspace when samples are nondegenerate. |
+| `indexed_basis_two_samples_nonzero_diagonal_of_separating_score` (theorem) | Reuse scalar factorization and eliminate possible zero products. | covariance_two_samples_rank_one_factorization, Stdlib.Reals.Rmult_integral. | **New:** Separating basis score provides a nonzero diagonal rank-one certificate. |
+
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
 | `finite_signed_three_scores_cross_covariance_one` (lemma) | Evaluate the same finite moment definitions and normalize the real expression. | FiniteMoments.covariance, FiniteMoments.expect, FiniteSum.finite_sum, ring. | **New:** First and second score have cross-covariance one despite zero first-score variance. |
@@ -1466,4 +1474,28 @@ interfaces; there is no new numerical matrix implementation.
 Inventory after this addition: **913 public claims, 916 proof scripts,
 1001 documented declarations** (502 FiniteMoments proofs) across seven
 modules, subject to pinned Rocq 9.2 and Python/Deal/SPARK CI.
+
+
+## Exact two-sample covariance rank-one certificates (13 November 2026)
+
+Seven documented Rocq results prove that every covariance over two
+enumerated sample occurrences and unit total mass has the form
+w(x)w(y)(f(x)-f(y))(g(x)-g(y)), without nonnegative-weight assumptions.
+Every two-by-two covariance minor therefore vanishes for every
+four bounded Fin-indexed score coordinates; the same factorization
+applies to arbitrary typed coefficient composite scores. The row
+kernel is exactly the kernel of the sample contrast functional when
+both weights have nonzero product and the basis includes a score
+separating the two outcomes. Such a separating score also yields
+a nonzero covariance diagonal, completing an explicit rank-one
+certificate. Proofs reuse the established finite covariance and
+FiniteSum operators, Stdlib.Vectors.Fin/Vector, and standard ring
+and zero-product lemmas. No custom matrix or determinant implementation
+or general rank-nullity theorem is added.
+
+Expected total: **920 public claims, 923 proof scripts, 1008
+documented declarations**, including **509 FiniteMoments proof
+scripts**, pending pinned Rocq 9.2 and Python regression CI.
+Signed weights can produce negative covariance diagonals, so no
+signed-weight positive-semidefiniteness is claimed.
 

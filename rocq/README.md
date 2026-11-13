@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **916 proof scripts** in seven
+for the two reports. **923 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3954,6 +3954,29 @@ interfaces; there is no new numerical matrix implementation.
 Inventory after this addition: **913 public claims, 916 proof scripts,
 1001 documented declarations** (502 FiniteMoments proofs) across seven
 modules, subject to pinned Rocq 9.2 and Python/Deal/SPARK CI.
+
+## Exact two-sample covariance rank-one certificates (13 November 2026)
+
+Seven documented Rocq results prove that every covariance over two
+enumerated sample occurrences and unit total mass has the form
+w(x)w(y)(f(x)-f(y))(g(x)-g(y)), without nonnegative-weight assumptions.
+Every two-by-two covariance minor therefore vanishes for every
+four bounded Fin-indexed score coordinates; the same factorization
+applies to arbitrary typed coefficient composite scores. The row
+kernel is exactly the kernel of the sample contrast functional when
+both weights have nonzero product and the basis includes a score
+separating the two outcomes. Such a separating score also yields
+a nonzero covariance diagonal, completing an explicit rank-one
+certificate. Proofs reuse the established finite covariance and
+FiniteSum operators, Stdlib.Vectors.Fin/Vector, and standard ring
+and zero-product lemmas. No custom matrix or determinant implementation
+or general rank-nullity theorem is added.
+
+Expected total: **920 public claims, 923 proof scripts, 1008
+documented declarations**, including **509 FiniteMoments proof
+scripts**, pending pinned Rocq 9.2 and Python regression CI.
+Signed weights can produce negative covariance diagonals, so no
+signed-weight positive-semidefiniteness is claimed.
 
 ## Research extensions
 
