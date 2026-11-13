@@ -2987,6 +2987,26 @@ modules, pending Rocq 9.2 kernel and Python-contract CI.
 No vector-space dimension, rank-nullity, or covariance-rank
 claim is introduced by these algebraic translations.
 
+## Unique tail coordinates and two-sided linear reconstruction (13 November 2026)
+
+Five generic lemmas combine existing Stdlib finite-vector and verified
+sum laws into a bidirectional concrete coordinate interface:
+a positive-length vector has zero sum exactly when it is the extension
+of a *unique* tail; the tail map preserves addition and scaling on
+zero-sum vectors (and these operations preserve zero-sum membership);
+and extending the sum or scalar multiple of tails exactly reconstructs
+the corresponding full zero-sum operation. The tail linearity proofs
+extract fst from the already checked product encoding add/scale laws,
+instead of repeating Vector.map/Vector.map2 recursion.
+
+The source maintains Vector.t and the existing zero-sum predicate.
+No new custom vector, matrix, summation implementation, axioms or
+admitted proofs are introduced. Intended inventory: 876 public
+claims, 879 proof scripts, and 957 documented declarations
+across seven Rocq modules. Rocq 9.2 and Python/Deal/SPARK CI verify
+the implementation; no abstract linear-space isomorphism or
+dimension/rank-nullity result is asserted.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

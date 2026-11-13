@@ -14164,6 +14164,211 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_iff_exists_unique_extension] (lemma) —
+   Every zero-sum vector of length S n has exactly one canonical
+   tail-coordinate witness of length n, and conversely.
+   Mathematical meaning: The standard tail/extension correspondence
+   is bijective on the concrete zero-sum family, including n=0.
+   Exact checked proposition: For every n and v:Vector.t R (S n),
+   zero_sum v iff exists! tail:Vector.t R n,
+   zero_sum_extension tail = v.
+   Premises and side conditions: Coordinates can have any real sign;
+   there are no samples, weights, positivity or normalization premises.
+   Proof/definition method: Choose Vector.tl v, apply the established
+   inverse on the zero-sum family, and derive uniqueness using
+   extension injectivity. In the converse, transport the known
+   zero-sum property of the canonical extension along its equality.
+   Library reuse: Stdlib.Logic exists!, Stdlib.Vectors.Vector.tl,
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum,
+   indexed_real_vector_zero_sum_extension_injective,
+   indexed_real_vector_zero_sum_extension_zero_sum.
+   Boundary: A concrete bijection theorem, not an abstract
+   module equivalence, dimension, covariance rank, or IQ inference.
+   *)
+  Lemma indexed_real_vector_zero_sum_iff_exists_unique_extension :
+    forall n (v : Vector.t R (S n)),
+      (indexed_real_vector_zero_sum v <->
+       exists! tail : Vector.t R n,
+         indexed_real_vector_zero_sum_extension tail = v).
+  Proof.
+    intros n v.
+    split.
+    - intro Hzero.
+      exists (Vector.tl v).
+      split.
+      + apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+        exact Hzero.
+      + intros other Hother.
+        apply (indexed_real_vector_zero_sum_extension_injective
+          n other (Vector.tl v)).
+        rewrite Hother.
+        symmetry.
+        apply indexed_real_vector_zero_sum_extension_inverse_on_zero_sum.
+        exact Hzero.
+    - intros [tail [Hequal _]].
+      rewrite <- Hequal.
+      apply indexed_real_vector_zero_sum_extension_zero_sum.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_tail_add_linear] (lemma) —
+   Tail coordinates respect addition between zero-sum vectors,
+   and the sum remains in the zero-sum family.
+   Mathematical meaning: The inverse direction of the concrete
+   zero-sum/tail correspondence is additive on its intended domain.
+   Exact checked proposition: If zero_sum left and zero_sum right,
+   then zero_sum (map2 Rplus left right), and
+   tl (map2 Rplus left right) =
+   map2 Rplus (tl left) (tl right).
+   Premises and side conditions: Both operands have length S n;
+   n=0 and signed coordinates are allowed, without weighted data.
+   Proof/definition method: Reuse zero-sum closure under addition.
+   Obtain the typed tail equation by applying Stdlib.Logic.f_equal
+   to fst of the already checked tail-total product encoding law;
+   no new Vector.map2 induction or coordinate arithmetic is used.
+   Library reuse: indexed_real_vector_zero_sum_closed_under_add,
+   indexed_real_vector_tail_total_encode_add, Stdlib.Datatypes.fst,
+   Stdlib.Logic.f_equal.
+   Boundary: Concrete additivity on a family, not a packaged
+   linear-space instance or a numerical rank calculation.
+   *)
+  Lemma indexed_real_vector_zero_sum_tail_add_linear :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_zero_sum left ->
+      indexed_real_vector_zero_sum right ->
+      (indexed_real_vector_zero_sum (Vector.map2 Rplus left right) /\
+       Vector.tl (Vector.map2 Rplus left right) =
+       Vector.map2 Rplus (Vector.tl left) (Vector.tl right)).
+  Proof.
+    intros n left right Hleft Hright.
+    split.
+    - apply indexed_real_vector_zero_sum_closed_under_add;
+        assumption.
+    - pose proof
+        (f_equal
+          (fun p : (Vector.t R n * R)%type => fst p)
+          (indexed_real_vector_tail_total_encode_add n left right))
+        as Htail.
+      unfold indexed_real_vector_tail_total_encode in Htail.
+      simpl in Htail.
+      exact Htail.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_tail_scale_linear] (lemma) —
+   Tail coordinates respect scalar multiplication on zero-sum
+   vectors, and the scaled vector remains zero-sum.
+   Mathematical meaning: The inverse tail-coordinate map is
+   homogeneous for every signed, zero, or negative real scalar.
+   Exact checked proposition: For n, zero-sum v:Vector.t R (S n)
+   and a:R, zero_sum (Vector.map (fun c => a*c) v) and
+   tl (Vector.map (fun c => a*c) v) =
+   Vector.map (fun c => a*c) (tl v).
+   Premises and side conditions: Includes n=0 and arbitrary real
+   coordinates/scalars, without sample or covariance hypotheses.
+   Proof/definition method: Apply the maintained zero-sum closure
+   under scaling. Extract the first component of the previously
+   proved tail-total encoding homogeneity using Stdlib.f_equal
+   on fst, instead of a fresh vector map proof.
+   Library reuse: indexed_real_vector_zero_sum_closed_under_scale,
+   indexed_real_vector_tail_total_encode_scale,
+   Stdlib.Datatypes.fst, Stdlib.Logic.f_equal.
+   Boundary: Concrete homogeneity of the inverse coordinates,
+   not a dimension or covariance rank theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_tail_scale_linear :
+    forall n (v : Vector.t R (S n)) (a : R),
+      indexed_real_vector_zero_sum v ->
+      (indexed_real_vector_zero_sum (Vector.map (fun c => a * c) v) /\
+       Vector.tl (Vector.map (fun c => a * c) v) =
+       Vector.map (fun c => a * c) (Vector.tl v)).
+  Proof.
+    intros n v a Hzero.
+    split.
+    - apply indexed_real_vector_zero_sum_closed_under_scale.
+      exact Hzero.
+    - pose proof
+        (f_equal
+          (fun p : (Vector.t R n * R)%type => fst p)
+          (indexed_real_vector_tail_total_encode_scale n v a))
+        as Htail.
+      unfold indexed_real_vector_tail_total_encode in Htail.
+      simpl in Htail.
+      exact Htail.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_tail_add_reconstruct] (lemma) —
+   Adding tail coordinates of two zero-sum vectors and then
+   extending reproduces their full componentwise sum.
+   Mathematical meaning: The forward zero-sum extension is additive
+   and is a right inverse to tail extraction on the zero-sum family.
+   Exact checked proposition: For all zero-sum left,right of
+   length S n, extension (map2 Rplus (tl left) (tl right)) =
+   map2 Rplus left right.
+   Premises and side conditions: No restrictions on signed real
+   entries, tail length, normalized weights or sample independence.
+   Proof/definition method: Apply the previously checked extension
+   addition law, then rewrite both extensions of tails using their
+   established inverse-on-zero-sum identities.
+   Library reuse: indexed_real_vector_zero_sum_extension_add,
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum,
+   Stdlib.Vectors.Vector.map2.
+   Boundary: Concrete linear retraction, without introducing
+   an abstract linear map, subspace or dimension calculation.
+   *)
+  Lemma indexed_real_vector_zero_sum_tail_add_reconstruct :
+    forall n (left right : Vector.t R (S n)),
+      indexed_real_vector_zero_sum left ->
+      indexed_real_vector_zero_sum right ->
+      indexed_real_vector_zero_sum_extension
+        (Vector.map2 Rplus (Vector.tl left) (Vector.tl right)) =
+      Vector.map2 Rplus left right.
+  Proof.
+    intros n left right Hleft Hright.
+    rewrite indexed_real_vector_zero_sum_extension_add.
+    rewrite (indexed_real_vector_zero_sum_extension_inverse_on_zero_sum
+      n left Hleft).
+    rewrite (indexed_real_vector_zero_sum_extension_inverse_on_zero_sum
+      n right Hright).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_tail_scale_reconstruct] (lemma) —
+   Scaling tail coordinates of a zero-sum vector and then
+   extending reproduces scaling of the full vector.
+   Mathematical meaning: The forward extension and inverse
+   tail-coordinate correspondence commute with real scaling.
+   Exact checked proposition: For every n and zero-sum
+   v:Vector.t R (S n), a:R, extension (map (fun c=>a*c) (tl v)) =
+   Vector.map (fun c=>a*c) v.
+   Premises and side conditions: All finite n, signed entries
+   and any scalar; no weighted finite-sample assumptions.
+   Proof/definition method: Rewrite using the maintained
+   extension-scale law followed by the previously verified
+   inverse-on-zero-sum identity; no fresh map or sum recursion.
+   Library reuse: indexed_real_vector_zero_sum_extension_scale,
+   indexed_real_vector_zero_sum_extension_inverse_on_zero_sum,
+   Stdlib.Vectors.Vector.map.
+   Boundary: A concrete linear inverse identity, not a general
+   rank-nullity formula or a claim about Gaussian data.
+   *)
+  Lemma indexed_real_vector_zero_sum_tail_scale_reconstruct :
+    forall n (v : Vector.t R (S n)) (a : R),
+      indexed_real_vector_zero_sum v ->
+      indexed_real_vector_zero_sum_extension
+        (Vector.map (fun c => a * c) (Vector.tl v)) =
+      Vector.map (fun c => a * c) v.
+  Proof.
+    intros n v a Hzero.
+    rewrite indexed_real_vector_zero_sum_extension_scale.
+    rewrite (indexed_real_vector_zero_sum_extension_inverse_on_zero_sum
+      n v Hzero).
+    reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

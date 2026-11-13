@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **874 proof scripts** in seven
+for the two reports. **879 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3787,6 +3787,25 @@ Targeted inventory: **871 public claims, 874 proof scripts and
 952 documented declarations**, subject to Rocq 9.2 and
 Python/Deal/SPARK CI. Library-level direct-sum dimensions and
 covariance-rank formalization remain separate work.
+
+## Bijective linear tail coordinates for zero-sum vectors (13 November 2026)
+
+Five new checked-claim candidates package previously separate
+zero-sum-extension retraction, injectivity, finite-vector addition
+and scalar multiplication facts into a concrete two-sided interface.
+A zero-sum vector has exactly one canonical tail witness. Tail
+extraction preserves addition and scaling on zero-sum vectors, and
+extending those tail combinations reconstructs the corresponding
+full vectors. The proofs reuse the maintained tail-total product
+encoder, canonical extension, and Stdlib fst/f_equal rather than
+writing fresh vector recursion or matrix arithmetic.
+
+Target inventory: **876 public claims, 879 proof scripts, and
+957 documented declarations** (seven Rocq modules), subject to
+pinned kernel and Python/Deal/SPARK workflow checks. This concrete
+linear bijection is not yet a packaged algebra-library linear
+equivalence, hyperplane dimension calculation, covariance rank,
+or empirical psychometric proof.
 
 ## Research extensions
 
