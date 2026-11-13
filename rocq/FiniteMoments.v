@@ -19024,8 +19024,12 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis x y i j k l Hsamples Hmass.
     unfold indexed_basis_cross_covariance_matrix.
-    apply covariance_two_samples_all_cross_minors_zero;
-      assumption.
+    exact (covariance_two_samples_all_cross_minors_zero
+      (Vector.nth (Vector.of_list basis) i)
+      (Vector.nth (Vector.of_list basis) k)
+      (Vector.nth (Vector.of_list basis) j)
+      (Vector.nth (Vector.of_list basis) l)
+      x y Hsamples Hmass).
   Qed.
 
   (**
@@ -19058,8 +19062,10 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis left right x y Hsamples Hmass.
     unfold indexed_basis_covariance_bilinear_form.
-    apply covariance_two_samples_rank_one_factorization;
-      assumption.
+    exact (covariance_two_samples_rank_one_factorization
+      (weighted_basis_sum (Vector.to_list left) basis)
+      (weighted_basis_sum (Vector.to_list right) basis)
+      x y Hsamples Hmass).
   Qed.
 
   (**
