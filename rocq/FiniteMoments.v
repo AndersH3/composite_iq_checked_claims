@@ -14577,12 +14577,13 @@ Section FiniteProbabilityMoments.
    z1+axis(a)=z2+axis(b) iff z1=z2 and a=b.
    Premises and side conditions: Any finite n and signed real
    coordinates and scalars; no finite probability assumptions.
-   Proof/definition method: Apply the maintained projection and
-   coordinate-sum functions to the equality via Stdlib.f_equal.
-   Reuse the proven coordinates of each additive decomposition;
+   Proof/definition method: Apply the maintained axis-sum
+   uniqueness criterion to one representative. Rewrite its
+   projected and total coordinates with those of the other;
    the converse substitutes equal coordinates.
-   Library reuse: indexed_real_vector_zero_sum_axis_sum_coordinates,
-   Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.map2.
+   Library reuse: indexed_real_vector_zero_sum_axis_sum_unique,
+   indexed_real_vector_zero_sum_axis_sum_coordinates,
+   Stdlib.Logic.eq_sym, Stdlib.Vectors.Vector.map2.
    Boundary: Componentwise uniqueness, not a statement of
    abstract dimension, rank, or orthogonality.
    *)
@@ -14597,23 +14598,16 @@ Section FiniteProbabilityMoments.
     intros n z1 z2 a b Hz1 Hz2.
     split.
     - intro Hequal.
-      pose proof
-        (f_equal
-          (fun x : Vector.t R (S n) =>
-             indexed_real_vector_zero_sum_projection x) Hequal)
-        as Hprojection.
-      pose proof
-        (f_equal
-          (fun x : Vector.t R (S n) =>
-             indexed_real_vector_coordinate_sum x) Hequal)
-        as Htotal.
-      destruct (indexed_real_vector_zero_sum_axis_sum_coordinates
-        n z1 a Hz1) as [Hp1 Hs1].
+      destruct (proj2
+        (indexed_real_vector_zero_sum_axis_sum_unique
+          n z1 a
+          (Vector.map2 Rplus z2 (indexed_real_vector_total_axis b))
+          Hz1) (eq_sym Hequal)) as [Hprojection Htotal].
       destruct (indexed_real_vector_zero_sum_axis_sum_coordinates
         n z2 b Hz2) as [Hp2 Hs2].
-      rewrite Hp1, Hp2 in Hprojection.
-      rewrite Hs1, Hs2 in Htotal.
-      split; assumption.
+      rewrite Hp2 in Hprojection.
+      rewrite Hs2 in Htotal.
+      split; symmetry; assumption.
     - intros [Heqz Heqa].
       subst z2 b.
       reflexivity.
