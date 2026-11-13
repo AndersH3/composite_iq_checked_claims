@@ -18331,8 +18331,8 @@ Section FiniteProbabilityMoments.
         (f :: g :: rest)
         (indexed_basis_affine_prefix_null_direction
           (n:=length rest) a) Hmass Hw)).
-    apply indexed_basis_affine_prefix_covariance_quadratic_zero;
-      assumption.
+    exact (indexed_basis_affine_prefix_covariance_quadratic_zero
+      f g rest a c Hmass Haffine).
   Qed.
 
   (**
@@ -18373,8 +18373,8 @@ Section FiniteProbabilityMoments.
         (f :: g :: rest)
         (indexed_basis_affine_prefix_null_direction
           (n:=length rest) a) Hmass Hw)).
-    apply indexed_basis_affine_prefix_covariance_quadratic_zero;
-      assumption.
+    exact (indexed_basis_affine_prefix_covariance_quadratic_zero
+      f g rest a c Hmass Haffine).
   Qed.
 
 End FiniteProbabilityMoments.
