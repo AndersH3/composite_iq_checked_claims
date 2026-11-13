@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **903 public theorem/lemma/example claims**, plus
+The current branch has **908 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**906 proof scripts** across seven Rocq modules. The claims and scripts
+**911 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 492 proof scripts
+## FiniteMoments.v — 497 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1269,9 +1269,13 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional` (theorem) | Row-dot covariance identity and symmetry; existing bounded-index surjectivity and vector-list nth_error membership. | covariance_with_weighted_basis_as_row_dot, indexed_basis_covariance_matrix_row_has_bounded_index, vector_of_list_nth_error. | **New:** Arbitrary-weight row kernel iff orthogonality to every basis score. |
 | `indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional` (theorem) | Compose the radical-vs-basis and row-vs-basis equivalences with tauto. | Both new unconditional basis-orthogonality bridges. | **New:** Algebraic radical iff row kernel without sign/mass conditions. |
 | `indexed_basis_covariance_bilinear_radical_iff_row_kernel` (theorem) | **Refactored:** Keep original API but delegate to unconditional algebraic radical-row equivalence. | indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **Refactored:** Remove unnecessary quadratic-nullity positivity bridge. |
-| `indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial` (theorem) | Reuse positive-definite iff trivial named row kernel and the new radical/row iff | indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial, indexed_basis_covariance_bilinear_radical_iff_row_kernel | **New:** positive definiteness iff the typed covariance radical has no nonzero coefficient direction |
+| `indexed_basis_covariance_positive_definite_iff_bilinear_radical_trivial` (theorem) | **Refactored:** Reuse positivity iff trivial named row kernel, but obtain radical/row equality unconditionally. | indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **Refactored:** Probability assumptions now used only where positivity requires them. |
 | `indexed_basis_covariance_bilinear_radical_zero_coefficients` (theorem) | Standard zero-vector list and existing weighted-score zero identity, covariance extensionality and homogeneity | VectorSpec.to_list_const, weighted_basis_sum_repeat_zero, covariance_extensional, covariance_scale_first, Stdlib.Ring | **New:** canonical typed coefficient zero lies in covariance radical even with signed unnormalized weights |
 | `indexed_basis_covariance_bilinear_radical_nonzero_scale_iff` (theorem) | First-argument covariance homogeneity and standard real zero-product elimination | indexed_basis_covariance_bilinear_scale_first, Stdlib.Reals.Rmult_integral, Stdlib.Ring | **New:** radical membership invariant under every nonzero scalar, without probability assumptions |
+| `indexed_basis_bounded_covariance_row_kernel_zero_unconditional` (theorem) | Zero-vector radical theorem transported by the unconditional radical-to-row kernel iff. | indexed_basis_covariance_bilinear_radical_zero_coefficients, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **New:** Every finite covariance row annihilates the zero vector without mass or sign restrictions. |
+| `indexed_basis_bounded_covariance_row_kernel_closed_under_add_unconditional` (theorem) | Convert two row members to radical, apply radical addition closure, convert the sum back. | indexed_basis_covariance_bilinear_radical_closed_under_add, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **New:** Arbitrary-weight row-null addition closure. |
+| `indexed_basis_bounded_covariance_row_kernel_closed_under_scale_unconditional` (theorem) | Apply radical scaling closure between two unconditional radical/row transports. | indexed_basis_covariance_bilinear_radical_closed_under_scale, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **New:** Arbitrary-weight row-null scalar closure. |
+| `indexed_basis_bounded_covariance_row_kernel_nonzero_scale_iff_unconditional` (theorem) | Compose radical rescaling iff with two unconditional radical/row iff applications using tauto. | indexed_basis_covariance_bilinear_radical_nonzero_scale_iff, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **New:** Nonzero rescaling cannot alter row-kernel membership, without positivity. |
 | `indexed_basis_covariance_bilinear_radical_iff_sample_vector_zero` (theorem) | Compose the existing typed zero-quadratic iff radical and zero-quadratic iff sample-output-zero equivalences | indexed_basis_covariance_quadratic_zero_iff_bilinear_radical, indexed_basis_covariance_quadratic_zero_iff_sample_vector_zero, tauto | **New:** radical exactly equals the kernel of the concrete centered-sample output vector under finite probability assumptions |
 | `indexed_basis_covariance_bilinear_add_radical_first_invariant` (theorem) | Reuse first-argument additivity and radical orthogonality; ordinary zero-summand ring reduction | indexed_basis_covariance_bilinear_add_first, indexed_basis_covariance_bilinear_radical, Stdlib.Ring | **New:** adding radical coefficients leaves pairing's first argument unchanged |
 | `indexed_basis_covariance_bilinear_add_radical_second_invariant` (theorem) | Reduce second argument to previously checked first-argument invariance by symmetry | indexed_basis_covariance_bilinear_symmetric, indexed_basis_covariance_bilinear_add_radical_first_invariant | **New:** radical shifts are invisible in either argument |
@@ -1282,6 +1286,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_first_shift_iff_radical` (theorem) | First-argument additivity and real cancellation give necessity; prior radical-shift invariance gives sufficiency | indexed_basis_covariance_bilinear_add_first, indexed_basis_covariance_bilinear_add_radical_first_invariant, Stdlib.Lra | **New:** arbitrary-weight first-slot universal shift-invariance iff radical |
 | `indexed_basis_covariance_bilinear_second_shift_iff_radical` (theorem) | Reduce second-slot universal invariance to first-slot iff through symmetry, reuse second-slot invariance | indexed_basis_covariance_bilinear_symmetric, indexed_basis_covariance_bilinear_first_shift_iff_radical, indexed_basis_covariance_bilinear_add_radical_second_invariant | **New:** arbitrary-weight second-slot universal shift-invariance iff radical |
 | `indexed_basis_covariance_bilinear_radical_add_radical_iff` (theorem) | Rewrite both implications using established first-slot covariance radical-shift invariance; avoid vector/list induction | indexed_basis_covariance_bilinear_add_radical_first_invariant, indexed_basis_covariance_bilinear_radical, Stdlib.Vectors.Vector.map2 | **New:** radical(c+r) iff radical(c) whenever radical(r), even for signed unnormalized weights |
+| `indexed_basis_bounded_covariance_row_kernel_add_kernel_iff_unconditional` (theorem) | Transport three row predicates to radical, apply its coset-shift iff and tauto. | indexed_basis_covariance_bilinear_radical_add_radical_iff, indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional. | **New:** Row-kernel membership invariant under row-kernel shifts, even for signed weights. |
 | `indexed_real_vector_equal_iff_signed_difference_zero` (lemma) | Factor out generic equal-length real-vector cancellation by VectorSpec.eq_nth_iff and coordinate nth_map2/nth_map laws | Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map2/nth_map/const_nth, Stdlib.Ring, Stdlib.Lra | **New reusable helper:** x=y iff x+(-1)*y=0 for all finite real-vector dimensions |
 | `indexed_real_vector_zero_iff_to_list_repeat` (lemma) | Reuse Stdlib VectorSpec.to_list_const and to_list_inj; no custom induction or real-vector conversion | Stdlib.Vectors.VectorSpec.to_list_const/to_list_inj, Stdlib.List.repeat | **New reusable helper:** typed real zero vector iff its standard coefficient list is repeat 0 |
 | `indexed_real_vector_equality_stable` (lemma) | Use VectorSpec.eq_nth_iff and the maintained Req_dec real equality dichotomy at each bounded coordinate | Stdlib.Reals.Req_dec, Stdlib.Vectors.VectorSpec.eq_nth_iff, Vector.nth | **New reusable helper:** double-negation stability of equality of length-indexed real vectors; no new axiom declarations |
@@ -1411,4 +1416,26 @@ declarations** over seven modules, pending pinned Rocq 9.2 and Python
 CI. This is a purely algebraic kernel equivalence, not a general
 quadratic-nullity equivalence for signed weights, PSD claim or rank
 calculation.
+
+
+## Algebraic covariance-row kernel closure and shift invariance (13 November 2026)
+
+Five documented theorems certify zero membership, addition closure,
+scalar closure, nonzero-scaling equivalence, and invariance under
+row-kernel shifts **without normalizing sample weights or assuming
+their nonnegativity**. All results reuse the unconditional equivalence
+between the bilinear covariance radical and the indexed covariance
+row kernel, plus existing radical lemmas; no second matrix, vector,
+or finite-sum implementation is introduced. The older normalized
+row-kernel APIs remain intact as separately defined compatibility
+statements (their source-order dependencies precede the radical
+interface). The positive-definiteness iff trivial radical theorem
+now uses the unconditional bridge in both directions, retaining its
+own probability premises because strict positivity requires them.
+
+Inventory: **908 public claims, 911 proof scripts, 990 documented
+declarations**, with **497 proof scripts in FiniteMoments.v**, across
+seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal/SPARK
+CI. No signed-weight PSD, covariance rank, abstract nullity or
+empirical IQ result follows from these kernel identities.
 

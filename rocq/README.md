@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **906 proof scripts** in seven
+for the two reports. **911 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3912,6 +3912,27 @@ declarations** over seven modules, pending pinned Rocq 9.2 and Python
 CI. This is a purely algebraic kernel equivalence, not a general
 quadratic-nullity equivalence for signed weights, PSD claim or rank
 calculation.
+
+## Algebraic covariance-row kernel closure and shift invariance (13 November 2026)
+
+Five documented theorems certify zero membership, addition closure,
+scalar closure, nonzero-scaling equivalence, and invariance under
+row-kernel shifts **without normalizing sample weights or assuming
+their nonnegativity**. All results reuse the unconditional equivalence
+between the bilinear covariance radical and the indexed covariance
+row kernel, plus existing radical lemmas; no second matrix, vector,
+or finite-sum implementation is introduced. The older normalized
+row-kernel APIs remain intact as separately defined compatibility
+statements (their source-order dependencies precede the radical
+interface). The positive-definiteness iff trivial radical theorem
+now uses the unconditional bridge in both directions, retaining its
+own probability premises because strict positivity requires them.
+
+Inventory: **908 public claims, 911 proof scripts, 990 documented
+declarations**, with **497 proof scripts in FiniteMoments.v**, across
+seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal/SPARK
+CI. No signed-weight PSD, covariance rank, abstract nullity or
+empirical IQ result follows from these kernel identities.
 
 ## Research extensions
 

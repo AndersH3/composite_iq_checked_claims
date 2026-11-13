@@ -16540,14 +16540,14 @@ Section FiniteProbabilityMoments.
    basis iff every coefficient whose list is not repeat 0 has
    a nonzero pairing against at least one typed direction.
    Premises and side conditions: The basis may be empty or
-   dependent. Unit mass and nonnegative weights are essential
-   for the earlier row-kernel/positive-definiteness criterion.
+   dependent. Unit mass and nonnegative weights remain necessary for the
+   row-kernel/positive-definiteness criterion, not the radical/row iff.
    Proof/definition method: Reuse the already verified
    positive-definite iff trivial row kernel theorem and
-   the just established row-kernel iff radical bridge.
+   the stronger unconditional row-kernel iff radical bridge.
    No new nonzero witness construction or matrix algebra.
    Library reuse: indexed_basis_covariance_positive_definite_iff_named_row_kernel_trivial,
-   indexed_basis_covariance_bilinear_radical_iff_row_kernel,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
    Stdlib.Vectors.Vector.to_list and Stdlib.Logic.
    Boundary: Triviality of the finite covariance radical, not
    the rank/dimension of its orthogonal complement.
@@ -16569,16 +16569,16 @@ Section FiniteProbabilityMoments.
     - intros Hpd coefficients Hnonzero Hradical.
       apply ((proj1 Hpositive) Hpd coefficients Hnonzero).
       apply (proj1
-        (indexed_basis_covariance_bilinear_radical_iff_row_kernel
-          basis coefficients Hmass Hw)).
+        (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+          basis coefficients)).
       exact Hradical.
     - intros Hdetect.
       apply (proj2 Hpositive).
       intros coefficients Hnonzero Hrow.
       apply (Hdetect coefficients Hnonzero).
       apply (proj2
-        (indexed_basis_covariance_bilinear_radical_iff_row_kernel
-          basis coefficients Hmass Hw)).
+        (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+          basis coefficients)).
       exact Hrow.
   Qed.
 
@@ -16674,6 +16674,143 @@ Section FiniteProbabilityMoments.
       rewrite indexed_basis_covariance_bilinear_scale_first.
       rewrite (Hradical right).
       ring.
+  Qed.
+
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_zero_unconditional]
+   (theorem) — A zero coefficient direction is covariance row-null.
+   Mathematical meaning: The canonical zero vector annihilates every
+   bounded row of the exact finite covariance matrix.
+   Exact checked proposition: For any basis, RowKernel(basis,
+   Vector.const 0 (length basis)) holds with no sample hypotheses.
+   Premises and side conditions: Signed, zero, unnormalized weights,
+   repeated outcomes and empty bases are permitted.
+   Proof/definition method: Transfer the existing zero-vector
+   radical theorem through the unconditional radical/row iff.
+   Library reuse: indexed_basis_covariance_bilinear_radical_zero_coefficients,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   Stdlib.Vectors.Vector.const and Stdlib.Logic.proj1.
+   Boundary: Membership of zero gives no rank or dimension.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_zero_unconditional :
+    forall basis,
+      indexed_basis_bounded_covariance_row_kernel
+        basis (Vector.const 0 (length basis)).
+  Proof.
+    intro basis.
+    apply (proj1
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis (Vector.const 0 (length basis)))).
+    apply indexed_basis_covariance_bilinear_radical_zero_coefficients.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_closed_under_add_unconditional]
+   (theorem) — Row-kernel closure under coefficient-vector addition.
+   Mathematical meaning: Two coefficient vectors annihilating every
+   bounded covariance row have a row-null componentwise sum.
+   Exact checked proposition: RowKernel(left) and RowKernel(right)
+   imply RowKernel(Vector.map2 Rplus left right) for any basis.
+   Premises and side conditions: Arbitrary signed or unnormalized
+   finite sample weights; vectors have basis length by type.
+   Proof/definition method: Transport row membership to bilinear
+   radical membership, reuse its unconditional additivity closure,
+   and transport the sum back, with no fresh matrix calculation.
+   Library reuse: indexed_basis_covariance_bilinear_radical_closed_under_add,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Reals.Rplus.
+   Boundary: Additive closure, not a kernel-basis algorithm.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_closed_under_add_unconditional :
+    forall basis (left right : Vector.t R (length basis)),
+      indexed_basis_bounded_covariance_row_kernel basis left ->
+      indexed_basis_bounded_covariance_row_kernel basis right ->
+      indexed_basis_bounded_covariance_row_kernel
+        basis (Vector.map2 Rplus left right).
+  Proof.
+    intros basis left right Hleft Hright.
+    apply (proj1
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis (Vector.map2 Rplus left right))).
+    apply indexed_basis_covariance_bilinear_radical_closed_under_add.
+    - apply (proj2
+        (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+          basis left)); exact Hleft.
+    - apply (proj2
+        (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+          basis right)); exact Hright.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_closed_under_scale_unconditional]
+   (theorem) — Row-kernel closure under arbitrary real scaling.
+   Mathematical meaning: Any scalar multiple, including zero, of
+   a row-null vector annihilates every covariance row.
+   Exact checked proposition: RowKernel(coefficients) implies
+   RowKernel(Vector.map (fun c => a*c) coefficients) for every a.
+   Premises and side conditions: Arbitrary real, possibly signed
+   outcome weights; no normalization or nonzero-scalar premise.
+   Proof/definition method: Apply the existing unconditional
+   radical scaling theorem between two applications of the
+   stronger radical/row membership equivalence.
+   Library reuse: indexed_basis_covariance_bilinear_radical_closed_under_scale,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   Stdlib.Vectors.Vector.map and Stdlib.Reals.Rmult.
+   Boundary: Algebraic closure; not positive semidefiniteness.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_closed_under_scale_unconditional :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      indexed_basis_bounded_covariance_row_kernel basis coefficients ->
+      indexed_basis_bounded_covariance_row_kernel
+        basis (Vector.map (fun c => a * c) coefficients).
+  Proof.
+    intros basis coefficients a Hrow.
+    apply (proj1
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis (Vector.map (fun c => a * c) coefficients))).
+    apply indexed_basis_covariance_bilinear_radical_closed_under_scale.
+    apply (proj2
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis coefficients)).
+    exact Hrow.
+  Qed.
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_nonzero_scale_iff_unconditional]
+   (theorem) — Exact row-kernel invariance under nonzero rescaling.
+   Mathematical meaning: Rescaling by a nonzero coefficient cannot
+   create or eliminate a covariance row-null direction.
+   Exact checked proposition: If a<>0, then
+   RowKernel(Vector.map (fun c => a*c) coefficients)
+   iff RowKernel(coefficients) for each typed basis.
+   Premises and side conditions: The scalar alone is required
+   nonzero; no mass, sample weight-sign or independence premises.
+   Proof/definition method: Compose the established radical
+   nonzero-scale iff with two unconditional row/radical bridges.
+   Library reuse: indexed_basis_covariance_bilinear_radical_nonzero_scale_iff,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   Stdlib.Vectors.Vector.map and Stdlib.Logic.tauto.
+   Boundary: Does not imply signed-weight quadratic positivity.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_nonzero_scale_iff_unconditional :
+    forall basis (coefficients : Vector.t R (length basis)) (a : R),
+      a <> 0 ->
+      (indexed_basis_bounded_covariance_row_kernel
+         basis (Vector.map (fun c => a * c) coefficients) <->
+       indexed_basis_bounded_covariance_row_kernel basis coefficients).
+  Proof.
+    intros basis coefficients a Ha.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis (Vector.map (fun c => a * c) coefficients)) as Hscaled.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis coefficients) as Horiginal.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_nonzero_scale_iff
+        basis coefficients a Ha) as Hradical.
+    tauto.
   Qed.
 
   (**
@@ -17154,6 +17291,47 @@ Section FiniteProbabilityMoments.
       rewrite (indexed_basis_covariance_bilinear_add_radical_first_invariant
         basis coefficients shift right Hshift).
       exact (Horiginal right).
+  Qed.
+
+
+  (**
+   [indexed_basis_bounded_covariance_row_kernel_add_kernel_iff_unconditional]
+   (theorem) — Translation by a row-null vector preserves row nullity.
+   Mathematical meaning: A coefficient direction has zero covariance
+   row products exactly when its translate by a fixed row-null shift does.
+   Exact checked proposition: If RowKernel(shift), then
+   RowKernel(Vector.map2 Rplus coefficients shift)
+   iff RowKernel(coefficients), for arbitrary typed vectors.
+   Premises and side conditions: All finite real weights, including
+   signed or unnormalized samples, and empty or repeated bases.
+   Proof/definition method: Transport each row-kernel statement to
+   the bilinear radical, then apply its existing radical-coset iff.
+   Library reuse: indexed_basis_covariance_bilinear_radical_add_radical_iff,
+   indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Logic.tauto.
+   Boundary: A finite algebraic kernel law, not quotient rank-nullity.
+   *)
+  Theorem indexed_basis_bounded_covariance_row_kernel_add_kernel_iff_unconditional :
+    forall basis (coefficients shift : Vector.t R (length basis)),
+      indexed_basis_bounded_covariance_row_kernel basis shift ->
+      (indexed_basis_bounded_covariance_row_kernel
+         basis (Vector.map2 Rplus coefficients shift) <->
+       indexed_basis_bounded_covariance_row_kernel basis coefficients).
+  Proof.
+    intros basis coefficients shift Hshift.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis (Vector.map2 Rplus coefficients shift)) as Hsum.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis coefficients) as Horiginal.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis shift) as Hshift_iff.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_add_radical_iff
+        basis coefficients shift ((proj2 Hshift_iff) Hshift)) as Hradical.
+    tauto.
   Qed.
 
   (**
