@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **908 public theorem/lemma/example claims**, plus
+The current branch has **913 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**911 proof scripts** across seven Rocq modules. The claims and scripts
+**916 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 497 proof scripts
+## FiniteMoments.v — 502 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1326,6 +1326,12 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_affine_prefix_covariance_row_kernel` (theorem) | **Refactored:** Delegate original nonnegative-weight interface to stronger signed-weight row theorem. | indexed_basis_affine_prefix_covariance_row_kernel_signed. | **Refactored:** Algebraic row-dot proof replaces redundant positivity-dependent nullity bridge. |
 
 
+| `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
+| `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
+| `finite_signed_three_scores_cross_covariance_one` (lemma) | Evaluate the same finite moment definitions and normalize the real expression. | FiniteMoments.covariance, FiniteMoments.expect, FiniteSum.finite_sum, ring. | **New:** First and second score have cross-covariance one despite zero first-score variance. |
+| `finite_signed_three_direction_selects_first_score` (lemma) | Compute typed Vector.of_list/to_list and existing composite score with List.combine, use ring. | Vector.of_list/to_list, weighted_basis_sum, linear_combination, FiniteSum.finite_sum. | **New:** Explicit first-coordinate typed coefficient exactly selects first score. |
+| `finite_signed_three_unit_mass_isotropic_not_radical` (theorem) | Quadratic via unit-mass variance, then refute radical via unconditional orthogonality-to-basis iff and cross-covariance witness. | indexed_basis_covariance_quadratic_as_variance, variance_extensional, covariance_extensional, indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional, Lra. | **New:** Kernel-checked signed-weight counterexample to quadratic-zero implies radical, with total mass one. |
+
 ## FiniteBridge.v — 37 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
@@ -1438,4 +1444,26 @@ declarations**, with **497 proof scripts in FiniteMoments.v**, across
 seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal/SPARK
 CI. No signed-weight PSD, covariance rank, abstract nullity or
 empirical IQ result follows from these kernel identities.
+
+
+## A concrete unit-mass signed-weight isotropic counterexample (13 November 2026)
+
+The finite natural-number sample [0,1,2] carries outcome weights
+(1,1,-1), totaling exactly one, but the last is negative. The two
+indicator-like scores are f=1 only at sample one and g=1 only
+at sample two. The checked finite moment calculations give
+Var(f)=0 and Cov(f,g)=1. A typed direction selecting f therefore
+has zero indexed covariance quadratic but **does not** lie in the
+bilinear radical: the unconditional radical/basis-score theorem
+detects its nonzero covariance against g. The construction is
+deliberately synthetic and disproves the tempting signed-weight
+converse of quadratic nullity to radical membership. It does
+not challenge positive-semidefinite covariance under
+nonnegative normalized probability weights. All computations
+use the existing finite-sum, indexed-basis and covariance
+interfaces; there is no new numerical matrix implementation.
+
+Inventory after this addition: **913 public claims, 916 proof scripts,
+1001 documented declarations** (502 FiniteMoments proofs) across seven
+modules, subject to pinned Rocq 9.2 and Python/Deal/SPARK CI.
 

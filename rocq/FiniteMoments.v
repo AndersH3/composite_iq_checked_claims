@@ -18927,3 +18927,289 @@ Section FiniteProbabilityMoments.
   Qed.
 
 End FiniteProbabilityMoments.
+
+
+(**
+ [finite_signed_three_samples] (definition) — A finite signed-mass
+ counterexample with three distinct enumerated outcomes.
+ Mathematical meaning: Enumerates natural-number outcomes zero, one,
+ and two in their exact order, retaining each as one sample occurrence.
+ Exact declaration: finite_signed_three_samples := [0%nat;1%nat;2%nat].
+ Premises and side conditions: There is no probability or positivity
+ premise in a concrete list definition.
+ Proof/definition method: Use Stdlib.List notation for the finite list.
+ Library reuse: Stdlib.List.list and ListNotations.
+ Boundary: This is a mathematical counterexample, not observed IQ data.
+ *)
+Definition finite_signed_three_samples : list nat :=
+  [0%nat; 1%nat; 2%nat].
+
+(**
+ [finite_signed_three_weight] (definition) — A signed unit-mass weighting.
+ Mathematical meaning: Give outcomes zero and one weight +1 and every
+ outcome at least two weight -1, producing sample weights (1,1,-1).
+ Exact declaration: finite_signed_three_weight k uses the three
+ natural-number constructor patterns O, S O, and S (S _).
+ Premises and side conditions: Negative weights are deliberate;
+ this is not a probability mass function.
+ Proof/definition method: Native Rocq pattern matching on Stdlib.nat.
+ Library reuse: Stdlib.Init.Datatypes.nat and Stdlib.Reals.
+ Boundary: Only enumerated sample values affect finite covariance.
+ *)
+Definition finite_signed_three_weight (k : nat) : R :=
+  match k with
+  | O => 1
+  | S O => 1
+  | S (S _) => -1
+  end.
+
+(**
+ [finite_signed_three_first_score] (definition) — First score in the
+ normalized signed-weight isotropic-direction counterexample.
+ Mathematical meaning: The score is one at outcome one and zero
+ elsewhere, making its finite expectation and square expectation one.
+ Exact declaration: The score matches S O to 1, all other naturals to 0.
+ Premises and side conditions: This is a total function on nat;
+ no event probabilities or independence assumptions are introduced.
+ Proof/definition method: Standard nat pattern matching, not a
+ custom indicator or sample traversal algorithm.
+ Library reuse: Stdlib.Init.Datatypes.nat and Stdlib.Reals.
+ Boundary: A synthetic score used to separate quadratic nullity
+ from bilinear radical membership under signed weights.
+ *)
+Definition finite_signed_three_first_score (k : nat) : R :=
+  match k with
+  | S O => 1
+  | _ => 0
+  end.
+
+(**
+ [finite_signed_three_second_score] (definition) — Covariance witness score.
+ Mathematical meaning: The score is one only at outcome two, so its
+ finite expectation under (1,1,-1) equals negative one.
+ Exact declaration: The score matches S (S O) to 1, else to 0.
+ Premises and side conditions: Total nat function; no probability,
+ positivity, empirical distribution, or score independence assumed.
+ Proof/definition method: Standard nat pattern matching.
+ Library reuse: Stdlib.Init.Datatypes.nat and Stdlib.Reals.
+ Boundary: The score detects a covariance missed by the first score's
+ vanishing signed-weight quadratic value.
+ *)
+Definition finite_signed_three_second_score (k : nat) : R :=
+  match k with
+  | S (S O) => 1
+  | _ => 0
+  end.
+
+(**
+ [finite_signed_three_basis] (definition) — Explicit two-score basis.
+ Mathematical meaning: Use the first and second synthetic score in
+ order, preserving their covariance interaction for typed directions.
+ Exact declaration: finite_signed_three_basis equals the list of the
+ two named scores, without deduplicating or reordering them.
+ Premises and side conditions: List length equals two by construction.
+ Proof/definition method: Stdlib.List notation; no matrix routine.
+ Library reuse: Stdlib.List.list and the named synthetic scores.
+ Boundary: A counterexample basis, not a psychometric score model.
+ *)
+Definition finite_signed_three_basis : list (nat -> R) :=
+  [finite_signed_three_first_score; finite_signed_three_second_score].
+
+(**
+ [finite_signed_three_direction] (definition) — Typed first-coordinate unit.
+ Mathematical meaning: Select the first score with coefficients (1,0).
+ Exact declaration: The result has type Vector.t R
+ (length finite_signed_three_basis) and is Vector.of_list [1;0].
+ Premises and side conditions: The length is determined by the basis;
+ no runtime index or length-truncation operation is required.
+ Proof/definition method: Reuse Stdlib.Vectors.Vector.of_list.
+ Library reuse: Stdlib.Vectors.Vector.of_list and Stdlib.List.length.
+ Boundary: A fixed vector for a signed-weight kernel counterexample.
+ *)
+Definition finite_signed_three_direction :
+    Vector.t R (length finite_signed_three_basis) :=
+  Vector.of_list [1; 0].
+
+(**
+ [finite_signed_three_mass_one] (lemma) — Signed mass can sum to one.
+ Mathematical meaning: The three enumerated sample weights
+ (1,1,-1) have total mass exactly one despite a negative entry.
+ Exact checked proposition: The named total_mass for nat, the
+ three samples and the signed weight is equal to 1.
+ Premises and side conditions: None; this is a concrete finite sum.
+ Proof/definition method: Reduce the maintained generic finite
+ sum at each natural-number sample and normalize real arithmetic.
+ Library reuse: FiniteMoments.total_mass, FiniteSum.finite_sum,
+ Stdlib.List, Stdlib.Ring.
+ Boundary: Unit mass alone does not turn signed weights into
+ a nonnegative probability distribution.
+ *)
+Lemma finite_signed_three_mass_one :
+  @total_mass nat finite_signed_three_samples finite_signed_three_weight = 1.
+Proof.
+  unfold total_mass, sum_finite, FiniteSum.finite_sum,
+    finite_signed_three_samples, finite_signed_three_weight.
+  simpl.
+  ring.
+Qed.
+
+(**
+ [finite_signed_three_first_score_variance_zero] (lemma) —
+ A nonconstant score with zero variance under signed normalized weights.
+ Mathematical meaning: The first score has weighted mean one and
+ weighted square mean one, hence covariance with itself is zero.
+ Exact checked proposition: Its finite variance is exactly 0.
+ Premises and side conditions: This uses fixed signed weights, not
+ the nonnegative-weight covariance positivity theorem.
+ Proof/definition method: Unfold the existing covariance and
+ expectation definitions, compute the three terms and use ring.
+ Library reuse: FiniteMoments.variance, FiniteMoments.covariance,
+ FiniteMoments.expect, FiniteSum.finite_sum, Stdlib.Ring.
+ Boundary: Zero variance under signed weights does not imply the
+ sampled score is constant or uncorrelated with other scores.
+ *)
+Lemma finite_signed_three_first_score_variance_zero :
+  @variance nat finite_signed_three_samples finite_signed_three_weight
+    finite_signed_three_first_score = 0.
+Proof.
+  unfold variance, covariance, expect, sum_finite,
+    FiniteSum.finite_sum, finite_signed_three_samples,
+    finite_signed_three_weight, finite_signed_three_first_score.
+  simpl.
+  ring.
+Qed.
+
+(**
+ [finite_signed_three_scores_cross_covariance_one] (lemma) —
+ A nonzero covariance detects the isotropic direction.
+ Mathematical meaning: The first score has mean +1, the second
+ score has mean -1, and their product is zero on all three samples.
+ Exact checked proposition: Their finite cross-covariance equals 1.
+ Premises and side conditions: Only the fixed signed finite sample;
+ no positive-semidefinite covariance law is used.
+ Proof/definition method: Evaluate the shared finite expectation
+ and covariance definitions at the enumerated outcomes and use ring.
+ Library reuse: FiniteMoments.covariance, FiniteMoments.expect,
+ FiniteSum.finite_sum and Stdlib.Ring.
+ Boundary: Synthetic nonzero covariance, not observed correlation.
+ *)
+Lemma finite_signed_three_scores_cross_covariance_one :
+  @covariance nat finite_signed_three_samples finite_signed_three_weight
+    finite_signed_three_first_score finite_signed_three_second_score = 1.
+Proof.
+  unfold covariance, expect, sum_finite, FiniteSum.finite_sum,
+    finite_signed_three_samples, finite_signed_three_weight,
+    finite_signed_three_first_score, finite_signed_three_second_score.
+  simpl.
+  ring.
+Qed.
+
+(**
+ [finite_signed_three_direction_selects_first_score] (lemma) —
+ Reuse the exact typed finite weighted basis composite.
+ Mathematical meaning: The coefficient vector (1,0) applied to
+ the basis [first, second] equals the first score at every outcome.
+ Exact checked proposition: For all x, weighted_basis_sum of the
+ vector's coefficient list and the basis evaluates to first_score x.
+ Premises and side conditions: Pointwise equality holds for all nat;
+ no sample or mass condition is needed.
+ Proof/definition method: Normalize the standard Vector.of_list/to_list
+ and List.combine structure, then simplify real linear combination.
+ Library reuse: Stdlib.Vectors.Vector.of_list/to_list,
+ FiniteMoments.weighted_basis_sum, FiniteSum.finite_sum, Stdlib.Ring.
+ Boundary: A concrete score-selection identity; no new matrix code.
+ *)
+Lemma finite_signed_three_direction_selects_first_score :
+  forall x,
+    @weighted_basis_sum nat
+      (Vector.to_list finite_signed_three_direction)
+      finite_signed_three_basis x =
+    finite_signed_three_first_score x.
+Proof.
+  intro x.
+  unfold finite_signed_three_direction, finite_signed_three_basis,
+    weighted_basis_sum, linear_combination, FiniteSum.finite_sum.
+  simpl.
+  ring.
+Qed.
+
+(**
+ [finite_signed_three_unit_mass_isotropic_not_radical] (theorem) —
+ Explicit failure of quadratic-zero implies radical for signed weights.
+ Mathematical meaning: A unit-mass finite signed model admits a
+ coefficient direction of zero covariance quadratic value that is
+ nevertheless correlated with another basis direction.
+ Exact checked proposition: In the displayed signed three-sample
+ two-score basis, total_mass=1, indexed covariance quadratic of
+ the first-coordinate vector is 0, and that vector does not belong
+ to the indexed covariance bilinear radical.
+ Premises and side conditions: The weight at sample two is -1.
+ No nonnegative-weight premise is silently added; the vector is
+ typed to the exact basis length. The values are explicit.
+ Proof/definition method: Use the existing indexed quadratic-as-
+ variance theorem at checked unit mass and score extensionality.
+ For nonradicality, use the unconditional radical iff zero covariance
+ with each basis score, together with the verified nonzero cross
+ covariance. Avoid implementing a second quadratic/matrix evaluator.
+ Library reuse: indexed_basis_covariance_quadratic_as_variance,
+ variance_extensional, covariance_extensional,
+ indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional,
+ finite_signed_three_* lemmas, Stdlib.List.In, Stdlib.Lra.
+ Boundary: A mathematical counterexample to a false signed-weight
+ implication; it does not refute PSD under genuine nonnegative
+ normalized probability measures, nor establish a matrix rank.
+ *)
+Theorem finite_signed_three_unit_mass_isotropic_not_radical :
+  @total_mass nat finite_signed_three_samples finite_signed_three_weight = 1 /\
+  @indexed_basis_covariance_quadratic_form
+    nat finite_signed_three_samples finite_signed_three_weight
+    finite_signed_three_basis finite_signed_three_direction = 0 /\
+  ~ @indexed_basis_covariance_bilinear_radical
+    nat finite_signed_three_samples finite_signed_three_weight
+    finite_signed_three_basis finite_signed_three_direction.
+Proof.
+  split.
+  - exact finite_signed_three_mass_one.
+  - split.
+    + rewrite (@indexed_basis_covariance_quadratic_as_variance
+        nat finite_signed_three_samples finite_signed_three_weight
+        finite_signed_three_basis finite_signed_three_direction
+        finite_signed_three_mass_one).
+      transitivity
+        (@variance nat finite_signed_three_samples
+          finite_signed_three_weight finite_signed_three_first_score).
+      * apply (@variance_extensional
+          nat finite_signed_three_samples finite_signed_three_weight).
+        apply finite_signed_three_direction_selects_first_score.
+      * apply finite_signed_three_first_score_variance_zero.
+    + intro Hradical.
+      pose proof
+        ((proj1
+          (@indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional
+            nat finite_signed_three_samples finite_signed_three_weight
+            finite_signed_three_basis finite_signed_three_direction))
+          Hradical) as Hbasis.
+      assert (Hin : In finite_signed_three_second_score finite_signed_three_basis).
+      { unfold finite_signed_three_basis; simpl; tauto. }
+      specialize (Hbasis finite_signed_three_second_score Hin).
+      assert (Hcov :
+        @covariance nat finite_signed_three_samples finite_signed_three_weight
+          finite_signed_three_first_score finite_signed_three_second_score = 0).
+      {
+        transitivity
+          (@covariance nat finite_signed_three_samples finite_signed_three_weight
+            (@weighted_basis_sum nat
+              (Vector.to_list finite_signed_three_direction)
+              finite_signed_three_basis)
+            finite_signed_three_second_score).
+        - apply (@covariance_extensional
+            nat finite_signed_three_samples finite_signed_three_weight).
+          + intro x.
+            symmetry.
+            apply finite_signed_three_direction_selects_first_score.
+          + intro x; reflexivity.
+        - exact Hbasis.
+      }
+      rewrite finite_signed_three_scores_cross_covariance_one in Hcov.
+      lra.
+Qed.

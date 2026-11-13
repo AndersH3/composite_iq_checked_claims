@@ -3143,6 +3143,27 @@ seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal/SPARK
 CI. No signed-weight PSD, covariance rank, abstract nullity or
 empirical IQ result follows from these kernel identities.
 
+## A concrete unit-mass signed-weight isotropic counterexample (13 November 2026)
+
+The finite natural-number sample [0,1,2] carries outcome weights
+(1,1,-1), totaling exactly one, but the last is negative. The two
+indicator-like scores are f=1 only at sample one and g=1 only
+at sample two. The checked finite moment calculations give
+Var(f)=0 and Cov(f,g)=1. A typed direction selecting f therefore
+has zero indexed covariance quadratic but **does not** lie in the
+bilinear radical: the unconditional radical/basis-score theorem
+detects its nonzero covariance against g. The construction is
+deliberately synthetic and disproves the tempting signed-weight
+converse of quadratic nullity to radical membership. It does
+not challenge positive-semidefinite covariance under
+nonnegative normalized probability weights. All computations
+use the existing finite-sum, indexed-basis and covariance
+interfaces; there is no new numerical matrix implementation.
+
+Inventory after this addition: **913 public claims, 916 proof scripts,
+1001 documented declarations** (502 FiniteMoments proofs) across seven
+modules, subject to pinned Rocq 9.2 and Python/Deal/SPARK CI.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
