@@ -16069,6 +16069,48 @@ Section FiniteProbabilityMoments.
       indexed_basis_covariance_bilinear_form basis left right = 0.
 
   (**
+   [indexed_basis_covariance_bilinear_radical_of_sample_constant]
+   (theorem) — Covariance radical membership from sampled score constancy.
+   Mathematical meaning: If a coefficient combination is constant on all
+   listed outcomes, it has zero covariance with every other combination
+   of the basis, even when some observation weights are negative.
+   Exact checked proposition: If total_mass=1 and the coefficient score
+   equals c on every In x samples, the typed coefficients belong to
+   indexed_basis_covariance_bilinear_radical basis.
+   Premises and side conditions: Total normalization is required,
+   but nonnegative weights, independent scores, nonempty samples
+   and unique sample occurrences are not required.
+   Proof/definition method: Rewrite the first covariance score to
+   a constant using the sampled-support extensionality lemma, then
+   apply the already proven constant-first covariance identity.
+   Library reuse: covariance_extensional_on_samples,
+   covariance_with_constant_first, indexed_basis_covariance_bilinear_form,
+   Stdlib.Vectors.Vector.to_list and Stdlib.List.In.
+   Boundary: This proves sufficient radical membership, not
+   positive semidefiniteness or a numerical covariance rank.
+   *)
+  Theorem indexed_basis_covariance_bilinear_radical_of_sample_constant :
+    forall basis (coefficients : Vector.t R (length basis)) (c : R),
+      total_mass = 1 ->
+      (forall x, In x samples ->
+        weighted_basis_sum (Vector.to_list coefficients) basis x = c) ->
+      indexed_basis_covariance_bilinear_radical basis coefficients.
+  Proof.
+    intros basis coefficients c Hmass Hconstant.
+    unfold indexed_basis_covariance_bilinear_radical.
+    intro right.
+    unfold indexed_basis_covariance_bilinear_form.
+    transitivity
+      (covariance (fun _ : Outcome => c)
+        (weighted_basis_sum (Vector.to_list right) basis)).
+    - apply covariance_extensional_on_samples.
+      + exact Hconstant.
+      + intros x _; reflexivity.
+    - apply covariance_with_constant_first.
+      exact Hmass.
+  Qed.
+
+  (**
    [indexed_basis_covariance_bilinear_radical_closed_under_scale]
    (theorem) — Scalar stability of the covariance radical.
    Mathematical meaning: Rescaling any coefficient direction
@@ -18293,26 +18335,65 @@ Section FiniteProbabilityMoments.
     lra.
   Qed.
 
+
+  (**
+   [indexed_basis_affine_prefix_covariance_radical_signed] (theorem) —
+   An affinely dependent prefix is radical even for signed sample weights.
+   Mathematical meaning: In any score basis beginning with f and g,
+   the nonzero direction (1,-a,0,...,0) annihilates covariance with
+   every direction whenever f=a*g+c on the enumerated samples.
+   Exact checked proposition: Unit total sample mass and the
+   sampled affine relation imply that the typed prefix witness
+   belongs to indexed_basis_covariance_bilinear_radical.
+   Premises and side conditions: Negative and zero weights are
+   permitted, as are arbitrary trailing basis functions, slopes,
+   intercepts, and repeated outcomes. Unit total mass is essential.
+   Proof/definition method: Combine the already verified affine
+   prefix composite-score identity with the general sample-constant
+   composite radical criterion; do not use quadratic positivity.
+   Library reuse: indexed_basis_affine_prefix_weighted_score,
+   indexed_basis_covariance_bilinear_radical_of_sample_constant,
+   Stdlib.Vectors.Vector.cons and Vector.const.
+   Boundary: A signed-weight algebraic orthogonality witness, not
+   an assertion of signed-weight positive semidefiniteness or rank.
+   *)
+  Theorem indexed_basis_affine_prefix_covariance_radical_signed :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      indexed_basis_covariance_bilinear_radical
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a).
+  Proof.
+    intros f g rest a c Hmass Haffine.
+    apply (indexed_basis_covariance_bilinear_radical_of_sample_constant
+      (f :: g :: rest)
+      (indexed_basis_affine_prefix_null_direction
+        (n:=length rest) a) c Hmass).
+    intros x Hx.
+    apply indexed_basis_affine_prefix_weighted_score.
+    apply Haffine; exact Hx.
+  Qed.
+
   (**
    [indexed_basis_affine_prefix_covariance_radical] (theorem) —
-   With nonnegative normalized weights, the explicit affine
-   witness is orthogonal to every coefficient direction.
-   Mathematical meaning: The exhibited null direction lies in
-   the bilinear covariance radical, not merely at quadratic zero.
-   Exact checked proposition: Under unit mass, nonnegative
-   listed weights and f=a*g+c on samples, the typed witness
-   belongs to indexed_basis_covariance_bilinear_radical.
-   Premises and side conditions: Extra scores may be arbitrary;
-   nonnegative listed weights are required by the maintained
-   quadratic-zero iff radical theorem.
-   Proof/definition method: Reuse the already checked
-   quadratic-nullity to bilinear radical equivalence and the
-   explicit prefix quadratic-zero theorem without expanding
-   covariance matrix entries or redefining bilinear forms.
-   Library reuse: indexed_basis_covariance_quadratic_zero_iff_bilinear_radical,
-   indexed_basis_affine_prefix_covariance_quadratic_zero.
-   Boundary: Certified radical membership without measuring
-   its dimension or proving an empirical covariance pattern.
+   Retained normalized nonnegative-weight affine-radical interface.
+   Mathematical meaning: The explicitly constructed affine-prefix
+   coefficient witness is orthogonal in covariance to every
+   coefficient direction, including in an extended score basis.
+   Exact checked proposition: Unit total mass, nonnegative listed
+   weights and sampled f=a*g+c imply bilinear radical membership.
+   Premises and side conditions: The nonnegative-weight hypothesis
+   remains for compatibility, though the stronger signed-weight
+   theorem shows it is unnecessary for this radical conclusion.
+   Proof/definition method: Delegate to the new signed-weight
+   specialization, replacing the Cauchy-Schwarz-dependent bridge.
+   Library reuse: indexed_basis_affine_prefix_covariance_radical_signed,
+   indexed_basis_covariance_bilinear_radical_of_sample_constant.
+   Boundary: This retains the old API without claiming
+   dimension/rank-nullity or Gaussian covariance conclusions.
    *)
   Theorem indexed_basis_affine_prefix_covariance_radical :
     forall (f g : Outcome -> R) (rest : list (Outcome -> R))
@@ -18325,13 +18406,8 @@ Section FiniteProbabilityMoments.
         (indexed_basis_affine_prefix_null_direction
           (n:=length rest) a).
   Proof.
-    intros f g rest a c Hmass Hw Haffine.
-    apply (proj1
-      (indexed_basis_covariance_quadratic_zero_iff_bilinear_radical
-        (f :: g :: rest)
-        (indexed_basis_affine_prefix_null_direction
-          (n:=length rest) a) Hmass Hw)).
-    exact (indexed_basis_affine_prefix_covariance_quadratic_zero
+    intros f g rest a c Hmass _ Haffine.
+    exact (indexed_basis_affine_prefix_covariance_radical_signed
       f g rest a c Hmass Haffine).
   Qed.
 

@@ -3073,6 +3073,21 @@ advance the intended inventory to **895 public claims, 898 proof scripts,
 977 documented declarations** across seven modules. Pinned Rocq 9.2
 and Python/Deal/SPARK CI must validate the change.
 
+## Sample-constant signed-weight covariance radical (13 November 2026)
+
+Two documented Rocq theorems establish that a typed composite constant
+on every enumerated sample is a covariance-radical direction when total
+mass equals one, even with negative weights. The explicit affine-prefix
+witness specializes this general statement. The original theorem with
+nonnegative weights now delegates to the stronger result, preserving
+its signature. Proofs use covariance_extensional_on_samples,
+covariance_with_constant_first and indexed_basis_affine_prefix_weighted_score
+rather than implementing new matrices, sums or positivity arguments.
+The intended inventory is **897 public claims, 900 proof scripts and
+979 documented declarations** across seven modules; Rocq 9.2 and
+Python/Deal/SPARK CI remain the verification authorities. No
+rank/nullity theorem or signed-weight positive-semidefiniteness is claimed.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

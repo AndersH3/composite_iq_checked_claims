@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **898 proof scripts** in seven
+for the two reports. **900 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3863,6 +3863,21 @@ Rocq 9.2 kernel checking and Python/Deal/SPARK workflows.
 This gives a concrete rank-deficiency witness but does not
 prove a general rank-nullity dimension formula or assess
 any empirical IQ covariance matrix.
+
+## Sample-constant signed-weight covariance radical (13 November 2026)
+
+Two documented Rocq theorems establish that a typed composite constant
+on every enumerated sample is a covariance-radical direction when total
+mass equals one, even with negative weights. The explicit affine-prefix
+witness specializes this general statement. The original theorem with
+nonnegative weights now delegates to the stronger result, preserving
+its signature. Proofs use covariance_extensional_on_samples,
+covariance_with_constant_first and indexed_basis_affine_prefix_weighted_score
+rather than implementing new matrices, sums or positivity arguments.
+The intended inventory is **897 public claims, 900 proof scripts and
+979 documented declarations** across seven modules; Rocq 9.2 and
+Python/Deal/SPARK CI remain the verification authorities. No
+rank/nullity theorem or signed-weight positive-semidefiniteness is claimed.
 
 ## Research extensions
 

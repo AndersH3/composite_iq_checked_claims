@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **895 public theorem/lemma/example claims**, plus
+The current branch has **897 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**898 proof scripts** across seven Rocq modules. The claims and scripts
+**900 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 484 proof scripts
+## FiniteMoments.v — 486 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1259,6 +1259,7 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_bilinear_diagonal` (theorem) | Identify self-covariance with variance and reuse original indexed quadratic bridge | indexed_basis_covariance_quadratic_as_variance, variance | **New:** B(c,c)=Q(c) under unit mass |
 | `indexed_basis_covariance_bilinear_polarization` (theorem) | Thin pairing wrapper of existing typed quadratic polarization theorem | indexed_basis_covariance_quadratic_add_polarization | **New:** Q(u+v)=Q(u)+Q(v)+2 B(u,v) |
 | `indexed_basis_covariance_bilinear_cauchy_schwarz_squared` (theorem) | Thin pairing wrapper over checked typed finite covariance Cauchy-Schwarz | indexed_basis_covariance_cross_cauchy_schwarz_squared | **New:** B(u,v)^2<=Q(u)Q(v) with nonnegative normalized weights |
+| `indexed_basis_covariance_bilinear_radical_of_sample_constant` (theorem) | Sampled covariance extensionality replaces the composite by a constant, then normalized constant-first covariance vanishes. | covariance_extensional_on_samples, covariance_with_constant_first. | **New:** Signed-weight sample-constant composite lies in covariance radical. |
 | `indexed_basis_covariance_bilinear_radical_closed_under_scale` (theorem) | One rewrite by established first-argument scalar homogeneity and zero substitution | indexed_basis_covariance_bilinear_scale_first, Stdlib.Ring | **New:** algebraic radical closed under all scalar multiplication |
 | `indexed_basis_covariance_bilinear_radical_closed_under_add` (theorem) | One rewrite by established first-argument additivity and zero substitutions | indexed_basis_covariance_bilinear_add_first, Stdlib.Ring | **New:** algebraic radical closed under coefficient addition |
 | `indexed_basis_covariance_quadratic_zero_iff_bilinear_radical` (theorem) | Compose existing orthogonality to arbitrary scores with diagonal self-pairing | indexed_basis_covariance_quadratic_zero_iff_uncorrelated_with_every_score, indexed_basis_covariance_bilinear_diagonal | **New:** finite covariance quadratic nullspace equals the typed bilinear radical |
@@ -1309,7 +1310,8 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_affine_prefix_centered_sample_zero` (theorem) | Apply full centered-output-zero iff sampled-score-zero; use expectation extensionality and normalized constant expectation. | indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero, indexed_basis_affine_prefix_weighted_score, expectation_extensional_on_samples, expectation_constant_normalized. | **New:** The affine prefix gives an exact centered sample-output kernel witness. |
 | `indexed_basis_affine_prefix_covariance_quadratic_zero` (theorem) | Use indexed quadratic-as-variance, variance_extensional_on_samples and variance_of_constant_score_zero. | indexed_basis_covariance_quadratic_as_variance, indexed_basis_affine_prefix_weighted_score, variance_of_constant_score_zero. | **New:** Affinely dependent prefix yields zero covariance quadratic with arbitrary extra scores, including signed weights. |
 | `indexed_basis_affine_prefix_covariance_not_positive_definite` (theorem) | Instantiate the existing positive-definiteness predicate with the nonzero witness and its zero quadratic; finish by Lra. | indexed_basis_covariance_positive_definite, indexed_basis_affine_prefix_null_direction_nonzero, indexed_basis_affine_prefix_covariance_quadratic_zero, Lra. | **New:** Adding other scores cannot restore strict covariance positive definiteness. |
-| `indexed_basis_affine_prefix_covariance_radical` (theorem) | Use maintained quadratic-zero iff bilinear-radical theorem and the explicit quadratic-null witness. | indexed_basis_covariance_quadratic_zero_iff_bilinear_radical, indexed_basis_affine_prefix_covariance_quadratic_zero. | **New:** Under nonnegative finite weights, the witness annihilates every bilinear covariance direction. |
+| `indexed_basis_affine_prefix_covariance_radical_signed` (theorem) | Compose established affine-prefix weighted-score equality with the constant-score radical lemma. | indexed_basis_affine_prefix_weighted_score, indexed_basis_covariance_bilinear_radical_of_sample_constant. | **New:** Signed-weight affine-prefix witness is radical. |
+| `indexed_basis_affine_prefix_covariance_radical` (theorem) | **Refactored:** Preserve public theorem assumptions, delegate to the signed-weight result. | indexed_basis_affine_prefix_covariance_radical_signed. | **Refactored:** Avoid unnecessary positivity-dependent quadratic bridge. |
 | `indexed_basis_affine_prefix_covariance_row_kernel` (theorem) | Use maintained quadratic-zero iff named row-kernel theorem and the explicit quadratic-null witness. | indexed_basis_covariance_quadratic_zero_iff_named_row_kernel, indexed_basis_affine_prefix_covariance_quadratic_zero. | **New:** Under nonnegative finite weights, the witness lies in every bounded covariance row kernel. |
 
 
