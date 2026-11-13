@@ -18053,7 +18053,9 @@ Section FiniteProbabilityMoments.
   Proof.
     intros n a.
     unfold indexed_basis_affine_prefix_null_direction.
-    simpl.
+    change
+      (1 :: (-a) :: Vector.to_list (Vector.const 0 n) =
+       1 :: (-a) :: repeat 0 n).
     rewrite VectorSpec.to_list_const.
     reflexivity.
   Qed.
