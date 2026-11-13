@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **890 proof scripts** in seven
+for the two reports. **898 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3839,6 +3839,30 @@ Target inventory: **887 public claims, 890 proof scripts and
 to pinned Rocq 9.2 and Python/Deal/SPARK workflows. The
 concrete additive equivalence does not yet certify an abstract
 dimension or covariance matrix rank bound.
+
+## Affinely dependent prefix in any covariance basis (13 November 2026)
+
+Eight new documented lemmas/theorems and one typed witness constructor
+generalize the earlier two-score affine-dependence result to bases
+with arbitrarily many additional scores. If the first two basis scores
+satisfy f=a*g+c on the listed samples, (1,-a,0,...,0) is a nonzero
+coefficient direction with identically zero centered sample output
+and zero covariance quadratic under unit sample mass, even for
+signed weights. The covariance is therefore not strictly positive
+definite. With nonnegative listed weights, the witness also
+annihilates the covariance bilinear form and every named matrix row.
+
+The proofs rely on maintained Stdlib.Vector constructors,
+finite-sum zero coefficients, expectation/variance extensionality
+and the project's already checked covariance-kernel theorems;
+no duplicate matrix/spectral/rank implementation is added.
+
+Intended inventory: **895 public claims, 898 proof scripts and
+977 documented declarations** in seven Rocq modules, subject to
+Rocq 9.2 kernel checking and Python/Deal/SPARK workflows.
+This gives a concrete rank-deficiency witness but does not
+prove a general rank-nullity dimension formula or assess
+any empirical IQ covariance matrix.
 
 ## Research extensions
 

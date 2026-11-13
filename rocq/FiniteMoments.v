@@ -18009,4 +18009,358 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+  (**
+   [indexed_basis_affine_prefix_null_direction] (definition) —
+   A typed witness for an affine dependence among the first two
+   functions of an arbitrarily longer finite covariance basis.
+   Mathematical meaning: Coefficients 1 and -a cancel a relation
+   f=a*g+c, while all remaining score coordinates are zero.
+   Exact checked declaration: For a real slope a and a tail of
+   length n, the coefficient vector is (1,-a,0,...,0) of
+   length S (S n), using standard Vector.cons and Vector.const.
+   Premises and side conditions: All n and signed real slopes;
+   no sample weights or normalization assumption is built in.
+   Proof/definition method: Construct the witness entirely with
+   Stdlib.Vectors.Vector constructors and the scalar -a.
+   Library reuse: Vector.cons, Vector.const, Reals.
+   Boundary: A concrete null-direction candidate, not a
+   newly implemented vector space or a general kernel algorithm.
+   *)
+  Definition indexed_basis_affine_prefix_null_direction
+      {n : nat} (a : R) : Vector.t R (S (S n)) :=
+    Vector.cons R 1 (S n)
+      (Vector.cons R (-a) n (Vector.const 0 n)).
+
+  (**
+   [indexed_basis_affine_prefix_null_direction_to_list] (lemma) —
+   Convert the candidate witness into existing list coefficients.
+   Mathematical meaning: The typed vector representation and the
+   finite-list covariance interface contain identical coefficients.
+   Exact checked proposition: For n and a, converting the prefix
+   witness to a list yields 1 :: (-a) :: repeat 0 n.
+   Premises and side conditions: Every n and a, including n=0.
+   Proof/definition method: Reduce the standard cons constructors
+   and use maintained VectorSpec.to_list_const for the zero tail.
+   Library reuse: Vector.to_list, VectorSpec.to_list_const,
+   List.repeat; no bespoke vector/list conversion.
+   Boundary: Representation only; not a rank calculation.
+   *)
+  Lemma indexed_basis_affine_prefix_null_direction_to_list :
+    forall n (a : R),
+      Vector.to_list
+        (indexed_basis_affine_prefix_null_direction (n:=n) a) =
+      1 :: (-a) :: repeat 0 n.
+  Proof.
+    intros n a.
+    unfold indexed_basis_affine_prefix_null_direction.
+    simpl.
+    rewrite VectorSpec.to_list_const.
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_affine_prefix_null_direction_nonzero] (lemma) —
+   The affine-dependence coefficient witness is genuinely nonzero.
+   Mathematical meaning: Its first coordinate is 1, independently
+   of the slope and the number of remaining zero coordinates.
+   Exact checked proposition: For every n,a, its coefficient
+   list differs from repeat 0 (S (S n)).
+   Premises and side conditions: Any real a and finite n.
+   Proof/definition method: Convert the vector with the verified
+   list lemma and apply standard List.hd congruence to a
+   hypothetical equality; Lra refutes 1=0.
+   Library reuse: Stdlib.List.hd/repeat, Stdlib.Logic.f_equal,
+   Stdlib.Lra, prefix_null_direction_to_list.
+   Boundary: Nonzero witness only; no independent-basis claim.
+   *)
+  Lemma indexed_basis_affine_prefix_null_direction_nonzero :
+    forall n (a : R),
+      Vector.to_list
+        (indexed_basis_affine_prefix_null_direction (n:=n) a) <>
+      repeat 0 (S (S n)).
+  Proof.
+    intros n a Hequal.
+    rewrite indexed_basis_affine_prefix_null_direction_to_list
+      in Hequal.
+    pose proof
+      (f_equal (fun xs : list R => hd 0 xs) Hequal) as Hhead.
+    simpl in Hhead.
+    lra.
+  Qed.
+
+  (**
+   [indexed_basis_affine_prefix_weighted_score] (lemma) —
+   The extended affine-null witness evaluates to a constant.
+   Mathematical meaning: The first two scores cancel the
+   slope term, and the arbitrarily many remaining basis scores
+   contribute zero because their coefficients are zero.
+   Exact checked proposition: If f(x)=a*g(x)+c then the
+   weighted_basis_sum of the prefix witness against
+   f::g::rest equals c at x.
+   Premises and side conditions: A pointwise relation at one
+   outcome x; no weight or normalization hypotheses.
+   Proof/definition method: Reuse the typed-to-list bridge and
+   the existing weighted_basis_sum_repeat_zero theorem, then
+   normalize only the two scalar prefix contributions by Ring.
+   Library reuse: weighted_basis_sum_repeat_zero,
+   indexed_basis_affine_prefix_null_direction_to_list,
+   Stdlib.List.combine, Stdlib.Ring.
+   Boundary: Finite score algebra; no covariance conclusion yet.
+   *)
+  Lemma indexed_basis_affine_prefix_weighted_score :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R) (x : Outcome),
+      f x = a * g x + c ->
+      weighted_basis_sum
+        (Vector.to_list
+          (indexed_basis_affine_prefix_null_direction
+            (n:=length rest) a))
+        (f :: g :: rest) x = c.
+  Proof.
+    intros f g rest a c x Haffine.
+    rewrite indexed_basis_affine_prefix_null_direction_to_list.
+    change
+      (1 * f x + ((-a) * g x +
+        weighted_basis_sum (repeat 0 (length rest)) rest x) = c).
+    rewrite weighted_basis_sum_repeat_zero.
+    rewrite Haffine.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_affine_prefix_centered_sample_zero] (theorem) —
+   Affine dependence annihilates the full normalized centered
+   sample evaluator, regardless of the number of extra scores.
+   Mathematical meaning: A composite score constant on all listed
+   outcomes has zero centered weighted score at every position.
+   Exact checked proposition: Under total_mass=1 and the
+   relation f(x)=a*g(x)+c for each x in samples, the centered
+   output for (1,-a,0,...,0) equals the zero vector.
+   Premises and side conditions: Signed or zero sample weights,
+   repeated outcomes, and any remaining basis functions allowed.
+   Proof/definition method: Reuse the checked full-vector
+   zero iff every sampled centered score vanishes. Obtain the
+   composite constant from prefix_weighted_score, transport
+   expectation by expectation_extensional_on_samples, then
+   use expectation_constant_normalized and Ring.
+   Library reuse: indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero,
+   indexed_basis_affine_prefix_weighted_score,
+   expectation_extensional_on_samples,
+   expectation_constant_normalized, Stdlib.Ring.
+   Boundary: Explicit nonzero evaluator kernel when combined
+   with the preceding lemma; no general nullity dimension.
+   *)
+  Theorem indexed_basis_affine_prefix_centered_sample_zero :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      indexed_basis_centered_sample_vector
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a) =
+      Vector.const 0 (length samples).
+  Proof.
+    intros f g rest a c Hmass Haffine.
+    apply (proj2
+      (indexed_basis_centered_sample_vector_zero_iff_all_sample_scores_zero
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a))).
+    assert (Hexpect :
+      expect
+        (weighted_basis_sum
+          (Vector.to_list
+            (indexed_basis_affine_prefix_null_direction
+              (n:=length rest) a))
+          (f :: g :: rest)) = c).
+    {
+      transitivity (expect (fun _ : Outcome => c)).
+      - apply expectation_extensional_on_samples.
+        intros x Hx.
+        apply indexed_basis_affine_prefix_weighted_score.
+        apply Haffine; exact Hx.
+      - apply expectation_constant_normalized.
+        exact Hmass.
+    }
+    intros x Hx.
+    unfold indexed_basis_centered_weighted_score.
+    rewrite (indexed_basis_affine_prefix_weighted_score
+      f g rest a c x (Haffine x Hx)).
+    rewrite Hexpect.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_affine_prefix_covariance_quadratic_zero] (theorem) —
+   Every finite covariance basis beginning with two affinely
+   dependent scores has an explicit nonzero quadratic-null direction.
+   Mathematical meaning: Appending any number of additional scores
+   cannot eliminate the null vector (1,-a,0,...,0).
+   Exact checked proposition: If total_mass=1 and f=a*g+c on
+   sampled outcomes, the indexed covariance quadratic of the
+   typed prefix witness is exactly zero.
+   Premises and side conditions: Signed weights are allowed;
+   there is no nonnegative-weight or sample-independence premise.
+   Proof/definition method: Reuse indexed quadratic-as-variance
+   and variance_extensional_on_samples. The composite evaluates
+   to constant c by the previous score theorem, so the existing
+   normalized constant-score variance theorem finishes.
+   Library reuse: indexed_basis_covariance_quadratic_as_variance,
+   indexed_basis_affine_prefix_weighted_score,
+   variance_extensional_on_samples,
+   variance_of_constant_score_zero.
+   Boundary: A quadratic-null witness and singularity obstruction,
+   not the entire covariance spectrum or an empirical rank.
+   *)
+  Theorem indexed_basis_affine_prefix_covariance_quadratic_zero :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      indexed_basis_covariance_quadratic_form
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a) = 0.
+  Proof.
+    intros f g rest a c Hmass Haffine.
+    rewrite (indexed_basis_covariance_quadratic_as_variance
+      (f :: g :: rest)
+      (indexed_basis_affine_prefix_null_direction
+        (n:=length rest) a) Hmass).
+    transitivity (variance (fun _ : Outcome => c)).
+    - apply variance_extensional_on_samples.
+      intros x Hx.
+      apply indexed_basis_affine_prefix_weighted_score.
+      apply Haffine; exact Hx.
+    - apply variance_of_constant_score_zero.
+      exact Hmass.
+  Qed.
+
+  (**
+   [indexed_basis_affine_prefix_covariance_not_positive_definite]
+   (theorem) — Arbitrarily many extra basis functions cannot make
+   an affinely dependent prefix strictly positive definite.
+   Mathematical meaning: The explicit nonzero prefix witness
+   contradicts strict positivity of the covariance quadratic.
+   Exact checked proposition: Under unit mass and sampled
+   f=a*g+c, indexed_basis_covariance_positive_definite
+   (f::g::rest) is false for any rest.
+   Premises and side conditions: Signed weights allowed and no
+   nonnegativity hypothesis required; arbitrary real a,c.
+   Proof/definition method: Instantiate the existing typed
+   positive-definiteness predicate with the nonzero witness;
+   rewrite its quadratic by the preceding zero theorem and
+   use Lra. No determinant or Gaussian argument is introduced.
+   Library reuse: indexed_basis_covariance_positive_definite,
+   indexed_basis_affine_prefix_null_direction_nonzero,
+   indexed_basis_affine_prefix_covariance_quadratic_zero,
+   Stdlib.Lra.
+   Boundary: Explicit failure of positive definiteness, not a
+   computed numerical rank or a full rank-nullity theorem.
+   *)
+  Theorem indexed_basis_affine_prefix_covariance_not_positive_definite :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      ~ indexed_basis_covariance_positive_definite (f :: g :: rest).
+  Proof.
+    intros f g rest a c Hmass Haffine Hpositive.
+    unfold indexed_basis_covariance_positive_definite in Hpositive.
+    pose proof
+      (Hpositive
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a)
+        (indexed_basis_affine_prefix_null_direction_nonzero
+          (length rest) a)) as Hstrict.
+    rewrite (indexed_basis_affine_prefix_covariance_quadratic_zero
+      f g rest a c Hmass Haffine) in Hstrict.
+    lra.
+  Qed.
+
+  (**
+   [indexed_basis_affine_prefix_covariance_radical] (theorem) —
+   With nonnegative normalized weights, the explicit affine
+   witness is orthogonal to every coefficient direction.
+   Mathematical meaning: The exhibited null direction lies in
+   the bilinear covariance radical, not merely at quadratic zero.
+   Exact checked proposition: Under unit mass, nonnegative
+   listed weights and f=a*g+c on samples, the typed witness
+   belongs to indexed_basis_covariance_bilinear_radical.
+   Premises and side conditions: Extra scores may be arbitrary;
+   nonnegative listed weights are required by the maintained
+   quadratic-zero iff radical theorem.
+   Proof/definition method: Reuse the already checked
+   quadratic-nullity to bilinear radical equivalence and the
+   explicit prefix quadratic-zero theorem without expanding
+   covariance matrix entries or redefining bilinear forms.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_bilinear_radical,
+   indexed_basis_affine_prefix_covariance_quadratic_zero.
+   Boundary: Certified radical membership without measuring
+   its dimension or proving an empirical covariance pattern.
+   *)
+  Theorem indexed_basis_affine_prefix_covariance_radical :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      indexed_basis_covariance_bilinear_radical
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a).
+  Proof.
+    intros f g rest a c Hmass Hw Haffine.
+    apply (proj1
+      (indexed_basis_covariance_quadratic_zero_iff_bilinear_radical
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a) Hmass Hw)).
+    apply indexed_basis_affine_prefix_covariance_quadratic_zero;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_affine_prefix_covariance_row_kernel] (theorem) —
+   The same explicit affinely dependent prefix direction
+   annihilates every bounded covariance row.
+   Mathematical meaning: Under finite probability assumptions
+   the direction (1,-a,0,...,0) is a genuine covariance
+   matrix kernel vector, even with additional basis functions.
+   Exact checked proposition: Under unit mass, nonnegative
+   listed weights and f=a*g+c on samples, the witness satisfies
+   indexed_basis_bounded_covariance_row_kernel (f::g::rest).
+   Premises and side conditions: No invertibility or
+   independence of the remaining score basis is assumed.
+   Proof/definition method: Apply the existing quadratic-null
+   iff named covariance-row-kernel criterion and the previously
+   verified exact witness quadratic-zero theorem.
+   Library reuse: indexed_basis_covariance_quadratic_zero_iff_named_row_kernel,
+   indexed_basis_affine_prefix_covariance_quadratic_zero,
+   Stdlib.Vectors.Fin.
+   Boundary: Constructed row-null witness; no general
+   determinant or rank computation.
+   *)
+  Theorem indexed_basis_affine_prefix_covariance_row_kernel :
+    forall (f g : Outcome -> R) (rest : list (Outcome -> R))
+           (a c : R),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (forall x, In x samples -> f x = a * g x + c) ->
+      indexed_basis_bounded_covariance_row_kernel
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a).
+  Proof.
+    intros f g rest a c Hmass Hw Haffine.
+    apply (proj1
+      (indexed_basis_covariance_quadratic_zero_iff_named_row_kernel
+        (f :: g :: rest)
+        (indexed_basis_affine_prefix_null_direction
+          (n:=length rest) a) Hmass Hw)).
+    apply indexed_basis_affine_prefix_covariance_quadratic_zero;
+      assumption.
+  Qed.
+
 End FiniteProbabilityMoments.

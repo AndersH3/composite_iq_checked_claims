@@ -3048,6 +3048,31 @@ Intended new inventory: **887 public claims, 890 proof scripts,
 968 documented declarations** in seven Rocq modules, pending
 pinned Rocq 9.2 and Python/Deal/SPARK CI.
 
+## Affine-dependence null witness in arbitrary finite covariance bases (13 November 2026)
+
+The earlier two-score affine-dependence covariance obstruction is extended
+to any score basis starting with f,g and followed by an arbitrary list
+rest. A single documented typed witness (1,-a,0,...,0) exhibits a
+genuine nonzero coefficient direction whenever f(x)=a*g(x)+c at every
+enumerated sample occurrence. Exact composite-score cancellation,
+zero centered sample output, and zero covariance quadratic all follow
+under unit total mass, without requiring nonnegative individual
+weights. Consequently, the entire extended basis is not strictly
+positive definite, regardless of the number or identity of its
+additional scores. Under the usual nonnegative finite-weight
+hypothesis, the same direction belongs to both the covariance
+bilinear radical and its named row kernel.
+
+The new code uses maintained Vector.cons/const/to_list, List.repeat,
+existing weighted_basis_sum_repeat_zero, finite expectation and
+variance extensionality, and the verified quadratic-to-radical and
+row-kernel bridges. It introduces no vector arithmetic or
+covariance-matrix algorithm, admitted proof, axiom or numerical rank
+calculation. Eight proof scripts and one documented witness definition
+advance the intended inventory to **895 public claims, 898 proof scripts,
+977 documented declarations** across seven modules. Pinned Rocq 9.2
+and Python/Deal/SPARK CI must validate the change.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
