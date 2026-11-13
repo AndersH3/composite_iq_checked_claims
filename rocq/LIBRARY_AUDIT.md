@@ -2969,6 +2969,24 @@ Intended inventory: **868 public claims, 871 proof scripts and
 are exact concrete affine properties, not image-dimension or rank
 claims. Verification is via the pinned Rocq/Python CI workflows.
 
+## Zero-sum translation equivariance of the canonical splitting (13 November 2026)
+
+Three documented generic real-vector lemmas complement the existing
+scalar-axis shift formulas. Adding a zero-sum vector changes the
+canonical zero-sum projection by that same vector, leaves the
+coordinate total unchanged, and therefore changes only the
+zero-sum component in the existing additive decomposition.
+Each proof composes maintained projector additivity, zero-sum
+fixed-point membership, coordinate-sum additivity, and the
+previously checked canonical decomposition. There is no new
+vector recursion, matrix code, affine model or axiom.
+
+Intended post-change inventory: 871 public claims, 874 proof
+scripts and 952 documented declarations across seven Rocq
+modules, pending Rocq 9.2 kernel and Python-contract CI.
+No vector-space dimension, rank-nullity, or covariance-rank
+claim is introduced by these algebraic translations.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

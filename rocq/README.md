@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **871 proof scripts** in seven
+for the two reports. **874 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3771,6 +3771,22 @@ Intended inventory: **868 public claims, 871 proof scripts and
 949 documented declarations**, pending pinned Rocq 9.2 and
 Python/Deal/SPARK CI. Abstract rank and dimension assertions remain
 out of scope at this stage.
+
+## Zero-sum translation laws (13 November 2026)
+
+Three generic finite-vector lemmas complement the affine head-axis
+translation results: a zero-sum translation moves the projected
+component by itself, leaves the coordinate total unchanged, and
+changes only the zero-sum term of the existing additive splitting.
+The proof code composes existing Stdlib-backed projection
+additivity, zero-sum fixed-point membership, finite-vector sum
+additivity, and canonical decomposition. No new vector recursion,
+matrix implementation, unproved assumptions or empirical claims.
+
+Targeted inventory: **871 public claims, 874 proof scripts and
+952 documented declarations**, subject to Rocq 9.2 and
+Python/Deal/SPARK CI. Library-level direct-sum dimensions and
+covariance-rank formalization remain separate work.
 
 ## Research extensions
 

@@ -14058,6 +14058,112 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_translation_projection] (lemma) —
+   Translating by a zero-sum vector changes the canonical projection
+   by exactly that same zero-sum vector.
+   Mathematical meaning: In the zero-sum component of the existing
+   direct additive decomposition, a zero-sum translation is retained
+   rather than annihilated, unlike a scalar-axis translation.
+   Exact checked proposition: For all n, v,z : Vector.t R (S n),
+   zero_sum z implies projection (map2 Rplus v z) =
+   map2 Rplus (projection v) z.
+   Premises and side conditions: Length is at least one, all
+   coordinates may be signed, and no probability assumptions occur.
+   Proof/definition method: Rewrite by the already checked
+   projection-additivity theorem and apply the existing fixed-point
+   characterization of zero-sum vectors to the second summand.
+   Library reuse: indexed_real_vector_zero_sum_projection_add,
+   indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum,
+   Stdlib.Vectors.Vector.map2.
+   Boundary: Concrete additive covariance of a projection, not an
+   abstract quotient-space or matrix-rank statement.
+   *)
+  Lemma indexed_real_vector_zero_sum_translation_projection :
+    forall n (v z : Vector.t R (S n)),
+      indexed_real_vector_zero_sum z ->
+      indexed_real_vector_zero_sum_projection (Vector.map2 Rplus v z) =
+      Vector.map2 Rplus (indexed_real_vector_zero_sum_projection v) z.
+  Proof.
+    intros n v z Hzero.
+    rewrite indexed_real_vector_zero_sum_projection_add.
+    rewrite (proj2
+      (indexed_real_vector_zero_sum_projection_fixed_iff_zero_sum
+        n z) Hzero).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_translation_coordinate_sum]
+   (lemma) — A zero-sum translation leaves the full coordinate
+   total unchanged.
+   Mathematical meaning: Zero-sum directions contribute no
+   scalar-axis coordinate to the canonical splitting.
+   Exact checked proposition: For all n, v,z : Vector.t R (S n),
+   zero_sum z implies sum (map2 Rplus v z) = sum v.
+   Premises and side conditions: All positive finite dimensions
+   and signed real entries, with no weight normalization assumptions.
+   Proof/definition method: Reuse the generic finite-vector
+   coordinate-sum-add theorem and unfold only the pre-existing
+   zero-sum predicate to replace the second sum by zero.
+   Library reuse: indexed_real_vector_coordinate_sum_add,
+   indexed_real_vector_zero_sum, Stdlib.Ring.
+   Boundary: A linear functional identity, not a dimension result.
+   *)
+  Lemma indexed_real_vector_zero_sum_translation_coordinate_sum :
+    forall n (v z : Vector.t R (S n)),
+      indexed_real_vector_zero_sum z ->
+      indexed_real_vector_coordinate_sum (Vector.map2 Rplus v z) =
+      indexed_real_vector_coordinate_sum v.
+  Proof.
+    intros n v z Hzero.
+    rewrite indexed_real_vector_coordinate_sum_add.
+    unfold indexed_real_vector_zero_sum in Hzero.
+    rewrite Hzero.
+    ring.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_translation_decomposition]
+   (lemma) — A zero-sum translation changes only the projected
+   coordinate in the canonical zero-sum plus scalar-axis splitting.
+   Mathematical meaning: Adding a zero-sum direction z to v gives
+   the sum of projection(v)+z and the original head-only axis.
+   Exact checked proposition: For all n, v,z : Vector.t R (S n),
+   zero_sum z implies map2 Rplus v z =
+   map2 Rplus (map2 Rplus (projection v) z) (axis (sum v)).
+   Premises and side conditions: Positive finite length including
+   singleton vectors; signed entries, no probability assumptions.
+   Proof/definition method: Apply the existing generic canonical
+   decomposition to the translated input, then rewrite its projected
+   and scalar components with the preceding two translation laws.
+   No vector associativity or componentwise induction is repeated.
+   Library reuse: indexed_real_vector_zero_sum_axis_decomposition,
+   indexed_real_vector_zero_sum_translation_projection,
+   indexed_real_vector_zero_sum_translation_coordinate_sum,
+   Stdlib.Vectors.Vector.map2.
+   Boundary: This is a direct additive-coordinate identity, not
+   a library-packaged isomorphism or numerical covariance rank.
+   *)
+  Lemma indexed_real_vector_zero_sum_translation_decomposition :
+    forall n (v z : Vector.t R (S n)),
+      indexed_real_vector_zero_sum z ->
+      Vector.map2 Rplus v z =
+      Vector.map2 Rplus
+        (Vector.map2 Rplus (indexed_real_vector_zero_sum_projection v) z)
+        (indexed_real_vector_total_axis
+          (indexed_real_vector_coordinate_sum v)).
+  Proof.
+    intros n v z Hzero.
+    rewrite (indexed_real_vector_zero_sum_axis_decomposition
+      n (Vector.map2 Rplus v z)) at 1.
+    rewrite (indexed_real_vector_zero_sum_translation_projection
+      n v z Hzero).
+    rewrite (indexed_real_vector_zero_sum_translation_coordinate_sum
+      n v z Hzero).
+    reflexivity.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all

@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **868 public theorem/lemma/example claims**, plus
+The current branch has **871 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**871 proof scripts** across seven Rocq modules. The claims and scripts
+**874 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 457 proof scripts
+## FiniteMoments.v — 460 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1212,6 +1212,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_real_vector_zero_sum_projection_equal_iff_exact_axis_shift` (lemma) | Extract the existing affine-fiber witness and specialize it via the preceding scalar-uniqueness identity; converse repackages the explicit witness. | indexed_real_vector_zero_sum_projection_equal_iff_axis_shift, indexed_real_vector_zero_sum_axis_shift_scalar_unique, Stdlib.Logic. | **New:** Equal projection iff one exact signed sum-difference axis shift relates the vectors. |
 | `indexed_real_vector_zero_sum_projection_equal_iff_unique_axis_shift` (lemma) | Reuse the existing affine-fiber existence theorem; identify any two scalar witnesses through the coordinate-sum difference using Lra. | indexed_real_vector_zero_sum_projection_equal_iff_axis_shift, indexed_real_vector_zero_sum_axis_shift_scalar_unique, Stdlib.Lra. | **New:** Equal projection iff exactly one axis-shift scalar exists. |
 | `indexed_real_vector_zero_sum_projection_iff_unique_normalizing_shift` (lemma) | Rewrite the previously checked projector by the minus-total axis shift and directly apply the maintained axis-shift injectivity equivalence. | indexed_real_vector_zero_sum_projection_as_axis_normalization, indexed_real_vector_zero_sum_axis_shift_injective. | **New:** A head-axis shift equals the projector iff it cancels the coordinate sum. |
+| `indexed_real_vector_zero_sum_translation_projection` (lemma) | Use projection additivity and the already proved fixed-point criterion to identify the projection of the zero-sum summand with itself. | indexed_real_vector_zero_sum_projection_add/fixed_iff_zero_sum, Stdlib.Vectors.Vector.map2. | **New:** Zero-sum translations are retained exactly in the projected component. |
+| `indexed_real_vector_zero_sum_translation_coordinate_sum` (lemma) | Use shared coordinate-sum additivity and rewrite the zero-sum vector's total to zero; close by Ring. | indexed_real_vector_coordinate_sum_add, indexed_real_vector_zero_sum, Stdlib.Ring. | **New:** Adding a zero-sum direction leaves the scalar total unchanged. |
+| `indexed_real_vector_zero_sum_translation_decomposition` (lemma) | Decompose the shifted input using the existing canonical splitting; rewrite the two coordinates by the preceding translation lemmas. | indexed_real_vector_zero_sum_axis_decomposition, indexed_real_vector_zero_sum_translation_projection/coordinate_sum, Stdlib.Vectors.Vector.map2. | **New:** Zero-sum translations modify only the zero-sum component of the direct decomposition. |
 | `indexed_basis_centered_sample_vector_sum_zero` (theorem) | Transport generic finite sum of vector entries through standard map theorem to existing centered-score sum | indexed_basis_centered_sample_vector_to_list, FiniteSum.finite_sum_map, indexed_basis_centered_weighted_score_sum_zero | **New:** all normalized typed sample-output vectors have zero coordinate sum |
 | `indexed_basis_centered_sample_vector_in_zero_sum` (theorem) | Unfold shared predicate/functional and reuse the existing normalized centered-output coordinate-sum-zero result | indexed_real_vector_zero_sum, indexed_real_vector_coordinate_sum, indexed_basis_centered_sample_vector_sum_zero | **New:** normalized centered sample evaluator maps every direction into typed zero-sum family |
 | `indexed_basis_centered_sample_vector_omits_nonzero_constant` (theorem) | Combine already checked zero-sum sample output membership with the generic positive-length nonzero-constant exclusion criterion | indexed_basis_centered_sample_vector_in_zero_sum, indexed_real_vector_zero_sum_const_nonzero, Vector.const | **New:** under unit mass and nonempty sample list, a centered output is never a nonzero constant vector, even for signed weights |
