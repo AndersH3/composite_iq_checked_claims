@@ -3214,6 +3214,29 @@ kernel verification and existing Python/Deal/SPARK regression gates.
 Rank-zero and rank-one here are structural entry certificates,
 not an abstract dimension/rank-nullity formalization.
 
+
+## Diagonal detection of all two-sample covariance entries (13 November 2026)
+
+Three documented and library-reusing Rocq theorems extend the structural
+rank-one certificate beyond pivot reconstruction. The checked two-by-two
+minor theorem and covariance symmetry imply M(i,j)^2=M(i,i)M(j,j).
+Consequently a cross-covariance entry is nonzero exactly when **both**
+corresponding diagonal entries are nonzero, regardless of the sign of
+the sample weights. The entire Fin-indexed covariance matrix vanishes
+exactly when every diagonal vanishes. This includes empty and dependent
+score bases, repeated outcomes and signed unit-mass weights. Proofs
+reuse the existing Fin-indexed covariance, two-sample minor theorem,
+covariance symmetry, Stdlib.Reals.Rmult_integral and Psatz.nra; no
+new matrix data type, determinant, rank algorithm or axiom is added.
+
+Expected inventory: **930 public claims, 933 proof scripts, 1018
+documented declarations**, with **519 FiniteMoments proof scripts**
+in seven modules. Pinned Rocq 9.2 kernel and Python regression checks
+must validate the branch head before these counts are reported as
+verified. This is an entrywise rank-zero/rank-one certificate, not
+a general finite-dimensional rank-nullity theorem or a claim about
+empirical IQ covariance.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

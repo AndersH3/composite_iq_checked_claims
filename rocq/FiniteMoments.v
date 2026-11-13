@@ -19528,6 +19528,139 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+  (**
+   [indexed_basis_two_samples_cross_square_equals_diagonal_product]
+   (theorem) — Every two-sample cross-covariance square equals its
+   corresponding diagonal product.
+   Mathematical meaning: The checked two-sample rank-one minor law and
+   covariance symmetry give M(i,j)^2=M(i,i)M(j,j) at all bounded indices.
+   Exact checked proposition: For samples=[x;y], total_mass=1 and any
+   Fin.t indices i,j, M(i,j)*M(i,j)=M(i,i)*M(j,j).
+   Premises and side conditions: Sample weights may be signed or zero;
+   no positivity or score-independence assumption is introduced.
+   Proof/definition method: Specialize the existing all-minors-zero
+   theorem at (i,j,j,i) and replace M(j,i) by M(i,j) using symmetry.
+   Library reuse: indexed_basis_covariance_two_samples_all_minors_zero,
+   covariance_symmetric, indexed_basis_cross_covariance_matrix and
+   Stdlib.Vectors.Fin. No new matrix multiplication is implemented.
+   Boundary: Algebraic rank-one entry identity, not a dimension theorem.
+   *)
+  Theorem indexed_basis_two_samples_cross_square_equals_diagonal_product :
+    forall basis x y (i j : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_cross_covariance_matrix basis basis i j *
+      indexed_basis_cross_covariance_matrix basis basis i j =
+      indexed_basis_cross_covariance_matrix basis basis i i *
+      indexed_basis_cross_covariance_matrix basis basis j j.
+  Proof.
+    intros basis x y i j Hsamples Hmass.
+    pose proof
+      (indexed_basis_covariance_two_samples_all_minors_zero
+        basis x y i j j i Hsamples Hmass) as Hminor.
+    assert (Hsym :
+      indexed_basis_cross_covariance_matrix basis basis j i =
+      indexed_basis_cross_covariance_matrix basis basis i j).
+    {
+      unfold indexed_basis_cross_covariance_matrix.
+      apply covariance_symmetric.
+    }
+    rewrite Hsym in Hminor.
+    exact Hminor.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_cross_entry_nonzero_iff_diagonals_nonzero]
+   (theorem) — Exact nonzero-cross-entry test without positive weights.
+   Mathematical meaning: In the checked two-sample covariance matrix,
+   an off-diagonal entry is nonzero precisely when both associated
+   covariance diagonal entries are nonzero.
+   Exact checked proposition: For any bounded i,j under samples=[x;y]
+   and unit mass, M(i,j)<>0 iff M(i,i)<>0 and M(j,j)<>0.
+   Premises and side conditions: Real signed weights are allowed; a
+   diagonal may be negative. Empty score bases have no Fin.t indices.
+   Proof/definition method: Apply the previously checked cross-square
+   identity. A nonzero real has nonzero square; conversely the product
+   of two nonzero real diagonals cannot vanish by Rmult_integral.
+   Library reuse: indexed_basis_two_samples_cross_square_equals_diagonal_product,
+   Stdlib.Psatz.nra and Stdlib.Reals.Rmult_integral.
+   Boundary: Nonzero entry characterization, not eigenvalue or rank code.
+   *)
+  Theorem indexed_basis_two_samples_cross_entry_nonzero_iff_diagonals_nonzero :
+    forall basis x y (i j : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_cross_covariance_matrix basis basis i j <> 0 <->
+       indexed_basis_cross_covariance_matrix basis basis i i <> 0 /\
+       indexed_basis_cross_covariance_matrix basis basis j j <> 0).
+  Proof.
+    intros basis x y i j Hsamples Hmass.
+    pose proof
+      (indexed_basis_two_samples_cross_square_equals_diagonal_product
+        basis x y i j Hsamples Hmass) as Hproduct.
+    split.
+    - intro Hcross.
+      split.
+      + intro Hdiagonal.
+        rewrite Hdiagonal in Hproduct.
+        apply Hcross.
+        nra.
+      + intro Hdiagonal.
+        rewrite Hdiagonal in Hproduct.
+        apply Hcross.
+        nra.
+    - intros [Hleft Hright] Hcross.
+      rewrite Hcross in Hproduct.
+      assert (Hdiagonal_product :
+        indexed_basis_cross_covariance_matrix basis basis i i *
+        indexed_basis_cross_covariance_matrix basis basis j j = 0) by nra.
+      apply Rmult_integral in Hdiagonal_product.
+      destruct Hdiagonal_product as [Hleft_zero | Hright_zero].
+      + apply Hleft; exact Hleft_zero.
+      + apply Hright; exact Hright_zero.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_zero_matrix_iff_all_diagonals_zero]
+   (theorem) — Zero-diagonal criterion for the whole covariance matrix.
+   Mathematical meaning: A normalized two-sample covariance matrix is
+   identically zero if and only if every bounded variance diagonal
+   entry vanishes; off-diagonal entries cannot remain nonzero alone.
+   Exact checked proposition: For samples=[x;y], unit total mass,
+   (forall i j, M(i,j)=0) iff (forall i, M(i,i)=0).
+   Premises and side conditions: The basis may be empty or dependent,
+   outcome occurrences may coincide, and signed weights are permitted.
+   Proof/definition method: The forward implication selects j=i;
+   the reverse applies the cross-square diagonal-product identity,
+   substitutes the two zero diagonals, and uses real square-zero
+   arithmetic without deciding equality or defining a matrix rank.
+   Library reuse: indexed_basis_two_samples_cross_square_equals_diagonal_product,
+   Stdlib.Psatz.nra and the existing Fin-indexed covariance entries.
+   Boundary: Exact matrix-zero certificate, not general rank-nullity.
+   *)
+  Theorem indexed_basis_two_samples_zero_matrix_iff_all_diagonals_zero :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      ((forall (i j : Fin.t (length basis)),
+          indexed_basis_cross_covariance_matrix basis basis i j = 0) <->
+       (forall (i : Fin.t (length basis)),
+          indexed_basis_cross_covariance_matrix basis basis i i = 0)).
+  Proof.
+    intros basis x y Hsamples Hmass.
+    split.
+    - intros Hmatrix i.
+      exact (Hmatrix i i).
+    - intros Hdiagonal i j.
+      pose proof
+        (indexed_basis_two_samples_cross_square_equals_diagonal_product
+          basis x y i j Hsamples Hmass) as Hproduct.
+      rewrite (Hdiagonal i), (Hdiagonal j) in Hproduct.
+      nra.
+  Qed.
+
+
+
 End FiniteProbabilityMoments.
 
 

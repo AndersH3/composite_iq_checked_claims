@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **927 public theorem/lemma/example claims**, plus
+The current branch has **930 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**930 proof scripts** across seven Rocq modules. The claims and scripts
+**933 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 516 proof scripts
+## FiniteMoments.v — 519 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1341,6 +1341,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero` (theorem) | Reuse typed nth_error membership, scalar contrast detection, named row-kernel/contrast equivalence and unconditional covariance row-dot identity. | vector_of_list_nth_error, nth_error_In, covariance_with_weighted_basis_as_row_dot, covariance_symmetric, VectorSpec.length_to_list. | **New:** One nonzero pivot row determines the full two-sample covariance row kernel. |
 | `indexed_basis_two_samples_radical_iff_pivot_row_dot_zero` (theorem) | Compose unconditional radical/row-kernel equivalence with the preceding one-row test. | indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional, indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero, tauto. | **New:** One pivot-row dot product also detects the bilinear radical, including signed weights. |
 | `indexed_basis_two_samples_zero_matrix_of_zero_weight_product` (theorem) | Expand every existing indexed entry using scalar rank-one factorization, then simplify the zero weight product. | covariance_two_samples_rank_one_factorization, indexed_basis_cross_covariance_matrix, ring. | **New:** Exact rank-zero degeneracy when either two-sample weight vanishes. |
+| `indexed_basis_two_samples_cross_square_equals_diagonal_product` (theorem) | Specialize the established all-minors-zero law at (i,j,j,i); rewrite the reverse entry using covariance symmetry. | indexed_basis_covariance_two_samples_all_minors_zero, covariance_symmetric, Stdlib.Vectors.Fin. | **New:** M(i,j)^2=M(i,i)M(j,j) for normalized two-sample signed covariance. |
+| `indexed_basis_two_samples_cross_entry_nonzero_iff_diagonals_nonzero` (theorem) | Apply the shared square-diagonal identity and cancel nonzero real factors, without assuming PSD. | indexed_basis_two_samples_cross_square_equals_diagonal_product, Psatz.nra, Reals.Rmult_integral. | **New:** M(i,j) is nonzero iff both associated diagonals are nonzero. |
+| `indexed_basis_two_samples_zero_matrix_iff_all_diagonals_zero` (theorem) | Reduce all entry zeros to all diagonal zeros using the established cross-square law and real square-zero arithmetic. | indexed_basis_two_samples_cross_square_equals_diagonal_product, Psatz.nra, indexed_basis_cross_covariance_matrix. | **New:** Exact two-sample rank-zero certificate, valid for signed weights. |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1535,3 +1538,25 @@ kernel verification and existing Python/Deal/SPARK regression gates.
 Rank-zero and rank-one here are structural entry certificates,
 not an abstract dimension/rank-nullity formalization.
 
+
+## Diagonal detection of all two-sample covariance entries (13 November 2026)
+
+Three documented and library-reusing Rocq theorems extend the structural
+rank-one certificate beyond pivot reconstruction. The checked two-by-two
+minor theorem and covariance symmetry imply M(i,j)^2=M(i,i)M(j,j).
+Consequently a cross-covariance entry is nonzero exactly when **both**
+corresponding diagonal entries are nonzero, regardless of the sign of
+the sample weights. The entire Fin-indexed covariance matrix vanishes
+exactly when every diagonal vanishes. This includes empty and dependent
+score bases, repeated outcomes and signed unit-mass weights. Proofs
+reuse the existing Fin-indexed covariance, two-sample minor theorem,
+covariance symmetry, Stdlib.Reals.Rmult_integral and Psatz.nra; no
+new matrix data type, determinant, rank algorithm or axiom is added.
+
+Expected inventory: **930 public claims, 933 proof scripts, 1018
+documented declarations**, with **519 FiniteMoments proof scripts**
+in seven modules. Pinned Rocq 9.2 kernel and Python regression checks
+must validate the branch head before these counts are reported as
+verified. This is an entrywise rank-zero/rank-one certificate, not
+a general finite-dimensional rank-nullity theorem or a claim about
+empirical IQ covariance.
