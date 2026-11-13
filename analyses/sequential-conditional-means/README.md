@@ -33,6 +33,26 @@ The fixed recursive means have SD `0`. The report derives a general case with `r
 
 For `a = 2`, `c = 0.6` and three subsequent predictions, the inclusive means are `1.7` and `1.818182`; the corresponding conditional SDs of the actual means are `0.319374` and `0.246183`.
 
+## IQ 150 examples, SD 15 and correlation 0.6
+
+Use the reporting scale `IQ = 100 + 15 X`, so an initial IQ of 150 is the standardized starting score `a = (150 - 100) / 15 = 10/3`. The underlying standardized tests retain mean 0 and SD 1. For one, two or three initial IQ-150 scores, every subsequent prediction is respectively **130.00**, **137.50** or **140.91** IQ points.
+
+All initial scores are included in the following means. `k` is the number of subsequent predictions. The SD columns describe the actual test-score mean, in IQ points; the conditional SD fixes every initial score at IQ 150.
+
+| Initial IQ-150 scores | Subsequent predictions k | Total scores | Mean IQ | Population SD | Conditional SD |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 1 | 2 | 140.00 | 13.42 | 6.00 |
+| 1 | 2 | 3 | 136.67 | 12.85 | 6.63 |
+| 1 | 10 | 11 | 131.82 | 11.97 | 7.22 |
+| 2 | 1 | 3 | 145.83 | 12.85 | 3.71 |
+| 2 | 2 | 4 | 143.75 | 12.55 | 4.44 |
+| 2 | 10 | 12 | 139.58 | 11.94 | 5.45 |
+| 3 | 1 | 4 | 147.73 | 12.55 | 2.68 |
+| 3 | 2 | 5 | 146.36 | 12.37 | 3.34 |
+| 3 | 10 | 13 | 143.01 | 11.91 | 4.46 |
+
+The PDF derives the scale conversion, mean and SD formulas and works through the two-start, ten-prediction row. Calculations use the exact standardized score `10/3` and exact correlation `3/5`, with rounding applied only to displayed results. The fixed recursive mean has SD 0 in every row; the nonzero SDs describe actual test outcomes.
+
 ## Build
 
 From this directory, run:
@@ -49,7 +69,7 @@ The report follows the typography and output layout of the existing [Hoeflin/Fer
 
 The derivation was reviewed by collaborating AI agents. Validation completed on 13 November 2026:
 
-- `make pdf` passed; the eleven-page PDF was rendered and visually inspected. The final LaTeX log had no unresolved references, missing glyphs, or overfull/underfull boxes.
+- `make pdf` passed; the thirteen-page PDF was rendered and visually inspected. The final LaTeX log had no unresolved references, missing glyphs, or overfull/underfull boxes.
 - From the repository root, `make check PYTHON=.venv/bin/python` passed using the exact versions in `requirements-dev.txt`. This includes Python contract coverage, the SPARK structural contract audit, static lint with its required negative control, **343 runtime/property tests**, and the existing scoped symbolic acceptance gate.
 - The symbolic gate proved its six expected postcondition obligations and found the required negative-control counterexample. Those obligations concern the existing software; they do not formally verify this new analysis.
 

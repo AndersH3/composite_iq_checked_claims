@@ -55,7 +55,9 @@ We derive the Gaussian conditional mean, solve the recursion,
 describe the admissible correlations and singular endpoints, and distinguish
 these sources of variation. A general derivation also gives the cases with
 two or three initial scores all fixed at \(a\), including every starting
-score in the average. A counterexample shows that means, variances and
+score in the average. Worked examples use initial IQ scores of 150 on a
+mean-100, SD-15 reporting scale, correlation \(0.6\), and one, two or ten
+subsequent predictions. A counterexample shows that means, variances and
 correlations alone do not determine the recursive conditional means.
 \end{abstract}
 
@@ -643,6 +645,115 @@ SD of the fixed recursive mean & \(0\) & \(0\) \\
 \hline
 \end{tabular}
 \end{center}
+
+\section{Worked examples starting at IQ 150}
+\label{sec:iq150-examples}
+
+\subsection{Convert the reporting scale to the standardized model}
+The model scores \(X_i\) continue to have population mean \(0\) and
+standard deviation \(1\). To report them on an IQ scale with mean \(100\)
+and standard deviation \(15\), define
+\begin{equation}
+  Q_i=100+15X_i.
+  \label{eq:iq-scale}
+\end{equation}
+An initial observed IQ of \(150\) therefore corresponds to
+\begin{equation}
+  a=\frac{150-100}{15}=\frac{10}{3}.
+  \label{eq:iq150-start}
+\end{equation}
+This conversion preserves the tests' correlations. The mean and SD of the
+standardized model are unchanged; \(Q_i\) is its reporting scale. In the
+examples below, \(r\in\{1,2,3\}\) is the number of initial IQ-150 scores,
+\(k\in\{1,2,10\}\) is the number of subsequent predictions, and every
+initial score is included in the \(N=r+k\) values being averaged.
+Use the selected correlation \(c=0.6=3/5\) throughout this section.
+
+\subsection{Predictions, means and standard deviations in IQ points}
+Put \(d_r=1+(r-1)c\) and \(d_N=1+(N-1)c\), as above. Converting
+\eqref{eq:multiple-predictions} gives the IQ prediction for every subsequent
+score:
+\begin{equation}
+  q_r=100+15\frac{rca}{d_r}
+      =100+50\frac{rc}{d_r}.
+  \label{eq:iq150-prediction}
+\end{equation}
+At \(c=0.6\), these predictions are
+\begin{equation}
+  q_1=130,\qquad q_2=137.5,\qquad
+  q_3=\frac{1550}{11}\approx140.909091.
+  \label{eq:iq150-predictions}
+\end{equation}
+They depend on the number of fixed starting scores \(r\), and are constant
+across all \(k\) subsequent recursive predictions within a case.
+
+The recursive average in IQ points, also equal to the conditional expected
+value of the actual IQ-score mean, is
+\begin{equation}
+  m_{r,k}^{\mathrm{IQ}}
+    =100+15B_{r,k}
+    =100+50\frac{r d_N}{N d_r}
+    =\frac{150r+kq_r}{r+k}.
+  \label{eq:iq150-mean}
+\end{equation}
+Adding \(100\) changes a mean, but does not change a standard deviation.
+Multiplication by \(15\) multiplies both means relative to \(100\) and
+standard deviations by \(15\). Hence the actual IQ-score mean has
+population and conditional standard deviations
+\begin{align}
+  \sigma_{\mathrm{pop},r,k}^{\mathrm{IQ}}
+    &=15\sqrt{\frac{d_N}{N}},
+      \label{eq:iq150-population-sd}\\
+  \sigma_{\mathrm{cond},r,k}^{\mathrm{IQ}}
+    &=\frac{15}{N}\sqrt{\frac{k(1-c)d_N}{d_r}}.
+      \label{eq:iq150-conditional-sd}
+\end{align}
+The conditional SD is calculated after all \(r\) initial IQ-150 scores have
+been observed. The fixed recursively filled average itself has SD \(0\).
+
+\subsection{The nine requested examples}
+The following table reports the inclusive mean and both actual-mean SDs in
+IQ points, rounded to two decimal places. Here \(N=r+k\) includes every
+starting score and every subsequent prediction. The mean is
+\(m_{r,k}^{\mathrm{IQ}}\) from \eqref{eq:iq150-mean}; the SD columns use
+\eqref{eq:iq150-population-sd} and \eqref{eq:iq150-conditional-sd}.
+
+\begin{center}
+\begin{tabular}{rrr r r r}
+\hline
+\shortstack{Initial\\scores \(r\)} &
+\shortstack{Subsequent\\predictions \(k\)} &
+\shortstack{Total\\\(N\)} &
+\shortstack{Mean\\IQ} &
+\shortstack{Population\\SD} &
+\shortstack{Conditional\\SD} \\
+\hline
+1 & 1  & 2  & 140.00 & 13.42 & 6.00 \\
+1 & 2  & 3  & 136.67 & 12.85 & 6.63 \\
+1 & 10 & 11 & 131.82 & 11.97 & 7.22 \\
+\hline
+2 & 1  & 3  & 145.83 & 12.85 & 3.71 \\
+2 & 2  & 4  & 143.75 & 12.55 & 4.44 \\
+2 & 10 & 12 & 139.58 & 11.94 & 5.45 \\
+\hline
+3 & 1  & 4  & 147.73 & 12.55 & 2.68 \\
+3 & 2  & 5  & 146.36 & 12.37 & 3.34 \\
+3 & 10 & 13 & 143.01 & 11.91 & 4.46 \\
+\hline
+\end{tabular}
+\end{center}
+
+For example, with two starting scores of \(150\) and ten subsequent
+predictions, each subsequent IQ prediction is \(137.5\). The inclusive
+mean is therefore
+\[
+  \frac{2(150)+10(137.5)}{12}
+  =\frac{1675}{12}\approx139.583333.
+\]
+In this row, the population variance of the actual IQ mean is \(285/2\),
+and its conditional variance is \(475/16\). Their square roots give
+approximately \(11.937336\) and \(5.448624\) IQ points, respectively.
+The fixed recursive mean in the same row remains a deterministic number.
 
 \section{Boundary cases with one starting score}
 
