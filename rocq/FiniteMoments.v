@@ -18186,10 +18186,22 @@ Section FiniteProbabilityMoments.
         exact Hmass.
     }
     intros x Hx.
-    unfold indexed_basis_centered_weighted_score.
+    change
+      (weight x *
+        (weighted_basis_sum
+          (Vector.to_list
+            (indexed_basis_affine_prefix_null_direction
+              (n:=length rest) a))
+          (f :: g :: rest) x -
+         expect
+          (weighted_basis_sum
+            (Vector.to_list
+              (indexed_basis_affine_prefix_null_direction
+                (n:=length rest) a))
+            (f :: g :: rest))) = 0).
+    rewrite Hexpect.
     rewrite (indexed_basis_affine_prefix_weighted_score
       f g rest a c x (Haffine x Hx)).
-    rewrite Hexpect.
     ring.
   Qed.
 
