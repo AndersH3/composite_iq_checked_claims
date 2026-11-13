@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **950 proof scripts** in seven
+for the two reports. **954 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -4092,6 +4092,34 @@ Intended inventory: **947 public checked claims, 950 proof scripts,
 scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal/SPARK CI
 remain the verification authorities; these counts alone do not imply
 generic rank-nullity or empirical IQ-test validity.
+
+
+## Typed coefficient-pivot covariance reconstruction (13 November 2026)
+
+Four new fully documented theorems extend the already checked
+two-sample all-minors-zero theorem to a **single typed coefficient pivot**
+with nonzero covariance self-pairing. The first specializes the
+four-direction determinant-free cross identity. The second reconstructs
+every bilinear covariance pairing from two pivot covariances divided by
+the nonzero pivot self-pairing. The third proves that radical membership
+is exactly the vanishing of one pivot covariance. The fourth proves that
+a zero covariance between two directions occurs exactly when one of
+their corresponding pivot covariances vanishes.
+
+The proofs reuse the maintained indexed-basis covariance bilinear form
+and radical, its all-minors identity, Stdlib.Reals.Rmult_integral,
+Stdlib.Ring and Stdlib.Field. No new matrix operations, coefficient
+selectors, finite sums, axioms or admitted proofs have been introduced.
+The sign of either individual sample weight is unrestricted under
+two-sample unit-mass normalization. The nonzero-pivot premise is
+essential for the reconstruction and one-pivot nullity converses.
+
+Intended inventory: **951 public checked claims, 954 proof scripts,
+1039 documented declarations**, including **540 FiniteMoments proof
+scripts** in seven modules. GitHub Actions Rocq 9.2 kernel checks and
+the existing Python/Deal/SPARK workflows are the verification authority.
+The result does not yet prove an abstract linear-map rank-nullity theorem
+or an empirical covariance inference.
 
 ## Research extensions
 

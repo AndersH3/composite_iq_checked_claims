@@ -20410,6 +20410,196 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_two_samples_bilinear_pivot_cross_identity] (theorem) —
+   A nonzero typed covariance pivot controls every bilinear pairing.
+   Mathematical meaning: The rank-one covariance pairing formed from
+   two normalized sample occurrences has vanishing two-by-two minors
+   for any four typed coefficient vectors, including a repeated pivot.
+   Exact checked proposition: Under samples=[x;y] and total_mass=1,
+   B(left,right)*B(pivot,pivot)=B(left,pivot)*B(pivot,right).
+   Premises and side conditions: The basis may be empty or dependent
+   and all real signed weights are admitted. This cross identity does
+   not itself require the pivot self-pairing to be nonzero.
+   Proof/definition method: Specialize the previously established
+   four-direction bilinear all-minors theorem with the pivot repeated
+   in both remaining slots. No covariance expression is expanded.
+   Library reuse: indexed_basis_two_samples_bilinear_all_minors_zero
+   and the existing dimension-indexed covariance bilinear interface.
+   Boundary: Exact rank-one cross identity, not a generic rank-nullity
+   theorem, determinant implementation or covariance matrix inverse.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_pivot_cross_identity :
+    forall basis
+           (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis left right *
+      indexed_basis_covariance_bilinear_form basis pivot pivot =
+      indexed_basis_covariance_bilinear_form basis left pivot *
+      indexed_basis_covariance_bilinear_form basis pivot right.
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass.
+    exact (indexed_basis_two_samples_bilinear_all_minors_zero
+      basis left right pivot pivot x y Hsamples Hmass).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_pivot_reconstruction] (theorem) —
+   Reconstruct any typed covariance pairing from a single nonzero pivot.
+   Mathematical meaning: Two-sample covariance is the outer product
+   of evaluations against any coefficient pivot with nonzero self-
+   covariance, normalized by the pivot's self-covariance.
+   Exact checked proposition: If B(p,p)<>0, then for any typed u,v,
+   B(u,v)=B(u,p)*B(p,v)/B(p,p), under two unit-mass samples.
+   Premises and side conditions: Exactly two sampled occurrences
+   and unit total mass; signed weights, repeated samples, dependent
+   scores and arbitrary basis dimensions remain allowed whenever
+   the specified pivot is well-defined and its pairing is nonzero.
+   Proof/definition method: Rewrite the requested quotient by the
+   checked typed pivot cross identity and use Stdlib.Field with its
+   nonzero denominator obligation supplied by the premise.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_cross_identity,
+   Stdlib.Field and Stdlib.Reals; no new vector/matrix operations.
+   Boundary: An algebraic reconstruction of every coefficient pairing,
+   not an inversion algorithm or proof of an abstract rank theorem.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_pivot_reconstruction :
+    forall basis
+           (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left right =
+        (indexed_basis_covariance_bilinear_form basis left pivot *
+         indexed_basis_covariance_bilinear_form basis pivot right) /
+        indexed_basis_covariance_bilinear_form basis pivot pivot.
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    pose proof (indexed_basis_two_samples_bilinear_pivot_cross_identity
+      basis pivot left right x y Hsamples Hmass) as Hminor.
+    rewrite <- Hminor.
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_radical_iff_pivot_orthogonal]
+   (theorem) — A single nonzero typed pivot detects the full radical.
+   Mathematical meaning: For a nonzero rank-one two-sample covariance
+   pairing, one covariance with a nonisotropic pivot suffices to test
+   whether a coefficient vector covaries with *every* other direction
+   as zero; the universal quantifier is reduced to one scalar test.
+   Exact checked proposition: Assuming B(p,p)<>0, Radical(left) iff
+   B(left,p)=0, for every typed left coefficient vector.
+   Premises and side conditions: Exactly two unit-mass occurrences
+   and a nonzero pivot self-pairing. Signed weights and dependent
+   bases are allowed; no positivity or sample-outcome inequality
+   assumption is added.
+   Proof/definition method: Necessity specializes the already defined
+   bilinear radical to p. For sufficiency, the bilinear pivot identity
+   makes B(left,test)*B(p,p)=0; Rmult_integral and the nonzero-pivot
+   premise cancel the latter factor for each test vector.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_cross_identity,
+   indexed_basis_covariance_bilinear_radical, Stdlib.Reals.Rmult_integral
+   and Stdlib.Ring. No new radical or row-kernel definitions.
+   Boundary: A concrete one-functional radical certificate, not a
+   proof of its vector-space dimension or generic kernel rank.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_radical_iff_pivot_orthogonal :
+    forall basis
+           (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis left <->
+       indexed_basis_covariance_bilinear_form basis left pivot = 0).
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    unfold indexed_basis_covariance_bilinear_radical.
+    split.
+    - intros Hradical.
+      exact (Hradical pivot).
+    - intros Hcross test.
+      pose proof
+        (indexed_basis_two_samples_bilinear_pivot_cross_identity
+          basis pivot left test x y Hsamples Hmass) as Hminor.
+      rewrite Hcross in Hminor.
+      assert (Hzero :
+        indexed_basis_covariance_bilinear_form basis left test *
+        indexed_basis_covariance_bilinear_form basis pivot pivot = 0).
+      { rewrite Hminor; ring. }
+      apply Rmult_integral in Hzero.
+      destruct Hzero as [Hleft | Hright].
+      + exact Hleft.
+      + contradiction.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_zero_iff_pivot_orthogonality]
+   (theorem) — A nonzero typed pivot factors every zero cross-pairing.
+   Mathematical meaning: If the covariance of a two-sample coefficient
+   pivot with itself is nonzero, two coefficient directions have zero
+   mutual covariance exactly when at least one has zero covariance
+   against the pivot (in the corresponding left or right slot).
+   Exact checked proposition: B(u,v)=0 iff B(u,p)=0 or B(p,v)=0
+   whenever B(p,p)<>0, for any two unit-mass sample occurrences.
+   Premises and side conditions: Both coefficient vectors are typed
+   to the finite score basis. Signed weights and dependent score
+   functions are admitted; no general PSD or spectral assumption.
+   Proof/definition method: Use the maintained pivot cross identity
+   and the real zero-product lemma; for the reverse implication cancel
+   the nonzero pivot factor after substituting either zero covariance.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_cross_identity,
+   Stdlib.Reals.Rmult_integral and Stdlib.Ring. No reimplemented field
+   arithmetic, matrix multiplication or determinant operations.
+   Boundary: A zero-pairing factorization for nonzero two-sample forms,
+   not an abstract rank-nullity result for arbitrary covariance matrices.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_zero_iff_pivot_orthogonality :
+    forall basis
+           (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis left right = 0 <->
+       indexed_basis_covariance_bilinear_form basis left pivot = 0 \/
+       indexed_basis_covariance_bilinear_form basis pivot right = 0).
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    pose proof
+      (indexed_basis_two_samples_bilinear_pivot_cross_identity
+        basis pivot left right x y Hsamples Hmass) as Hminor.
+    split.
+    - intro Hzero.
+      assert (Hproduct :
+        indexed_basis_covariance_bilinear_form basis left pivot *
+        indexed_basis_covariance_bilinear_form basis pivot right = 0).
+      { rewrite <- Hminor; rewrite Hzero; ring. }
+      apply Rmult_integral in Hproduct.
+      exact Hproduct.
+    - intros [Hleft | Hright].
+      + rewrite Hleft in Hminor.
+        assert (Hproduct :
+          indexed_basis_covariance_bilinear_form basis left right *
+          indexed_basis_covariance_bilinear_form basis pivot pivot = 0).
+        { rewrite Hminor; ring. }
+        apply Rmult_integral in Hproduct.
+        destruct Hproduct as [Hzero | Hzero].
+        * exact Hzero.
+        * contradiction.
+      + rewrite Hright in Hminor.
+        assert (Hproduct :
+          indexed_basis_covariance_bilinear_form basis left right *
+          indexed_basis_covariance_bilinear_form basis pivot pivot = 0).
+        { rewrite Hminor; ring. }
+        apply Rmult_integral in Hproduct.
+        destruct Hproduct as [Hzero | Hzero].
+        * exact Hzero.
+        * contradiction.
+  Qed.
+
+
 End FiniteProbabilityMoments.
 
 

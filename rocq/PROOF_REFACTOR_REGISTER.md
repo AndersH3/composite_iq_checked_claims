@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **947 public theorem/lemma/example claims**, plus
+The current branch has **951 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**950 proof scripts** across seven Rocq modules. The claims and scripts
+**954 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 536 proof scripts
+## FiniteMoments.v — 540 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1361,6 +1361,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis` (theorem) | Use Req_EM_T and the existing typed basis coordinate witness for necessity; factorization and the unconditional basis/radical bridge for sufficiency. | Req_EM_T, indexed_basis_score_has_typed_coordinate_representation, indexed_basis_covariance_bilinear_radical_iff_uncorrelated_with_basis_unconditional, covariance_two_samples_rank_one_factorization. | **New: all bilinear pairings vanish iff weight product zero or basis does not separate sampled outcomes.** |
 | `indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis` (theorem) | Convert every zero self-pairing into radical membership, then reuse exact full-zero-form classification. | indexed_basis_two_samples_bilinear_self_zero_iff_radical_signed, indexed_basis_two_samples_bilinear_zero_iff_weight_or_nonseparating_basis. | **New: all self-nullities characterize full two-sample covariance degeneracy even with signed weights.** |
 | `indexed_basis_two_samples_all_quadratics_zero_iff_weight_or_nonseparating_basis` (theorem) | Transport universal zero quadratics through the already verified bilinear diagonal theorem and all-self-nullity classification. | indexed_basis_covariance_bilinear_diagonal, indexed_basis_two_samples_all_self_zero_iff_weight_or_nonseparating_basis. | **New: exact criterion for a globally zero typed covariance quadratic under arbitrary signed two-sample weights.** |
+| `indexed_basis_two_samples_bilinear_pivot_cross_identity` (theorem) | Specialize the established all-minors-zero theorem to a repeated typed coefficient pivot. | indexed_basis_two_samples_bilinear_all_minors_zero. | **New: one pivot cross identity for arbitrary typed coefficient covariance pairings.** |
+| `indexed_basis_two_samples_bilinear_pivot_reconstruction` (theorem) | Rewrite the typed pivot identity as a quotient and discharge the denominator with the nonzero self-pairing premise. | indexed_basis_two_samples_bilinear_pivot_cross_identity, Stdlib.Field. | **New: reconstruct the full typed covariance pairing from a nonzero pivot.** |
+| `indexed_basis_two_samples_bilinear_radical_iff_pivot_orthogonal` (theorem) | Use the pivot cross identity and Rmult_integral to cancel nonzero self-covariance in every test pairing. | indexed_basis_two_samples_bilinear_pivot_cross_identity, indexed_basis_covariance_bilinear_radical, Rmult_integral. | **New: radical membership is equivalent to one pivot covariance equality.** |
+| `indexed_basis_two_samples_bilinear_zero_iff_pivot_orthogonality` (theorem) | Factor zero pairings by pivot cross identity, real zero-product and nonzero-pivot cancellation. | indexed_basis_two_samples_bilinear_pivot_cross_identity, Rmult_integral, Stdlib.Ring. | **New: a zero typed cross-pairing iff either pivot-side pairing vanishes.** |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1640,3 +1644,30 @@ Intended inventory: **947 public checked claims, 950 proof scripts,
 scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal/SPARK CI
 remain the verification authorities; these counts alone do not imply
 generic rank-nullity or empirical IQ-test validity.
+
+## Typed coefficient-pivot covariance reconstruction (13 November 2026)
+
+Four new fully documented theorems extend the already checked
+two-sample all-minors-zero theorem to a **single typed coefficient pivot**
+with nonzero covariance self-pairing. The first specializes the
+four-direction determinant-free cross identity. The second reconstructs
+every bilinear covariance pairing from two pivot covariances divided by
+the nonzero pivot self-pairing. The third proves that radical membership
+is exactly the vanishing of one pivot covariance. The fourth proves that
+a zero covariance between two directions occurs exactly when one of
+their corresponding pivot covariances vanishes.
+
+The proofs reuse the maintained indexed-basis covariance bilinear form
+and radical, its all-minors identity, Stdlib.Reals.Rmult_integral,
+Stdlib.Ring and Stdlib.Field. No new matrix operations, coefficient
+selectors, finite sums, axioms or admitted proofs have been introduced.
+The sign of either individual sample weight is unrestricted under
+two-sample unit-mass normalization. The nonzero-pivot premise is
+essential for the reconstruction and one-pivot nullity converses.
+
+Intended inventory: **951 public checked claims, 954 proof scripts,
+1039 documented declarations**, including **540 FiniteMoments proof
+scripts** in seven modules. GitHub Actions Rocq 9.2 kernel checks and
+the existing Python/Deal/SPARK workflows are the verification authority.
+The result does not yet prove an abstract linear-map rank-nullity theorem
+or an empirical covariance inference.
