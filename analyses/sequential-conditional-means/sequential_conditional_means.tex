@@ -47,10 +47,14 @@ pairwise correlation \(c\), recursively predict each subsequent test by
 conditioning on the starting score and on all earlier predictions.
 Every subsequent prediction equals \(ca\). Including \(a\) as the first
 value, the average of \(a,e_1,\ldots,e_k\) is
-\(a(1+kc)/(k+1)\). We derive the Gaussian conditional mean, solve the recursion,
+\(a(1+kc)/(k+1)\). This fixed recursive average has standard deviation zero.
+The actual \((k+1)\)-test average has population standard deviation
+\(\sqrt{(1+kc)/(k+1)}\); after observing the starting score, its conditional
+standard deviation is \(\sqrt{k(1-c)(1+kc)}/(k+1)\).
+We derive the Gaussian conditional mean, solve the recursion,
 describe the admissible correlations and singular endpoints, and distinguish
-this deterministic construction from actual future scores. A counterexample
-shows that means, variances and correlations alone do not establish the result.
+these sources of variation. A counterexample shows that means, variances and
+correlations alone do not determine the recursive conditional means.
 \end{abstract}
 
 \noindent\textbf{AI disclosure.} This analysis, its mathematical exposition,
@@ -275,41 +279,110 @@ the average after three predictions is instead
 \]
 
 \begin{samepage}
-\section{Interpretation and other averages}
+\section{Standard deviation of the mean}
 
-\subsection{Actual scores and their conditional average}
-The recursion replaces each previous future score by its conditional mean.
-Actual observed future scores need not equal those replacements. If
-\[
-  C_k=\frac1{k+1}\sum_{j=0}^{k}X_j
-\]
-is the actual average including the starting test, bivariate Gaussian regression gives
-\(\E[X_n\given X_0=a]=ca\) for every \(1\leq n\leq k\). Linearity therefore gives
+\subsection{The specified recursive average with fixed starting score}
+The numbers \(a,e_1,\ldots,e_k\) and their average \(B_k\) are fixed once
+\(a,c,k\) are specified. Hence
+\begin{equation}
+  \Var(B_k)=\E[(B_k-\E[B_k])^2]=0,
+  \qquad \boxed{\operatorname{SD}(B_k)=0.}
+  \label{eq:fixed-sd}
+\end{equation}
+\end{samepage}
+The actual test-score mean also includes the first test. Its population and
+conditional standard deviations are derived next.
+
+\subsection{Population standard deviation of the actual test-score mean}
+Define the random mean of all \(k+1\) scores by
+\begin{equation}
+  C_k=\frac1{k+1}\sum_{j=0}^{k}X_j.
+  \label{eq:actual-average}
+\end{equation}
+Its population mean is zero. There are \(k+1\) variance terms, each equal
+to \(1\), and \(k(k+1)/2\) distinct covariance pairs, each equal to \(c\).
+Consequently
+\begin{align}
+  \Var(C_k)
+  &=\frac1{(k+1)^2}
+    \left(\sum_{j=0}^{k}\Var(X_j)
+           +2\sum_{0\leq i<j\leq k}\Cov(X_i,X_j)\right)\notag\\
+  &=\frac{(k+1)+k(k+1)c}{(k+1)^2}
+   =\frac{1+kc}{k+1}=\lambda_k.
+   \label{eq:population-variance}
+\end{align}
+Taking the nonnegative square root gives
+\begin{equation}
+  \boxed{\operatorname{SD}(C_k)
+    =\sqrt{\frac{1+kc}{k+1}}
+    =\sqrt{c+\frac{1-c}{k+1}}.}
+  \label{eq:population-sd}
+\end{equation}
+For \(N=k+1\) total tests, this is
+\begin{equation}
+  \boxed{\operatorname{SD}(C_{N-1})
+    =\sqrt{\frac{1+(N-1)c}{N}}.}
+  \label{eq:population-sd-total}
+\end{equation}
+The population variance and standard deviation require only the specified
+finite variances and covariances; joint Gaussianity is not needed for
+\eqref{eq:population-variance}--\eqref{eq:population-sd-total}.
+
+\subsection{Conditional standard deviation after observing the first score}
+Return to the joint Gaussian model and fix \(X_0=a\).
+For \(1\leq i\leq k\), write \(U_i=X_i-cX_0\). The vector of residuals
+is jointly Gaussian with \(X_0\), has zero covariance with \(X_0\), and
+is therefore independent of it. Direct calculation gives
+\begin{align*}
+  \Var(U_i)&=1-c^2,\\
+  \Cov(U_i,U_j)&=c-c^2\qquad(i\ne j).
+\end{align*}
+Thus each future score has conditional mean \(ca\), conditional variance
+\(1-c^2\), and each distinct future pair has conditional covariance
+\(c-c^2\). Including the fixed first score gives
 \begin{equation}
   \E[C_k\given X_0=a]
     =\frac{a+kca}{k+1}=\lambda_k a=B_k.
     \label{eq:actual-mean}
 \end{equation}
-\end{samepage}
-Although this conditional expectation equals \(B_k\), the random
-variable \(C_k\) generally has positive conditional variance.
-
-\begin{samepage}
-In fact,
-\[
-  \Var(C_k)=\frac{1+kc}{k+1}=\lambda_k,
-  \qquad \Cov(C_k,X_0)=\lambda_k,
-\]
-so Gaussian regression gives
-\begin{equation}
+The starting score contributes no variance after it is fixed, so
+\begin{align}
   \Var(C_k\given X_0=a)
-  =\lambda_k-\lambda_k^2
-  =\frac{k(1-c)(1+kc)}{(k+1)^2}.
+  &=\frac{k(1-c^2)+k(k-1)(c-c^2)}{(k+1)^2}\notag\\
+  &=\frac{k(1-c)(1+kc)}{(k+1)^2}
+   =\lambda_k(1-\lambda_k).
   \label{eq:actual-variance}
+\end{align}
+Therefore
+\begin{equation}
+  \boxed{\operatorname{SD}(C_k\given X_0=a)
+    =\frac{\sqrt{k(1-c)(1+kc)}}{k+1}.}
+  \label{eq:conditional-sd}
 \end{equation}
-\end{samepage}
+This conditional standard deviation does not depend on the numerical value
+of \(a\) under the Gaussian model. The value of \(a\) determines the
+conditional mean. In terms of the total count \(N=k+1\),
+\begin{equation}
+  \operatorname{SD}(C_{N-1}\given X_0=a)
+  =\frac{\sqrt{(N-1)(1-c)[1+(N-1)c]}}{N}.
+  \label{eq:conditional-sd-total}
+\end{equation}
 
-Likewise, the random predictors
+For the example \(a=2,c=0.6,k=3\), the four-score mean satisfies
+\[
+  \E[C_3\given X_0=2]=1.4,\qquad
+  \operatorname{SD}(C_3)=\sqrt{0.7}\approx0.836660,
+\]
+\[
+  \operatorname{SD}(C_3\given X_0=2)
+    =\sqrt{0.21}\approx0.458258,
+  \qquad \operatorname{SD}(B_3)=0.
+\]
+The population spread, the uncertainty remaining after the first score is
+observed, and the variation of the fixed recursive mean are different quantities.
+
+\subsection{Predictors based on actual earlier outcomes}
+The random predictors
 \[
   P_n=\E[X_n\given X_0,\ldots,X_{n-1}]
 \]
@@ -339,6 +412,16 @@ Consequently
 \end{equation}
 where \(\lambda_k\geq0\) throughout the admissible correlation domain.
 These are population statements obtained by varying the starting score.
+In particular, the standard deviation \(\lambda_k\) of the recursively
+filled mean across random starting scores generally differs from the standard deviation
+\(\sqrt{\lambda_k}\) of the actual test-score mean. The law of total variance
+accounts for the difference:
+\begin{align*}
+  \Var(C_k)
+  &=\Var\bigl(\E[C_k\given X_0]\bigr)
+    +\E\bigl[\Var(C_k\given X_0)\bigr]\\
+  &=\lambda_k^2+\lambda_k(1-\lambda_k)=\lambda_k.
+\end{align*}
 For the fixed starting score in this problem, the answer is
 \(B_k=\lambda_k a\), which need not be zero. Every original test still has
 mean \(0\) and standard deviation \(1\); the arithmetic average has its own
@@ -348,11 +431,15 @@ distribution and is not rescaled to unit standard deviation.
 
 At \(c=0\), joint Gaussianity makes the scores independent, and every
 subsequent prediction is zero. Including the starting score gives
-\(B_k=a/(k+1)\). At \(c=1\),
+\(B_k=a/(k+1)\). The population and conditional standard deviations of
+the actual mean are then \(1/\sqrt{k+1}\) and \(\sqrt{k}/(k+1)\), respectively.
+At \(c=1\),
 \(\Var(X_i-X_j)=2(1-c)=0\), so all scores agree almost surely. Given
 the starting score \(a\), every compatible recursive prediction is
 \(a=ca\), and \(B_k=a\). This establishes the result at \(c=1\) without using the
 singular inverse in \eqref{eq:inverse}.
+The population standard deviation of \(C_k\) is \(1\), while its
+conditional standard deviation after observing \(X_0=a\) is \(0\).
 
 At the other endpoint, \(c=-1/k\), the full vector satisfies
 \[
@@ -364,6 +451,11 @@ shown above, so the derivation of \eqref{eq:answer} applies. Its prescribed
 history is compatible with the support, since
 \(a+kca=0\), so \(B_k=0\). The final conditional variance
 \eqref{eq:conditional-variance} is zero.
+Both the population and conditional standard deviations of \(C_k\) are
+also zero at this endpoint. The fixed recursive mean has standard deviation
+zero at every admissible correlation. For the single-value case \(N=1\),
+the actual score has population standard deviation \(1\), and fixing its
+value leaves conditional standard deviation \(0\).
 
 \section{Why correlation alone is insufficient}
 

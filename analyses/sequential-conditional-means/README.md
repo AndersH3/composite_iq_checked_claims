@@ -7,6 +7,17 @@ A full derivation for the average of `a, e_1, ..., e_k`, including the fixed sta
 
 The report derives the Gaussian regression function using a residual independent of the conditioning scores, solves the recursion by induction and by telescoping partial sums, and distinguishes the deterministic sequence from actual test outcomes. It also gives the formula in terms of the total number of values `N = k + 1`: `a (1 + (N - 1) c) / N`. It covers the admissible finite-battery correlation interval and both singular endpoints. A discrete counterexample shows why correlation alone is insufficient. The tests remain on the specified mean-zero, unit-standard-deviation scale throughout.
 
+The standard deviation of the mean depends on which scores remain random:
+
+| Quantity, including the first value | Standard deviation |
+|---|---|
+| Actual mean of `k + 1` tests across the population | `sqrt((1 + k c) / (k + 1))` |
+| Actual mean after fixing the first test score at `a` (Gaussian model) | `sqrt(k (1 - c) (1 + k c)) / (k + 1)` |
+| Recursive mean of the fixed numbers `a, e_1, ..., e_k` | `0` |
+| Recursively filled mean across random starting scores | `(1 + k c) / (k + 1)` |
+
+The PDF derives these formulas by counting covariance terms and conditioning Gaussian residuals. It also connects the formulas using the law of total variance. For `N` total tests, the population standard deviation is `sqrt((1 + (N - 1) c) / N)`; this population formula needs the stated variances and covariances but does not require Gaussianity.
+
 ## Build
 
 From this directory, run:
@@ -23,7 +34,7 @@ The report follows the typography and output layout of the existing [Hoeflin/Fer
 
 The derivation was reviewed by collaborating AI agents. Validation completed on 13 November 2026:
 
-- `make pdf` passed; the six-page PDF was rendered and visually inspected. The final LaTeX log had no unresolved references, missing glyphs, or overfull/underfull boxes.
+- `make pdf` passed; the eight-page PDF was rendered and visually inspected. The final LaTeX log had no unresolved references, missing glyphs, or overfull/underfull boxes.
 - From the repository root, `make check PYTHON=.venv/bin/python` passed using the exact versions in `requirements-dev.txt`. This includes Python contract coverage, the SPARK structural contract audit, static lint with its required negative control, **343 runtime/property tests**, and the existing scoped symbolic acceptance gate.
 - The symbolic gate proved its six expected postcondition obligations and found the required negative-control counterexample. Those obligations concern the existing software; they do not formally verify this new analysis.
 
