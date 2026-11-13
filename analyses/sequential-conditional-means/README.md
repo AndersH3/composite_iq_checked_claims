@@ -1,11 +1,11 @@
 # Sequential Conditional Means of Equicorrelated Scores
 
-A full derivation for a fixed starting standardized score `a` and the subsequent recursive predictions `e_1, ..., e_k`. Under joint Gaussianity and equal pairwise correlation `c`, every prediction equals `c a`; their average also equals `c a`. The starting score is excluded from the requested average.
+A full derivation for the average of `a, e_1, ..., e_k`, including the fixed starting score `a` as the first value. Every test has population mean **0** and standard deviation **1**. Under joint Gaussianity and equal pairwise correlation `c`, every subsequent recursive prediction equals `c a`, so the requested average is **`a (1 + k c) / (k + 1)`**. Here `k` counts subsequent predictions and `k + 1` counts all values in the average.
 
 - [Compiled PDF](output/pdf/sequential_conditional_means.pdf)
 - [XeLaTeX source](sequential_conditional_means.tex)
 
-The report derives the Gaussian regression function using a residual independent of the conditioning scores, solves the recursion by induction and by telescoping partial sums, and distinguishes the deterministic predictions from actual future outcomes. It covers the raw-score scale, the admissible finite-battery correlation interval and both singular endpoints. A discrete counterexample shows why correlation alone is insufficient.
+The report derives the Gaussian regression function using a residual independent of the conditioning scores, solves the recursion by induction and by telescoping partial sums, and distinguishes the deterministic sequence from actual test outcomes. It also gives the formula in terms of the total number of values `N = k + 1`: `a (1 + (N - 1) c) / N`. It covers the admissible finite-battery correlation interval and both singular endpoints. A discrete counterexample shows why correlation alone is insufficient. The tests remain on the specified mean-zero, unit-standard-deviation scale throughout.
 
 ## Build
 
