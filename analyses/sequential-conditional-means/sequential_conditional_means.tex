@@ -1,0 +1,380 @@
+% !TeX program = xelatex
+\documentclass[a4paper,fontsize=11pt,parskip=half,headings=small]{scrartcl}
+\usepackage[margin=18mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
+\usepackage{fontspec}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
+\setmonofont{Latin Modern Mono}
+\setmathfont{TeX Gyre Pagella Math}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,
+  pdftitle={Sequential Conditional Means of Equicorrelated Scores},
+  pdfauthor={Prepared with OpenAI Codex},
+  pdfsubject={A fixed starting score and the average of subsequent Gaussian conditional means}]{hyperref}
+\usepackage{bookmark}
+\usepackage{scrlayer-scrpage}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\given}{\,\vert\,}
+\newcommand{\one}{\mathbf{1}}
+\setlength{\emergencystretch}{1.5em}
+\setkomafont{disposition}{\normalfont\sffamily\bfseries}
+\setkomafont{pageheadfoot}{\normalfont\sffamily\small}
+\clearpairofpagestyles
+\ihead{Sequential conditional means}
+\ohead{Derivation and assumptions}
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+\title{Sequential Conditional Means of Equicorrelated Scores}
+\subtitle{A fixed starting score and the average of subsequent predictions}
+\author{}
+\date{13 November 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{plain.scrheadings}
+\vspace{-1em}
+\begin{abstract}
+Fix a starting standardized score \(a\). For jointly Gaussian tests with
+equal pairwise correlation \(c\), recursively predict each subsequent test
+by conditioning on the starting score and on all earlier predictions.
+Every prediction equals \(ca\), so the average of any positive number of
+these predictions is \(ca\). The starting score is excluded from that
+average. We derive the Gaussian conditional mean, solve the recursion,
+describe the admissible correlations and singular endpoints, and distinguish
+this deterministic construction from actual future scores. A counterexample
+shows that means, variances and correlations alone do not establish the result.
+\end{abstract}
+
+\noindent\textbf{AI disclosure.} This analysis, its mathematical exposition,
+supporting repository documentation and typesetting were prepared with OpenAI
+Codex and collaborating AI agents. The requester specified the problem,
+clarified the indexing and requested this analysis. Mathematical review and
+build checks were performed within the same AI-assisted workflow; no independent
+human peer review or new empirical psychometric validation is claimed.
+
+\section{Problem and notation}
+
+Let \(k\geq1\) be an integer and write
+\[
+  X_0,X_1,\ldots,X_k
+\]
+for standardized test scores, each with mean zero and variance one. We
+relabel the original tests \(A_r(c,0,1)\) so that test \(0\) supplies the
+starting observation. For distinct indices,
+assume \(\Cov(X_i,X_j)=\operatorname{Corr}(X_i,X_j)=c\).
+
+Use \(a\in\mathbb{R}\) for the \emph{fixed starting score}; it is a scalar,
+not a function. For each \(1\leq n\leq k\), let \(g_n\) be the Gaussian conditional
+mean function of \(X_n\) given \((X_0,\ldots,X_{n-1})\). Define
+\begin{align}
+  e_1&=g_1(a)=\E[X_1\given X_0=a],\label{eq:first}\\
+  e_n&=g_n(a,e_1,\ldots,e_{n-1})\notag\\
+     &=\E[X_n\given X_0=a,X_1=e_1,\ldots,X_{n-1}=e_{n-1}],
+       \qquad 2\leq n\leq k.\label{eq:definition}
+\end{align}
+The quantity of interest is
+\begin{equation}
+  \boxed{\overline e_k=\frac1k\sum_{n=1}^{k}e_n.}
+  \label{eq:target}
+\end{equation}
+It contains the \(k\) predictions \(e_1,\ldots,e_k\), and excludes \(a\).
+
+For continuous distributions, conditioning on a particular score is not a
+ratio of probabilities of point events. A conditional mean is ordinarily
+defined only almost everywhere. Here, \(g_n\) means the continuous version
+supplied by Gaussian regression, derived below. This convention specifies
+the recursion even at individual histories of probability zero. The singular
+case \(c=1\) will be treated directly on its support.
+
+\section{The joint model and its correlation domain}
+
+Assume \((X_0,\ldots,X_k)\) is jointly Gaussian, allowing degenerate Gaussian
+distributions at the endpoints. Its covariance matrix is
+\begin{equation}
+  R_{k+1}=(1-c)I_{k+1}+c\one_{k+1}\one_{k+1}^{\T},
+  \label{eq:covariance}
+\end{equation}
+where \(I_d\) is the \(d\)-dimensional identity and \(\one_d\) is a column
+of \(d\) ones. Vectors orthogonal to \(\one_{k+1}\) have eigenvalue
+\(1-c\); the vector \(\one_{k+1}\) has eigenvalue \(1+kc\). Thus a
+covariance matrix for these \(k+1\) scores exists exactly when
+\begin{equation}
+  \boxed{-\frac1k\leq c\leq1.}\label{eq:domain}
+\end{equation}
+An arbitrarily long equicorrelated collection requires \(0\leq c\leq1\).
+A negative fixed \(c\) cannot satisfy the lower bound for all \(k\).
+
+For \(0\leq c\leq1\), a construction consistent with the hypothetical
+common-factor illustration in the repository's
+\href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/analyses/hoeflin-ferguson/composite_iq_analysis.tex}{Hoeflin/Ferguson analysis, Appendix A}, is
+\begin{equation}
+  X_j=\sqrt c\,G+\sqrt{1-c}\,\varepsilon_j,
+  \label{eq:factor}
+\end{equation}
+where \(G,\varepsilon_0,\ldots,\varepsilon_k\) are independent standard-normal
+variables. The covariance-matrix derivation below also covers the admissible
+negative correlations. This is a mathematical model, not a claim that actual
+test batteries satisfy these assumptions.
+
+\section{Derivation of the conditional mean}
+
+Fix \(1\leq n\leq k\), initially with \(c<1\), and put
+\[
+  Y_n=(X_0,\ldots,X_{n-1})^{\T},\qquad
+  R_n=\Cov(Y_n)=(1-c)I_n+c\one_n\one_n^{\T}.
+\]
+The eigenvalue of \(R_n\) in the direction \(\one_n\) is
+\[
+  d_n=1+(n-1)c.
+\]
+It is positive throughout \(-1/k\leq c<1\): for negative \(c\),
+\(d_n\geq1-(n-1)/k\geq1/k>0\). The other eigenvalues are \(1-c>0\).
+Consequently every conditioning block is nonsingular, even if the full
+\((k+1)\)-score distribution is singular at \(c=-1/k\).
+
+An explicit inverse, verified by multiplying it by \(R_n\), is
+\begin{equation}
+  R_n^{-1}=\frac1{1-c}
+  \left(I_n-\frac{c}{1+(n-1)c}\one_n\one_n^{\T}\right).
+  \label{eq:inverse}
+\end{equation}
+Since \(\Cov(X_n,Y_n)=c\one_n^{\T}\), the regression coefficient is
+\begin{equation}
+  \Cov(X_n,Y_n)R_n^{-1}
+    =\frac{c}{1+(n-1)c}\one_n^{\T}.
+  \label{eq:coefficient}
+\end{equation}
+
+To establish why this coefficient gives the conditional mean, define the
+residual
+\begin{equation}
+  W_n=X_n-\frac{c}{1+(n-1)c}\sum_{j=0}^{n-1}X_j.
+  \label{eq:residual}
+\end{equation}
+For each \(\ell\in\{0,\ldots,n-1\}\),
+\begin{align*}
+  \Cov(W_n,X_\ell)
+  &=c-\frac{c}{1+(n-1)c}
+         \sum_{j=0}^{n-1}\Cov(X_j,X_\ell)\\
+  &=c-\frac{c}{1+(n-1)c}\bigl[1+(n-1)c\bigr]=0.
+\end{align*}
+The residual and \(Y_n\) are jointly Gaussian because they are linear
+transformations of a Gaussian vector. Their zero cross-covariance implies
+independence: the Gaussian characteristic function
+\(\exp(-t^{\T}\Sigma t/2)\) factors across covariance blocks when the
+cross-covariance block is zero. This argument also allows a zero-variance
+residual. Since \(\E[W_n]=0\), independence gives
+\(\E[W_n\given Y_n]=0\). Taking the conditional expectation in
+\eqref{eq:residual} therefore yields
+\begin{equation}
+  \boxed{
+    g_n(y_0,\ldots,y_{n-1})
+    =\frac{c}{1+(n-1)c}\sum_{j=0}^{n-1}y_j.}
+  \label{eq:conditional-mean}
+\end{equation}
+This linear function is the unique continuous version, because the
+nonsingular vector \(Y_n\) has a strictly positive density everywhere.
+
+For completeness, the same residual calculation gives
+\begin{align}
+  \Var(X_n\given Y_n)
+    &=\Var(W_n)
+      =1-\frac{nc^2}{1+(n-1)c}\notag\\
+    &=\frac{(1-c)(1+nc)}{1+(n-1)c}.
+    \label{eq:conditional-variance}
+\end{align}
+This nonnegative conditional variance describes actual test outcomes,
+not randomness in the recursively specified numbers \(e_n\).
+
+\section{Solving the recursion and taking the average}
+
+Inserting the prescribed history into \eqref{eq:conditional-mean} gives
+\begin{equation}
+  e_n=\frac{c}{1+(n-1)c}
+         \left(a+\sum_{j=1}^{n-1}e_j\right),
+  \qquad 1\leq n\leq k,
+  \label{eq:recursion}
+\end{equation}
+where the sum is empty at \(n=1\). In particular, \(e_1=ca\).
+Suppose \(e_j=ca\) for all \(1\leq j<n\). Then
+\[
+  e_n=\frac{c}{1+(n-1)c}\bigl[a+(n-1)ca\bigr]
+      =\frac{ca[1+(n-1)c]}{1+(n-1)c}=ca.
+\]
+\begin{samepage}
+Induction establishes
+\begin{equation}
+  \boxed{e_1=e_2=\cdots=e_k=ca.}\label{eq:all-predictions}
+\end{equation}
+Consequently the requested average is
+\begin{equation}
+  \boxed{\overline e_k=\frac1k\sum_{n=1}^{k}e_n=ca.}
+  \label{eq:answer}
+\end{equation}
+\end{samepage}
+The answer depends on \(c\) and on the fixed starting score \(a\), but not
+on the number \(k\) of subsequent predictions, within the admissible domain.
+Once \(a\) and \(c\) are fixed, this average is deterministic. An additional
+expectation changes nothing: \(\E[\overline e_k]=ca\).
+
+There is also a partial-sum derivation. Define
+\[
+  T_0=a,\qquad T_n=a+\sum_{j=1}^{n}e_j.
+\]
+Equation~\eqref{eq:recursion} implies
+\[
+  T_n=\frac{1+nc}{1+(n-1)c}T_{n-1}.
+\]
+Multiplying these relations telescopes, without dividing by \(c\) or by
+\(a\):
+\[
+  T_n=a\prod_{j=1}^{n}\frac{1+jc}{1+(j-1)c}=a(1+nc).
+\]
+Thus \(\sum_{j=1}^{k}e_j=T_k-a=kca\), which again gives
+\eqref{eq:answer}. This proof includes \(a=0\) and \(c=0\).
+
+For example, if \(a=2\) and \(c=0.6\), then
+\[
+  e_1=1.2,\qquad
+  e_2=\frac{0.6}{1.6}(2+1.2)=1.2,\qquad
+  e_3=\frac{0.6}{2.2}(2+1.2+1.2)=1.2.
+\]
+Every subsequent prediction and their average remain \(1.2\).
+
+\section{Interpretation and other averages}
+
+\subsection{Actual future scores}
+The recursion replaces each previous future score by its conditional mean.
+Actual observed future scores need not equal those replacements. If
+\[
+  M_k=\frac1k\sum_{n=1}^{k}X_n
+\]
+is the actual future average, bivariate Gaussian regression gives
+\(\E[X_n\given X_0=a]=ca\) for every \(1\leq n\leq k\). Linearity therefore gives
+\begin{equation}
+  \E[M_k\given X_0=a]=ca.\label{eq:actual-mean}
+\end{equation}
+Although this conditional expectation equals \(\overline e_k\), the random
+variable \(M_k\) generally has positive conditional variance.
+
+\begin{samepage}
+In fact,
+\[
+  \Var(M_k)=\frac{1+(k-1)c}{k},\qquad \Cov(M_k,X_0)=c,
+\]
+so Gaussian regression gives
+\begin{equation}
+  \Var(M_k\given X_0=a)
+  =\frac{1+(k-1)c}{k}-c^2
+  =(1-c)\left(c+\frac1k\right).
+  \label{eq:actual-variance}
+\end{equation}
+\end{samepage}
+
+Likewise, the random predictors
+\[
+  P_n=\E[X_n\given X_0,\ldots,X_{n-1}]
+\]
+use actual prior outcomes and are not the deterministic values \(e_n\).
+The tower property implies \(\E[P_n\given X_0]=cX_0\), while its
+unconditional implication \(\E[P_n]=0\) holds without Gaussianity whenever
+the scores are integrable and have mean zero. Applying a conditional mean
+function at a fixed, recursively chosen history is a different operation.
+
+\subsection{Including the starting observation or randomizing it}
+If the starting value is included, there are \(k+1\) terms, and
+\begin{equation}
+  \frac{a+\sum_{n=1}^{k}e_n}{k+1}
+    =\frac{1+kc}{k+1}a.\label{eq:including-start}
+\end{equation}
+This differs from the requested average, which excludes \(a\).
+If one instead randomizes the starting observation, the recursively filled
+average becomes \(cX_0\). It has unconditional expectation zero. That is
+a different averaging operation from holding the starting score fixed.
+
+\subsection{Returning to a common raw-score scale}
+For tests with common mean \(m\) and standard deviation \(s>0\), put
+\[
+  Y_j=m+sX_j.
+\]
+If the fixed raw starting score is \(b\), then
+\(a=(b-m)/s\). Affine equivariance of conditional expectation gives each
+raw-score prediction and its average as
+\begin{equation}
+  \boxed{e_n^{\mathrm{raw}}=\overline e_k^{\mathrm{raw}}
+    =m+sca=m+c(b-m).}\label{eq:raw}
+\end{equation}
+Thus \(s\) determines the conversion to a standardized starting score;
+it cancels when the prediction is expressed directly in terms of \(b-m\).
+
+\section{Boundary cases}
+
+At \(c=0\), joint Gaussianity makes the scores independent, and every
+subsequent prediction is zero. At \(c=1\),
+\(\Var(X_i-X_j)=2(1-c)=0\), so all scores agree almost surely. Given
+the starting score \(a\), every compatible recursive prediction is
+\(a=ca\). This establishes the result at \(c=1\) without using the
+singular inverse in \eqref{eq:inverse}.
+
+At the other endpoint, \(c=-1/k\), the full vector satisfies
+\[
+  \sum_{j=0}^{k}X_j=0\quad\text{almost surely},
+\]
+because that sum has mean zero and variance
+\((k+1)(1+kc)=0\). Every conditioning prefix remains nonsingular, as
+shown above, so the derivation of \eqref{eq:answer} applies. Its prescribed
+history is compatible with the support, since
+\(a+kca=0\). The final conditional variance
+\eqref{eq:conditional-variance} is zero.
+
+\section{Why correlation alone is insufficient}
+
+The original description specifies only marginal means, marginal variances
+and pairwise correlations. Those quantities do not determine the conditional
+mean functions. A counterexample already exists with one subsequent test.
+Let
+\[
+  P(X_0=-\sqrt2)=P(X_0=\sqrt2)=\tfrac14,
+  \qquad P(X_0=0)=\tfrac12,
+  \qquad X_1=X_0^2-1.
+\]
+Symmetry and direct calculation give
+\[
+  \E[X_0]=0,\quad \E[X_0^2]=1,\quad
+  \E[X_0^3]=0,\quad \E[X_0^4]=2.
+\]
+Consequently
+\begin{align*}
+  \E[X_1]&=\E[X_0^2]-1=0,\\
+  \Var(X_1)&=\E[(X_0^2-1)^2]=2-2+1=1,\\
+  \Cov(X_0,X_1)&=\E[X_0^3-X_0]=0.
+\end{align*}
+Both scores are standardized and \(c=0\), yet at the fixed starting value
+\(a=0\), an event with positive probability,
+\[
+  e_1=\E[X_1\given X_0=0]=-1\ne0=ca.
+\]
+Therefore \eqref{eq:answer} is a result under the stated joint Gaussian
+model, or another model with the same conditional-mean functions; it does
+not follow from equicorrelation alone.
+
+\section{Scope and provenance}
+
+This analysis extends the repository's hypothetical Gaussian illustration
+to a sequential prediction question. The Gaussian residual argument and the
+recursion above provide the mathematical derivation. The repository's
+existing Ada/SPARK and Python/Deal verification records concern their stated
+programs and analyses; they are not new formal-proof evidence for this text.
+No new simulation or formal-prover campaign is claimed here. The accompanying
+README records how to build the PDF and the checks actually performed for
+this addition. The repository's original material is governed by its existing
+license, subject to third-party rights.
+
+\end{document}
