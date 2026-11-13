@@ -3187,6 +3187,33 @@ scripts**, pending pinned Rocq 9.2 and Python regression CI.
 Signed weights can produce negative covariance diagonals, so no
 signed-weight positive-semidefiniteness is claimed.
 
+## Pivot reconstruction and exact one-row kernels (13 November 2026)
+
+Seven documented Rocq theorems strengthen the two-sample rank-one
+certificate. Under samples=[x;y], total_mass=1, and a nonzero
+Fin-indexed diagonal pivot M(p,p), the existing bounded covariance
+matrix has exact entrywise reconstruction
+M(i,j)=M(i,p)*M(p,j)/M(p,p). That pivot is shown to separate the two
+outcomes and requires a nonzero product of their weights. A single
+ordinary pivot-row dot product is therefore an exact membership test
+for the entire covariance row kernel and, through the previously
+checked unconditional radical-row equivalence, for the bilinear
+radical. Separately, a zero weight product implies every indexed
+matrix entry is exactly zero. A reusable scalar two-sample
+zero-covariance iff contrast theorem replaces repeated
+zero-product reasoning in the existing two-sample kernel proof.
+The construction reuses FiniteSum, Stdlib.Vectors.Fin/Vector,
+the maintained indexed covariance matrix and real-field lemmas;
+it defines no competing matrix type, determinant or rank routine.
+Signed weights are supported but no PSD claim is made.
+
+Expected inventory: **927 public claims, 930 proof scripts and
+1015 documented declarations** in seven modules, including
+**516 FiniteMoments proof scripts**, subject to pinned Rocq 9.2
+kernel verification and existing Python/Deal/SPARK regression gates.
+Rank-zero and rank-one here are structural entry certificates,
+not an abstract dimension/rank-nullity formalization.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

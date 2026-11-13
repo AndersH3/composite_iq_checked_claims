@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **920 public theorem/lemma/example claims**, plus
+The current branch has **927 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**923 proof scripts** across seven Rocq modules. The claims and scripts
+**930 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 509 proof scripts
+## FiniteMoments.v — 516 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1331,8 +1331,16 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_two_samples_all_minors_zero` (theorem) | Instantiate scalar cross-minor theorem at standard Fin-indexed covariance matrix entries. | indexed_basis_cross_covariance_matrix, covariance_two_samples_all_cross_minors_zero, Vector.nth/of_list. | **New:** Dimension-safe all-minors-zero certificate. |
 | `indexed_basis_covariance_bilinear_two_samples_factorization` (theorem) | Unfold existing bilinear covariance and instantiate scalar product factorization. | indexed_basis_covariance_bilinear_form, covariance_two_samples_rank_one_factorization. | **New:** Composite covariance pairing factors through a single score contrast. |
 | `indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero` (theorem) | Compose unconditional row/basis-orthogonality iff with rank-one factorization. | indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional, covariance_two_samples_rank_one_factorization. | **New:** Signed-weight row-kernel criterion for every basis score. |
-| `indexed_basis_two_samples_row_kernel_iff_equal_composite_values` (theorem) | Cancel nonzero weight and separating-score factors using Rmult_integral. | indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero, Stdlib.Reals.Rmult_integral/Lra. | **New:** Exact kernel equals the zero-contrast subspace when samples are nondegenerate. |
+| `covariance_two_samples_zero_against_separating_score_iff_equal_values` (theorem) | Reuse exact rank-one factorization and standard real zero-product cancellation in one reusable scalar equivalence. | covariance_two_samples_rank_one_factorization, Rmult_integral, Lra. | **New:** Cov(f,pivot)=0 exactly when f has zero two-sample contrast under nondegeneracy. |
+| `indexed_basis_two_samples_row_kernel_iff_equal_composite_values` (theorem) | **Refactored:** Reuse scalar zero-covariance iff for a separating basis score and unconditional row-kernel/basis covariance orthogonality. | covariance_two_samples_zero_against_separating_score_iff_equal_values, indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional, covariance_two_samples_rank_one_factorization. | **Refactored:** Eliminate duplicated Rmult_integral proof tree while keeping the API and hypotheses. |
 | `indexed_basis_two_samples_nonzero_diagonal_of_separating_score` (theorem) | Reuse scalar factorization and eliminate possible zero products. | covariance_two_samples_rank_one_factorization, Stdlib.Reals.Rmult_integral. | **New:** Separating basis score provides a nonzero diagonal rank-one certificate. |
+
+| `indexed_basis_two_samples_pivot_cross_identity` (theorem) | Specialize already checked all-minors-zero theorem with a repeated row/column pivot index. | indexed_basis_covariance_two_samples_all_minors_zero, Fin.t. | **New:** Every entry times pivot diagonal equals pivot column times pivot row. |
+| `indexed_basis_two_samples_pivot_reconstruction` (theorem) | Rewrite numerator by cross-product identity and cancel a nonzero denominator with standard field normalization. | indexed_basis_two_samples_pivot_cross_identity, Stdlib.Reals/Field. | **New:** Exact reconstruction M(i,j)=M(i,p)M(p,j)/M(p,p) for a nonzero diagonal pivot. |
+| `indexed_basis_two_samples_nonzero_pivot_implies_nondegenerate` (theorem) | Expand diagonal by existing scalar two-sample covariance factorization; refute vanishing factors by ring. | covariance_two_samples_rank_one_factorization, Stdlib.Ring. | **New:** Nonzero pivot guarantees nonzero weight product and separating pivot score. |
+| `indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero` (theorem) | Reuse typed nth_error membership, scalar contrast detection, named row-kernel/contrast equivalence and unconditional covariance row-dot identity. | vector_of_list_nth_error, nth_error_In, covariance_with_weighted_basis_as_row_dot, covariance_symmetric, VectorSpec.length_to_list. | **New:** One nonzero pivot row determines the full two-sample covariance row kernel. |
+| `indexed_basis_two_samples_radical_iff_pivot_row_dot_zero` (theorem) | Compose unconditional radical/row-kernel equivalence with the preceding one-row test. | indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional, indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero, tauto. | **New:** One pivot-row dot product also detects the bilinear radical, including signed weights. |
+| `indexed_basis_two_samples_zero_matrix_of_zero_weight_product` (theorem) | Expand every existing indexed entry using scalar rank-one factorization, then simplify the zero weight product. | covariance_two_samples_rank_one_factorization, indexed_basis_cross_covariance_matrix, ring. | **New:** Exact rank-zero degeneracy when either two-sample weight vanishes. |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1498,4 +1506,32 @@ documented declarations**, including **509 FiniteMoments proof
 scripts**, pending pinned Rocq 9.2 and Python regression CI.
 Signed weights can produce negative covariance diagonals, so no
 signed-weight positive-semidefiniteness is claimed.
+
+
+## Pivot reconstruction and exact one-row kernels (13 November 2026)
+
+Seven documented Rocq theorems strengthen the two-sample rank-one
+certificate. Under samples=[x;y], total_mass=1, and a nonzero
+Fin-indexed diagonal pivot M(p,p), the existing bounded covariance
+matrix has exact entrywise reconstruction
+M(i,j)=M(i,p)*M(p,j)/M(p,p). That pivot is shown to separate the two
+outcomes and requires a nonzero product of their weights. A single
+ordinary pivot-row dot product is therefore an exact membership test
+for the entire covariance row kernel and, through the previously
+checked unconditional radical-row equivalence, for the bilinear
+radical. Separately, a zero weight product implies every indexed
+matrix entry is exactly zero. A reusable scalar two-sample
+zero-covariance iff contrast theorem replaces repeated
+zero-product reasoning in the existing two-sample kernel proof.
+The construction reuses FiniteSum, Stdlib.Vectors.Fin/Vector,
+the maintained indexed covariance matrix and real-field lemmas;
+it defines no competing matrix type, determinant or rank routine.
+Signed weights are supported but no PSD claim is made.
+
+Expected inventory: **927 public claims, 930 proof scripts and
+1015 documented declarations** in seven modules, including
+**516 FiniteMoments proof scripts**, subject to pinned Rocq 9.2
+kernel verification and existing Python/Deal/SPARK regression gates.
+Rank-zero and rank-one here are structural entry certificates,
+not an abstract dimension/rank-nullity formalization.
 

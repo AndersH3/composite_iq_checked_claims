@@ -19114,6 +19114,58 @@ Section FiniteProbabilityMoments.
       apply Hcontrast; exact Hg.
   Qed.
 
+
+  (**
+   [covariance_two_samples_zero_against_separating_score_iff_equal_values]
+   (theorem) — A single separating score detects every two-sample
+   covariance-zero direction.
+   Mathematical meaning: With two unit-mass sampled outcomes and
+   nonzero weight product, covariance against a score separating
+   those outcomes vanishes precisely for comparison scores with
+   equal values at the two samples.
+   Exact checked proposition: If samples=[x;y], total_mass=1,
+   weight x*weight y<>0 and pivot x<>pivot y, then
+   covariance f pivot=0 iff f x=f y, for every score f.
+   Premises and side conditions: Individual sample weights may
+   be signed, and the two outcomes need not have decidable
+   equality. Zero product and nonseparating pivot cases are
+   intentionally excluded from the reverse cancellation.
+   Proof/definition method: Rewrite by the existing two-sample
+   rank-one covariance factorization. Eliminate zero products
+   with standard Rmult_integral and use linear arithmetic to
+   identify the only remaining possible zero factor.
+   Library reuse: covariance_two_samples_rank_one_factorization,
+   Stdlib.Reals.Rmult_integral and Stdlib.Lra.
+   Boundary: One scalar covariance criterion; no general matrix
+   rank or positive-semidefinite assertion is made.
+   *)
+  Theorem covariance_two_samples_zero_against_separating_score_iff_equal_values :
+    forall (f pivot : Outcome -> R) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      weight x * weight y <> 0 ->
+      pivot x <> pivot y ->
+      (covariance f pivot = 0 <-> f x = f y).
+  Proof.
+    intros f pivot x y Hsamples Hmass Hweights Hpivot.
+    rewrite (covariance_two_samples_rank_one_factorization
+      f pivot x y Hsamples Hmass).
+    split.
+    - intro Hzero.
+      apply Rmult_integral in Hzero.
+      destruct Hzero as [Hfirst | Hlast].
+      + apply Rmult_integral in Hfirst.
+        destruct Hfirst as [Hweight_zero | Hdifference_zero].
+        * contradiction.
+        * lra.
+      + exfalso.
+        apply Hpivot.
+        lra.
+    - intro Hequal.
+      rewrite Hequal.
+      ring.
+  Qed.
+
   (**
    [indexed_basis_two_samples_row_kernel_iff_equal_composite_values]
    (theorem) — A nondegenerate two-sample row kernel is one contrast.
@@ -19125,10 +19177,14 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: Unit total mass and samples=[x;y],
    weight(x)*weight(y)<>0, and exists g in basis with g(x)<>g(y).
    Sample weights may otherwise have either sign.
-   Proof/definition method: Apply the contrast-product kernel
-   iff and Stdlib.Rmult_integral twice to cancel nonzero factors.
-   Library reuse: indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero,
-   Stdlib.Reals.Rmult_integral and Stdlib.Lra/Ring.
+   Proof/definition method: Transport row membership to covariance
+   orthogonality against each enumerated basis score. One separating
+   basis score gives necessity via the reusable two-sample scalar
+   covariance-zero iff; factorization gives sufficiency directly.
+   This eliminates repeated nested zero-product eliminations.
+   Library reuse: indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional,
+   covariance_two_samples_zero_against_separating_score_iff_equal_values,
+   covariance_two_samples_rank_one_factorization, Stdlib.Ring.
    Boundary: Exact kernel test, not a general rank-nullity theorem.
    *)
   Theorem indexed_basis_two_samples_row_kernel_iff_equal_composite_values :
@@ -19143,23 +19199,21 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis coefficients x y Hsamples Hmass Hweights [g [Hg Hgdiff]].
     pose proof
-      (indexed_basis_two_samples_row_kernel_iff_all_contrast_products_zero
-        basis coefficients x y Hsamples Hmass) as Hiff.
+      (indexed_basis_bounded_covariance_row_kernel_iff_uncorrelated_with_basis_unconditional
+        basis coefficients) as Hbasis.
     split.
     - intro Hrow.
-      pose proof ((proj1 Hiff) Hrow g Hg) as Hzero.
-      apply Rmult_integral in Hzero.
-      destruct Hzero as [Hfirst | Hlast].
-      + apply Rmult_integral in Hfirst.
-        destruct Hfirst as [Hweight_zero | Hdiff_zero].
-        * contradiction.
-        * lra.
-      + exfalso.
-        apply Hgdiff.
-        lra.
+      apply (proj1
+        (covariance_two_samples_zero_against_separating_score_iff_equal_values
+          (weighted_basis_sum (Vector.to_list coefficients) basis)
+          g x y Hsamples Hmass Hweights Hgdiff)).
+      apply ((proj1 Hbasis) Hrow g Hg).
     - intro Hequal.
-      apply (proj2 Hiff).
+      apply (proj2 Hbasis).
       intros h Hh.
+      rewrite (covariance_two_samples_rank_one_factorization
+        (weighted_basis_sum (Vector.to_list coefficients) basis)
+        h x y Hsamples Hmass).
       rewrite Hequal.
       ring.
   Qed.
@@ -19204,6 +19258,275 @@ Section FiniteProbabilityMoments.
       + apply Hgdiff; lra.
     - apply Hgdiff; lra.
   Qed.
+
+
+  (**
+   [indexed_basis_two_samples_pivot_cross_identity] (theorem) —
+   Any chosen diagonal pivot satisfies the row-column cross-product law.
+   Mathematical meaning: Each two-sample covariance entry times a
+   pivot diagonal equals its matching pivot-column and pivot-row
+   product, even before assuming that diagonal is nonzero.
+   Exact checked proposition: With M the existing dimension-safe
+   covariance matrix, M(i,j)*M(p,p)=M(i,p)*M(p,j).
+   Premises and side conditions: Exactly two samples, total mass
+   one; arbitrary real signed weights, dependent score bases,
+   duplicate scores, and all valid Fin.t indices are supported.
+   Proof/definition method: Specialize the previously checked
+   universal zero-two-by-two-minor theorem with its row and
+   column pivots both equal to p. No determinant is redefined.
+   Library reuse: indexed_basis_covariance_two_samples_all_minors_zero,
+   indexed_basis_cross_covariance_matrix and Stdlib.Vectors.Fin.
+   Boundary: A cross-product identity, not an assertion of
+   nonzero rank or existence of any pivot.
+   *)
+  Theorem indexed_basis_two_samples_pivot_cross_identity :
+    forall basis x y
+           (pivot i j : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_cross_covariance_matrix basis basis i j *
+      indexed_basis_cross_covariance_matrix basis basis pivot pivot =
+      indexed_basis_cross_covariance_matrix basis basis i pivot *
+      indexed_basis_cross_covariance_matrix basis basis pivot j.
+  Proof.
+    intros basis x y pivot i j Hsamples Hmass.
+    exact (indexed_basis_covariance_two_samples_all_minors_zero
+      basis x y i j pivot pivot Hsamples Hmass).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_reconstruction] (theorem) —
+   Reconstruct every covariance entry from one nonzero diagonal pivot.
+   Mathematical meaning: Every two-sample covariance matrix with
+   a nonzero diagonal pivot is the outer product of the pivot
+   column and row, divided by the shared pivot diagonal.
+   Exact checked proposition: If M(p,p)<>0, then for every
+   bounded i,j, M(i,j)=M(i,p)*M(p,j)/M(p,p).
+   Premises and side conditions: Exactly two sample occurrences,
+   total mass one, and a specified nonzero pivot diagonal.
+   The outcome weights may be signed; no positive-definiteness,
+   diagonal positivity, or arbitrary-rank assumption is needed.
+   Proof/definition method: Rewrite by the cross-product minor
+   identity, then use the standard real-field division law,
+   discharging its only denominator side condition explicitly.
+   Library reuse: indexed_basis_two_samples_pivot_cross_identity,
+   Stdlib.Reals and Stdlib.Field tactic, existing Fin-indexed M.
+   Boundary: A complete algebraic entry reconstruction for
+   the two-sample case, not a new matrix inverse or rank library.
+   *)
+  Theorem indexed_basis_two_samples_pivot_reconstruction :
+    forall basis x y
+           (pivot i j : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_cross_covariance_matrix basis basis pivot pivot <> 0 ->
+      indexed_basis_cross_covariance_matrix basis basis i j =
+        (indexed_basis_cross_covariance_matrix basis basis i pivot *
+         indexed_basis_cross_covariance_matrix basis basis pivot j) /
+        indexed_basis_cross_covariance_matrix basis basis pivot pivot.
+  Proof.
+    intros basis x y pivot i j Hsamples Hmass Hdiag.
+    pose proof
+      (indexed_basis_two_samples_pivot_cross_identity
+        basis x y pivot i j Hsamples Hmass) as Hminor.
+    rewrite <- Hminor.
+    field; exact Hdiag.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_nonzero_pivot_implies_nondegenerate]
+   (theorem) — Decode the nonzero diagonal pivot assumptions.
+   Mathematical meaning: A nonzero covariance diagonal in a
+   two-sample model implies both outcome weights have nonzero
+   product and the selected score distinguishes the two outcomes.
+   Exact checked proposition: M(p,p)<>0 entails
+   w(x)w(y)<>0 and score_p(x)<>score_p(y).
+   Premises and side conditions: samples=[x;y], total_mass=1.
+   Individual weights may be negative, so the nonzero pivot
+   diagonal is not assumed positive.
+   Proof/definition method: Unfold the existing indexed entry,
+   substitute scalar two-sample factorization, then refute
+   either zero factor by standard polynomial ring simplification.
+   Library reuse: covariance_two_samples_rank_one_factorization,
+   indexed_basis_cross_covariance_matrix, Stdlib.Ring, Vector.nth.
+   Boundary: Nonzero implies nondegenerate, but no PSD property.
+   *)
+  Theorem indexed_basis_two_samples_nonzero_pivot_implies_nondegenerate :
+    forall basis x y (pivot : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_cross_covariance_matrix basis basis pivot pivot <> 0 ->
+      weight x * weight y <> 0 /\
+      Vector.nth (Vector.of_list basis) pivot x <>
+        Vector.nth (Vector.of_list basis) pivot y.
+  Proof.
+    intros basis x y pivot Hsamples Hmass Hdiag.
+    unfold indexed_basis_cross_covariance_matrix in Hdiag.
+    rewrite (covariance_two_samples_rank_one_factorization
+      (Vector.nth (Vector.of_list basis) pivot)
+      (Vector.nth (Vector.of_list basis) pivot)
+      x y Hsamples Hmass) in Hdiag.
+    split.
+    - intro Hzero.
+      apply Hdiag.
+      rewrite Hzero.
+      ring.
+    - intro Hequal.
+      apply Hdiag.
+      rewrite Hequal.
+      ring.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero]
+   (theorem) — One nonzero covariance pivot row tests the whole kernel.
+   Mathematical meaning: For a two-sample covariance matrix with
+   a nonzero selected diagonal, annihilating that row is necessary
+   and sufficient to annihilate every row in the entire matrix.
+   Exact checked proposition: RowKernel(coefficients) iff
+   vector_dot (to_list coefficients) (map (Cov(score_p,g)) basis)=0,
+   provided samples=[x;y], unit mass, and M(p,p)<>0.
+   Premises and side conditions: The typed pivot is Fin.t
+   (length basis), so empty bases have no selected pivot.
+   Negative and zero individual weights are allowed, subject
+   only to the nonzero diagonal premise.
+   Proof/definition method: The pivot nonzero lemma supplies
+   the nonzero weight product and separating score. The
+   existing row-kernel/contrast equivalence and the scalar
+   zero-covariance/contrast equivalence give the same predicate.
+   Convert the comparison covariance to the existing row-dot
+   using the unconditional row-dot identity and symmetry.
+   Library reuse: indexed_basis_two_samples_nonzero_pivot_implies_nondegenerate,
+   indexed_basis_two_samples_row_kernel_iff_equal_composite_values,
+   covariance_two_samples_zero_against_separating_score_iff_equal_values,
+   covariance_with_weighted_basis_as_row_dot, covariance_symmetric,
+   VectorSpec.length_to_list, vector_of_list_nth_error, nth_error_In.
+   Boundary: A one-row nullity test; no general dimension
+   formula or unproved arbitrary-matrix rank result.
+   *)
+  Theorem indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero :
+    forall basis (coefficients : Vector.t R (length basis))
+           x y (pivot : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_cross_covariance_matrix basis basis pivot pivot <> 0 ->
+      (indexed_basis_bounded_covariance_row_kernel basis coefficients <->
+       vector_dot (Vector.to_list coefficients)
+         (map (fun g => covariance
+           (Vector.nth (Vector.of_list basis) pivot) g) basis) = 0).
+  Proof.
+    intros basis coefficients x y pivot Hsamples Hmass Hdiag.
+    destruct (indexed_basis_two_samples_nonzero_pivot_implies_nondegenerate
+      basis x y pivot Hsamples Hmass Hdiag) as [Hweights Hseparates].
+    assert (Hmember :
+      In (Vector.nth (Vector.of_list basis) pivot) basis).
+    {
+      eapply nth_error_In.
+      apply vector_of_list_nth_error.
+    }
+    assert (Hexists :
+      exists g, In g basis /\ g x <> g y).
+    {
+      exists (Vector.nth (Vector.of_list basis) pivot).
+      split; assumption.
+    }
+    pose proof
+      (indexed_basis_two_samples_row_kernel_iff_equal_composite_values
+        basis coefficients x y Hsamples Hmass Hweights Hexists) as Hrow.
+    pose proof
+      (covariance_two_samples_zero_against_separating_score_iff_equal_values
+        (weighted_basis_sum (Vector.to_list coefficients) basis)
+        (Vector.nth (Vector.of_list basis) pivot)
+        x y Hsamples Hmass Hweights Hseparates) as Hcov.
+    assert (Hlength :
+      length (Vector.to_list coefficients) = length basis).
+    { apply VectorSpec.length_to_list. }
+    rewrite <- (covariance_with_weighted_basis_as_row_dot
+      (Vector.to_list coefficients) basis
+      (Vector.nth (Vector.of_list basis) pivot) Hlength).
+    rewrite (covariance_symmetric
+      (Vector.nth (Vector.of_list basis) pivot)
+      (weighted_basis_sum (Vector.to_list coefficients) basis)).
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_radical_iff_pivot_row_dot_zero]
+   (theorem) — One pivot row also certifies bilinear radical membership.
+   Mathematical meaning: Covariance-orthogonality against every
+   typed coefficient direction reduces to one ordinary finite
+   dot product with a selected nondegenerate covariance pivot row.
+   Exact checked proposition: Under exactly two unit-mass samples
+   and M(p,p)<>0, Radical(coefficients) iff pivot_row_dot=0.
+   Premises and side conditions: No nonnegative-weight hypothesis,
+   basis independence or positive-definite assumption is needed.
+   Proof/definition method: Combine the unconditional equivalence
+   of the bilinear radical and bounded row kernel with the new
+   single-pivot-row test, using propositional logic.
+   Library reuse: indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional,
+   indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero,
+   Stdlib.Logic.tauto and existing Vector.t / Fin.t interfaces.
+   Boundary: This reduces a radical test to a single row, not
+   a signed-weight quadratic-zero equivalence or rank count.
+   *)
+  Theorem indexed_basis_two_samples_radical_iff_pivot_row_dot_zero :
+    forall basis (coefficients : Vector.t R (length basis))
+           x y (pivot : Fin.t (length basis)),
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_cross_covariance_matrix basis basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis coefficients <->
+       vector_dot (Vector.to_list coefficients)
+         (map (fun g => covariance
+           (Vector.nth (Vector.of_list basis) pivot) g) basis) = 0).
+  Proof.
+    intros basis coefficients x y pivot Hsamples Hmass Hdiag.
+    pose proof
+      (indexed_basis_covariance_bilinear_radical_iff_row_kernel_unconditional
+        basis coefficients) as Hradical.
+    pose proof
+      (indexed_basis_two_samples_row_kernel_iff_pivot_row_dot_zero
+        basis coefficients x y pivot Hsamples Hmass Hdiag) as Hrow.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_zero_matrix_of_zero_weight_product]
+   (theorem) — Degenerate two-sample weights give a zero covariance matrix.
+   Mathematical meaning: If either of the two sample weights
+   vanishes, every covariance entry on every finite score basis
+   vanishes, including all diagonal and off-diagonal entries.
+   Exact checked proposition: Under samples=[x;y], mass one,
+   and weight x*weight y=0, M(i,j)=0 for every bounded pair.
+   Premises and side conditions: The remaining weight can be
+   signed in the algebraic statement; no score independence or
+   sample distinctness assumption is imposed.
+   Proof/definition method: Unfold the existing indexed entry,
+   rewrite with the checked two-sample scalar factorization,
+   then cancel the zero weight product by ring.
+   Library reuse: covariance_two_samples_rank_one_factorization,
+   indexed_basis_cross_covariance_matrix, Stdlib.Ring.
+   Boundary: A rank-zero degeneracy certificate, not a generic
+   numerical rank or PSD analysis.
+   *)
+  Theorem indexed_basis_two_samples_zero_matrix_of_zero_weight_product :
+    forall basis x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      weight x * weight y = 0 ->
+      forall (i j : Fin.t (length basis)),
+        indexed_basis_cross_covariance_matrix basis basis i j = 0.
+  Proof.
+    intros basis x y Hsamples Hmass Hweights i j.
+    unfold indexed_basis_cross_covariance_matrix.
+    rewrite (covariance_two_samples_rank_one_factorization
+      (Vector.nth (Vector.of_list basis) i)
+      (Vector.nth (Vector.of_list basis) j)
+      x y Hsamples Hmass).
+    rewrite Hweights.
+    ring.
+  Qed.
+
 
 End FiniteProbabilityMoments.
 
