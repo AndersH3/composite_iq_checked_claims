@@ -3026,6 +3026,28 @@ and Python/Deal/SPARK CI are required before describing the new
 statements as kernel-checked. No abstract dimension or covariance
 rank conclusion is asserted.
 
+## Unique linear coordinates of the zero-sum-plus-axis splitting (13 November 2026)
+
+Six documented generic finite-vector lemmas upgrade the preceding
+affine normal forms to a concrete algebraic direct-sum interface.
+For zero-sum z1 and z2, equality of z1+axis(a) and z2+axis(b)
+is equivalent to equality of both coordinates. Every nonempty
+real vector admits a unique zero-sum component and scalar-axis
+coordinate, identified by its canonical projection and total.
+Addition and scalar multiplication preserve these coordinates
+componentwise, and the inverse reconstructions respect both
+operations.
+
+All proofs compose existing Rocq-checked projection/sum laws,
+unique reconstruction, and zero-sum closure, using only standard
+Stdlib.Vector.map/map2 and f_equal. No recursive vector or matrix
+implementation, new axiom, admitted proof, empirical inference,
+or abstract dimension/rank-nullity claim is introduced.
+
+Intended new inventory: **887 public claims, 890 proof scripts,
+968 documented declarations** in seven Rocq modules, pending
+pinned Rocq 9.2 and Python/Deal/SPARK CI.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

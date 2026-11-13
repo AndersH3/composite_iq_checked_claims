@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **884 proof scripts** in seven
+for the two reports. **890 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -3823,6 +3823,22 @@ Intended inventory: **881 public claims, 884 proof scripts,
 pinned Rocq and Python/Deal/SPARK CI. These concrete coordinate
 identities do not constitute a maintained abstract vector-space
 direct-sum isomorphism or dimension/rank theorem.
+
+## Unique additive/scalar direct-sum coordinates (13 November 2026)
+
+Six documented generic real-vector lemmas formalize uniqueness of
+the zero-sum summand and scalar-axis coordinate, and show that
+both coordinates—and their reconstruction—respect addition and
+real scaling. The source reuses existing zero-sum closure,
+projection and coordinate-total linearity, axis coordinates
+and unique reconstruction, rather than defining vector
+arithmetic, a matrix class, or a second abstract vector type.
+
+Target inventory: **887 public claims, 890 proof scripts and
+968 documented declarations** across seven Rocq modules, subject
+to pinned Rocq 9.2 and Python/Deal/SPARK workflows. The
+concrete additive equivalence does not yet certify an abstract
+dimension or covariance matrix rank bound.
 
 ## Research extensions
 

@@ -14568,6 +14568,278 @@ Section FiniteProbabilityMoments.
   Qed.
 
   (**
+   [indexed_real_vector_zero_sum_axis_pair_unique_components] (lemma) —
+   The zero-sum summand and scalar-axis coordinate of an explicit
+   additive decomposition are jointly unique.
+   Exact checked proposition: For zero-sum z1,z2 of length S n,
+   z1+axis(a)=z2+axis(b) iff z1=z2 and a=b.
+   Premises and side conditions: Any finite n and signed real
+   coordinates and scalars; no finite probability assumptions.
+   Proof/definition method: Apply the maintained projection and
+   coordinate-sum functions to the equality via Stdlib.f_equal.
+   Reuse the proven coordinates of each additive decomposition;
+   the converse substitutes equal coordinates.
+   Library reuse: indexed_real_vector_zero_sum_axis_sum_coordinates,
+   Stdlib.Logic.f_equal, Stdlib.Vectors.Vector.map2.
+   Boundary: Componentwise uniqueness, not a statement of
+   abstract dimension, rank, or orthogonality.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_pair_unique_components :
+    forall n (z1 z2 : Vector.t R (S n)) (a b : R),
+      indexed_real_vector_zero_sum z1 ->
+      indexed_real_vector_zero_sum z2 ->
+      (Vector.map2 Rplus z1 (indexed_real_vector_total_axis a) =
+         Vector.map2 Rplus z2 (indexed_real_vector_total_axis b) <->
+       z1 = z2 /\ a = b).
+  Proof.
+    intros n z1 z2 a b Hz1 Hz2.
+    split.
+    - intro Hequal.
+      pose proof
+        (f_equal
+          (fun x : Vector.t R (S n) =>
+             indexed_real_vector_zero_sum_projection x) Hequal)
+        as Hprojection.
+      pose proof
+        (f_equal
+          (fun x : Vector.t R (S n) =>
+             indexed_real_vector_coordinate_sum x) Hequal)
+        as Htotal.
+      destruct (indexed_real_vector_zero_sum_axis_sum_coordinates
+        n z1 a Hz1) as [Hp1 Hs1].
+      destruct (indexed_real_vector_zero_sum_axis_sum_coordinates
+        n z2 b Hz2) as [Hp2 Hs2].
+      rewrite Hp1, Hp2 in Hprojection.
+      rewrite Hs1, Hs2 in Htotal.
+      split; assumption.
+    - intros [Heqz Heqa].
+      subst z2 b.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_unique_decomposition] (lemma) —
+   Every positive-length real vector admits one uniquely
+   determined zero-sum summand and one scalar-axis coordinate.
+   Exact checked proposition: For every v, there exist z and t
+   such that zero_sum z and v=z+axis(t), and any other zero-sum
+   z' and scalar t' satisfying v=z'+axis(t') must satisfy
+   z'=z and t'=t.
+   Premises and side conditions: Includes singleton vectors and
+   arbitrary signed coordinates; no sample normalization.
+   Proof/definition method: Choose the established projection
+   and coordinate sum and use the canonical decomposition.
+   Derive uniqueness by the inverse direction of the existing
+   axis-sum coordinate characterization, not by vector induction.
+   Library reuse: indexed_real_vector_zero_sum_axis_decomposition,
+   indexed_real_vector_zero_sum_axis_sum_unique,
+   indexed_real_vector_zero_sum_projection_zero_sum.
+   Boundary: Exact concrete unique coordinates, not a packaged
+   subspace direct sum, a dimension count or rank-nullity.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_unique_decomposition :
+    forall n (v : Vector.t R (S n)),
+      exists z : Vector.t R (S n), exists total : R,
+        indexed_real_vector_zero_sum z /\
+        v = Vector.map2 Rplus z
+              (indexed_real_vector_total_axis total) /\
+        (forall (other : Vector.t R (S n)) (other_total : R),
+          indexed_real_vector_zero_sum other ->
+          v = Vector.map2 Rplus other
+                (indexed_real_vector_total_axis other_total) ->
+          other = z /\ other_total = total).
+  Proof.
+    intros n v.
+    exists (indexed_real_vector_zero_sum_projection v).
+    exists (indexed_real_vector_coordinate_sum v).
+    split.
+    - apply indexed_real_vector_zero_sum_projection_zero_sum.
+    - split.
+      + apply indexed_real_vector_zero_sum_axis_decomposition.
+      + intros other other_total Hzero Hequal.
+        destruct (proj2
+          (indexed_real_vector_zero_sum_axis_sum_unique
+            n other other_total v Hzero) Hequal)
+          as [Hprojection Htotal].
+        split; symmetry; assumption.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_pair_add_coordinates] (lemma) —
+   Addition of two explicit zero-sum-plus-axis representatives
+   adds their zero-sum coordinates and their scalar totals.
+   Exact checked proposition: If z1,z2 are zero-sum, then
+   projection((z1+axis(a))+(z2+axis(b)))=z1+z2 and the
+   coordinate total of that sum equals a+b.
+   Premises and side conditions: All n, signed vectors, and
+   signed scalars; no positivity or sample assumptions.
+   Proof/definition method: Apply the existing projection and
+   coordinate-sum addition laws and substitute the established
+   coordinates of each zero-sum-plus-axis representative.
+   Library reuse: indexed_real_vector_zero_sum_projection_add,
+   indexed_real_vector_coordinate_sum_add,
+   indexed_real_vector_zero_sum_axis_sum_coordinates,
+   Stdlib.Vectors.Vector.map2.
+   Boundary: Concrete additive coordinates, not an abstract
+   algebra-library linear map or dimension result.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_pair_add_coordinates :
+    forall n (z1 z2 : Vector.t R (S n)) (a b : R),
+      indexed_real_vector_zero_sum z1 ->
+      indexed_real_vector_zero_sum z2 ->
+      (indexed_real_vector_zero_sum_projection
+        (Vector.map2 Rplus
+          (Vector.map2 Rplus z1 (indexed_real_vector_total_axis a))
+          (Vector.map2 Rplus z2 (indexed_real_vector_total_axis b))) =
+        Vector.map2 Rplus z1 z2 /\
+       indexed_real_vector_coordinate_sum
+        (Vector.map2 Rplus
+          (Vector.map2 Rplus z1 (indexed_real_vector_total_axis a))
+          (Vector.map2 Rplus z2 (indexed_real_vector_total_axis b))) =
+        a + b).
+  Proof.
+    intros n z1 z2 a b Hz1 Hz2.
+    destruct (indexed_real_vector_zero_sum_axis_sum_coordinates
+      n z1 a Hz1) as [Hp1 Hs1].
+    destruct (indexed_real_vector_zero_sum_axis_sum_coordinates
+      n z2 b Hz2) as [Hp2 Hs2].
+    split.
+    - rewrite indexed_real_vector_zero_sum_projection_add.
+      rewrite Hp1, Hp2.
+      reflexivity.
+    - rewrite indexed_real_vector_coordinate_sum_add.
+      rewrite Hs1, Hs2.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_pair_scale_coordinates] (lemma) —
+   Uniform real scaling of an explicit zero-sum-plus-axis vector
+   scales each of its two unique canonical coordinates.
+   Exact checked proposition: For zero-sum z, projection
+   (scale(c, z+axis(a)))=scale(c,z) and the coordinate total
+   of that scaled vector equals c*a.
+   Premises and side conditions: The scalar c may be negative or
+   zero; all n and signed coordinates are admitted.
+   Proof/definition method: Reuse the established projection
+   and coordinate-sum homogeneity laws together with the
+   checked coordinates of z+axis(a).
+   Library reuse: indexed_real_vector_zero_sum_projection_scale,
+   indexed_real_vector_coordinate_sum_scale,
+   indexed_real_vector_zero_sum_axis_sum_coordinates,
+   Stdlib.Vectors.Vector.map.
+   Boundary: Concrete homogeneity only; no abstract linear
+   isomorphism or rank-nullity is inferred.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_pair_scale_coordinates :
+    forall n (z : Vector.t R (S n)) (total scalar : R),
+      indexed_real_vector_zero_sum z ->
+      (indexed_real_vector_zero_sum_projection
+        (Vector.map (fun x => scalar * x)
+          (Vector.map2 Rplus z
+            (indexed_real_vector_total_axis total))) =
+        Vector.map (fun x => scalar * x) z /\
+       indexed_real_vector_coordinate_sum
+        (Vector.map (fun x => scalar * x)
+          (Vector.map2 Rplus z
+            (indexed_real_vector_total_axis total))) =
+        scalar * total).
+  Proof.
+    intros n z total scalar Hzero.
+    destruct (indexed_real_vector_zero_sum_axis_sum_coordinates
+      n z total Hzero) as [Hprojection Htotal].
+    split.
+    - rewrite indexed_real_vector_zero_sum_projection_scale.
+      rewrite Hprojection.
+      reflexivity.
+    - rewrite indexed_real_vector_coordinate_sum_scale.
+      rewrite Htotal.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_pair_add_reconstruct] (lemma) —
+   Adding two canonical representatives is equivalent to
+   reconstructing directly from the sums of their components.
+   Exact checked proposition: For zero-sum z1,z2,
+   (z1+axis(a))+(z2+axis(b))=(z1+z2)+axis(a+b).
+   Premises and side conditions: Every positive finite length,
+   all signed coordinates and scalars, without covariance premises.
+   Proof/definition method: Invoke the unique canonical
+   reconstruction theorem with the established addition
+   coordinate lemma and zero-sum closure under addition;
+   this avoids a separate vector associativity/commutativity proof.
+   Library reuse: indexed_real_vector_zero_sum_axis_sum_unique,
+   indexed_real_vector_zero_sum_axis_pair_add_coordinates,
+   indexed_real_vector_zero_sum_closed_under_add.
+   Boundary: Reconstruction using maintained finite-vector
+   operators, not a new matrix implementation or rank theorem.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_pair_add_reconstruct :
+    forall n (z1 z2 : Vector.t R (S n)) (a b : R),
+      indexed_real_vector_zero_sum z1 ->
+      indexed_real_vector_zero_sum z2 ->
+      Vector.map2 Rplus
+        (Vector.map2 Rplus z1 (indexed_real_vector_total_axis a))
+        (Vector.map2 Rplus z2 (indexed_real_vector_total_axis b)) =
+      Vector.map2 Rplus
+        (Vector.map2 Rplus z1 z2)
+        (indexed_real_vector_total_axis (a + b)).
+  Proof.
+    intros n z1 z2 a b Hz1 Hz2.
+    apply (proj1
+      (indexed_real_vector_zero_sum_axis_sum_unique
+        n (Vector.map2 Rplus z1 z2) (a + b)
+        (Vector.map2 Rplus
+          (Vector.map2 Rplus z1 (indexed_real_vector_total_axis a))
+          (Vector.map2 Rplus z2 (indexed_real_vector_total_axis b)))
+        (indexed_real_vector_zero_sum_closed_under_add
+          (S n) z1 z2 Hz1 Hz2))).
+    apply indexed_real_vector_zero_sum_axis_pair_add_coordinates;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_real_vector_zero_sum_axis_pair_scale_reconstruct] (lemma) —
+   Scaling an explicit canonical representative is equivalent
+   to reconstructing from the scaled zero-sum and scalar coordinates.
+   Exact checked proposition: For zero-sum z, scale(c,z+axis(a))
+   =scale(c,z)+axis(c*a).
+   Premises and side conditions: Every n, signed coordinates,
+   and any scalar including zero or negative values.
+   Proof/definition method: Apply the maintained canonical
+   reconstruction equivalence and the preceding scaled
+   coordinate pair, using existing zero-sum scale closure.
+   Library reuse: indexed_real_vector_zero_sum_axis_sum_unique,
+   indexed_real_vector_zero_sum_axis_pair_scale_coordinates,
+   indexed_real_vector_zero_sum_closed_under_scale.
+   Boundary: Exact finite-vector scaling and reconstruction,
+   not a packaged abstract linear equivalence or dimension proof.
+   *)
+  Lemma indexed_real_vector_zero_sum_axis_pair_scale_reconstruct :
+    forall n (z : Vector.t R (S n)) (total scalar : R),
+      indexed_real_vector_zero_sum z ->
+      Vector.map (fun x => scalar * x)
+        (Vector.map2 Rplus z
+          (indexed_real_vector_total_axis total)) =
+      Vector.map2 Rplus
+        (Vector.map (fun x => scalar * x) z)
+        (indexed_real_vector_total_axis (scalar * total)).
+  Proof.
+    intros n z total scalar Hzero.
+    apply (proj1
+      (indexed_real_vector_zero_sum_axis_sum_unique
+        n (Vector.map (fun x => scalar * x) z)
+        (scalar * total)
+        (Vector.map (fun x => scalar * x)
+          (Vector.map2 Rplus z (indexed_real_vector_total_axis total)))
+        (indexed_real_vector_zero_sum_closed_under_scale
+          (S n) z scalar Hzero))).
+    apply indexed_real_vector_zero_sum_axis_pair_scale_coordinates.
+    exact Hzero.
+  Qed.
+
+  (**
    [indexed_basis_centered_sample_vector_sum_zero] (theorem) —
    Every normalized centered sample-output vector has coordinate sum zero.
    Mathematical meaning: Under total sample mass one, adding all
