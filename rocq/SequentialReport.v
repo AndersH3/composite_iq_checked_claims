@@ -492,7 +492,8 @@ Theorem sequential_conditional_variance_perfect_correlation :
   forall r k, sequential_conditional_variance r k 1 = 0.
 Proof.
   intros r k; unfold sequential_conditional_variance;
-  replace (1-1) with 0 by ring; ring.
+  replace (1-1) with 0 by ring;
+  unfold Rdiv; ring.
 Qed.
 
 (**
@@ -510,7 +511,7 @@ Theorem sequential_conditional_variance_singular_boundary :
   sequential_conditional_variance r k c = 0.
 Proof.
   intros r k c Hzero; unfold sequential_conditional_variance;
-  rewrite Hzero; ring.
+  rewrite Hzero; unfold Rdiv; ring.
 Qed.
 
 (**
