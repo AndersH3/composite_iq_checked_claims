@@ -3681,3 +3681,35 @@ source change, or evidence alteration. Expected after pinned Rocq
 9.2 kernel and CI audit: **1044 public checked claims,
 1047 proof scripts, 1136 declarations**
 including **633 FiniteMoments scripts**.
+
+
+## Rank-one pivot criterion: covariance quotient and signed-weight classification (14 November 2026)
+
+**One documented definition and 18 documented Rocq theorems** formalize the
+all-minors pivot rank-one condition B(u,v)B(p,p)=B(u,p)B(v,p).
+For nonisotropic pivots and **arbitrary signed/unnormalized finite weights**,
+rank-one is equivalent to a vanishing Schur residual block, every residual
+being in the full covariance radical, all residual self-pairings vanishing
+(by polarization), all pivot Gram determinant minors vanishing, and exact
+factorization through normalized scalar covariance coordinates.
+It is also equivalent to equality of the full radical with the kernel
+of the pivot coordinate and to full covariance invariance under
+first-slot, second-slot or simultaneous pivot projection.
+
+Further results show full two-direction Gram equality, zero self-covariance
+iff radical even for signed rank-one models, complete covariance-row fiber
+classification by pivot coordinates and projections, and **PSD/NSD iff
+positive/negative nonisotropic pivot**. The general signed-weight theorems
+are instantiated at *two unit-mass sample occurrences*, for which an
+all-minors rank-one certificate is available without assuming the pivot
+nonisotropic or weights nonnegative. These statements do **not** claim
+that a general covariance with signed weights is PSD.
+
+All source/proof declarations have extensive local commentary, reuse
+prior checked Schur complement, residual bilinearity, covariance symmetry,
+vector reconstruction, and Rocq Stdlib Field/Ring/Lra/Psatz. No custom
+matrix rank algebra, duplicate finite-sum algorithms, axioms, admits,
+Python/SPARK source changes or archived evidence modifications.
+Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims,
+1065 total proof scripts, 1155 documented declarations**, including
+**651 FiniteMoments proof scripts**.
