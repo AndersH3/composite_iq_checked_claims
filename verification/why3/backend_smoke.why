@@ -1,0 +1,26 @@
+(*
+AI disclosure: This minimal Why3 validation fixture was drafted with AI
+assistance. It contains a deliberately true arithmetic theorem and an
+explicitly false negative control. Neither goal is part of the user's
+formalization; this file only tests Why3's bridge to external SMT solvers.
+
+This fixture uses only Why3's standard int.Int library, and is intended
+to be checked with each prover separately. A backend is considered
+functional for this smoke test only if it proves TrueGoal as Valid AND
+does not label FalseGoal Valid. A positive result is not a claim that
+the backend can prove the project's substantive theorems or that
+the prover itself is free from implementation defects.
+*)
+theory BackendSmoke
+  use int.Int
+
+  (* Positive control: zero is a right identity for integer addition.
+     This quantifies over all mathematical integers, not machine words.
+     The SMT prover must return Valid for this goal. *)
+  goal TrueGoal: forall x: int. x + 0 = x
+
+  (* Negative control: zero and one are distinct mathematical integers.
+     A correct configuration must not report this goal as Valid.
+     In standard Z3/CVC5 configurations it should be reported Invalid. *)
+  goal FalseGoal: 0 = 1
+end
