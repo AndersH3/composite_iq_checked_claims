@@ -4273,6 +4273,33 @@ claims**, **995 proof scripts**, **1084 documented declarations** across seven
 Rocq modules, including **581 FiniteMoments proof scripts**. Verify with the
 pinned Rocq 9.2 kernel and independent documentation/no-placeholder gate.
 
+
+## Unique two-sample scalar-plus-radical coefficient decomposition (14 November 2026)
+
+Two documented theorems complete the concrete **direct-sum-style uniqueness**
+interface. If a direction is represented as a scalar multiple of a chosen
+nonisotropic covariance pivot plus a radical vector, then both the scalar
+and the remainder are uniquely determined, exactly as the previously defined
+normalized pivot coordinate and \`indexed_basis_covariance_pivot_remainder\`.
+A second theorem packages the existence and uniqueness as a single Rocq
+\`exists!\` witness of type \`R * Vector.t R (length basis)\`, with a
+radical remainder and exact coefficient reconstruction.
+
+The proof factors through already checked covariance-coordinate linearity,
+the two-sample radical/kernel equivalence and the pivot reconstruction
+law. It uses \`Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map2/nth_map\` only
+for the unavoidable equality of the typed remainder itself; there is
+no new vector recursion, finite-sum or matrix implementation.
+
+The two-outcome unit-mass and nonzero-pivot premises remain explicit;
+weights can be signed and basis functions dependent. This is a fully
+concrete split representation, **not** an abstract rank-nullity theorem,
+Gaussian moment result, or empirical covariance estimate.
+
+Expected inventory upon pinned CI verification: **994 public claims**,
+**997 proof scripts**, **1086 documented declarations** across seven
+modules, with **583 FiniteMoments proof scripts**.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to
