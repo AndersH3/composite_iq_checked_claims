@@ -4532,3 +4532,23 @@ passed at source commit `a6d3135c`. These are exact scalar algebra and
 recursion proofs under supplied regression formulas, not proofs of the
 Gaussian conditional distribution, spectral theorem or continuous-version
 conditional expectation; see `REPORT_THEOREM_INVENTORY.md`.
+
+
+### Report rounding proof formalization (14 November 2026)
+
+The new source `rocq/ReportRounding.v` adds **four transparent
+representations and twelve theorem proofs** mapped directly to the
+sequential report's `lem:rounding` and its nine IQ-150 certificate rows.
+The generic theorems establish strict non-overlapping decimal lattice
+cells, rational absolute-error certificate soundness and square-root
+variance-certificate soundness. All nine exact rows are certified
+by five kernel-computed positive integer differences each (45 integer
+values, corresponding to 9 means and 18 standard deviations).
+The generic real rounding proof and row integer arithmetic are **distinct
+obligations**; they do not establish a Gaussian regression law or a
+conditional expectation. This module reuses Rocq Stdlib Reals/ZArith,
+Field/Psatz/Lra/Lia instead of implementing new numerical libraries.
+
+The source documentation and source-ordered proof register include each
+new theorem. CI compiles this module after SequentialReport.v under the
+pinned Rocq 9.2 Docker image. The module introduces no axiom or admit.
