@@ -4,7 +4,24 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-python3 - <<'PY'
+# Prefer the interpreter that already has the project's Deal dependency.
+# Allow a caller to override it explicitly when testing other environments.
+# CI has Deal installed in its python3, while Debian users commonly install
+# Deal only in .venv and do not activate that environment before running us.
+if [[ -n "${ROCQ_TEST_PYTHON:-}" ]]; then
+    test_python="$ROCQ_TEST_PYTHON"
+elif [[ -x .venv/bin/python ]]; then
+    test_python=.venv/bin/python
+else
+    test_python=python3
+fi
+
+if ! "$test_python" -c 'import deal' >/dev/null 2>&1; then
+    printf 'Deal is missing from %s. Install it there or set ROCQ_TEST_PYTHON.\n' "$test_python" >&2
+    exit 2
+fi
+
+"$test_python" - <<'PY'
 import deal
 from scripts.install_rocq_opam import (
     OCAML_COMPILER, RELEASE_REPOSITORY, ROCQ_CORE, SWITCH, SWITCH_OPTION,
@@ -54,19 +71,19 @@ chmod +x "$work_dir/bin/opam"
 export OPAM_TEST_LOG="$work_dir/opam.log"
 export PATH="$work_dir/bin:$PATH"
 export MOCK_SWITCH_EXISTS=0 MOCK_REPOSITORY_EXISTS=0
-python3 scripts/install_rocq_opam.py --dry-run > "$work_dir/dry-run.txt"
+"$test_python" scripts/install_rocq_opam.py --dry-run > "$work_dir/dry-run.txt"
 test ! -e "$OPAM_TEST_LOG"
 grep -Fq 'rocq-core=9.2.0' "$work_dir/dry-run.txt"
 grep -Fq 'switch create rocq-9.2' "$work_dir/dry-run.txt"
 
-python3 scripts/install_rocq_opam.py > "$work_dir/first-install.txt"
+"$test_python" scripts/install_rocq_opam.py > "$work_dir/first-install.txt"
 grep -Fxq 'switch create rocq-9.2 ocaml-base-compiler.4.14.2 --yes' "$OPAM_TEST_LOG"
 grep -Fxq 'repository add rocq-released https://rocq-prover.org/opam/released --switch=rocq-9.2 --yes' "$OPAM_TEST_LOG"
 grep -Fxq 'install --switch=rocq-9.2 --yes rocq-prover rocq-core=9.2.0' "$OPAM_TEST_LOG"
 
 : > "$OPAM_TEST_LOG"
 export MOCK_SWITCH_EXISTS=1 MOCK_REPOSITORY_EXISTS=1
-python3 scripts/install_rocq_opam.py > "$work_dir/reinstall.txt"
+"$test_python" scripts/install_rocq_opam.py > "$work_dir/reinstall.txt"
 if grep -Eq '^(switch create|repository add) ' "$OPAM_TEST_LOG"; then
     echo "Repeated installation recreated the existing switch or repository" >&2
     exit 1
