@@ -915,7 +915,7 @@ Theorem sequential_rounding_rational_certificate_unique :
 Proof.
   intros T P Q t j HT HQ Hneq Hcertificate.
   assert (Habs : Rabs (T*P-IZR t*Q) < Q/2) by lra.
-  apply Rabs_lt in Habs.
+  apply Rabs_def2 in Habs.
   destruct Habs as [Habslo Habshi].
   assert (Hdiv : T*(P/Q)*Q = T*P).
   { field; lra. }
