@@ -178,7 +178,18 @@ Proof.
   rewrite (equicorr_centered_energy_decomposition n c energy total) by lra.
   assert (Ht : 0 <= total*total/n).
   { unfold Rdiv; apply Rmult_le_pos; [nra | left; apply Rinv_0_lt_compat; lra]. }
-  nra.
+  assert (Hcontrast : 0 <= (1-c)*(energy-total*total/n)).
+  { apply Rmult_le_pos; lra. }
+  assert (Hcommon : 0 <= sequential_d n c*(total*total/n)).
+  { apply Rmult_le_pos; lra. }
+  destruct (Rlt_dec 0 (energy-total*total/n)) as [Hu | Hu].
+  - assert (Hpos : 0 < (1-c)*(energy-total*total/n)).
+    { apply Rmult_lt_0_compat; lra. }
+    lra.
+  - assert (Htot : 0 < total*total/n) by lra.
+    assert (Hpos : 0 < sequential_d n c*(total*total/n)).
+    { apply Rmult_lt_0_compat; lra. }
+    lra.
 Qed.
 
 (**
