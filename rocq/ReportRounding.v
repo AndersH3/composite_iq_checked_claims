@@ -137,7 +137,7 @@ Proof.
   assert (Hscaled :
     (2 * T * sqrt (P / Q)) * (2 * T * sqrt (P / Q)) * Q =
     4 * T * T * P).
-  { rewrite <- Hfactor; ring. }
+  { nra. }
   assert (HlowerSquares :
     (2 * IZR t - 1) * (2 * IZR t - 1) <
     (2 * T * sqrt (P / Q)) * (2 * T * sqrt (P / Q))).
