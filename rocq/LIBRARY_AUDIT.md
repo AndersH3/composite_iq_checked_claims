@@ -3755,3 +3755,31 @@ Field/Psatz/Lra/Lia instead of implementing new numerical libraries.
 The source documentation and source-ordered proof register include each
 new theorem. CI compiles this module after SequentialReport.v under the
 pinned Rocq 9.2 Docker image. The module introduces no axiom or admit.
+
+
+### Report-actual conditional-mean counterexample (14 November 2026)
+
+The new `rocq/ReportCounterexample.v` establishes **25 extensively
+documented finite-model theorem proofs and 14 transparent definitions**
+using only the maintained `FiniteSum.finite_sum` and Rocq Stdlib.
+It proves the report's `prop:counterexample` by an *alternative,
+fully rational witness* rather than reusing the report's irrational
+`sqrt 2` support. The dependent model has three atoms with
+`(X,Y,p)=(-1,1,1/3),(2,1,1/6),(0,-1,1/2)`.
+The comparison model splits each X mass equally between Y=+1 and Y=-1.
+Both joint models have identical X and Y marginal distributions,
+E[X]=E[Y]=0, Var(X)=Var(Y)=1, Cov(X,Y)=0, and P(X=0)=1/2.
+But E[Y|X=0]=-1 in the dependent model versus 0 in the
+independent model; the inclusive means after one prediction differ
+as -1/2 versus 0. Hence correlation and marginals alone do **not**
+determine conditional means. The witness is not Gaussian, as required
+for a valid counterexample to a *distribution-free* inference.
+
+The module uses *finite positive-event conditional means only* and
+explicit support, moments, cross-moments and marginal mass checks.
+It does **not** claim a measure-theoretic conditional expectation,
+regular conditional law or Gaussian regression theorem. The pinned
+Rocq workflow now compiles it after FiniteSum; the documentation
+audit includes all 25 proof scripts and 14 source declarations.
+No original reports, archived proof evidence or numerical outputs
+were altered.
