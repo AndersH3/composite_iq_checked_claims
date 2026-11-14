@@ -1088,7 +1088,7 @@ Definition sequential_example_conditional_mean (f : nat -> R) : R :=
 Theorem sequential_example_mass_one :
  sequential_example_expectation (fun _ => 1) = 1.
 Proof.
- unfold sequential_example_expectation, finite_sum; simpl; ring.
+ unfold sequential_example_expectation, finite_sum; simpl; field; lra.
 Qed.
 
 (**
@@ -1103,7 +1103,7 @@ Qed.
 Theorem sequential_example_x_centered :
  forall a, sequential_example_expectation (sequential_example_x a) = 0.
 Proof.
- intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x; simpl; ring.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x; simpl; field; lra.
 Qed.
 
 (**
@@ -1118,7 +1118,7 @@ Qed.
 Theorem sequential_example_x_second_moment :
  forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_x a i) = a*a/2.
 Proof.
- intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x; simpl; ring.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x; simpl; field; lra.
 Qed.
 
 (**
@@ -1133,7 +1133,7 @@ Qed.
 Theorem sequential_example_y_dependent_centered :
  sequential_example_expectation sequential_example_y_dependent = 0.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; field; lra.
 Qed.
 
 (**
@@ -1148,7 +1148,7 @@ Qed.
 Theorem sequential_example_y_comparison_centered :
  sequential_example_expectation sequential_example_y_comparison = 0.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; field; lra.
 Qed.
 
 (**
@@ -1163,7 +1163,7 @@ Qed.
 Theorem sequential_example_y_dependent_unit_second_moment :
  sequential_example_expectation (fun i => sequential_example_y_dependent i * sequential_example_y_dependent i) = 1.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; field; lra.
 Qed.
 
 (**
@@ -1178,7 +1178,7 @@ Qed.
 Theorem sequential_example_y_comparison_unit_second_moment :
  sequential_example_expectation (fun i => sequential_example_y_comparison i * sequential_example_y_comparison i) = 1.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; field; lra.
 Qed.
 
 (**
@@ -1193,7 +1193,7 @@ Qed.
 Theorem sequential_example_dependent_cross_moment_zero :
  forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_y_dependent i) = 0.
 Proof.
- intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x, sequential_example_y_dependent; simpl; ring.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x, sequential_example_y_dependent; simpl; field; lra.
 Qed.
 
 (**
@@ -1208,7 +1208,7 @@ Qed.
 Theorem sequential_example_comparison_cross_moment_zero :
  forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_y_comparison i) = 0.
 Proof.
- intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x, sequential_example_y_comparison; simpl; ring.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x, sequential_example_y_comparison; simpl; field; lra.
 Qed.
 
 (**
@@ -1223,7 +1223,7 @@ Qed.
 Theorem sequential_example_zero_event_mass_half :
  sequential_example_expectation sequential_example_zero_event = 1/2.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_zero_event; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_zero_event; simpl; field; lra.
 Qed.
 
 (**
@@ -1238,7 +1238,7 @@ Qed.
 Theorem sequential_example_dependent_zero_event_moment :
  sequential_example_expectation (fun i => sequential_example_zero_event i * sequential_example_y_dependent i) = -1/2.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_zero_event, sequential_example_y_dependent; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_zero_event, sequential_example_y_dependent; simpl; field; lra.
 Qed.
 
 (**
@@ -1253,7 +1253,7 @@ Qed.
 Theorem sequential_example_comparison_zero_event_moment :
  sequential_example_expectation (fun i => sequential_example_zero_event i * sequential_example_y_comparison i) = 0.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_zero_event, sequential_example_y_comparison; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_zero_event, sequential_example_y_comparison; simpl; field; lra.
 Qed.
 
 (**
@@ -1268,7 +1268,7 @@ Qed.
 Theorem sequential_example_dependent_conditional_minus_one :
  sequential_example_conditional_mean sequential_example_y_dependent = -1.
 Proof.
- unfold sequential_example_conditional_mean; rewrite sequential_example_dependent_zero_event_moment, sequential_example_zero_event_mass_half; field.
+ unfold sequential_example_conditional_mean; rewrite sequential_example_dependent_zero_event_moment, sequential_example_zero_event_mass_half; field; lra.
 Qed.
 
 (**
@@ -1283,7 +1283,7 @@ Qed.
 Theorem sequential_example_comparison_conditional_zero :
  sequential_example_conditional_mean sequential_example_y_comparison = 0.
 Proof.
- unfold sequential_example_conditional_mean; rewrite sequential_example_comparison_zero_event_moment, sequential_example_zero_event_mass_half; field.
+ unfold sequential_example_conditional_mean; rewrite sequential_example_comparison_zero_event_moment, sequential_example_zero_event_mass_half; field; lra.
 Qed.
 
 (**
@@ -1298,7 +1298,7 @@ Qed.
 Theorem sequential_example_dependent_positive_marginal_half :
  sequential_example_expectation (fun i => (1+sequential_example_y_dependent i)/2) = 1/2.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; field; lra.
 Qed.
 
 (**
@@ -1313,7 +1313,7 @@ Qed.
 Theorem sequential_example_comparison_positive_marginal_half :
  sequential_example_expectation (fun i => (1+sequential_example_y_comparison i)/2) = 1/2.
 Proof.
- unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; ring.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; field; lra.
 Qed.
 
 (**
