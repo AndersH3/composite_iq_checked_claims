@@ -944,7 +944,13 @@ Proof.
   intros T v t HT Hv Ht Hlower Hupper.
   pose proof (sqrt_pos v) as Hsqrt.
   pose proof (sqrt_sqrt v Hv) as Hsquare.
-  rewrite <- Hsquare in Hlower, Hupper.
+  assert (Hscaled :
+    (2*T*sqrt v)*(2*T*sqrt v) = 4*T*T*v).
+  { rewrite <- Hsquare; ring. }
+  rewrite <- Hscaled in Hlower, Hupper.
+  assert (Hscaled_pos : 0 <= 2*T*sqrt v) by nra.
+  assert (Hlower_pos : 0 <= 2*IZR t-1) by lra.
+  assert (Hupper_pos : 0 <= 2*IZR t+1) by lra.
   split; nra.
 Qed.
 
