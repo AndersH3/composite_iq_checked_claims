@@ -3,7 +3,7 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1,196 proof scripts** across twelve
+for the three principal reports. **1,222 proof scripts** across thirteen
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -26,6 +26,7 @@ rocq compile ReportRounding.v
 rocq compile ReportCounterexample.v
 rocq compile EquicorrelationSpectral.v
 rocq compile EquicorrelationVectors.v
+rocq compile EquicorrelationInverseVectors.v
 ```
 
 The GitHub Actions workflow at
@@ -4602,8 +4603,12 @@ OpenAI's assistant designed the theorem statements, wrote the annotated Rocq pro
 
 `EquicorrelationVectors.v` extends the algebraic `EquicorrelationSpectral.v` criteria to genuine finite lists of real coordinates by proving finite-vector Cauchy–Schwarz, mean-centered energy nonnegativity, and the exact PSD/PD iff eigenvalue conditions for any fixed dimension n>=2. The implementation uses `FiniteSum` rather than creating a new summation operator and `Stdlib.List` for vector construction, concatenation and affine maps. The new module contains 34 theorem scripts, including dimensional and finite-list support lemmas and three matrix-action/nullspace refinements. Theorems are deterministic finite algebra; Gaussian realization, general spectral theorem and conditional Gaussian prediction remain open.
 
+## November 14 continuation: finite-list inverse and linear regression
+
+`EquicorrelationInverseVectors.v` adds 26 explicitly commented Rocq theorems and six transparent definitions, built upon `EquicorrelationSpectral.v` and `EquicorrelationVectors.v`. The key checked propositions are actual two-sided finite-list inverses of the rank-one equicorrelation matrix, true coordinate dot-product precision, the contrast/common inverse eigenspaces, an exact least-squares risk square-completion and unique optimal equal-weight coefficient, residual cross-orthogonality, and concrete future-block Schur action/eigenvectors/PSD. `Stdlib.List.map` and the maintained `FiniteSum` operators provide all coordinate aggregation without custom recursions. This **is not** a construction of Gaussian random variables, Gaussian regression conditional law, general spectral theorem or population-model validation. See `REPORT_THEOREM_INVENTORY.md` for claim-by-claim boundaries.
+
 ## Appendix — Complete AI disclosure (finite-vector bridge)
 
 OpenAI's assistant designed the finite-vector theorem statements, composed the Rocq proof scripts and accompanying documentation, and wired the module into the pinned CI validation. The independent operational evidence is the Rocq 9.2 kernel compilation and repository-wide Python/Deal/SPARK CI gates; no extrapolation from a successful algebraic proof to empirical IQ calibration or continuous Gaussian probability is made.
 
-The final algebraic refinements identify the aggregate equicorrelation quadratic form with the **literal finite sum of each coordinate times its rank-one covariance-matrix action**; show every zero-sum vector is a contrast eigenvector; and characterize the exact nullspace under strict eigenvalue positivity using Stdlib.Forall and the shared finite-sum support lemmas. These statements are a finite real-vector realization, not a general matrix spectral theorem or probabilistic Gaussian model.
+The final algebraic refinements identify the aggregate equicorrelation quadratic form with the **literal finite sum of each coordinate times its rank-one covariance-matrix action**; show every zero-sum vector is a contrast eigenvector; and characterize the exact nullspace under strict eigenvalue positivity using Stdlib.Forall and the shared finite-sum support lemmas. These statements are a finite real-vector realization, not a general matrix spectral theorem or probabilistic Gaussian model. Subsequent AI assistance developed and kernel-tested (subject to final pinned CI) the new full finite-list inverse, precision quadratic, linear-regression least-squares and Schur-vector theorems, and edited this README, report inventory, checker, and proof register. No continuous Gaussian random-variable model or empirical IQ interpretation was independently proved.
