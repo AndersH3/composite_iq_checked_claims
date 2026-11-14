@@ -22399,6 +22399,10 @@ Section FiniteProbabilityMoments.
       pose proof
         (f_equal (fun vector : Vector.t R (length basis) =>
           Vector.nth vector i) Hsum) as Hnth.
+      change (Vector.nth
+        (Vector.map2 Rplus
+          (Vector.map (fun c => beta * c) pivot) radical) i =
+        Vector.nth left i) in Hnth.
       rewrite (VectorSpec.nth_map2 Rplus
         (Vector.map (fun c => beta * c) pivot) radical
         i i i eq_refl eq_refl) in Hnth.
