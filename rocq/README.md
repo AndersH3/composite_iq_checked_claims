@@ -25,6 +25,7 @@ rocq compile SequentialReport.v
 rocq compile ReportRounding.v
 rocq compile ReportCounterexample.v
 rocq compile EquicorrelationSpectral.v
+rocq compile EquicorrelationVectors.v
 ```
 
 The GitHub Actions workflow at
@@ -4595,3 +4596,12 @@ Added `EquicorrelationSpectral.v` with 23 documented theorem scripts concerning 
 ### Complete AI disclosure (November 14 addition)
 
 OpenAI's assistant designed the theorem statements, wrote the annotated Rocq proofs, updated the source-ordered proof register, and checked the status of repository automation. The final independently verifiable result is the pinned Rocq 9.2 workflow's success or failure; mathematical scope remains limited to the explicit real-algebra and feasibility assumptions. Existing statistical inference, model calibration, Gaussian integration, and empirical IQ claims are not established by these proofs.
+
+
+## November 14: concrete vector PSD and PD criteria
+
+`EquicorrelationVectors.v` extends the algebraic `EquicorrelationSpectral.v` criteria to genuine finite lists of real coordinates by proving finite-vector Cauchy–Schwarz, mean-centered energy nonnegativity, and the exact PSD/PD iff eigenvalue conditions for any fixed dimension n>=2. The implementation uses `FiniteSum` rather than creating a new summation operator and `Stdlib.List` for vector construction, concatenation and affine maps. The new module contains 31 theorem scripts, including dimensional and finite-list support lemmas. Theorems are deterministic finite algebra; Gaussian realization, general spectral theorem and conditional Gaussian prediction remain open.
+
+### Complete AI disclosure — finite-vector bridge
+
+OpenAI's assistant designed the finite-vector theorem statements, composed the Rocq proof scripts and accompanying documentation, and wired the module into the pinned CI validation. The independent operational evidence is the Rocq 9.2 kernel compilation and repository-wide Python/Deal/SPARK CI gates; no extrapolation from a successful algebraic proof to empirical IQ calibration or continuous Gaussian probability is made.
