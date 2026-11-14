@@ -197,7 +197,7 @@ Theorem vector_real_sum_repeat :
   forall n : nat, forall a : R, vector_real_sum (repeat a n) = INR n*a.
 Proof.
  induction n as [|n IH]; intro a.
- - reflexivity.
+ - unfold vector_real_sum, finite_sum; simpl; ring.
  - change (a+vector_real_sum (repeat a n) = INR (S n)*a).
    rewrite IH, S_INR; ring.
 Qed.
@@ -215,7 +215,7 @@ Theorem vector_square_energy_repeat :
   forall n : nat, forall a : R, vector_square_energy (repeat a n) = INR n*a*a.
 Proof.
  induction n as [|n IH]; intro a.
- - reflexivity.
+ - unfold vector_square_energy, finite_sum; simpl; ring.
  - change (a*a+vector_square_energy (repeat a n) = INR (S n)*a*a).
    rewrite IH, S_INR; ring.
 Qed.
