@@ -20,12 +20,27 @@ Use [`scripts/install_ada_spark_why3.sh`](../scripts/install_ada_spark_why3.sh).
 | Why3 verification platform | Debian `why3` | 1.8.0 | apt |
 | Additional SMT/ATP solvers | Debian `z3`, `cvc5`, `eprover` | distribution versions | apt |
 | Why3 examples | Debian `why3-examples` | distribution version | apt |
-| GNATprove SPARK checker | Alire crate `gnatprove` | currently 16.1.0 in the Alire index | user-prefix installation |
+| GNATprove SPARK checker | Alire crate `gnatprove` | pinned 16.1.0 | versioned user-local binary download via `alr -n get` |
 | Joe Hurd Metis theorem prover | [gilith/metis](https://github.com/gilith/metis) | pinned development commit `7a23e4ea68bc92927716777ebc98bea09e91fe24` | separate source checkout; build requires Standard ML compiler |
 
 **Two similarly named products:** Metis from `gilith/metis` is a first-order resolution theorem prover for TPTP problems. The Debian binary package `metis` is an entirely unrelated graph partitioner. The script never requests the Debian `metis` package.
 
 The pinned development snapshot is *not* claimed to be the official Metis 2.4 release tarball. The official release is Metis 2.4 (20260920), but only a source archive was identified without a vendor-published checksum. The script therefore checks out an exact Git commit and checks its SHA before attempting to build. A pinned Git object is not independent code auditing.
+
+## Observed computer10 results (November 15, 2026)
+
+The user's terminal output confirms that `gnat` 14.1, `gprbuild`
+2025.0.0-4, `alire` 1.2.1, GDB, GCC/G++, Make, Git, Perl, Gappa 1.6.0,
+Why3 1.8.0, Z3, and CVC5 were installed already. The apt action installed
+`eprover` 3.2.5, `picosat` 965, and `why3-examples` 1.8.0. However,
+the attempted GNATprove installation stopped immediately with
+`error: Unrecognized command: install`; no GNATprove download or
+functional SPARK proof-check was confirmed.
+
+The user's separately submitted `why3 config --detect` command also
+reported `unrecognized option '--detect'`. The fixed installer avoids both
+unsupported invocations. These are observed host facts, not test results from
+the GitHub Actions runner.
 
 ## User commands on computer10
 
@@ -65,7 +80,25 @@ To obtain GNATprove in a **separate user prefix**:
 bash scripts/install_ada_spark_why3.sh --install-spark
 ```
 
-The command invokes `alr install --prefix="$HOME/.local/opt/ada-spark" gnatprove`. GNATprove is not included in Debian's `gnat` package and must be acquired separately. If Alire detects an incompatible compiler or unavailable dependency, stop and inspect its diagnostic; do not assume installation succeeded.
+**Correction for Debian 13:** The installed `alire` version is 1.2.1 and
+does not provide an `install` subcommand. A previous version of this script
+incorrectly used `alr install`, which failed as reported on computer10.
+The corrected script uses `alr -n get gnatprove=16.1.0` within
+`~/.local/opt/ada-spark/`, locates the versioned executable, checks
+`--version` and creates the isolated launcher
+`~/.local/opt/ada-spark/bin/gnatprove`. The wrapper adds the downloaded
+GNATprove bundle's own `bin/` directory to its subprocess `PATH`, so
+its packaged solvers are visible without modifying the shell's global PATH.
+
+To query the GNATprove launcher after installation:
+
+```sh
+~/.local/opt/ada-spark/bin/gnatprove --version
+```
+
+GNATprove is not included in Debian's `gnat` package. The download requires
+a configured Alire community index and network access. If it fails, retain
+the error output; don't claim a successful SPARK installation.
 
 For **project-specific SPARK checking**, go to an Alire crate containing your Ada/SPARK code, run `alr with gnatprove`, and then `alr gnatprove`. Work through the GNATprove warnings and proof-obligation reports, rather than treating a tool's `--version` output as evidence that source-level contracts are established. Depending on your setup, use `alr gnatprove --mode=all` or `gnatprove -Pproject.gpr --mode=all`; verify the flags of the installed release.
 
@@ -89,7 +122,11 @@ Finally, enumerate the detected tools and register compatible external provers w
 bash scripts/install_ada_spark_why3.sh --detect
 ```
 
-Debian's Why3 1.8 and upstream Why3 1.9 use different `config` syntax; the script inspects local help and selects the syntax available. After adding Yices, Metis, Gappa, PVS or other provers, repeat configuration detection. If a prover cannot be detected, check compatibility with Why3's supported versions; do not claim it is usable merely because the binary is on `PATH`.
+**Correction for Debian Why3 1.8.0:** use `why3 config detect`, followed
+by `why3 --list-provers`. The previous recommendation to run
+`why3 config --detect` failed because it is not a recognized option in
+this package. The corrected script issues the documented Debian 13 commands
+directly. After adding Yices, Metis, Gappa, PVS or other provers, repeat configuration detection. If a prover cannot be detected, check compatibility with Why3's supported versions; do not claim it is usable merely because the binary is on `PATH`.
 
 ## Further Ada/SPARK facilities
 
@@ -99,7 +136,11 @@ For Why3, further candidates include Alt-Ergo, veriT, Vampire and SPASS. Availab
 
 ## Validation limits
 
-The offline test `bash scripts/test_ada_spark_why3.sh` validates shell syntax, command-plan outputs, negative controls for the wrong Metis package, and the absence of prohibited automatic changes. GitHub Actions runs that test as part of its existing Python-contracts workflow, alongside the separate Deal coverage and runtime-test gates.
+The offline test `bash scripts/test_ada_spark_why3.sh` validates shell
+syntax, command-plan outputs, a mocked Alire 1.2 that accepts `get` but
+rejects `install`, a fake GNATprove binary and launcher, the exact
+`why3 config detect` dispatch, negative controls for the wrong Metis
+package, and the absence of prohibited automatic system changes. GitHub Actions runs that test as part of its existing Python-contracts workflow, alongside the separate Deal coverage and runtime-test gates.
 
 The user's computer has not been operated remotely by the assistant. Installation, real compiler execution, SPARK proof closure, Metis build success, and Why3 backend acceptance are **not confirmed** until the appropriate commands have run on computer10. Runtime success is distinct from a formal proof of software correctness.
 
@@ -111,5 +152,14 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The initial AI-generated installer gave incorrect `alr install` and
+`why3 config --detect` commands for the user's Debian 13 versions.
+The user supplied exact CLI error logs, and the correction was verified
+against Debian's Why3 manpage and Alire's `alr get` and `with` facilities.
+Mock-based CI tests do not establish that the binary can be downloaded or
+that SPARK proof obligations close on computer10. This known error and its
+subsequent correction are included to preserve transparent provenance.
+
 
 OpenAI assisted in identifying toolchain variants, researching package repositories and vendor pages, composing the Bash installation and test scripts, writing the guide, and committing repository changes through the connected GitHub integration. The requested target was Debian 13 on computer10. The user previously reported installed Rocq, Lean, Yices and PVS facilities and an in-progress detached Isabelle transfer, but no AI-initiated installation was carried out on their host. Source locations and release information were checked against public vendor and Debian records on November 15, 2026; remote inventories and future package updates may differ. The installer offers explicit mutating actions requiring invocation by the user; its tests are offline and do not validate live downloads, the validity of third-party proofs, vendor build-chain trust, or SPARK proof closure. The source checkout for Metis is a pinned development commit, **not** a verified official Metis binary release. GNATprove's Alire crate is community software and may differ from commercial SPARK Pro. Formal claims made in project reports require separately recorded reproducible compilation, proof success, and a proof-status audit on the actual source revision.
