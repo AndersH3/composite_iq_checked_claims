@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Baseline:** `main` at merge commit `0946d858b6fec14a1823cf50bd6db0beeca607df` (merged PR #4). **Proof-development branch:** `rocq-report-claim-proofs-20261114`.
+**Audit date:** November 14, 2026. **Baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (merged PR #7). **Proof-development branch:** `rocq-equicorrelation-inverse-psd-20261114`.
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
