@@ -29,9 +29,10 @@ case "$mode" in
     printf '%s\n' '  --metis-source   fetch a pinned official Metis theorem prover Git commit'
     printf '%s\n' '  --metis-build    build pinned Metis using an EXISTING Standard ML compiler'
     printf '%s\n' '  --detect         detect Why3 backends and inspect command availability'
+    printf '%s\n' '  --smoke-ada      compile and run a disposable Ada program with GNAT'
     exit 0
     ;;
-  --plan|--install-apt|--install-spark|--metis-source|--metis-build|--detect)
+  --plan|--install-apt|--install-spark|--metis-source|--metis-build|--detect|--smoke-ada)
     ;;
   *)
     printf 'Unknown option: %s\n' "$mode" >&2
@@ -49,6 +50,31 @@ if [[ "$mode" == "--plan" ]]; then
   printf '%s\n' 'NOTE: Metis build needs a separate MLton, Poly/ML or Moscow ML compiler.'
   printf '%s\n' 'For the GNATprove Alire workspace, use: alr with gnatprove; alr gnatprove'
   printf '%s\n' 'Why3 integration is verified by: why3 config --detect'
+  exit 0
+fi
+
+if [[ "$mode" == "--smoke-ada" ]]; then
+  if ! command -v gnatmake >/dev/null; then
+    printf '%s\n' 'GNAT compiler is missing; run --install-apt first.' >&2
+    exit 3
+  fi
+  workdir="$(mktemp -d)"
+  trap 'rm -rf -- "$workdir"' EXIT
+  cat >"$workdir/smoke_ada.adb" <<'ADA'
+-- Minimal Ada compiler smoke test, deliberately not a SPARK verification.
+-- This standalone source validates GNAT compilation, linking and execution;
+-- it does not assert that SPARK program contracts have been proved.
+with Ada.Text_IO;
+procedure Smoke_Ada is
+begin
+   Ada.Text_IO.Put_Line ("Ada compiler smoke test succeeded");
+end Smoke_Ada;
+ADA
+  (
+    cd "$workdir"
+    gnatmake -q -gnat2022 smoke_ada.adb
+    ./smoke_ada
+  )
   exit 0
 fi
 
