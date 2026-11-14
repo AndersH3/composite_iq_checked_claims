@@ -20600,6 +20600,237 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_two_samples_bilinear_functional_normal_form] (theorem) —
+   Every two-sample covariance functional is a multiple of one pivot.
+   Mathematical meaning: Given any coefficient pivot with nonzero
+   covariance against itself, covariance against an arbitrary left
+   direction depends on the test direction only through its covariance
+   against the pivot, with a coefficient fixed by the pivot pairing.
+   Exact checked proposition: For two unit-mass sample occurrences
+   and B(p,p)<>0, B(left,right)=(B(left,p)/B(p,p))*B(p,right).
+   Premises and side conditions: Both arguments and the pivot are
+   Vector.t R (length basis); sample weights can be signed, the
+   basis can be dependent, and no positive-definiteness is imposed.
+   Proof/definition method: Reuse the proved typed coefficient-pivot
+   reconstruction and normalize a denominator in Stdlib.Field,
+   providing its nonzero premise explicitly.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_reconstruction,
+   Stdlib.Field and the established typed covariance bilinear form.
+   Boundary: An algebraic rank-one functional normal form, not an
+   implementation of abstract dual-space rank or kernel dimension.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_functional_normal_form :
+    forall basis
+           (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left right =
+        (indexed_basis_covariance_bilinear_form basis left pivot /
+         indexed_basis_covariance_bilinear_form basis pivot pivot) *
+        indexed_basis_covariance_bilinear_form basis pivot right.
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    rewrite (indexed_basis_two_samples_bilinear_pivot_reconstruction
+      basis pivot left right x y Hsamples Hmass Hpivot).
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_functional_unique_scale] (theorem) —
+   The nonzero pivot gives a unique scalar for each covariance functional.
+   Mathematical meaning: For each coefficient direction, exactly one
+   scalar multiplies the pivot covariance functional to produce its
+   covariance against every coefficient test direction.
+   Exact checked proposition: If B(p,p)<>0, then for every left
+   coefficient vector there exists exactly one alpha:R satisfying
+   forall right, B(left,right)=alpha*B(p,right).
+   Premises and side conditions: Unit-mass two-sample model;
+   arbitrary signed weights and dependent basis functions allowed.
+   The pivot self-pairing must be nonzero to ensure uniqueness.
+   Proof/definition method: Choose alpha=B(left,p)/B(p,p), apply the
+   preceding functional normal form for existence, specialize any
+   alternative alpha at right=p, and cancel the nonzero pivot by
+   the standard field tactic. No new vector-space abstraction is built.
+   Library reuse: indexed_basis_two_samples_bilinear_functional_normal_form,
+   Stdlib.Field, Stdlib.Logic.ex_unique and Stdlib.Reals.
+   Boundary: Unique scaling of a concrete bilinear functional; not
+   a formally defined one-dimensional subspace or rank-nullity count.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_functional_unique_scale :
+    forall basis
+           (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      exists! alpha : R,
+        forall right : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left right =
+          alpha * indexed_basis_covariance_bilinear_form basis pivot right.
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    exists
+      (indexed_basis_covariance_bilinear_form basis left pivot /
+       indexed_basis_covariance_bilinear_form basis pivot pivot).
+    split.
+    - intro right.
+      apply indexed_basis_two_samples_bilinear_functional_normal_form;
+        assumption.
+    - intros alpha Halpha.
+      specialize (Halpha pivot).
+      rewrite Halpha.
+      field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_radical_unique_pivot_subtraction]
+   (theorem) — Unique scalar decomposition modulo the covariance radical.
+   Mathematical meaning: Every coefficient direction has a unique
+   scalar pivot component such that subtracting that multiple of a
+   nonisotropic pivot leaves a direction orthogonal to every test
+   coefficient vector under the finite covariance pairing.
+   Exact checked proposition: If B(p,p)<>0, there exists exactly one
+   alpha:R with Radical(left + Vector.map ((-alpha)*.) pivot).
+   Premises and side conditions: Two unit-mass sample occurrences,
+   a nonzero pivot, any finite typed score basis and signed weights.
+   The statement does not require a chosen vector-space quotient.
+   Proof/definition method: Take alpha=B(left,p)/B(p,p), reuse the
+   functional normal form and checked additive/scalar bilinearity to
+   prove the remainder radical. For uniqueness, apply the candidate
+   radical to test=p, expand using the same bilinear lemmas, and use
+   field cancellation at the supplied nonzero pivot.
+   Library reuse: indexed_basis_two_samples_bilinear_functional_normal_form,
+   indexed_basis_covariance_bilinear_add_first,
+   indexed_basis_covariance_bilinear_scale_first,
+   indexed_basis_covariance_bilinear_radical,
+   Stdlib.Vectors.Vector.map/map2, Stdlib.Ring and Stdlib.Field.
+   Boundary: A constructive one-pivot scalar/radical splitting
+   certificate, not a proved abstract direct-sum dimension formula.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_radical_unique_pivot_subtraction :
+    forall basis
+           (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      exists! alpha : R,
+        indexed_basis_covariance_bilinear_radical basis
+          (Vector.map2 Rplus left
+            (Vector.map (fun coefficient => (-alpha) * coefficient) pivot)).
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    exists
+      (indexed_basis_covariance_bilinear_form basis left pivot /
+       indexed_basis_covariance_bilinear_form basis pivot pivot).
+    split.
+    - unfold indexed_basis_covariance_bilinear_radical.
+      intro right.
+      rewrite indexed_basis_covariance_bilinear_add_first.
+      rewrite indexed_basis_covariance_bilinear_scale_first.
+      rewrite (indexed_basis_two_samples_bilinear_functional_normal_form
+        basis pivot left right x y Hsamples Hmass Hpivot).
+      ring.
+    - intros alpha Hradical.
+      unfold indexed_basis_covariance_bilinear_radical in Hradical.
+      specialize (Hradical pivot).
+      rewrite indexed_basis_covariance_bilinear_add_first in Hradical.
+      rewrite indexed_basis_covariance_bilinear_scale_first in Hradical.
+      assert (Halpha :
+        indexed_basis_covariance_bilinear_form basis left pivot =
+        alpha * indexed_basis_covariance_bilinear_form basis pivot pivot).
+      { nra. }
+      rewrite Halpha.
+      field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_functional_fiber_iff_pivot]
+   (theorem) — One pivot covariance identifies equality of functionals.
+   Mathematical meaning: Two typed coefficient directions induce
+   identical covariance against every test direction precisely when
+   their covariances against the chosen nonzero pivot are equal.
+   Exact checked proposition: Under two unit-mass samples and
+   B(p,p)<>0, (forall test, B(left,test)=B(other,test)) iff
+   B(left,p)=B(other,p).
+   Premises and side conditions: Signed weights, arbitrary finite
+   score bases and duplicate sampled outcomes are formally permitted
+   when the nonzero pivot premise can be satisfied.
+   Proof/definition method: Necessity specializes equality at pivot.
+   Sufficiency rewrites both covariance functionals with the already
+   checked typed normal form and substitutes the common pivot value.
+   Library reuse: indexed_basis_two_samples_bilinear_functional_normal_form
+   and Stdlib.Logic; no additional coordinate or matrix interface.
+   Boundary: Equality of covariance evaluation fibers, not a
+   numerical rank computation or equality of coefficient vectors.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_functional_fiber_iff_pivot :
+    forall basis
+           (pivot left other : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall test : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left test =
+          indexed_basis_covariance_bilinear_form basis other test) <->
+       indexed_basis_covariance_bilinear_form basis left pivot =
+       indexed_basis_covariance_bilinear_form basis other pivot).
+  Proof.
+    intros basis pivot left other x y Hsamples Hmass Hpivot.
+    split.
+    - intro Hequal.
+      exact (Hequal pivot).
+    - intros Hequal test.
+      rewrite (indexed_basis_two_samples_bilinear_functional_normal_form
+        basis pivot left test x y Hsamples Hmass Hpivot).
+      rewrite (indexed_basis_two_samples_bilinear_functional_normal_form
+        basis pivot other test x y Hsamples Hmass Hpivot).
+      rewrite Hequal.
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_covariance_quadratic_pivot_square] (theorem) —
+   The full quadratic form is a square divided by pivot self-covariance.
+   Mathematical meaning: In a normalized two-outcome model with a
+   nonzero typed pivot, the covariance quadratic of any coefficient
+   vector is entirely determined by its covariance with the pivot.
+   Its sign is governed by the pivot self-pairing even for signed weights.
+   Exact checked proposition: Q(left)=B(left,p)*B(left,p)/B(p,p).
+   Premises and side conditions: Samples are [x;y], total mass is one,
+   and B(p,p) is nonzero; no positive-weight hypothesis or independence
+   of the finite score basis is required.
+   Proof/definition method: Use the existing bilinear diagonal identity
+   to replace Q by B(left,left), the established pivot reconstruction,
+   and preexisting covariance symmetry to obtain the numerator square.
+   Library reuse: indexed_basis_covariance_bilinear_diagonal,
+   indexed_basis_two_samples_bilinear_pivot_reconstruction,
+   indexed_basis_covariance_bilinear_symmetric and Stdlib.Reals.
+   Boundary: An exact scalar square normal form, not an eigenvalue
+   decomposition, general rank theorem or inferential model.
+   *)
+  Theorem indexed_basis_two_samples_covariance_quadratic_pivot_square :
+    forall basis
+           (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_quadratic_form basis left =
+        (indexed_basis_covariance_bilinear_form basis left pivot *
+         indexed_basis_covariance_bilinear_form basis left pivot) /
+        indexed_basis_covariance_bilinear_form basis pivot pivot.
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    rewrite <-
+      (indexed_basis_covariance_bilinear_diagonal basis left Hmass).
+    rewrite (indexed_basis_two_samples_bilinear_pivot_reconstruction
+      basis pivot left left x y Hsamples Hmass Hpivot).
+    rewrite (indexed_basis_covariance_bilinear_symmetric basis pivot left).
+    reflexivity.
+  Qed.
+
+
 End FiniteProbabilityMoments.
 
 

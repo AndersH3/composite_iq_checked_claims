@@ -3330,6 +3330,33 @@ the existing Python/Deal/SPARK workflows are the verification authority.
 The result does not yet prove an abstract linear-map rank-nullity theorem
 or an empirical covariance inference.
 
+
+## Typed two-sample covariance functional normal form (14 November 2026)
+
+Five Rocq kernel-checkable and fully documented theorems extend the
+two-sample typed pivot reconstruction. Given a nonzero self-pairing of a
+typed coefficient pivot, every covariance functional is a scalar multiple
+of the pivot functional and that scalar is **unique**. Every coefficient
+direction has exactly one pivot multiplier whose subtraction leaves a
+coefficient direction in the covariance bilinear radical. Two coefficient
+directions induce the same covariance against every test direction if and
+only if they agree against the pivot. The original typed covariance
+quadratic equals the square of its pivot covariance divided by the
+nonzero pivot self-pairing, under the existing unit-mass premise.
+
+All five proofs reuse the already checked bilinear normalizations,
+additive/scalar linearity, radical predicate, diagonal identity,
+symmetry, and Stdlib.Field/Ring/Psatz. No new finite-sum, custom
+matrix algebra, coefficient-selector, axioms or admitted code is added.
+Signed weights are permitted because the algebra is specific to
+two unit-mass sampled occurrences. The construction supplies a
+unique one-scalar/radical normal form, but does not yet supply a
+maintained abstract vector-space dimension or rank-nullity theorem.
+
+Expected inventory: **956 public checked claims, 959 proof scripts,
+1044 documented declarations**, including **545 FiniteMoments proof
+scripts** across seven modules; pinned Rocq 9.2 CI remains mandatory.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

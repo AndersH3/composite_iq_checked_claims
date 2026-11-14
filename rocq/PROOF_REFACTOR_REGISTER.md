@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **951 public theorem/lemma/example claims**, plus
+The current branch has **956 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**954 proof scripts** across seven Rocq modules. The claims and scripts
+**959 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 540 proof scripts
+## FiniteMoments.v — 545 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1365,6 +1365,11 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_bilinear_pivot_reconstruction` (theorem) | Rewrite the typed pivot identity as a quotient and discharge the denominator with the nonzero self-pairing premise. | indexed_basis_two_samples_bilinear_pivot_cross_identity, Stdlib.Field. | **New: reconstruct the full typed covariance pairing from a nonzero pivot.** |
 | `indexed_basis_two_samples_bilinear_radical_iff_pivot_orthogonal` (theorem) | Use the pivot cross identity and Rmult_integral to cancel nonzero self-covariance in every test pairing. | indexed_basis_two_samples_bilinear_pivot_cross_identity, indexed_basis_covariance_bilinear_radical, Rmult_integral. | **New: radical membership is equivalent to one pivot covariance equality.** |
 | `indexed_basis_two_samples_bilinear_zero_iff_pivot_orthogonality` (theorem) | Factor zero pairings by pivot cross identity, real zero-product and nonzero-pivot cancellation. | indexed_basis_two_samples_bilinear_pivot_cross_identity, Rmult_integral, Stdlib.Ring. | **New: a zero typed cross-pairing iff either pivot-side pairing vanishes.** |
+| `indexed_basis_two_samples_bilinear_functional_normal_form` (theorem) | Normalize the previously proved typed pivot reconstruction to a scalar multiple of the pivot functional. | indexed_basis_two_samples_bilinear_pivot_reconstruction, Stdlib.Field. | **New: exact functional normal form for every typed coefficient direction.** |
+| `indexed_basis_two_samples_bilinear_functional_unique_scale` (theorem) | Choose the pivot quotient as the scale; use right=pivot and the nonzero denominator to prove uniqueness. | indexed_basis_two_samples_bilinear_functional_normal_form, Stdlib.Logic.ex_unique, Stdlib.Field. | **New: covariance functional image has a unique scalar coordinate against a nonzero pivot.** |
+| `indexed_basis_two_samples_bilinear_radical_unique_pivot_subtraction` (theorem) | Subtract the quotient-scaled pivot; use checked bilinear add/scale laws to prove radical membership and field cancellation for uniqueness. | indexed_basis_two_samples_bilinear_functional_normal_form, indexed_basis_covariance_bilinear_add_first, indexed_basis_covariance_bilinear_scale_first, Stdlib.Field. | **New: unique scalar-plus-radical splitting of every typed covariance coefficient direction.** |
+| `indexed_basis_two_samples_bilinear_functional_fiber_iff_pivot` (theorem) | Use the normal form in both directions to equate full covariance functionals precisely when one pivot evaluation matches. | indexed_basis_two_samples_bilinear_functional_normal_form, Stdlib.Logic. | **New: single-pivot equality criterion for arbitrary covariance functional fibers.** |
+| `indexed_basis_two_samples_covariance_quadratic_pivot_square` (theorem) | Rewrite the typed quadratic as a bilinear diagonal and then a pivot-reconstructed symmetric square. | indexed_basis_covariance_bilinear_diagonal, indexed_basis_two_samples_bilinear_pivot_reconstruction, indexed_basis_covariance_bilinear_symmetric. | **New: exact signed two-sample quadratic square divided by a nonzero pivot pairing.** |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1671,3 +1676,29 @@ scripts** in seven modules. GitHub Actions Rocq 9.2 kernel checks and
 the existing Python/Deal/SPARK workflows are the verification authority.
 The result does not yet prove an abstract linear-map rank-nullity theorem
 or an empirical covariance inference.
+
+## Typed two-sample covariance functional normal form (14 November 2026)
+
+Five Rocq kernel-checkable and fully documented theorems extend the
+two-sample typed pivot reconstruction. Given a nonzero self-pairing of a
+typed coefficient pivot, every covariance functional is a scalar multiple
+of the pivot functional and that scalar is **unique**. Every coefficient
+direction has exactly one pivot multiplier whose subtraction leaves a
+coefficient direction in the covariance bilinear radical. Two coefficient
+directions induce the same covariance against every test direction if and
+only if they agree against the pivot. The original typed covariance
+quadratic equals the square of its pivot covariance divided by the
+nonzero pivot self-pairing, under the existing unit-mass premise.
+
+All five proofs reuse the already checked bilinear normalizations,
+additive/scalar linearity, radical predicate, diagonal identity,
+symmetry, and Stdlib.Field/Ring/Psatz. No new finite-sum, custom
+matrix algebra, coefficient-selector, axioms or admitted code is added.
+Signed weights are permitted because the algebra is specific to
+two unit-mass sampled occurrences. The construction supplies a
+unique one-scalar/radical normal form, but does not yet supply a
+maintained abstract vector-space dimension or rank-nullity theorem.
+
+Expected inventory: **956 public checked claims, 959 proof scripts,
+1044 documented declarations**, including **545 FiniteMoments proof
+scripts** across seven modules; pinned Rocq 9.2 CI remains mandatory.
