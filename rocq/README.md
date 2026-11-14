@@ -1,5 +1,7 @@
 # Rocq formalization of checked claims
 
+For Debian 13 / computer10, use the dedicated [Rocq 9.2 opam installer](INSTALL_DEBIAN13.md), implemented as [a Python/Deal utility](../scripts/install_rocq_opam.py) and covered by [mock-opam tests](../scripts/test_rocq_opam_installer.sh). The installation preserves other opam switches.
+
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
