@@ -515,14 +515,10 @@ Theorem finite_weighted_loss_polarization :
 Proof.
  intros A xs weight f g a b.
  unfold finite_weighted_loss, finite_weighted_cross, finite_weighted_score.
- transitivity (finite_sum (fun x=>
-   weight x*(f x-a)*(f x-a) +
-   2*(weight x*(f x-a)*(g x-b)) +
-   weight x*(g x-b)*(g x-b)) xs).
- { apply finite_sum_ext; intro x; ring. }
- repeat rewrite finite_sum_add.
- rewrite finite_sum_scale.
- ring.
+ rewrite <- finite_sum_scale.
+ rewrite <- finite_sum_add.
+ rewrite <- finite_sum_add.
+ apply finite_sum_ext; intro x; ring.
 Qed.
 
 (**
