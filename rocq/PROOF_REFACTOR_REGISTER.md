@@ -1,5 +1,7 @@
 # Complete proof-script refactoring register
 
+> **AI disclosure:** This proof audit and the new theorem register entries were prepared with AI assistance. Formal correctness is established only by the separately pinned Rocq 9.2 kernel workflow.
+
 This register inventories **every `Proof. ... Qed.` or `Proof. ... Defined.`
 script**, including local helpers and two explicit record constructors.
 It is a proof-by-proof review of source structure, dependency reuse, and
@@ -2317,3 +2319,8 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `vector_equicorrelation_dot_action_identity` (theorem) | Expand actual matrix-action dot products and reuse finite_sum_ext/add/scale to identify the explicit quadratic form. | Stdlib.Ring, FiniteSum, EquicorrelationSpectral. | Genuine finite vector and rank-one matrix-action equality; no Gaussian model. |
 | `vector_equicorrelation_contrast_action_eigenvector` (theorem) | Use Stdlib.map_ext_in to identify the full matrix action on every zero-sum vector. | Stdlib.List, EquicorrelationSpectral.equicorr_action. | Exact contrast eigenspace on finite real lists, no general spectral package. |
 | `vector_equicorrelation_pd_kernel_trivial` (theorem) | Combine previously checked vector positive-definiteness with square-norm zero support and finite-sum extensionality. | FiniteSum, Stdlib.Forall_forall, vector_equicorrelation_pd. | Trivial kernel under strict eigenvalue hypotheses, not a Gaussian realization. |
+
+
+## Appendix — Complete AI disclosure
+
+OpenAI's assistant inspected the previously merged proof modules, developed and revised the 34 new `EquicorrelationVectors.v` theorem scripts, updated this source-ordered register, and checked the GitHub Actions build logs against individual commit SHAs. The assistant did not assume a spectral theorem, construct Gaussian random variables, or verify statistical calibration; all mathematical conclusions are confined to explicitly stated finite real lists, positive correlation/eigenvalue conditions and deterministic matrix identities. The `Rocq 9.2` kernel checks the final source terms, while the documentation checker verifies this register's source order rather than the truth of propositions. Repository Python/Deal and Ada/SPARK checks remain independent evidence and do not substitute for Rocq proof checking.
