@@ -110,6 +110,15 @@ and a representative proof/check have run successfully.
 
 ## Isabelle download failures and official mirror
 
+**November 14, 2026 correction:** The original script mistakenly used
+`mirror.cosi.clarkson.edu`. This caused an SSL hostname mismatch on
+computer10, which correctly rejected the untrusted host. The official
+Clarkson mirror identifies itself as `mirror.clarkson.edu`; its
+`/isabelle/dist/index.html` lists the exact Isabelle2026 archive and
+SHA256 checksum. The installer, documentation, and regression tests now
+use the corrected hostname. **Do not bypass TLS verification** with
+`curl -k`, `--insecure`, or an unverified Python SSL context.
+
 If Isabelle fails with `[Errno 101] Network is unreachable`, this is a
 network/download problem, not a Lean, PVS, or Yices failure. First reconnect
 to `computer10` if the SSH session ended, and check its network connection.
@@ -136,7 +145,7 @@ distribution directory, verify or transfer it without modification, and copy
 it to computer10. For example, from `computer7`:
 
 ```sh
-curl --fail --location --continue-at - --retry 3 --output Isabelle2026_linux.tar.gz https://mirror.cosi.clarkson.edu/isabelle/dist/Isabelle2026_linux.tar.gz
+curl --fail --location --continue-at - --retry 3 --output Isabelle2026_linux.tar.gz https://mirror.clarkson.edu/isabelle/dist/Isabelle2026_linux.tar.gz
 sha256sum Isabelle2026_linux.tar.gz
 scp Isabelle2026_linux.tar.gz anonymous@computer10:~/
 ```
