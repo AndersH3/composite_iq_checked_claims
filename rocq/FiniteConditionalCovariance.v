@@ -571,7 +571,8 @@ Proof.
     (g x-finite_weighted_mean xs weight g))) xs).
  { apply finite_sum_ext; intro x; ring. }
  rewrite finite_sum_scale.
- reflexivity.
+ f_equal.
+ apply finite_sum_ext; intro x; ring.
 Qed.
 
 (**
@@ -622,7 +623,9 @@ Proof.
     (h x-finite_weighted_mean xs weight h)) xs).
  { apply finite_sum_ext; intro x; ring. }
  rewrite finite_sum_add.
- reflexivity.
+ f_equal.
+ - apply finite_sum_ext; intro x; ring.
+ - apply finite_sum_ext; intro x; ring.
 Qed.
 
 (**
