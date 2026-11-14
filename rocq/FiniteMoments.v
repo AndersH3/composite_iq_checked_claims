@@ -23731,7 +23731,19 @@ Section FiniteProbabilityMoments.
     pose proof
       (indexed_basis_covariance_pivot_residual_quadratic_decomposition
         basis pivot left Hpivot) as Hsplit.
-    split; intro H; nra.
+    split.
+    - intro Hequal.
+      assert (Hproduct :
+        (indexed_basis_covariance_pivot_coordinate basis pivot left *
+         indexed_basis_covariance_pivot_coordinate basis pivot left) *
+        indexed_basis_covariance_bilinear_form basis pivot pivot = 0).
+      { nra. }
+      apply Rmult_integral in Hproduct as [Hsquare | Hzero].
+      + nra.
+      + lra.
+    - intro Hcoord.
+      rewrite Hcoord in Hsplit.
+      nra.
   Qed.
 
   (**
