@@ -22388,6 +22388,8 @@ Section FiniteProbabilityMoments.
       unfold indexed_basis_covariance_pivot_section in Hsum.
       set (beta :=
         indexed_basis_covariance_pivot_coordinate basis pivot left) in *.
+      change (Vector.map2 Rplus
+        (Vector.map (fun c => beta * c) pivot) radical = left) in Hsum.
       apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
         radical
         (Vector.map2 Rplus left
