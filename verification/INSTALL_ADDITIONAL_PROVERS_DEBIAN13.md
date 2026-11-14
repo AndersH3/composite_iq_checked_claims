@@ -108,6 +108,53 @@ For PVS or Isabelle, runtime compatibility is not established merely by a
 successful archive extraction. Avoid system-wide links until the launcher
 and a representative proof/check have run successfully.
 
+## Isabelle download failures and official mirror
+
+If Isabelle fails with `[Errno 101] Network is unreachable`, this is a
+network/download problem, not a Lean, PVS, or Yices failure. First reconnect
+to `computer10` if the SSH session ended, and check its network connection.
+The Isabelle project has noted intermittent problems with the Munich mirror.
+It lists Clarkson as an official release mirror, with the **same SHA256**
+and **1412134191-byte** bundle as the pinned Munich release.
+
+From the cloned repository checkout on `computer10`:
+
+```sh
+git pull --ff-only
+.venv/bin/python scripts/install_formal_provers.py --tool isabelle --mirror clarkson
+.venv/bin/python scripts/install_formal_provers.py --tool isabelle --mirror clarkson --install
+```
+
+`--mirror clarkson` only changes the download host; all archive-size and
+SHA256 checks remain unchanged. Other tool names reject this mirror. An
+unreachable network yields a short diagnostic and does not disturb existing
+Lean, Yices, PVS, Rocq or COLIBRI2 installations.
+
+If `computer10` has no internet connection, download the **exact**
+`Isabelle2026_linux.tar.gz` on another machine from the official Clarkson
+distribution directory, verify or transfer it without modification, and copy
+it to computer10. For example, from `computer7`:
+
+```sh
+curl --fail --location --continue-at - --retry 3 --output Isabelle2026_linux.tar.gz https://mirror.cosi.clarkson.edu/isabelle/dist/Isabelle2026_linux.tar.gz
+sha256sum Isabelle2026_linux.tar.gz
+scp Isabelle2026_linux.tar.gz anonymous@computer10:~/
+```
+
+The required SHA256 is
+`858c995b32216b3876bf395c3be843147d1f1eee404bc6c958d7534ee335e48d`.
+Then on `computer10`, in this repository directory:
+
+```sh
+.venv/bin/python scripts/install_formal_provers.py --tool isabelle --install --archive "$HOME/Isabelle2026_linux.tar.gz"
+```
+
+The Python installer independently verifies both the hash and the exact
+byte count **before** extracting any archive. A partial transfer fails
+verification. If the mirror is inaccessible from both machines, investigate
+DNS, routing, firewall, proxy, or IPv4/IPv6 connectivity rather than
+disabling certificate or checksum verification.
+
 ## Classic COLIBRI: explicit manual step
 
 Download from the vendor's own
