@@ -596,7 +596,7 @@ Qed.
 (**
  [finite_two_cell_residual_mean_zero] (theorem) — The prediction residual of the finite two-cell conditional mean has global weighted expectation exactly zero.
  Mathematical meaning: The prediction residual of the finite two-cell conditional mean has global weighted expectation exactly zero.
- Exact checked proposition: forall (A : Type) (samples : list A) (weight score : A -> R) (event : A -> bool), finite_true_mass samples weight event<>0 -> finite_false_mass samples weight event<>0 -> finite_weighted_score samples weight (fun x=>score x-finite_two_cell_prediction samples weight score event)=0.
+ Exact checked proposition: forall (A : Type) (samples : list A) (weight score : A -> R) (event : A -> bool), finite_true_mass samples weight event<>0 -> finite_false_mass samples weight event<>0 -> finite_weighted_score samples weight (fun x=>score x-finite_two_cell_prediction samples weight score event x)=0.
  Premises and side conditions: Finite outcome occurrences, Boolean-cell selection, and real score weights are explicit. A nonzero cell mass is required where a conditional mean divides, and positivity is required only for order/optimality conclusions.
  Proof/definition method: Apply the existing weighted-score subtraction and two-cell tower equality.
  Library reuse: Stdlib.List.filter/filter_In, Stdlib.Reals/Lra/Psatz/Field/Ring, FiniteSum.finite_sum/finite_sum_filter_partition and existing nonnegative-zero-support and scaling lemmas. No duplicated finite-sum recursion.
@@ -608,7 +608,7 @@ Theorem finite_two_cell_residual_mean_zero :
  finite_true_mass samples weight event<>0 ->
  finite_false_mass samples weight event<>0 ->
  finite_weighted_score samples weight
-   (fun x=>score x-finite_two_cell_prediction samples weight score event)=0.
+   (fun x=>score x-finite_two_cell_prediction samples weight score event x)=0.
 Proof.
  intros A samples weight score event Ht Hf.
  rewrite finite_weighted_score_sub.
@@ -619,7 +619,7 @@ Qed.
 (**
  [finite_two_cell_residual_orthogonal] (theorem) — The finite conditional prediction error is orthogonal to every function constant on each observation cell.
  Mathematical meaning: The finite conditional prediction error is orthogonal to every function constant on each observation cell.
- Exact checked proposition: forall (A : Type) (samples : list A) (weight score : A -> R) (event : A -> bool) (a b : R), finite_true_mass samples weight event<>0 -> finite_false_mass samples weight event<>0 -> finite_weighted_score samples weight (fun x=>(score x-finite_two_cell_prediction samples weight score event)* (if event x then a else b))=0.
+ Exact checked proposition: forall (A : Type) (samples : list A) (weight score : A -> R) (event : A -> bool) (a b : R), finite_true_mass samples weight event<>0 -> finite_false_mass samples weight event<>0 -> finite_weighted_score samples weight (fun x=>(score x-finite_two_cell_prediction samples weight score event x)* (if event x then a else b))=0.
  Premises and side conditions: Finite outcome occurrences, Boolean-cell selection, and real score weights are explicit. A nonzero cell mass is required where a conditional mean divides, and positivity is required only for order/optimality conclusions.
  Proof/definition method: Derive projection orthogonality to every two-cell measurable score using the previously checked piecewise first moments and exact mean normal equations.
  Library reuse: Stdlib.List.filter/filter_In, Stdlib.Reals/Lra/Psatz/Field/Ring, FiniteSum.finite_sum/finite_sum_filter_partition and existing nonnegative-zero-support and scaling lemmas. No duplicated finite-sum recursion.
@@ -631,7 +631,7 @@ Theorem finite_two_cell_residual_orthogonal :
  finite_true_mass samples weight event<>0 ->
  finite_false_mass samples weight event<>0 ->
  finite_weighted_score samples weight
-  (fun x=>(score x-finite_two_cell_prediction samples weight score event)*
+  (fun x=>(score x-finite_two_cell_prediction samples weight score event x)*
     (if event x then a else b))=0.
 Proof.
  intros A samples weight score event a b Ht Hf.
@@ -639,7 +639,7 @@ Proof.
    finite_weighted_score samples weight
      (fun x=>score x*(if event x then a else b)) -
    finite_weighted_score samples weight
-     (fun x=>finite_two_cell_prediction samples weight score event*
+     (fun x=>finite_two_cell_prediction samples weight score event x*
        (if event x then a else b))).
  { rewrite <- finite_weighted_score_sub.
    unfold finite_weighted_score.
@@ -647,7 +647,7 @@ Proof.
  rewrite finite_two_cell_piecewise_score_expectation.
  assert (Heq :
   finite_weighted_score samples weight
-     (fun x=>finite_two_cell_prediction samples weight score event*
+     (fun x=>finite_two_cell_prediction samples weight score event x*
        (if event x then a else b)) =
   finite_weighted_score samples weight
      (fun x=>if event x
