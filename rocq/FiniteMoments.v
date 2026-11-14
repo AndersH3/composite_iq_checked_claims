@@ -20676,8 +20676,8 @@ Section FiniteProbabilityMoments.
        indexed_basis_covariance_bilinear_form basis pivot pivot).
     split.
     - intro right.
-      apply indexed_basis_two_samples_bilinear_functional_normal_form;
-        assumption.
+      exact (indexed_basis_two_samples_bilinear_functional_normal_form
+        basis pivot left right x y Hsamples Hmass Hpivot).
     - intros alpha Halpha.
       specialize (Halpha pivot).
       rewrite Halpha.
