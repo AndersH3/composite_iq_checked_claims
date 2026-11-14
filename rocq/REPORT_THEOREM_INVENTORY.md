@@ -40,7 +40,7 @@ The `SequentialReport.v` module now has **seven definitions and 37 Rocq 9.2 kern
 | `cor:iq-reporting` | Standardization of IQ 150 and affine re-scaling of predictions and SD | `sequential_iq_start_standardized`, `sequential_iq_prediction_exact`, `sequential_iq_mean_exact`, `sequential_iq_population_variance_exact`, `sequential_iq_conditional_variance_exact` | **A** for exact rational conversion; actual Gaussian conditional distribution not constructed |
 | `prop:counterexample` | Equal marginal means, variances, correlation can conceal different conditional means | The finite covariance formalization supplies foundations, but no checked counterexample construction matching this proposition | **P**, add a concrete finite countermodel |
 | `cor:exact-iq-values` | Exact fractions `100+50r(3N+2)/(N(3r+2))`, `45(3N+2)/N`, `90k(3N+2)/(N²(3r+2))` | `sequential_iq_mean_exact`, `sequential_iq_population_variance_exact`, `sequential_iq_conditional_variance_exact` | **A** for the exact fraction formulas; the probabilistic interpretation has the above prerequisites |
-| `lem:rounding` | Rigorous rational interval tests for nearest-decimal mean and square-root SD, including tie exclusion | Report's integer certificates are recorded in `exact_numeric_certificates.tex`; no Rocq proof of the general rounding lemma yet | **P**, explicit remaining formalization target |
+| `lem:rounding` | Rigorous rational interval tests for nearest-decimal mean and square-root SD, including tie exclusion | Report's integer certificates are recorded in `exact_numeric_certificates.tex`; Rocq proofs of the general rational and squared-SD nearest-decimal rounding criteria in `SequentialReport.v` | **K for the general strict rational/SD rounding criteria**; individual numeric certificates still require machine checking |
 
 ### Additional consequential labelled sequential formulas
 
@@ -89,7 +89,7 @@ The report gives labelled equations rather than a separate list of theorem envir
 
 1. **Highest impact, genuinely missing:** Gaussian regression, conditional expectation (with regular conditional laws and continuous versions), and equicorrelation positive-semidefinite/spectral construction. The current Schur covariance theorems do **not** establish these stochastic claims.
 2. **Checked in the maintained finite/reals infrastructure:** complete finite-history induction, two/three-start closed-form means, residual variance and exact IQ arithmetic. `SequentialReport.v` proves **37** real-algebra and induction statements, conditioned on the stated model inputs. General Gaussian regression and conditional probability laws remain open.
-3. **Numerical certification:** exact rational rounding lemma and checked bivariate-normal tail/quantile error bounds. Existing Python/SciPy regression tests are valuable but do not constitute Rocq proofs of continuous probability integrals.
+3. **Numerical certification:** checked individual numeric certificate instances and bivariate-normal tail/quantile error bounds. Existing Python/SciPy regression tests are valuable but do not constitute Rocq proofs of continuous probability integrals.
 4. **Finite-model counterexample:** explicitly exhibit two finite joint distributions with the same marginals and covariance but different conditional means, discharging `prop:counterexample` without introducing unsupported Gaussian claims.
 
 The table is a scope audit: it intentionally does **not** claim that every source theorem has already been formalized. Existing checked results retain their exact finite-model hypotheses; a well-documented report proof or citation is not automatically a kernel proof.
@@ -99,3 +99,16 @@ The table is a scope audit: it intentionally does **not** claim that every sourc
 ## Appendix — Complete AI disclosure
 
 This inventory was researched, extracted, organized, and drafted by OpenAI's AI assistant using the connected GitHub repository. The assistant read the three primary XeLaTeX reports, two sequential-report appendices, existing Rocq theorem modules, compilation workflow, and proof-refactor register. It generated the 37-theorem and seven-definition `SequentialReport.v` algebraic and natural-induction formalization and mapped individual report labels to named proof declarations. Where a theorem involves Gaussian laws, measure-theoretic conditional expectations, matrix spectral properties, inverse-normal calculations, or floating-point error bounds not represented in Rocq, the inventory explicitly says so. The assistant did not independently validate the empirical applicability of any IQ model or change any evidence artifacts. Final source-proof claims must be checked by the pinned Rocq 9.2 CI workflow, not inferred from this document's prose.
+
+
+## November 14 follow-up: checked report rounding criteria
+
+Five new Rocq 9.2 candidate proofs correspond directly to `lem:rounding`:
+integer grid separation, the strict midpoint unique-nearest criterion,
+exact rational certificate sufficiency, strict squared-interval transfer
+to nonnegative standard deviation, and exact SD certificate sufficiency.
+These results establish **strict uniqueness**, excluding halfway ties,
+with explicit positive denominators and scales. The reported 9+18
+specific integer certificates are separate inputs until independently
+kernel-checked. Gaussian conditional-expectation, spectral and continuous
+numerical integration claims remain outside this arithmetic layer.

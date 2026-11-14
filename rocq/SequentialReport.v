@@ -22,7 +22,7 @@
    with Rocq 9.2; see rocq/REPORT_THEOREM_INVENTORY.md for claim mapping,
    rocq/README.md for module order and the checked-claim register.
  *)
-From Stdlib Require Import Reals Lra Psatz Lia.
+From Stdlib Require Import Reals Lra Psatz Lia ZArith.
 Require Import Hoeflin.
 Open Scope R_scope.
 
@@ -843,4 +843,138 @@ Proof.
      (sequential_recursive_nonnegative_correlation_denominators_positive
        n r c Hr Hc) as Hpositive.
    lra.
+Qed.
+
+
+(**
+ [sequential_rounding_grid_separation] (theorem) — Distinct integer grid indices differ by at least one unit in one of the two real order directions.
+ Mathematical meaning: Distinct integer grid indices differ by at least one unit in one of the two real order directions.
+ Exact checked proposition: j<>t implies IZR j <= IZR t-1 or IZR t+1<=IZR j.
+ Premises and side conditions: Arbitrary integers j,t; no statistical or decimal assumptions.
+ Proof/definition method: Split integer order with Z_lt_ge_dec and transfer inequalities using Stdlib ZArith IZR_le.
+ Library reuse: Stdlib.ZArith, Stdlib.Lia, Stdlib.Reals.
+ Boundary: Elementary grid geometry, not a rounding certificate for a specific reported decimal.
+ *)
+Theorem sequential_rounding_grid_separation :
+  forall t j : Z, j <> t ->
+  IZR j <= IZR t - 1 \/ IZR t + 1 <= IZR j.
+Proof.
+  intros t j Hneq.
+  destruct (Z_lt_ge_dec j t) as [Hlt|Hge].
+  - left.
+    assert (Hz : (j <= t - 1)%Z) by lia.
+    apply IZR_le in Hz.
+    rewrite minus_IZR in Hz.
+    simpl in Hz.
+    lra.
+  - right.
+    assert (Hz : (t + 1 <= j)%Z) by lia.
+    apply IZR_le in Hz.
+    rewrite plus_IZR in Hz.
+    simpl in Hz.
+    lra.
+Qed.
+
+(**
+ [sequential_rounding_strict_midpoint_unique] (theorem) — A real number strictly between two adjacent midpoint boundaries has strictly smaller squared scaled error to its proposed grid index than to every other integer.
+ Mathematical meaning: A real number strictly between two adjacent midpoint boundaries has strictly smaller squared scaled error to its proposed grid index than to every other integer.
+ Exact checked proposition: If t-1/2<T*x<t+1/2 and j<>t then (T*x-t)^2<(T*x-j)^2.
+ Premises and side conditions: T>0; t,j integer; the scaled target lies strictly inside the target rounding cell.
+ Proof/definition method: Use the integer grid-separation lemma, then elementary polynomial order to compare squared errors; no numerical approximations.
+ Library reuse: sequential_rounding_grid_separation, Stdlib.Psatz.nra.
+ Boundary: States uniqueness by squared error, which is equivalent to Euclidean nearest-grid-point ordering at positive scale.
+ *)
+Theorem sequential_rounding_strict_midpoint_unique :
+  forall T x : R, forall t j : Z,
+  0 < T -> j <> t ->
+  2 * IZR t - 1 < 2 * T * x ->
+  2 * T * x < 2 * IZR t + 1 ->
+  (T*x-IZR t)*(T*x-IZR t) <
+  (T*x-IZR j)*(T*x-IZR j).
+Proof.
+  intros T x t j HT Hneq Hlower Hupper.
+  destruct (sequential_rounding_grid_separation t j Hneq)
+    as [Hleft|Hright]; nra.
+Qed.
+
+(**
+ [sequential_rounding_rational_certificate_unique] (theorem) — A strictly positive exact rational midpoint certificate implies the stated decimal grid point is the unique nearest candidate by squared distance.
+ Mathematical meaning: A strictly positive exact rational midpoint certificate implies the stated decimal grid point is the unique nearest candidate by squared distance.
+ Exact checked proposition: Q>0, T>0 and Q-2|TP-tQ|>0 imply the t-grid error is strictly smaller than every j<>t.
+ Premises and side conditions: P,Q,T real-valued exact rational numerator, positive denominator and positive grid scale; t,j integer; this formulation can be instantiated with IZR numerator/denominator.
+ Proof/definition method: Convert the strict absolute-value certificate to its exact open midpoint interval, cancel Q using the field tactic, and apply the universal rounding cell theorem.
+ Library reuse: Stdlib.Reals.Rabs_lt, Stdlib.Field, sequential_rounding_strict_midpoint_unique.
+ Boundary: Pure rational rounding; actual rounded decimals require individually checked positive certificate inputs.
+ *)
+Theorem sequential_rounding_rational_certificate_unique :
+  forall T P Q : R, forall t j : Z,
+  0 < T -> 0 < Q -> j <> t ->
+  0 < Q - 2 * Rabs (T*P-IZR t*Q) ->
+  (T*(P/Q)-IZR t)*(T*(P/Q)-IZR t) <
+  (T*(P/Q)-IZR j)*(T*(P/Q)-IZR j).
+Proof.
+  intros T P Q t j HT HQ Hneq Hcertificate.
+  assert (Habs : Rabs (T*P-IZR t*Q) < Q/2) by lra.
+  apply Rabs_lt in Habs.
+  destruct Habs as [Habslo Habshi].
+  assert (Hdiv : T*(P/Q)*Q = T*P).
+  { field; lra. }
+  apply sequential_rounding_strict_midpoint_unique; try assumption.
+  - nra.
+  - nra.
+Qed.
+
+(**
+ [sequential_rounding_sqrt_squared_midpoints] (theorem) — Strict squared upper and lower bounds around a nonnegative variance translate into strict midpoint bounds on its nonnegative standard deviation.
+ Mathematical meaning: Strict squared upper and lower bounds around a nonnegative variance translate into strict midpoint bounds on its nonnegative standard deviation.
+ Exact checked proposition: 0<=v, 0<T, t>=1 and (2t-1)^2<4T^2v<(2t+1)^2 imply t-1/2<T sqrt(v)<t+1/2.
+ Premises and side conditions: Nonnegative real variance, positive real decimal scale, integer index at least one, and strict squared bracket.
+ Proof/definition method: Use Stdlib sqrt_sqrt and sqrt_pos; compare squares of nonnegative quantities via nra.
+ Library reuse: Stdlib.Reals.sqrt_sqrt, Stdlib.Reals.sqrt_pos, Stdlib.Psatz.nra.
+ Boundary: No square-root interpretation of a negative variance; no Gaussian distribution or measurement model is inferred.
+ *)
+Theorem sequential_rounding_sqrt_squared_midpoints :
+  forall T v : R, forall t : Z,
+  0 < T -> 0 <= v -> 1 <= IZR t ->
+  (2*IZR t-1)*(2*IZR t-1) < 4*T*T*v ->
+  4*T*T*v < (2*IZR t+1)*(2*IZR t+1) ->
+  2*IZR t-1 < 2*T*sqrt v /\
+  2*T*sqrt v < 2*IZR t+1.
+Proof.
+  intros T v t HT Hv Ht Hlower Hupper.
+  pose proof (sqrt_pos v) as Hsqrt.
+  pose proof (sqrt_sqrt v Hv) as Hsquare.
+  rewrite <- Hsquare in Hlower, Hupper.
+  split; nra.
+Qed.
+
+(**
+ [sequential_rounding_sqrt_certificate_unique] (theorem) — The report's two positive integer square-root certificates prove uniqueness of the nearest rounded standard-deviation grid point.
+ Mathematical meaning: The report's two positive integer square-root certificates prove uniqueness of the nearest rounded standard-deviation grid point.
+ Exact checked proposition: L=4T^2P-(2t-1)^2Q>0 and U=(2t+1)^2Q-4T^2P>0 imply unique nearest grid index t to sqrt(P/Q).
+ Premises and side conditions: T>0, Q>0, P>=0, t>=1 integer, j<>t; all certificates are exact real interpretations of integer comparisons.
+ Proof/definition method: Divide the strict squared certificates by positive Q via exact field normalization, derive sqrt midpoint bounds using Stdlib sqrt lemmas, then apply the checked nearest-grid theorem.
+ Library reuse: sequential_rounding_sqrt_squared_midpoints, sequential_rounding_strict_midpoint_unique, Stdlib.Field.
+ Boundary: Provides general rounding certification; specific report table entries must instantiate its numerator, denominator and certificate inequalities.
+ *)
+Theorem sequential_rounding_sqrt_certificate_unique :
+  forall T P Q : R, forall t j : Z,
+  0 < T -> 0 < Q -> 0 <= P -> 1 <= IZR t -> j <> t ->
+  0 < 4*T*T*P-(2*IZR t-1)*(2*IZR t-1)*Q ->
+  0 < (2*IZR t+1)*(2*IZR t+1)*Q-4*T*T*P ->
+  (T*sqrt(P/Q)-IZR t)*(T*sqrt(P/Q)-IZR t) <
+  (T*sqrt(P/Q)-IZR j)*(T*sqrt(P/Q)-IZR j).
+Proof.
+  intros T P Q t j HT HQ HP Ht Hneq HL HU.
+  assert (Hdiv : (P/Q)*Q=P).
+  { field; lra. }
+  assert (Hv : 0 <= P/Q).
+  { apply Rdiv_le_0_compat; lra. }
+  assert (Hlower : (2*IZR t-1)*(2*IZR t-1) < 4*T*T*(P/Q)).
+  { nra. }
+  assert (Hupper : 4*T*T*(P/Q) < (2*IZR t+1)*(2*IZR t+1)).
+  { nra. }
+  destruct (sequential_rounding_sqrt_squared_midpoints
+    T (P/Q) t HT Hv Ht Hlower Hupper) as [Hmidlo Hmidhi].
+  apply sequential_rounding_strict_midpoint_unique; assumption.
 Qed.

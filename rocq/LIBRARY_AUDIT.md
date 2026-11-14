@@ -3735,3 +3735,16 @@ passed at source commit `a6d3135c`. These are exact scalar algebra and
 recursion proofs under supplied regression formulas, not proofs of the
 Gaussian conditional distribution, spectral theorem or continuous-version
 conditional expectation; see `REPORT_THEOREM_INVENTORY.md`.
+
+
+## November 14 follow-up: checked report rounding criteria
+
+Five new Rocq 9.2 candidate proofs correspond directly to `lem:rounding`:
+integer grid separation, the strict midpoint unique-nearest criterion,
+exact rational certificate sufficiency, strict squared-interval transfer
+to nonnegative standard deviation, and exact SD certificate sufficiency.
+These results establish **strict uniqueness**, excluding halfway ties,
+with explicit positive denominators and scales. The reported 9+18
+specific integer certificates are separate inputs until independently
+kernel-checked. Gaussian conditional-expectation, spectral and continuous
+numerical integration claims remain outside this arithmetic layer.
