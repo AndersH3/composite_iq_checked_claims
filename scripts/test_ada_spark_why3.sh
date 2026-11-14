@@ -31,7 +31,7 @@ if grep -Eq 'curl[[:space:]].*(-k|--insecure)' "$installer"; then
   printf '%s\n' 'ERROR: TLS verification bypass was introduced' >&2
   exit 1
 fi
-if grep -Eq '(^|[[:space:]])(opam[[:space:]]+switch|apt-get[[:space:]]+dist-upgrade)' "$installer"; then
+if grep -Eq '^[[:space:]]*(opam[[:space:]]+switch|apt-get[[:space:]]+dist-upgrade)' "$installer"; then
   printf '%s\n' 'ERROR: script changes unrelated toolchain or entire system' >&2
   exit 1
 fi
