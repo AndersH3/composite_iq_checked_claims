@@ -33,6 +33,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import urllib.error
 import urllib.request
 
 import deal
@@ -70,6 +71,10 @@ SPECS = {
     ),
 }
 ALLOWED_HOSTS = ("https://github.com/", "https://isabelle.in.tum.de/")
+ISABELLE_CLARKSON = (
+    "https://mirror.cosi.clarkson.edu/isabelle/dist/Isabelle2026_linux.tar.gz"
+)
+MIRRORS = ("primary", "clarkson")
 HEX = frozenset("0123456789abcdef")
 
 
@@ -98,6 +103,43 @@ def release_spec(name: str) -> tuple[str, str, int, str]:
     This is metadata validation, not verification of a remote server.
     """
     return SPECS[name]
+
+
+@deal.pre(lambda tool, mirror: isinstance(tool, str))
+@deal.pre(lambda tool, mirror: tool in SPECS)
+@deal.pre(lambda tool, mirror: isinstance(mirror, str))
+@deal.pre(lambda tool, mirror: mirror in MIRRORS)
+@deal.pre(lambda tool, mirror: mirror == "primary" or tool == "isabelle")
+@deal.pure
+@deal.post(lambda result: isinstance(result, str))
+@deal.post(lambda result: result.startswith("https://"))
+@deal.post(lambda result: "?" not in result and "#" not in result)
+@deal.post(lambda result: result.endswith((".tar.gz", ".tgz")))
+@deal.post(lambda result: result.startswith(
+    ("https://github.com/", "https://isabelle.in.tum.de/",
+     "https://mirror.cosi.clarkson.edu/")))
+@deal.ensure(lambda tool, mirror, result:
+             result.rsplit("/", maxsplit=1)[-1] ==
+             SPECS[tool][0].rsplit("/", maxsplit=1)[-1])
+@deal.ensure(lambda tool, mirror, result:
+             mirror != "primary" or result == SPECS[tool][0])
+@deal.ensure(lambda tool, mirror, result:
+             mirror != "clarkson" or result == ISABELLE_CLARKSON)
+def download_url(tool: str, mirror: str) -> str:
+    """Select a whitelisted official archive host, never an arbitrary URL.
+
+    The original filename is preserved exactly, so the SHA256 and byte count
+    pinned by release_spec continue to apply regardless of download host.
+    Only Isabelle supports the alternate mirror; other tools refuse it.
+    The mirror source is the Isabelle project's public mirror listing.
+
+    Preconditions specify accepted solver names and valid tool/mirror pairs;
+    postconditions specify HTTPS, host allowlist, archive file extension,
+    and absence of query/fragment parameters. Relational contracts require
+    exact filename, vendor URL for primary, and pinned Clarkson URL otherwise.
+    """
+    return SPECS[tool][0] if mirror == "primary" else ISABELLE_CLARKSON
+
 
 
 @deal.pre(lambda archive, digest, expected_size: isinstance(archive, Path))
@@ -142,6 +184,8 @@ if __name__ == "__main__":
                         help="download, verify, and install the selected pinned release")
     parser.add_argument("--archive", type=Path,
                         help="use a previously downloaded archive instead of fetching")
+    parser.add_argument("--mirror", choices=MIRRORS, default="primary",
+                        help="official download mirror; clarkson is for Isabelle only")
     parser.add_argument("--prefix", type=Path,
                         default=Path.home() / ".local" / "opt" / "formal-provers",
                         help="isolated user directory (default: ~/.local/opt/formal-provers)")
@@ -151,6 +195,10 @@ if __name__ == "__main__":
         parser.error("This version of the installer supports Linux x86_64 only")
     if not args.install and args.archive is not None:
         parser.error("--archive requires --install")
+    if args.mirror != "primary" and args.tool != "isabelle":
+        parser.error("--mirror clarkson is only supported for Isabelle")
+    if args.mirror != "primary" and args.archive is not None:
+        parser.error("--mirror and --archive are mutually exclusive")
     if args.tool is None:
         if args.install:
             parser.error("--install requires --tool")
@@ -166,10 +214,11 @@ if __name__ == "__main__":
         print("contents and provenance. Do not substitute opam colibri2.")
         raise SystemExit(0 if not args.install else 2)
 
-    url, digest, size, dirname = release_spec(args.tool)
+    original_url, digest, size, dirname = release_spec(args.tool)
+    url = download_url(args.tool, args.mirror)
     target = args.prefix.expanduser().resolve() / dirname
     print(f"Tool: {args.tool}; expected SHA256: {digest}")
-    print(f"Official URL: {url}")
+    print(f"Selected official URL ({args.mirror}): {url}")
     print(f"User installation: {target}")
     if args.tool == "lean":
         print(f"Pinned Lean toolchain: {LEAN_TOOLCHAIN}")
@@ -190,9 +239,23 @@ if __name__ == "__main__":
             scratch / url.rsplit("/", maxsplit=1)[-1])
         if args.archive is None:
             print("Downloading pinned official release...", flush=True)
-            with urllib.request.urlopen(url, timeout=60) as response:
-                with archive.open("wb") as output:
-                    shutil.copyfileobj(response, output, length=1024 * 1024)
+            try:
+                with urllib.request.urlopen(url, timeout=60) as response:
+                    with archive.open("wb") as output:
+                        shutil.copyfileobj(response, output, length=1024 * 1024)
+            except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+                print(f"Download failed from {url}: {error}", file=sys.stderr)
+                if args.tool == "isabelle":
+                    print("If the network is reachable, try the official"
+                          " alternate mirror:", file=sys.stderr)
+                    print("  .venv/bin/python scripts/install_formal_provers.py"
+                          " --tool isabelle --mirror clarkson --install", file=sys.stderr)
+                    print("Alternatively, download Isabelle2026_linux.tar.gz"
+                          " on another computer and invoke --archive /path/to/file",
+                          file=sys.stderr)
+                print("No installation was created; other installed tools"
+                      " are unchanged.", file=sys.stderr)
+                raise SystemExit(3) from error
         verify_archive(archive, digest, size)
         print("Official release SHA256 and size verified.", flush=True)
 
