@@ -68,6 +68,19 @@ incorrect input types through the active Deal preconditions, verifies the
 non-mutating dry run, and uses a fake `opam` executable to test first and
 repeated installations. It does not download Rocq or call the real opam.
 
+The test runner automatically selects `.venv/bin/python` when available,
+so it uses the Deal installation in the checkout's virtual environment even
+if that environment has not been activated in Bash. When no `.venv` exists,
+it falls back to `python3`. To select a different interpreter explicitly:
+
+```sh
+ROCQ_TEST_PYTHON=/path/to/python bash scripts/test_rocq_opam_installer.sh
+```
+
+A missing Deal dependency produces a diagnostic rather than an unexplained
+`ModuleNotFoundError`. Successful installer execution has already been
+confirmed on computer10 using the switch-specific `rocq --version` command.
+
 ## Scope and known limits
 
 This is an opam installer, not a proof checker. Its Deal contracts verify
