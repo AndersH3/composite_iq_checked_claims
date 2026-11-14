@@ -343,7 +343,13 @@ Proof.
     ((a-finite_weighted_mean samples weight score)*
      (a-finite_weighted_mean samples weight score))).
  { apply Rmult_le_pos; [lra|exact Hs]. }
- nra.
+ replace (finite_weight_mass samples weight*
+    (a-finite_weighted_mean samples weight score)*
+    (a-finite_weighted_mean samples weight score))
+   with (finite_weight_mass samples weight*
+    ((a-finite_weighted_mean samples weight score)*
+     (a-finite_weighted_mean samples weight score))) by ring.
+ lra.
 Qed.
 
 (**
@@ -762,7 +768,19 @@ Proof.
    ((b-finite_false_mean samples weight score event)*
     (b-finite_false_mean samples weight score event))).
  { apply Rmult_le_pos; [lra|exact Hs2]. }
- nra.
+ replace (finite_true_mass samples weight event*
+   (a-finite_true_mean samples weight score event)*
+   (a-finite_true_mean samples weight score event))
+ with (finite_true_mass samples weight event*
+   ((a-finite_true_mean samples weight score event)*
+    (a-finite_true_mean samples weight score event))) by ring.
+ replace (finite_false_mass samples weight event*
+   (b-finite_false_mean samples weight score event)*
+   (b-finite_false_mean samples weight score event))
+ with (finite_false_mass samples weight event*
+   ((b-finite_false_mean samples weight score event)*
+    (b-finite_false_mean samples weight score event))) by ring.
+ lra.
 Qed.
 
 (**
@@ -851,7 +869,27 @@ Proof.
     (finite_false_mean samples weight score event-
      finite_weighted_mean samples weight score))).
  { apply Rmult_le_pos; assumption. }
- nra.
+ replace (finite_true_mass samples weight event*
+   (finite_true_mean samples weight score event-
+    finite_weighted_mean samples weight score)*
+   (finite_true_mean samples weight score event-
+    finite_weighted_mean samples weight score))
+ with (finite_true_mass samples weight event*
+   ((finite_true_mean samples weight score event-
+     finite_weighted_mean samples weight score)*
+    (finite_true_mean samples weight score event-
+     finite_weighted_mean samples weight score))) by ring.
+ replace (finite_false_mass samples weight event*
+   (finite_false_mean samples weight score event-
+    finite_weighted_mean samples weight score)*
+   (finite_false_mean samples weight score event-
+    finite_weighted_mean samples weight score))
+ with (finite_false_mass samples weight event*
+   ((finite_false_mean samples weight score event-
+     finite_weighted_mean samples weight score)*
+    (finite_false_mean samples weight score event-
+     finite_weighted_mean samples weight score))) by ring.
+ lra.
 Qed.
 
 (**
