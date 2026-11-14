@@ -186,9 +186,10 @@ Proof.
  rewrite vector_equicorrelation_action_sum.
  unfold vector_equicorrelation_action.
  rewrite map_map.
- rewrite <- (map_id xs).
- apply map_ext_in; intros x _; simpl.
- apply equicorr_inverse_left_action; assumption.
+ transitivity (map (fun x : R => x) xs).
+ - apply map_ext_in; intros x _; simpl.
+   apply equicorr_inverse_left_action; assumption.
+ - now rewrite map_id.
 Qed.
 
 (**
@@ -210,9 +211,10 @@ Proof.
  rewrite vector_equicorrelation_inverse_sum by assumption.
  unfold vector_equicorrelation_inverse.
  rewrite map_map.
- rewrite <- (map_id ys).
- apply map_ext_in; intros y _; simpl.
- apply equicorr_inverse_right_action; assumption.
+ transitivity (map (fun y : R => y) ys).
+ - apply map_ext_in; intros y _; simpl.
+   apply equicorr_inverse_right_action; assumption.
+ - now rewrite map_id.
 Qed.
 
 (**
