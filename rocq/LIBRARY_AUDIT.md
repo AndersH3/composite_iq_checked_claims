@@ -3748,3 +3748,18 @@ with explicit positive denominators and scales. The reported 9+18
 specific integer certificates are separate inputs until independently
 kernel-checked. Gaussian conditional-expectation, spectral and continuous
 numerical integration claims remain outside this arithmetic layer.
+
+
+## Concrete positive-probability conditional-mean counterexample
+
+Nineteen report-directed Rocq theorems certify an eight-outcome uniform
+finite probability construction. The common first score has marginal
+(-sqrt(2),0,sqrt(2)) with weights (1/4,1/2,1/4). Both second-score
+marginals are ±1 with probabilities 1/2 each. In both joint models the
+marginal score means are zero, the second moments are one, and the cross
+moment is zero. But at the identical history event X=0 of positive mass
+1/2, the dependent second score has conditional mean -1, while the
+balanced comparison has conditional mean 0; the fixed recursive
+averages are respectively -1/2 and 0. Every expectation reuses
+FiniteSum.finite_sum. This checks the finite `prop:counterexample`
+without asserting any Gaussian law or any general independence theorem.

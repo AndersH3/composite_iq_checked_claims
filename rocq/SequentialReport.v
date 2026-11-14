@@ -22,8 +22,9 @@
    with Rocq 9.2; see rocq/REPORT_THEOREM_INVENTORY.md for claim mapping,
    rocq/README.md for module order and the checked-claim register.
  *)
-From Stdlib Require Import Reals Lra Psatz Lia ZArith.
-Require Import Hoeflin.
+From Stdlib Require Import Reals Lra Psatz Lia ZArith List.
+Require Import Hoeflin FiniteSum.
+Import ListNotations;
 Open Scope R_scope.
 
 (**
@@ -992,4 +993,372 @@ Proof.
   destruct (sequential_rounding_sqrt_squared_midpoints
     T (P/Q) t HT Hv Ht Hlower Hupper) as [Hmidlo Hmidhi].
   apply sequential_rounding_strict_midpoint_unique; assumption.
+Qed.
+
+
+(**
+ [sequential_example_x] (definition) — Two negative, four zero and two positive observations; a²=2 yields unit second moment.
+ Mathematical meaning: Two negative, four zero and two positive observations; a²=2 yields unit second moment.
+ Exact declaration: Definition sequential_example_x (a : R) (i : nat) : R :=
+ match i with 0%nat | 1%nat => -a | 6%nat | 7%nat => a | _ => 0 end
+ Premises and side conditions: This is a finite eight-occurrence witness for the report's conditional-mean counterexample.
+ Proof/definition method: Transparent finite value cases and the maintained FiniteSum fold; no new summation recursion.
+ Library reuse: Stdlib.List.seq and FiniteSum.finite_sum, standard real numbers.
+ Boundary: Not a Gaussian or continuous measure definition.
+ *)
+Definition sequential_example_x (a : R) (i : nat) : R :=
+ match i with 0%nat | 1%nat => -a | 6%nat | 7%nat => a | _ => 0 end.
+
+(**
+ [sequential_example_y_dependent] (definition) — The dependent binary score equals X²−1 on the enumerated support when a²=2.
+ Mathematical meaning: The dependent binary score equals X²−1 on the enumerated support when a²=2.
+ Exact declaration: Definition sequential_example_y_dependent (i : nat) : R :=
+ match i with 0%nat | 1%nat | 6%nat | 7%nat => 1 | _ => -1 end
+ Premises and side conditions: This is a finite eight-occurrence witness for the report's conditional-mean counterexample.
+ Proof/definition method: Transparent finite value cases and the maintained FiniteSum fold; no new summation recursion.
+ Library reuse: Stdlib.List.seq and FiniteSum.finite_sum, standard real numbers.
+ Boundary: Not a Gaussian or continuous measure definition.
+ *)
+Definition sequential_example_y_dependent (i : nat) : R :=
+ match i with 0%nat | 1%nat | 6%nat | 7%nat => 1 | _ => -1 end.
+
+(**
+ [sequential_example_y_comparison] (definition) — An alternating binary score balanced within each of the first-score value groups.
+ Mathematical meaning: An alternating binary score balanced within each of the first-score value groups.
+ Exact declaration: Definition sequential_example_y_comparison (i : nat) : R :=
+ match i with 0%nat | 2%nat | 4%nat | 6%nat => 1 | _ => -1 end
+ Premises and side conditions: This is a finite eight-occurrence witness for the report's conditional-mean counterexample.
+ Proof/definition method: Transparent finite value cases and the maintained FiniteSum fold; no new summation recursion.
+ Library reuse: Stdlib.List.seq and FiniteSum.finite_sum, standard real numbers.
+ Boundary: Not a Gaussian or continuous measure definition.
+ *)
+Definition sequential_example_y_comparison (i : nat) : R :=
+ match i with 0%nat | 2%nat | 4%nat | 6%nat => 1 | _ => -1 end.
+
+(**
+ [sequential_example_expectation] (definition) — The normalized expectation on eight equally weighted occurrences, reusing FiniteSum.
+ Mathematical meaning: The normalized expectation on eight equally weighted occurrences, reusing FiniteSum.
+ Exact declaration: Definition sequential_example_expectation (f : nat -> R) : R :=
+ finite_sum f (seq 0%nat 8%nat) / 8
+ Premises and side conditions: This is a finite eight-occurrence witness for the report's conditional-mean counterexample.
+ Proof/definition method: Transparent finite value cases and the maintained FiniteSum fold; no new summation recursion.
+ Library reuse: Stdlib.List.seq and FiniteSum.finite_sum, standard real numbers.
+ Boundary: Not a Gaussian or continuous measure definition.
+ *)
+Definition sequential_example_expectation (f : nat -> R) : R :=
+ finite_sum f (seq 0%nat 8%nat) / 8.
+
+(**
+ [sequential_example_zero_event] (definition) — Indicator for the four observations with common first score zero, assuming a<>0.
+ Mathematical meaning: Indicator for the four observations with common first score zero, assuming a<>0.
+ Exact declaration: Definition sequential_example_zero_event (i : nat) : R :=
+ match i with 2%nat | 3%nat | 4%nat | 5%nat => 1 | _ => 0 end
+ Premises and side conditions: This is a finite eight-occurrence witness for the report's conditional-mean counterexample.
+ Proof/definition method: Transparent finite value cases and the maintained FiniteSum fold; no new summation recursion.
+ Library reuse: Stdlib.List.seq and FiniteSum.finite_sum, standard real numbers.
+ Boundary: Not a Gaussian or continuous measure definition.
+ *)
+Definition sequential_example_zero_event (i : nat) : R :=
+ match i with 2%nat | 3%nat | 4%nat | 5%nat => 1 | _ => 0 end.
+
+(**
+ [sequential_example_conditional_mean] (definition) — Finite conditioning on an event with mass one-half (proved below).
+ Mathematical meaning: Finite conditioning on an event with mass one-half (proved below).
+ Exact declaration: Definition sequential_example_conditional_mean (f : nat -> R) : R :=
+ sequential_example_expectation (fun i => sequential_example_zero_event i * f i) /
+ sequential_example_expectation sequential_example_zero_event
+ Premises and side conditions: This is a finite eight-occurrence witness for the report's conditional-mean counterexample.
+ Proof/definition method: Transparent finite value cases and the maintained FiniteSum fold; no new summation recursion.
+ Library reuse: Stdlib.List.seq and FiniteSum.finite_sum, standard real numbers.
+ Boundary: Not a Gaussian or continuous measure definition.
+ *)
+Definition sequential_example_conditional_mean (f : nat -> R) : R :=
+ sequential_example_expectation (fun i => sequential_example_zero_event i * f i) /
+ sequential_example_expectation sequential_example_zero_event.
+
+(**
+ [sequential_example_mass_one] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun _ => 1) = 1
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_mass_one :
+ sequential_example_expectation (fun _ => 1) = 1.
+Proof.
+ unfold sequential_example_expectation, finite_sum; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_x_centered] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: forall a, sequential_example_expectation (sequential_example_x a) = 0
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_x_centered :
+ forall a, sequential_example_expectation (sequential_example_x a) = 0.
+Proof.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_x_second_moment] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_x a i) = a*a/2
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_x_second_moment :
+ forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_x a i) = a*a/2.
+Proof.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_y_dependent_centered] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation sequential_example_y_dependent = 0
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_y_dependent_centered :
+ sequential_example_expectation sequential_example_y_dependent = 0.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_y_comparison_centered] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation sequential_example_y_comparison = 0
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_y_comparison_centered :
+ sequential_example_expectation sequential_example_y_comparison = 0.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_y_dependent_unit_second_moment] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun i => sequential_example_y_dependent i * sequential_example_y_dependent i) = 1
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_y_dependent_unit_second_moment :
+ sequential_example_expectation (fun i => sequential_example_y_dependent i * sequential_example_y_dependent i) = 1.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_y_comparison_unit_second_moment] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun i => sequential_example_y_comparison i * sequential_example_y_comparison i) = 1
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_y_comparison_unit_second_moment :
+ sequential_example_expectation (fun i => sequential_example_y_comparison i * sequential_example_y_comparison i) = 1.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_dependent_cross_moment_zero] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_y_dependent i) = 0
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_dependent_cross_moment_zero :
+ forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_y_dependent i) = 0.
+Proof.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x, sequential_example_y_dependent; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_comparison_cross_moment_zero] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_y_comparison i) = 0
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_comparison_cross_moment_zero :
+ forall a, sequential_example_expectation (fun i => sequential_example_x a i * sequential_example_y_comparison i) = 0.
+Proof.
+ intros a; unfold sequential_example_expectation, finite_sum, sequential_example_x, sequential_example_y_comparison; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_zero_event_mass_half] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation sequential_example_zero_event = 1/2
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_zero_event_mass_half :
+ sequential_example_expectation sequential_example_zero_event = 1/2.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_zero_event; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_dependent_zero_event_moment] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun i => sequential_example_zero_event i * sequential_example_y_dependent i) = -1/2
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_dependent_zero_event_moment :
+ sequential_example_expectation (fun i => sequential_example_zero_event i * sequential_example_y_dependent i) = -1/2.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_zero_event, sequential_example_y_dependent; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_comparison_zero_event_moment] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun i => sequential_example_zero_event i * sequential_example_y_comparison i) = 0
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_comparison_zero_event_moment :
+ sequential_example_expectation (fun i => sequential_example_zero_event i * sequential_example_y_comparison i) = 0.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_zero_event, sequential_example_y_comparison; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_dependent_conditional_minus_one] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_conditional_mean sequential_example_y_dependent = -1
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_dependent_conditional_minus_one :
+ sequential_example_conditional_mean sequential_example_y_dependent = -1.
+Proof.
+ unfold sequential_example_conditional_mean; rewrite sequential_example_dependent_zero_event_moment, sequential_example_zero_event_mass_half; field.
+Qed.
+
+(**
+ [sequential_example_comparison_conditional_zero] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_conditional_mean sequential_example_y_comparison = 0
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_comparison_conditional_zero :
+ sequential_example_conditional_mean sequential_example_y_comparison = 0.
+Proof.
+ unfold sequential_example_conditional_mean; rewrite sequential_example_comparison_zero_event_moment, sequential_example_zero_event_mass_half; field.
+Qed.
+
+(**
+ [sequential_example_dependent_positive_marginal_half] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun i => (1+sequential_example_y_dependent i)/2) = 1/2
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_dependent_positive_marginal_half :
+ sequential_example_expectation (fun i => (1+sequential_example_y_dependent i)/2) = 1/2.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_dependent; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_comparison_positive_marginal_half] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun i => (1+sequential_example_y_comparison i)/2) = 1/2
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_comparison_positive_marginal_half :
+ sequential_example_expectation (fun i => (1+sequential_example_y_comparison i)/2) = 1/2.
+Proof.
+ unfold sequential_example_expectation, finite_sum, sequential_example_y_comparison; simpl; ring.
+Qed.
+
+(**
+ [sequential_example_conditional_disagreement] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_conditional_mean sequential_example_y_dependent <> sequential_example_conditional_mean sequential_example_y_comparison
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_conditional_disagreement :
+ sequential_example_conditional_mean sequential_example_y_dependent <> sequential_example_conditional_mean sequential_example_y_comparison.
+Proof.
+ rewrite sequential_example_dependent_conditional_minus_one, sequential_example_comparison_conditional_zero; lra.
+Qed.
+
+(**
+ [sequential_example_recursive_mean_disagreement] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: (0+sequential_example_conditional_mean sequential_example_y_dependent)/2 <> (0+sequential_example_conditional_mean sequential_example_y_comparison)/2
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_recursive_mean_disagreement :
+ (0+sequential_example_conditional_mean sequential_example_y_dependent)/2 <> (0+sequential_example_conditional_mean sequential_example_y_comparison)/2.
+Proof.
+ rewrite sequential_example_dependent_conditional_minus_one, sequential_example_comparison_conditional_zero; lra.
+Qed.
+
+(**
+ [sequential_example_x_unit_second_moment_sqrt_two] (theorem) — Exact finite report counterexample certificate.
+ Mathematical meaning: The corresponding marginal, second moment, cross moment, atomic conditional mean, or disagreement follows by exact eight-point finite probability calculation.
+ Exact checked proposition: sequential_example_expectation (fun i => sequential_example_x (sqrt 2) i * sequential_example_x (sqrt 2) i) = 1
+ Premises and side conditions: Eight equiprobable outcomes. For the a-dependent first-score unit second moment, the amplitude is explicitly sqrt 2; no Gaussian assumption.
+ Proof/definition method: Reduce the concrete finite_sum using Stdlib.List.seq, reuse earlier checked atomic-model identities where appropriate, and close with the standard real Ring, Field, Lra or Psatz tactic.
+ Library reuse: FiniteSum.finite_sum, Stdlib.List.seq, Stdlib.Reals.sqrt_sqrt and Stdlib.Ring/Lra.
+ Boundary: Verifies the finite counterexample used in prop:counterexample; no general Gaussian conditional-expectation or independence theorem is inferred from covariance.
+ *)
+Theorem sequential_example_x_unit_second_moment_sqrt_two :
+ sequential_example_expectation (fun i => sequential_example_x (sqrt 2) i * sequential_example_x (sqrt 2) i) = 1.
+Proof.
+ rewrite sequential_example_x_second_moment.
+  assert (Hsq : sqrt 2 * sqrt 2 = 2) by (apply sqrt_sqrt; lra).
+  nra.
 Qed.

@@ -38,7 +38,7 @@ The `SequentialReport.v` module now has **seven definitions and 37 Rocq 9.2 kern
 | `cor:three-starts` | Analogous formulas for `r=3` | `sequential_prediction_three_starts`, `sequential_mean_three_starts` | **A**, including only arithmetic content |
 | `prop:multiple-boundaries` | `c=1`, `c=0`, singular lower boundary and `k=0`; compatible histories | `sequential_prediction_independence_limit`, `sequential_mean_independence_limit`, `sequential_mean_perfect_correlation_limit`, `sequential_conditional_variance_perfect_correlation`, `sequential_conditional_variance_singular_boundary` | **A** for algebraic boundaries, **P** for singular Gaussian support/versions |
 | `cor:iq-reporting` | Standardization of IQ 150 and affine re-scaling of predictions and SD | `sequential_iq_start_standardized`, `sequential_iq_prediction_exact`, `sequential_iq_mean_exact`, `sequential_iq_population_variance_exact`, `sequential_iq_conditional_variance_exact` | **A** for exact rational conversion; actual Gaussian conditional distribution not constructed |
-| `prop:counterexample` | Equal marginal means, variances, correlation can conceal different conditional means | The finite covariance formalization supplies foundations, but no checked counterexample construction matching this proposition | **P**, add a concrete finite countermodel |
+| `prop:counterexample` | Equal marginal means, variances, correlation can conceal different conditional means | The finite covariance formalization supplies foundations, but explicit finite eight-occurrence counterexample in `SequentialReport.v`, with same marginal means, variances and zero cross-moment yet unequal conditional means on positive-mass history | **K for the finite countermodel and positive-atom conditional means**; not a Gaussian regression theorem |
 | `cor:exact-iq-values` | Exact fractions `100+50r(3N+2)/(N(3r+2))`, `45(3N+2)/N`, `90k(3N+2)/(N²(3r+2))` | `sequential_iq_mean_exact`, `sequential_iq_population_variance_exact`, `sequential_iq_conditional_variance_exact` | **A** for the exact fraction formulas; the probabilistic interpretation has the above prerequisites |
 | `lem:rounding` | Rigorous rational interval tests for nearest-decimal mean and square-root SD, including tie exclusion | Report's integer certificates are recorded in `exact_numeric_certificates.tex`; Rocq proofs of the general rational and squared-SD nearest-decimal rounding criteria in `SequentialReport.v` | **K for the general strict rational/SD rounding criteria**; individual numeric certificates still require machine checking |
 
@@ -112,3 +112,18 @@ with explicit positive denominators and scales. The reported 9+18
 specific integer certificates are separate inputs until independently
 kernel-checked. Gaussian conditional-expectation, spectral and continuous
 numerical integration claims remain outside this arithmetic layer.
+
+
+## Concrete positive-probability conditional-mean counterexample
+
+Nineteen report-directed Rocq theorems certify an eight-outcome uniform
+finite probability construction. The common first score has marginal
+(-sqrt(2),0,sqrt(2)) with weights (1/4,1/2,1/4). Both second-score
+marginals are ±1 with probabilities 1/2 each. In both joint models the
+marginal score means are zero, the second moments are one, and the cross
+moment is zero. But at the identical history event X=0 of positive mass
+1/2, the dependent second score has conditional mean -1, while the
+balanced comparison has conditional mean 0; the fixed recursive
+averages are respectively -1/2 and 0. Every expectation reuses
+FiniteSum.finite_sum. This checks the finite `prop:counterexample`
+without asserting any Gaussian law or any general independence theorem.
