@@ -3509,6 +3509,34 @@ Expected inventory upon pinned CI verification: **994 public claims**,
 **997 proof scripts**, **1086 documented declarations** across seven
 modules, with **583 FiniteMoments proof scripts**.
 
+
+## Rank-one Gram identities and pivot-based semidefinite classification (14 November 2026)
+
+Five extensively documented Rocq theorems further classify **all typed
+coefficient directions** in the signed two-unit-mass-sample model. The
+two-direction Gram determinant is identically zero without any pivot
+assumption: `B(u,v)^2=B(u,u) B(v,v)`. This implies that zero cross-covariance
+is equivalent to at least one zero self-covariance, and nonzero
+cross-covariance is equivalent to both self-covariances being nonzero.
+With an explicitly nonisotropic pivot `p`, positive semidefiniteness
+(`forall u, 0<=B(u,u)`) is equivalent to `B(p,p)>0`; likewise negative
+semidefiniteness is equivalent to `B(p,p)<0`.
+
+The first three results reuse the existing **four-direction all-minors
+identity**, covariance symmetry, real `Rmult_integral`, and propositional
+logic without expanding a covariance evaluator. The last two reuse
+the previous pivot-coordinate factorization, standard nonnegative
+squares and real arithmetic. All claims allow signed sample weights
+and dependent score bases, but require exactly two sample occurrences
+and total mass one. Nonisotropic pivots are necessary only for the
+two sign-classification equivalences. No abstract matrix rank,
+dimension theorem, generic signed-weight PSD, empirical correlations,
+new finite-sum/vector recursion, Python/SPARK code or archived evidence
+modifications are claimed.
+
+Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
+1091 documented declarations**, including **588 FiniteMoments proofs**.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

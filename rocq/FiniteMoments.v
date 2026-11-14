@@ -22472,6 +22472,212 @@ Section FiniteProbabilityMoments.
       reflexivity.
   Qed.
 
+
+  (**
+   [indexed_basis_two_samples_bilinear_gram_determinant_zero] (theorem) —
+   Every two-direction covariance Gram determinant vanishes.
+   Mathematical meaning: For any two typed coefficient directions,
+   the square of their cross-covariance equals the product of their
+   self-covariances, including for signed outcome weights.
+   Exact checked proposition: B(left,right)^2=B(left,left)*B(right,right).
+   Premises and side conditions: Precisely two sampled occurrences
+   and total mass one; no nonzero pivot, weight positivity, basis
+   independence or separation premise is needed.
+   Proof/definition method: Specialize the existing four-direction
+   covariance minor identity with the two directions in reverse order
+   and rewrite the reverse cross-covariance by symmetry.
+   Library reuse: indexed_basis_two_samples_bilinear_all_minors_zero
+   and indexed_basis_covariance_bilinear_symmetric; no determinant
+   or matrix implementation is introduced.
+   Boundary: This is rank-one algebra, not a dimension/rank-nullity
+   theorem, nonnegative covariance assertion or measured IQ correlation.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_gram_determinant_zero :
+    forall basis (left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis left right *
+      indexed_basis_covariance_bilinear_form basis left right =
+      indexed_basis_covariance_bilinear_form basis left left *
+      indexed_basis_covariance_bilinear_form basis right right.
+  Proof.
+    intros basis left right x y Hsamples Hmass.
+    pose proof (indexed_basis_two_samples_bilinear_all_minors_zero
+      basis left right right left x y Hsamples Hmass) as Hminor.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis right left) in Hminor.
+    exact Hminor.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_cross_zero_iff_self_zero] (theorem) —
+   Exact zero-cross-covariance criterion for two sampled outcomes.
+   Mathematical meaning: Two typed directions can be uncorrelated in
+   any two-unit-mass-sample covariance model only when one of them
+   has zero self-covariance; this includes nonzero signed weights.
+   Exact checked proposition: B(left,right)=0 iff
+   B(left,left)=0 or B(right,right)=0.
+   Premises and side conditions: Two sampled occurrences, total mass
+   one, signed weights and arbitrary finite bases are allowed; this
+   does not require a nonisotropic pivot or positive semidefiniteness.
+   Proof/definition method: Use the checked Gram-square identity;
+   its forward direction factors a zero product with Rmult_integral,
+   while its converse forces a real square to vanish via Psatz.nra.
+   Library reuse: indexed_basis_two_samples_bilinear_gram_determinant_zero,
+   Stdlib.Reals.Rmult_integral and Stdlib.Psatz.nra.
+   Boundary: Exact rank-one finite covariance statement, not a
+   general zero-covariance rule for three or more sampled outcomes.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_cross_zero_iff_self_zero :
+    forall basis (left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_bilinear_form basis left right = 0 <->
+       indexed_basis_covariance_bilinear_form basis left left = 0 /
+       indexed_basis_covariance_bilinear_form basis right right = 0).
+  Proof.
+    intros basis left right x y Hsamples Hmass.
+    pose proof
+      (indexed_basis_two_samples_bilinear_gram_determinant_zero
+        basis left right x y Hsamples Hmass) as Hgram.
+    split.
+    - intro Hcross.
+      rewrite Hcross in Hgram.
+      assert (Hproduct :
+        indexed_basis_covariance_bilinear_form basis left left *
+        indexed_basis_covariance_bilinear_form basis right right = 0).
+      { rewrite <- Hgram; ring. }
+      apply Rmult_integral in Hproduct.
+      exact Hproduct.
+    - intros [Hleft | Hright].
+      + rewrite Hleft in Hgram.
+        nra.
+      + rewrite Hright in Hgram.
+        nra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_cross_nonzero_iff_self_nonzero]
+   (theorem) — Both self-pairings detect nonzero cross-covariance.
+   Mathematical meaning: For two unit-mass sampled outcomes,
+   covariance between coefficient directions is nonzero precisely
+   when neither direction has vanishing self-covariance.
+   Exact checked proposition: B(left,right)<>0 iff
+   B(left,left)<>0 and B(right,right)<>0.
+   Premises and side conditions: Two samples, total mass one,
+   arbitrary signed weights and arbitrary typed finite bases; no
+   pivot, positive-weight or nonempty-basis premise is required.
+   Proof/definition method: Convert the previously proved exact
+   zero-cross criterion by propositional negation; avoid redoing
+   covariance factorization or square-root arithmetic.
+   Library reuse: indexed_basis_two_samples_bilinear_cross_zero_iff_self_zero
+   and the standard intuitionistic tauto tactic.
+   Boundary: This equivalence is specific to two occurrences, not a
+   general test for correlation in multivariate empirical samples.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_cross_nonzero_iff_self_nonzero :
+    forall basis (left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      (indexed_basis_covariance_bilinear_form basis left right <> 0 <->
+       indexed_basis_covariance_bilinear_form basis left left <> 0 /\
+       indexed_basis_covariance_bilinear_form basis right right <> 0).
+  Proof.
+    intros basis left right x y Hsamples Hmass.
+    pose proof (indexed_basis_two_samples_bilinear_cross_zero_iff_self_zero
+      basis left right x y Hsamples Hmass) as Hzero.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_positive_iff_all_self_nonnegative]
+   (theorem) — A nonisotropic pivot certifies exact positive semidefiniteness.
+   Mathematical meaning: The entire two-sample typed covariance form
+   has nonnegative self-pairings precisely when the chosen nonzero
+   pivot self-covariance is strictly positive.
+   Exact checked proposition: B(p,p)<>0 implies
+   (B(p,p)>0 iff forall left, B(left,left)>=0).
+   Premises and side conditions: Samples=[x;y], unit total mass,
+   arbitrary signed weights, dependent basis functions and typed
+   directions; a nonzero pivot is explicitly required for the iff.
+   Proof/definition method: Apply the established scalar-coordinate
+   factorization to each self-pairing, use Rle_0_sqr and
+   Rmult_le_pos to preserve sign; the converse tests the pivot
+   itself and excludes its zero value with linear real arithmetic.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_coordinate_factorization,
+   Stdlib.Reals.Rle_0_sqr/Rmult_le_pos, Stdlib.Ring and Stdlib.Lra.
+   Boundary: Semidefinite classification for rank-one signed two-sample
+   covariance only; not positivity of arbitrary signed moments.
+   *)
+  Theorem indexed_basis_two_samples_pivot_positive_iff_all_self_nonnegative :
+    forall basis (pivot : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (0 < indexed_basis_covariance_bilinear_form basis pivot pivot <->
+       forall left : Vector.t R (length basis),
+         0 <= indexed_basis_covariance_bilinear_form basis left left).
+  Proof.
+    intros basis pivot x y Hsamples Hmass Hpivot.
+    split.
+    - intros Hpositive left.
+      rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
+        basis pivot left left x y Hsamples Hmass Hpivot).
+      set (alpha := indexed_basis_covariance_pivot_coordinate basis pivot left).
+      replace (alpha * alpha *
+        indexed_basis_covariance_bilinear_form basis pivot pivot)
+        with ((alpha * alpha) *
+          indexed_basis_covariance_bilinear_form basis pivot pivot) by ring.
+      apply Rmult_le_pos.
+      + apply Rle_0_sqr.
+      + lra.
+    - intro Hall.
+      specialize (Hall pivot).
+      lra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_negative_iff_all_self_nonpositive]
+   (theorem) — A negative nonisotropic pivot detects negative semidefiniteness.
+   Mathematical meaning: Under normalized two-occurrence covariance,
+   all typed coefficient self-pairings are nonpositive exactly when
+   the self-pairing of a chosen nonisotropic pivot is negative.
+   Exact checked proposition: B(p,p)<>0 implies
+   (B(p,p)<0 iff forall left, B(left,left)<=0).
+   Premises and side conditions: Exactly two unit-mass samples,
+   signed real weights allowed, dependent bases admitted, and
+   nonzero pivot self-covariance explicitly assumed.
+   Proof/definition method: Rewrite every diagonal covariance by
+   the already checked pivot-coordinate square factorization,
+   use the standard nonnegative-square lemma and Psatz.nra; the
+   reverse implication tests the pivot and excludes the zero case.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_coordinate_factorization,
+   Stdlib.Reals.Rle_0_sqr, Stdlib.Psatz.nra and Stdlib.Lra.
+   Boundary: This does not assert that signed-weight covariance for
+   three or more occurrences is semidefinite.
+   *)
+  Theorem indexed_basis_two_samples_pivot_negative_iff_all_self_nonpositive :
+    forall basis (pivot : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis pivot pivot < 0 <->
+       forall left : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis left left <= 0).
+  Proof.
+    intros basis pivot x y Hsamples Hmass Hpivot.
+    split.
+    - intros Hnegative left.
+      rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
+        basis pivot left left x y Hsamples Hmass Hpivot).
+      set (alpha := indexed_basis_covariance_pivot_coordinate basis pivot left).
+      assert (Hsquare : 0 <= alpha * alpha) by apply Rle_0_sqr.
+      nra.
+    - intro Hall.
+      specialize (Hall pivot).
+      lra.
+  Qed.
+
 End FiniteProbabilityMoments.
 
 

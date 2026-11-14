@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 583 proof scripts
+## FiniteMoments.v — 588 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1409,6 +1409,11 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_cross_pivot_projections_differ_by_radical` (theorem) | Combine projection-fiber iff radical difference with idempotence and cross-pivot absorption. | indexed_basis_two_samples_projection_fiber_iff_radical_difference, indexed_basis_covariance_pivot_projection_idempotent. | **New: Pivot-line representatives from different pivots lie in the same radical coset.** |
 | `indexed_basis_two_samples_pivot_decomposition_unique_components` (theorem) | Apply the normalized pivot coordinate and its radical-zero equivalence to determine the scalar; use Stdlib.VectorSpec extensionality and ring arithmetic for remainder equality. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero, indexed_basis_covariance_pivot_coordinate_add/section, VectorSpec.eq_nth_iff/nth_map2/nth_map, Stdlib.Psatz. | **New: A scalar pivot plus radical decomposition has uniquely determined scalar and coefficient remainder.** |
 | `indexed_basis_two_samples_pivot_decomposition_exists_unique` (theorem) | Construct the section/remainder witness and use both previously checked decomposition and new pair uniqueness. | indexed_basis_two_samples_pivot_remainder_in_radical, indexed_basis_covariance_pivot_projection_remainder_decomposition, indexed_basis_two_samples_pivot_decomposition_unique_components. | **New: Constructive exists-unique typed scalar/radical splitting for every coefficient vector.** |
+| `indexed_basis_two_samples_bilinear_gram_determinant_zero` (theorem) | Specialize existing four-direction minor to the two-direction Gram matrix and rewrite covariance symmetry. | indexed_basis_two_samples_bilinear_all_minors_zero, indexed_basis_covariance_bilinear_symmetric. | **New: Exact zero Gram determinant without nonzero pivot or sign assumptions.** |
+| `indexed_basis_two_samples_bilinear_cross_zero_iff_self_zero` (theorem) | Factor the self-pairing product in the Gram-square identity, and recover zero cross-pairing from a vanishing real square. | Rmult_integral, Psatz.nra, Gram determinant identity. | **New: Cross-zero iff at least one self-covariance zero.** |
+| `indexed_basis_two_samples_bilinear_cross_nonzero_iff_self_nonzero` (theorem) | Negate the checked cross-zero disjunction using standard propositional logic. | indexed_basis_two_samples_bilinear_cross_zero_iff_self_zero, tauto. | **New: Cross-nonzero iff both self-covariances nonzero.** |
+| `indexed_basis_two_samples_pivot_positive_iff_all_self_nonnegative` (theorem) | Factor each self-pairing into the square pivot coordinate times the positive pivot, then test the pivot for the converse. | indexed_basis_two_samples_bilinear_pivot_coordinate_factorization, Rle_0_sqr, Rmult_le_pos, Lra. | **New: Exact PSD classification by positive nonisotropic pivot.** |
+| `indexed_basis_two_samples_pivot_negative_iff_all_self_nonpositive` (theorem) | Use pivot-coordinate square factorization, Rle_0_sqr, nra and test the pivot. | indexed_basis_two_samples_bilinear_pivot_coordinate_factorization, Psatz.nra, Lra. | **New: Exact NSD classification by negative nonisotropic pivot.** |
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
 | `finite_signed_three_scores_cross_covariance_one` (lemma) | Evaluate the same finite moment definitions and normalize the real expression. | FiniteMoments.covariance, FiniteMoments.expect, FiniteSum.finite_sum, ring. | **New:** First and second score have cross-covariance one despite zero first-score variance. |
@@ -1890,3 +1895,31 @@ Gaussian moment result, or empirical covariance estimate.
 Expected inventory upon pinned CI verification: **994 public claims**,
 **997 proof scripts**, **1086 documented declarations** across seven
 modules, with **583 FiniteMoments proof scripts**.
+
+
+## Rank-one Gram identities and pivot-based semidefinite classification (14 November 2026)
+
+Five extensively documented Rocq theorems further classify **all typed
+coefficient directions** in the signed two-unit-mass-sample model. The
+two-direction Gram determinant is identically zero without any pivot
+assumption: `B(u,v)^2=B(u,u) B(v,v)`. This implies that zero cross-covariance
+is equivalent to at least one zero self-covariance, and nonzero
+cross-covariance is equivalent to both self-covariances being nonzero.
+With an explicitly nonisotropic pivot `p`, positive semidefiniteness
+(`forall u, 0<=B(u,u)`) is equivalent to `B(p,p)>0`; likewise negative
+semidefiniteness is equivalent to `B(p,p)<0`.
+
+The first three results reuse the existing **four-direction all-minors
+identity**, covariance symmetry, real `Rmult_integral`, and propositional
+logic without expanding a covariance evaluator. The last two reuse
+the previous pivot-coordinate factorization, standard nonnegative
+squares and real arithmetic. All claims allow signed sample weights
+and dependent score bases, but require exactly two sample occurrences
+and total mass one. Nonisotropic pivots are necessary only for the
+two sign-classification equivalences. No abstract matrix rank,
+dimension theorem, generic signed-weight PSD, empirical correlations,
+new finite-sum/vector recursion, Python/SPARK code or archived evidence
+modifications are claimed.
+
+Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
+1091 documented declarations**, including **588 FiniteMoments proofs**.
