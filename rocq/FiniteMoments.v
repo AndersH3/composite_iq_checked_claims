@@ -21642,6 +21642,329 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_covariance_pivot_remainder] (definition) —
+   The complementary coefficient component of the covariance pivot projection.
+   Mathematical meaning: Remove from a typed coefficient direction its
+   covariance coordinate multiplied by the selected pivot, leaving the
+   algebraic complement to the standard-library-backed projection.
+   Exact declaration: remainder(left)=Vector.map2 Rplus left
+   (section(pivot,-coordinate(pivot,left))).
+   Premises and side conditions: The definition is total, even for a
+   zero pivot, signed weights, unnormalized mass and an empty basis;
+   radical claims below explicitly require nonzero pivot and two samples.
+   Proof/definition method: Compose existing coordinate and section maps
+   with Stdlib.Vectors.Vector.map2; introduce no coordinate recursion.
+   Library reuse: indexed_basis_covariance_pivot_coordinate,
+   indexed_basis_covariance_pivot_section and Vector.map2.
+   Boundary: Concrete linear splitting data, not a generic vector-space
+   quotient or an assertion of nullspace dimension.
+   *)
+  Definition indexed_basis_covariance_pivot_remainder
+      (basis : list (Outcome -> R))
+      (pivot left : Vector.t R (length basis)) :
+      Vector.t R (length basis) :=
+    Vector.map2 Rplus left
+      (indexed_basis_covariance_pivot_section basis pivot
+        (- indexed_basis_covariance_pivot_coordinate basis pivot left)).
+
+  (**
+   [indexed_basis_covariance_pivot_projection_remainder_decomposition]
+   (theorem) — Exact pivot-line plus complementary-vector reconstruction.
+   Mathematical meaning: Every typed coefficient direction equals its
+   pivot projection plus its explicitly defined complementary remainder.
+   Exact checked proposition: Vector.map2 Rplus (projection left)
+   (remainder left)=left for any typed pivot and basis.
+   Premises and side conditions: No nonzero-pivot, two-sample, unit-mass,
+   sign, independence or nonempty-basis assumption is needed here.
+   Proof/definition method: Apply maintained VectorSpec.eq_nth_iff,
+   expand only the standard map/map2 coordinate views, then use ring
+   cancellation of alpha*pivot against its negative.
+   Library reuse: Stdlib.Vectors.VectorSpec.eq_nth_iff, nth_map2,
+   nth_map, Vector.map, Vector.map2 and Stdlib.Ring.
+   Boundary: Constructive coefficient equality, not abstract rank-nullity.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_remainder_decomposition :
+    forall basis (pivot left : Vector.t R (length basis)),
+      Vector.map2 Rplus
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        (indexed_basis_covariance_pivot_remainder basis pivot left) =
+      left.
+  Proof.
+    intros basis pivot left.
+    unfold indexed_basis_covariance_pivot_projection,
+      indexed_basis_covariance_pivot_remainder,
+      indexed_basis_covariance_pivot_section.
+    set (alpha := indexed_basis_covariance_pivot_coordinate basis pivot left).
+    apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
+      (Vector.map2 Rplus
+        (Vector.map (fun c => alpha * c) pivot)
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (- alpha) * c) pivot)))
+      left)).
+    intros i j Hij.
+    subst j.
+    rewrite (VectorSpec.nth_map2 Rplus
+      (Vector.map (fun c => alpha * c) pivot)
+      (Vector.map2 Rplus left
+        (Vector.map (fun c => (- alpha) * c) pivot))
+      i i i eq_refl eq_refl).
+    rewrite (VectorSpec.nth_map (fun c => alpha * c)
+      pivot i i eq_refl).
+    rewrite (VectorSpec.nth_map2 Rplus left
+      (Vector.map (fun c => (- alpha) * c) pivot)
+      i i i eq_refl eq_refl).
+    rewrite (VectorSpec.nth_map (fun c => (- alpha) * c)
+      pivot i i eq_refl).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_remainder_coordinate_zero] (theorem) —
+   The explicit complementary remainder is annihilated by the coordinate.
+   Mathematical meaning: Subtracting the pivot section with the same
+   scalar coordinate always leaves a direction of zero pivot coordinate.
+   Exact checked proposition: If B(pivot,pivot)<>0, then
+   coordinate(pivot,remainder(left))=0.
+   Premises and side conditions: Arbitrary signed, unnormalized finite
+   weights and dependent bases are supported; only the pivot is nonzero.
+   Proof/definition method: Compose existing coordinate additivity with
+   the coordinate-section retraction and simplify alpha+(-alpha).
+   Library reuse: indexed_basis_covariance_pivot_coordinate_add,
+   indexed_basis_covariance_pivot_coordinate_section and Stdlib.Ring.
+   Boundary: A scalar functional kernel equation, not yet a claim that
+   the kernel is the covariance radical outside two unit-mass samples.
+   *)
+  Theorem indexed_basis_covariance_pivot_remainder_coordinate_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot
+        (indexed_basis_covariance_pivot_remainder basis pivot left) = 0.
+  Proof.
+    intros basis pivot left Hpivot.
+    unfold indexed_basis_covariance_pivot_remainder.
+    rewrite (indexed_basis_covariance_pivot_coordinate_add
+      basis pivot left
+      (indexed_basis_covariance_pivot_section basis pivot
+        (- indexed_basis_covariance_pivot_coordinate basis pivot left))
+      Hpivot).
+    rewrite (indexed_basis_covariance_pivot_coordinate_section
+      basis pivot
+      (- indexed_basis_covariance_pivot_coordinate basis pivot left)
+      Hpivot).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_remainder_in_radical] (theorem) —
+   The explicitly constructed complement belongs to the covariance radical.
+   Mathematical meaning: With two normalized sample occurrences, each
+   coefficient vector splits into a scalar pivot direction and a remainder
+   having zero covariance against every typed test coefficient direction.
+   Exact checked proposition: samples=[x;y], total_mass=1 and
+   B(pivot,pivot)<>0 imply Radical(remainder(left)).
+   Premises and side conditions: Individual sample weights may be
+   negative; score bases may be dependent or include repeated functions.
+   Proof/definition method: Apply the preexisting two-sample equivalence
+   between radical membership and zero normalized pivot coordinate,
+   then use the preceding sample-independent remainder-coordinate law.
+   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero,
+   indexed_basis_covariance_pivot_remainder_coordinate_zero.
+   Boundary: Two-sample radical splitting, not arbitrary-sample PSD.
+   *)
+  Theorem indexed_basis_two_samples_pivot_remainder_in_radical :
+    forall basis (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_radical basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left).
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    apply (proj2
+      (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+        basis pivot
+        (indexed_basis_covariance_pivot_remainder basis pivot left)
+        x y Hsamples Hmass Hpivot)).
+    apply indexed_basis_covariance_pivot_remainder_coordinate_zero.
+    exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_remainder_zero] (theorem) —
+   Projecting the complementary remainder gives the standard zero vector.
+   Mathematical meaning: The decomposition remainder belongs to the
+   kernel of the idempotent pivot projection without any sample-count
+   or total-mass hypothesis.
+   Exact checked proposition: B(pivot,pivot)<>0 implies
+   projection(pivot,remainder(left))=Vector.const 0 (length basis).
+   Premises and side conditions: Works for all signed finite weights,
+   arbitrary sample enumeration and all well-typed coefficient vectors.
+   Proof/definition method: Unfold only projection, rewrite the checked
+   remainder-coordinate zero theorem and identify the zero pivot section.
+   Library reuse: indexed_basis_covariance_pivot_remainder_coordinate_zero,
+   indexed_basis_covariance_pivot_section_zero, Vector.const.
+   Boundary: A concrete projection-kernel statement; equality of this
+   kernel with the covariance radical needs two normalized samples.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_remainder_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_projection basis pivot
+        (indexed_basis_covariance_pivot_remainder basis pivot left) =
+      Vector.const 0 (length basis).
+  Proof.
+    intros basis pivot left Hpivot.
+    unfold indexed_basis_covariance_pivot_projection.
+    rewrite (indexed_basis_covariance_pivot_remainder_coordinate_zero
+      basis pivot left Hpivot).
+    apply indexed_basis_covariance_pivot_section_zero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_fixes_section] (theorem) —
+   The scalar pivot line is pointwise fixed by the projection.
+   Mathematical meaning: Every pivot-line coefficient vector is already
+   its own canonical projection for a nonisotropic pivot.
+   Exact checked proposition: B(pivot,pivot)<>0 implies
+   projection(pivot,section(pivot,alpha))=section(pivot,alpha).
+   Premises and side conditions: Any scalar, signed or unnormalized
+   weights, and arbitrary finite basis dimension are allowed.
+   Proof/definition method: Expand projection as coordinate followed by
+   section, and apply the already checked coordinate-section retraction.
+   Library reuse: indexed_basis_covariance_pivot_coordinate_section,
+   indexed_basis_covariance_pivot_projection and Stdlib.Logic.
+   Boundary: Fixed-point certificate, not an abstract image dimension.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_fixes_section :
+    forall basis (pivot : Vector.t R (length basis)) alpha,
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_projection basis pivot
+        (indexed_basis_covariance_pivot_section basis pivot alpha) =
+      indexed_basis_covariance_pivot_section basis pivot alpha.
+  Proof.
+    intros basis pivot alpha Hpivot.
+    unfold indexed_basis_covariance_pivot_projection.
+    rewrite (indexed_basis_covariance_pivot_coordinate_section
+      basis pivot alpha Hpivot).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_radical_pivot_line_trivial] (theorem) —
+   The nonisotropic pivot line has trivial intersection with the radical.
+   Mathematical meaning: Among scalar multiples of a nonzero covariance
+   pivot, only the zero multiple is orthogonal to every coefficient test.
+   Exact checked proposition: Under samples=[x;y], total_mass=1 and
+   B(pivot,pivot)<>0, Radical(section(pivot,alpha)) iff alpha=0.
+   Premises and side conditions: Signed weights and dependent finite
+   basis scores remain allowed; the pivot need not be unit length.
+   Proof/definition method: Use the previously checked radical iff
+   coordinate-zero criterion, followed by scalar-section retraction.
+   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero,
+   indexed_basis_covariance_pivot_coordinate_section and Stdlib.Logic.
+   Boundary: Directness of this concrete splitting, without asserting
+   an abstract quotient-space dimension or generic rank-nullity formula.
+   *)
+  Theorem indexed_basis_two_samples_radical_pivot_line_trivial :
+    forall basis (pivot : Vector.t R (length basis)) alpha x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis
+        (indexed_basis_covariance_pivot_section basis pivot alpha) <->
+       alpha = 0).
+  Proof.
+    intros basis pivot alpha x y Hsamples Hmass Hpivot.
+    pose proof
+      (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+        basis pivot
+        (indexed_basis_covariance_pivot_section basis pivot alpha)
+        x y Hsamples Hmass Hpivot) as Hradical.
+    split.
+    - intro Hrad.
+      apply (proj1 Hradical) in Hrad.
+      rewrite (indexed_basis_covariance_pivot_coordinate_section
+        basis pivot alpha Hpivot) in Hrad.
+      exact Hrad.
+    - intro Halpha.
+      apply (proj2 Hradical).
+      rewrite (indexed_basis_covariance_pivot_coordinate_section
+        basis pivot alpha Hpivot).
+      exact Halpha.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_projection_fiber_iff_radical_difference]
+   (theorem) — Covariance projection fibers are exactly radical cosets.
+   Mathematical meaning: Two typed coefficient directions have the same
+   pivot-line projection precisely when their difference is covariance
+   orthogonal to every coefficient test direction.
+   Exact checked proposition: Under two unit-mass samples and B(p,p)<>0,
+   P(left)=P(right) iff Radical(left+(-1)*right), using typed Vector maps.
+   Premises and side conditions: Signed weights, arbitrary finite bases,
+   and repeated samples remain allowed if a nonzero pivot exists.
+   Proof/definition method: Combine the already checked projection-fiber
+   criterion with the signed two-sample radical/coordinate-zero criterion;
+   establish coordinate(linear difference)=coordinate(left)-coordinate(right)
+   from the generic coordinate add/scale laws and Stdlib.Ring.
+   Library reuse: indexed_basis_covariance_pivot_projection_fiber_iff_coordinate,
+   indexed_basis_two_samples_radical_iff_pivot_coordinate_zero,
+   indexed_basis_covariance_pivot_coordinate_add/scale, Vector.map2,
+   Vector.map, Stdlib.Ring and Stdlib.Lra.
+   Boundary: Exact equivalence classes for a concrete projection,
+   not a packaged quotient space or a general rank-nullity theorem.
+   *)
+  Theorem indexed_basis_two_samples_projection_fiber_iff_radical_difference :
+    forall basis
+           (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_projection basis pivot left =
+       indexed_basis_covariance_pivot_projection basis pivot right <->
+       indexed_basis_covariance_bilinear_radical basis
+         (Vector.map2 Rplus left
+           (Vector.map (fun c => (-1) * c) right))).
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    pose proof
+      (indexed_basis_covariance_pivot_projection_fiber_iff_coordinate
+        basis pivot left right Hpivot) as Hfiber.
+    pose proof
+      (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+        basis pivot
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right))
+        x y Hsamples Hmass Hpivot) as Hradical.
+    assert (Hdifference :
+      indexed_basis_covariance_pivot_coordinate basis pivot
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (-1) * c) right)) =
+      indexed_basis_covariance_pivot_coordinate basis pivot left -
+      indexed_basis_covariance_pivot_coordinate basis pivot right).
+    {
+      rewrite (indexed_basis_covariance_pivot_coordinate_add
+        basis pivot left
+        (Vector.map (fun c => (-1) * c) right) Hpivot).
+      rewrite (indexed_basis_covariance_pivot_coordinate_scale
+        basis pivot right (-1) Hpivot).
+      ring.
+    }
+    split.
+    - intro Hprojected.
+      apply (proj2 Hradical).
+      rewrite Hdifference.
+      apply (proj1 Hfiber) in Hprojected.
+      lra.
+    - intro Hrad.
+      apply (proj2 Hfiber).
+      apply (proj1 Hradical) in Hrad.
+      rewrite Hdifference in Hrad.
+      lra.
+  Qed.
+
 End FiniteProbabilityMoments.
 
 

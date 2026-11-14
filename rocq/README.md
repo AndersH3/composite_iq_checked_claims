@@ -4213,6 +4213,32 @@ explicit scalar-line image and covariance radical kernel are now
 represented with typed standard-library vectors, but an abstract
 vector-space dimension and general rank-nullity result remain open.
 
+
+## Explicit pivot-line / radical complement and quotient fibers (14 November 2026)
+
+The maintained covariance projection now has an explicit **typed complementary
+remainder**, using only `Vector.map2 Rplus` and the existing scalar pivot
+section. Seven documented Rocq theorems certify: exact vector reconstruction
+as projection plus remainder without normalization; zero pivot coordinate
+and projection of that remainder under nonzero pivot; full bilinear-radical
+membership of the remainder under exactly two unit-mass sample occurrences;
+pointwise fixation of every pivot-line vector; trivial intersection of that
+line with the covariance radical; and equality of projected vectors exactly
+when their difference belongs to the radical.
+
+All theorems work with signed weights where logically allowed. Only the
+radical-specific theorems assume two occurrences and unit mass; none claims
+an abstract vector-space rank, dimension, or a general PSD statement. The
+proofs reuse established `indexed_basis_covariance_pivot_*` interfaces,
+`Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2`,
+`Stdlib.Ring` and `Stdlib.Lra`. No new matrix, summation, recursive vector,
+axiom, admitted proof, Python/SPARK source or historical evidence was added.
+
+Expected inventory after Rocq CI: **983 public claims**, **986 proof scripts**
+and **1075 documented declarations** across seven modules, including
+**572 FiniteMoments proof scripts**. The surviving research gap is transport to
+maintained abstract linear maps, subspaces and a generic rank-nullity theorem.
+
 ## Research extensions
 
 The next valuable targets are: (1) extending the generic finite conditional-independence interface to

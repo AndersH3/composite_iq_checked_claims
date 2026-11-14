@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 565 proof scripts
+## FiniteMoments.v — 572 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1391,6 +1391,13 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_projection_scale` (theorem) | Compose normalized covariance-coordinate homogeneity and scalar-section homogeneity. | indexed_basis_covariance_pivot_coordinate_scale, indexed_basis_covariance_pivot_section_scale. | **New: The pivot projection respects arbitrary real scalar multiplication.** |
 | `indexed_basis_two_samples_projection_radical_iff_zero_vector` (theorem) | Rewrite the checked radical/zero-section equivalence using the certified section-zero vector identity. | indexed_basis_two_samples_projection_radical_iff_zero_section, indexed_basis_covariance_pivot_section_zero. | **New: For two signed unit-mass outcomes, the linear projection kernel equals covariance radical.** |
 
+| `indexed_basis_covariance_pivot_projection_remainder_decomposition` (theorem) | Prove the full vector decomposition by VectorSpec pointwise extensionality and ring cancellation. | VectorSpec.eq_nth_iff, nth_map, nth_map2, Stdlib.Ring. | **New: Every coefficient vector decomposes into pivot projection plus explicit remainder.** |
+| `indexed_basis_covariance_pivot_remainder_coordinate_zero` (theorem) | Combine coordinate additivity and section retraction to cancel the pivot coordinate. | indexed_basis_covariance_pivot_coordinate_add, indexed_basis_covariance_pivot_coordinate_section. | **New: Remainder has zero normalized pivot coordinate.** |
+| `indexed_basis_two_samples_pivot_remainder_in_radical` (theorem) | Use two-sample radical/kernel equivalence and the remainder coordinate-zero proof. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero. | **New: Signed two-sample remainder is in the full covariance bilinear radical.** |
+| `indexed_basis_covariance_pivot_projection_remainder_zero` (theorem) | Substitute the remainder coordinate-zero theorem and the standard zero-section identity. | indexed_basis_covariance_pivot_section_zero, Vector.const. | **New: Concrete remainder lies in the projection kernel without normalization.** |
+| `indexed_basis_covariance_pivot_projection_fixes_section` (theorem) | Reuse coordinate-section retraction in the projection's thin composition. | indexed_basis_covariance_pivot_coordinate_section. | **New: Every pivot-line vector is fixed by the projection.** |
+| `indexed_basis_two_samples_radical_pivot_line_trivial` (theorem) | Rewrite radical membership via the scalar coordinate and section retraction. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero. | **New: Radical and nonisotropic pivot line intersect only at zero.** |
+| `indexed_basis_two_samples_projection_fiber_iff_radical_difference` (theorem) | Combine projection and radical coordinate-fiber equivalences, then simplify linear differences. | indexed_basis_covariance_pivot_coordinate_add/scale, Stdlib.Ring, Stdlib.Lra. | **New: Projection fibers are exactly covariance-radical cosets.** |
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
 | `finite_signed_three_scores_cross_covariance_one` (lemma) | Evaluate the same finite moment definitions and normalize the real expression. | FiniteMoments.covariance, FiniteMoments.expect, FiniteSum.finite_sum, ring. | **New:** First and second score have cross-covariance one despite zero first-score variance. |
@@ -1785,3 +1792,29 @@ scripts** across seven Rocq modules. The linear projection and its
 explicit scalar-line image and covariance radical kernel are now
 represented with typed standard-library vectors, but an abstract
 vector-space dimension and general rank-nullity result remain open.
+
+
+## Explicit pivot-line / radical complement and quotient fibers (14 November 2026)
+
+The maintained covariance projection now has an explicit **typed complementary
+remainder**, using only `Vector.map2 Rplus` and the existing scalar pivot
+section. Seven documented Rocq theorems certify: exact vector reconstruction
+as projection plus remainder without normalization; zero pivot coordinate
+and projection of that remainder under nonzero pivot; full bilinear-radical
+membership of the remainder under exactly two unit-mass sample occurrences;
+pointwise fixation of every pivot-line vector; trivial intersection of that
+line with the covariance radical; and equality of projected vectors exactly
+when their difference belongs to the radical.
+
+All theorems work with signed weights where logically allowed. Only the
+radical-specific theorems assume two occurrences and unit mass; none claims
+an abstract vector-space rank, dimension, or a general PSD statement. The
+proofs reuse established `indexed_basis_covariance_pivot_*` interfaces,
+`Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2`,
+`Stdlib.Ring` and `Stdlib.Lra`. No new matrix, summation, recursive vector,
+axiom, admitted proof, Python/SPARK source or historical evidence was added.
+
+Expected inventory after Rocq CI: **983 public claims**, **986 proof scripts**
+and **1075 documented declarations** across seven modules, including
+**572 FiniteMoments proof scripts**. The surviving research gap is transport to
+maintained abstract linear maps, subspaces and a generic rank-nullity theorem.
