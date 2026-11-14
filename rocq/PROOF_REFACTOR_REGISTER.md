@@ -2156,7 +2156,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 1065 total proof scripts, 1155 documented declarations**, including
 **651 FiniteMoments proof scripts**.
 
-## SequentialReport.v — 31 proof scripts
+## SequentialReport.v — 37 proof scripts
 
 | Declaration (proof script) | Refactoring / proof method | Existing libraries or lemmas reused | Scope and boundary |
 |---|---|---|---|
@@ -2192,3 +2192,10 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `sequential_iq_population_variance_exact` (theorem) | Convert the normalized population variance by factor 15²=225 and cancel exact rational factors. | Stdlib.Reals, Stdlib.Lra, Stdlib.Psatz; previously checked sequential real identities. | Exact real-algebraic identity only; no Gaussian conditional distribution or empirical IQ model is established. |
 | `sequential_iq_conditional_variance_exact` (theorem) | Scale the already specified conditional variance by 225 and verify a real field identity. | Stdlib.Reals, Stdlib.Lra, Stdlib.Psatz; previously checked sequential real identities. | Exact real-algebraic identity only; no Gaussian conditional distribution or empirical IQ model is established. |
 
+
+| `sequential_recursive_history_sum_closed_form` (theorem) | Induct on j and use the previously checked fixed-point identity to close the successor case. | Stdlib.Lia, Stdlib.Reals.S_INR, sequential_prediction_recursive_fixed_point. | Deterministic finite recursion, not Gaussian conditional expectation. |
+| `sequential_recursive_prediction_constant` (theorem) | Rewrite the entire history using its inductive closed form and reuse scalar regression fixed-point uniqueness. | sequential_recursive_history_sum_closed_form, sequential_prediction_recursive_fixed_point. | Deterministic finite recursion, not Gaussian conditional expectation. |
+| `sequential_recursive_inclusive_mean_closed_form` (theorem) | Rewrite by natural induction and compare two definitionally equal expressions. | sequential_recursive_history_sum_closed_form, sequential_inclusive_mean. | Deterministic finite recursion, not Gaussian conditional expectation. |
+| `sequential_recursive_single_start_predictions_constant` (theorem) | Specialize the inductive constant-prediction result to one observed score. | sequential_recursive_prediction_constant, sequential_prediction_single_start. | Deterministic finite recursion, not Gaussian conditional expectation. |
+| `sequential_recursive_nonnegative_correlation_denominators_positive` (theorem) | Prove natural-to-real count nonnegativity by Rocq induction, then reuse denominator positivity. | Stdlib.Reals.S_INR, sequential_denominator_positive_nonnegative_correlation. | Deterministic finite recursion, not Gaussian conditional expectation. |
+| `sequential_recursive_history_nonnegative_correlation` (theorem) | Compose full-history induction with the checked positivity of every prefix denominator. | sequential_recursive_history_sum_closed_form, sequential_recursive_nonnegative_correlation_denominators_positive. | Deterministic finite recursion, not Gaussian conditional expectation. |

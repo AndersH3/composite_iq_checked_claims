@@ -22,7 +22,7 @@
    with Rocq 9.2; see rocq/REPORT_THEOREM_INVENTORY.md for claim mapping,
    rocq/README.md for module order and the checked-claim register.
  *)
-From Stdlib Require Import Reals Lra Psatz.
+From Stdlib Require Import Reals Lra Psatz Lia.
 Require Import Hoeflin.
 Open Scope R_scope.
 
@@ -625,4 +625,222 @@ Theorem sequential_iq_conditional_variance_exact :
     90*k*(3*(r+k)+2)/((r+k)*(r+k)*(3*r+2)).
 Proof.
   intros r k Hdr Hn; unfold sequential_conditional_variance, sequential_d; field; nra.
+Qed.
+
+(**
+ [sequential_recursive_history_sum] (fixpoint) —
+ The total history after a prescribed number of recursive predictions.
+ Mathematical meaning: Begin with the r identical observed scores, whose
+ sum is r*a, and iteratively add the next prediction given by the
+ equicorrelation scalar-regression formula.
+ Exact declaration: T_0=r*a and T_(j+1)=T_j+c*T_j/d_(r+j).
+ Premises and side conditions: Natural number j counts subsequent predictions;
+ r,c,a are real parameters; denominators need not be nonzero to define
+ the expression, but later theorems require the relevant nonzero hypotheses.
+ Proof/definition method: Structurally recursive on the natural history count
+ using standard Rocq recursion, not a custom finite-list sum.
+ Library reuse: Stdlib.Init.Nat, Stdlib.Reals.INR and sequential_d.
+ Boundary: The conditional regression coefficient is a stated arithmetic
+ input; this does not prove any Gaussian conditional distribution.
+ *)
+Fixpoint sequential_recursive_history_sum (j : nat) (r c a : R) : R :=
+  match j with
+  | O => r * a
+  | S n =>
+      let previous := sequential_recursive_history_sum n r c a in
+      previous + c * previous / sequential_d (r + INR n) c
+  end.
+
+(**
+ [sequential_recursive_next_score] (definition) —
+ The next scalar prediction following a finite recursive history.
+ Mathematical meaning: The regression rule is evaluated at the complete
+ history of initial scores and earlier recursive predictions.
+ Exact declaration: e_(j+1)=c*T_j/d_(r+j), with T_j the canonical history sum.
+ Premises and side conditions: A natural-number history count and real-valued
+ count, correlation, and observed score; interpretation requires a nonzero
+ regression denominator, proved explicitly in later theorems.
+ Proof/definition method: A transparent application of the checked history
+ function and the previously specified denominator; no auxiliary matrix,
+ probabilistic axiom or bespoke finite-sum implementation is introduced.
+ Library reuse: sequential_recursive_history_sum, sequential_d, Stdlib.Reals.INR.
+ Boundary: This is not a conditional-expectation construction.
+ *)
+Definition sequential_recursive_next_score (j : nat) (r c a : R) : R :=
+  c * sequential_recursive_history_sum j r c a /
+    sequential_d (r + INR j) c.
+
+(**
+ [sequential_recursive_history_sum_closed_form] (theorem) — The complete recursively generated scalar history has a closed form for every natural number of later predictions.
+ Mathematical meaning: The complete recursively generated scalar history has a closed form for every natural number of later predictions.
+ Exact checked proposition: forall j r c a, sequential_d r c <> 0 -> (forall n, (n < j)%nat -> sequential_d (r + INR n) c <> 0) -> sequential_recursive_history_sum j r c a = r * a + INR j * sequential_prediction r c a.
+ Premises and side conditions: Nonzero initial denominator and all previous recursive denominators; every history length is a natural number.
+ Proof/definition method: Induct on j and use the previously checked fixed-point identity to close the successor case.
+ Library reuse: Stdlib.Lia, Stdlib.Reals.S_INR, sequential_prediction_recursive_fixed_point.
+ Boundary: Deterministic recursive algebra only; the Gaussian conditioning
+ interpretation depends on the report's separately stated distribution model
+ and its currently unformalized conditional-expectation theorem.
+ *)
+Theorem sequential_recursive_history_sum_closed_form :
+  forall j r c a,
+   sequential_d r c <> 0 ->
+   (forall n, (n < j)%nat -> sequential_d (r + INR n) c <> 0) ->
+   sequential_recursive_history_sum j r c a =
+     r * a + INR j * sequential_prediction r c a.
+Proof.
+ induction j as [|j IH]; intros r c a Hdr Hall.
+ - simpl [sequential_recursive_history_sum].
+   simpl.
+   ring.
+ - assert (Hprev :
+     sequential_recursive_history_sum j r c a =
+       r*a + INR j * sequential_prediction r c a).
+   { apply IH.
+     + exact Hdr.
+     + intros n Hlt; apply Hall; lia. }
+   change
+     (sequential_recursive_history_sum j r c a +
+       c * sequential_recursive_history_sum j r c a /
+         sequential_d (r + INR j) c =
+      r * a + INR (S j) * sequential_prediction r c a).
+   rewrite Hprev.
+   rewrite S_INR.
+   assert (Hstep : sequential_d (r + INR j) c <> 0).
+   { apply Hall; lia. }
+   rewrite (sequential_prediction_recursive_fixed_point
+     r (INR j) c a Hdr Hstep).
+   ring.
+Qed.
+
+(**
+ [sequential_recursive_prediction_constant] (theorem) — Every next prediction generated by the entire recursive history equals the same exact closed-form value.
+ Mathematical meaning: Every next prediction generated by the entire recursive history equals the same exact closed-form value.
+ Exact checked proposition: forall j r c a, sequential_d r c <> 0 -> (forall n, (n <= j)%nat -> sequential_d (r + INR n) c <> 0) -> sequential_recursive_next_score j r c a = sequential_prediction r c a.
+ Premises and side conditions: Nonzero initial and each intermediate regression denominator through step j.
+ Proof/definition method: Rewrite the entire history using its inductive closed form and reuse scalar regression fixed-point uniqueness.
+ Library reuse: sequential_recursive_history_sum_closed_form, sequential_prediction_recursive_fixed_point.
+ Boundary: Deterministic recursive algebra only; the Gaussian conditioning
+ interpretation depends on the report's separately stated distribution model
+ and its currently unformalized conditional-expectation theorem.
+ *)
+Theorem sequential_recursive_prediction_constant :
+  forall j r c a,
+   sequential_d r c <> 0 ->
+   (forall n, (n <= j)%nat -> sequential_d (r + INR n) c <> 0) ->
+   sequential_recursive_next_score j r c a =
+     sequential_prediction r c a.
+Proof.
+ intros j r c a Hdr Hall.
+ unfold sequential_recursive_next_score.
+ assert (Hsum :
+   sequential_recursive_history_sum j r c a =
+     r*a + INR j * sequential_prediction r c a).
+ { apply sequential_recursive_history_sum_closed_form.
+   - exact Hdr.
+   - intros n Hlt; apply Hall; lia. }
+ rewrite Hsum.
+ apply sequential_prediction_recursive_fixed_point.
+ - exact Hdr.
+ - apply Hall; lia.
+Qed.
+
+(**
+ [sequential_recursive_inclusive_mean_closed_form] (theorem) — Dividing the actual recursive history sum by its count yields exactly the inclusive score average in the report.
+ Mathematical meaning: Dividing the actual recursive history sum by its count yields exactly the inclusive score average in the report.
+ Exact checked proposition: forall k r c a, sequential_d r c <> 0 -> (forall n, (n < k)%nat -> sequential_d (r + INR n) c <> 0) -> r + INR k <> 0 -> sequential_recursive_history_sum k r c a / (r + INR k) = sequential_inclusive_mean r (INR k) c a.
+ Premises and side conditions: Nonzero initial and previous regression denominators and positive/nonzero total count.
+ Proof/definition method: Rewrite by natural induction and compare two definitionally equal expressions.
+ Library reuse: sequential_recursive_history_sum_closed_form, sequential_inclusive_mean.
+ Boundary: Deterministic recursive algebra only; the Gaussian conditioning
+ interpretation depends on the report's separately stated distribution model
+ and its currently unformalized conditional-expectation theorem.
+ *)
+Theorem sequential_recursive_inclusive_mean_closed_form :
+  forall k r c a,
+   sequential_d r c <> 0 ->
+   (forall n, (n < k)%nat -> sequential_d (r + INR n) c <> 0) ->
+   r + INR k <> 0 ->
+   sequential_recursive_history_sum k r c a / (r + INR k) =
+     sequential_inclusive_mean r (INR k) c a.
+Proof.
+ intros k r c a Hdr Hall Hcount.
+ rewrite (sequential_recursive_history_sum_closed_form
+   k r c a Hdr Hall).
+ unfold sequential_inclusive_mean.
+ reflexivity.
+Qed.
+
+(**
+ [sequential_recursive_single_start_predictions_constant] (theorem) — Every future score in the single-start recursion equals c*a, for an arbitrary finite history length.
+ Mathematical meaning: Every future score in the single-start recursion equals c*a, for an arbitrary finite history length.
+ Exact checked proposition: forall j c a, (forall n, (n <= j)%nat -> sequential_d (1 + INR n) c <> 0) -> sequential_recursive_next_score j 1 c a = c * a.
+ Premises and side conditions: Nonzero denominators through j; no Gaussian distribution has been constructed.
+ Proof/definition method: Specialize the inductive constant-prediction result to one observed score.
+ Library reuse: sequential_recursive_prediction_constant, sequential_prediction_single_start.
+ Boundary: Deterministic recursive algebra only; the Gaussian conditioning
+ interpretation depends on the report's separately stated distribution model
+ and its currently unformalized conditional-expectation theorem.
+ *)
+Theorem sequential_recursive_single_start_predictions_constant :
+  forall j c a,
+   (forall n, (n <= j)%nat -> sequential_d (1 + INR n) c <> 0) ->
+   sequential_recursive_next_score j 1 c a = c * a.
+Proof.
+ intros j c a Hall.
+ assert (Hone : sequential_d 1 c <> 0).
+ { rewrite sequential_denominator_one; lra. }
+ rewrite (sequential_recursive_prediction_constant j 1 c a Hone Hall).
+ apply sequential_prediction_single_start.
+Qed.
+
+(**
+ [sequential_recursive_nonnegative_correlation_denominators_positive] (theorem) — Every finite regression denominator stays positive if there is at least one initial score and correlations are nonnegative.
+ Mathematical meaning: Every finite regression denominator stays positive if there is at least one initial score and correlations are nonnegative.
+ Exact checked proposition: forall j r c, 1 <= r -> 0 <= c -> 0 < sequential_d (r + INR j) c.
+ Premises and side conditions: At least one observed score and c>=0; negative correlations require the full domain inequalities.
+ Proof/definition method: Prove natural-to-real count nonnegativity by Rocq induction, then reuse denominator positivity.
+ Library reuse: Stdlib.Reals.S_INR, sequential_denominator_positive_nonnegative_correlation.
+ Boundary: Deterministic recursive algebra only; the Gaussian conditioning
+ interpretation depends on the report's separately stated distribution model
+ and its currently unformalized conditional-expectation theorem.
+ *)
+Theorem sequential_recursive_nonnegative_correlation_denominators_positive :
+  forall j r c, 1 <= r -> 0 <= c ->
+   0 < sequential_d (r + INR j) c.
+Proof.
+ intros j r c Hr Hc.
+ assert (Hnat : 0 <= INR j).
+ { induction j as [|j IH].
+   - simpl; lra.
+   - rewrite S_INR; lra. }
+ apply sequential_denominator_positive_nonnegative_correlation; lra.
+Qed.
+
+(**
+ [sequential_recursive_history_nonnegative_correlation] (theorem) — The full history sum has its closed form without any individual denominator premises in the c>=0 regime.
+ Mathematical meaning: The full history sum has its closed form without any individual denominator premises in the c>=0 regime.
+ Exact checked proposition: forall j r c a, 1 <= r -> 0 <= c -> sequential_recursive_history_sum j r c a = r*a + INR j * sequential_prediction r c a.
+ Premises and side conditions: Real initial score count at least one and nonnegative correlation; the proof does not assume Gaussianity.
+ Proof/definition method: Compose full-history induction with the checked positivity of every prefix denominator.
+ Library reuse: sequential_recursive_history_sum_closed_form, sequential_recursive_nonnegative_correlation_denominators_positive.
+ Boundary: Deterministic recursive algebra only; the Gaussian conditioning
+ interpretation depends on the report's separately stated distribution model
+ and its currently unformalized conditional-expectation theorem.
+ *)
+Theorem sequential_recursive_history_nonnegative_correlation :
+  forall j r c a, 1 <= r -> 0 <= c ->
+   sequential_recursive_history_sum j r c a =
+     r*a + INR j * sequential_prediction r c a.
+Proof.
+ intros j r c a Hr Hc.
+ apply sequential_recursive_history_sum_closed_form.
+ - pose proof
+     (sequential_denominator_positive_nonnegative_correlation
+       r c Hr Hc) as Hpositive.
+   lra.
+ - intros n Hlt.
+   pose proof
+     (sequential_recursive_nonnegative_correlation_denominators_positive
+       n r c Hr Hc) as Hpositive.
+   lra.
 Qed.
