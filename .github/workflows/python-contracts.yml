@@ -30,6 +30,8 @@ jobs:
         run: python verification/check_static_lint.py
       - name: Runtime and property tests
         run: python -m pytest -q tests
+      - name: Verify pinned additional-prover installer offline
+        run: bash scripts/test_formal_provers.sh
       - name: Symbolically verify acceptance gates and the unchanged negative fixture
         run: python verification/check_symbolic.py
       # The retained Nov 5 campaign is a historical, source-pinned artifact.
