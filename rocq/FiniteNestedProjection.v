@@ -336,12 +336,12 @@ Theorem two_cell_projection_idempotent :
 Proof.
  intros A xs weight score p x Ht Hf.
  change
- (if p x then finite_true_mean xs weight
+ ((if p x then finite_true_mean xs weight
       (finite_two_cell_prediction xs weight score p) p
-  else finite_false_mean xs weight
-      (finite_two_cell_prediction xs weight score p) p =
-  if p x then finite_true_mean xs weight score p
-  else finite_false_mean xs weight score p).
+   else finite_false_mean xs weight
+      (finite_two_cell_prediction xs weight score p) p) =
+  (if p x then finite_true_mean xs weight score p
+   else finite_false_mean xs weight score p)).
  destruct (p x).
  - apply two_cell_predictor_true_mean_fixed; exact Ht.
  - apply two_cell_predictor_false_mean_fixed; exact Hf.
@@ -585,12 +585,12 @@ Proof.
    rewrite (nested_false_projection_moment A xs weight score p q Hft Hff).
    reflexivity. }
  change
-   (if p x then finite_true_mean xs weight
+   ((if p x then finite_true_mean xs weight
        (refined_projection xs weight score p q) p
-    else finite_false_mean xs weight
-       (refined_projection xs weight score p q) p =
-    if p x then finite_true_mean xs weight score p
-    else finite_false_mean xs weight score p).
+     else finite_false_mean xs weight
+       (refined_projection xs weight score p q) p) =
+    (if p x then finite_true_mean xs weight score p
+     else finite_false_mean xs weight score p)).
  destruct (p x); assumption.
 Qed.
 
