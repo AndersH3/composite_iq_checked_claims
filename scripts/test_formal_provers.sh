@@ -21,17 +21,35 @@ fi
 for name in lean isabelle yices pvs colibri; do
   "$py" scripts/install_formal_provers.py --tool "$name" > /dev/null
 done
+# The official Clarkson mirror is a download-only option for Isabelle.
+"$py" scripts/install_formal_provers.py --tool isabelle --mirror clarkson > /dev/null
+if "$py" scripts/install_formal_provers.py --tool yices --mirror clarkson > /dev/null 2>&1; then
+  echo "Rejected mirror unexpectedly accepted for Yices" >&2
+  exit 1
+fi
 
 "$py" - <<'PY'
 from hashlib import sha256
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import deal
-from scripts.install_formal_provers import release_spec, verify_archive, SPECS
+from scripts.install_formal_provers import release_spec, verify_archive, download_url, SPECS, ISABELLE_CLARKSON
 
 deal.enable(warn=False)
 assert set(SPECS) == {"lean", "isabelle", "yices", "pvs"}
 assert len({release_spec(tool)[3] for tool in SPECS}) == 4
+
+for tool in SPECS:
+    assert download_url(tool, "primary") == release_spec(tool)[0]
+assert download_url("isabelle", "clarkson") == ISABELLE_CLARKSON
+assert download_url("isabelle", "clarkson").endswith("Isabelle2026_linux.tar.gz")
+for tool in ("lean", "yices", "pvs"):
+    try:
+        download_url(tool, "clarkson")
+    except deal.PreContractError:
+        pass
+    else:
+        raise AssertionError("Unsupported mirror accepted for " + tool)
 
 for tool in SPECS:
     url, digest, size, directory = release_spec(tool)
@@ -66,7 +84,7 @@ with TemporaryDirectory() as root:
     else:
         raise AssertionError("Malformed checksum was accepted")
 
-print("Four official pinned releases, Deal contracts and checksum controls passed")
+print("Four official pinned releases, mirror constraints, Deal contracts and checksum controls passed")
 PY
 
 echo "Offline installer plan tests passed"
