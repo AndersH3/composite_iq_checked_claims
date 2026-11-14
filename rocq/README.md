@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **959 proof scripts** in seven
+for the two reports. **972 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -4147,6 +4147,41 @@ maintained abstract vector-space dimension or rank-nullity theorem.
 Expected inventory: **956 public checked claims, 959 proof scripts,
 1044 documented declarations**, including **545 FiniteMoments proof
 scripts** across seven modules; pinned Rocq 9.2 CI remains mandatory.
+
+
+## Covariance pivot-coordinate retraction and rank-one projection (14 November 2026)
+
+Three thoroughly commented thin definitions and thirteen documented
+theorems organize the previously proved two-sample scalar-plus-radical
+normal form as an explicit **coordinate / section / projection** triple
+over the existing Stdlib.Vectors.Vector.t representation. The normalized
+coordinate is additive and homogeneous and sends the chosen pivot
+to one when its self-covariance is nonzero. The standard Vector.map
+scalar section is an injective right inverse to the coordinate map.
+The covariance pairing for two unit-mass outcomes factors exactly
+through the two real normalized coordinates and one pivot self-pairing.
+
+The induced coefficient projection preserves its coordinate, is
+idempotent, has fibers classified by one real scalar, and has image
+exactly the scalar pivot line. Under two unit-mass sampled outcomes,
+its kernel is precisely the existing covariance bilinear radical
+and projecting both arguments **preserves every covariance pairing**.
+The first ten results require only a nonzero pivot and do not need
+probability mass normalization; the factorization and radical
+identities state exactly the two-sample unit-mass hypotheses.
+
+The implementation reuses indexed-basis bilinearity, prior typed
+pivot reconstruction, the existing radical and Stdlib.Reals,
+Stdlib.Field, Stdlib.Psatz, Stdlib.Vectors.Vector.map and f_equal.
+No new finite sum, vector recursion, matrix evaluator, determinant,
+axiom or admitted proof is introduced. No Python, SPARK or archived
+evidence code is changed. The operator is a concrete, certified
+rank-one-style retraction, **not yet an abstract dimension/rank-nullity
+theorem** over a maintained vector-space theory.
+
+Expected inventory after pinned Rocq 9.2 validation:
+**969 public claims, 972 proof scripts, 1060 documented declarations**
+across seven modules; **558 FiniteMoments proof scripts**.
 
 ## Research extensions
 

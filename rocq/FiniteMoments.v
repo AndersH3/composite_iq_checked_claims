@@ -20831,6 +20831,566 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate] (definition) —
+   Normalize a typed coefficient direction by a covariance pivot.
+   Mathematical meaning: The scalar coefficient of a direction along
+   a chosen covariance pivot is its cross-covariance with that pivot
+   divided by the pivot's covariance with itself.
+   Exact declaration: coordinate(basis,pivot,left) :=
+   B(left,pivot) / B(pivot,pivot), with the existing typed pairing B.
+   Premises and side conditions: The definition is total over reals,
+   using Rocq's existing division even at zero denominators; all
+   useful retraction, kernel, and reconstruction theorems below impose
+   B(pivot,pivot)<>0 explicitly. Signed finite weights are allowed.
+   Proof/definition method: Thin wrapper around the maintained
+   indexed_basis_covariance_bilinear_form and Stdlib.Reals division.
+   Library reuse: indexed_basis_covariance_bilinear_form, Stdlib.Reals,
+   Stdlib.Vectors.Vector.t; no new finite sum or matrix evaluator.
+   Boundary: A concrete scalar functional, not a packaged dual space.
+   *)
+  Definition indexed_basis_covariance_pivot_coordinate
+      (basis : list (Outcome -> R))
+      (pivot left : Vector.t R (length basis)) : R :=
+    indexed_basis_covariance_bilinear_form basis left pivot /
+    indexed_basis_covariance_bilinear_form basis pivot pivot.
+
+  (**
+   [indexed_basis_covariance_pivot_section] (definition) —
+   Represent a scalar as a scaled typed covariance pivot.
+   Mathematical meaning: Each real scalar describes one coefficient
+   direction on the chosen pivot line in the maintained finite basis.
+   Exact declaration: section(basis,pivot,alpha) is the standard
+   Vector.map (fun c => alpha*c) pivot, of the same basis length.
+   Premises and side conditions: Every finite dimension, including
+   zero, and any scalar, basis, outcome samples, and signed weights
+   are permitted. No division or nonzero assumption enters this map.
+   Proof/definition method: Directly reuse standard vector mapping.
+   Library reuse: Stdlib.Vectors.Vector.map, Stdlib.Reals.Rmult;
+   no custom coordinate selector, recursion or matrix machinery.
+   Boundary: Concrete scalar-to-vector section, not a formal
+   dimension theorem for its image.
+   *)
+  Definition indexed_basis_covariance_pivot_section
+      (basis : list (Outcome -> R))
+      (pivot : Vector.t R (length basis)) (alpha : R) :
+      Vector.t R (length basis) :=
+    Vector.map (fun c => alpha * c) pivot.
+
+  (**
+   [indexed_basis_covariance_pivot_projection] (definition) —
+   The coefficient-space endomorphism onto the selected pivot line.
+   Mathematical meaning: Replace a typed coefficient vector by the
+   pivot direction scaled with its normalized covariance coordinate.
+   Exact declaration: projection(basis,pivot,left) =
+   section(basis,pivot,coordinate(basis,pivot,left)).
+   Premises and side conditions: This total algebraic definition
+   admits signed and unnormalized sample weights. Idempotence,
+   radical-kernel, and covariance-preservation theorems below require
+   a nonzero pivot; the last two also require two unit-mass outcomes.
+   Proof/definition method: Compose the two thin standard-library-
+   backed definitions without implementing new vector operations.
+   Library reuse: indexed_basis_covariance_pivot_coordinate,
+   indexed_basis_covariance_pivot_section, Stdlib.Vectors.Vector.map.
+   Boundary: A concrete rank-one-style operator whose abstract
+   image dimension is not yet separately certified.
+   *)
+  Definition indexed_basis_covariance_pivot_projection
+      (basis : list (Outcome -> R))
+      (pivot left : Vector.t R (length basis)) :
+      Vector.t R (length basis) :=
+    indexed_basis_covariance_pivot_section basis pivot
+      (indexed_basis_covariance_pivot_coordinate basis pivot left).
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_add] (theorem) —
+   The covariance pivot coordinate is a linear additive functional.
+   Mathematical meaning: The normalized covariance of a sum with a
+   fixed nonisotropic pivot equals the sum of its two coordinates.
+   Exact checked proposition: When B(p,p)<>0,
+   coordinate(p,left+right)=coordinate(p,left)+coordinate(p,right).
+   Premises and side conditions: All listed weights may be signed
+   and unnormalized. The finite score basis and typed vectors may
+   be empty or dependent, subject only to the nonzero pivot premise.
+   Proof/definition method: Use previously checked first-slot
+   covariance additivity and Stdlib.Field to normalize the quotient.
+   Library reuse: indexed_basis_covariance_bilinear_add_first,
+   indexed_basis_covariance_pivot_coordinate and Stdlib.Field.
+   Boundary: Scalar linearity, not a new vector-space implementation.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_add :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate
+        basis pivot (Vector.map2 Rplus left right) =
+      indexed_basis_covariance_pivot_coordinate basis pivot left +
+      indexed_basis_covariance_pivot_coordinate basis pivot right.
+  Proof.
+    intros basis pivot left right Hpivot.
+    unfold indexed_basis_covariance_pivot_coordinate.
+    rewrite indexed_basis_covariance_bilinear_add_first.
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_scale] (theorem) —
+   Homogeneity of the normalized covariance pivot coordinate.
+   Mathematical meaning: Scaling any typed coefficient direction
+   by an arbitrary real scalar scales its pivot coordinate equally.
+   Exact checked proposition: When B(p,p)<>0,
+   coordinate(p,alpha*left)=alpha*coordinate(p,left).
+   Premises and side conditions: No mass normalization, weight
+   nonnegativity, basis independence, or nonzero alpha is assumed.
+   Proof/definition method: Apply the existing first-slot bilinear
+   homogeneity then use standard ordered-real field normalization.
+   Library reuse: indexed_basis_covariance_bilinear_scale_first,
+   indexed_basis_covariance_pivot_coordinate and Stdlib.Field.
+   Boundary: A concrete linear-functional property, not rank-nullity.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_scale :
+    forall basis (pivot left : Vector.t R (length basis)) (alpha : R),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate
+        basis pivot (Vector.map (fun c => alpha * c) left) =
+      alpha * indexed_basis_covariance_pivot_coordinate basis pivot left.
+  Proof.
+    intros basis pivot left alpha Hpivot.
+    unfold indexed_basis_covariance_pivot_coordinate.
+    rewrite indexed_basis_covariance_bilinear_scale_first.
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_pivot_one] (theorem) —
+   The nonzero pivot itself has normalized coordinate one.
+   Mathematical meaning: A nonisotropic pivot becomes the unit element
+   of the real coordinate used to represent its covariance functional.
+   Exact checked proposition: B(p,p)<>0 implies coordinate(p,p)=1.
+   Premises and side conditions: Signed or unnormalized weights and
+   any typed finite basis are admitted; the one essential assumption
+   is that the pivot self-covariance is not zero.
+   Proof/definition method: Expand only the coordinate quotient and
+   cancel a nonzero real denominator by the standard field tactic.
+   Library reuse: indexed_basis_covariance_pivot_coordinate,
+   indexed_basis_covariance_bilinear_form and Stdlib.Field.
+   Boundary: A normalization identity, not a matrix rank result.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_pivot_one :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot pivot = 1.
+  Proof.
+    intros basis pivot Hpivot.
+    unfold indexed_basis_covariance_pivot_coordinate.
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_section] (theorem) —
+   Scalar retraction of the normalized pivot coordinate map.
+   Mathematical meaning: Embedding any real scalar along the pivot
+   and then reading the normalized covariance coordinate recovers
+   the original scalar exactly.
+   Exact checked proposition: B(p,p)<>0 implies
+   coordinate(p,section(p,alpha))=alpha for every real alpha.
+   Premises and side conditions: No weight sign or normalization
+   condition; the chosen pivot must have nonzero self-covariance.
+   Proof/definition method: Reuse the checked homogeneity of the
+   covariance pairing, then cancel the nonzero pivot in Stdlib.Field.
+   Library reuse: indexed_basis_covariance_bilinear_scale_first,
+   indexed_basis_covariance_pivot_section,
+   indexed_basis_covariance_pivot_coordinate, Stdlib.Field.
+   Boundary: A concrete split epimorphism onto R, with no abstract
+   dimension, quotient or subspace object introduced.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_section :
+    forall basis (pivot : Vector.t R (length basis)) (alpha : R),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot
+        (indexed_basis_covariance_pivot_section basis pivot alpha) =
+      alpha.
+  Proof.
+    intros basis pivot alpha Hpivot.
+    unfold indexed_basis_covariance_pivot_coordinate,
+      indexed_basis_covariance_pivot_section.
+    rewrite indexed_basis_covariance_bilinear_scale_first.
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_section_injective] (theorem) —
+   Different real coordinates determine different pivot-line vectors.
+   Mathematical meaning: When pivot self-covariance is nonzero, no
+   two distinct real scalars can describe the same scaled pivot vector.
+   Exact checked proposition: B(p,p)<>0 and section(p,a)=section(p,b)
+   imply a=b for every pair of real scalars a,b.
+   Premises and side conditions: Signed and unnormalized finite
+   weights are allowed; the pivot's covariance is nonzero.
+   Proof/definition method: Apply f_equal to the existing normalized
+   coordinate functional, then rewrite the two verified coordinate-
+   section retraction equations. No vector-coordinate induction.
+   Library reuse: indexed_basis_covariance_pivot_coordinate_section,
+   Stdlib.Logic.f_equal and Stdlib.Vectors.Vector.map.
+   Boundary: Injection of a concrete real line into coefficient
+   vectors, not yet a formal vector-subspace dimension computation.
+   *)
+  Theorem indexed_basis_covariance_pivot_section_injective :
+    forall basis (pivot : Vector.t R (length basis)) a b,
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_section basis pivot a =
+      indexed_basis_covariance_pivot_section basis pivot b ->
+      a = b.
+  Proof.
+    intros basis pivot a b Hpivot Hequal.
+    pose proof
+      (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
+        Hequal) as Hcoordinates.
+    rewrite (indexed_basis_covariance_pivot_coordinate_section
+      basis pivot a Hpivot) in Hcoordinates.
+    rewrite (indexed_basis_covariance_pivot_coordinate_section
+      basis pivot b Hpivot) in Hcoordinates.
+    exact Hcoordinates.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_bilinear_pivot_coordinate_factorization]
+   (theorem) — The typed covariance pairing factors through two real scalars.
+   Mathematical meaning: For two unit-mass sample occurrences, the
+   coefficient covariance of any two directions is their normalized
+   pivot-coordinate product times the pivot self-covariance.
+   Exact checked proposition: B(left,right)=coordinate(p,left) *
+   coordinate(p,right) * B(p,p) under B(p,p)<>0.
+   Premises and side conditions: Signed weights and dependent finite
+   score bases are permitted. Samples=[x;y] and total_mass=1 are
+   necessary for the previously verified typed pivot reconstruction.
+   Proof/definition method: Rewrite by the existing typed pivot
+   reconstruction, use covariance symmetry in its remaining pivot
+   argument, and normalize the resulting real quotient with Field.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_reconstruction,
+   indexed_basis_covariance_bilinear_symmetric,
+   indexed_basis_covariance_pivot_coordinate and Stdlib.Field.
+   Boundary: Exact scalar covariance factorization, not a formal
+   general-rank matrix decomposition or empirical regression model.
+   *)
+  Theorem indexed_basis_two_samples_bilinear_pivot_coordinate_factorization :
+    forall basis
+           (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left right =
+        indexed_basis_covariance_pivot_coordinate basis pivot left *
+        indexed_basis_covariance_pivot_coordinate basis pivot right *
+        indexed_basis_covariance_bilinear_form basis pivot pivot.
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    unfold indexed_basis_covariance_pivot_coordinate.
+    rewrite (indexed_basis_two_samples_bilinear_pivot_reconstruction
+      basis pivot left right x y Hsamples Hmass Hpivot).
+    rewrite (indexed_basis_covariance_bilinear_symmetric basis pivot right).
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_radical_iff_pivot_coordinate_zero]
+   (theorem) — The covariance radical is the kernel of one real functional.
+   Mathematical meaning: In a nonzero two-sample covariance model,
+   the entire typed covariance radical consists exactly of the
+   directions with normalized pivot coordinate equal to zero.
+   Exact checked proposition: Under samples=[x;y], total_mass=1 and
+   B(p,p)<>0, Radical(left) iff coordinate(p,left)=0.
+   Premises and side conditions: The finite score basis may be
+   dependent or contain duplicates; real weights may be signed.
+   Proof/definition method: Reuse the proved one-pivot radical iff
+   orthogonality theorem. Transport its single covariance equation
+   across the nonzero real denominator using Stdlib.Field and nra.
+   Library reuse: indexed_basis_two_samples_bilinear_radical_iff_pivot_orthogonal,
+   indexed_basis_covariance_pivot_coordinate, Stdlib.Field, Psatz.nra.
+   Boundary: An explicit kernel predicate, not its abstract dimension.
+   *)
+  Theorem indexed_basis_two_samples_radical_iff_pivot_coordinate_zero :
+    forall basis
+           (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis left <->
+       indexed_basis_covariance_pivot_coordinate basis pivot left = 0).
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    pose proof
+      (indexed_basis_two_samples_bilinear_radical_iff_pivot_orthogonal
+        basis pivot left x y Hsamples Hmass Hpivot) as Hradical.
+    split.
+    - intro Hrad.
+      apply (proj1 Hradical) in Hrad.
+      unfold indexed_basis_covariance_pivot_coordinate.
+      rewrite Hrad.
+      field; exact Hpivot.
+    - intro Hcoordinate.
+      apply (proj2 Hradical).
+      assert (Hrestore :
+        indexed_basis_covariance_bilinear_form basis left pivot =
+        indexed_basis_covariance_pivot_coordinate basis pivot left *
+        indexed_basis_covariance_bilinear_form basis pivot pivot).
+      {
+        unfold indexed_basis_covariance_pivot_coordinate.
+        field; exact Hpivot.
+      }
+      rewrite Hcoordinate in Hrestore.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_coordinate] (theorem) —
+   Covariance-pivot projection preserves its normalized scalar coordinate.
+   Mathematical meaning: Projecting a direction onto the selected
+   coefficient pivot line does not change its normalized covariance
+   coordinate, even if sample weights are signed or unnormalized.
+   Exact checked proposition: Under B(p,p)<>0, coordinate(p,P(left))
+   equals coordinate(p,left).
+   Premises and side conditions: Arbitrary finite typed score basis,
+   signed weights and any coefficient direction; nonzero pivot is needed.
+   Proof/definition method: Unfold only projection as composition of
+   coordinate and section, then apply the already proved retraction law.
+   Library reuse: indexed_basis_covariance_pivot_projection,
+   indexed_basis_covariance_pivot_coordinate_section and Stdlib.Logic.
+   Boundary: Coordinate preservation, not a general orthogonal
+   projection theorem for arbitrary indefinite covariance forms.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_coordinate :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate
+        basis pivot (indexed_basis_covariance_pivot_projection basis pivot left) =
+      indexed_basis_covariance_pivot_coordinate basis pivot left.
+  Proof.
+    intros basis pivot left Hpivot.
+    unfold indexed_basis_covariance_pivot_projection.
+    rewrite (indexed_basis_covariance_pivot_coordinate_section
+      basis pivot (indexed_basis_covariance_pivot_coordinate basis pivot left)
+      Hpivot).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_idempotent] (theorem) —
+   The covariance-pivot coefficient operator is a genuine projection.
+   Mathematical meaning: Applying the canonical pivot-line replacement
+   twice changes no coefficient beyond applying it once.
+   Exact checked proposition: B(p,p)<>0 implies P(P(left))=P(left).
+   Premises and side conditions: The basis may be dependent or empty
+   where premise permits. Finite weights may be signed or unnormalized.
+   Proof/definition method: Expand only the outer projection and
+   rewrite its scalar coordinate using the maintained projection
+   coordinate preservation theorem. No vector induction or matrix code.
+   Library reuse: indexed_basis_covariance_pivot_projection_coordinate,
+   indexed_basis_covariance_pivot_projection, Stdlib.Logic.eq_refl.
+   Boundary: An exact idempotent linear-algebra-style operator; an
+   abstract dimension computation is still separate work.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_idempotent :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_projection basis pivot
+        (indexed_basis_covariance_pivot_projection basis pivot left) =
+      indexed_basis_covariance_pivot_projection basis pivot left.
+  Proof.
+    intros basis pivot left Hpivot.
+    change
+      (indexed_basis_covariance_pivot_section basis pivot
+        (indexed_basis_covariance_pivot_coordinate basis pivot
+          (indexed_basis_covariance_pivot_projection basis pivot left)) =
+       indexed_basis_covariance_pivot_projection basis pivot left).
+    rewrite (indexed_basis_covariance_pivot_projection_coordinate
+      basis pivot left Hpivot).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_fiber_iff_coordinate]
+   (theorem) — Projection fibers are exactly normalized-coordinate fibers.
+   Mathematical meaning: Two coefficient vectors project to the same
+   pivot-line vector precisely when their normalized covariance scalar
+   coordinates agree; redundant directions need not coincide.
+   Exact checked proposition: Under B(p,p)<>0, P(left)=P(other)
+   iff coordinate(p,left)=coordinate(p,other).
+   Premises and side conditions: Any finite typed score basis and
+   signed sample weights; no unit-mass or positivity requirement.
+   Proof/definition method: Apply f_equal to the established coordinate
+   map and use its verified projection invariance; conversely
+   substitute equal scalar coordinates in the projection definition.
+   Library reuse: indexed_basis_covariance_pivot_projection_coordinate,
+   indexed_basis_covariance_pivot_projection, Stdlib.Logic.f_equal.
+   Boundary: Exact fiber classification, not injectivity of the
+   original coefficient-to-score map or generic rank.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_fiber_iff_coordinate :
+    forall basis
+           (pivot left other : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_projection basis pivot left =
+       indexed_basis_covariance_pivot_projection basis pivot other <->
+       indexed_basis_covariance_pivot_coordinate basis pivot left =
+       indexed_basis_covariance_pivot_coordinate basis pivot other).
+  Proof.
+    intros basis pivot left other Hpivot.
+    split.
+    - intro Hequal.
+      pose proof
+        (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
+          Hequal) as Hcoordinates.
+      rewrite (indexed_basis_covariance_pivot_projection_coordinate
+        basis pivot left Hpivot) in Hcoordinates.
+      rewrite (indexed_basis_covariance_pivot_projection_coordinate
+        basis pivot other Hpivot) in Hcoordinates.
+      exact Hcoordinates.
+    - intro Hcoordinate.
+      unfold indexed_basis_covariance_pivot_projection.
+      now rewrite Hcoordinate.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_image_iff_section]
+   (theorem) — Complete image characterization of the pivot projection.
+   Mathematical meaning: A coefficient vector lies in the image of
+   the canonical projection exactly when it lies on the scalar line
+   generated by the chosen covariance pivot.
+   Exact checked proposition: Under B(p,p)<>0,
+   (exists input, P(input)=candidate) iff
+   (exists alpha:R, section(p,alpha)=candidate).
+   Premises and side conditions: Arbitrary finite score basis, signed
+   sample weights, and full length-typed coefficient vectors.
+   Proof/definition method: Every projection is definitionally a
+   section of its scalar coordinate. Every section is fixed under
+   projection by the checked coordinate-section retraction equation.
+   Library reuse: indexed_basis_covariance_pivot_projection,
+   indexed_basis_covariance_pivot_coordinate_section,
+   Stdlib.Logic.ex_intro and Stdlib.Vectors.Vector.map.
+   Boundary: Explicit one-scalar image parameterization, not an
+   abstract linear-space dimension-one theorem.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_image_iff_section :
+    forall basis
+           (pivot candidate : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((exists input : Vector.t R (length basis),
+          indexed_basis_covariance_pivot_projection basis pivot input =
+          candidate) <->
+       (exists alpha : R,
+          indexed_basis_covariance_pivot_section basis pivot alpha =
+          candidate)).
+  Proof.
+    intros basis pivot candidate Hpivot.
+    split.
+    - intros [input Hprojected].
+      exists (indexed_basis_covariance_pivot_coordinate basis pivot input).
+      rewrite <- Hprojected.
+      reflexivity.
+    - intros [alpha Hsection].
+      exists (indexed_basis_covariance_pivot_section basis pivot alpha).
+      rewrite <- Hsection.
+      unfold indexed_basis_covariance_pivot_projection.
+      rewrite (indexed_basis_covariance_pivot_coordinate_section
+        basis pivot alpha Hpivot).
+      reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_projection_radical_iff_zero_section]
+   (theorem) — Projection kernel is exactly the covariance radical.
+   Mathematical meaning: For two unit-mass sampled outcomes with a
+   nonzero covariance pivot, a coefficient vector projects to the
+   scalar-zero pivot vector exactly when it is covariance orthogonal
+   to every other coefficient direction.
+   Exact checked proposition: Radical(left) iff
+   P(left)=section(pivot,0), with samples=[x;y] and B(p,p)<>0.
+   Premises and side conditions: Arbitrary signed weights and
+   dependent finite score bases; the pivot must be nonisotropic.
+   Proof/definition method: Reuse the signed two-sample radical iff
+   zero normalized coordinate theorem and the coordinate-section
+   retraction, passing to and from projection equality via f_equal.
+   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero,
+   indexed_basis_covariance_pivot_projection_coordinate,
+   indexed_basis_covariance_pivot_coordinate_section, Stdlib.Logic.
+   Boundary: Kernel equality without asserting an abstract nullity.
+   *)
+  Theorem indexed_basis_two_samples_projection_radical_iff_zero_section :
+    forall basis (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis left <->
+       indexed_basis_covariance_pivot_projection basis pivot left =
+       indexed_basis_covariance_pivot_section basis pivot 0).
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    pose proof
+      (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+        basis pivot left x y Hsamples Hmass Hpivot) as Hradical.
+    split.
+    - intro Hrad.
+      apply (proj1 Hradical) in Hrad.
+      unfold indexed_basis_covariance_pivot_projection.
+      now rewrite Hrad.
+    - intro Hprojected.
+      apply (proj2 Hradical).
+      pose proof
+        (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
+          Hprojected) as Hcoordinate.
+      rewrite (indexed_basis_covariance_pivot_projection_coordinate
+        basis pivot left Hpivot) in Hcoordinate.
+      rewrite (indexed_basis_covariance_pivot_coordinate_section
+        basis pivot 0 Hpivot) in Hcoordinate.
+      exact Hcoordinate.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_projection_preserves_bilinear] (theorem) —
+   The canonical pivot projection preserves all covariance pairings.
+   Mathematical meaning: Replacing both coefficient directions by
+   their normalized pivot-line representatives leaves the complete
+   covariance bilinear form unchanged in a two-sample unit-mass model.
+   Exact checked proposition: B(P(left),P(right))=B(left,right).
+   Premises and side conditions: A nonzero pivot self-covariance,
+   exactly two unit-mass sampled outcomes and arbitrary signed
+   weights. No positive-semidefinite or score-independence hypothesis.
+   Proof/definition method: Rewrite both sides by the established
+   scalar-coordinate factorization of the bilinear form and apply
+   the coordinate preservation theorem in each projection argument.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_coordinate_factorization,
+   indexed_basis_covariance_pivot_projection_coordinate, Stdlib.Logic.
+   Boundary: A concrete covariance-preserving rank-one projection,
+   not a generic spectral theorem or an abstract dimension count.
+   *)
+  Theorem indexed_basis_two_samples_projection_preserves_bilinear :
+    forall basis
+           (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        (indexed_basis_covariance_pivot_projection basis pivot right) =
+      indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
+      basis pivot
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        (indexed_basis_covariance_pivot_projection basis pivot right)
+      x y Hsamples Hmass Hpivot).
+    rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
+      basis pivot left right x y Hsamples Hmass Hpivot).
+    rewrite (indexed_basis_covariance_pivot_projection_coordinate
+      basis pivot left Hpivot).
+    rewrite (indexed_basis_covariance_pivot_projection_coordinate
+      basis pivot right Hpivot).
+    reflexivity.
+  Qed.
+
+
 End FiniteProbabilityMoments.
 
 

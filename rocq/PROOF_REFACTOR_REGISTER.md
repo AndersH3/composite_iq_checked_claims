@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **956 public theorem/lemma/example claims**, plus
+The current branch has **969 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**959 proof scripts** across seven Rocq modules. The claims and scripts
+**972 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 545 proof scripts
+## FiniteMoments.v — 558 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1370,6 +1370,19 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_bilinear_radical_unique_pivot_subtraction` (theorem) | Subtract the quotient-scaled pivot; use checked bilinear add/scale laws to prove radical membership and field cancellation for uniqueness. | indexed_basis_two_samples_bilinear_functional_normal_form, indexed_basis_covariance_bilinear_add_first, indexed_basis_covariance_bilinear_scale_first, Stdlib.Field. | **New: unique scalar-plus-radical splitting of every typed covariance coefficient direction.** |
 | `indexed_basis_two_samples_bilinear_functional_fiber_iff_pivot` (theorem) | Use the normal form in both directions to equate full covariance functionals precisely when one pivot evaluation matches. | indexed_basis_two_samples_bilinear_functional_normal_form, Stdlib.Logic. | **New: single-pivot equality criterion for arbitrary covariance functional fibers.** |
 | `indexed_basis_two_samples_covariance_quadratic_pivot_square` (theorem) | Rewrite the typed quadratic as a bilinear diagonal and then a pivot-reconstructed symmetric square. | indexed_basis_covariance_bilinear_diagonal, indexed_basis_two_samples_bilinear_pivot_reconstruction, indexed_basis_covariance_bilinear_symmetric. | **New: exact signed two-sample quadratic square divided by a nonzero pivot pairing.** |
+| `indexed_basis_covariance_pivot_coordinate_add` (theorem) | Reuse typed covariance additivity and normalize the quotient under a nonzero pivot. | indexed_basis_covariance_bilinear_add_first, Stdlib.Field. | **New: Coordinate map is additive, even for signed/unnormalized weights.** |
+| `indexed_basis_covariance_pivot_coordinate_scale` (theorem) | Use typed covariance scalar homogeneity and field normalization. | indexed_basis_covariance_bilinear_scale_first, Stdlib.Field. | **New: Coordinate map is homogeneous.** |
+| `indexed_basis_covariance_pivot_coordinate_pivot_one` (theorem) | Cancel the nonzero pivot self-covariance in the normalized quotient. | Stdlib.Field, indexed_basis_covariance_pivot_coordinate. | **New: Pivot has normalized scalar coordinate one.** |
+| `indexed_basis_covariance_pivot_coordinate_section` (theorem) | Apply checked covariance homogeneity to the standard vector-map section then normalize. | indexed_basis_covariance_bilinear_scale_first, Stdlib.Field, Vector.map. | **New: Coordinate composed with scalar section is the identity on R.** |
+| `indexed_basis_covariance_pivot_section_injective` (theorem) | Apply the coordinate functional to a section equality and use retraction. | indexed_basis_covariance_pivot_coordinate_section, f_equal. | **New: Scalar section is injective for a nonzero pivot.** |
+| `indexed_basis_two_samples_bilinear_pivot_coordinate_factorization` (theorem) | Apply checked two-sample bilinear pivot reconstruction, symmetry and field arithmetic. | indexed_basis_two_samples_bilinear_pivot_reconstruction, indexed_basis_covariance_bilinear_symmetric, Stdlib.Field. | **New: Every pairing factors through two normalized real coordinates.** |
+| `indexed_basis_two_samples_radical_iff_pivot_coordinate_zero` (theorem) | Transport one-pivot radical orthogonality across the nonzero scalar denominator. | indexed_basis_two_samples_bilinear_radical_iff_pivot_orthogonal, Stdlib.Field, Psatz.nra. | **New: Radical is the kernel of one normalized real linear functional.** |
+| `indexed_basis_covariance_pivot_projection_coordinate` (theorem) | Unfold the composition and invoke coordinate-section retraction. | indexed_basis_covariance_pivot_coordinate_section. | **New: Projection preserves its unique scalar coordinate.** |
+| `indexed_basis_covariance_pivot_projection_idempotent` (theorem) | Expand only the outer projection and rewrite its coordinate to the original value. | indexed_basis_covariance_pivot_projection_coordinate. | **New: Pivot-line coefficient projection is idempotent.** |
+| `indexed_basis_covariance_pivot_projection_fiber_iff_coordinate` (theorem) | Apply the normalized coordinate to equal projections, and vice versa. | indexed_basis_covariance_pivot_projection_coordinate, f_equal. | **New: Projection equality iff one real coordinate equality.** |
+| `indexed_basis_covariance_pivot_projection_image_iff_section` (theorem) | Project to its scalar section; conversely each section is fixed by retraction. | indexed_basis_covariance_pivot_coordinate_section. | **New: Projection image is exactly the one-scalar pivot line.** |
+| `indexed_basis_two_samples_projection_radical_iff_zero_section` (theorem) | Reuse the radical iff zero-coordinate criterion and the projection retraction. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero, indexed_basis_covariance_pivot_projection_coordinate. | **New: Covariance radical equals concrete projection kernel.** |
+| `indexed_basis_two_samples_projection_preserves_bilinear` (theorem) | Factor both pairings into normalized coordinates and preserve each projection coordinate. | indexed_basis_two_samples_bilinear_pivot_coordinate_factorization, indexed_basis_covariance_pivot_projection_coordinate. | **New: Projecting both directions leaves covariance unchanged.** |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1702,3 +1715,37 @@ maintained abstract vector-space dimension or rank-nullity theorem.
 Expected inventory: **956 public checked claims, 959 proof scripts,
 1044 documented declarations**, including **545 FiniteMoments proof
 scripts** across seven modules; pinned Rocq 9.2 CI remains mandatory.
+
+## Covariance pivot-coordinate retraction and rank-one projection (14 November 2026)
+
+Three thoroughly commented thin definitions and thirteen documented
+theorems organize the previously proved two-sample scalar-plus-radical
+normal form as an explicit **coordinate / section / projection** triple
+over the existing Stdlib.Vectors.Vector.t representation. The normalized
+coordinate is additive and homogeneous and sends the chosen pivot
+to one when its self-covariance is nonzero. The standard Vector.map
+scalar section is an injective right inverse to the coordinate map.
+The covariance pairing for two unit-mass outcomes factors exactly
+through the two real normalized coordinates and one pivot self-pairing.
+
+The induced coefficient projection preserves its coordinate, is
+idempotent, has fibers classified by one real scalar, and has image
+exactly the scalar pivot line. Under two unit-mass sampled outcomes,
+its kernel is precisely the existing covariance bilinear radical
+and projecting both arguments **preserves every covariance pairing**.
+The first ten results require only a nonzero pivot and do not need
+probability mass normalization; the factorization and radical
+identities state exactly the two-sample unit-mass hypotheses.
+
+The implementation reuses indexed-basis bilinearity, prior typed
+pivot reconstruction, the existing radical and Stdlib.Reals,
+Stdlib.Field, Stdlib.Psatz, Stdlib.Vectors.Vector.map and f_equal.
+No new finite sum, vector recursion, matrix evaluator, determinant,
+axiom or admitted proof is introduced. No Python, SPARK or archived
+evidence code is changed. The operator is a concrete, certified
+rank-one-style retraction, **not yet an abstract dimension/rank-nullity
+theorem** over a maintained vector-space theory.
+
+Expected inventory after pinned Rocq 9.2 validation:
+**969 public claims, 972 proof scripts, 1060 documented declarations**
+across seven modules; **558 FiniteMoments proof scripts**.
