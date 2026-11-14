@@ -22,6 +22,7 @@ modules = (
     "ReportRounding", "ReportCounterexample", "EquicorrelationSpectral",
     "EquicorrelationVectors", "EquicorrelationInverseVectors",
     "FiniteTwoCellProjection", "FiniteNestedProjection",
+    "FiniteConditionalCovariance",
 )
 decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global|Polymorphic|Program)\s+)?"
