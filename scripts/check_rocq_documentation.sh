@@ -21,7 +21,7 @@ modules = (
     "FiniteSum", "FiniteBridge", "FourCellBridge", "SequentialReport",
     "ReportRounding", "ReportCounterexample", "EquicorrelationSpectral",
     "EquicorrelationVectors", "EquicorrelationInverseVectors",
-    "FiniteTwoCellProjection",
+    "FiniteTwoCellProjection", "FiniteNestedProjection",
 )
 decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global|Polymorphic|Program)\s+)?"

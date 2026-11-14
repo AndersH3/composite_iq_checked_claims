@@ -10,17 +10,20 @@
  FiniteTwoCellProjection.v supplies weighted moments, conditional means,
  two-cell projection orthogonality, risk and variance decomposition.
  All unnormalized moments count repeated sample occurrences.
- Hypotheses: Every conditional cell mean under projection has nonzero
+ Explicit hypotheses: Every conditional cell mean under projection has nonzero
  mass; optimization/monotonicity requires positive observed cell mass.
  No nonnegative-weight hypothesis is concealed in an algebraic theorem;
  interpretations as probabilities require normalized nonnegative weights.
+ Library use: Stdlib.List and Stdlib.Reals, the shared FiniteSum,
+ and the maintained FiniteTwoCellProjection theorem API.
  Refactoring: The only general sum helper is a derived if-partition
  property proved with FiniteSum.finite_sum_filter and finite_sum_add.
  No new recursive fold or custom indicator implementation.
  Limitations: Finite Boolean partitions are not a general sigma-algebra,
  L1 conditional expectation, or Gaussian conditional distribution.
  None of the report's empirical IQ premises follows from these results.
- Verification: Pinned Rocq 9.2 kernel workflow (via GitHub Actions).
+ Reproduction: rocq compile FiniteNestedProjection.v after all listed
+ dependencies, in the pinned Rocq 9.2 GitHub Actions build.
  AI disclosure: OpenAI's assistant authored the source and explanatory
  comments; only independent kernel checking validates theorem statements.
  *)
@@ -894,9 +897,12 @@ Theorem nested_refinement_cannot_increase_risk :
   (finite_false_mean xs weight score p).
 Proof.
  intros A xs weight score p q Htt Htf Hft Hff.
+ assert (Htt0 : finite_true_mass (filter p xs) weight q <> 0) by lra.
+ assert (Htf0 : finite_false_mass (filter p xs) weight q <> 0) by lra.
+ assert (Hft0 : finite_true_mass (filter (fun x=>negb(p x)) xs) weight q <> 0) by lra.
+ assert (Hff0 : finite_false_mass (filter (fun x=>negb(p x)) xs) weight q <> 0) by lra.
  pose proof (nested_refinement_variance_decomposition A xs weight score p q
-   (Rgt_not_eq _ _ Htt) (Rgt_not_eq _ _ Htf)
-   (Rgt_not_eq _ _ Hft) (Rgt_not_eq _ _ Hff)) as Hdecomp.
+   Htt0 Htf0 Hft0 Hff0) as Hdecomp.
  pose proof (nested_between_loss_nonnegative A xs weight score p q
    (Rlt_le _ _ Htt) (Rlt_le _ _ Htf)
    (Rlt_le _ _ Hft) (Rlt_le _ _ Hff)) as Hpos.
