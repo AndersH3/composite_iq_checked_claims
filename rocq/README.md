@@ -1,5 +1,7 @@
 # Rocq formalization of checked claims
 
+> **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
+
 This directory is an additional **Rocq kernel-checked mathematical layer**
 for the two reports. **979 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
@@ -19,6 +21,10 @@ rocq compile FiniteUnion.v
 rocq compile FiniteMoments.v
 rocq compile FiniteBridge.v
 rocq compile FourCellBridge.v
+rocq compile SequentialReport.v
+rocq compile ReportRounding.v
+rocq compile ReportCounterexample.v
+rocq compile EquicorrelationSpectral.v
 ```
 
 The GitHub Actions workflow at
@@ -4580,3 +4586,12 @@ Rocq workflow now compiles it after FiniteSum; the documentation
 audit includes all 25 proof scripts and 14 source declarations.
 No original reports, archived proof evidence or numerical outputs
 were altered.
+
+
+## November 14: Equicorrelation quadratic form and Schur/inverse algebra
+
+Added `EquicorrelationSpectral.v` with 23 documented theorem scripts concerning common/contrast eigendirections, sharp PSD/PD domain for explicitly feasible energy/sum summaries, exact inverse component-and-total action, and Schur residual positive-energy inequalities. The new module reuses `SequentialReport.v` and Rocq's real-number libraries and introduces no custom matrix calculus or new axioms. This is a substantial report-algebra contribution, but not a Gaussian realization, general spectral theorem, full n-dimensional vector proof, or conditional expectation theorem.
+
+### Complete AI disclosure (November 14 addition)
+
+OpenAI's assistant designed the theorem statements, wrote the annotated Rocq proofs, updated the source-ordered proof register, and checked the status of repository automation. The final independently verifiable result is the pinned Rocq 9.2 workflow's success or failure; mathematical scope remains limited to the explicit real-algebra and feasibility assumptions. Existing statistical inference, model calibration, Gaussian integration, and empirical IQ claims are not established by these proofs.
