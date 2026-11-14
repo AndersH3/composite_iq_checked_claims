@@ -48,6 +48,17 @@ bash scripts/install_ada_spark_why3.sh --install-apt
 
 This runs `sudo apt-get install --no-install-recommends` on the explicit manifest, after checking candidate availability. It prompts for authorization. It does not add repositories, perform a full system upgrade or install the similarly named graph-partitioning package.
 
+To check that GNAT can compile, link and run a minimal standalone
+Ada program without modifying the repository, run:
+
+```sh
+bash scripts/install_ada_spark_why3.sh --smoke-ada
+```
+
+This uses a disposable directory under `/tmp` and removes it after
+completion. Successful compilation of this Ada test is **not** evidence
+that any particular SPARK verification conditions have been discharged.
+
 To obtain GNATprove in a **separate user prefix**:
 
 ```sh
