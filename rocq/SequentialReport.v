@@ -946,7 +946,11 @@ Proof.
   pose proof (sqrt_sqrt v Hv) as Hsquare.
   assert (Hscaled :
     (2*T*sqrt v)*(2*T*sqrt v) = 4*T*T*v).
-  { rewrite <- Hsquare; ring. }
+  {
+    transitivity (4*T*T*(sqrt v*sqrt v)).
+    - ring.
+    - rewrite Hsquare; reflexivity.
+  }
   rewrite <- Hscaled in Hlower, Hupper.
   assert (Hscaled_pos : 0 <= 2*T*sqrt v) by nra.
   assert (Hlower_pos : 0 <= 2*IZR t-1) by lra.
