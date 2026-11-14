@@ -19,6 +19,7 @@ from pathlib import Path
 modules = (
     "Hoeflin", "Admissions", "FiniteUnion", "FiniteMoments",
     "FiniteSum", "FiniteBridge", "FourCellBridge", "SequentialReport",
+    "ReportRounding",
 )
 decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global|Polymorphic|Program)\s+)?"
