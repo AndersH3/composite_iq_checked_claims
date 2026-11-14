@@ -4510,3 +4510,8 @@ Python/SPARK source changes or archived evidence modifications.
 Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims,
 1065 total proof scripts, 1155 documented declarations**, including
 **651 FiniteMoments proof scripts**.
+
+
+## Sequential report arithmetic proof module (14 November 2026)
+
+The source file `SequentialReport.v` implements **5 report-specific definitions and 31 kernel-targeted real-algebra theorems**, mapped precisely to the labelled formulas in the sequential conditional-means report. The symbolic count parameters are real scalars so these identities also apply to positive-integer test counts; interpreting them as expectations or conditional Gaussian variances requires the separately identified Gaussian hypotheses. It reuses `Hoeflin.equal_weight_variance` and Rocq Stdlib Reals, Lra, Psatz, Ring and Field, with no additional axioms or admits. For exact scope and Gaussian proof gaps see `rocq/REPORT_THEOREM_INVENTORY.md`.

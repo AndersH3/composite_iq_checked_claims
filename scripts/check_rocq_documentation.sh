@@ -18,7 +18,7 @@ from pathlib import Path
 
 modules = (
     "Hoeflin", "Admissions", "FiniteUnion", "FiniteMoments",
-    "FiniteSum", "FiniteBridge", "FourCellBridge",
+    "FiniteSum", "FiniteBridge", "FourCellBridge", "SequentialReport",
 )
 decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global|Polymorphic|Program)\s+)?"
@@ -128,6 +128,6 @@ if issues:
 print(
     f"Documented all {total} declarations and {theorems} proofs "
     f"(including local helper lemmas), and audited all {total_scripts} "
-    "Proof./Qed. or Proof./Defined. scripts in seven Rocq files."
+    f"Proof./Qed. or Proof./Defined. scripts in {len(modules)} Rocq files."
 )
 PY
