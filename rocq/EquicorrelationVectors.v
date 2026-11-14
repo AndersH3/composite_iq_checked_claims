@@ -323,8 +323,10 @@ Proof.
  destruct Hiff as [Hforward Hbackward]; split.
  - intro H; apply Forall_forall; intros x Hin.
    pose proof (Hforward H x Hin); nra.
- - intro H; apply Forall_forall in H.
-   apply Hbackward; intros x Hin; rewrite (H x Hin); ring.
+ - intro H.
+   apply Hbackward; intros x Hin.
+   pose proof ((proj1 (@Forall_forall R (fun y => y=a) xs)) H x Hin) as Heq.
+   rewrite Heq; ring.
 Qed.
 
 (**
@@ -347,8 +349,10 @@ Proof.
  destruct Hiff as [Hforward Hbackward]; split.
  - intro H; apply Forall_forall; intros x Hin.
    pose proof (Hforward H x Hin); nra.
- - intro H; apply Forall_forall in H.
-   apply Hbackward; intros x Hin; rewrite (H x Hin); ring.
+ - intro H.
+   apply Hbackward; intros x Hin.
+   pose proof ((proj1 (@Forall_forall R (fun y => y=0) xs)) H x Hin) as Heq.
+   rewrite Heq; ring.
 Qed.
 
 (**
