@@ -2156,7 +2156,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 1065 total proof scripts, 1155 documented declarations**, including
 **651 FiniteMoments proof scripts**.
 
-## SequentialReport.v — 61 proof scripts
+## SequentialReport.v — 65 proof scripts
 
 | Declaration (proof script) | Refactoring / proof method | Existing libraries or lemmas reused | Scope and boundary |
 |---|---|---|---|
@@ -2225,3 +2225,8 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `sequential_example_conditional_disagreement` (theorem) | Compute the exact 8-outcome finite expectation using the maintained shared fold, or compose earlier atomic conditional identities. | FiniteSum.finite_sum; Stdlib.List.seq; Ring, Field, Lra, Psatz. | Report `prop:counterexample`: sequential_example_conditional_mean sequential_example_y_dependent <> sequential_example_conditional_mean sequential_example_y_comparison |
 | `sequential_example_recursive_mean_disagreement` (theorem) | Compute the exact 8-outcome finite expectation using the maintained shared fold, or compose earlier atomic conditional identities. | FiniteSum.finite_sum; Stdlib.List.seq; Ring, Field, Lra, Psatz. | Report `prop:counterexample`: (0+sequential_example_conditional_mean sequential_example_y_dependent)/2 <> (0+sequential_example_conditional_mean sequential_example_y_comparison)/2 |
 | `sequential_example_x_unit_second_moment_sqrt_two` (theorem) | Compute the exact 8-outcome finite expectation using the maintained shared fold, or compose earlier atomic conditional identities. | FiniteSum.finite_sum; Stdlib.List.seq; Ring, Field, Lra, Psatz. | Report `prop:counterexample`: sequential_example_expectation (fun i => sequential_example_x (sqrt 2) i * sequential_example_x (sqrt 2) i) = 1 |
+
+| `sequential_example_zero_event_exactly_x_zero` (theorem) | Enumerate only supported outcomes or apply shared finite-sum normalization; no new probability primitives. | Stdlib.List.In/seq, FiniteSum.finite_sum, Reals/Field/Lra. | Report `prop:counterexample`: The concrete conditioning indicator is exactly the event X=0 on all eight supported outcomes whenever the score amplitude is nonzero. |
+| `sequential_example_binary_marginal_support` (theorem) | Enumerate only supported outcomes or apply shared finite-sum normalization; no new probability primitives. | Stdlib.List.In/seq, FiniteSum.finite_sum, Reals/Field/Lra. | Report `prop:counterexample`: Both report couplings have binary ±1 second-score values at every actually sampled outcome, turning their positive and negative score transforms into genuine event indicators. |
+| `sequential_example_dependent_negative_marginal_half` (theorem) | Enumerate only supported outcomes or apply shared finite-sum normalization; no new probability primitives. | Stdlib.List.In/seq, FiniteSum.finite_sum, Reals/Field/Lra. | Report `prop:counterexample`: The dependent coupling has probability exactly one half at second-score value -1, complementing the already proved +1 mass. |
+| `sequential_example_comparison_negative_marginal_half` (theorem) | Enumerate only supported outcomes or apply shared finite-sum normalization; no new probability primitives. | Stdlib.List.In/seq, FiniteSum.finite_sum, Reals/Field/Lra. | Report `prop:counterexample`: The comparison coupling has the same -1 marginal probability, completing exact equality of both binary second-score distributions. |

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three reports. **1,126 proof scripts** in eight
+for the three reports. **1,130 proof scripts** in eight
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -25,7 +25,7 @@ rocq compile SequentialReport.v
 The source-matched [report theorem inventory](REPORT_THEOREM_INVENTORY.md)
 links each actual report claim to checked Rocq theorem names, distinguishes
 finite/algebraic scope from Gaussian-law assumptions, and records
-outstanding numerical/analytic formalization. The 61 checked theorems
+outstanding numerical/analytic formalization. The 65 report-aligned theorems
 in `SequentialReport.v` include 37 original identities/induction proofs,
 five strict-rounding theorems, and 19 finite counterexample results.
 
@@ -4568,3 +4568,12 @@ balanced comparison has conditional mean 0; the fixed recursive
 averages are respectively -1/2 and 0. Every expectation reuses
 FiniteSum.finite_sum. This checks the finite `prop:counterexample`
 without asserting any Gaussian law or any general independence theorem.
+
+
+Four additional Rocq support checks strengthen the finite report
+counterexample: the middle-event indicator is exactly X=0 on the
+sampled support for nonzero amplitude, both Y couplings have explicit
+binary ±1 support, and both negative-value marginal masses equal 1/2.
+This avoids equating equality of moments with equality of distributions.
+After kernel verification this raises the module to 65 proof scripts
+and the global eight-module inventory to 1,130 scripts.

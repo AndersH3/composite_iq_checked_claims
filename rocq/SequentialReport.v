@@ -1362,3 +1362,98 @@ Proof.
   assert (Hsq : sqrt 2 * sqrt 2 = 2) by (apply sqrt_sqrt; lra).
   nra.
 Qed.
+
+(**
+ [sequential_example_zero_event_exactly_x_zero] (theorem) — The concrete conditioning indicator is exactly the event X=0 on all eight supported outcomes whenever the score amplitude is nonzero.
+ Mathematical meaning: The concrete conditioning indicator is exactly the event X=0 on all eight supported outcomes whenever the score amplitude is nonzero.
+ Exact checked proposition: forall a i,
+  a <> 0 -> In i (seq 0%nat 8%nat) ->
+  (sequential_example_zero_event i = 1 <->
+   sequential_example_x a i = 0)
+ Premises and side conditions: The enumerated eight-outcome uniform model, with a nonzero amplitude explicitly required to identify the X=0 atom where necessary.
+ Proof/definition method: Enumerate only the eight List.seq-supported sample indices using Stdlib.List.In and simplification, or normalize their shared FiniteSum moments with the standard field tactic.
+ Library reuse: Stdlib.List.In/seq, Stdlib.Logic, FiniteSum.finite_sum, Stdlib.Reals.Field/Lra; no new finite-sum recursion.
+ Boundary: Finite positive-probability conditioning and exact binary marginals only; no Gaussian conditional theorem or continuity assumption.
+ *)
+Theorem sequential_example_zero_event_exactly_x_zero :
+  forall a i,
+  a <> 0 -> In i (seq 0%nat 8%nat) ->
+  (sequential_example_zero_event i = 1 <->
+   sequential_example_x a i = 0).
+Proof.
+  intros a i Ha Hin.
+  simpl in Hin.
+  repeat match type of Hin with
+    | _ \/ _ => destruct Hin as [Hin | Hin]
+  end;
+  try contradiction;
+  subst i; simpl; split; intro H;
+    try reflexivity; try discriminate;
+    try (exfalso; apply Ha; lra).
+Qed.
+
+(**
+ [sequential_example_binary_marginal_support] (theorem) — Both report couplings have binary ±1 second-score values at every actually sampled outcome, turning their positive and negative score transforms into genuine event indicators.
+ Mathematical meaning: Both report couplings have binary ±1 second-score values at every actually sampled outcome, turning their positive and negative score transforms into genuine event indicators.
+ Exact checked proposition: forall i, In i (seq 0%nat 8%nat) ->
+  (sequential_example_y_dependent i = 1 \/
+   sequential_example_y_dependent i = -1) /\
+  (sequential_example_y_comparison i = 1 \/
+   sequential_example_y_comparison i = -1)
+ Premises and side conditions: The enumerated eight-outcome uniform model, with a nonzero amplitude explicitly required to identify the X=0 atom where necessary.
+ Proof/definition method: Enumerate only the eight List.seq-supported sample indices using Stdlib.List.In and simplification, or normalize their shared FiniteSum moments with the standard field tactic.
+ Library reuse: Stdlib.List.In/seq, Stdlib.Logic, FiniteSum.finite_sum, Stdlib.Reals.Field/Lra; no new finite-sum recursion.
+ Boundary: Finite positive-probability conditioning and exact binary marginals only; no Gaussian conditional theorem or continuity assumption.
+ *)
+Theorem sequential_example_binary_marginal_support :
+  forall i, In i (seq 0%nat 8%nat) ->
+  (sequential_example_y_dependent i = 1 \/
+   sequential_example_y_dependent i = -1) /\
+  (sequential_example_y_comparison i = 1 \/
+   sequential_example_y_comparison i = -1).
+Proof.
+  intros i Hin.
+  simpl in Hin.
+  repeat match type of Hin with
+    | _ \/ _ => destruct Hin as [Hin | Hin]
+  end;
+  try contradiction;
+  subst i; simpl; split;
+    first [left; reflexivity | right; reflexivity].
+Qed.
+
+(**
+ [sequential_example_dependent_negative_marginal_half] (theorem) — The dependent coupling has probability exactly one half at second-score value -1, complementing the already proved +1 mass.
+ Mathematical meaning: The dependent coupling has probability exactly one half at second-score value -1, complementing the already proved +1 mass.
+ Exact checked proposition: sequential_example_expectation
+  (fun i => (1-sequential_example_y_dependent i)/2) = 1/2
+ Premises and side conditions: The enumerated eight-outcome uniform model, with a nonzero amplitude explicitly required to identify the X=0 atom where necessary.
+ Proof/definition method: Enumerate only the eight List.seq-supported sample indices using Stdlib.List.In and simplification, or normalize their shared FiniteSum moments with the standard field tactic.
+ Library reuse: Stdlib.List.In/seq, Stdlib.Logic, FiniteSum.finite_sum, Stdlib.Reals.Field/Lra; no new finite-sum recursion.
+ Boundary: Finite positive-probability conditioning and exact binary marginals only; no Gaussian conditional theorem or continuity assumption.
+ *)
+Theorem sequential_example_dependent_negative_marginal_half :
+  sequential_example_expectation
+  (fun i => (1-sequential_example_y_dependent i)/2) = 1/2.
+Proof.
+  unfold sequential_example_expectation, finite_sum,
+    sequential_example_y_dependent; simpl; field; lra.
+Qed.
+
+(**
+ [sequential_example_comparison_negative_marginal_half] (theorem) — The comparison coupling has the same -1 marginal probability, completing exact equality of both binary second-score distributions.
+ Mathematical meaning: The comparison coupling has the same -1 marginal probability, completing exact equality of both binary second-score distributions.
+ Exact checked proposition: sequential_example_expectation
+  (fun i => (1-sequential_example_y_comparison i)/2) = 1/2
+ Premises and side conditions: The enumerated eight-outcome uniform model, with a nonzero amplitude explicitly required to identify the X=0 atom where necessary.
+ Proof/definition method: Enumerate only the eight List.seq-supported sample indices using Stdlib.List.In and simplification, or normalize their shared FiniteSum moments with the standard field tactic.
+ Library reuse: Stdlib.List.In/seq, Stdlib.Logic, FiniteSum.finite_sum, Stdlib.Reals.Field/Lra; no new finite-sum recursion.
+ Boundary: Finite positive-probability conditioning and exact binary marginals only; no Gaussian conditional theorem or continuity assumption.
+ *)
+Theorem sequential_example_comparison_negative_marginal_half :
+  sequential_example_expectation
+  (fun i => (1-sequential_example_y_comparison i)/2) = 1/2.
+Proof.
+  unfold sequential_example_expectation, finite_sum,
+    sequential_example_y_comparison; simpl; field; lra.
+Qed.

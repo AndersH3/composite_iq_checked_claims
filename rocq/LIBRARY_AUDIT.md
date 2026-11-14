@@ -3777,3 +3777,12 @@ numerical approximations; individual table certificate inputs must still
 be instantiated. Rocq 9.2 push run 43630400889 passed on c7c7a293,
 verifying 1,126 proof scripts in eight modules. No other proof trust base,
 new Gaussian axiom, or Python/SPARK modification was introduced.
+
+
+Four additional Rocq support checks strengthen the finite report
+counterexample: the middle-event indicator is exactly X=0 on the
+sampled support for nonzero amplitude, both Y couplings have explicit
+binary ±1 support, and both negative-value marginal masses equal 1/2.
+This avoids equating equality of moments with equality of distributions.
+After kernel verification this raises the module to 65 proof scripts
+and the global eight-module inventory to 1,130 scripts.

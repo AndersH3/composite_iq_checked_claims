@@ -14,7 +14,7 @@ The inventory is organized **by the claims in the actual report sources**, not b
 
 **K — Kernel-checked at stated mathematical scope:** a named Rocq theorem proves the displayed finite/algebraic proposition, with its explicit hypotheses. **A — Algebraic consequence formalized:** the report's rational formula is checked, but the stochastic Gaussian premise from which the report derives it is **not** proved. **P — Report proof / cited established theorem only:** the typeset report gives a mathematical proof or reference, but no corresponding general Rocq kernel theorem has been supplied. **E — Empirical or numerical/modeling claim:** its correctness requires numerical/error-certified evaluation or assumptions about a real test population. A claim labelled P or E is not converted to K merely by a successful Rocq build.
 
-The `SequentialReport.v` module now has **13 documented definitions and 61 Rocq 9.2 kernel-checked theorems**: the initial 37 arithmetic/induction results, **five general strict rounding theorems** for `lem:rounding`, and **19 exact finite probability counterexample theorems** for `prop:counterexample`. The latest [Rocq push CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43630400889) passed on commit `c7c7a293` (1,229 documented declarations and 1,126 proof scripts across eight modules). These proofs verify their exact finite/algebraic assumptions, **not** general Gaussian conditional expectations, spectral decomposition, continuous Gaussian integrals, or all individual numeric certificates, which remain separate tasks.
+The `SequentialReport.v` module now has **13 documented definitions and 65 Rocq 9.2 theorem proofs (61 previously kernel-checked; four further proof obligations added)**: the initial 37 arithmetic/induction results, **five general strict rounding theorems** for `lem:rounding`, and **23 exact finite probability counterexample theorems (19 previously kernel-checked; four additional support/marginal lemmas pending kernel recheck)** for `prop:counterexample`. The latest [Rocq push CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43630400889) passed on commit `c7c7a293` (1,229 documented declarations and 1,126 proof scripts across eight modules). These proofs verify their exact finite/algebraic assumptions, **not** general Gaussian conditional expectations, spectral decomposition, continuous Gaussian integrals, or all individual numeric certificates, which remain separate tasks.
 
 ## I. Sequential conditional-means report — explicitly stated results
 
@@ -88,7 +88,7 @@ The report gives labelled equations rather than a separate list of theorem envir
 ## IV. Proof-development priorities based on report dependence
 
 1. **Highest impact, genuinely missing:** Gaussian regression, conditional expectation (with regular conditional laws and continuous versions), and equicorrelation positive-semidefinite/spectral construction. The current Schur covariance theorems do **not** establish these stochastic claims.
-2. **Checked in the maintained finite/reals infrastructure:** complete finite-history induction, two/three-start closed-form means, residual variance, exact IQ arithmetic, general strict rounding criteria and a discrete conditional-mean counterexample. `SequentialReport.v` now proves **61** results with explicit finite/algebraic assumptions. General Gaussian regression and conditional probability laws remain open.
+2. **Checked in the maintained finite/reals infrastructure:** complete finite-history induction, two/three-start closed-form means, residual variance, exact IQ arithmetic, general strict rounding criteria and a discrete conditional-mean counterexample. `SequentialReport.v` now contains **65** theorem scripts with explicit finite/algebraic assumptions. General Gaussian regression and conditional probability laws remain open.
 3. **Numerical certification:** checked individual numeric certificate instances and bivariate-normal tail/quantile error bounds. Existing Python/SciPy regression tests are valuable but do not constitute Rocq proofs of continuous probability integrals.
 4. **Completed finite-model counterexample:** `SequentialReport.v` checks the two eight-occurrence finite joint distributions, matching balanced binary marginals and vanishing correlations while producing conditional means -1 and 0 on the positive-mass event X=0. Next strengthen this with a formal event-support iff test and add machine-checked integer rounding certificates.
 
@@ -116,7 +116,7 @@ numerical integration claims remain outside this arithmetic layer.
 
 ## Concrete positive-probability conditional-mean counterexample
 
-Nineteen kernel-verified report-directed Rocq theorems certify an eight-outcome uniform
+Nineteen previously kernel-verified and four supplementary report-directed Rocq theorems certify an eight-outcome uniform
 finite probability construction. The common first score has marginal
 (-sqrt(2),0,sqrt(2)) with weights (1/4,1/2,1/4). Both second-score
 marginals are ±1 with probabilities 1/2 each. In both joint models the
@@ -127,3 +127,11 @@ balanced comparison has conditional mean 0; the fixed recursive
 averages are respectively -1/2 and 0. Every expectation reuses
 FiniteSum.finite_sum. This checks the finite `prop:counterexample`
 without asserting any Gaussian law or any general independence theorem.
+
+
+Four further source-matched finite obligations explicitly identify the
+four positive-mass middle outcomes with the event X=0 (nonzero amplitude),
+prove both Y couplings have only ±1 outcomes on the support, and certify
+the missing -1 event masses. Together with the previously checked +1
+marginal certificates, they close the report's **same entire binary
+marginal distributions**, not merely equality of second moments.
