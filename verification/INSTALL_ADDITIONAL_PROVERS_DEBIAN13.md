@@ -5,6 +5,8 @@ Source URLs, version numbers and vendor-provided SHA256 values were reviewed
 on November 14, 2026. Verification of downloaded bytes is *not* a formal
 proof of the software's correctness, security, or operational compatibility.
 
+For Ada/SPARK, Gappa, Joe Hurd's Metis and Why3 backends, see [the separate Debian 13 Ada/SPARK guide](INSTALL_ADA_SPARK_WHY3_METIS_DEBIAN13.md). This is a separately opted-in installation, preserving the ongoing Isabelle download.
+
 ## Scope and naming
 
 The host is `computer10` (Debian 13, x86_64). Install each tool in its
