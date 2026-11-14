@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **979 proof scripts** in seven
+for the three reports. **1,130 proof scripts** in eight
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -19,7 +19,15 @@ rocq compile FiniteUnion.v
 rocq compile FiniteMoments.v
 rocq compile FiniteBridge.v
 rocq compile FourCellBridge.v
+rocq compile SequentialReport.v
 ```
+
+The source-matched [report theorem inventory](REPORT_THEOREM_INVENTORY.md)
+links each actual report claim to checked Rocq theorem names, distinguishes
+finite/algebraic scope from Gaussian-law assumptions, and records
+outstanding numerical/analytic formalization. The 65 report-aligned theorems
+in `SequentialReport.v` include 37 original identities/induction proofs,
+five strict-rounding theorems, and 19 finite counterexample results.
 
 The GitHub Actions workflow at
 [rocq-proofs.yml](../.github/workflows/rocq-proofs.yml) compiles the
@@ -4532,3 +4540,40 @@ passed at source commit `a6d3135c`. These are exact scalar algebra and
 recursion proofs under supplied regression formulas, not proofs of the
 Gaussian conditional distribution, spectral theorem or continuous-version
 conditional expectation; see `REPORT_THEOREM_INVENTORY.md`.
+
+
+## November 14 follow-up: checked report rounding criteria
+
+Five new Rocq 9.2 candidate proofs correspond directly to `lem:rounding`:
+integer grid separation, the strict midpoint unique-nearest criterion,
+exact rational certificate sufficiency, strict squared-interval transfer
+to nonnegative standard deviation, and exact SD certificate sufficiency.
+These results establish **strict uniqueness**, excluding halfway ties,
+with explicit positive denominators and scales. The reported 9+18
+specific integer certificates are separate inputs until independently
+kernel-checked. Gaussian conditional-expectation, spectral and continuous
+numerical integration claims remain outside this arithmetic layer.
+
+
+## Concrete positive-probability conditional-mean counterexample
+
+Nineteen report-directed Rocq theorems certify an eight-outcome uniform
+finite probability construction. The common first score has marginal
+(-sqrt(2),0,sqrt(2)) with weights (1/4,1/2,1/4). Both second-score
+marginals are ±1 with probabilities 1/2 each. In both joint models the
+marginal score means are zero, the second moments are one, and the cross
+moment is zero. But at the identical history event X=0 of positive mass
+1/2, the dependent second score has conditional mean -1, while the
+balanced comparison has conditional mean 0; the fixed recursive
+averages are respectively -1/2 and 0. Every expectation reuses
+FiniteSum.finite_sum. This checks the finite `prop:counterexample`
+without asserting any Gaussian law or any general independence theorem.
+
+
+Four additional Rocq support checks strengthen the finite report
+counterexample: the middle-event indicator is exactly X=0 on the
+sampled support for nonzero amplitude, both Y couplings have explicit
+binary ±1 support, and both negative-value marginal masses equal 1/2.
+This avoids equating equality of moments with equality of distributions.
+After kernel verification this raises the module to 65 proof scripts
+and the global eight-module inventory to 1,130 scripts.
