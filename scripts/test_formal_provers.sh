@@ -42,6 +42,8 @@ assert len({release_spec(tool)[3] for tool in SPECS}) == 4
 for tool in SPECS:
     assert download_url(tool, "primary") == release_spec(tool)[0]
 assert download_url("isabelle", "clarkson") == ISABELLE_CLARKSON
+assert ISABELLE_CLARKSON == "https://mirror.clarkson.edu/isabelle/dist/Isabelle2026_linux.tar.gz"
+assert "mirror.cosi.clarkson.edu" not in ISABELLE_CLARKSON
 assert download_url("isabelle", "clarkson").endswith("Isabelle2026_linux.tar.gz")
 for tool in ("lean", "yices", "pvs"):
     try:
