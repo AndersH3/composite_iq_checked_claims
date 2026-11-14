@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 591 proof scripts
+## FiniteMoments.v — 597 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1410,6 +1410,12 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_coordinate_zero_iff_projection_zero` (theorem) | Rewrite the typed zero vector as scalar-zero section; use section injectivity and standard vector constants. | pivot_section_zero, pivot_section_injective, Stdlib.Vector.const. | **New: Exact generic projection kernel iff scalar coordinate zero.** |
 | `indexed_basis_covariance_pivot_decomposition_unique_components` (theorem) | Apply generic coordinate additivity and section retraction, then one maintained VectorSpec pointwise equality proof. | pivot_coordinate_add/section, VectorSpec.eq_nth_iff/nth_map/nth_map2, nra. | **New: Full scalar/complement uniqueness for arbitrary samples and masses.** |
 | `indexed_basis_covariance_pivot_decomposition_exists_unique` (theorem) | Construct canonical coordinate and remainder, then invoke the new generic component uniqueness theorem. | pivot_remainder_coordinate_zero, projection_remainder_decomposition, Stdlib.Logic.ex_unique. | **New: Constructive generic exact splitting with a unique witness.** |
+| `indexed_basis_covariance_pivot_section_pairing` (theorem) | Compose the existing first/second bilinear homogeneity laws and Stdlib.Ring. | bilinear_scale_first/second, Vector.map, Ring. | **New: Covariance between two scaled pivot-line directions is scalar-product times pivot self-pairing.** |
+| `indexed_basis_covariance_pivot_remainder_orthogonal` (theorem) | Cancel the real denominator of zero remainder coordinate and apply covariance symmetry. | pivot_remainder_coordinate_zero, bilinear_symmetric, Field. | **New: Remainder is orthogonal to the chosen pivot in both covariance slots without sample-count restrictions.** |
+| `indexed_basis_covariance_pivot_projection_remainder_orthogonal` (theorem) | Scale both pivot projections and apply the two-sided remainder/pivot orthogonality lemma. | pivot_remainder_orthogonal, bilinear_scale_first/second, Ring. | **New: Projections and remainders have zero mixed covariance for arbitrary finite samples.** |
+| `indexed_basis_covariance_pivot_residual_bilinear_block_decomposition` (theorem) | Expand both projection/remainder decompositions and cancel mixed terms via bilinearity. | projection_remainder_decomposition, projection_remainder_orthogonal, bilinear_add_first/second. | **New: Exact orthogonal block splitting of any finite typed covariance bilinear form.** |
+| `indexed_basis_covariance_pivot_residual_bilinear_decomposition` (theorem) | Rewrite the generic block decomposition and apply pivot-section covariance homogeneity. | residual_bilinear_block_decomposition, pivot_section_pairing. | **New: General rank-one pivot covariance term plus unconstrained residual covariance.** |
+| `indexed_basis_covariance_pivot_residual_quadratic_decomposition` (theorem) | Specialize the generic scalar-residual decomposition to equal arguments. | residual_bilinear_decomposition, Reals. | **New: Generic covariance self-pairing decomposes into pivot-coordinate square and residual quadratic.** |
 | `indexed_basis_two_samples_pivot_decomposition_unique_components` (theorem) | Reduce radical membership to scalar zero coordinate and apply the generic component uniqueness theorem, eliminating duplicate VectorSpec proof. | two_samples_radical_iff_pivot_coordinate_zero, covariance_pivot_decomposition_unique_components. | **Refactored: Specialized radical uniqueness delegates to generic covariance splitting.** |
 | `indexed_basis_two_samples_pivot_decomposition_exists_unique` (theorem) | Construct the section/remainder witness and use both previously checked decomposition and new pair uniqueness. | indexed_basis_two_samples_pivot_remainder_in_radical, indexed_basis_covariance_pivot_projection_remainder_decomposition, indexed_basis_two_samples_pivot_decomposition_unique_components. | **New: Constructive exists-unique typed scalar/radical splitting for every coefficient vector.** |
 | `indexed_basis_two_samples_bilinear_gram_determinant_zero` (theorem) | Specialize existing four-direction minor to the two-direction Gram matrix and rewrite covariance symmetry. | indexed_basis_two_samples_bilinear_all_minors_zero, indexed_basis_covariance_bilinear_symmetric. | **New: Exact zero Gram determinant without nonzero pivot or sign assumptions.** |
@@ -1953,3 +1959,32 @@ changes, or archived evidence alterations.
 Expected pinned Rocq 9.2 counts: **1002 public checked claims**,
 **1005 proof scripts**, **1094 documented declarations**, including
 **591 FiniteMoments proof scripts**.
+
+## Pivot-plus-residual covariance block decomposition (14 November 2026)
+
+Six fully documented Rocq theorems turn the generic scalar-coordinate
+splitting into an exact, two-sided **covariance-orthogonal block
+decomposition** for any finite sample list and signed or unnormalized
+weights with nonisotropic pivot B(p,p)<>0. First, the covariance of
+two scaled pivot sections equals alpha*beta*B(p,p). Then the existing
+explicit remainder is orthogonal to the pivot in both slots, and
+each projected direction is orthogonal to every complementary
+remainder. The complete bilinear form splits as
+
+B(u,v) = B(P(u),P(v)) + B(R(u),R(v))
+       = c_p(u)*c_p(v)*B(p,p) + B(R(u),R(v)).
+
+The diagonal version gives B(u,u)=c_p(u)^2*B(p,p)+B(R(u),R(u)).
+This is a Schur-complement-style **algebraic residual formula**.
+It does not declare a nonnegative residual for signed weights, and
+does not assume residual covariance vanishes for more than two samples.
+
+The proof chain reuses existing covariance bilinearity, projection
+and remainder reconstruction, pivot-coordinate zero, covariance
+symmetry, standard Vector.map/map2, real Field/Ring arithmetic.
+No new summation, matrix evaluator, vector recursion, axiom, admitted
+proof, Python/SPARK code or archived evidence alterations.
+
+Expected pinned CI totals after this additional batch:
+**1008 public claims; 1011 proof scripts; 1100 documented
+declarations**, including **597 FiniteMoments proof scripts**.

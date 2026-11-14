@@ -3564,6 +3564,35 @@ Expected pinned Rocq 9.2 counts: **1002 public checked claims**,
 **1005 proof scripts**, **1094 documented declarations**, including
 **591 FiniteMoments proof scripts**.
 
+## Pivot-plus-residual covariance block decomposition (14 November 2026)
+
+Six fully documented Rocq theorems turn the generic scalar-coordinate
+splitting into an exact, two-sided **covariance-orthogonal block
+decomposition** for any finite sample list and signed or unnormalized
+weights with nonisotropic pivot B(p,p)<>0. First, the covariance of
+two scaled pivot sections equals alpha*beta*B(p,p). Then the existing
+explicit remainder is orthogonal to the pivot in both slots, and
+each projected direction is orthogonal to every complementary
+remainder. The complete bilinear form splits as
+
+B(u,v) = B(P(u),P(v)) + B(R(u),R(v))
+       = c_p(u)*c_p(v)*B(p,p) + B(R(u),R(v)).
+
+The diagonal version gives B(u,u)=c_p(u)^2*B(p,p)+B(R(u),R(u)).
+This is a Schur-complement-style **algebraic residual formula**.
+It does not declare a nonnegative residual for signed weights, and
+does not assume residual covariance vanishes for more than two samples.
+
+The proof chain reuses existing covariance bilinearity, projection
+and remainder reconstruction, pivot-coordinate zero, covariance
+symmetry, standard Vector.map/map2, real Field/Ring arithmetic.
+No new summation, matrix evaluator, vector recursion, axiom, admitted
+proof, Python/SPARK code or archived evidence alterations.
+
+Expected pinned CI totals after this additional batch:
+**1008 public claims; 1011 proof scripts; 1100 documented
+declarations**, including **597 FiniteMoments proof scripts**.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
