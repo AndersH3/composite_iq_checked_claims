@@ -24144,8 +24144,8 @@ Section FiniteProbabilityMoments.
    Mathematical meaning: The rank-one covariance property is equivalent to preserving every covariance pairing when projecting only its first coefficient argument.
    Exact checked proposition: rank_one(p) iff forall u v, B(P_p(u),v)=B(u,v).
    Premises and side conditions: B(p,p)<>0, arbitrary signed weights and finite sample bases.
-   Proof/definition method: Transport the all-residual-radical characterization through the exact vector projection-plus-remainder reconstruction and original first-slot covariance additivity.
-   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical, projection_remainder_decomposition, bilinear_add_first, Stdlib.Logic.f_equal.
+   Proof/definition method: Transport the all-residual-radical characterization through an explicit covariance sum identity obtained from standard typed-vector projection/remainder reconstruction and original first-slot additivity.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical, projection_remainder_decomposition, bilinear_add_first, Stdlib.Lra.
    Boundary: This is a covariance-preserving algebraic projection, not equality of coefficient vectors.
    *)
   Theorem indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_first :
@@ -24161,26 +24161,40 @@ Section FiniteProbabilityMoments.
     - intro Hrank.
       pose proof ((proj1 Hradical) Hrank) as Hall.
       intros left right.
-      pose proof
-        (f_equal
-          (fun coefficients : Vector.t R (length basis) =>
-             indexed_basis_covariance_bilinear_form basis coefficients right)
+      transitivity
+        (indexed_basis_covariance_bilinear_form basis
+          (Vector.map2 Rplus
+            (indexed_basis_covariance_pivot_projection basis pivot left)
+            (indexed_basis_covariance_pivot_remainder basis pivot left))
+          right).
+      + rewrite indexed_basis_covariance_bilinear_add_first.
+        rewrite (Hall left right).
+        lra.
+      + rewrite
           (indexed_basis_covariance_pivot_projection_remainder_decomposition
-            basis pivot left)) as Hsplit.
-      rewrite indexed_basis_covariance_bilinear_add_first in Hsplit.
-      rewrite (Hall left right) in Hsplit.
-      lra.
+            basis pivot left).
+        reflexivity.
     - intro Hpreserve.
       apply (proj2 Hradical).
       intros left right.
       pose proof (Hpreserve left right) as Hequal.
-      pose proof
-        (f_equal
-          (fun coefficients : Vector.t R (length basis) =>
-             indexed_basis_covariance_bilinear_form basis coefficients right)
+      assert (Hsplit :
+        indexed_basis_covariance_bilinear_form basis
+          (indexed_basis_covariance_pivot_projection basis pivot left) right +
+        indexed_basis_covariance_bilinear_form basis
+          (indexed_basis_covariance_pivot_remainder basis pivot left) right =
+        indexed_basis_covariance_bilinear_form basis left right).
+      {
+        rewrite <-
+          (indexed_basis_covariance_bilinear_add_first basis
+            (indexed_basis_covariance_pivot_projection basis pivot left)
+            (indexed_basis_covariance_pivot_remainder basis pivot left)
+            right).
+        rewrite
           (indexed_basis_covariance_pivot_projection_remainder_decomposition
-            basis pivot left)) as Hsplit.
-      rewrite indexed_basis_covariance_bilinear_add_first in Hsplit.
+            basis pivot left).
+        reflexivity.
+      }
       lra.
   Qed.
 
