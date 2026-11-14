@@ -533,9 +533,13 @@ Proof.
   unfold sequential_conditional_variance.
   unfold Rdiv.
   apply Rmult_le_pos.
-  - nra.
+  - apply Rmult_le_pos.
+    + apply Rmult_le_pos; [exact Hk | lra].
+    + exact Htotal.
   - apply Rlt_le, Rinv_0_lt_compat.
-    nra.
+    apply Rmult_lt_0_compat.
+    + apply Rmult_lt_0_compat; exact Hn.
+    + exact Hdr.
 Qed.
 
 (**
