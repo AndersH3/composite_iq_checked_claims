@@ -3,7 +3,7 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1,277 proof scripts** across fifteen
+for the three principal reports. **1,308 proof scripts** across sixteen
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -29,6 +29,7 @@ rocq compile EquicorrelationVectors.v
 rocq compile EquicorrelationInverseVectors.v
 rocq compile FiniteTwoCellProjection.v
 rocq compile FiniteNestedProjection.v
+rocq compile FiniteConditionalCovariance.v
 ```
 
 The GitHub Actions workflow at
@@ -4619,8 +4620,13 @@ OpenAI's assistant designed the theorem statements, wrote the annotated Rocq pro
 
 `FiniteNestedProjection.v` proposes 29 Rocq theorem scripts and five transparent definitions for two observed Boolean variables, using an explicit four-cell partition of the original weighted outcome occurrences. It proves the idempotent two-cell conditional projection, pointwise coarse/fine tower of projections, expected-score preservation, residual orthogonality to **all** four-cell functions, and the exact mean-square prediction and variance laws for additional information. The substantive identity is `coarse optimum risk = refined optimum risk + four weighted squared changes of conditional means`; strict positive four-cell masses imply nonnegative explained variance and weakly lower optimal squared risk. The implementation composes the existing `FiniteSum`, `FiniteTwoCellProjection` and `Stdlib.List.filter` APIs; it does not introduce a second list fold or general measure-theoretic conditional expectation. All statements need the pinned Rocq CI check and must not be extrapolated to Gaussian conditional distributions or real IQ populations.
 
+
+## Finite conditional covariance and pull-out
+
+`FiniteConditionalCovariance.v` adds 31 extensively documented theorem scripts and four finite weighted moment definitions. Building on maintained `FiniteSum` and the actual finite two-cell/nested projection modules, it covers weighted-mean linearity, conditional affine IQ-score rescaling, pointwise linear projection, cross-loss expansion, centered covariance bilinearity and polarization, a score times observed-function **pull-out identity**, and the exact **finite law of total covariance**. The latter is a bilinear within-plus-between decomposition under explicit nonzero observed-cell masses; equal input scores reproduce the finite law of total variance. No second finite list fold, new axiom, general sigma-algebra or Gaussian random vector was introduced. Normalized nonnegative weights are required for a conventional probabilistic interpretation; general measure-theoretic and Gaussian conditional-law claims remain outside kernel-checked scope.
+
 ## Appendix — Complete AI disclosure (finite-vector bridge)
 
 OpenAI's assistant designed the finite-vector theorem statements, composed the Rocq proof scripts and accompanying documentation, and wired the module into the pinned CI validation. The independent operational evidence is the Rocq 9.2 kernel compilation and repository-wide Python/Deal/SPARK CI gates; no extrapolation from a successful algebraic proof to empirical IQ calibration or continuous Gaussian probability is made.
 
-The final algebraic refinements identify the aggregate equicorrelation quadratic form with the **literal finite sum of each coordinate times its rank-one covariance-matrix action**; show every zero-sum vector is a contrast eigenvector; and characterize the exact nullspace under strict eigenvalue positivity using Stdlib.Forall and the shared finite-sum support lemmas. These statements are a finite real-vector realization, not a general matrix spectral theorem or probabilistic Gaussian model. Subsequent AI assistance developed and kernel-tested (subject to final pinned CI) the new full finite-list inverse, precision quadratic, linear-regression least-squares and Schur-vector theorems, and edited this README, report inventory, checker, and proof register. The assistant also authored the 26 finite two-cell conditional projection and total-variance proofs and wired them into the kernel and documentation audit without introducing a new summation algorithm. The assistant also prepared a 29-script nested finite projection continuation, including a source-ordered proof audit, CI registration and direct report mapping; its correctness depends on the pinned Rocq kernel. No continuous Gaussian random-variable model or empirical IQ interpretation was independently proved.
+The final algebraic refinements identify the aggregate equicorrelation quadratic form with the **literal finite sum of each coordinate times its rank-one covariance-matrix action**; show every zero-sum vector is a contrast eigenvector; and characterize the exact nullspace under strict eigenvalue positivity using Stdlib.Forall and the shared finite-sum support lemmas. These statements are a finite real-vector realization, not a general matrix spectral theorem or probabilistic Gaussian model. Subsequent AI assistance developed and kernel-tested (subject to final pinned CI) the new full finite-list inverse, precision quadratic, linear-regression least-squares and Schur-vector theorems, and edited this README, report inventory, checker, and proof register. The assistant also authored the 26 finite two-cell conditional projection and total-variance proofs and wired them into the kernel and documentation audit without introducing a new summation algorithm. The assistant also prepared a 29-script nested finite projection continuation, including a source-ordered proof audit, CI registration and direct report mapping; its correctness depends on the pinned Rocq kernel. The assistant additionally drafted 31 bilinear finite covariance, affine predictor, pull-out and total-covariance theorem scripts, with a documented source-to-report mapping and CI check. No continuous Gaussian random-variable model or empirical IQ interpretation was independently proved.
