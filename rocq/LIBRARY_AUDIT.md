@@ -3537,6 +3537,62 @@ modifications are claimed.
 Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
 1091 documented declarations**, including **588 FiniteMoments proofs**.
 
+## Generic covariance pivot-coordinate splitting (14 November 2026)
+
+Three new extensively documented Rocq theorems extract the algebraic
+component of the former two-sample radical decomposition:
+(1) a pivot projection has exactly the scalar coordinate-zero kernel;
+(2) a scalar pivot-section plus a zero-coordinate complement has
+uniquely determined real and typed vector components; and
+(3) every typed vector has an **exists!** pair realizing that split.
+
+**Only B(p,p)<>0 is assumed.** These results support all finite
+sample lengths, unnormalized signed weights and dependent bases. The
+original two-sample radical uniqueness theorem now delegates to
+the generic component theorem after invoking the existing radical
+iff zero-coordinate lemma. This removes its duplicate 50-line
+VectorSpec extensionality/cancellation proof, reusing Stdlib.Vector
+and the existing scalar coordinate laws instead.
+
+The generic complement is **not** claimed to be the full covariance
+radical for arbitrary sample counts; that special identification
+requires two normalized sampled occurrences. No abstract rank-nullity,
+new vector or matrix implementation, admits, axioms, Python/SPARK
+changes, or archived evidence alterations.
+
+Expected pinned Rocq 9.2 counts: **1002 public checked claims**,
+**1005 proof scripts**, **1094 documented declarations**, including
+**591 FiniteMoments proof scripts**.
+
+## Pivot-plus-residual covariance block decomposition (14 November 2026)
+
+Six fully documented Rocq theorems turn the generic scalar-coordinate
+splitting into an exact, two-sided **covariance-orthogonal block
+decomposition** for any finite sample list and signed or unnormalized
+weights with nonisotropic pivot B(p,p)<>0. First, the covariance of
+two scaled pivot sections equals alpha*beta*B(p,p). Then the existing
+explicit remainder is orthogonal to the pivot in both slots, and
+each projected direction is orthogonal to every complementary
+remainder. The complete bilinear form splits as
+
+B(u,v) = B(P(u),P(v)) + B(R(u),R(v))
+       = c_p(u)*c_p(v)*B(p,p) + B(R(u),R(v)).
+
+The diagonal version gives B(u,u)=c_p(u)^2*B(p,p)+B(R(u),R(u)).
+This is a Schur-complement-style **algebraic residual formula**.
+It does not declare a nonnegative residual for signed weights, and
+does not assume residual covariance vanishes for more than two samples.
+
+The proof chain reuses existing covariance bilinearity, projection
+and remainder reconstruction, pivot-coordinate zero, covariance
+symmetry, standard Vector.map/map2, real Field/Ring arithmetic.
+No new summation, matrix evaluator, vector recursion, axiom, admitted
+proof, Python/SPARK code or archived evidence alterations.
+
+Expected pinned CI totals after this additional batch:
+**1008 public claims; 1011 proof scripts; 1100 documented
+declarations**, including **597 FiniteMoments proof scripts**.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each
@@ -3544,3 +3600,116 @@ proof has been rewritten, that general finite probability has been replaced
 by abstract measure theory, or that the report's empirical claims have been
 proved. The remaining migration is structural work requiring explicit
 equivalence proofs and regression testing.
+
+
+## Exact Schur residual and semidefinite pivot classification (14 November 2026)
+
+Four new kernel-checkable, declaration-documented Rocq theorems extend the
+existing generic orthogonal covariance splitting with (i) the exact
+scalar Schur-complement residual formula for every pair of typed
+coefficient directions; (ii) the corresponding pivot/Gram determinant
+identity; (iii) equivalence between global positive semidefiniteness
+and a *positive* nonisotropic pivot plus nonnegative residual quadratic;
+and (iv) the dual negative-semidefinite equivalence with a *negative*
+pivot and nonpositive residual quadratic.
+
+All results explicitly require B(p,p)<>0 and permit **arbitrarily many
+finite sample occurrences, signed and unnormalized real weights, and
+dependent basis scores**. The sign equivalences are conditional
+characterizations; they do not assume or infer that signed-weight
+covariance is necessarily PSD or NSD.
+
+The proofs reuse the previously verified scalar/residual covariance
+block identity, symmetric typed pairing, standard real Field, Ring,
+Lra, Psatz and nonnegative-square/product lemmas. They introduce no
+extra matrix representation, vector recursion, summation evaluator,
+axiom, admitted proof, Python/SPARK modification or evidence edits.
+The exact checked inventory is determined by the pinned Rocq 9.2
+documentation and kernel CI, not by this commentary: expected **1012
+public checked claims, 1015 proof scripts, 1104 declarations**, with
+**601 FiniteMoments proof scripts**.
+
+
+## Residual bilinearity and all-direction Gram sign classification (14 November 2026)
+
+**17 fully documented Rocq theorems** certify scalar Schur residual
+symmetry and two-sided additivity/homogeneity, orthogonality to every
+pivot-line section, and exact first/second-slot residual absorption.
+They further characterize Schur cross-zero and diagonal determinant
+zero, positive/negative pivot Gram signs, and **global PSD/NSD iff
+pivot sign and all pivot Gram minors are nonnegative**. Genuine
+normalized nonnegative weights separately imply a nonnegative Gram
+bound and a residual Cauchy--Schwarz bound.
+
+General statements allow arbitrary finite sample lengths, signed or
+unnormalized weights and dependent bases; B(p,p)<>0 where required.
+The statements about normalized nonnegative weights explicitly carry
+those hypotheses. We reuse existing covariance bilinearity, symmetry,
+Schur decomposition, Rocq Stdlib Field/Psatz/Lra, vector reconstruction,
+positive-semidefinite and Cauchy--Schwarz theorems. No new custom sum,
+vector recursion, matrix evaluator, axioms, admits, Python/SPARK source,
+or archived evidence edits. The expected Rocq 9.2 inventory is **1029
+public claims, 1032 proof scripts, 1121 documented declarations**
+including **618 FiniteMoments scripts**; verify by pinned CI.
+
+
+## Pivot radical/Schur geometry and equality regimes (14 November 2026)
+
+**15 newly documented Rocq theorems** extend the generic finite
+covariance covariance-pivot decomposition. For arbitrary signed and
+unnormalized weights they establish the pivot coordinate/orthogonality
+criterion, an exact decomposition of the **full covariance radical**
+into scalar-kernel and residual-radical conditions, residual radical
+tests against all residual vectors, and all-direction scalar Schur
+cross-minor characterizations. Unlike PSD-specific tests, these
+signed-weight radical results do **not** equate zero quadratic with
+radical membership.
+
+For explicitly normalized, nonnegative finite weights, they establish
+nonnegative/zero/strictly positive residual quadratic regimes and
+necessary-and-sufficient Gram-determinant equality/strictness tests.
+A Schur-complement Cauchy--Schwarz bound is derived directly from the
+maintained finite covariance Cauchy--Schwarz theorem. Under a positive
+nonisotropic pivot, the residual self-pairing is no larger than the
+original diagonal, and equality is characterized by zero pivot
+coordinate/equivalently zero typed projection even for signed weights.
+
+Everything reuses checked covariance symmetry/bilinearity and prior
+pivot identities, Rocq Stdlib Vector, Field, Reals, Lra and Psatz.
+No new sum/matrix/vector recursion, new axiom or admit, Python/SPARK
+source change, or evidence alteration. Expected after pinned Rocq
+9.2 kernel and CI audit: **1044 public checked claims,
+1047 proof scripts, 1136 declarations**
+including **633 FiniteMoments scripts**.
+
+
+## Rank-one pivot criterion: covariance quotient and signed-weight classification (14 November 2026)
+
+**One documented definition and 18 documented Rocq theorems** formalize the
+all-minors pivot rank-one condition B(u,v)B(p,p)=B(u,p)B(v,p).
+For nonisotropic pivots and **arbitrary signed/unnormalized finite weights**,
+rank-one is equivalent to a vanishing Schur residual block, every residual
+being in the full covariance radical, all residual self-pairings vanishing
+(by polarization), all pivot Gram determinant minors vanishing, and exact
+factorization through normalized scalar covariance coordinates.
+It is also equivalent to equality of the full radical with the kernel
+of the pivot coordinate and to full covariance invariance under
+first-slot, second-slot or simultaneous pivot projection.
+
+Further results show full two-direction Gram equality, zero self-covariance
+iff radical even for signed rank-one models, complete covariance-row fiber
+classification by pivot coordinates and projections, and **PSD/NSD iff
+positive/negative nonisotropic pivot**. The general signed-weight theorems
+are instantiated at *two unit-mass sample occurrences*, for which an
+all-minors rank-one certificate is available without assuming the pivot
+nonisotropic or weights nonnegative. These statements do **not** claim
+that a general covariance with signed weights is PSD.
+
+All source/proof declarations have extensive local commentary, reuse
+prior checked Schur complement, residual bilinearity, covariance symmetry,
+vector reconstruction, and Rocq Stdlib Field/Ring/Lra/Psatz. No custom
+matrix rank algebra, duplicate finite-sum algorithms, axioms, admits,
+Python/SPARK source changes or archived evidence modifications.
+Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims,
+1065 total proof scripts, 1155 documented declarations**, including
+**651 FiniteMoments proof scripts**.

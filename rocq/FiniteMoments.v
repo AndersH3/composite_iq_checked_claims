@@ -22319,6 +22319,2219 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_zero_iff_projection_zero]
+   (theorem) — Exact kernel of the finite covariance pivot projection.
+   Mathematical meaning: Projection onto a nonisotropic covariance
+   pivot vanishes precisely for input directions with normalized
+   pivot coordinate zero.
+   Exact checked proposition: B(p,p)<>0 implies
+   c_p(left)=0 iff P_p(left)=Vector.const 0 (length basis).
+   Premises and side conditions: Arbitrary finite samples, signed or
+   unnormalized weights, and dependent bases; only B(p,p)<>0.
+   Proof/definition method: Rewrite the typed zero vector as the
+   established zero scalar pivot section; use injectivity of the
+   section and direct coordinate rewriting, not vector recursion.
+   Library reuse: indexed_basis_covariance_pivot_section_zero,
+   indexed_basis_covariance_pivot_section_injective, Vector.const.
+   Boundary: This kernel need not equal the full covariance radical
+   for three or more sampled outcomes.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_zero_iff_projection_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_coordinate basis pivot left = 0 <->
+       indexed_basis_covariance_pivot_projection basis pivot left =
+         Vector.const 0 (length basis)).
+  Proof.
+    intros basis pivot left Hpivot.
+    rewrite <- (indexed_basis_covariance_pivot_section_zero basis pivot).
+    unfold indexed_basis_covariance_pivot_projection.
+    split.
+    - intro Hzero.
+      now rewrite Hzero.
+    - intro Hprojected.
+      exact (indexed_basis_covariance_pivot_section_injective
+        basis pivot
+        (indexed_basis_covariance_pivot_coordinate basis pivot left)
+        0 Hpivot Hprojected).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_decomposition_unique_components]
+   (theorem) — Generic component uniqueness for the pivot scalar and
+   its exact complementary coordinate-kernel direction.
+   Mathematical meaning: A representation as a scalar pivot section
+   plus a zero-pivot-coordinate coefficient vector has precisely the
+   canonical pivot coordinate and its explicit remainder.
+   Exact checked proposition: If B(p,p)<>0 and c_p(r)=0 and
+   section(p,alpha)+r=left, then alpha=c_p(left) and
+   r=remainder(p,left) as equal typed coefficient vectors.
+   Premises and side conditions: Any finite sample list, real
+   signed weights, nonunit mass, and dependent basis allowed;
+   no covariance-radical hypothesis is needed.
+   Proof/definition method: Use existing pivot-coordinate additivity
+   and section retraction to determine alpha. Prove vector equality
+   once via Stdlib.VectorSpec.eq_nth_iff, nth_map/nth_map2 and nra.
+   This factors the componentwise proof from the earlier specialized
+   two-sample radical decomposition into a reusable generic lemma.
+   Library reuse: pivot_coordinate_add, pivot_coordinate_section,
+   VectorSpec.eq_nth_iff, nth_map, nth_map2 and Stdlib.Psatz.nra.
+   Boundary: Generic scalar-kernel complement, not abstract linear
+   algebra rank-nullity or general identification with the radical.
+   *)
+  Theorem indexed_basis_covariance_pivot_decomposition_unique_components :
+    forall basis
+           (pivot left complement : Vector.t R (length basis))
+           (alpha : R),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot complement = 0 ->
+      Vector.map2 Rplus
+        (indexed_basis_covariance_pivot_section basis pivot alpha)
+        complement = left ->
+      alpha = indexed_basis_covariance_pivot_coordinate basis pivot left /\
+      complement = indexed_basis_covariance_pivot_remainder basis pivot left.
+  Proof.
+    intros basis pivot left complement alpha Hpivot Hzero Hsum.
+    pose proof
+      (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
+        Hsum) as Hsumcoord.
+    rewrite (indexed_basis_covariance_pivot_coordinate_add
+      basis pivot
+        (indexed_basis_covariance_pivot_section basis pivot alpha)
+        complement Hpivot) in Hsumcoord.
+    rewrite (indexed_basis_covariance_pivot_coordinate_section
+      basis pivot alpha Hpivot) in Hsumcoord.
+    rewrite Hzero in Hsumcoord.
+    assert (Halpha :
+      alpha = indexed_basis_covariance_pivot_coordinate basis pivot left).
+    { lra. }
+    split.
+    - exact Halpha.
+    - subst alpha.
+      unfold indexed_basis_covariance_pivot_remainder,
+        indexed_basis_covariance_pivot_section.
+      unfold indexed_basis_covariance_pivot_section in Hsum.
+      set (beta :=
+        indexed_basis_covariance_pivot_coordinate basis pivot left) in *.
+      change (Vector.map2 Rplus
+        (Vector.map (fun c => beta * c) pivot) complement = left) in Hsum.
+      apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
+        complement
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (- beta) * c) pivot)))).
+      intros i j Hij.
+      subst j.
+      pose proof
+        (f_equal (fun vector : Vector.t R (length basis) =>
+          Vector.nth vector i) Hsum) as Hnth.
+      change (Vector.nth
+        (Vector.map2 Rplus
+          (Vector.map (fun c => beta * c) pivot) complement) i =
+        Vector.nth left i) in Hnth.
+      rewrite (VectorSpec.nth_map2 Rplus
+        (Vector.map (fun c => beta * c) pivot) complement
+        i i i eq_refl eq_refl) in Hnth.
+      rewrite (VectorSpec.nth_map (fun c => beta * c)
+        pivot i i eq_refl) in Hnth.
+      rewrite (VectorSpec.nth_map2 Rplus left
+        (Vector.map (fun c => (- beta) * c) pivot)
+        i i i eq_refl eq_refl).
+      rewrite (VectorSpec.nth_map (fun c => (- beta) * c)
+        pivot i i eq_refl).
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_decomposition_exists_unique]
+   (theorem) — Universal constructive scalar-plus-kernel decomposition.
+   Mathematical meaning: Every typed coefficient direction is the
+   unique sum of one normalized pivot scalar section and one
+   coefficient vector of zero pivot coordinate.
+   Exact checked proposition: B(p,p)<>0 implies exists! pair of
+   type R*Vector.t R n such that c_p(snd pair)=0 and
+   section(p,fst pair)+snd pair=left.
+   Premises and side conditions: No two-sample restriction,
+   total mass, nonnegative weights, basis independence or radical
+   premise; the pivot self-covariance must be nonzero.
+   Proof/definition method: Construct pair using existing normalized
+   pivot coordinate and explicit remainder; reconstruct via the
+   established Vector.map2 decomposition and prove uniqueness using
+   the new generic component theorem and ordinary product equality.
+   Library reuse: pivot_remainder_coordinate_zero,
+   pivot_projection_remainder_decomposition, generic component
+   uniqueness, Stdlib.Init.Datatypes.prod and Stdlib.Logic.ex_unique.
+   Boundary: Explicit single-functional split, not a packaged
+   quotient dimension or general rank-nullity theorem.
+   *)
+  Theorem indexed_basis_covariance_pivot_decomposition_exists_unique :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      exists! pair : (R * Vector.t R (length basis))%type,
+        indexed_basis_covariance_pivot_coordinate basis pivot (snd pair) = 0 /\
+        Vector.map2 Rplus
+          (indexed_basis_covariance_pivot_section basis pivot (fst pair))
+          (snd pair) = left.
+  Proof.
+    intros basis pivot left Hpivot.
+    exists
+      (indexed_basis_covariance_pivot_coordinate basis pivot left,
+       indexed_basis_covariance_pivot_remainder basis pivot left).
+    split.
+    - split.
+      + apply indexed_basis_covariance_pivot_remainder_coordinate_zero.
+        exact Hpivot.
+      + apply indexed_basis_covariance_pivot_projection_remainder_decomposition.
+    - intros [alpha complement] [Hzero Hsum].
+      simpl in *.
+      pose proof
+        (indexed_basis_covariance_pivot_decomposition_unique_components
+          basis pivot left complement alpha Hpivot Hzero Hsum)
+        as [Halpha Hremainder].
+      rewrite Halpha, Hremainder.
+      reflexivity.
+  Qed.
+
+
+  (**
+   [indexed_basis_covariance_pivot_section_pairing] (theorem) —
+   Covariance of two pivot-line vectors is a scalar product times
+   the pivot's self-covariance, without normalization assumptions.
+   Mathematical meaning: Any two coefficient vectors produced by
+   scaling the same pivot have covariance alpha*beta*B(p,p).
+   Exact checked proposition: B(section(p,alpha),section(p,beta)) =
+   alpha*beta*B(p,p) for all real alpha,beta and typed pivots.
+   Premises and side conditions: Arbitrary signed finite weights,
+   unnormalized total mass, dependent bases and any sample count;
+   the pivot may even have zero self-covariance.
+   Proof/definition method: Unfold only the thin vector section
+   and compose the already checked first/second-slot homogeneity
+   of the covariance bilinear form; close scalar associativity by
+   the maintained real ring tactic, not vector induction.
+   Library reuse: indexed_basis_covariance_bilinear_scale_first,
+   indexed_basis_covariance_bilinear_scale_second,
+   Stdlib.Vectors.Vector.map and Stdlib.Ring.
+   Boundary: This is a scalar-line pairing law, not covariance
+   positivity, nondegeneracy or a rank-nullity formula.
+   *)
+  Theorem indexed_basis_covariance_pivot_section_pairing :
+    forall basis (pivot : Vector.t R (length basis)) alpha beta,
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_section basis pivot alpha)
+        (indexed_basis_covariance_pivot_section basis pivot beta) =
+      alpha * beta *
+      indexed_basis_covariance_bilinear_form basis pivot pivot.
+  Proof.
+    intros basis pivot alpha beta.
+    unfold indexed_basis_covariance_pivot_section.
+    rewrite indexed_basis_covariance_bilinear_scale_first.
+    rewrite indexed_basis_covariance_bilinear_scale_second.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_remainder_orthogonal] (theorem) —
+   The algebraic complementary direction is covariance orthogonal
+   to the selected nonisotropic pivot in both argument slots.
+   Mathematical meaning: The explicit remainder subtracts exactly
+   the component detectable by covariance against the chosen pivot.
+   Exact checked proposition: If B(p,p)<>0, then
+   B(remainder(p,left),p)=0 and B(p,remainder(p,left))=0.
+   Premises and side conditions: No restriction on sample count,
+   total mass, real weight signs or independence of score functions;
+   the pivot self-covariance must be nonzero.
+   Proof/definition method: Convert the previously checked
+   zero normalized pivot coordinate of the remainder to zero
+   unnormalized covariance by ordinary nonzero real division.
+   Apply covariance symmetry for the opposite argument order.
+   Library reuse: indexed_basis_covariance_pivot_remainder_coordinate_zero,
+   indexed_basis_covariance_bilinear_symmetric, Stdlib.Field,
+   Stdlib.Psatz.nra and Stdlib.Reals.
+   Boundary: Orthogonality to the single pivot is not membership
+   in the full covariance radical for general finite sample counts.
+   *)
+  Theorem indexed_basis_covariance_pivot_remainder_orthogonal :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis
+         (indexed_basis_covariance_pivot_remainder basis pivot left) pivot = 0 /\
+       indexed_basis_covariance_bilinear_form basis pivot
+         (indexed_basis_covariance_pivot_remainder basis pivot left) = 0).
+  Proof.
+    intros basis pivot left Hpivot.
+    pose proof (indexed_basis_covariance_pivot_remainder_coordinate_zero
+      basis pivot left Hpivot) as Hzero.
+    unfold indexed_basis_covariance_pivot_coordinate in Hzero.
+    assert (Hfactor :
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left) pivot =
+      (indexed_basis_covariance_bilinear_form basis
+         (indexed_basis_covariance_pivot_remainder basis pivot left) pivot /
+       indexed_basis_covariance_bilinear_form basis pivot pivot) *
+      indexed_basis_covariance_bilinear_form basis pivot pivot).
+    { field; exact Hpivot. }
+    rewrite Hzero in Hfactor.
+    assert (Horth :
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left) pivot = 0).
+    { nra. }
+    split.
+    - exact Horth.
+    - rewrite (indexed_basis_covariance_bilinear_symmetric
+        basis pivot (indexed_basis_covariance_pivot_remainder basis pivot left)).
+      exact Horth.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_remainder_orthogonal]
+   (theorem) — Pivot projections and residual directions are mutually
+   orthogonal under covariance, without a two-sample restriction.
+   Mathematical meaning: Projecting either coefficient argument onto
+   the same nonisotropic pivot line yields zero covariance against
+   the other argument's complementary remainder.
+   Exact checked proposition: B(P(left),remainder(right))=0 and
+   B(remainder(left),P(right))=0 for B(p,p)<>0.
+   Premises and side conditions: Arbitrary finite samples, any
+   real signed or unnormalized weights, dependent bases; each
+   projection and remainder uses the same nonisotropic pivot.
+   Proof/definition method: Expand projections only into standard
+   scalar sections. Factor their scalar by existing bilinearity,
+   then use the previously checked remainder/pivot orthogonality
+   in the appropriate argument slot.
+   Library reuse: indexed_basis_covariance_pivot_remainder_orthogonal,
+   indexed_basis_covariance_bilinear_scale_first/second,
+   Stdlib.Vectors.Vector.map and Stdlib.Ring.
+   Boundary: Zero cross terms are not a statement that the
+   entire residual covariance form is zero.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_remainder_orthogonal :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis
+         (indexed_basis_covariance_pivot_projection basis pivot left)
+         (indexed_basis_covariance_pivot_remainder basis pivot right) = 0 /\
+       indexed_basis_covariance_bilinear_form basis
+         (indexed_basis_covariance_pivot_remainder basis pivot left)
+         (indexed_basis_covariance_pivot_projection basis pivot right) = 0).
+  Proof.
+    intros basis pivot left right Hpivot.
+    pose proof (indexed_basis_covariance_pivot_remainder_orthogonal
+      basis pivot left Hpivot) as [Hleft _].
+    pose proof (indexed_basis_covariance_pivot_remainder_orthogonal
+      basis pivot right Hpivot) as [_ Hright].
+    split.
+    - unfold indexed_basis_covariance_pivot_projection,
+        indexed_basis_covariance_pivot_section.
+      rewrite indexed_basis_covariance_bilinear_scale_first.
+      rewrite Hright.
+      ring.
+    - unfold indexed_basis_covariance_pivot_projection,
+        indexed_basis_covariance_pivot_section.
+      rewrite indexed_basis_covariance_bilinear_scale_second.
+      rewrite Hleft.
+      ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_bilinear_block_decomposition]
+   (theorem) — Full finite covariance splits into pivot-projected and
+   residual blocks, with no mixed covariance terms.
+   Mathematical meaning: Every pair of typed coefficient directions
+   can be reconstructed using its pivot projection and residual;
+   bilinearity and orthogonality cancel both mixed terms exactly.
+   Exact checked proposition: B(left,right) =
+   B(P(left),P(right)) + B(remainder(left),remainder(right)).
+   Premises and side conditions: The pivot self-covariance is nonzero;
+   arbitrary signed weights, finite samples and dependent bases are
+   allowed without mass one or positivity.
+   Proof/definition method: Rewrite each argument using the generic
+   Vector.map2 projection/remainder reconstruction lemma, distribute
+   with the checked first- and second-slot bilinearity, and eliminate
+   the two cross terms using previously verified orthogonality.
+   Library reuse: indexed_basis_covariance_pivot_projection_remainder_decomposition,
+   indexed_basis_covariance_pivot_projection_remainder_orthogonal,
+   indexed_basis_covariance_bilinear_add_first/add_second,
+   Stdlib.Vectors.Vector.map2 and Stdlib.Ring.
+   Boundary: This block decomposition does not claim that residual
+   covariance vanishes in arbitrary finite sample models.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_bilinear_block_decomposition :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left right =
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        (indexed_basis_covariance_pivot_projection basis pivot right) +
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left)
+        (indexed_basis_covariance_pivot_remainder basis pivot right).
+  Proof.
+    intros basis pivot left right Hpivot.
+    pose proof (indexed_basis_covariance_pivot_projection_remainder_orthogonal
+      basis pivot left right Hpivot) as [Hcross1 Hcross2].
+    rewrite <- (indexed_basis_covariance_pivot_projection_remainder_decomposition
+      basis pivot left) at 1.
+    rewrite <- (indexed_basis_covariance_pivot_projection_remainder_decomposition
+      basis pivot right) at 1.
+    rewrite indexed_basis_covariance_bilinear_add_first.
+    rewrite !indexed_basis_covariance_bilinear_add_second.
+    rewrite Hcross1, Hcross2.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_bilinear_decomposition]
+   (theorem) — Exact rank-one pivot term plus residual covariance
+   for arbitrary finite signed-weight sample models.
+   Mathematical meaning: The general finite covariance form splits
+   into the scalar pivot-coordinate product multiplied by the pivot
+   variance and an independent residual covariance pairing.
+   Exact checked proposition: B(left,right) =
+   c_p(left)*c_p(right)*B(p,p)+B(remainder(left),remainder(right)).
+   Premises and side conditions: B(p,p)<>0 is required; signed or
+   unnormalized weights, more than two sampled outcomes, and
+   dependent or repeated score basis functions are all allowed.
+   Proof/definition method: Reuse the checked block decomposition,
+   unfold each projected argument into its scalar pivot section,
+   and use the newly verified scalar-section covariance identity.
+   Avoid constructing custom matrix blocks, summations or inversion.
+   Library reuse: indexed_basis_covariance_pivot_residual_bilinear_block_decomposition,
+   indexed_basis_covariance_pivot_section_pairing and
+   Stdlib.Vectors.Vector.map.
+   Boundary: The residual term generally need not vanish; the
+   special two-unit-mass-sample rank-one form is stronger.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_bilinear_decomposition :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left right =
+      indexed_basis_covariance_pivot_coordinate basis pivot left *
+      indexed_basis_covariance_pivot_coordinate basis pivot right *
+      indexed_basis_covariance_bilinear_form basis pivot pivot +
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left)
+        (indexed_basis_covariance_pivot_remainder basis pivot right).
+  Proof.
+    intros basis pivot left right Hpivot.
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_block_decomposition
+      basis pivot left right Hpivot).
+    unfold indexed_basis_covariance_pivot_projection.
+    rewrite (indexed_basis_covariance_pivot_section_pairing
+      basis pivot
+      (indexed_basis_covariance_pivot_coordinate basis pivot left)
+      (indexed_basis_covariance_pivot_coordinate basis pivot right)).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_quadratic_decomposition]
+   (theorem) — A pivot contribution and residual self-covariance
+   sum to the full typed covariance self-pairing.
+   Mathematical meaning: The self-covariance of any coefficient
+   direction equals its normalized pivot-coordinate square times
+   the pivot self-pairing plus the remainder's self-covariance.
+   Exact checked proposition: B(left,left)=c_p(left)^2*B(p,p)
+   +B(remainder(left),remainder(left)), where square is multiplication.
+   Premises and side conditions: The pivot has nonzero self-pairing;
+   any finite signed or unnormalized sample model is allowed.
+   Proof/definition method: Specialize the general scalar-residual
+   bilinear decomposition to identical left and right arguments;
+   this avoids a separate polarization or matrix proof.
+   Library reuse: indexed_basis_covariance_pivot_residual_bilinear_decomposition,
+   Stdlib.Reals and the existing typed covariance pairing.
+   Boundary: Without positive weights this identity alone does
+   not imply either pivot or residual covariance is nonnegative.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_quadratic_decomposition :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left left =
+      indexed_basis_covariance_pivot_coordinate basis pivot left *
+      indexed_basis_covariance_pivot_coordinate basis pivot left *
+      indexed_basis_covariance_bilinear_form basis pivot pivot +
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left)
+        (indexed_basis_covariance_pivot_remainder basis pivot left).
+  Proof.
+    intros basis pivot left Hpivot.
+    exact (indexed_basis_covariance_pivot_residual_bilinear_decomposition
+      basis pivot left left Hpivot).
+  Qed.
+
+
+  (**
+   [indexed_basis_covariance_pivot_schur_complement_identity] (theorem) —
+   The exact scalar Schur residual formula for arbitrary finite covariance.
+   Mathematical meaning: Removing the covariance pivot component in both
+   arguments subtracts the cross-covariance product divided by the
+   nonzero pivot self-pairing. The remainder covariance is therefore
+   the algebraic Schur complement of the selected one-dimensional block.
+   Exact checked proposition: B(R_p(u),R_p(v)) =
+   B(u,v) - B(u,p)*B(v,p)/B(p,p) for any typed coefficient directions.
+   Premises and side conditions: B(p,p)<>0 is required, but sample
+   count, total mass, weight signs and basis dependence are unrestricted.
+   Proof/definition method: Apply the checked scalar-plus-residual
+   decomposition once, unfold the two normalized scalar coordinates,
+   cancel their common nonzero denominator using Stdlib.Field, then
+   rearrange the resulting real equation with Stdlib.Lra.
+   Library reuse: indexed_basis_covariance_pivot_residual_bilinear_decomposition,
+   indexed_basis_covariance_pivot_coordinate, Stdlib.Field, Stdlib.Lra.
+   Boundary: This is an algebraic Schur identity, not an assertion of
+   residual positivity, invertibility of a covariance matrix or rank.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_complement_identity :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left)
+        (indexed_basis_covariance_pivot_remainder basis pivot right) =
+      indexed_basis_covariance_bilinear_form basis left right -
+      (indexed_basis_covariance_bilinear_form basis left pivot *
+       indexed_basis_covariance_bilinear_form basis right pivot) /
+      indexed_basis_covariance_bilinear_form basis pivot pivot.
+  Proof.
+    intros basis pivot left right Hpivot.
+    pose proof
+      (indexed_basis_covariance_pivot_residual_bilinear_decomposition
+        basis pivot left right Hpivot) as Hsplit.
+    unfold indexed_basis_covariance_pivot_coordinate in Hsplit.
+    assert (Hcancel :
+      (indexed_basis_covariance_bilinear_form basis left pivot /
+       indexed_basis_covariance_bilinear_form basis pivot pivot) *
+      (indexed_basis_covariance_bilinear_form basis right pivot /
+       indexed_basis_covariance_bilinear_form basis pivot pivot) *
+       indexed_basis_covariance_bilinear_form basis pivot pivot =
+      (indexed_basis_covariance_bilinear_form basis left pivot *
+       indexed_basis_covariance_bilinear_form basis right pivot) /
+       indexed_basis_covariance_bilinear_form basis pivot pivot).
+    { field; exact Hpivot. }
+    rewrite Hcancel in Hsplit.
+    lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_determinant_identity] (theorem) —
+   Exact two-direction pivot Gram determinant as residual covariance.
+   Mathematical meaning: Multiplying the diagonal Schur complement
+   by the pivot self-pairing recovers the determinant of the symmetric
+   two-direction covariance Gram block, including indefinite cases.
+   Exact checked proposition: B(u,u)*B(p,p)-B(u,p)^2 =
+   B(R_p(u),R_p(u))*B(p,p), with square written as multiplication.
+   Premises and side conditions: B(p,p)<>0; no assumption on weight
+   signs, normalized mass, sampled outcomes, or score-basis rank.
+   Proof/definition method: Specialize the generic Schur residual
+   identity to identical arguments and cancel a single nonzero real
+   denominator, then normalize polynomial products with Stdlib.Psatz.
+   Library reuse: indexed_basis_covariance_pivot_schur_complement_identity,
+   Stdlib.Field, Stdlib.Psatz.nra and the existing typed bilinear form.
+   Boundary: The identity alone does not assign a sign to the Gram
+   determinant; that requires independent positivity assumptions.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_determinant_identity :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left left *
+        indexed_basis_covariance_bilinear_form basis pivot pivot -
+      indexed_basis_covariance_bilinear_form basis left pivot *
+        indexed_basis_covariance_bilinear_form basis left pivot =
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_remainder basis pivot left)
+        (indexed_basis_covariance_pivot_remainder basis pivot left) *
+      indexed_basis_covariance_bilinear_form basis pivot pivot.
+  Proof.
+    intros basis pivot left Hpivot.
+    pose proof (indexed_basis_covariance_pivot_schur_complement_identity
+      basis pivot left left Hpivot) as Hschur.
+    assert (Hcancel :
+      ((indexed_basis_covariance_bilinear_form basis left pivot *
+         indexed_basis_covariance_bilinear_form basis left pivot) /
+        indexed_basis_covariance_bilinear_form basis pivot pivot) *
+        indexed_basis_covariance_bilinear_form basis pivot pivot =
+      indexed_basis_covariance_bilinear_form basis left pivot *
+        indexed_basis_covariance_bilinear_form basis left pivot).
+    { field; exact Hpivot. }
+    nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_residual_psd]
+   (theorem) — Full positive semidefiniteness splits into two blocks.
+   Mathematical meaning: When a nonisotropic pivot is chosen, every
+   coefficient covariance self-pairing is nonnegative exactly when the
+   pivot self-pairing is strictly positive and the entire family of
+   residual coefficient self-pairings is nonnegative.
+   Exact checked proposition: (forall u, B(u,u)>=0) iff
+   (B(p,p)>0 and forall u, B(R_p(u),R_p(u))>=0).
+   Premises and side conditions: The pivot self-pairing is nonzero;
+   signed or unnormalized weights and any finite sample count remain
+   permitted, with no false claim that signed weights imply PSD.
+   Proof/definition method: Necessity tests the pivot itself and uses
+   the same universal nonnegative premise on each remainder. For
+   sufficiency, apply the checked diagonal block identity and the
+   Stdlib.Reals nonnegative-square/product laws to the positive pivot.
+   Library reuse: indexed_basis_covariance_pivot_residual_quadratic_decomposition,
+   Stdlib.Reals.Rle_0_sqr, Rmult_le_pos and Stdlib.Lra.
+   Boundary: Conditional characterization of arbitrary finite
+   covariance, not an automatic PSD theorem or abstract inertia law.
+   *)
+  Theorem indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_residual_psd :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall left : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form basis left left) <->
+       (0 < indexed_basis_covariance_bilinear_form basis pivot pivot /\
+        forall left : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form basis
+            (indexed_basis_covariance_pivot_remainder basis pivot left)
+            (indexed_basis_covariance_pivot_remainder basis pivot left))).
+  Proof.
+    intros basis pivot Hpivot.
+    split.
+    - intro Hpositive.
+      split.
+      + specialize (Hpositive pivot); lra.
+      + intro left; apply Hpositive.
+    - intros [Hpivot_positive Hresidual] left.
+      pose proof
+        (indexed_basis_covariance_pivot_residual_quadratic_decomposition
+          basis pivot left Hpivot) as Hsplit.
+      specialize (Hresidual left).
+      assert (Hpivot_term :
+        0 <= indexed_basis_covariance_pivot_coordinate basis pivot left *
+          indexed_basis_covariance_pivot_coordinate basis pivot left *
+          indexed_basis_covariance_bilinear_form basis pivot pivot).
+      {
+        apply Rmult_le_pos.
+        - apply Rle_0_sqr.
+        - lra.
+      }
+      lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_residual_nsd]
+   (theorem) — Negative semidefiniteness under an orthogonal pivot split.
+   Mathematical meaning: A symmetric finite signed covariance pairing
+   has nonpositive self-covariance in every direction precisely when
+   the nonisotropic pivot has negative self-pairing and the residual
+   quadratic is nonpositive on every typed coefficient vector.
+   Exact checked proposition: (forall u, B(u,u)<=0) iff
+   (B(p,p)<0 and forall u, B(R_p(u),R_p(u))<=0).
+   Premises and side conditions: B(p,p)<>0, arbitrary finite samples,
+   signed/unnormalized weights and dependent score bases are allowed.
+   Proof/definition method: The forward implication tests the pivot
+   and then any residual. The reverse invokes the general diagonal
+   covariance split and multiplies a nonnegative real square by
+   a negative pivot, using Stdlib.Psatz and real linear inequalities.
+   Library reuse: indexed_basis_covariance_pivot_residual_quadratic_decomposition,
+   Stdlib.Reals.Rle_0_sqr and Stdlib.Psatz.nra/Lra.
+   Boundary: Conditional NSD equivalence, not a generic claim that
+   covariance under signed weights must have a definite sign.
+   *)
+  Theorem indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_residual_nsd :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall left : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left left <= 0) <->
+       (indexed_basis_covariance_bilinear_form basis pivot pivot < 0 /\
+        forall left : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis
+            (indexed_basis_covariance_pivot_remainder basis pivot left)
+            (indexed_basis_covariance_pivot_remainder basis pivot left) <= 0)).
+  Proof.
+    intros basis pivot Hpivot.
+    split.
+    - intro Hnegative.
+      split.
+      + specialize (Hnegative pivot); lra.
+      + intro left; apply Hnegative.
+    - intros [Hpivot_negative Hresidual] left.
+      pose proof
+        (indexed_basis_covariance_pivot_residual_quadratic_decomposition
+          basis pivot left Hpivot) as Hsplit.
+      specialize (Hresidual left).
+      pose proof
+        (Rle_0_sqr
+          (indexed_basis_covariance_pivot_coordinate basis pivot left))
+        as Hsquare.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_bilinear_symmetric] (theorem) — The scalar Schur residual is symmetric in the original typed coefficient arguments.
+   Mathematical meaning: The scalar Schur residual is symmetric in the original typed coefficient arguments.
+   Exact checked proposition: B(R_p(u),R_p(v))=B(R_p(v),R_p(u)).
+   Premises and side conditions: No nonisotropic pivot, normalization, sign or sample-count premise; the residual function is total.
+   Proof/definition method: Specialize the previously checked general covariance symmetry at both remainders.
+   Library reuse: indexed_basis_covariance_bilinear_symmetric, Stdlib.Vectors.Vector.t.
+   Boundary: Symmetry is algebraic and does not imply residual positivity.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_bilinear_symmetric :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right) =
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot right) (indexed_basis_covariance_pivot_remainder basis pivot left).
+  Proof.
+    intros basis pivot left right.
+    apply indexed_basis_covariance_bilinear_symmetric.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_bilinear_add_first] (theorem) — The residual covariance is additive in the original first input, despite the remainder transformation.
+   Mathematical meaning: The residual covariance is additive in the original first input, despite the remainder transformation.
+   Exact checked proposition: B(R_p(u+v),R_p(w))=B(R_p(u),R_p(w))+B(R_p(v),R_p(w)).
+   Premises and side conditions: B(p,p)<>0; signed weights, arbitrary finite samples, dependent bases.
+   Proof/definition method: Expand all residual pairings by the checked Schur identity and distribute original first-slot covariance; simplify the common denominator.
+   Library reuse: pivot_schur_complement_identity, bilinear_add_first, Stdlib.Field.
+   Boundary: No new matrix, finite-sum, or vector-addition algorithm.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_bilinear_add_first :
+    forall basis (pivot left right test : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot (Vector.map2 Rplus left right)) (indexed_basis_covariance_pivot_remainder basis pivot test) =
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot test) +
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot right) (indexed_basis_covariance_pivot_remainder basis pivot test).
+  Proof.
+    intros basis pivot left right test Hpivot.
+    rewrite (indexed_basis_covariance_pivot_schur_complement_identity
+      basis pivot (Vector.map2 Rplus left right) test Hpivot).
+    rewrite (indexed_basis_covariance_pivot_schur_complement_identity
+      basis pivot left test Hpivot).
+    rewrite (indexed_basis_covariance_pivot_schur_complement_identity
+      basis pivot right test Hpivot).
+    rewrite !indexed_basis_covariance_bilinear_add_first.
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_bilinear_scale_first] (theorem) — Scalar homogeneity of the residual covariance in its first original input.
+   Mathematical meaning: Scalar homogeneity of the residual covariance in its first original input.
+   Exact checked proposition: B(R_p(alpha*u),R_p(v))=alpha*B(R_p(u),R_p(v)).
+   Premises and side conditions: B(p,p)<>0 with arbitrary scalar alpha and arbitrary signed finite weights.
+   Proof/definition method: Rewrite the two Schur residuals, apply original first-slot homogeneity and simplify by the nonzero real pivot.
+   Library reuse: pivot_schur_complement_identity, bilinear_scale_first, Stdlib.Field.
+   Boundary: Residual pairing linearity is proved without an independent vector space implementation.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_bilinear_scale_first :
+    forall basis (pivot left right : Vector.t R (length basis)) alpha,
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot (Vector.map (fun c => alpha * c) left)) (indexed_basis_covariance_pivot_remainder basis pivot right) =
+      alpha * indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right).
+  Proof.
+    intros basis pivot left right alpha Hpivot.
+    rewrite (indexed_basis_covariance_pivot_schur_complement_identity
+      basis pivot (Vector.map (fun c => alpha * c) left) right Hpivot).
+    rewrite (indexed_basis_covariance_pivot_schur_complement_identity
+      basis pivot left right Hpivot).
+    rewrite !indexed_basis_covariance_bilinear_scale_first.
+    field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_bilinear_add_second] (theorem) — Residual pairing is additive in the second original coefficient input.
+   Mathematical meaning: Residual pairing is additive in the second original coefficient input.
+   Exact checked proposition: B(R_p(u),R_p(v+w))=B(R_p(u),R_p(v))+B(R_p(u),R_p(w)).
+   Premises and side conditions: B(p,p)<>0; weights may be signed or unnormalized.
+   Proof/definition method: Transport the checked first-slot residual additivity by residual covariance symmetry.
+   Library reuse: residual_bilinear_symmetric, residual_bilinear_add_first.
+   Boundary: Second-slot linearity reuses existing results rather than repeating quotient algebra.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_bilinear_add_second :
+    forall basis (pivot left right test : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot (Vector.map2 Rplus right test)) =
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right) +
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot test).
+  Proof.
+    intros basis pivot left right test Hpivot.
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_symmetric
+      basis pivot left (Vector.map2 Rplus right test)).
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_add_first
+      basis pivot right test left Hpivot).
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_symmetric
+      basis pivot right left).
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_symmetric
+      basis pivot test left).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_bilinear_scale_second] (theorem) — Residual pairing is homogeneous in the second original input.
+   Mathematical meaning: Residual pairing is homogeneous in the second original input.
+   Exact checked proposition: B(R_p(u),R_p(alpha*v))=alpha*B(R_p(u),R_p(v)).
+   Premises and side conditions: Nonisotropic pivot with no positivity or normalization premise.
+   Proof/definition method: Transport verified first-slot scalar homogeneity across residual symmetry.
+   Library reuse: residual_bilinear_scale_first, residual_bilinear_symmetric.
+   Boundary: An exact concrete bilinear identity, not a spectral or rank claim.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_bilinear_scale_second :
+    forall basis (pivot left right : Vector.t R (length basis)) alpha,
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot (Vector.map (fun c => alpha * c) right)) =
+      alpha * indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right).
+  Proof.
+    intros basis pivot left right alpha Hpivot.
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_symmetric
+      basis pivot left (Vector.map (fun c => alpha * c) right)).
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_scale_first
+      basis pivot right left alpha Hpivot).
+    rewrite (indexed_basis_covariance_pivot_residual_bilinear_symmetric
+      basis pivot right left).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_remainder_orthogonal_to_section_first] (theorem) — Every residual is covariance-orthogonal to all scalar sections of its pivot.
+   Mathematical meaning: Every residual is covariance-orthogonal to all scalar sections of its pivot.
+   Exact checked proposition: B(R_p(u),section_p(alpha))=0 for all real alpha.
+   Premises and side conditions: B(p,p)<>0; arbitrary finite signed weights and typed coefficient vectors.
+   Proof/definition method: Extend known residual/pivot orthogonality to the full pivot line using second-slot covariance homogeneity.
+   Library reuse: remainder_orthogonal, bilinear_scale_second, Stdlib.Ring.
+   Boundary: Only orthogonality against the selected line, not radical membership for all samples.
+   *)
+  Theorem indexed_basis_covariance_pivot_remainder_orthogonal_to_section_first :
+    forall basis (pivot left : Vector.t R (length basis)) alpha,
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_section basis pivot alpha) = 0.
+  Proof.
+    intros basis pivot left alpha Hpivot.
+    unfold indexed_basis_covariance_pivot_section.
+    rewrite indexed_basis_covariance_bilinear_scale_second.
+    destruct (indexed_basis_covariance_pivot_remainder_orthogonal
+      basis pivot left Hpivot) as [Horth _].
+    rewrite Horth.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_remainder_orthogonal_to_section_second] (theorem) — Every pivot-line section is orthogonal to all residuals in the opposite argument order.
+   Mathematical meaning: Every pivot-line section is orthogonal to all residuals in the opposite argument order.
+   Exact checked proposition: B(section_p(alpha),R_p(u))=0.
+   Premises and side conditions: B(p,p)<>0; no mass-one, independent-basis or weight-sign restrictions.
+   Proof/definition method: Apply covariance symmetry to the newly proved residual/section orthogonality.
+   Library reuse: bilinear_symmetric, remainder_orthogonal_to_section_first.
+   Boundary: Opposite-slot zero covariance, not a diagonalization of the full residual block.
+   *)
+  Theorem indexed_basis_covariance_pivot_remainder_orthogonal_to_section_second :
+    forall basis (pivot left : Vector.t R (length basis)) alpha,
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_section basis pivot alpha) (indexed_basis_covariance_pivot_remainder basis pivot left) = 0.
+  Proof.
+    intros basis pivot left alpha Hpivot.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis (indexed_basis_covariance_pivot_section basis pivot alpha)
+      (indexed_basis_covariance_pivot_remainder basis pivot left)).
+    apply indexed_basis_covariance_pivot_remainder_orthogonal_to_section_first.
+    exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_pairing_first_absorption] (theorem) — Pairing a remainder against an arbitrary direction only detects the other direction's remainder.
+   Mathematical meaning: Pairing a remainder against an arbitrary direction only detects the other direction's remainder.
+   Exact checked proposition: B(R_p(u),v)=B(R_p(u),R_p(v)).
+   Premises and side conditions: B(p,p)<>0; arbitrary finite samples and signed coefficients.
+   Proof/definition method: Reconstruct v from its projection and residual, expand by second-slot bilinearity and cancel the mixed pairing.
+   Library reuse: projection_remainder_decomposition, projection_remainder_orthogonal, bilinear_add_second.
+   Boundary: An absorption law for the residual form, not the full covariance form.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_pairing_first_absorption :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) right =
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right).
+  Proof.
+    intros basis pivot left right Hpivot.
+    rewrite <- (indexed_basis_covariance_pivot_projection_remainder_decomposition
+      basis pivot right) at 1.
+    rewrite indexed_basis_covariance_bilinear_add_second.
+    pose proof
+      (indexed_basis_covariance_pivot_projection_remainder_orthogonal
+        basis pivot left right Hpivot) as [_ Hcross].
+    rewrite Hcross.
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_pairing_second_absorption] (theorem) — Pairing an arbitrary direction with a residual only depends on the first direction's residual.
+   Mathematical meaning: Pairing an arbitrary direction with a residual only depends on the first direction's residual.
+   Exact checked proposition: B(u,R_p(v))=B(R_p(u),R_p(v)).
+   Premises and side conditions: Nonisotropic pivot; arbitrary signed or unnormalized finite weights.
+   Proof/definition method: Apply original covariance symmetry, first residual absorption, and residual symmetry.
+   Library reuse: bilinear_symmetric, residual_pairing_first_absorption, residual_bilinear_symmetric.
+   Boundary: This removes pivot-line contributions, not arbitrary correlations between residuals.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_pairing_second_absorption :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left (indexed_basis_covariance_pivot_remainder basis pivot right) =
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right).
+  Proof.
+    intros basis pivot left right Hpivot.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis left (indexed_basis_covariance_pivot_remainder basis pivot right)).
+    rewrite (indexed_basis_covariance_pivot_residual_pairing_first_absorption
+      basis pivot right left Hpivot).
+    apply indexed_basis_covariance_pivot_residual_bilinear_symmetric.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_zero_iff_pivot_product] (theorem) — The residual covariance is zero exactly when the original cross-pairing factors through the selected pivot.
+   Mathematical meaning: The residual covariance is zero exactly when the original cross-pairing factors through the selected pivot.
+   Exact checked proposition: B(R_p(u),R_p(v))=0 iff B(u,v)*B(p,p)=B(u,p)*B(v,p).
+   Premises and side conditions: B(p,p)<>0, with arbitrary finite sample counts and signed weights.
+   Proof/definition method: Cancel the nonzero Schur denominator in both directions using a checked real field identity and Psatz.
+   Library reuse: pivot_schur_complement_identity, Stdlib.Field, Stdlib.Psatz.nra.
+   Boundary: Cross-residual covariance zero does not imply either residual vector is zero.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_zero_iff_pivot_product :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right) = 0 <->
+       indexed_basis_covariance_bilinear_form basis left right * indexed_basis_covariance_bilinear_form basis pivot pivot =
+       indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot).
+  Proof.
+    intros basis pivot left right Hpivot.
+    pose proof
+      (indexed_basis_covariance_pivot_schur_complement_identity
+        basis pivot left right Hpivot) as Hschur.
+    assert (Hcancel :
+      ((indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot) / indexed_basis_covariance_bilinear_form basis pivot pivot) *
+        indexed_basis_covariance_bilinear_form basis pivot pivot =
+      indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot).
+    { field; exact Hpivot. }
+    split; intro H; nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_zero] (theorem) — A two-direction Gram determinant vanishes precisely when its pivot residual diagonal vanishes.
+   Mathematical meaning: A two-direction Gram determinant vanishes precisely when its pivot residual diagonal vanishes.
+   Exact checked proposition: B(u,u)*B(p,p)-B(u,p)^2=0 iff B(R_p(u),R_p(u))=0.
+   Premises and side conditions: Only B(p,p)<>0; no positivity or two-sample restriction.
+   Proof/definition method: Use determinant=pivot times residual from the preceding verified theorem, and eliminate the nonzero pivot.
+   Library reuse: pivot_schur_determinant_identity, Stdlib.Psatz.nra.
+   Boundary: Zero diagonal under signed weights need not imply covariance radical membership.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot - indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot = 0 <->
+       indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) = 0).
+  Proof.
+    intros basis pivot left Hpivot.
+    pose proof (indexed_basis_covariance_pivot_schur_determinant_identity
+      basis pivot left Hpivot) as Hdet.
+    split; intro H; nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonnegative] (theorem) — With positive pivot self-pairing, the Gram determinant and residual diagonal have the same sign.
+   Mathematical meaning: With positive pivot self-pairing, the Gram determinant and residual diagonal have the same sign.
+   Exact checked proposition: 0<=Gram(p,u) iff 0<=B(R_p(u),R_p(u)).
+   Premises and side conditions: B(p,p)>0; this alone is not global PSD and weight signs are unrestricted.
+   Proof/definition method: Use the determinant-as-pivot-times-residual identity, preserving inequalities across a positive factor.
+   Library reuse: pivot_schur_determinant_identity, Stdlib.Lra, Stdlib.Psatz.nra.
+   Boundary: A per-direction Gram criterion, not an automatic positivity claim.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonnegative :
+    forall basis (pivot left : Vector.t R (length basis)),
+      0 < indexed_basis_covariance_bilinear_form basis pivot pivot ->
+      (0 <= indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot - indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot <->
+       0 <= indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left)).
+  Proof.
+    intros basis pivot left Hpositive.
+    assert (Hpivot : indexed_basis_covariance_bilinear_form basis pivot pivot <> 0) by lra.
+    pose proof (indexed_basis_covariance_pivot_schur_determinant_identity
+      basis pivot left Hpivot) as Hdet.
+    split; intro H; nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonpositive] (theorem) — With a negative pivot, nonnegative Gram determinants correspond to nonpositive residual diagonal values.
+   Mathematical meaning: With a negative pivot, nonnegative Gram determinants correspond to nonpositive residual diagonal values.
+   Exact checked proposition: 0<=Gram(p,u) iff B(R_p(u),R_p(u))<=0.
+   Premises and side conditions: B(p,p)<0 with arbitrary signed and unnormalized weights.
+   Proof/definition method: Use the determinant identity and reverse inequalities across the negative pivot factor.
+   Library reuse: pivot_schur_determinant_identity, Stdlib.Psatz.nra.
+   Boundary: Negative pivot does not imply negative semidefiniteness without controlling all residual directions.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonpositive :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot < 0 ->
+      (0 <= indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot - indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot <->
+       indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) <= 0).
+  Proof.
+    intros basis pivot left Hnegative.
+    assert (Hpivot : indexed_basis_covariance_bilinear_form basis pivot pivot <> 0) by lra.
+    pose proof (indexed_basis_covariance_pivot_schur_determinant_identity
+      basis pivot left Hpivot) as Hdet.
+    split; intro H; nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_determinant_nonnegative_of_probability_weights] (theorem) — Genuine finite probability weights imply a nonnegative two-direction covariance Gram determinant for every nonisotropic pivot.
+   Mathematical meaning: Genuine finite probability weights imply a nonnegative two-direction covariance Gram determinant for every nonisotropic pivot.
+   Exact checked proposition: With mass one and nonnegative weights, 0<=B(u,u)*B(p,p)-B(u,p)^2.
+   Premises and side conditions: Unit total mass, nonnegative weights on enumerated outcomes, B(p,p)<>0.
+   Proof/definition method: Prove pivot positive using the existing self-nonnegativity theorem; apply the Schur sign criterion to a residual and its already verified PSD.
+   Library reuse: bilinear_self_nonnegative, schur_nonnegative_iff_residual_nonnegative, Stdlib.Lra.
+   Boundary: This finite probability consequence does not assume Gaussian distributions or IQ measurement validity.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_determinant_nonnegative_of_probability_weights :
+    forall basis (pivot left : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      0 <= indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot - indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot.
+  Proof.
+    intros basis pivot left Hmass Hw Hpivot.
+    pose proof
+      (indexed_basis_covariance_bilinear_self_nonnegative
+        basis pivot Hmass Hw) as Hpositive_or_zero.
+    assert (Hpositive : 0 < indexed_basis_covariance_bilinear_form basis pivot pivot) by lra.
+    apply (proj2
+      (indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonnegative
+        basis pivot left Hpositive)).
+    apply (indexed_basis_covariance_bilinear_self_nonnegative
+      basis (indexed_basis_covariance_pivot_remainder basis pivot left)
+      Hmass Hw).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_cauchy_schwarz_squared] (theorem) — Residual covariance satisfies the Cauchy–Schwarz squared bound under genuine finite probability weights.
+   Mathematical meaning: Residual covariance satisfies the Cauchy–Schwarz squared bound under genuine finite probability weights.
+   Exact checked proposition: B(R_p(u),R_p(v))²<=B(R_p(u),R_p(u))*B(R_p(v),R_p(v)).
+   Premises and side conditions: Unit total mass and nonnegative weights on all sampled outcomes; no nonzero pivot is needed because remainder is total.
+   Proof/definition method: Instantiate the maintained general finite covariance Cauchy–Schwarz theorem directly at the typed residual vectors.
+   Library reuse: indexed_basis_covariance_bilinear_cauchy_schwarz_self_squared, Stdlib.Vectors.Vector.t.
+   Boundary: Signed weights need not satisfy this inequality; no such extension is claimed.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_cauchy_schwarz_squared :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right) *
+        indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right) <=
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) *
+        indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot right) (indexed_basis_covariance_pivot_remainder basis pivot right).
+  Proof.
+    intros basis pivot left right Hmass Hw.
+    apply (indexed_basis_covariance_bilinear_cauchy_schwarz_self_squared
+      basis
+      (indexed_basis_covariance_pivot_remainder basis pivot left)
+      (indexed_basis_covariance_pivot_remainder basis pivot right)
+      Hmass Hw).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_all_gram_minors_nonnegative] (theorem) — Positive semidefiniteness of the entire finite covariance form is equivalent to one positive nonisotropic pivot and nonnegative Gram minors against every typed coefficient direction.
+   Mathematical meaning: Positive semidefiniteness of the entire finite covariance form is equivalent to one positive nonisotropic pivot and nonnegative Gram minors against every typed coefficient direction.
+   Exact checked proposition: forall u, B(u,u)>=0 iff B(p,p)>0 and forall u, Gram(p,u)>=0.
+   Premises and side conditions: B(p,p)<>0; all samples and signed weights permitted and no unsupported positivity assertion is assumed.
+   Proof/definition method: Compose generic pivot/residual PSD characterization with positive-pivot Gram determinant sign equivalence.
+   Library reuse: pivot_psd_iff_positive_pivot_and_residual_psd, schur_nonnegative_iff_residual_nonnegative.
+   Boundary: A concrete all-directions criterion, not an abstract matrix spectral or rank-nullity theorem.
+   *)
+  Theorem indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_all_gram_minors_nonnegative :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall left : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form basis left left) <->
+       (0 < indexed_basis_covariance_bilinear_form basis pivot pivot /\
+        forall left : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot - indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot)).
+  Proof.
+    intros basis pivot Hpivot.
+    split.
+    - intro Hall.
+      pose proof
+        ((proj1 (indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_residual_psd
+          basis pivot Hpivot)) Hall) as [Hpositive Hresidual].
+      split.
+      + exact Hpositive.
+      + intro left.
+        apply (proj2
+          (indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonnegative
+            basis pivot left Hpositive)).
+        apply Hresidual.
+    - intros [Hpositive Hminors].
+      apply (proj2
+        (indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_residual_psd
+          basis pivot Hpivot)).
+      split.
+      + exact Hpositive.
+      + intro left.
+        apply (proj1
+          (indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonnegative
+            basis pivot left Hpositive)).
+        apply Hminors.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_all_gram_minors_nonnegative] (theorem) — Negative semidefiniteness of the entire finite form is equivalent to a negative nonisotropic pivot and nonnegative Gram minors against every typed coefficient vector.
+   Mathematical meaning: Negative semidefiniteness of the entire finite form is equivalent to a negative nonisotropic pivot and nonnegative Gram minors against every typed coefficient vector.
+   Exact checked proposition: forall u, B(u,u)<=0 iff B(p,p)<0 and forall u, Gram(p,u)>=0.
+   Premises and side conditions: B(p,p)<>0, with arbitrary finite signed or unnormalized weights and dependent bases.
+   Proof/definition method: Compose the generic negative-pivot/residual NSD classification and negative-pivot Gram sign equivalence.
+   Library reuse: pivot_nsd_iff_negative_pivot_and_residual_nsd, schur_nonnegative_iff_residual_nonpositive.
+   Boundary: A conditional algebraic sign test, not a blanket claim about signed covariance being semidefinite.
+   *)
+  Theorem indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_all_gram_minors_nonnegative :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall left : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left left <= 0) <->
+       (indexed_basis_covariance_bilinear_form basis pivot pivot < 0 /\
+        forall left : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot - indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot)).
+  Proof.
+    intros basis pivot Hpivot.
+    split.
+    - intro Hall.
+      pose proof
+        ((proj1 (indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_residual_nsd
+          basis pivot Hpivot)) Hall) as [Hnegative Hresidual].
+      split.
+      + exact Hnegative.
+      + intro left.
+        apply (proj2
+          (indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonpositive
+            basis pivot left Hnegative)).
+        apply Hresidual.
+    - intros [Hnegative Hminors].
+      apply (proj2
+        (indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_residual_nsd
+          basis pivot Hpivot)).
+      split.
+      + exact Hnegative.
+      + intro left.
+        apply (proj1
+          (indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonpositive
+            basis pivot left Hnegative)).
+        apply Hminors.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_zero_iff_orthogonal] (theorem) —
+   An arbitrary typed direction has zero pivot coordinate exactly when it is covariance-orthogonal to the nonisotropic pivot.
+   Mathematical meaning: An arbitrary typed direction has zero pivot coordinate exactly when it is covariance-orthogonal to the nonisotropic pivot.
+   Exact checked proposition: c_p(u)=0 iff B(u,p)=0, under B(p,p)<>0.
+   Premises and side conditions: No normalization, sample-count, sign, basis independence or positive-semidefiniteness assumptions; only the pivot denominator must be nonzero.
+   Proof/definition method: Use a nonzero real denominator cancellation and Stdlib.Field; no vector recursion.
+   Library reuse: pivot_coordinate, Stdlib.Reals, Stdlib.Field and Psatz.nra.
+   Boundary: This is orthogonality to one pivot and not in general membership of the entire covariance radical.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_zero_iff_orthogonal :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_coordinate basis pivot left = 0 <-> indexed_basis_covariance_bilinear_form basis left pivot = 0).
+  Proof.
+    intros basis pivot left Hpivot.
+    split.
+    - intro Hzero.
+      unfold indexed_basis_covariance_pivot_coordinate in Hzero.
+      assert (Hcancel :
+        indexed_basis_covariance_bilinear_form basis left pivot =
+        (indexed_basis_covariance_bilinear_form basis left pivot / indexed_basis_covariance_bilinear_form basis pivot pivot) * indexed_basis_covariance_bilinear_form basis pivot pivot).
+      { field; exact Hpivot. }
+      rewrite Hzero in Hcancel.
+      nra.
+    - intro Hzero.
+      unfold indexed_basis_covariance_pivot_coordinate.
+      rewrite Hzero.
+      field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_radical_iff_all_residual_pairings_zero] (theorem) —
+   The full covariance radical of a residual is equivalent to vanishing of its pairing with all pivot remainders.
+   Mathematical meaning: The full covariance radical of a residual is equivalent to vanishing of its pairing with all pivot remainders.
+   Exact checked proposition: Radical(R_p(u)) iff forall v, B(R_p(u),R_p(v))=0.
+   Premises and side conditions: Only B(p,p)<>0; arbitrary signed and unnormalized weighted samples and dependent bases.
+   Proof/definition method: Use the previously proved first residual-pairing absorption to replace any test direction by its remainder.
+   Library reuse: residual_pairing_first_absorption and the existing radical predicate.
+   Boundary: This does not assert residual quadratic positivity or identify the radical with the entire coordinate kernel.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_radical_iff_all_residual_pairings_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left) <->
+       forall right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right) = 0).
+  Proof.
+    intros basis pivot left Hpivot.
+    split.
+    - intros Hrad right.
+      apply Hrad.
+    - intros Hall right.
+      rewrite (indexed_basis_covariance_pivot_residual_pairing_first_absorption
+        basis pivot left right Hpivot).
+      apply Hall.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_residual_radical] (theorem) —
+   The full covariance radical splits exactly into a zero pivot coordinate together with residual radical membership.
+   Mathematical meaning: The full covariance radical splits exactly into a zero pivot coordinate together with residual radical membership.
+   Exact checked proposition: Radical(u) iff c_p(u)=0 and Radical(R_p(u)).
+   Premises and side conditions: Any finite signed or unnormalized sample list and dependent basis; B(p,p)<>0 is the only required algebraic premise.
+   Proof/definition method: Use coordinate orthogonality, residual-pairing absorption and the general rank-one-plus-Schur covariance decomposition; no matrix rank assumption.
+   Library reuse: pivot_coordinate_zero_iff_orthogonal, residual_radical_iff_all_residual_pairings_zero, residual_pairing_second_absorption, residual_bilinear_decomposition.
+   Boundary: Unlike a two-sample specialization, the residual radical need not equal the entire coordinate kernel for arbitrary sample lengths.
+   *)
+  Theorem indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_residual_radical :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis left <->
+       (indexed_basis_covariance_pivot_coordinate basis pivot left = 0 /\
+        indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left))).
+  Proof.
+    intros basis pivot left Hpivot.
+    split.
+    - intro Hrad.
+      split.
+      + apply (proj2
+          (indexed_basis_covariance_pivot_coordinate_zero_iff_orthogonal
+            basis pivot left Hpivot)).
+        apply Hrad.
+      + apply (proj2
+          (indexed_basis_covariance_pivot_residual_radical_iff_all_residual_pairings_zero
+            basis pivot left Hpivot)).
+        intro right.
+        rewrite <-
+          (indexed_basis_covariance_pivot_residual_pairing_second_absorption
+            basis pivot left right Hpivot).
+        apply Hrad.
+    - intros [Hzero Hresidual] right.
+      pose proof
+        (indexed_basis_covariance_pivot_residual_bilinear_decomposition
+          basis pivot left right Hpivot) as Hsplit.
+      rewrite Hzero in Hsplit.
+      rewrite (Hresidual
+        (indexed_basis_covariance_pivot_remainder basis pivot right))
+        in Hsplit.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_self_nonnegative_of_probability] (theorem) —
+   A residual self-pairing is nonnegative for every finite probability distribution, independently of the chosen pivot.
+   Mathematical meaning: A residual self-pairing is nonnegative for every finite probability distribution, independently of the chosen pivot.
+   Exact checked proposition: 0<=B(R_p(u),R_p(u)) under unit mass and nonnegative sample weights.
+   Premises and side conditions: Explicit total_mass=1 and all enumerated weights nonnegative; pivot may be isotropic because its total remainder vector is defined in all cases.
+   Proof/definition method: Instantiate the existing finite covariance bilinear PSD theorem at the typed residual vector.
+   Library reuse: indexed_basis_covariance_bilinear_self_nonnegative and Stdlib.Vectors.Vector.t.
+   Boundary: No general positivity is asserted for arbitrary signed or unnormalized weights.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_self_nonnegative_of_probability :
+    forall basis (pivot left : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      0 <= indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left).
+  Proof.
+    intros basis pivot left Hmass Hw.
+    apply indexed_basis_covariance_bilinear_self_nonnegative;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_self_zero_iff_radical] (theorem) —
+   Zero residual self-covariance exactly characterizes residual membership in the full covariance radical under genuine probability weights.
+   Mathematical meaning: Zero residual self-covariance exactly characterizes residual membership in the full covariance radical under genuine probability weights.
+   Exact checked proposition: B(R_p(u),R_p(u))=0 iff Radical(R_p(u)).
+   Premises and side conditions: Require normalized total mass one and nonnegative weights on all enumerated outcomes; arbitrary bases and zero-weight samples allowed.
+   Proof/definition method: Reuse the existing global quadratic-zero/radical equivalence at the residual vector without calculating covariance afresh.
+   Library reuse: indexed_basis_covariance_bilinear_self_zero_iff_radical and Stdlib.Vectors.Vector.t.
+   Boundary: The equivalence can fail for signed-weight indefinite covariance and is not used in that setting.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_self_zero_iff_radical :
+    forall basis (pivot left : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) = 0 <->
+       indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left)).
+  Proof.
+    intros basis pivot left Hmass Hw.
+    apply indexed_basis_covariance_bilinear_self_zero_iff_radical;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_self_positive_iff_not_radical] (theorem) —
+   A residual direction has strictly positive covariance self-pairing precisely when it is not in the full covariance radical of a finite probability model.
+   Mathematical meaning: A residual direction has strictly positive covariance self-pairing precisely when it is not in the full covariance radical of a finite probability model.
+   Exact checked proposition: 0<B(R_p(u),R_p(u)) iff not Radical(R_p(u)).
+   Premises and side conditions: Explicit unit mass and nonnegative enumerated sample weights, with no score-basis independence or positive definiteness premise.
+   Proof/definition method: Apply the existing self-positivity iff nonradical theorem to the canonical typed pivot remainder.
+   Library reuse: indexed_basis_covariance_bilinear_self_positive_iff_not_radical.
+   Boundary: This strict criterion does not carry over to indefinite signed weights.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_self_positive_iff_not_radical :
+    forall basis (pivot left : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      (0 < indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) <->
+       ~ indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left)).
+  Proof.
+    intros basis pivot left Hmass Hw.
+    apply indexed_basis_covariance_bilinear_self_positive_iff_not_radical;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_radical] (theorem) —
+   For genuine finite probabilities, equality in the pivot Gram determinant means that the residual lies in the full covariance radical.
+   Mathematical meaning: For genuine finite probabilities, equality in the pivot Gram determinant means that the residual lies in the full covariance radical.
+   Exact checked proposition: Gram(p,u)=0 iff Radical(R_p(u)).
+   Premises and side conditions: Nonzero pivot, normalized total mass one, and nonnegative sampled weights; no sample-count limit or basis independence.
+   Proof/definition method: Compose the general determinant-zero iff residual-self-zero identity with the probability-weight zero-self iff radical theorem.
+   Library reuse: pivot_schur_determinant_zero_iff_residual_zero and residual_self_zero_iff_radical.
+   Boundary: Signed-weight zero Gram determinants need not imply full radical membership.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_radical :
+    forall basis (pivot left : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot -
+        indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot = 0 <-> indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left)).
+  Proof.
+    intros basis pivot left Hmass Hw Hpivot.
+    pose proof
+      (indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_zero
+        basis pivot left Hpivot) as Hdet.
+    pose proof
+      (indexed_basis_covariance_pivot_residual_self_zero_iff_radical
+        basis pivot left Hmass Hw) as Hrad.
+    split; intro H.
+    - apply (proj1 Hrad). apply (proj1 Hdet). exact H.
+    - apply (proj2 Hdet). apply (proj2 Hrad). exact H.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_determinant_positive_iff_residual_not_radical] (theorem) —
+   For genuine finite probabilities, strict positivity of the pivot Gram determinant is equivalent to the residual being outside the covariance radical.
+   Mathematical meaning: For genuine finite probabilities, strict positivity of the pivot Gram determinant is equivalent to the residual being outside the covariance radical.
+   Exact checked proposition: 0<Gram(p,u) iff not Radical(R_p(u)).
+   Premises and side conditions: Nonzero pivot, unit mass, and nonnegative sampled weights ensure the pivot pairing is strictly positive.
+   Proof/definition method: Obtain pivot positivity from self-nonnegativity and nonisotropy, use determinant=pivot times residual and existing strict residual positivity iff nonradical.
+   Library reuse: bilinear_self_nonnegative, pivot_schur_determinant_identity, residual_self_positive_iff_not_radical, Psatz.nra.
+   Boundary: The result does not infer positivity for signed and indefinite covariance forms.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_determinant_positive_iff_residual_not_radical :
+    forall basis (pivot left : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (0 < indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot -
+        indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot <->
+       ~ indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left)).
+  Proof.
+    intros basis pivot left Hmass Hw Hpivot.
+    pose proof
+      (indexed_basis_covariance_bilinear_self_nonnegative
+        basis pivot Hmass Hw) as Hpnonnegative.
+    assert (Hpositive : 0 < indexed_basis_covariance_bilinear_form basis pivot pivot) by lra.
+    pose proof
+      (indexed_basis_covariance_pivot_schur_determinant_identity
+        basis pivot left Hpivot) as Hdet.
+    pose proof
+      (indexed_basis_covariance_pivot_residual_self_positive_iff_not_radical
+        basis pivot left Hmass Hw) as Hrad.
+    split; intro H.
+    - apply (proj1 Hrad).
+      rewrite Hdet in H.
+      nra.
+    - apply (proj2 Hrad) in H.
+      rewrite Hdet.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_gram_zero] (theorem) —
+   In finite probability models the entire covariance radical is determined by vanishing pivot coordinate and a single pivot Gram determinant.
+   Mathematical meaning: In finite probability models the entire covariance radical is determined by vanishing pivot coordinate and a single pivot Gram determinant.
+   Exact checked proposition: Radical(u) iff c_p(u)=0 and Gram(p,u)=0.
+   Premises and side conditions: Nonisotropic pivot, unit mass and nonnegative sampled weights; arbitrary finite basis and sample length.
+   Proof/definition method: Compose the general radical scalar/residual criterion with the determinant-zero iff residual-radical theorem.
+   Library reuse: pivot_radical_iff_coordinate_zero_and_residual_radical, schur_determinant_zero_iff_residual_radical.
+   Boundary: This is a finite PSD radical test, not a universal signed-weight radical criterion.
+   *)
+  Theorem indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_gram_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis left <->
+       (indexed_basis_covariance_pivot_coordinate basis pivot left = 0 /\
+        indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot -
+        indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot = 0)).
+  Proof.
+    intros basis pivot left Hmass Hw Hpivot.
+    pose proof
+      (indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_residual_radical
+        basis pivot left Hpivot) as Hsplit.
+    pose proof
+      (indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_radical
+        basis pivot left Hmass Hw Hpivot) as Hdet.
+    split; intro H.
+    - apply (proj1 Hsplit) in H.
+      destruct H as [Hcoord Hrad].
+      split.
+      + exact Hcoord.
+      + apply (proj2 Hdet). exact Hrad.
+    - destruct H as [Hcoord Hdetzero].
+      apply (proj2 Hsplit).
+      split.
+      + exact Hcoord.
+      + apply (proj1 Hdet). exact Hdetzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_self_at_most_original] (theorem) —
+   A strictly positive covariance pivot ensures the residual self-pairing never exceeds the original diagonal covariance, even with signed weights.
+   Mathematical meaning: A strictly positive covariance pivot ensures the residual self-pairing never exceeds the original diagonal covariance, even with signed weights.
+   Exact checked proposition: B(R_p(u),R_p(u))<=B(u,u) whenever B(p,p)>0.
+   Premises and side conditions: Positive pivot self-pairing is required; sample weights may be signed or unnormalized and no residual positivity is assumed.
+   Proof/definition method: Use the existing exact orthogonal diagonal covariance decomposition and the Stdlib nonnegative-square identity.
+   Library reuse: pivot_residual_quadratic_decomposition, Stdlib.Reals.Rle_0_sqr, Stdlib.Psatz.nra.
+   Boundary: This is only an algebraic upper comparison; a signed residual self-covariance can be negative.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_self_at_most_original :
+    forall basis (pivot left : Vector.t R (length basis)),
+      0 < indexed_basis_covariance_bilinear_form basis pivot pivot ->
+      indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) <= indexed_basis_covariance_bilinear_form basis left left.
+  Proof.
+    intros basis pivot left Hpositive.
+    assert (Hpivot : indexed_basis_covariance_bilinear_form basis pivot pivot <> 0) by lra.
+    pose proof
+      (indexed_basis_covariance_pivot_residual_quadratic_decomposition
+        basis pivot left Hpivot) as Hsplit.
+    pose proof (Rle_0_sqr (indexed_basis_covariance_pivot_coordinate basis pivot left)) as Hsquare.
+    nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_self_equal_original_iff_coordinate_zero] (theorem) —
+   Equality in the pivot-versus-residual self-covariance comparison holds exactly when the original pivot coordinate vanishes.
+   Mathematical meaning: Equality in the pivot-versus-residual self-covariance comparison holds exactly when the original pivot coordinate vanishes.
+   Exact checked proposition: B(R_p(u),R_p(u))=B(u,u) iff c_p(u)=0 for positive pivot.
+   Premises and side conditions: B(p,p)>0, without any probability or nonnegative-weight requirement.
+   Proof/definition method: Cancel the exact scalar square contribution from the checked diagonal block decomposition, using the strictly positive pivot.
+   Library reuse: pivot_residual_quadratic_decomposition, Stdlib.Psatz.nra.
+   Boundary: Equality characterizes loss of pivot covariance, not necessarily zero covariance radical.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_self_equal_original_iff_coordinate_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      0 < indexed_basis_covariance_bilinear_form basis pivot pivot ->
+      (indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) = indexed_basis_covariance_bilinear_form basis left left <->
+       indexed_basis_covariance_pivot_coordinate basis pivot left = 0).
+  Proof.
+    intros basis pivot left Hpositive.
+    assert (Hpivot : indexed_basis_covariance_bilinear_form basis pivot pivot <> 0) by lra.
+    pose proof
+      (indexed_basis_covariance_pivot_residual_quadratic_decomposition
+        basis pivot left Hpivot) as Hsplit.
+    split.
+    - intro Hequal.
+      assert (Hproduct :
+        (indexed_basis_covariance_pivot_coordinate basis pivot left *
+         indexed_basis_covariance_pivot_coordinate basis pivot left) *
+        indexed_basis_covariance_bilinear_form basis pivot pivot = 0).
+      { nra. }
+      apply Rmult_integral in Hproduct as [Hsquare | Hzero].
+      + nra.
+      + lra.
+    - intro Hcoord.
+      rewrite Hcoord in Hsplit.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_residual_self_equal_original_iff_projection_zero] (theorem) —
+   Equality of original and residual self-covariance is equivalent to the canonical pivot projection being the typed zero vector.
+   Mathematical meaning: Equality of original and residual self-covariance is equivalent to the canonical pivot projection being the typed zero vector.
+   Exact checked proposition: B(R_p(u),R_p(u))=B(u,u) iff P_p(u)=Vector.const 0 n.
+   Premises and side conditions: Strictly positive pivot; sample length, weight signs and basis independence unrestricted.
+   Proof/definition method: Compose the diagonal equality iff coordinate-zero theorem with the already checked projection kernel iff coordinate-zero characterization.
+   Library reuse: pivot_residual_self_equal_original_iff_coordinate_zero, pivot_coordinate_zero_iff_projection_zero, Stdlib.Vectors.Vector.const.
+   Boundary: No assertion of equality of the original and residual coefficient vectors is needed.
+   *)
+  Theorem indexed_basis_covariance_pivot_residual_self_equal_original_iff_projection_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      0 < indexed_basis_covariance_bilinear_form basis pivot pivot ->
+      (indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) = indexed_basis_covariance_bilinear_form basis left left <->
+       indexed_basis_covariance_pivot_projection basis pivot left =
+         Vector.const 0 (length basis)).
+  Proof.
+    intros basis pivot left Hpositive.
+    assert (Hpivot : indexed_basis_covariance_bilinear_form basis pivot pivot <> 0) by lra.
+    pose proof
+      (indexed_basis_covariance_pivot_residual_self_equal_original_iff_coordinate_zero
+        basis pivot left Hpositive) as Heq.
+    pose proof
+      (indexed_basis_covariance_pivot_coordinate_zero_iff_projection_zero
+        basis pivot left Hpivot) as Hproj.
+    split; intro H.
+    - apply (proj1 Hproj). apply (proj1 Heq). exact H.
+    - apply (proj2 Heq). apply (proj2 Hproj). exact H.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_schur_cauchy_schwarz_squared] (theorem) —
+   The scalar Schur complement of finite covariance obeys a full residual Cauchy–Schwarz inequality under genuine probability weights.
+   Mathematical meaning: The scalar Schur complement of finite covariance obeys a full residual Cauchy–Schwarz inequality under genuine probability weights.
+   Exact checked proposition: (B(u,v)-B(u,p)B(v,p)/B(p,p))² <= Schur(u,u)*Schur(v,v).
+   Premises and side conditions: Unit total mass, nonnegative weights, nonisotropic pivot; no sample-count restriction or independent-basis hypothesis.
+   Proof/definition method: Rewrite each scalar Schur term by the generic residual-pairing equality and invoke the already verified residual covariance Cauchy–Schwarz bound.
+   Library reuse: pivot_schur_complement_identity, pivot_residual_cauchy_schwarz_squared, Rocq Stdlib.Reals.
+   Boundary: Finite algebraic partial covariance bound, not Gaussian conditional covariance or empirical IQ inference.
+   *)
+  Theorem indexed_basis_covariance_pivot_schur_cauchy_schwarz_squared :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      total_mass = 1 ->
+      (forall x, In x samples -> 0 <= weight x) ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_form basis left right -
+        (indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot) / indexed_basis_covariance_bilinear_form basis pivot pivot) * (indexed_basis_covariance_bilinear_form basis left right -
+        (indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot) / indexed_basis_covariance_bilinear_form basis pivot pivot) <=
+      (indexed_basis_covariance_bilinear_form basis left left -
+        (indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot) / indexed_basis_covariance_bilinear_form basis pivot pivot) * (indexed_basis_covariance_bilinear_form basis right right -
+        (indexed_basis_covariance_bilinear_form basis right pivot * indexed_basis_covariance_bilinear_form basis right pivot) / indexed_basis_covariance_bilinear_form basis pivot pivot).
+  Proof.
+    intros basis pivot left right Hmass Hw Hpivot.
+    repeat rewrite <-
+      (indexed_basis_covariance_pivot_schur_complement_identity
+        basis pivot left right Hpivot).
+    rewrite <-
+      (indexed_basis_covariance_pivot_schur_complement_identity
+        basis pivot left left Hpivot).
+    rewrite <-
+      (indexed_basis_covariance_pivot_schur_complement_identity
+        basis pivot right right Hpivot).
+    apply indexed_basis_covariance_pivot_residual_cauchy_schwarz_squared;
+      assumption.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_all_schur_cross_zero_iff_residual_radical] (theorem) —
+   Universal vanishing of the scalar Schur cross-minor against every direction is equivalent to residual radical membership.
+   Mathematical meaning: Universal vanishing of the scalar Schur cross-minor against every direction is equivalent to residual radical membership.
+   Exact checked proposition: (forall v, B(u,v)B(p,p)=B(u,p)B(v,p)) iff Radical(R_p(u)).
+   Premises and side conditions: B(p,p)<>0; signed/unnormalized finite weights and dependent bases allowed.
+   Proof/definition method: Transport the previously verified residual radical test across the checked Schur zero iff pivot-product equivalence.
+   Library reuse: pivot_residual_radical_iff_all_residual_pairings_zero, pivot_schur_zero_iff_pivot_product.
+   Boundary: Pointwise vanishing of all Schur minors is stronger than vanishing of one residual diagonal in signed-weight models.
+   *)
+  Theorem indexed_basis_covariance_pivot_all_schur_cross_zero_iff_residual_radical :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall right : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left right * indexed_basis_covariance_bilinear_form basis pivot pivot =
+          indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot) <->
+       indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left)).
+  Proof.
+    intros basis pivot left Hpivot.
+    pose proof
+      (indexed_basis_covariance_pivot_residual_radical_iff_all_residual_pairings_zero
+        basis pivot left Hpivot) as Hrad.
+    split.
+    - intro Hall.
+      apply (proj2 Hrad).
+      intro right.
+      apply (proj2
+        (indexed_basis_covariance_pivot_schur_zero_iff_pivot_product
+          basis pivot left right Hpivot)).
+      apply Hall.
+    - intros Hresrad right.
+      apply (proj1
+        (indexed_basis_covariance_pivot_schur_zero_iff_pivot_product
+          basis pivot left right Hpivot)).
+      exact ((proj1 Hrad) Hresrad right).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_all_schur_cross_zero] (theorem) —
+   An exact signed-weight radical criterion requires zero pivot coordinate and vanishing of every associated Schur minor, not merely the diagonal minor.
+   Mathematical meaning: An exact signed-weight radical criterion requires zero pivot coordinate and vanishing of every associated Schur minor, not merely the diagonal minor.
+   Exact checked proposition: Radical(u) iff c_p(u)=0 and forall v, B(u,v)B(p,p)=B(u,p)B(v,p).
+   Premises and side conditions: Arbitrary finite signed or unnormalized outcome weights and bases with B(p,p)<>0.
+   Proof/definition method: Combine the generic pivot radical splitting theorem and all-Schur-cross-zero characterization of the residual radical.
+   Library reuse: pivot_radical_iff_coordinate_zero_and_residual_radical, pivot_all_schur_cross_zero_iff_residual_radical.
+   Boundary: This intentionally requires all directions; a zero quadratic alone is insufficient for indefinite signed-weight covariance.
+   *)
+  Theorem indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_all_schur_cross_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis left <->
+       (indexed_basis_covariance_pivot_coordinate basis pivot left = 0 /\
+        forall right : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left right * indexed_basis_covariance_bilinear_form basis pivot pivot =
+          indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot)).
+  Proof.
+    intros basis pivot left Hpivot.
+    pose proof
+      (indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_residual_radical
+        basis pivot left Hpivot) as Hsplit.
+    pose proof
+      (indexed_basis_covariance_pivot_all_schur_cross_zero_iff_residual_radical
+        basis pivot left Hpivot) as Hminor.
+    split; intro H.
+    - apply (proj1 Hsplit) in H.
+      destruct H as [Hcoord Hrad].
+      split.
+      + exact Hcoord.
+      + apply (proj2 Hminor). exact Hrad.
+    - destruct H as [Hcoord Hminors].
+      apply (proj2 Hsplit).
+      split.
+      + exact Hcoord.
+      + apply (proj1 Hminor). exact Hminors.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one] (definition) —
+   Explicit all-minors rank-one covariance criterion anchored at a pivot.
+   Mathematical meaning: Every cross-pairing B(u,v), multiplied by
+   the chosen pivot self-pairing, is the product of the two covariances
+   against that pivot. This property is defined even for isotropic
+   pivots, but the equivalence with one-dimensional factorization
+   requires B(p,p)<>0.
+   Exact definition: For all typed u,v,
+     B(u,v)*B(p,p)=B(u,p)*B(v,p).
+   Premises and side conditions: Finite signed or unnormalized weights
+   and dependent coefficient-score bases are unrestricted.
+   Proof/definition method: Reuse the maintained bilinear pairing;
+   introduce no custom matrices, finite sums or vector recursion.
+   Library reuse: indexed_basis_covariance_bilinear_form,
+   Stdlib.Vectors.Vector.t and Stdlib.Logic.Forall.
+   Boundary: An algebraic anchored rank-one condition, not a new
+   abstract rank or dimension API and not a PSD assertion.
+   *)
+  Definition indexed_basis_covariance_pivot_rank_one
+      (basis : list (Outcome -> R))
+      (pivot : Vector.t R (length basis)) : Prop :=
+    forall left right : Vector.t R (length basis),
+      indexed_basis_covariance_bilinear_form basis left right * indexed_basis_covariance_bilinear_form basis pivot pivot =
+      indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis right pivot.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero] (theorem) —
+   The rank-one pivot criterion is equivalent to complete vanishing of the Schur residual bilinear form, not merely its diagonal.
+   Mathematical meaning: The rank-one pivot criterion is equivalent to complete vanishing of the Schur residual bilinear form, not merely its diagonal.
+   Exact checked proposition: rank_one(p) iff forall u v, B(R_p(u),R_p(v))=0.
+   Premises and side conditions: Requires B(p,p)<>0; signed weights, arbitrary finite sample counts, nonunit mass and dependent bases remain valid.
+   Proof/definition method: Apply the previously kernel-checked scalar Schur zero iff pivot-product theorem separately to every pair.
+   Library reuse: pivot_schur_zero_iff_pivot_product, Stdlib.Logic.
+   Boundary: This is an all-directions finite bilinear identity, not an abstract rank calculation.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot right) = 0).
+  Proof.
+    intros basis pivot Hpivot.
+    unfold indexed_basis_covariance_pivot_rank_one.
+    split.
+    - intros Hrank left right.
+      apply (proj2 (indexed_basis_covariance_pivot_schur_zero_iff_pivot_product
+        basis pivot left right Hpivot)).
+      apply Hrank.
+    - intros Hzero left right.
+      apply (proj1 (indexed_basis_covariance_pivot_schur_zero_iff_pivot_product
+        basis pivot left right Hpivot)).
+      apply Hzero.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical] (theorem) —
+   The same rank-one condition is equivalent to every canonical pivot remainder belonging to the full covariance radical.
+   Mathematical meaning: The same rank-one condition is equivalent to every canonical pivot remainder belonging to the full covariance radical.
+   Exact checked proposition: rank_one(p) iff forall u, Radical(R_p(u)).
+   Premises and side conditions: Nonisotropic pivot B(p,p)<>0; signed weighted finite samples of arbitrary cardinality.
+   Proof/definition method: Compose the checked residual-radical iff all residual pairings zero theorem with the rank-one Schur characterization.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero, residual_radical_iff_all_residual_pairings_zero, Stdlib.Logic.
+   Boundary: Unlike a zero-diagonal test alone, radical membership requires vanishing pairing against every typed test vector.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_radical basis (indexed_basis_covariance_pivot_remainder basis pivot left)).
+  Proof.
+    intros basis pivot Hpivot.
+    pose proof (indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero basis pivot Hpivot) as Hzero.
+    split.
+    - intros Hrank left.
+      apply (proj2
+        (indexed_basis_covariance_pivot_residual_radical_iff_all_residual_pairings_zero
+          basis pivot left Hpivot)).
+      intros right.
+      exact ((proj1 Hzero Hrank) left right).
+    - intro Hall.
+      apply (proj2 Hzero).
+      intros left right.
+      apply (proj1
+        (indexed_basis_covariance_pivot_residual_radical_iff_all_residual_pairings_zero
+          basis pivot left Hpivot)).
+      exact (Hall left).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_all_residual_diagonals_zero] (theorem) —
+   Universal vanishing of the residual covariance quadratic is sufficient for complete vanishing of the symmetric residual bilinear form, even with indefinite signed weights.
+   Mathematical meaning: Universal vanishing of the residual covariance quadratic is sufficient for complete vanishing of the symmetric residual bilinear form, even with indefinite signed weights.
+   Exact checked proposition: rank_one(p) iff forall u, B(R_p(u),R_p(u))=0.
+   Premises and side conditions: B(p,p)<>0, with no assumptions on probability normalization or weight nonnegativity.
+   Proof/definition method: Use bilinearity of the residual pairing and the universal zero quadratic evaluated at u+v; polarization eliminates its cross term.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero, residual_bilinear_add_first/add_second, residual_bilinear_symmetric, Stdlib.Psatz.nra.
+   Boundary: The universal quantifier is essential: a single isotropic direction need not lie in the radical for signed covariance.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_all_residual_diagonals_zero :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_remainder basis pivot left) (indexed_basis_covariance_pivot_remainder basis pivot left) = 0).
+  Proof.
+    intros basis pivot Hpivot.
+    pose proof (indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero basis pivot Hpivot) as Hiff.
+    split.
+    - intros Hrank left.
+      exact ((proj1 Hiff Hrank) left left).
+    - intro Hdiagonal.
+      apply (proj2 Hiff).
+      intros left right.
+      pose proof (Hdiagonal (Vector.map2 Rplus left right)) as Hsum.
+      rewrite (indexed_basis_covariance_pivot_residual_bilinear_add_first
+        basis pivot left right (Vector.map2 Rplus left right) Hpivot) in Hsum.
+      rewrite (indexed_basis_covariance_pivot_residual_bilinear_add_second
+        basis pivot left left right Hpivot) in Hsum.
+      rewrite (indexed_basis_covariance_pivot_residual_bilinear_add_second
+        basis pivot right left right Hpivot) in Hsum.
+      rewrite (indexed_basis_covariance_pivot_residual_bilinear_symmetric
+        basis pivot right left) in Hsum.
+      pose proof (Hdiagonal left) as Hleft.
+      pose proof (Hdiagonal right) as Hright.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_all_pivot_gram_minors_zero] (theorem) —
+   All pivot-anchored Gram determinant minors vanish exactly when the entire covariance pairing has the rank-one pivot factorization.
+   Mathematical meaning: All pivot-anchored Gram determinant minors vanish exactly when the entire covariance pairing has the rank-one pivot factorization.
+   Exact checked proposition: rank_one(p) iff forall u, B(u,u) B(p,p)-B(u,p)^2 = 0.
+   Premises and side conditions: Nonzero B(p,p); no positivity, normalized mass or two-sample restriction; applies to indefinite signed covariance.
+   Proof/definition method: Transfer the universal residual quadratic-zero criterion through the generic determinant equals pivot times Schur remainder identity.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_all_residual_diagonals_zero, pivot_schur_determinant_zero_iff_residual_zero.
+   Boundary: One minor alone is not sufficient; every typed coefficient direction is quantified.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_all_pivot_gram_minors_zero :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis pivot pivot -
+        indexed_basis_covariance_bilinear_form basis left pivot * indexed_basis_covariance_bilinear_form basis left pivot = 0).
+  Proof.
+    intros basis pivot Hpivot.
+    pose proof (indexed_basis_covariance_pivot_rank_one_iff_all_residual_diagonals_zero basis pivot Hpivot) as Hdiagonal.
+    split.
+    - intros Hrank left.
+      apply (proj2
+        (indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_zero
+          basis pivot left Hpivot)).
+      exact ((proj1 Hdiagonal Hrank) left).
+    - intro Hall.
+      apply (proj2 Hdiagonal).
+      intro left.
+      apply (proj1
+        (indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_zero
+          basis pivot left Hpivot)).
+      exact (Hall left).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization] (theorem) —
+   Exact rank-one factorization through the normalized scalar pivot coordinate is equivalent to the nondivided all-minors rank-one criterion.
+   Mathematical meaning: Exact rank-one factorization through the normalized scalar pivot coordinate is equivalent to the nondivided all-minors rank-one criterion.
+   Exact checked proposition: rank_one(p) iff forall u v, B(u,v)=c_p(u)c_p(v)B(p,p).
+   Premises and side conditions: B(p,p)<>0. No positivity or two-sample assumption is necessary; the pivot denominator is algebraically canceled.
+   Proof/definition method: Normalize the two covariance-against-pivot factors using Stdlib.Field and the nonisotropic pivot.
+   Library reuse: indexed_basis_covariance_pivot_coordinate, indexed_basis_covariance_pivot_rank_one, Stdlib.Field.
+   Boundary: This scalar factorization does not assert an abstract rank-nullity theorem.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis left right =
+         indexed_basis_covariance_pivot_coordinate basis pivot left * indexed_basis_covariance_pivot_coordinate basis pivot right * indexed_basis_covariance_bilinear_form basis pivot pivot).
+  Proof.
+    intros basis pivot Hpivot.
+    split.
+    - intros Hrank left right.
+      pose proof (Hrank left right) as Hcross.
+      unfold indexed_basis_covariance_pivot_coordinate.
+      assert (Hrestore :
+        indexed_basis_covariance_bilinear_form basis left right =
+          (indexed_basis_covariance_bilinear_form basis left right * indexed_basis_covariance_bilinear_form basis pivot pivot) / indexed_basis_covariance_bilinear_form basis pivot pivot).
+      { field; exact Hpivot. }
+      rewrite Hrestore at 1.
+      rewrite Hcross.
+      field; exact Hpivot.
+    - intros Hfactor left right.
+      pose proof (Hfactor left right) as Heq.
+      unfold indexed_basis_covariance_pivot_coordinate in Heq.
+      rewrite Heq.
+      field; exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_radical_coordinate_kernel] (theorem) —
+   The full finite covariance radical coincides with the zero set of the single pivot coordinate exactly in the rank-one regime.
+   Mathematical meaning: The full finite covariance radical coincides with the zero set of the single pivot coordinate exactly in the rank-one regime.
+   Exact checked proposition: rank_one(p) iff forall u, Radical(u) iff c_p(u)=0.
+   Premises and side conditions: Nonisotropic pivot; all real signed weights, arbitrary finite samples and dependent bases.
+   Proof/definition method: Forward: transport rank-one cross minors through zero pivot covariance. Reverse: apply the coordinate criterion to all residual vectors and use the checked residual-radical characterization.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical, pivot_coordinate_zero_iff_orthogonal, pivot_remainder_coordinate_zero, Stdlib.Reals.Rmult_integral.
+   Boundary: The equivalence is false for generic higher-rank finite covariance; the rank-one condition is essential.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_radical_coordinate_kernel :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left : Vector.t R (length basis),
+         (indexed_basis_covariance_bilinear_radical basis left <-> indexed_basis_covariance_pivot_coordinate basis pivot left = 0)).
+  Proof.
+    intros basis pivot Hpivot.
+    split.
+    - intros Hrank left.
+      split.
+      + intro Hrad.
+        apply (proj2
+          (indexed_basis_covariance_pivot_coordinate_zero_iff_orthogonal
+            basis pivot left Hpivot)).
+        apply Hrad.
+      + intro Hcoord.
+        pose proof
+          ((proj1 (indexed_basis_covariance_pivot_coordinate_zero_iff_orthogonal
+             basis pivot left Hpivot)) Hcoord) as Horth.
+        unfold indexed_basis_covariance_bilinear_radical.
+        intro right.
+        pose proof (Hrank left right) as Hcross.
+        rewrite Horth in Hcross.
+        assert (Hprod :
+          indexed_basis_covariance_bilinear_form basis left right * indexed_basis_covariance_bilinear_form basis pivot pivot = 0).
+        { nra. }
+        apply Rmult_integral in Hprod as [Hzero | Hzero].
+        * exact Hzero.
+        * contradiction.
+    - intro Hkernel.
+      apply (proj2 (indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical basis pivot Hpivot)).
+      intro left.
+      apply (proj2 (Hkernel (indexed_basis_covariance_pivot_remainder basis pivot left))).
+      apply indexed_basis_covariance_pivot_remainder_coordinate_zero.
+      exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_first] (theorem) —
+   The rank-one covariance property is equivalent to preserving every covariance pairing when projecting only its first coefficient argument.
+   Mathematical meaning: The rank-one covariance property is equivalent to preserving every covariance pairing when projecting only its first coefficient argument.
+   Exact checked proposition: rank_one(p) iff forall u v, B(P_p(u),v)=B(u,v).
+   Premises and side conditions: B(p,p)<>0, arbitrary signed weights and finite sample bases.
+   Proof/definition method: Transport the all-residual-radical characterization through an explicit covariance sum identity obtained from standard typed-vector projection/remainder reconstruction and original first-slot additivity.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical, projection_remainder_decomposition, bilinear_add_first, Stdlib.Lra.
+   Boundary: This is a covariance-preserving algebraic projection, not equality of coefficient vectors.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_first :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_projection basis pivot left) right = indexed_basis_covariance_bilinear_form basis left right).
+  Proof.
+    intros basis pivot Hpivot.
+    pose proof (indexed_basis_covariance_pivot_rank_one_iff_all_residuals_radical basis pivot Hpivot) as Hradical.
+    split.
+    - intro Hrank.
+      pose proof ((proj1 Hradical) Hrank) as Hall.
+      intros left right.
+      transitivity
+        (indexed_basis_covariance_bilinear_form basis
+          (Vector.map2 Rplus
+            (indexed_basis_covariance_pivot_projection basis pivot left)
+            (indexed_basis_covariance_pivot_remainder basis pivot left))
+          right).
+      + rewrite indexed_basis_covariance_bilinear_add_first.
+        rewrite (Hall left right).
+        lra.
+      + rewrite
+          (indexed_basis_covariance_pivot_projection_remainder_decomposition
+            basis pivot left).
+        reflexivity.
+    - intro Hpreserve.
+      apply (proj2 Hradical).
+      intros left right.
+      pose proof (Hpreserve left right) as Hequal.
+      assert (Hsplit :
+        indexed_basis_covariance_bilinear_form basis
+          (indexed_basis_covariance_pivot_projection basis pivot left) right +
+        indexed_basis_covariance_bilinear_form basis
+          (indexed_basis_covariance_pivot_remainder basis pivot left) right =
+        indexed_basis_covariance_bilinear_form basis left right).
+      {
+        rewrite <-
+          (indexed_basis_covariance_bilinear_add_first basis
+            (indexed_basis_covariance_pivot_projection basis pivot left)
+            (indexed_basis_covariance_pivot_remainder basis pivot left)
+            right).
+        rewrite
+          (indexed_basis_covariance_pivot_projection_remainder_decomposition
+            basis pivot left).
+        reflexivity.
+      }
+      lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_second] (theorem) —
+   The same rank-one condition is equivalent to preservation of all covariance pairings when only the second argument is pivot-projected.
+   Mathematical meaning: The same rank-one condition is equivalent to preservation of all covariance pairings when only the second argument is pivot-projected.
+   Exact checked proposition: rank_one(p) iff forall u v, B(u,P_p(v))=B(u,v).
+   Premises and side conditions: Nonisotropic pivot with arbitrary signed or unnormalized finite weights.
+   Proof/definition method: Conjugate the first-slot characterization by symmetry of the checked finite covariance pairing.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_first, covariance_bilinear_symmetric.
+   Boundary: Second-slot covariance equivalence rather than equality of the original and projected coefficient vectors.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_second :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis left (indexed_basis_covariance_pivot_projection basis pivot right) = indexed_basis_covariance_bilinear_form basis left right).
+  Proof.
+    intros basis pivot Hpivot.
+    pose proof (indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_first basis pivot Hpivot) as Hfirst.
+    split.
+    - intros Hrank left right.
+      rewrite (indexed_basis_covariance_bilinear_symmetric
+        basis left (indexed_basis_covariance_pivot_projection basis pivot right)).
+      rewrite ((proj1 Hfirst Hrank) right left).
+      apply indexed_basis_covariance_bilinear_symmetric.
+    - intro Hsecond.
+      apply (proj2 Hfirst).
+      intros left right.
+      rewrite (indexed_basis_covariance_bilinear_symmetric
+        basis (indexed_basis_covariance_pivot_projection basis pivot left) right).
+      rewrite (Hsecond right left).
+      apply indexed_basis_covariance_bilinear_symmetric.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_both] (theorem) —
+   Rank-one covariance is equivalent to simultaneous two-sided preservation of the entire bilinear pairing by one scalar pivot projection.
+   Mathematical meaning: Rank-one covariance is equivalent to simultaneous two-sided preservation of the entire bilinear pairing by one scalar pivot projection.
+   Exact checked proposition: rank_one(p) iff forall u v, B(P_p(u),P_p(v))=B(u,v).
+   Premises and side conditions: B(p,p)<>0; finite signed weights and duplicate or dependent score bases are all allowed.
+   Proof/definition method: Forward: combine one-slot preservation theorems. Reverse: apply the checked block decomposition to infer that every residual cross-pairing is zero.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_first, indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_second, indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero, pivot_residual_bilinear_block_decomposition, Stdlib.Lra.
+   Boundary: An exact all-argument covariance identity, not an eigenvalue or abstract rank theorem.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_both :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_rank_one basis pivot <->
+       forall left right : Vector.t R (length basis),
+         indexed_basis_covariance_bilinear_form basis (indexed_basis_covariance_pivot_projection basis pivot left) (indexed_basis_covariance_pivot_projection basis pivot right) = indexed_basis_covariance_bilinear_form basis left right).
+  Proof.
+    intros basis pivot Hpivot.
+    split.
+    - intros Hrank left right.
+      rewrite ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_first basis pivot Hpivot) Hrank)
+        left (indexed_basis_covariance_pivot_projection basis pivot right)).
+      apply ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_projection_preserves_second basis pivot Hpivot) Hrank) left right).
+    - intro Hpreserve.
+      apply (proj2 (indexed_basis_covariance_pivot_rank_one_iff_all_residual_pairings_zero basis pivot Hpivot)).
+      intros left right.
+      pose proof
+        (indexed_basis_covariance_pivot_residual_bilinear_block_decomposition
+          basis pivot left right Hpivot) as Hsplit.
+      pose proof (Hpreserve left right) as Hequal.
+      lra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_all_gram_minors_zero] (theorem) —
+   Under the rank-one property, every two-direction Gram determinant vanishes, including those not containing the chosen pivot.
+   Mathematical meaning: Under the rank-one property, every two-direction Gram determinant vanishes, including those not containing the chosen pivot.
+   Exact checked proposition: forall u v, B(u,v)^2=B(u,u)B(v,v) under rank_one(p).
+   Premises and side conditions: Nonisotropic pivot and arbitrary signed/unnormalized finite weights; the scalar pivot may be positive or negative.
+   Proof/definition method: Use universal checked scalar factorization, then eliminate cross-products by the real ring normalizer.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization, Stdlib.Ring and the maintained finite covariance bilinear form.
+   Boundary: An algebraic Cauchy–Schwarz equality, not a general Cauchy–Schwarz inequality for arbitrary signed covariance.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_all_gram_minors_zero :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_rank_one basis pivot ->
+      indexed_basis_covariance_bilinear_form basis left right * indexed_basis_covariance_bilinear_form basis left right =
+      indexed_basis_covariance_bilinear_form basis left left * indexed_basis_covariance_bilinear_form basis right right.
+  Proof.
+    intros basis pivot left right Hpivot Hrank.
+    pose proof ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization basis pivot Hpivot)) Hrank)
+      as Hfactor.
+    rewrite (Hfactor left right).
+    rewrite (Hfactor left left).
+    rewrite (Hfactor right right).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_self_zero_iff_radical] (theorem) —
+   Even when finite weights are signed, in the nonisotropic rank-one regime a coefficient direction has zero self-covariance exactly when it belongs to the full covariance radical.
+   Mathematical meaning: Even when finite weights are signed, in the nonisotropic rank-one regime a coefficient direction has zero self-covariance exactly when it belongs to the full covariance radical.
+   Exact checked proposition: B(u,u)=0 iff Radical(u), under rank_one(p) and B(p,p)<>0.
+   Premises and side conditions: Arbitrary signed finite weights and score basis; unlike the generic PSD zero-radical theorem, no normalized nonnegative weights are required.
+   Proof/definition method: Use the rank-one normalized coordinate factorization and radical=coordinate-kernel equivalence; eliminate a nonzero pivot by Stdlib.Rmult_integral.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization, indexed_basis_covariance_pivot_rank_one_iff_radical_coordinate_kernel, Stdlib.Reals.Rmult_integral, Psatz.nra.
+   Boundary: The result requires a nonisotropic rank-one covariance form and does not generalize to arbitrary indefinite symmetric pairings.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_self_zero_iff_radical :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_rank_one basis pivot ->
+      (indexed_basis_covariance_bilinear_form basis left left = 0 <-> indexed_basis_covariance_bilinear_radical basis left).
+  Proof.
+    intros basis pivot left Hpivot Hrank.
+    pose proof ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization basis pivot Hpivot)) Hrank)
+      as Hfactor.
+    pose proof ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_radical_coordinate_kernel basis pivot Hpivot)) Hrank left)
+      as Hkernel.
+    pose proof (Hfactor left left) as Hdiagonal.
+    split.
+    - intro Hzero.
+      apply (proj2 Hkernel).
+      assert (Hprod :
+        (indexed_basis_covariance_pivot_coordinate basis pivot left * indexed_basis_covariance_pivot_coordinate basis pivot left) * indexed_basis_covariance_bilinear_form basis pivot pivot = 0).
+      { nra. }
+      apply Rmult_integral in Hprod as [Hsquare | HzeroPivot].
+      + nra.
+      + contradiction.
+    - intro Hrad.
+      apply (proj1 Hkernel) in Hrad.
+      rewrite Hrad in Hdiagonal.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_covariance_fiber_iff_coordinate] (theorem) —
+   In a rank-one covariance, two coefficient vectors yield identical covariance against every test direction exactly when they have the same normalized pivot coordinate.
+   Mathematical meaning: In a rank-one covariance, two coefficient vectors yield identical covariance against every test direction exactly when they have the same normalized pivot coordinate.
+   Exact checked proposition: (forall v, B(u,v)=B(w,v)) iff c_p(u)=c_p(w).
+   Premises and side conditions: B(p,p)<>0 and the rank-one predicate; signed finite weights and dependent bases permitted.
+   Proof/definition method: Necessity tests covariance equality on the pivot; sufficiency uses the scalar factorization of both complete covariance rows.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization, indexed_basis_covariance_pivot_coordinate, Stdlib.Logic.
+   Boundary: Separates covariance-equivalence classes, not original coefficient vectors.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_covariance_fiber_iff_coordinate :
+    forall basis (pivot left other : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_rank_one basis pivot ->
+      ((forall right : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left right = indexed_basis_covariance_bilinear_form basis other right) <->
+       indexed_basis_covariance_pivot_coordinate basis pivot left = indexed_basis_covariance_pivot_coordinate basis pivot other).
+  Proof.
+    intros basis pivot left other Hpivot Hrank.
+    pose proof ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization basis pivot Hpivot)) Hrank)
+      as Hfactor.
+    split.
+    - intro Hrow.
+      unfold indexed_basis_covariance_pivot_coordinate.
+      rewrite (Hrow pivot).
+      reflexivity.
+    - intro Hcoord.
+      intro right.
+      rewrite (Hfactor left right).
+      rewrite (Hfactor other right).
+      now rewrite Hcoord.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_covariance_fiber_iff_projection] (theorem) —
+   Equality of full finite covariance rows is exactly equality of canonical typed pivot projections in the rank-one regime.
+   Mathematical meaning: Equality of full finite covariance rows is exactly equality of canonical typed pivot projections in the rank-one regime.
+   Exact checked proposition: (forall v, B(u,v)=B(w,v)) iff P_p(u)=P_p(w).
+   Premises and side conditions: Nonisotropic rank-one covariance; signed weights and arbitrary finite sample lists allowed.
+   Proof/definition method: Compose the covariance-row/coordinate fiber criterion with the previously checked projection fiber iff coordinate theorem.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_covariance_fiber_iff_coordinate, pivot_projection_fiber_iff_coordinate, Stdlib.Logic.
+   Boundary: A complete covariance-fiber classification; coefficient-vector injectivity is not asserted.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_covariance_fiber_iff_projection :
+    forall basis (pivot left other : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_rank_one basis pivot ->
+      ((forall right : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left right = indexed_basis_covariance_bilinear_form basis other right) <->
+       (indexed_basis_covariance_pivot_projection basis pivot left) = (indexed_basis_covariance_pivot_projection basis pivot other)).
+  Proof.
+    intros basis pivot left other Hpivot Hrank.
+    pose proof (indexed_basis_covariance_pivot_rank_one_covariance_fiber_iff_coordinate
+      basis pivot left other Hpivot Hrank) as Hrow.
+    pose proof
+      (indexed_basis_covariance_pivot_projection_fiber_iff_coordinate
+        basis pivot left other Hpivot) as Hproject.
+    split; intro Hequal.
+    - apply (proj2 Hproject).
+      apply (proj1 Hrow).
+      exact Hequal.
+    - apply (proj2 Hrow).
+      apply (proj1 Hproject).
+      exact Hequal.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_psd_iff_positive_pivot] (theorem) —
+   The sign of one nonisotropic pivot classifies positive semidefiniteness of every coefficient direction in an arbitrary rank-one signed covariance form.
+   Mathematical meaning: The sign of one nonisotropic pivot classifies positive semidefiniteness of every coefficient direction in an arbitrary rank-one signed covariance form.
+   Exact checked proposition: (forall u, 0<=B(u,u)) iff 0<B(p,p).
+   Premises and side conditions: Rank-one cross-product property and B(p,p)<>0; all finite weights may be negative and total mass unnormalized.
+   Proof/definition method: Necessity tests the pivot; sufficiency rewrites the diagonal through the universal normalized coordinate factorization and multiplies a real square by the positive pivot.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization, Stdlib.Reals.Rle_0_sqr, Stdlib.Psatz.nra and Lra.
+   Boundary: The result is conditional on rank-one; signed weights alone do not ensure positive semidefiniteness.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_psd_iff_positive_pivot :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_rank_one basis pivot ->
+      ((forall left : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form basis left left) <->
+       0 < indexed_basis_covariance_bilinear_form basis pivot pivot).
+  Proof.
+    intros basis pivot Hpivot Hrank.
+    pose proof ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization basis pivot Hpivot)) Hrank)
+      as Hfactor.
+    split.
+    - intro Hall.
+      pose proof (Hall pivot) as Hnonnegative.
+      lra.
+    - intros Hpositive left.
+      pose proof (Hfactor left left) as Hdiagonal.
+      pose proof (Rle_0_sqr (indexed_basis_covariance_pivot_coordinate basis pivot left)) as Hsquare.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_rank_one_nsd_iff_negative_pivot] (theorem) —
+   The same rank-one covariance admits universal nonpositive diagonal pairings exactly when its nonisotropic pivot has negative covariance with itself.
+   Mathematical meaning: The same rank-one covariance admits universal nonpositive diagonal pairings exactly when its nonisotropic pivot has negative covariance with itself.
+   Exact checked proposition: (forall u, B(u,u)<=0) iff B(p,p)<0.
+   Premises and side conditions: Rank-one criterion and B(p,p)<>0; arbitrary finite signed weights with no PSD assumption.
+   Proof/definition method: Use the existing normalized rank-one quadratic factorization and the nonnegative real-square law; the sign reversal comes entirely from the pivot.
+   Library reuse: indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization, Stdlib.Reals.Rle_0_sqr, Psatz.nra, Lra.
+   Boundary: This is an exact signed finite-form NSD classification, not a probabilistic covariance assertion.
+   *)
+  Theorem indexed_basis_covariance_pivot_rank_one_nsd_iff_negative_pivot :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_rank_one basis pivot ->
+      ((forall left : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left left <= 0) <->
+       indexed_basis_covariance_bilinear_form basis pivot pivot < 0).
+  Proof.
+    intros basis pivot Hpivot Hrank.
+    pose proof ((proj1 (indexed_basis_covariance_pivot_rank_one_iff_coordinate_factorization basis pivot Hpivot)) Hrank)
+      as Hfactor.
+    split.
+    - intro Hall.
+      pose proof (Hall pivot) as Hnonpositive.
+      lra.
+    - intros Hnegative left.
+      pose proof (Hfactor left left) as Hdiagonal.
+      pose proof (Rle_0_sqr (indexed_basis_covariance_pivot_coordinate basis pivot left)) as Hsquare.
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_rank_one] (theorem) —
+   Exactly two unit-mass sampled occurrences force the full pivot-anchored covariance rank-one cross-product identity, even with signed weights and an isotropic pivot.
+   Mathematical meaning: Exactly two unit-mass sampled occurrences force the full pivot-anchored covariance rank-one cross-product identity, even with signed weights and an isotropic pivot.
+   Exact checked proposition: samples=[x;y] and total_mass=1 imply rank_one(p) for every typed pivot p.
+   Premises and side conditions: Two sampled occurrences and unit total mass are essential; weight positivity and nonisotropic pivot are not assumed.
+   Proof/definition method: Instantiate the previously verified all-four-direction two-sample covariance minor identity and rewrite a single symmetric covariance pairing.
+   Library reuse: indexed_basis_two_samples_bilinear_all_minors_zero, indexed_basis_covariance_bilinear_symmetric.
+   Boundary: This certifies all pivot two-direction minor identities but not an abstract vector-space dimension formula.
+   *)
+  Theorem indexed_basis_two_samples_pivot_rank_one :
+    forall basis (pivot : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_pivot_rank_one basis pivot.
+  Proof.
+    intros basis pivot x y Hsamples Hmass.
+    unfold indexed_basis_covariance_pivot_rank_one.
+    intros left right.
+    pose proof
+      (indexed_basis_two_samples_bilinear_all_minors_zero
+        basis left right pivot pivot x y Hsamples Hmass)
+      as Hminor.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis pivot right) in Hminor.
+    exact Hminor.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_rank_one_psd_iff_positive] (theorem) —
+   Two normalized sampled occasions with a nonisotropic covariance pivot are globally PSD exactly when that single pivot has strictly positive diagonal covariance, even if the individual weights are signed.
+   Mathematical meaning: Two normalized sampled occasions with a nonisotropic covariance pivot are globally PSD exactly when that single pivot has strictly positive diagonal covariance, even if the individual weights are signed.
+   Exact checked proposition: two samples, unit mass, B(p,p)<>0: forall u, B(u,u)>=0 iff B(p,p)>0.
+   Premises and side conditions: Exactly two listed sample occurrences and unit total mass; signed weights, dependent score bases and duplicate outcome values allowed subject to nonzero pivot.
+   Proof/definition method: Combine the generic rank-one PSD iff pivot-sign theorem with the all-minors two-sample rank-one certificate.
+   Library reuse: indexed_basis_two_samples_pivot_rank_one, indexed_basis_covariance_pivot_rank_one_psd_iff_positive_pivot.
+   Boundary: No assertion that signed two-sample weights always yield a PSD covariance form.
+   *)
+  Theorem indexed_basis_two_samples_pivot_rank_one_psd_iff_positive :
+    forall basis (pivot : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall left : Vector.t R (length basis),
+          0 <= indexed_basis_covariance_bilinear_form basis left left) <->
+       0 < indexed_basis_covariance_bilinear_form basis pivot pivot).
+  Proof.
+    intros basis pivot x y Hsamples Hmass Hpivot.
+    apply (indexed_basis_covariance_pivot_rank_one_psd_iff_positive_pivot basis pivot Hpivot).
+    apply (indexed_basis_two_samples_pivot_rank_one basis pivot x y Hsamples Hmass).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_rank_one_nsd_iff_negative] (theorem) —
+   Two normalized signed-weight samples produce globally negative semidefinite finite covariance exactly when a chosen nonisotropic pivot self-pairing is strictly negative.
+   Mathematical meaning: Two normalized signed-weight samples produce globally negative semidefinite finite covariance exactly when a chosen nonisotropic pivot self-pairing is strictly negative.
+   Exact checked proposition: two samples, unit mass, B(p,p)<>0: forall u, B(u,u)<=0 iff B(p,p)<0.
+   Premises and side conditions: Precisely two unit-mass listed occurrences; arbitrary signed weights and dependent typed bases, requiring one nonzero pivot.
+   Proof/definition method: Specialize the generic rank-one negative-semidefiniteness theorem using the separately verified two-sample minor identity.
+   Library reuse: indexed_basis_two_samples_pivot_rank_one, indexed_basis_covariance_pivot_rank_one_nsd_iff_negative_pivot.
+   Boundary: A signed two-sample model may instead have PSD, NSD or zero covariance according to its actual weights and pivot; no sign is guessed.
+   *)
+  Theorem indexed_basis_two_samples_pivot_rank_one_nsd_iff_negative :
+    forall basis (pivot : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      ((forall left : Vector.t R (length basis),
+          indexed_basis_covariance_bilinear_form basis left left <= 0) <->
+       indexed_basis_covariance_bilinear_form basis pivot pivot < 0).
+  Proof.
+    intros basis pivot x y Hsamples Hmass Hpivot.
+    apply (indexed_basis_covariance_pivot_rank_one_nsd_iff_negative_pivot basis pivot Hpivot).
+    apply (indexed_basis_two_samples_pivot_rank_one basis pivot x y Hsamples Hmass).
+  Qed.
+
   (**
    [indexed_basis_two_samples_pivot_decomposition_unique_components]
    (theorem) — Uniqueness of both scalar and vector components of a
@@ -22334,16 +24547,13 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: Every coefficient is typed by the same
    finite basis, which may be dependent. Signed weights are permitted;
    positivity and independence are not presumed.
-   Proof/definition method: Apply the existing linear coordinate to the
-   proposed decomposition and use radical iff zero-coordinate to
-   identify alpha. Then compare the typed remainder coordinatewise using
-   VectorSpec.eq_nth_iff and nth_map2/nth_map; ordinary real arithmetic
-   cancels the pivot terms. The standard vector library handles indexing.
-   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero,
-   indexed_basis_covariance_pivot_coordinate_add,
-   indexed_basis_covariance_pivot_coordinate_section,
-   Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2,
-   Stdlib.Psatz.lra/nra.
+   Proof/definition method: Translate two-sample radical membership
+   to zero scalar pivot coordinate, then delegate both component
+   uniqueness assertions to the new generic splitting theorem.
+   This removes duplicated library-backed VectorSpec extensionality.
+   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+   and indexed_basis_covariance_pivot_decomposition_unique_components;
+   the generic proof shares Stdlib.VectorSpec and real algebra.
    Boundary: Unique concrete decomposition for two normalized
    occurrences, not a generic vector-space rank-nullity identity.
    *)
@@ -22363,57 +24573,13 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis pivot left radical alpha x y
       Hsamples Hmass Hpivot Hradical Hsum.
-    pose proof
-      ((proj1 (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
-        basis pivot radical x y Hsamples Hmass Hpivot)) Hradical)
-      as Hradcoord.
-    pose proof
-      (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
-        Hsum) as Hsumcoord.
-    rewrite (indexed_basis_covariance_pivot_coordinate_add
-      basis pivot
-        (indexed_basis_covariance_pivot_section basis pivot alpha)
-        radical Hpivot) in Hsumcoord.
-    rewrite (indexed_basis_covariance_pivot_coordinate_section
-      basis pivot alpha Hpivot) in Hsumcoord.
-    rewrite Hradcoord in Hsumcoord.
-    assert (Halpha :
-      alpha = indexed_basis_covariance_pivot_coordinate basis pivot left).
-    { lra. }
-    split.
-    - exact Halpha.
-    - subst alpha.
-      unfold indexed_basis_covariance_pivot_remainder,
-        indexed_basis_covariance_pivot_section.
-      unfold indexed_basis_covariance_pivot_section in Hsum.
-      set (beta :=
-        indexed_basis_covariance_pivot_coordinate basis pivot left) in *.
-      change (Vector.map2 Rplus
-        (Vector.map (fun c => beta * c) pivot) radical = left) in Hsum.
-      apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
-        radical
-        (Vector.map2 Rplus left
-          (Vector.map (fun c => (- beta) * c) pivot)))).
-      intros i j Hij.
-      subst j.
-      pose proof
-        (f_equal (fun vector : Vector.t R (length basis) =>
-          Vector.nth vector i) Hsum) as Hnth.
-      change (Vector.nth
-        (Vector.map2 Rplus
-          (Vector.map (fun c => beta * c) pivot) radical) i =
-        Vector.nth left i) in Hnth.
-      rewrite (VectorSpec.nth_map2 Rplus
-        (Vector.map (fun c => beta * c) pivot) radical
-        i i i eq_refl eq_refl) in Hnth.
-      rewrite (VectorSpec.nth_map (fun c => beta * c)
-        pivot i i eq_refl) in Hnth.
-      rewrite (VectorSpec.nth_map2 Rplus left
-        (Vector.map (fun c => (- beta) * c) pivot)
-        i i i eq_refl eq_refl).
-      rewrite (VectorSpec.nth_map (fun c => (- beta) * c)
-        pivot i i eq_refl).
-      nra.
+    apply (indexed_basis_covariance_pivot_decomposition_unique_components
+      basis pivot left radical alpha Hpivot).
+    - apply (proj1
+        (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+          basis pivot radical x y Hsamples Hmass Hpivot)).
+      exact Hradical.
+    - exact Hsum.
   Qed.
 
   (**
