@@ -127,12 +127,11 @@ Theorem report_sqrt_variance_certificate_sound :
     report_strict_rounding_interval T t (sqrt (P / Q)).
 Proof.
   intros P Q T t HP HQ HT Ht Hlower Hupper.
-  assert (Hvariance : 0 <= P / Q).
-  { apply Rdiv_le; lra. }
-  pose proof (sqrt_pos (P / Q)) as Hsqrtpositive.
-  pose proof (sqrt_sqrt (P / Q) Hvariance) as Hsqr.
   assert (Hquot : Q * (P / Q) = P).
   { field; lra. }
+  assert (Hvariance : 0 <= P / Q) by nra.
+  pose proof (sqrt_pos (P / Q)) as Hsqrtpositive.
+  pose proof (sqrt_sqrt (P / Q) Hvariance) as Hsqr.
   assert (Hfactor : Q * (sqrt (P / Q) * sqrt (P / Q)) = P).
   { rewrite Hsqr; exact Hquot. }
   unfold report_strict_rounding_interval.
