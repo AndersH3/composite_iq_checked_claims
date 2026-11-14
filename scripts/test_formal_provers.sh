@@ -17,6 +17,11 @@ if ! "$py" -c 'import deal' >/dev/null 2>&1; then
   exit 2
 fi
 
+# Validate Bash syntax and the offline help path of the persistent installer.
+bash -n scripts/retry_isabelle_computer10.sh
+bash scripts/retry_isabelle_computer10.sh --help | grep -F -- '--detach' >/dev/null
+bash scripts/retry_isabelle_computer10.sh --help | grep -F -- '--status' >/dev/null
+
 "$py" scripts/install_formal_provers.py > /dev/null
 for name in lean isabelle yices pvs colibri; do
   "$py" scripts/install_formal_provers.py --tool "$name" > /dev/null
