@@ -154,7 +154,7 @@ Theorem equicorr_psd_on_feasible_summaries :
   0<=energy-total*total/n -> 0<=equicorr_energy c energy total.
 Proof.
   intros n c energy total Hn Hc Hd Hfeas.
-  rewrite equicorr_centered_energy_decomposition by lra.
+  rewrite (equicorr_centered_energy_decomposition n c energy total) by lra.
   assert (Ht : 0 <= total*total/n).
   { unfold Rdiv; apply Rmult_le_pos; [nra | left; apply Rinv_0_lt_compat; lra]. }
   nra.
@@ -175,7 +175,7 @@ Theorem equicorr_pd_on_nonzero_feasible_summaries :
   0<equicorr_energy c energy total.
 Proof.
   intros n c energy total Hn Hc Hd He Hfeas.
-  rewrite equicorr_centered_energy_decomposition by lra.
+  rewrite (equicorr_centered_energy_decomposition n c energy total) by lra.
   assert (Ht : 0 <= total*total/n).
   { unfold Rdiv; apply Rmult_le_pos; [nra | left; apply Rinv_0_lt_compat; lra]. }
   nra.
