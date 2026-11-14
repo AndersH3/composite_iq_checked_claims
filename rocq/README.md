@@ -4448,3 +4448,33 @@ vector recursion, matrix evaluator, axioms, admits, Python/SPARK source,
 or archived evidence edits. The expected Rocq 9.2 inventory is **1029
 public claims, 1032 proof scripts, 1121 documented declarations**
 including **618 FiniteMoments scripts**; verify by pinned CI.
+
+
+## Pivot radical/Schur geometry and equality regimes (14 November 2026)
+
+**15 newly documented Rocq theorems** extend the generic finite
+covariance covariance-pivot decomposition. For arbitrary signed and
+unnormalized weights they establish the pivot coordinate/orthogonality
+criterion, an exact decomposition of the **full covariance radical**
+into scalar-kernel and residual-radical conditions, residual radical
+tests against all residual vectors, and all-direction scalar Schur
+cross-minor characterizations. Unlike PSD-specific tests, these
+signed-weight radical results do **not** equate zero quadratic with
+radical membership.
+
+For explicitly normalized, nonnegative finite weights, they establish
+nonnegative/zero/strictly positive residual quadratic regimes and
+necessary-and-sufficient Gram-determinant equality/strictness tests.
+A Schur-complement Cauchy--Schwarz bound is derived directly from the
+maintained finite covariance Cauchy--Schwarz theorem. Under a positive
+nonisotropic pivot, the residual self-pairing is no larger than the
+original diagonal, and equality is characterized by zero pivot
+coordinate/equivalently zero typed projection even for signed weights.
+
+Everything reuses checked covariance symmetry/bilinearity and prior
+pivot identities, Rocq Stdlib Vector, Field, Reals, Lra and Psatz.
+No new sum/matrix/vector recursion, new axiom or admit, Python/SPARK
+source change, or evidence alteration. Expected after pinned Rocq
+9.2 kernel and CI audit: **1044 public checked claims,
+1047 proof scripts, 1136 declarations**
+including **633 FiniteMoments scripts**.

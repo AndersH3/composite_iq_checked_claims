@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 618 proof scripts
+## FiniteMoments.v — 633 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1437,6 +1437,21 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_residual_cauchy_schwarz_squared` (theorem) | Specialize standard finite covariance Cauchy–Schwarz to residuals. | bilinear_cauchy_schwarz_self_squared. | **New: Residual Cauchy–Schwarz for probability weights.** |
 | `indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_all_gram_minors_nonnegative` (theorem) | Compose PSD pivot/residual splitting and Gram sign equivalence. | pivot_psd_iff_positive_pivot_and_residual_psd, schur_nonnegative_iff_residual_nonnegative. | **New: Full PSD iff positive pivot and every two-direction Gram minor nonnegative.** |
 | `indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_all_gram_minors_nonnegative` (theorem) | Compose NSD pivot/residual splitting and negative-pivot Gram sign equivalence. | pivot_nsd_iff_negative_pivot_and_residual_nsd, schur_nonnegative_iff_residual_nonpositive. | **New: Full NSD iff negative pivot and every two-direction Gram minor nonnegative.** |
+| `indexed_basis_covariance_pivot_coordinate_zero_iff_orthogonal` (theorem) | Use checked pivot quotient and nonzero field cancellation. | pivot_coordinate, Field, Psatz.nra. | **New: Generic pivot coordinate-zero iff covariance orthogonality.** |
+| `indexed_basis_covariance_pivot_residual_radical_iff_all_residual_pairings_zero` (theorem) | Reduce radical testing to residual inputs by absorption. | residual_pairing_first_absorption. | **New: Full residual radical iff all residual tests vanish.** |
+| `indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_residual_radical` (theorem) | Decompose any radical into pivot scalar and Schur radical. | pivot_coordinate_zero_iff_orthogonal, residual_pairing_second_absorption, residual_bilinear_decomposition. | **New: Generic radical iff scalar kernel and residual radical.** |
+| `indexed_basis_covariance_pivot_residual_self_nonnegative_of_probability` (theorem) | Specialize generic finite PSD to the residual vector. | bilinear_self_nonnegative. | **New: Genuine-probability residual PSD.** |
+| `indexed_basis_covariance_pivot_residual_self_zero_iff_radical` (theorem) | Specialize maintained zero-quadratic iff radical to residuals. | bilinear_self_zero_iff_radical. | **New: Residual quadratic zero iff radical under probability weights.** |
+| `indexed_basis_covariance_pivot_residual_self_positive_iff_not_radical` (theorem) | Specialize strict self-covariance criterion to the residual. | bilinear_self_positive_iff_not_radical. | **New: Residual strictly positive iff nonradical.** |
+| `indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_radical` (theorem) | Compose nonzero-pivot determinant equality and residual radical equivalence. | schur_determinant_zero_iff_residual_zero, residual_self_zero_iff_radical. | **New: Gram determinant equality iff residual covariance radical.** |
+| `indexed_basis_covariance_pivot_schur_determinant_positive_iff_residual_not_radical` (theorem) | Combine nonzero probability pivot, determinant factorization and strict radical criterion. | bilinear_self_nonnegative, schur_determinant_identity, residual_self_positive_iff_not_radical, nra. | **New: Strict pivot Gram determinant iff nonradical residual.** |
+| `indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_gram_zero` (theorem) | Transport general radical splitting through probability Gram equality. | pivot_radical_iff_coordinate_zero_and_residual_radical, schur_determinant_zero_iff_residual_radical. | **New: Full probability radical iff zero coordinate and zero Gram determinant.** |
+| `indexed_basis_covariance_pivot_residual_self_at_most_original` (theorem) | Compare diagonal pivot/residual decomposition using nonnegative squares. | pivot_residual_quadratic_decomposition, Rle_0_sqr, nra. | **New: Positive-pivot residual variance never exceeds original.** |
+| `indexed_basis_covariance_pivot_residual_self_equal_original_iff_coordinate_zero` (theorem) | Cancel strictly positive pivot square in the exact diagonal split. | pivot_residual_quadratic_decomposition, Psatz.nra. | **New: Residual and original diagonals coincide iff zero pivot coordinate.** |
+| `indexed_basis_covariance_pivot_residual_self_equal_original_iff_projection_zero` (theorem) | Compose equality-iff-coordinate-zero with projection kernel iff zero scalar. | residual_self_equal_original_iff_coordinate_zero, coordinate_zero_iff_projection_zero. | **New: Diagonal residual equality iff pivot projection vanishes.** |
+| `indexed_basis_covariance_pivot_schur_cauchy_schwarz_squared` (theorem) | Rewrite four Schur quotients as residual covariances and invoke existing Cauchy–Schwarz. | schur_complement_identity, residual_cauchy_schwarz_squared. | **New: Scalar Schur covariance Cauchy–Schwarz inequality.** |
+| `indexed_basis_covariance_pivot_all_schur_cross_zero_iff_residual_radical` (theorem) | Compose all-residual pairing radical test with Schur pivot-product criterion. | residual_radical_iff_all_residual_pairings_zero, schur_zero_iff_pivot_product. | **New: All scalar Schur minors zero iff residual is radical.** |
+| `indexed_basis_covariance_pivot_radical_iff_coordinate_zero_and_all_schur_cross_zero` (theorem) | Compose generic radical split and all-Schur-cross-zero iff residual radical. | pivot_radical_iff_coordinate_zero_and_residual_radical, all_schur_cross_zero_iff_residual_radical. | **New: Signed-weight full radical iff zero pivot scalar and all Schur minors.** |
 | `indexed_basis_two_samples_pivot_decomposition_unique_components` (theorem) | Reduce radical membership to scalar zero coordinate and apply the generic component uniqueness theorem, eliminating duplicate VectorSpec proof. | two_samples_radical_iff_pivot_coordinate_zero, covariance_pivot_decomposition_unique_components. | **Refactored: Specialized radical uniqueness delegates to generic covariance splitting.** |
 | `indexed_basis_two_samples_pivot_decomposition_exists_unique` (theorem) | Construct the section/remainder witness and use both previously checked decomposition and new pair uniqueness. | indexed_basis_two_samples_pivot_remainder_in_radical, indexed_basis_covariance_pivot_projection_remainder_decomposition, indexed_basis_two_samples_pivot_decomposition_unique_components. | **New: Constructive exists-unique typed scalar/radical splitting for every coefficient vector.** |
 | `indexed_basis_two_samples_bilinear_gram_determinant_zero` (theorem) | Specialize existing four-direction minor to the two-direction Gram matrix and rewrite covariance symmetry. | indexed_basis_two_samples_bilinear_all_minors_zero, indexed_basis_covariance_bilinear_symmetric. | **New: Exact zero Gram determinant without nonzero pivot or sign assumptions.** |
@@ -2060,3 +2075,33 @@ vector recursion, matrix evaluator, axioms, admits, Python/SPARK source,
 or archived evidence edits. The expected Rocq 9.2 inventory is **1029
 public claims, 1032 proof scripts, 1121 documented declarations**
 including **618 FiniteMoments scripts**; verify by pinned CI.
+
+
+## Pivot radical/Schur geometry and equality regimes (14 November 2026)
+
+**15 newly documented Rocq theorems** extend the generic finite
+covariance covariance-pivot decomposition. For arbitrary signed and
+unnormalized weights they establish the pivot coordinate/orthogonality
+criterion, an exact decomposition of the **full covariance radical**
+into scalar-kernel and residual-radical conditions, residual radical
+tests against all residual vectors, and all-direction scalar Schur
+cross-minor characterizations. Unlike PSD-specific tests, these
+signed-weight radical results do **not** equate zero quadratic with
+radical membership.
+
+For explicitly normalized, nonnegative finite weights, they establish
+nonnegative/zero/strictly positive residual quadratic regimes and
+necessary-and-sufficient Gram-determinant equality/strictness tests.
+A Schur-complement Cauchy--Schwarz bound is derived directly from the
+maintained finite covariance Cauchy--Schwarz theorem. Under a positive
+nonisotropic pivot, the residual self-pairing is no larger than the
+original diagonal, and equality is characterized by zero pivot
+coordinate/equivalently zero typed projection even for signed weights.
+
+Everything reuses checked covariance symmetry/bilinearity and prior
+pivot identities, Rocq Stdlib Vector, Field, Reals, Lra and Psatz.
+No new sum/matrix/vector recursion, new axiom or admit, Python/SPARK
+source change, or evidence alteration. Expected after pinned Rocq
+9.2 kernel and CI audit: **1044 public checked claims,
+1047 proof scripts, 1136 declarations**
+including **633 FiniteMoments scripts**.
