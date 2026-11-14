@@ -335,7 +335,7 @@ Theorem finite_weighted_loss_minimizer :
  finite_weighted_loss samples weight score a.
 Proof.
  intros A samples weight score a Hmass.
- rewrite finite_weighted_loss_completed_square by lra.
+ rewrite (finite_weighted_loss_completed_square A samples weight score a) by lra.
  assert (Hs : 0<=Rsqr (a-finite_weighted_mean samples weight score))
    by apply Rle_0_sqr.
  unfold Rsqr in Hs.
@@ -754,7 +754,7 @@ Theorem finite_two_cell_risk_optimal :
  finite_two_cell_risk samples weight score event a b.
 Proof.
  intros A samples weight score event a b Ht Hf.
- rewrite finite_two_cell_risk_completed_square by lra.
+ rewrite (finite_two_cell_risk_completed_square A samples weight score event a b) by lra.
  assert (Hs1 : 0<=Rsqr(a-finite_true_mean samples weight score event))
    by apply Rle_0_sqr.
  assert (Hs2 : 0<=Rsqr(b-finite_false_mean samples weight score event))
