@@ -1,0 +1,240 @@
+\section{Reference theorems and proof conventions}
+\label{sec:foundations}
+
+The probability model, its numerical parameters and the reporting scale are
+assumptions or definitions. The conclusions below are mathematical consequences
+of those choices. We use the cited standard foundational theorems; the proofs
+here establish their particular forms needed by this report. In particular,
+the cited Radon--Nikodym, spectral and characteristic-function uniqueness
+theorems are not claims of new results. All random variables in a variance or
+covariance calculation have finite second moments. Conditional-expectation
+equalities hold almost surely unless a specified continuous version is being
+evaluated at an individual history. Vector conditional expectations are taken
+coordinate by coordinate.
+
+\begin{theorem}[Moment identities and zero variance]
+\label{thm:moments}
+For integrable random variables, expectation is linear. If \(X_1,\ldots,X_n\)
+have finite second moments, covariance is bilinear and
+\[
+  \Var\!\left(\sum_{j=1}^{n}a_jX_j\right)
+  =\sum_{i=1}^{n}\sum_{j=1}^{n}a_i a_j\Cov(X_i,X_j).
+\]
+For a random vector \(X\), a constant matrix \(A\), and a constant vector
+\(b\),
+\[
+  \E[AX+b]=A\E[X]+b,\qquad
+  \Cov(AX+b)=A\Cov(X)A^{\T}.
+\]
+In particular, \(\operatorname{SD}(u+vX)=|v|\operatorname{SD}(X)\).
+Moreover, \(\Var(X)=0\) if and only if \(X=\E[X]\) almost surely.
+\end{theorem}
+
+\begin{proof}
+Linearity is the integral-linearity theorem
+\cite[Theorem~1.6.1]{durrett2019}. Products of centered square-integrable
+variables are integrable by H\"older's inequality
+\cite[Theorem~1.6.3]{durrett2019}. Expanding
+\(\E[(X-\E[X])(Y-\E[Y])]\), distributing finite sums and applying
+linearity gives covariance bilinearity and the displayed scalar and matrix
+identities. The SD identity follows by taking the nonnegative square root of
+\(\Var(u+vX)=v^2\Var(X)\); see also the covariance summary in
+\cite[Section~4.2]{bertsekas2008}. If the variance is zero, Chebyshev's
+inequality gives
+\[
+  P\{|X-\E[X]|\geq\varepsilon\}
+  \leq\frac{\Var(X)}{\varepsilon^2}=0
+  \qquad(\varepsilon>0)
+\]
+\cite[Theorem~1.6.4]{durrett2019}. Taking the union of these zero-probability
+events for \(\varepsilon=1,1/2,1/3,\ldots\) proves the assertion. Its
+converse follows directly from the variance definition.
+\end{proof}
+
+\begin{theorem}[Conditional expectation and total variance]
+\label{thm:conditional}
+Let \(\mathcal G\) be a sub-\(\sigma\)-algebra of the probability space and
+let \(X\) be integrable. There exists a \(\mathcal G\)-measurable integrable
+variable \(Z=\E[X\given\mathcal G]\), unique up to almost-sure equality,
+such that
+\[
+  \E[\one_A Z]=\E[\one_A X]\qquad\text{for every }A\in\mathcal G.
+\]
+Conditional expectation is linear, fixes integrable \(\mathcal G\)-measurable
+variables, and equals \(\E[X]\) when \(X\) is independent of
+\(\mathcal G\). If \(\mathcal G\subseteq\mathcal H\), its tower property is
+\[
+  \E[\E[X\given\mathcal H]\given\mathcal G]
+  =\E[X\given\mathcal G].
+\]
+If \(H\) is \(\mathcal G\)-measurable and \(X,HX\) are integrable, the
+pull-out identity is \(\E[HX\given\mathcal G]=H\E[X\given\mathcal G]\).
+For square-integrable \(X\),
+\[
+  \Var(X)=\Var(\E[X\given\mathcal G])
+      +\E[\Var(X\given\mathcal G)],
+\]
+where
+\(\Var(X\given\mathcal G)
+ =\E[(X-\E[X\given\mathcal G])^2\given\mathcal G]\).
+\end{theorem}
+
+\begin{proof}
+Existence follows by applying the Radon--Nikodym theorem separately to the
+finite positive measures \(A\mapsto\E[\one_A X^+]\) and
+\(A\mapsto\E[\one_A X^-]\) on \(\mathcal G\). Both are absolutely
+continuous with respect to the probability measure restricted to
+\(\mathcal G\). Subtracting their derivatives gives the defining integral
+identity; uniqueness gives almost-sure uniqueness. This is the
+construction in \cite[Section~4.1 and Theorem~A.4.8]{durrett2019}.
+Linearity and the known-variable property follow by substituting candidates
+in that identity. Independence gives
+\(\E[\one_A X]=P(A)\E[X]\), proving the independent-variable case.
+For the tower property, integrate over \(A\in\mathcal G\subseteq\mathcal H\)
+twice and invoke uniqueness. These properties are respectively recorded in
+\cite[Examples~4.1.3--4.1.4 and Theorems~4.1.9(a), 4.1.13]{durrett2019}.
+The pull-out property follows first for simple \(H\), then by approximation
+and truncation under the stated integrability assumptions
+\cite[Theorem~4.1.14]{durrett2019}.
+
+For total variance put \(Z=\E[X\given\mathcal G]\) and \(R=X-Z\).
+The conditional-expectation projection theorem gives \(Z\in L^2\) and
+\(\E[RH]=0\) for every \(\mathcal G\)-measurable \(H\in L^2\)
+\cite[Theorem~4.1.15]{durrett2019}. Apply it to \(H=Z-\E[X]\) and expand
+the square in \(X-\E[X]=R+(Z-\E[X])\). The cross term vanishes, while
+the tower property gives
+\(\E[R^2]=\E[\E[R^2\given\mathcal G]]\). This proves total variance,
+also stated in \cite[Section~4.3]{bertsekas2008} and posed in
+\cite[Exercise~4.1.7]{durrett2019}.
+\end{proof}
+
+\begin{theorem}[Spectral criterion and Gaussian covariance construction]
+\label{thm:spectral}
+A real symmetric matrix \(S\) is positive semidefinite if and only if all
+its eigenvalues are nonnegative, and positive definite if and only if all
+are positive. Every positive-semidefinite matrix is a covariance matrix of
+a possibly singular Gaussian vector. Every covariance matrix is positive
+semidefinite.
+\end{theorem}
+
+\begin{proof}
+The real spectral theorem gives \(S=U\Lambda U^{\T}\) with \(U\)
+orthogonal and \(\Lambda\) real diagonal
+\cite[Theorem~7.29]{axler2024}. Hence
+\(t^{\T}St=\sum_j\lambda_j(U^{\T}t)_j^2\), proving both eigenvalue
+criteria. For nonnegative eigenvalues let
+\(S^{1/2}=U\operatorname{diag}(\sqrt{\lambda_j})U^{\T}\), the positive
+square root \cite[Theorem~7.38]{axler2024}. If \(G\) has independent
+standard-normal coordinates, the vector \(S^{1/2}G\) has covariance \(S\)
+by Theorem~\ref{thm:moments}; this construction includes zero eigenvalues
+\cite[Theorems~3.4.4--3.4.5, author-hosted draft]{gallager2013}.
+Conversely, \(t^{\T}\Cov(X)t=\Var(t^{\T}X)\geq0\) for every \(t\).
+\end{proof}
+
+\begin{theorem}[Gaussian transformations and block independence]
+\label{thm:gaussian}
+An affine transformation of a jointly Gaussian vector is jointly Gaussian,
+including when its covariance is singular. Its mean and covariance determine
+its law. If two jointly Gaussian blocks have zero cross-covariance, they are
+independent, even if either block is singular or constant.
+\end{theorem}
+
+\begin{proof}
+Write a Gaussian vector as \(X=\mu+AG\), where \(G\) has independent
+standard-normal coordinates; \(A\) need not be invertible. Then
+\(BX+b=(B\mu+b)+BAG\), proving closure
+\cite[Definition~3.3.1 and Theorem~3.3.1, author-hosted draft]{gallager2013}.
+The one-dimensional Gaussian characteristic function and independence of
+the coordinates of \(G\) give
+\[
+  \phi_X(t)=\E[e^{\mathrm i t^{\T}X}]
+    =\exp\!\left(\mathrm i t^{\T}\mu-\tfrac12t^{\T}\Sigma t\right),
+  \qquad\Sigma=AA^{\T},
+\]
+as in \cite[Theorem~3.3.2 and equations~(3.14), (3.18), author-hosted draft]{gallager2013}.
+The uniqueness consequence of multivariate characteristic-function inversion
+\cite[Theorem~3.10.4]{durrett2019} shows that \(\mu,\Sigma\) determine
+the distribution. For blocks \((U,V)\) with \(\Cov(U,V)=0\), the displayed
+formula factors as \(\phi_{(U,V)}(s,t)=\phi_U(s)\phi_V(t)\).
+By the product-measure construction and Fubini's theorem
+\cite[Theorems~1.7.1--1.7.2]{durrett2019}, this is the characteristic function
+of the product of the two marginal laws. Uniqueness therefore proves independence.
+This proof uses no density
+and no covariance inverse, so it includes singular blocks.
+\end{proof}
+
+\begin{theorem}[Gaussian regression with a nonsingular conditioning block]
+\label{thm:regression}
+Let \((U,V)\) be jointly Gaussian with means \(\mu_U,\mu_V\) and covariance
+blocks \(A=\Cov(U)\), \(B=\Cov(V)\), \(C=\Cov(U,V)\). Suppose only
+that \(B\) is positive definite. A conditional distribution of \(U\) given
+\(V=v\) is the possibly singular normal law with
+\[
+  m(v)=\mu_U+CB^{-1}(v-\mu_V),\qquad
+  K=A-CB^{-1}C^{\T}.
+\]
+In particular its conditional mean is \(m(v)\) and its conditional covariance
+is \(K\). The full joint covariance need not be nonsingular.
+\end{theorem}
+
+\begin{proof}
+Set \(W=U-\mu_U-CB^{-1}(V-\mu_V)\). The moment identities yield
+\[
+  \E[W]=0,\qquad \Cov(W,V)=C-CB^{-1}B=0,
+  \qquad \Cov(W)=A-CB^{-1}C^{\T}.
+\]
+Theorem~\ref{thm:gaussian} shows that \(W\) is Gaussian and independent of
+\(V\). Thus \(U=m(V)+W\). Independence implies, for every bounded Borel
+function \(h\), that a version of \(\E[h(U)\given V]\) is
+\(v\mapsto\int h(m(v)+w)\,P_W(dw)\). Independence and Fubini's theorem
+\cite[Theorem~1.7.2]{durrett2019} verify its defining conditional integral
+identity. This conditional probability kernel has the stated normal law,
+mean and covariance. The argument
+also works when \(K\) has zero eigenvalues.
+The familiar full-rank result is given in
+\cite[Theorems~3.5.1--3.5.2 and equations~(3.44)--(3.45), author-hosted draft]{gallager2013}.
+Those cited statements assume a nonsingular full joint covariance; the
+residual proof here supplies the version needed when only the conditioning
+block is nonsingular.
+\end{proof}
+
+\begin{lemma}[Unique continuous conditional-mean version]
+\label{lem:continuous-version}
+If \(V\) is a Gaussian vector with positive-definite covariance, two
+continuous functions representing the same conditional mean given \(V\)
+agree at every point. In particular, the affine mean function in
+Theorem~\ref{thm:regression} is its unique continuous version.
+\end{lemma}
+
+\begin{proof}
+The nonsingular Gaussian density theorem
+\cite[Theorem~3.4.6 and equation~(3.22), author-hosted draft]{gallager2013}
+gives, in dimension \(q\),
+\[
+  f_V(v)=\frac{\exp[-\tfrac12(v-\mu_V)^{\T}B^{-1}(v-\mu_V)]}
+                 {(2\pi)^{q/2}\sqrt{\det B}}>0
+  \qquad\text{for every }v\in\mathbb R^q.
+\]
+Theorem~\ref{thm:conditional} makes any two conditional-mean versions equal
+\(P_V\)-almost everywhere. If continuous versions differed at one point,
+one coordinate of their difference would remain nonzero on some open ball.
+Such a ball has positive probability under the displayed density, contradicting
+almost-sure equality. This justifies evaluating the specified continuous
+version at a point history; it does not turn a probability-zero event into
+a probability ratio.
+\end{proof}
+
+\begin{theorem}[Mathematical induction]
+\label{thm:induction}
+For an assertion \(P(n)\) on integers \(n\geq n_0\), the base assertion
+\(P(n_0)\) and the implications \(P(n)\Rightarrow P(n+1)\) for every
+\(n\geq n_0\) establish \(P(n)\) for all such integers
+\cite[Section~10.1]{hammack2018}.
+\end{theorem}
+
+\begin{proof}
+If there were a counterexample, the well-ordering principle would supply
+the least one. It could not be \(n_0\), by the base assertion. Its predecessor
+would satisfy \(P\), and the induction step would then rule out this least
+counterexample. This is a contradiction.
+\end{proof}

@@ -4,6 +4,14 @@ A full derivation for the average of `a, e_1, ..., e_k`, including the fixed sta
 
 - [Compiled PDF](output/pdf/sequential_conditional_means.pdf)
 - [XeLaTeX source](sequential_conditional_means.tex)
+- [Established theorems and their proofs](theorem_foundations.tex)
+- [Exact arithmetic and rounding certificates](exact_numeric_certificates.tex)
+- [Bibliography](references.bib)
+- [Verified source versions and theorem locators](reference_notes.md)
+
+Every derived mathematical claim now has a proof from named, referenced results. The report states the foundational moment, conditional-expectation, spectral, Gaussian-conditioning and induction theorems, then proves the project-specific means, SDs, special cases and endpoint claims. A claim-to-proof map links the conclusions to their proof locations and source foundations. The cited primary references are Durrett, Gallager, Axler, Hammack, and Bertsekas-Tsitsiklis; exact source versions and theorem numbers are recorded in the reference notes.
+
+The population parameters, joint Gaussian assumption, fixed observed scores and IQ reporting transformation are explicit model inputs. The mathematical proofs establish their consequences. Exact rational values and positive-integer rounding certificates justify all displayed numerical approximations.
 
 The report derives the Gaussian regression function using a residual independent of the conditioning scores, solves the recursion by induction and by telescoping partial sums, and distinguishes the deterministic sequence from actual test outcomes. It also gives the formula in terms of the total number of values `N = k + 1`: `a (1 + (N - 1) c) / N`. It covers the admissible finite-battery correlation interval and both singular endpoints. A discrete counterexample shows why correlation alone is insufficient. The tests remain on the specified mean-zero, unit-standard-deviation scale throughout.
 
@@ -61,24 +69,24 @@ From this directory, run:
 make pdf
 ```
 
-The build requires XeLaTeX, `latexmk`, KOMA-Script, the packages loaded by the source, TeX Gyre Pagella text and mathematics, TeX Gyre Heros, and Latin Modern Mono. The output is `output/pdf/sequential_conditional_means.pdf`. `make clean` removes auxiliary files while retaining the PDF.
+The build requires XeLaTeX, BibTeX, `latexmk`, KOMA-Script, the packages loaded by the source, TeX Gyre Pagella text and mathematics, TeX Gyre Heros, and Latin Modern Mono. `latexmk` follows the included theorem/certificate files and runs BibTeX for `references.bib`. The output is `output/pdf/sequential_conditional_means.pdf`. `make clean` removes auxiliary files while retaining the PDF.
 
 The report follows the typography and output layout of the existing [Hoeflin/Ferguson analysis](../hoeflin-ferguson/). It introduces no Python or SPARK implementation and has no additional runtime dependencies.
 
 ## Verification and limits
 
-The derivation was reviewed by collaborating AI agents. Validation completed on 13 November 2026:
+The derivations, theorem attributions and source locators were reviewed by collaborating AI agents. Validation for the referenced-proof revision was completed on 14 November 2026:
 
-- `make pdf` passed; the thirteen-page PDF was rendered and visually inspected. The final LaTeX log had no unresolved references, missing glyphs, or overfull/underfull boxes.
+- `make pdf` passed; the PDF, including the bibliography and proof certificates, was rendered and visually inspected. The final LaTeX log had no unresolved references, missing glyphs, or overfull/underfull boxes.
 - From the repository root, `make check PYTHON=.venv/bin/python` passed using the exact versions in `requirements-dev.txt`. This includes Python contract coverage, the SPARK structural contract audit, static lint with its required negative control, **343 runtime/property tests**, and the existing scoped symbolic acceptance gate.
 - The symbolic gate proved its six expected postcondition obligations and found the required negative-control counterexample. Those obligations concern the existing software; they do not formally verify this new analysis.
 
-These checks do not constitute machine-checked mathematical proof of the derivation or empirical validation of the Gaussian test model. No new SPARK prover campaign was run.
+The report contains written mathematical proofs under its stated assumptions. Build and software checks are separate from those arguments and do not machine-check the new exposition or empirically validate the Gaussian test model. No new SPARK prover campaign was run.
 
 The text explicitly specifies the continuous Gaussian conditional-mean version so that recursive evaluation at probability-zero point histories is well defined. For `k` future tests and one starting test, the correlation domain is `-1/k <= c <= 1`; an arbitrarily long collection requires `0 <= c <= 1`.
 
 ## AI disclosure and license
 
-The mathematical exposition, documentation and typesetting were prepared with OpenAI Codex and collaborating AI agents in response to the requester's problem and indexing clarification. Review took place within that workflow; independent human peer review is not claimed. The report includes its own disclosure dated 13 November 2026. Historical verification evidence for other analyses is not evidence of a new formal verification of this report.
+The mathematical exposition, documentation and typesetting were prepared with OpenAI Codex and collaborating AI agents in response to the requester's problem, indexing clarifications and request for proofs with references. Review took place within that workflow; independent human peer review is not claimed. The report includes its own disclosure dated 14 November 2026. Historical verification evidence for other analyses is not evidence of a new formal verification of this report.
 
 The repository's existing [LICENSE](../../LICENSE) governs its original material, subject to third-party rights.

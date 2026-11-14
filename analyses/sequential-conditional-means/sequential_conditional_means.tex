@@ -3,6 +3,7 @@
 \usepackage[margin=18mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
 \usepackage{fontspec}
 \usepackage{mathtools}
+\usepackage{amsthm}
 \usepackage{unicode-math}
 \setmainfont{TeX Gyre Pagella}
 \setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
@@ -11,7 +12,10 @@
 \usepackage[protrusion=true,expansion=false]{microtype}
 \usepackage{xcolor}
 \usepackage{xurl}
-\usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black,
   pdftitle={Sequential Conditional Means of Equicorrelated Scores},
   pdfauthor={Prepared with OpenAI Codex},
   pdfsubject={One, two or three fixed starting scores included in the mean and its standard deviation}]{hyperref}
@@ -23,6 +27,10 @@
 \newcommand{\T}{\mathsf{T}}
 \newcommand{\given}{\,\vert\,}
 \newcommand{\one}{\mathbf{1}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
 \setlength{\emergencystretch}{1.5em}
 \setkomafont{disposition}{\normalfont\sffamily\bfseries}
 \setkomafont{pageheadfoot}{\normalfont\sffamily\small}
@@ -34,7 +42,7 @@
 \title{Sequential Conditional Means of Equicorrelated Scores}
 \subtitle{One, two or three fixed starting scores included in the average}
 \author{}
-\date{13 November 2026}
+\date{14 November 2026}
 
 \begin{document}
 \maketitle
@@ -59,6 +67,8 @@ score in the average. Worked examples use initial IQ scores of 150 on a
 mean-100, SD-15 reporting scale, correlation \(0.6\), and one, two or ten
 subsequent predictions. A counterexample shows that means, variances and
 correlations alone do not determine the recursive conditional means.
+Every mathematical conclusion is derived from explicitly stated reference
+theorems; exact arithmetic certificates justify the displayed numerical rounding.
 \end{abstract}
 
 \noindent\textbf{AI disclosure.} This analysis, its mathematical exposition,
@@ -67,6 +77,15 @@ Codex and collaborating AI agents. The requester specified the problem,
 clarified the indexing and requested this analysis. Mathematical review and
 build checks were performed within the same AI-assisted workflow; no independent
 human peer review or new empirical psychometric validation is claimed.
+
+\noindent\textbf{Proof standard.} Model assumptions and reporting-scale
+definitions are stated explicitly. The mathematical conclusions are proved
+from the established results collected in Section~\ref{sec:foundations}.
+Section~\ref{sec:proof-map} maps the claims to their proofs, and
+Section~\ref{sec:certificates} supplies exact numerical certificates.
+The references identify the versions and theorem locators actually checked;
+mathematical deductions do not establish the empirical adequacy of the chosen
+test model.
 
 \section{Problem and notation}
 
@@ -113,8 +132,21 @@ defined only almost everywhere. Here, \(g_n\) means the continuous version
 supplied by Gaussian regression, derived below. This convention specifies
 the recursion even at individual histories of probability zero. The singular
 case \(c=1\) will be treated directly on its support.
+Existence and almost-sure uniqueness of conditional expectation are part of
+Theorem~\ref{thm:conditional}; the pointwise continuous-version convention
+is justified by Lemma~\ref{lem:continuous-version}.
+
+\input{theorem_foundations}
 
 \section{The joint model and its correlation domain}
+
+\begin{proposition}[Admissible correlations and Gaussian realization]
+\label{prop:domain}
+For \(N=k+1\geq2\), a centered, unit-variance, equicorrelated Gaussian
+vector exists exactly when \(-1/k\leq c\leq1\). Admissibility for every
+finite battery size is equivalent to \(0\leq c\leq1\).
+\end{proposition}
+\begin{proof}
 
 Assume \((X_0,\ldots,X_k)\) is jointly Gaussian, allowing degenerate Gaussian
 distributions at the endpoints. Its covariance matrix is
@@ -129,8 +161,18 @@ covariance matrix for these \(k+1\) scores exists exactly when
 \begin{equation}
   \boxed{-\frac1k\leq c\leq1.}\label{eq:domain}
 \end{equation}
-An arbitrarily long equicorrelated collection requires \(0\leq c\leq1\).
-A negative fixed \(c\) cannot satisfy the lower bound for all \(k\).
+Necessity also follows directly from
+\(t^{\T}R_{k+1}t=\Var(t^{\T}X)\geq0\), by
+Theorem~\ref{thm:moments}. For sufficiency, the real spectral theorem and
+positive-square-root theorem give
+\(R_{k+1}=U\Lambda U^{\T}\) with \(\Lambda\geq0\). If \(Z\) has independent
+standard-normal coordinates, then \(X=U\Lambda^{1/2}Z\) is Gaussian with
+covariance \(R_{k+1}\), including singular endpoints. This is
+Theorem~\ref{thm:spectral} together with Theorem~\ref{thm:gaussian}; see
+\citet[Theorems 7.29 and 7.38]{axler2024} and
+\citet[author-hosted draft, Theorems 3.4.4--3.4.5]{gallager2013}.
+If \(c<0\), sufficiently large \(k\) makes \(1+kc<0\). Conversely,
+\(0\leq c\leq1\) satisfies the eigenvalue conditions for every finite \(k\).
 
 For \(0\leq c\leq1\), a construction consistent with the hypothetical
 common-factor illustration in the repository's
@@ -141,10 +183,25 @@ common-factor illustration in the repository's
 \end{equation}
 where \(G,\varepsilon_0,\ldots,\varepsilon_k\) are independent standard-normal
 variables. The covariance-matrix derivation below also covers the admissible
-negative correlations. This is a mathematical model, not a claim that actual
-test batteries satisfy these assumptions.
+negative correlations. Independence and Theorem~\ref{thm:moments} give
+\(\E[X_j]=0\), \(\Var(X_j)=c+(1-c)=1\), and, for \(i\ne j\),
+\(\Cov(X_i,X_j)=c\). Gaussian closure follows from
+Theorem~\ref{thm:gaussian}, so this verifies the stated construction.
+\end{proof}
+Joint Gaussianity and the choice of population parameters remain model
+assumptions for real test batteries.
 
 \section{Derivation of the conditional mean}
+
+\begin{theorem}[Equicorrelated Gaussian conditioning]
+\label{thm:equicorrelated-conditioning}
+For \(-1/k\leq c<1\) and \(1\leq n\leq k\), put
+\(d_n=1+(n-1)c\). The continuous conditional-mean function is
+\(g_n(y)=c\sum_{j=0}^{n-1}y_j/d_n\), and the conditional variance is
+\((1-c)(1+nc)/d_n\). These formulas also hold when the full vector is
+singular at \(c=-1/k\).
+\end{theorem}
+\begin{proof}
 
 Fix \(1\leq n\leq k\), initially with \(c<1\), and put
 \[
@@ -160,12 +217,21 @@ It is positive throughout \(-1/k\leq c<1\): for negative \(c\),
 Consequently every conditioning block is nonsingular, even if the full
 \((k+1)\)-score distribution is singular at \(c=-1/k\).
 
-An explicit inverse, verified by multiplying it by \(R_n\), is
+An explicit inverse is
 \begin{equation}
   R_n^{-1}=\frac1{1-c}
   \left(I_n-\frac{c}{1+(n-1)c}\one_n\one_n^{\T}\right).
   \label{eq:inverse}
 \end{equation}
+To prove the inverse identity, let \(J_n=\one_n\one_n^{\T}\). Then
+\(J_n^2=nJ_n\) and \(R_nJ_n=d_nJ_n\), whence
+\[
+ R_n\frac{I_n-(c/d_n)J_n}{1-c}
+ =\frac{R_n-cJ_n}{1-c}=I_n.
+\]
+The factors commute because both are polynomials in \(J_n\), so the reverse
+product is also \(I_n\). This proves \eqref{eq:inverse} without an unproved
+matrix-inversion step.
 Since \(\Cov(X_n,Y_n)=c\one_n^{\T}\), the regression coefficient is
 \begin{equation}
   \Cov(X_n,Y_n)R_n^{-1}
@@ -187,23 +253,34 @@ For each \(\ell\in\{0,\ldots,n-1\}\),
   &=c-\frac{c}{1+(n-1)c}\bigl[1+(n-1)c\bigr]=0.
 \end{align*}
 The residual and \(Y_n\) are jointly Gaussian because they are linear
-transformations of a Gaussian vector. Their zero cross-covariance implies
+transformations of a Gaussian vector, by Theorem~\ref{thm:gaussian}.
+Their zero cross-covariance implies
 independence: the Gaussian characteristic function
 \(\exp(-t^{\T}\Sigma t/2)\) factors across covariance blocks when the
 cross-covariance block is zero. This argument also allows a zero-variance
 residual. Since \(\E[W_n]=0\), independence gives
 \(\E[W_n\given Y_n]=0\). Taking the conditional expectation in
-\eqref{eq:residual} therefore yields
+\eqref{eq:residual}, using Theorem~\ref{thm:conditional}, therefore yields
 \begin{equation}
   \boxed{
     g_n(y_0,\ldots,y_{n-1})
     =\frac{c}{1+(n-1)c}\sum_{j=0}^{n-1}y_j.}
   \label{eq:conditional-mean}
 \end{equation}
-This linear function is the unique continuous version, because the
-nonsingular vector \(Y_n\) has a strictly positive density everywhere.
+This is the Gaussian regression theorem, proved in
+Theorem~\ref{thm:regression} from the Gaussian characteristic-function
+and conditional-expectation theorems. The nonsingular vector \(Y_n\) has
+a strictly positive density everywhere, so Lemma~\ref{lem:continuous-version}
+establishes uniqueness of this continuous version even though a prescribed
+history has probability zero.
 
-For completeness, the same residual calculation gives
+For the variance, put \(S_n=\sum_{j=0}^{n-1}X_j\). Covariance bilinearity
+from Theorem~\ref{thm:moments} gives
+\(\Var(S_n)=nd_n\) and \(\Cov(X_n,S_n)=nc\). With \(\alpha=c/d_n\),
+\[
+ \Var(W_n)=1+\alpha^2nd_n-2\alpha nc=1-\frac{nc^2}{d_n}.
+\]
+Independence of \(W_n\) and \(Y_n\), established above, then gives
 \begin{align}
   \Var(X_n\given Y_n)
     &=\Var(W_n)
@@ -211,10 +288,20 @@ For completeness, the same residual calculation gives
     &=\frac{(1-c)(1+nc)}{1+(n-1)c}.
     \label{eq:conditional-variance}
 \end{align}
+\end{proof}
 This nonnegative conditional variance describes actual test outcomes,
 not randomness in the recursively specified numbers \(e_n\).
 
 \section{Solving the recursion and taking the average}
+
+\begin{theorem}[One fixed starting score]
+\label{thm:single-start}
+Under the stated Gaussian model and continuous-version convention, for a
+fixed starting score \(a\) and \(-1/k\leq c<1\), every subsequent recursive
+prediction equals \(ca\), and the mean including the starting value is
+\(B_k=[1+kc]a/(k+1)\).
+\end{theorem}
+\begin{proof}
 
 Inserting the prescribed history into \eqref{eq:conditional-mean} gives
 \begin{equation}
@@ -230,7 +317,8 @@ Suppose \(e_j=ca\) for all \(1\leq j<n\). Then
       =\frac{ca[1+(n-1)c]}{1+(n-1)c}=ca.
 \]
 \begin{samepage}
-Induction establishes
+The base case and induction step satisfy Theorem~\ref{thm:induction}
+\citep[Section 10.1]{hammack2018}; hence
 \begin{equation}
   \boxed{e_1=e_2=\cdots=e_k=ca.}\label{eq:all-predictions}
 \end{equation}
@@ -270,6 +358,7 @@ Multiplying these relations telescopes, without dividing by \(c\) or by
 \]
 Dividing \(T_k=a+\sum_{j=1}^{k}e_j=a(1+kc)\) by \(k+1\) again gives
 \eqref{eq:answer}. This proof includes \(a=0\) and \(c=0\).
+\end{proof}
 
 For example, if \(a=2\) and \(c=0.6\), then
 \[
@@ -283,13 +372,16 @@ the average after three predictions is instead
   B_3=\frac{2+1.2+1.2+1.2}{4}
       =\frac{1+3(0.6)}4\,2=1.4.
 \]
+These substitutions and all displayed decimal rounding are certified in
+Section~\ref{sec:certificates}.
 
 \begin{samepage}
 \section{Standard deviation of the mean}
 
 \subsection{The specified recursive average with fixed starting score}
 The numbers \(a,e_1,\ldots,e_k\) and their average \(B_k\) are fixed once
-\(a,c,k\) are specified. Hence
+\(a,c,k\) are specified. The constant-variable case of
+Theorem~\ref{thm:moments}, or the variance definition itself, proves
 \begin{equation}
   \Var(B_k)=\E[(B_k-\E[B_k])^2]=0,
   \qquad \boxed{\operatorname{SD}(B_k)=0.}
@@ -300,6 +392,13 @@ The actual test-score mean also includes the first test. Its population and
 conditional standard deviations are derived next.
 
 \subsection{Population standard deviation of the actual test-score mean}
+\begin{proposition}[Population spread of the arithmetic mean]
+\label{prop:population-sd}
+For centered, unit-variance scores with common covariance \(c\),
+\(\Var(C_k)=[1+kc]/(k+1)\) and
+\(\operatorname{SD}(C_k)=\sqrt{[1+kc]/(k+1)}\), without requiring Gaussianity.
+\end{proposition}
+\begin{proof}
 Define the random mean of all \(k+1\) scores by
 \begin{equation}
   C_k=\frac1{k+1}\sum_{j=0}^{k}X_j.
@@ -307,7 +406,8 @@ Define the random mean of all \(k+1\) scores by
 \end{equation}
 Its population mean is zero. There are \(k+1\) variance terms, each equal
 to \(1\), and \(k(k+1)/2\) distinct covariance pairs, each equal to \(c\).
-Consequently
+Consequently, by Theorem~\ref{thm:moments}
+\citep[summary Section 4.2]{bertsekas2008},
 \begin{align}
   \Var(C_k)
   &=\frac1{(k+1)^2}
@@ -333,12 +433,21 @@ For \(N=k+1\) total tests, this is
 The population variance and standard deviation require only the specified
 finite variances and covariances; joint Gaussianity is not needed for
 \eqref{eq:population-variance}--\eqref{eq:population-sd-total}.
+\end{proof}
 
 \subsection{Conditional standard deviation after observing the first score}
+\begin{proposition}[Spread after one observed score]
+\label{prop:conditional-sd}
+Under the Gaussian model, the actual mean conditional on \(X_0=a\) has
+mean \(B_k\), variance \(\lambda_k(1-\lambda_k)\), and standard deviation
+\(\sqrt{k(1-c)(1+kc)}/(k+1)\).
+\end{proposition}
+\begin{proof}
 Return to the joint Gaussian model and fix \(X_0=a\).
 For \(1\leq i\leq k\), write \(U_i=X_i-cX_0\). The vector of residuals
 is jointly Gaussian with \(X_0\), has zero covariance with \(X_0\), and
-is therefore independent of it. Direct calculation gives
+is therefore independent of it by Theorem~\ref{thm:gaussian}.
+Covariance bilinearity (Theorem~\ref{thm:moments}) gives
 \begin{align*}
   \Var(U_i)&=1-c^2,\\
   \Cov(U_i,U_j)&=c-c^2\qquad(i\ne j).
@@ -373,6 +482,9 @@ conditional mean. In terms of the total count \(N=k+1\),
   =\frac{\sqrt{(N-1)(1-c)[1+(N-1)c]}}{N}.
   \label{eq:conditional-sd-total}
 \end{equation}
+These are Theorem~\ref{thm:regression} and the linearity of conditional
+expectation in Theorem~\ref{thm:conditional}, specialized to the first score.
+\end{proof}
 
 For the example \(a=2,c=0.6,k=3\), the four-score mean satisfies
 \[
@@ -386,6 +498,8 @@ For the example \(a=2,c=0.6,k=3\), the four-score mean satisfies
 \]
 The population spread, the uncertainty remaining after the first score is
 observed, and the variation of the fixed recursive mean are different quantities.
+The exact values underlying these decimals are in
+Section~\ref{sec:certificates}.
 
 \subsection{Predictors based on actual earlier outcomes}
 The random predictors
@@ -393,13 +507,16 @@ The random predictors
   P_n=\E[X_n\given X_0,\ldots,X_{n-1}]
 \]
 use actual prior outcomes and are not the deterministic values \(e_n\).
-The tower property implies \(\E[P_n\given X_0]=cX_0\), while its
+The tower property (Theorem~\ref{thm:conditional}, with
+\(\sigma(X_0)\subseteq\sigma(X_0,\ldots,X_{n-1})\)) proves
+\(\E[P_n\given X_0]=\E[X_n\given X_0]=cX_0\), while its
 unconditional implication \(\E[P_n]=0\) holds without Gaussianity whenever
 the scores are integrable and have mean zero. Applying a conditional mean
 function at a fixed, recursively chosen history is a different operation.
 
 \subsection{The subsequent predictions considered separately}
-For comparison, averaging just the \(k\) subsequent predictions gives
+For comparison, Theorem~\ref{thm:single-start} proves that averaging just
+the \(k\) subsequent predictions gives
 \begin{equation}
   \frac1k\sum_{n=1}^{k}e_n=ca.
   \label{eq:predictions-only}
@@ -410,7 +527,7 @@ denominator \(k+1\), as in \eqref{eq:answer}.
 \subsection{Population mean zero and the fixed starting score}
 If one randomizes the starting observation according to its standardized
 test distribution, the recursively filled average becomes \(\lambda_k X_0\).
-Consequently
+The affine-moment identities in Theorem~\ref{thm:moments} prove
 \begin{equation}
   \E[\lambda_k X_0]=0,\qquad
   \operatorname{SD}(\lambda_k X_0)=\lambda_k,
@@ -421,7 +538,9 @@ These are population statements obtained by varying the starting score.
 In particular, the standard deviation \(\lambda_k\) of the recursively
 filled mean across random starting scores generally differs from the standard deviation
 \(\sqrt{\lambda_k}\) of the actual test-score mean. The law of total variance
-accounts for the difference:
+accounts for the difference; its proof is included in
+Theorem~\ref{thm:conditional}
+\citep[summary Section 4.3]{bertsekas2008}:
 \begin{align*}
   \Var(C_k)
   &=\Var\bigl(\E[C_k\given X_0]\bigr)
@@ -455,6 +574,8 @@ The covariance-matrix eigenvalues give the domain
   -\frac1{N-1}\leq c\leq1.
   \label{eq:multiple-domain}
 \end{equation}
+This is Proposition~\ref{prop:domain} with \(k\) there replaced by \(N-1\);
+the Gaussian existence proof therefore applies to this larger vector as well.
 For \(c<1\), all conditioning prefixes are nonsingular. In particular,
 \[
   d_r\geq1-\frac{r-1}{N-1}=\frac{k}{N-1}>0.
@@ -464,10 +585,20 @@ conditional-mean version. This specifies the equal-score histories even
 though their point probabilities are zero.
 
 \subsection{Every subsequent prediction and the inclusive average}
+\begin{theorem}[Several equal fixed starting scores]
+\label{thm:multiple-mean}
+Let \(r\geq1\), \(k\geq1\), \(N=r+k\), and
+\(-1/(N-1)\leq c<1\). Given \(r\) initial scores all fixed at \(a\),
+every subsequent recursive prediction is \(rca/d_r\), and the inclusive
+mean is \(B_{r,k}=r d_N a/(N d_r)\).
+\end{theorem}
+\begin{proof}
 Let \(e_j^{(r)}\) be the recursive prediction of \(X_{r+j-1}\), using the
 \(r\) fixed initial scores and the previous \(j-1\) predictions.
-Equation~\eqref{eq:conditional-mean}, applied to the \(r+j-1\) preceding
-scores, gives
+Apply Theorem~\ref{thm:equicorrelated-conditioning} with its \(k\) replaced
+by \(N-1\), and its \(n\) replaced by \(r+j-1\). Since
+\(1\leq r+j-1\leq N-1\), all its hypotheses hold.
+Equation~\eqref{eq:conditional-mean} therefore gives
 \begin{equation}
   e_j^{(r)}=\frac{c}{d_r+(j-1)c}
        \left(ra+\sum_{\ell=1}^{j-1}e_\ell^{(r)}\right),
@@ -482,7 +613,8 @@ equal \(b_r\), then
   =\frac{ra}{d_r}\bigl[d_r+(j-1)c\bigr].
 \]
 Substituting into \eqref{eq:multiple-recursion} and cancelling the positive
-denominator establishes the induction step. Consequently
+denominator establishes the induction step. Theorem~\ref{thm:induction}
+then proves
 \begin{equation}
   \boxed{e_j^{(r)}=b_r=\frac{rc}{1+(r-1)c}\,a,
   \qquad 1\leq j\leq k.}
@@ -497,16 +629,27 @@ subsequent predictions, so
   &=\boxed{\frac{r\,[1+(r+k-1)c]}{(r+k)[1+(r-1)c]}\,a.}
   \label{eq:multiple-mean}
 \end{align}
+\end{proof}
 Putting \(r=1\) recovers \eqref{eq:answer}. Holding all starting scores,
 \(c\), and the counts fixed makes \(B_{r,k}\) deterministic, with
 \(\operatorname{SD}(B_{r,k})=0\).
 
 \subsection{Population and conditional standard deviations}
+\begin{theorem}[Spread with several observed starting scores]
+\label{thm:multiple-sd}
+Under the preceding assumptions, the actual mean \(C_{r,k}\) has
+population variance \(d_N/N\). Conditional on the initial block being
+\(a\one_r\), its mean is \(B_{r,k}\) and its variance is
+\(k(1-c)d_N/(N^2d_r)\). The population-variance statement requires only
+the covariance structure; the conditional statement uses joint Gaussianity.
+\end{theorem}
+\begin{proof}
 Let the actual mean of the \(N=r+k\) test outcomes be
 \[
   C_{r,k}=\frac1N\sum_{i=0}^{N-1}X_i.
 \]
-The covariance count in \eqref{eq:population-variance} gives
+Theorem~\ref{thm:moments} and the covariance count in
+Proposition~\ref{prop:population-sd} give
 \begin{equation}
   \boxed{\operatorname{SD}(C_{r,k})
     =\sqrt{\frac{1+(r+k-1)c}{r+k}}=\sqrt{\frac{d_N}{N}}.}
@@ -517,18 +660,27 @@ conditional calculation does use the joint Gaussian model.
 
 Let \(Z=(X_0,\ldots,X_{r-1})^{\T}\). Since
 \(\Cov(Z)=(1-c)I_r+c\one_r\one_r^{\T}\), the projection of each future
-score onto the starting block is \((c/d_r)\sum_{i=0}^{r-1}X_i\).
+score onto the starting block is \((c/d_r)\sum_{i=0}^{r-1}X_i\), by
+Theorem~\ref{thm:regression} and the inverse identity
+\eqref{eq:inverse} with \(n=r\). Here the battery parameter in
+Theorem~\ref{thm:equicorrelated-conditioning} is \(N-1\), so
+\(r\leq N-1\) is within its conditioning-prefix range.
 Define the future residuals
 \[
   V_j=X_{r+j-1}-\frac{c}{d_r}\sum_{i=0}^{r-1}X_i,
   \qquad 1\leq j\leq k.
 \]
-Each residual has zero covariance with every coordinate of \(Z\). Joint
-Gaussianity makes the residual vector independent of \(Z\). Its covariance
-entries are
+For each initial coordinate \(X_\ell\), covariance bilinearity gives
+\(\Cov(V_j,X_\ell)=c-(c/d_r)d_r=0\). Joint Gaussianity therefore makes
+the residual vector independent of \(Z\), by Theorem~\ref{thm:gaussian}.
+Put \(S_r=\sum_{i=0}^{r-1}X_i\) and \(\beta=c/d_r\).
+Theorem~\ref{thm:moments} gives \(\Var(S_r)=r d_r\) and
+\(\Cov(X_{r+j-1},S_r)=rc\). Expanding the residual covariance entries yields
 \begin{align*}
-  \Var(V_j)&=1-\frac{rc^2}{d_r},\\
-  \Cov(V_i,V_j)&=c-\frac{rc^2}{d_r}
+  \Var(V_j)&=1+\beta^2r d_r-2\beta rc
+      =1-\frac{rc^2}{d_r},\\
+  \Cov(V_i,V_j)&=c+\beta^2r d_r-2\beta rc
+      =c-\frac{rc^2}{d_r}
       =\frac{c(1-c)}{d_r}\qquad(i\ne j).
 \end{align*}
 Equivalently, the conditional covariance matrix of the future scores is
@@ -538,7 +690,7 @@ Equivalently, the conditional covariance matrix of the future scores is
 Conditioning on \(Z=a\one_r\) fixes all \(r\) starting terms. The future
 conditional means are all \(rca/d_r\), so
 \(\E[C_{r,k}\given Z=a\one_r]=B_{r,k}\). Summing the residual covariance
-terms gives
+terms by Theorem~\ref{thm:moments} gives
 \begin{align}
   \Var(C_{r,k}\given Z=a\one_r)
   &=\frac1{N^2}\left[k(1-c)+\frac{k^2c(1-c)}{d_r}\right]\notag\\
@@ -553,6 +705,7 @@ Thus the conditional standard deviation of the actual mean is
       \sqrt{\frac{k(1-c)[1+(r+k-1)c]}{1+(r-1)c}}.}
   \label{eq:multiple-conditional-sd}
 \end{equation}
+\end{proof}
 It is independent of the numerical value of \(a\). This is the spread of
 the actual mean after the starting block is observed; the fixed recursive
 mean itself has standard deviation zero. An across-population calculation
@@ -561,6 +714,8 @@ random-start interpretation in \eqref{eq:random-start} does not specify a
 distribution for several starting scores constrained to share one random value.
 
 \subsection{Special case: two starting scores equal to \texorpdfstring{\(a\)}{a}}
+\begin{corollary}[Two starting scores]
+\label{cor:two-starts}
 Set \(r=2\). The initial values are \(a,a\), followed by \(k\)
 predictions, so \(N=k+2\) and \(-1/(k+1)\leq c\leq1\). Every prediction
 and the inclusive average are
@@ -581,8 +736,17 @@ The actual mean has population and conditional standard deviations
        \sqrt{\frac{k(1-c)[1+(k+1)c]}{1+c}}.}
       \label{eq:two-conditional-sd}
 \end{align}
+\end{corollary}
+\begin{proof}
+Substitute \(r=2\), \(d_r=1+c\), and \(N=k+2\) into
+Theorems~\ref{thm:multiple-mean} and \ref{thm:multiple-sd}.
+Proposition~\ref{prop:domain} gives the stated correlation domain.
+The endpoint \(c=1\) follows from Proposition~\ref{prop:multiple-boundaries}.
+\end{proof}
 
 \subsection{Special case: three starting scores equal to \texorpdfstring{\(a\)}{a}}
+\begin{corollary}[Three starting scores]
+\label{cor:three-starts}
 Set \(r=3\). The initial values are \(a,a,a\), followed by \(k\)
 predictions, so \(N=k+3\) and \(-1/(k+2)\leq c\leq1\). The predictions
 and inclusive average are
@@ -603,19 +767,45 @@ The actual mean has standard deviations
        \sqrt{\frac{k(1-c)[1+(k+2)c]}{1+2c}}.}
       \label{eq:three-conditional-sd}
 \end{align}
+\end{corollary}
+\begin{proof}
+Substitute \(r=3\), \(d_r=1+2c\), and \(N=k+3\) into
+Theorems~\ref{thm:multiple-mean} and \ref{thm:multiple-sd}.
+Proposition~\ref{prop:domain} gives the stated domain, and
+Proposition~\ref{prop:multiple-boundaries} supplies \(c=1\).
+\end{proof}
 For both special cases, the standard deviation of the fixed recursive
-average \(B_{r,k}\) is \(0\).
+average \(B_{r,k}\) is \(0\), by Theorem~\ref{thm:moments}.
 
 \subsection{Checks, endpoints and an example}
+\begin{proposition}[Boundary values and compatible histories]
+\label{prop:multiple-boundaries}
+The preceding formulas extend to \(c=1\) on compatible equal-score
+histories. At \(c=0\) they give independent future scores; at
+\(c=-1/(N-1)\) the inclusive mean and both actual-mean SDs are zero.
+If \(k=0\), the fixed list averages to \(a\), with conditional SD zero,
+provided its history belongs to the model support.
+\end{proposition}
+\begin{proof}
 At \(c=0\), every subsequent prediction is zero,
 \(B_{r,k}=ra/(r+k)\), and the actual mean has population SD
 \(1/\sqrt{r+k}\) and conditional SD \(\sqrt{k}/(r+k)\).
+These values are direct substitutions into Theorems~\ref{thm:multiple-mean}
+and \ref{thm:multiple-sd}; independence follows from
+Theorem~\ref{thm:gaussian}.
 At \(c=1\), all test scores agree almost surely. The equal starting
 history is compatible with this support; all predictions and their
 inclusive mean equal \(a\). The population SD is \(1\), and the
 conditional SD is \(0\), establishing the endpoint directly.
+Indeed, \(\Var(X_i-X_j)=2(1-c)=0\). The zero-variance consequence of
+Chebyshev's inequality in Theorem~\ref{thm:moments} gives equality of every
+pair almost surely; a finite union of null events gives simultaneous
+equality. On the diagonal support the continuous conditional law therefore
+sets every subsequent score to \(a\).
 
-At \(c=-1/(N-1)\), the total score is zero almost surely. The initial
+At \(c=-1/(N-1)\), Theorem~\ref{thm:moments} gives
+\(\Var(\sum_{i=0}^{N-1}X_i)=Nd_N=0\). Its zero-variance conclusion
+therefore makes the total score zero almost surely. The initial
 block remains nonsingular because \(k\geq1\), and
 \[
   e_j^{(r)}=-\frac{ra}{k},\qquad
@@ -628,7 +818,9 @@ starting history is compatible with the model. The general derivation
 above assumes \(k\geq1\); it does not divide by a singular initial-block
 eigenvalue when \(k=0\).
 For \(r\geq2\) and \(k=0\), the lower endpoint \(c=-1/(r-1)\) permits
-equal starting scores only when \(a=0\).
+equal starting scores only when \(a=0\): the same zero-variance argument
+forces their total \(ra\) to vanish.
+\end{proof}
 
 For \(a=2\), \(c=0.6\), and \(k=3\) subsequent predictions, the two
 special cases give the following values, rounded to six decimal places:
@@ -645,11 +837,29 @@ SD of the fixed recursive mean & \(0\) & \(0\) \\
 \hline
 \end{tabular}
 \end{center}
+\begin{proof}[Proof of the numerical table]
+Substitute \(a=2\), \(c=3/5\), and \(k=3\) into
+Corollaries~\ref{cor:two-starts} and \ref{cor:three-starts}.
+Section~\ref{sec:certificates} records the exact fractions, variances and
+rounding bounds, so no floating-point accuracy assumption is needed for
+the printed six-decimal entries.
+\end{proof}
 
 \section{Worked examples starting at IQ 150}
 \label{sec:iq150-examples}
 
+\begin{corollary}[Affine reporting of the proved results]
+\label{cor:iq-reporting}
+With the definition \(Q_i=100+15X_i\), the IQ-150 starting score is
+\(a=10/3\). Equations~\eqref{eq:iq150-prediction},
+\eqref{eq:iq150-mean}, \eqref{eq:iq150-population-sd} and
+\eqref{eq:iq150-conditional-sd} give the subsequent IQ predictions,
+inclusive means and actual-mean SDs. The fixed recursive mean still has
+SD zero.
+\end{corollary}
+
 \subsection{Convert the reporting scale to the standardized model}
+\begin{proof}
 The model scores \(X_i\) continue to have population mean \(0\) and
 standard deviation \(1\). To report them on an IQ scale with mean \(100\)
 and standard deviation \(15\), define
@@ -662,7 +872,10 @@ An initial observed IQ of \(150\) therefore corresponds to
   a=\frac{150-100}{15}=\frac{10}{3}.
   \label{eq:iq150-start}
 \end{equation}
-This conversion preserves the tests' correlations. The mean and SD of the
+Theorem~\ref{thm:moments} gives
+\(\E[Q_i]=100\), \(\Var(Q_i)=225\), and
+\(\Cov(Q_i,Q_j)=225c\), so the correlation is
+\(225c/(15\cdot15)=c\). The mean and SD of the
 standardized model are unchanged; \(Q_i\) is its reporting scale. In the
 examples below, \(r\in\{1,2,3\}\) is the number of initial IQ-150 scores,
 \(k\in\{1,2,10\}\) is the number of subsequent predictions, and every
@@ -670,8 +883,9 @@ initial score is included in the \(N=r+k\) values being averaged.
 Use the selected correlation \(c=0.6=3/5\) throughout this section.
 
 \subsection{Predictions, means and standard deviations in IQ points}
-Put \(d_r=1+(r-1)c\) and \(d_N=1+(N-1)c\), as above. Converting
-\eqref{eq:multiple-predictions} gives the IQ prediction for every subsequent
+Put \(d_r=1+(r-1)c\) and \(d_N=1+(N-1)c\), as above. Conditional linearity
+from Theorem~\ref{thm:conditional}, together with
+Theorem~\ref{thm:multiple-mean}, gives the IQ prediction for every subsequent
 score:
 \begin{equation}
   q_r=100+15\frac{rca}{d_r}
@@ -696,9 +910,16 @@ value of the actual IQ-score mean, is
     =\frac{150r+kq_r}{r+k}.
   \label{eq:iq150-mean}
 \end{equation}
-Adding \(100\) changes a mean, but does not change a standard deviation.
-Multiplication by \(15\) multiplies both means relative to \(100\) and
-standard deviations by \(15\). Hence the actual IQ-score mean has
+Conditional linearity in Theorem~\ref{thm:conditional} proves
+\(\E[100+15W\mid Z]=100+15\E[W\mid Z]\).
+Subtracting this conditional mean from \(100+15W\) leaves
+\(15(W-\E[W\mid Z])\). Squaring and taking conditional expectation
+therefore proves
+\[
+ \Var(100+15W\mid Z)=225\Var(W\mid Z),\qquad
+ \operatorname{SD}(100+15W\mid Z)=15\operatorname{SD}(W\mid Z).
+\]
+Applying Theorem~\ref{thm:multiple-sd} therefore gives the actual IQ-score mean's
 population and conditional standard deviations
 \begin{align}
   \sigma_{\mathrm{pop},r,k}^{\mathrm{IQ}}
@@ -710,6 +931,7 @@ population and conditional standard deviations
 \end{align}
 The conditional SD is calculated after all \(r\) initial IQ-150 scores have
 been observed. The fixed recursively filled average itself has SD \(0\).
+\end{proof}
 
 \subsection{The nine requested examples}
 The following table reports the inclusive mean and both actual-mean SDs in
@@ -754,8 +976,19 @@ In this row, the population variance of the actual IQ mean is \(285/2\),
 and its conditional variance is \(475/16\). Their square roots give
 approximately \(11.937336\) and \(5.448624\) IQ points, respectively.
 The fixed recursive mean in the same row remains a deterministic number.
+\begin{proof}[Proof of the numerical IQ examples]
+All nine rows follow by substituting \(a=10/3\), \(c=3/5\),
+\(r\in\{1,2,3\}\), and \(k\in\{1,2,10\}\) into
+Corollary~\ref{cor:iq-reporting}. Section~\ref{sec:certificates} provides
+their exact rational means and variances and strict integer inequalities
+certifying every displayed two-decimal rounding. The worked row uses
+the same exact fractions, with its six-decimal bounds certified there as well.
+\end{proof}
 
 \section{Boundary cases with one starting score}
+\begin{proof}[Proof of the one-start boundary statements]
+These are the \(r=1\) cases of Proposition~\ref{prop:multiple-boundaries}.
+For clarity, the individual consequences are spelled out below.
 
 At \(c=0\), joint Gaussianity makes the scores independent, and every
 subsequent prediction is zero. Including the starting score gives
@@ -784,8 +1017,21 @@ also zero at this endpoint. The fixed recursive mean has standard deviation
 zero at every admissible correlation. For the single-value case \(N=1\),
 the actual score has population standard deviation \(1\), and fixing its
 value leaves conditional standard deviation \(0\).
+The almost-sure conclusions follow from the zero-variance part of
+Theorem~\ref{thm:moments}; the single-value statements follow directly
+from \(C_0=X_0\) and the constant-variable variance definition.
+\end{proof}
 
 \section{Why correlation alone is insufficient}
+
+\begin{proposition}[Conditional means are not determined by the marginals]
+\label{prop:counterexample}
+Two pairs can have the same one-dimensional marginal distributions, mean
+zero, variance one, and correlation zero, yet have different conditional
+means and different recursive averages at a starting value of positive
+probability.
+\end{proposition}
+\begin{proof}
 
 The original description specifies only marginal means, marginal variances
 and pairwise correlations. Those quantities do not determine the conditional
@@ -821,12 +1067,111 @@ Therefore \eqref{eq:answer} is a result under the stated joint Gaussian
 model, or another model with the same conditional-mean functions; it does
 not follow from equicorrelation alone.
 
+For an explicit comparison with identical marginal distributions, let
+\(X'_1\) be independent of \(X_0\), with probabilities \(1/2\) at each of
+\(-1\) and \(1\). The variable \(X_1=X_0^2-1\) has exactly this same
+marginal distribution. By independence and Theorem~\ref{thm:moments},
+\((X_0,X'_1)\) also has correlation zero and the same marginal means and
+variances as \((X_0,X_1)\). But Theorem~\ref{thm:conditional} gives
+\(\E[X'_1\mid X_0=0]=0\), whereas the first pair gives \(-1\).
+The conditioning event has probability \(1/2\) in both models, so this
+difference cannot be attributed to a choice of versions on a null history.
+Their inclusive recursive averages at \(a=0\) are respectively \(0\)
+and \(-1/2\). This proves the proposition.
+\end{proof}
+
+\input{exact_numeric_certificates}
+
+\section{Map from claims to proofs and references}
+\label{sec:proof-map}
+The following map covers the mathematical claims in this analysis. The
+reference theorems are stated with verified locators in
+Section~\ref{sec:foundations}; each project-specific deduction is proved
+in the location listed below. Model assumptions and definitions are inputs
+to those deductions, rather than empirical conclusions of a theorem.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}}
+\hline
+Claim group & Proof in this report & Reference foundation \\
+\hline
+\endfirsthead
+\hline
+Claim group & Proof in this report & Reference foundation \\
+\hline
+\endhead
+\hline
+\endfoot
+Means, variances, covariance sums, affine SDs and constant variables &
+Theorem~\ref{thm:moments}; variance counts in
+Proposition~\ref{prop:population-sd} &
+Expectation linearity, covariance definition, and Chebyshev's inequality
+\citep{durrett2019,bertsekas2008} \\
+\hline
+Admissible correlations and existence of the Gaussian model &
+Proposition~\ref{prop:domain}; its square-root construction &
+Real spectral theorem and positive square root
+\citep[Theorems 7.29 and 7.38]{axler2024}; Gaussian affine closure
+\citep{gallager2013} \\
+\hline
+Gaussian independence, conditional means and conditional covariance &
+Theorems~\ref{thm:gaussian}, \ref{thm:regression} and
+\ref{thm:equicorrelated-conditioning} &
+Gaussian characteristic function and multivariate inversion
+\citep{gallager2013,durrett2019}; the proof allows singular full vectors \\
+\hline
+Exact-history conditioning and matrix inverse &
+Lemma~\ref{lem:continuous-version}; explicit inverse multiplication in
+Theorem~\ref{thm:equicorrelated-conditioning} &
+Conditional-expectation uniqueness and positive Gaussian density
+\citep{durrett2019,gallager2013}; elementary matrix multiplication \\
+\hline
+One, two and three starting scores, subsequent predictions and inclusive means &
+Theorems~\ref{thm:single-start} and \ref{thm:multiple-mean};
+Corollaries~\ref{cor:two-starts} and \ref{cor:three-starts} &
+Gaussian regression and mathematical induction
+\citep{gallager2013,hammack2018} \\
+\hline
+Population SD, conditional SD and SD zero for fixed means &
+Propositions~\ref{prop:population-sd} and \ref{prop:conditional-sd};
+Theorem~\ref{thm:multiple-sd}; \eqref{eq:fixed-sd} &
+Covariance bilinearity, Gaussian conditioning and the SD definition
+\citep{bertsekas2008,gallager2013} \\
+\hline
+Random predictors, random starts and total variance &
+Theorem~\ref{thm:conditional} and its orthogonal-decomposition proof;
+\eqref{eq:random-start} &
+Tower and pull-out theorems
+\citep[Theorems 4.1.13--4.1.14]{durrett2019}; law of total variance
+\citep[summary Section 4.3]{bertsekas2008} \\
+\hline
+Singular endpoints and compatible histories &
+Proposition~\ref{prop:multiple-boundaries} and its one-start specialization &
+Zero variance implies an almost-sure constant
+\citep[Theorem 1.6.4]{durrett2019}; Gaussian support and residual proof \\
+\hline
+IQ conversion, numerical means and SDs, and every printed rounding &
+Corollary~\ref{cor:iq-reporting}; Section~\ref{sec:certificates}, including
+Lemma~\ref{lem:rounding} and exact integer certificates &
+Affine expectation/variance identities \citep{durrett2019}; proved
+mean/SD formulas and exact rational arithmetic \\
+\hline
+Failure of identification from moments or marginal laws &
+Proposition~\ref{prop:counterexample}, by two explicit probability laws &
+Conditional expectation on a positive-probability atom and independence
+\citep[Section 4.1]{durrett2019} \\
+\end{longtable}
+
 \noindent\textbf{Scope and provenance.} This derivation and its AI review
 extend the repository's hypothetical Gaussian model. Existing Ada/SPARK and
 Python/Deal evidence concerns the specified software; it does not formally
 verify this text. No new empirical study or formal-prover campaign was
 performed. The accompanying README records build and visual checks. The
 repository's original material follows its existing license, subject to
-third-party rights.
+third-party rights. Source versions and access limits are also recorded in
+the accompanying \texttt{reference\_notes.md}.
+
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{references}
 
 \end{document}
