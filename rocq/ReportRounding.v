@@ -134,6 +134,22 @@ Proof.
   pose proof (sqrt_sqrt (P / Q) Hvariance) as Hsqr.
   assert (Hfactor : Q * (sqrt (P / Q) * sqrt (P / Q)) = P).
   { rewrite Hsqr; exact Hquot. }
+  assert (Hscaled :
+    (2 * T * sqrt (P / Q)) * (2 * T * sqrt (P / Q)) * Q =
+    4 * T * T * P).
+  { rewrite <- Hfactor; ring. }
+  assert (HlowerSquares :
+    (2 * IZR t - 1) * (2 * IZR t - 1) <
+    (2 * T * sqrt (P / Q)) * (2 * T * sqrt (P / Q))).
+  { apply (Rmult_lt_reg_r Q); [exact HQ |].
+    rewrite Hscaled.
+    nra. }
+  assert (HupperSquares :
+    (2 * T * sqrt (P / Q)) * (2 * T * sqrt (P / Q)) <
+    (2 * IZR t + 1) * (2 * IZR t + 1)).
+  { apply (Rmult_lt_reg_r Q); [exact HQ |].
+    rewrite Hscaled.
+    nra. }
   unfold report_strict_rounding_interval.
   split; nra.
 Qed.
