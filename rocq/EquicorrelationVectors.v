@@ -280,7 +280,8 @@ Theorem vector_center_energy_nonnegative :
   forall xs : list R, forall a : R, 0 <= vector_center_energy xs a.
 Proof.
  intros xs a; unfold vector_center_energy.
- apply finite_sum_nonnegative; intros x _; nra.
+ apply finite_sum_nonnegative; intros x _.
+ change (0 <= Rsqr (x-a)); apply Rle_0_sqr.
 Qed.
 
 (**
@@ -296,7 +297,8 @@ Theorem vector_square_energy_nonnegative :
   forall xs : list R, 0 <= vector_square_energy xs.
 Proof.
  intro xs; unfold vector_square_energy.
- apply finite_sum_nonnegative; intros x _; nra.
+ apply finite_sum_nonnegative; intros x _.
+ change (0 <= Rsqr x); apply Rle_0_sqr.
 Qed.
 
 (**
@@ -316,7 +318,8 @@ Proof.
  assert (Hiff : vector_center_energy xs a = 0 <->
    forall x, In x xs -> (x-a)*(x-a)=0).
  { unfold vector_center_energy.
-   apply finite_sum_nonnegative_zero_iff; intros x _; nra. }
+   apply finite_sum_nonnegative_zero_iff; intros x _.
+   change (0 <= Rsqr (x-a)); apply Rle_0_sqr. }
  destruct Hiff as [Hforward Hbackward]; split.
  - intro H; apply Forall_forall; intros x Hin.
    pose proof (Hforward H x Hin); nra.
@@ -366,7 +369,8 @@ Proof.
  assert (Hiff : 0 < vector_square_energy xs <->
    exists x, In x xs /\ 0 < x*x).
  { unfold vector_square_energy.
-   apply finite_sum_positive_iff_positive_member; intros x _; nra. }
+   apply finite_sum_positive_iff_positive_member; intros x _.
+   change (0 <= Rsqr x); apply Rle_0_sqr. }
  destruct Hiff as [Hforward Hbackward]; split.
  - intro H; destruct (Hforward H) as [x [Hin Hp]].
    exists x; split; [exact Hin | nra].
