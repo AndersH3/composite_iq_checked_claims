@@ -136,8 +136,8 @@ Theorem vector_equicorrelation_inverse_affine :
  forall c : R, forall ys : list R,
  1-c<>0 -> sequential_d (INR(length ys)) c<>0 ->
  vector_equicorrelation_inverse c ys =
- map (fun y => /(1-c)*y - c*vector_real_sum ys /
-       (sequential_d (INR(length ys)) c*(1-c))) ys.
+ map (fun y => /(1-c)*y + (-c*vector_real_sum ys /
+       (sequential_d (INR(length ys)) c*(1-c)))) ys.
 Proof.
  intros c ys Hc Hd.
  unfold vector_equicorrelation_inverse.
