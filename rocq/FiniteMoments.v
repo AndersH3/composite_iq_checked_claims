@@ -22533,7 +22533,7 @@ Section FiniteProbabilityMoments.
       samples = [x; y] ->
       total_mass = 1 ->
       (indexed_basis_covariance_bilinear_form basis left right = 0 <->
-       indexed_basis_covariance_bilinear_form basis left left = 0 /
+       indexed_basis_covariance_bilinear_form basis left left = 0 \/
        indexed_basis_covariance_bilinear_form basis right right = 0).
   Proof.
     intros basis left right x y Hsamples Hmass.
