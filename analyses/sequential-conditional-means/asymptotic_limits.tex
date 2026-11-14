@@ -1,0 +1,201 @@
+\section{Limits as the number of subsequent predictions increases}
+\label{sec:asymptotic-limits}
+
+In this section the number \(r\geq1\) of fixed initial scores, their common
+standardized value \(a\), and the correlation \(c\) stay fixed. The number
+\(k\) of subsequent predictions increases, and \(N=r+k\) is the total
+number of values in the inclusive mean. The limits concern the proved
+prediction, mean and SD formulas, with the same counting convention as in
+Theorems~\ref{thm:multiple-mean} and \ref{thm:multiple-sd}.
+
+\begin{proposition}[Correlation domain for an unbounded sequence of counts]
+\label{prop:limit-domain}
+For fixed \(r\), the covariance structure is admissible for arbitrarily
+large finite \(k\) exactly when \(0\leq c\leq1\).
+\end{proposition}
+\begin{proof}
+Proposition~\ref{prop:domain}, with total size \(N=r+k\), requires
+\(1+(N-1)c\geq0\) and \(c\leq1\). A fixed negative \(c\) makes the
+first quantity negative for sufficiently large \(N\), so such a
+correlation cannot be retained as \(k\) increases without bound.
+Conversely, \(0\leq c\leq1\) satisfies both eigenvalue conditions for
+every finite \(N\); the Gaussian covariance construction in that
+proposition supplies each finite model. This argument concerns
+admissibility at all finite sizes and does not require an additional
+infinite-process assertion.
+\end{proof}
+
+\begin{lemma}[A square-root limit bound]
+\label{lem:square-root-limit-bound}
+For nonnegative real \(x,y\),
+\[
+ \lvert\sqrt{x}-\sqrt{y}\rvert\leq\sqrt{\lvert x-y\rvert}.
+\]
+Consequently, convergence of nonnegative variances implies convergence of
+their nonnegative square roots to the square root of the limiting variance.
+\end{lemma}
+\begin{proof}
+Put \(u=\sqrt{x}\) and \(v=\sqrt{y}\). If \(u\geq v\geq0\), then
+\((u-v)^2\leq(u-v)(u+v)=x-y\); otherwise interchange \(x\) and \(y\).
+Taking nonnegative square roots proves the inequality. If
+\(\lvert x_k-y\rvert<\varepsilon^2\), it gives
+\(\lvert\sqrt{x_k}-\sqrt y\rvert<\varepsilon\), proving the stated
+limit implication directly from the definition of convergence.
+\end{proof}
+
+\begin{theorem}[Limits of predictions, inclusive means and actual-mean SDs]
+\label{thm:prediction-limits}
+Suppose \(0\leq c\leq1\), \(r\geq1\), and put
+\(d_r=1+(r-1)c\). Every subsequent prediction is already the constant
+\[
+ b_r=\frac{rca}{d_r}.
+\]
+Its limit and the inclusive recursive-mean limit are therefore
+\begin{align}
+ \lim_{j\to\infty}e_j^{(r)}&=b_r,
+     \label{eq:limit-next-standardized}\\
+ \lim_{k\to\infty}B_{r,k}&=b_r.
+     \label{eq:limit-inclusive-standardized}
+\end{align}
+For the actual mean \(C_{r,k}\), the population and conditional SD limits
+are
+\begin{align}
+ \lim_{k\to\infty}\operatorname{SD}(C_{r,k})
+   &=\sqrt c,
+     \label{eq:limit-population-sd}\\
+ \lim_{k\to\infty}\operatorname{SD}(C_{r,k}\given Z=a\one_r)
+   &=\sqrt{\frac{c(1-c)}{d_r}}.
+     \label{eq:limit-conditional-sd}
+\end{align}
+The fixed recursively filled mean has SD zero for every finite \(k\) and
+in the limit.
+\end{theorem}
+\begin{proof}
+Theorem~\ref{thm:multiple-mean} makes \(e_j^{(r)}=b_r\) at every step;
+the value of the next prediction does not evolve towards a different
+limit. Its inclusive-mean formula can be rearranged exactly as
+\begin{equation}
+ B_{r,k}
+  =b_r+\frac{r(a-b_r)}{r+k}
+  =b_r+\frac{ra(1-c)}{d_r(r+k)}.
+  \label{eq:mean-limit-error}
+\end{equation}
+Here \(d_r\geq1\). The error is at most
+\(r|a|(1-c)/(d_r k)\); given \(\varepsilon>0\), choosing
+\(k>r|a|(1-c)/(d_r\varepsilon)\) makes it smaller than
+\(\varepsilon\). If that numerator is zero, the error is identically
+zero. This proves the mean limit.
+
+Theorem~\ref{thm:multiple-sd} gives population variance
+\(c+(1-c)/N\). Its difference from \(c\) is
+\((1-c)/N\), which tends to zero. For the conditional variance, substitute
+\(k=N-r\) in \eqref{eq:multiple-conditional-variance} to obtain
+\begin{equation}
+ \Var(C_{r,k}\given Z=a\one_r)
+ =\frac{1-c}{d_r}
+  \left[c+\frac{1-(r+1)c}{N}-\frac{r(1-c)}{N^2}\right].
+ \label{eq:conditional-variance-limit-expansion}
+\end{equation}
+Its absolute difference from \(c(1-c)/d_r\) is bounded by
+\[
+ \frac{1-c}{d_r N}
+   \bigl(|1-(r+1)c|+r(1-c)\bigr),
+\]
+since \(N\geq1\). The right-hand side tends to zero, by the same
+explicit \(1/N\) argument as for the mean. All these variances are
+nonnegative, so Lemma~\ref{lem:square-root-limit-bound} proves the two SD
+limits. The zero SD of the fixed recursive mean follows from
+Theorem~\ref{thm:moments} at every count. At \(c=1\), the equal-score
+support argument in Proposition~\ref{prop:multiple-boundaries} supplies
+the same constant predictions and conditional SD zero directly.
+\end{proof}
+
+\begin{proposition}[A coupling of the Gaussian aggregate laws]
+\label{prop:gaussian-limit-coupling}
+The population or conditional aggregate laws with means \(m_k\) and
+variances \(v_k\) considered above admit coupled realizations converging
+in mean square to a Gaussian law with the calculated limiting mean
+\(m_\infty\) and variance \(v_\infty\), including zero variances.
+\end{proposition}
+\begin{proof}
+Use a single standard normal \(G\), and put
+\(Y_k=m_k+\sqrt{v_k}G\) and
+\(Y_\infty=m_\infty+\sqrt{v_\infty}G\).
+Theorem~\ref{thm:gaussian} gives the required Gaussian marginal laws.
+The moment identities and \(\E[G]=0\), \(\E[G^2]=1\) give
+\[
+ \E[(Y_k-Y_\infty)^2]
+ =(m_k-m_\infty)^2+
+   (\sqrt{v_k}-\sqrt{v_\infty})^2\longrightarrow0,
+\]
+because Theorem~\ref{thm:prediction-limits} proves both parameter
+limits, using Lemma~\ref{lem:square-root-limit-bound} for the SDs.
+This is convergence in mean square by definition. This coupling concerns
+representations of the aggregate laws; it does not assert that the
+original expanding test battery uses this single-normal construction.
+\end{proof}
+
+\begin{corollary}[Limits for the IQ-150 examples]
+\label{cor:iq150-limits}
+On the reporting scale \(Q=100+15X\), with initial IQ scores \(150\),
+\(a=10/3\), and selected correlation \(c=3/5\), the limiting inclusive
+mean is also the IQ prediction for every subsequent test:
+\begin{equation}
+ m_{r,\infty}^{\mathrm{IQ}}=q_r
+ =100+\frac{150r}{3r+2}.
+ \label{eq:iq150-limit-means}
+\end{equation}
+The population SD limit is \(\sqrt{135}\) IQ points for all three initial
+counts. The conditional SD limits for \(r=1,2,3\) are respectively
+\begin{equation}
+ \sqrt{54},\qquad \sqrt{135/4},\qquad \sqrt{270/11}
+ \quad\text{IQ points}.
+ \label{eq:iq150-limit-sds}
+\end{equation}
+\end{corollary}
+\begin{proof}
+Corollary~\ref{cor:iq-reporting} and Theorem~\ref{thm:moments} transform a
+standardized mean by \(100+15b_r\), and an SD by multiplication by
+\(15\). Substituting \(c=3/5\) gives
+\(d_r=(3r+2)/5\) and \(100+15b_r=100+150r/(3r+2)\).
+The limiting population variance on this scale is \(225c=135\).
+The limiting conditional variance is
+\(225c(1-c)/d_r=270/(3r+2)\), which gives the three displayed fractions.
+\end{proof}
+
+The following table adds the \(k\to\infty\) case to the finite IQ-150
+examples. All means include the initial scores. Values are rounded to six
+decimal places.
+These infinite-count rows are calculated analytically. Simulations at
+finite counts can be compared with the finite formulas and the convergence
+bounds proved above.
+\begin{center}
+\begin{tabular}{r r r r}
+\hline
+Initial scores \(r\) & Limiting mean IQ & Population SD & Conditional SD \\
+\hline
+1 & \(130.000000\) & \(11.618950\) & \(7.348469\) \\
+2 & \(137.500000\) & \(11.618950\) & \(5.809475\) \\
+3 & \(140.909091\) & \(11.618950\) & \(4.954337\) \\
+\hline
+\end{tabular}
+\end{center}
+
+The means \(130\) and \(275/2\) are exact terminating values;
+\(1550/11\) and its six-decimal representation already have a certificate
+in Section~\ref{sec:certificates}. For completeness, the new SD roundings
+have the following exact positive-integer certificates in the notation of
+Lemma~\ref{lem:rounding}, with \(T=10^6\):
+\begin{center}
+\begin{tabular}{l r r r}
+\hline
+Quantity & Exact variance & \(L_T\) & \(U_T\) \\
+\hline
+Population limit & \(135\) & 50065799 & 42885801 \\
+Conditional limit, \(r=1\) & \(54\) & 42818031 & 15969721 \\
+Conditional limit, \(r=2\) & \(135/4\) & 96541596 & 89361604 \\
+Conditional limit, \(r=3\) & \(270/11\) & 193169781 & 242811875 \\
+\hline
+\end{tabular}
+\end{center}
+Each integer is positive, so the lemma proves each displayed SD rounding.

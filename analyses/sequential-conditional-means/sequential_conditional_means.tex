@@ -69,6 +69,9 @@ subsequent predictions. A counterexample shows that means, variances and
 correlations alone do not determine the recursive conditional means.
 Every mathematical conclusion is derived from explicitly stated reference
 theorems; exact arithmetic certificates justify the displayed numerical rounding.
+We also derive the infinite-count limits, explain the population and conditional
+SDs as different sampling experiments, and supply contracted Ada/SPARK
+calculations and simulations with an independent Python/Deal validator.
 \end{abstract}
 
 \noindent\textbf{AI disclosure.} This analysis, its mathematical exposition,
@@ -985,6 +988,9 @@ certifying every displayed two-decimal rounding. The worked row uses
 the same exact fractions, with its six-decimal bounds certified there as well.
 \end{proof}
 
+\input{asymptotic_limits}
+\input{sd_interpretation}
+
 \section{Boundary cases with one starting score}
 \begin{proof}[Proof of the one-start boundary statements]
 These are the \(r=1\) cases of Proposition~\ref{prop:multiple-boundaries}.
@@ -1081,6 +1087,7 @@ and \(-1/2\). This proves the proposition.
 \end{proof}
 
 \input{exact_numeric_certificates}
+\input{computational_verification}
 
 \section{Map from claims to proofs and references}
 \label{sec:proof-map}
@@ -1159,13 +1166,27 @@ Failure of identification from moments or marginal laws &
 Proposition~\ref{prop:counterexample}, by two explicit probability laws &
 Conditional expectation on a positive-probability atom and independence
 \citep[Section 4.1]{durrett2019} \\
+Infinite-count predictions, inclusive means and SDs &
+Proposition~\ref{prop:limit-domain}, Theorem~\ref{thm:prediction-limits}
+and Corollary~\ref{cor:iq150-limits} &
+Proved finite formulas, explicit convergence bounds, the square-root inequality
+in Lemma~\ref{lem:square-root-limit-bound}, and affine moment identities \\
+\hline
+Population versus conditional SD and its change with count &
+Section~\ref{sec:sd-interpretation}, including
+Propositions~\ref{prop:variance-components-general} and
+\ref{prop:conditional-sd-growth-examples} &
+Gaussian regression, total variance and the proved finite formulas
+\citep{gallager2013,bertsekas2008} \\
+\hline
 \end{longtable}
 
 \noindent\textbf{Scope and provenance.} This derivation and its AI review
 extend the repository's hypothetical Gaussian model. Existing Ada/SPARK and
 Python/Deal evidence concerns the specified software; it does not formally
-verify this text. No new empirical study or formal-prover campaign was
-performed. The accompanying README records build and visual checks. The
+verify this text. Section~\ref{sec:computational-verification} records the new
+computational campaign and its trust boundaries. No new empirical psychometric
+study was performed. The accompanying README records build and visual checks. The
 repository's original material follows its existing license, subject to
 third-party rights. Source versions and access limits are also recorded in
 the accompanying \texttt{reference\_notes.md}.

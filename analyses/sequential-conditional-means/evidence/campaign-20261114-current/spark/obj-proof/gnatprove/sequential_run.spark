@@ -1,0 +1,25 @@
+{
+  "spark": [
+  ],
+  "progress": "PROGRESS_PROOF",
+  "stop_reason": "STOP_REASON_NONE",
+  "flow": [
+  ],
+  "pragma_assume": [
+  ],
+  "session_map": {
+  },
+  "proof": [
+  ],
+  "assumptions": [
+  ],
+  "timings": {
+    "init_why_sections": 6.45999971311539E-04,
+    "globals (advanced)": 7.61099997907877E-03,
+    "flow analysis": 5.60000007681083E-05,
+    "marking": 6.60000005154870E-05,
+    "translation of standard": 2.73999990895391E-03,
+    "properties (advanced)": 1.49999996210681E-05,
+    "globals (basic)": 1.86950005590916E-02
+  }
+}

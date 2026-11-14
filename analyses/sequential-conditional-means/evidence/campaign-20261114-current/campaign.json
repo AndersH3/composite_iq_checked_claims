@@ -1,0 +1,4068 @@
+{
+  "schema": "sequential-fresh-campaign-v1",
+  "host": "computer10",
+  "started_utc": "2026-11-14T20:28:13.726011+00:00",
+  "source_context": "/home/anonymous/Documents/ChatGPT/composite_iq_checked_claims",
+  "trials": 200000,
+  "runner_sha256": "30488444b6f98370c9220354c7ddf97c1c79d43194eb419b97c31563a157cf36",
+  "complete": true,
+  "negative_controls_run": false,
+  "limits": [
+    "SPARK_Mode Off CLI and numerical completions are trusted boundaries.",
+    "Native proof establishes discharged program obligations under its model.",
+    "Numerical and Monte Carlo validation are separate from formal proof."
+  ],
+  "toolchain": {
+    "configuration": "/home/anonymous/Documents/ChatGPT/composite_iq_checked_claims/analyses/sequential-conditional-means/evidence/campaign-20261114-current/provers.conf",
+    "configuration_sha256": "2097d660d64be2ff574554435c33de07e9bdcb6f51b72aa1af16e6583c1a5538",
+    "tools": {
+      "gnatprove": {
+        "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+        "sha256": "044719aea06db21478af0b76ea405c448f2717f04b4a835f158f04d3189cb639",
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+          "--version"
+        ],
+        "returncode": 0,
+        "output": "0.0w\nWhy3 for gnatprove version 1.5.0+git\n/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/alt-ergo: Alt-Ergo version 2.4.0\n/home/anonymous/.local/share/icar16-classic-colibri/2026.06-v7/colibri-2026.06-v7/colibri: 2026.06/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/cvc5: This is cvc5 version 1.0.5 [git tag 1.0.5 branch HEAD]\ncompiled with GCC version 11.3.0\non Mar 13 2023 16:18:37\n\nCopyright (c) 2009-2022 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open-source and is covered by the BSD license (modified).\n\nTHIS SOFTWARE IS PROVIDED AS-IS, WITHOUT ANY WARRANTIES.\nUSE AT YOUR OWN RISK.\n\ncvc5 incorporates code from ANTLR3 (http://www.antlr.org).\nSee licenses/antlr3-LICENSE for copyright and licensing information.\n\nThis version of cvc5 is linked against the following non-(L)GPL'ed\nthird party libraries.\n\n  CaDiCaL - Simplified Satisfiability Solver\n  See https://github.com/arminbiere/cadical for copyright information.\n\n  Editline Library\n  See https://thrysoee.dk/editline\n  for copyright information.\n\n  SymFPU - The Symbolic Floating Point Unit\n  See https://github.com/martin-cs/symfpu/tree/cvc5 for copyright information.\n\nThis version of cvc5 is linked against the following third party\nlibraries covered by the LGPLv3 license.\nSee licenses/lgpl-3.0.txt for more information.\n\n  GMP - Gnu Multi Precision Arithmetic Library\n  See http://gmplib.org for copyright information.\n\n  LibPoly polynomial library\n  See https://github.com/SRI-CSL/libpoly for copyright and\n  licensing information.\n\ncvc5 is statically linked against these libraries. To recompile\nthis version of cvc5 with different versions of these libraries\nfollow the instructions on https://github.com/cvc5/cvc5/blob/main/INSTALL.md\n\nSee the file COPYING (distributed with the source code, and with\nall binaries) for the full cvc5 copyright, licensing, and (lack of)\nwarranty information.\n\n/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/z3: Z3 version 4.12.2 - 64 bit"
+      },
+      "gnat": {
+        "path": "/home/anonymous/.config/alire/cache/dependencies/gnat_native_13.2.1_788a01f9/bin/gnat",
+        "sha256": "7b695b2dca80c560ab2611f502d126a992b89688da3a315315b48b84b6c95656",
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gnat_native_13.2.1_788a01f9/bin/gnat",
+          "--version"
+        ],
+        "returncode": 0,
+        "output": "GNAT 13.2.0\nCopyright (C) 1996-2023, Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      },
+      "gprbuild": {
+        "path": "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+        "sha256": "92475d9a124acc2f202c05be3848844514faa492dd725724e4aacd880f2d07d2",
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+          "--version"
+        ],
+        "returncode": 0,
+        "output": "GPRBUILD 22.0.0 (2021-11-09) (x86_64-pc-linux-gnu)\nCopyright (C) 2004-2021, AdaCore\nThis is free software; see the source for copying conditions.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      },
+      "cvc5": {
+        "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/cvc5",
+        "sha256": "57fa94b740e0827f655a731b97dae84fedf86e65fa897c3a56a01a83d283d15e",
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/cvc5",
+          "--version"
+        ],
+        "returncode": 0,
+        "output": "This is cvc5 version 1.0.5 [git tag 1.0.5 branch HEAD]\ncompiled with GCC version 11.3.0\non Mar 13 2023 16:18:37\n\nCopyright (c) 2009-2022 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open-source and is covered by the BSD license (modified).\n\nTHIS SOFTWARE IS PROVIDED AS-IS, WITHOUT ANY WARRANTIES.\nUSE AT YOUR OWN RISK.\n\ncvc5 incorporates code from ANTLR3 (http://www.antlr.org).\nSee licenses/antlr3-LICENSE for copyright and licensing information.\n\nThis version of cvc5 is linked against the following non-(L)GPL'ed\nthird party libraries.\n\n  CaDiCaL - Simplified Satisfiability Solver\n  See https://github.com/arminbiere/cadical for copyright information.\n\n  Editline Library\n  See https://thrysoee.dk/editline\n  for copyright information.\n\n  SymFPU - The Symbolic Floating Point Unit\n  See https://github.com/martin-cs/symfpu/tree/cvc5 for copyright information.\n\nThis version of cvc5 is linked against the following third party\nlibraries covered by the LGPLv3 license.\nSee licenses/lgpl-3.0.txt for more information.\n\n  GMP - Gnu Multi Precision Arithmetic Library\n  See http://gmplib.org for copyright information.\n\n  LibPoly polynomial library\n  See https://github.com/SRI-CSL/libpoly for copyright and\n  licensing information.\n\ncvc5 is statically linked against these libraries. To recompile\nthis version of cvc5 with different versions of these libraries\nfollow the instructions on https://github.com/cvc5/cvc5/blob/main/INSTALL.md\n\nSee the file COPYING (distributed with the source code, and with\nall binaries) for the full cvc5 copyright, licensing, and (lack of)\nwarranty information."
+      },
+      "z3": {
+        "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/z3",
+        "sha256": "4f490bb1b8f4d71dea98cbd4a7b56a3fdf261ba8ca30a65f22a359d51e70ebd8",
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/z3",
+          "-version"
+        ],
+        "returncode": 0,
+        "output": "Z3 version 4.12.2 - 64 bit"
+      },
+      "altergo": {
+        "path": "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/alt-ergo",
+        "sha256": "1acfdd0ad0366277a3f60c373277e5dd8cc197226fc28879d7a301869ba4d8e6",
+        "argv": [
+          "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/libexec/spark/bin/alt-ergo",
+          "--version"
+        ],
+        "returncode": 0,
+        "output": "Alt-Ergo version 2.4.0"
+      },
+      "Colibri_Classic": {
+        "path": "/home/anonymous/.local/share/icar16-classic-colibri/2026.06-v7/colibri-2026.06-v7/colibri",
+        "sha256": "edda8a32253b755f61ef8803035e40225c507e8c592734a37af5797a85c223c9",
+        "argv": [
+          "/home/anonymous/.local/share/icar16-classic-colibri/2026.06-v7/colibri-2026.06-v7/colibri",
+          "--version"
+        ],
+        "returncode": 0,
+        "output": "2026.06"
+      },
+      "Yices": {
+        "path": "/usr/local/bin/yices-smt2",
+        "sha256": "eab7efbff2a6f0cce2fcd2c25cb4a94e0e048c902d8ef9e6fd7d7989aa54c501",
+        "argv": [
+          "/usr/local/bin/yices-smt2",
+          "--version"
+        ],
+        "returncode": 0,
+        "output": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2025-07-17\nPlatform: x86_64-pc-linux-gnu (release/static)\nRevision: 4f19700f0e272f4a68250080d12a873523bc7ac3"
+      }
+    },
+    "provers": [
+      "cvc5",
+      "z3",
+      "altergo",
+      "Colibri_Classic",
+      "Yices"
+    ]
+  },
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "901a6003ccd16bcb96264c5d50a06702a36299b1992581af63174033a737b8ed"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+      "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+      "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+      "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+      "sha256": "4b8d3b4011151fbafdcef628a47bbcf2b266bf564b97958dab372c88c1a6ec27"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+      "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/sequential.gpr",
+      "sha256": "88d1b8147543b0e956ff6c8920e5d6023adf96f6fd3189e996cc506544fa76b1"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/sequential_core_proof.gpr",
+      "sha256": "b6ba7a1d05e5e4e6945d6b99c4e21a5ddf05461a0ada03f6a3e5f139650abef5"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/sequential_proof.gpr",
+      "sha256": "7bdcb4a554b32822055148206b2c6c1d1b7437949c628c520835b9c7a3e82102"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_core.adb",
+      "sha256": "f206e204440e140549e9898d4495a161d2660cef5364ecb78e5fb3f38dbb8eef"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+      "sha256": "b54444637c766d09c8e1b2027ad353ae8d1251bb729af636ef8ec594a473bb00"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.adb",
+      "sha256": "62673fa160f539305ac2f83fd32a0d9ca9912c1d6ac8fdbca2514f99c56511d6"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+      "sha256": "ae5482eb0776e516e881e09d1f5e2477402fee0df95d075c33391cbf251b8457"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_run.adb",
+      "sha256": "381d984e09ec7a408e48742388f2ecaa74b2936a5d74aa3c46f6eb73b730a561"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.adb",
+      "sha256": "1ee0c13fafedde3a6ea07185ccf390154d5c5a249257f083eafe264cb470f8a2"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+      "sha256": "5a3a90397a3a0e6471f6f9e3ca4b4f3281933edb37dc1d9fde59b47bc82ce264"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/scripts/run_spark.py",
+      "sha256": "30488444b6f98370c9220354c7ddf97c1c79d43194eb419b97c31563a157cf36"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/scripts/validate_spark.py",
+      "sha256": "3e69ef41661ae41aa9e83cbb804130ecc2c95ab3d21af031140236f991c96332"
+    },
+    {
+      "path": "requirements-dev.txt",
+      "sha256": "40dce803d1533194da231e078be536eec4086f882ef91f13b52893b237c45c82"
+    },
+    {
+      "path": "verification/check_contract_coverage.py",
+      "sha256": "2f20987cacddab266bcd4817d1bcf4639b21b1b8eb0fae7e0237a34a3347d805"
+    },
+    {
+      "path": "verification/check_static_lint.py",
+      "sha256": "44b756e0be52007a9ca57ba5de47aed93d99a9e58dcbfe3a38f6af9c34590c6b"
+    },
+    {
+      "path": "verification/check_symbolic.py",
+      "sha256": "f6f09b00487744433b5d2dae3cc1aca25f7084492cfbb07bb7616f92dae40558"
+    },
+    {
+      "path": "verification/ghost_boundaries.py",
+      "sha256": "a6ccd4afd2f233e4ebe031b8ed5286e691547514a3734fa5e7b6f94b83d16ff5"
+    },
+    {
+      "path": "verification/proof_gate.py",
+      "sha256": "df77f09ad5bea31f6701dab196e6bf97bdc0e418d5efd270b0b682584fd168d7"
+    },
+    {
+      "path": "verification/replay_hoeflin.py",
+      "sha256": "91d4a975b84badf342863d90d3a823aec1453c5fcc4d466e33f3e615777fdc3d"
+    },
+    {
+      "path": "verification/run_computer10.py",
+      "sha256": "e2969673f689ef9b4f2b0796d331e2b23074521e19a86d5b67fddb1df87df910"
+    },
+    {
+      "path": "verification/spark_contracts.py",
+      "sha256": "df11d3705cfa32f8fd7b833c2ae91d76ef96add1c66d8b3f7f1cf8f4ac7676ea"
+    },
+    {
+      "path": "verification/spark_coverage.py",
+      "sha256": "448cec9f6eac6c3fa7ce372f3f9c7ad2538dbb7610fcd9bcc6c74e6e92e20601"
+    },
+    {
+      "path": "verification/verify_evidence.py",
+      "sha256": "8f127031f074122e35172682f0ce3527e6530ffd83c09ef2bea828ed4d709cb1"
+    }
+  ],
+  "contract_floor": {
+    "schema": "explicit-contract-clauses-v1",
+    "minimum_required": 5,
+    "minimum_observed": 5,
+    "functions": 8,
+    "procedures": 3,
+    "contracts": 139,
+    "entities": [
+      {
+        "identity": "sequential_core.calculate",
+        "name": "Calculate",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 92,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Calculate'Result => (R, K, C))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Valid (R, K, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Prediction.Num = Long_Long_Integer (R) * Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Prediction.Den = D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Mean.Num = Long_Long_Integer (R) *\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Mean.Den = Long_Long_Integer (R + K) *\n         D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Population_Variance.Num =\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Population_Variance.Den =\n         Scale * Long_Long_Integer (R + K)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Conditional_Variance.Num =\n         Long_Long_Integer (K) * (Scale - Long_Long_Integer (C)) *\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Conditional_Variance.Den =\n         Scale * Long_Long_Integer (R + K) * Long_Long_Integer (R + K) *\n         D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Regression_Coefficient.Num = Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Regression_Coefficient.Den = D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Residual_Variance.Num =\n         (Scale - Long_Long_Integer (C)) *\n         (D_Numerator (R, C) + Long_Long_Integer (C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Residual_Variance.Den = Scale * D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Common_Eigenvalue.Num =\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Common_Eigenvalue.Den = Scale"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Contrast_Eigenvalue.Num = Scale - Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Contrast_Eigenvalue.Den = Scale"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Mean.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Population_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Conditional_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Residual_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Has_Inverse = (R = 1 or else C < 1_000)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 1 then\n         Calculate'Result.Inverse_Diagonal.Num = 1 and then\n         Calculate'Result.Inverse_Diagonal.Den = 1 and then\n         Calculate'Result.Inverse_Off_Diagonal.Num = 0 and then\n         Calculate'Result.Inverse_Off_Diagonal.Den = 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R > 1 and then C < 1_000 then\n         Calculate'Result.Inverse_Diagonal.Num =\n           Scale * (D_Numerator (R, C) - Long_Long_Integer (C)) and then\n         Calculate'Result.Inverse_Diagonal.Den =\n           (Scale - Long_Long_Integer (C)) * D_Numerator (R, C) and then\n         Calculate'Result.Inverse_Off_Diagonal.Num = -Scale * Long_Long_Integer (C) and then\n         Calculate'Result.Inverse_Off_Diagonal.Den =\n           (Scale - Long_Long_Integer (C)) * D_Numerator (R, C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if not Calculate'Result.Has_Inverse then\n         Calculate'Result.Inverse_Diagonal.Num = 0 and then\n         Calculate'Result.Inverse_Diagonal.Den = 1 and then\n         Calculate'Result.Inverse_Off_Diagonal.Num = 0 and then\n         Calculate'Result.Inverse_Off_Diagonal.Den = 1)"
+          }
+        ],
+        "contract_count": 27,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_core.d_numerator",
+        "name": "D_Numerator",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 26,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(D_Numerator'Result => (N, C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "D_Numerator'Result = Scale + Long_Long_Integer (C) *\n         Long_Long_Integer (N - 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "D_Numerator'Result >= Scale * (2 - Long_Long_Integer (N))"
+          },
+          {
+            "aspect": "post",
+            "clause": "D_Numerator'Result <= Scale * Long_Long_Integer (N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if N = 1 then D_Numerator'Result = Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 0 then D_Numerator'Result = Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 1_000 then\n         D_Numerator'Result = Scale * Long_Long_Integer (N))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = -1_000 then\n         D_Numerator'Result = Scale * (2 - Long_Long_Integer (N)))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C >= 0 then D_Numerator'Result >= Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C <= 0 then D_Numerator'Result <= Scale)"
+          }
+        ],
+        "contract_count": 11,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_core.limits",
+        "name": "Limits",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 157,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Limits'Result => (R, C))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "C >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Prediction.Num = Long_Long_Integer (R) * Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Prediction.Den = D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Mean.Num = Limits'Result.Prediction.Num"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Mean.Den = Limits'Result.Prediction.Den"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Population_Variance.Num = Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Population_Variance.Den = Scale"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Conditional_Variance.Num =\n         Long_Long_Integer (C) * (Scale - Long_Long_Integer (C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Conditional_Variance.Den = Scale * D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Prediction.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Population_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Conditional_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 0 then Limits'Result.Mean.Num = 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 1_000 then\n         Limits'Result.Mean.Num = Limits'Result.Mean.Den)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 0 or else C = 1_000 then\n         Limits'Result.Conditional_Variance.Num = 0)"
+          }
+        ],
+        "contract_count": 17,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_core.valid",
+        "name": "Valid",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 49,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid'Result => (R, K, C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid'Result =\n         (R + K <= Max_Total and then\n          D_Numerator (Count (R + K), C) >= 0 and then\n          D_Numerator (R, C) > 0 and then\n          D_Numerator (R, C) + Long_Long_Integer (C) >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then R + K <= Max_Total)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then\n         D_Numerator (Count (R + K), C) >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then D_Numerator (R, C) > 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then\n         D_Numerator (R, C) + Long_Long_Integer (C) >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R + K > Max_Total then not Valid'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R + K <= Max_Total and then\n         D_Numerator (Count (R + K), C) < 0 then not Valid'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R + K <= Max_Total and then C >= 0 then\n         Valid'Result)"
+          }
+        ],
+        "contract_count": 10,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.add",
+        "name": "Add",
+        "kind": "procedure",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 90,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Acc => (Acc, X))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "X in -Sample_Limit .. Sample_Limit"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Count < Max_Samples"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Sum + X in Sum_Value"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Sum_Squares + X * X in Square_Sum_Value"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Count = Acc.Count'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum = Acc.Sum'Old + X"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum_Squares = Acc.Sum_Squares'Old + X * X"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum_Squares >= Acc.Sum_Squares'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 0.0 then Acc.Sum >= Acc.Sum'Old)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 0.0 then Acc.Sum <= Acc.Sum'Old)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 0.0 then\n         Acc.Sum = Acc.Sum'Old and then\n         Acc.Sum_Squares = Acc.Sum_Squares'Old)"
+          }
+        ],
+        "contract_count": 13,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.finish",
+        "name": "Finish",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 117,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Finish'Result => Acc)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Count >= 2"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Count = Acc.Count"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Mean = Acc.Sum / Long_Float (Acc.Count)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Unbiased_Variance = Long_Float'Max\n         (0.0, (Acc.Sum_Squares - Acc.Sum * Acc.Sum / Long_Float (Acc.Count)) /\n          Long_Float (Acc.Count - 1))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Unbiased_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Unbiased_Variance <= Square_Sum_Value'Last"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Mean in -1.0E10 .. 1.0E10"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Acc.Sum >= 0.0 then Finish'Result.Mean >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Acc.Sum <= 0.0 then Finish'Result.Mean <= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Acc.Sum = 0.0 then Finish'Result.Mean = 0.0)"
+          }
+        ],
+        "contract_count": 12,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.from_coefficients",
+        "name": "From_Coefficients",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 36,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(From_Coefficients'Result => (F, A))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "A in -20.0 .. 20.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "F.Population_Variance.Num >= 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "F.Conditional_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Prediction = Value (F.Prediction) * A"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Mean = Value (F.Mean) * A"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Population_Variance =\n         Value (F.Population_Variance)"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Conditional_Variance =\n         Value (F.Conditional_Variance)"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Prediction =\n         IQ_Origin + IQ_SD * From_Coefficients'Result.Prediction"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Mean =\n         IQ_Origin + IQ_SD * From_Coefficients'Result.Mean"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Population_Variance =\n         IQ_Variance * From_Coefficients'Result.Population_Variance"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Conditional_Variance =\n         IQ_Variance * From_Coefficients'Result.Conditional_Variance"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Population_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Conditional_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Population_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Conditional_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if A = 0.0 then\n         From_Coefficients'Result.Prediction = 0.0 and then\n         From_Coefficients'Result.Mean = 0.0)"
+          }
+        ],
+        "contract_count": 18,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.reset",
+        "name": "Reset",
+        "kind": "procedure",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 83,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Acc => null)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Count = 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum = 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum_Squares = 0.0"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.value",
+        "name": "Value",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 16,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Value'Result => Q)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value'Result = Long_Float (Q.Num) / Long_Float (Q.Den)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value'Result in -1.0E19 .. 1.0E19"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Q.Num >= 0 then Value'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Q.Num <= 0 then Value'Result <= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Q.Num = 0 then Value'Result = 0.0)"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_sampling.checked_sqrt",
+        "name": "Checked_Sqrt",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+        "line": 24,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Sqrt'Result => X)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Checked_Sqrt'Result >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Checked_Sqrt'Result <= 2.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 0.0 then Checked_Sqrt'Result = 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X > 0.0 then Checked_Sqrt'Result > 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 1.0 then Checked_Sqrt'Result = 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 4.0 then Checked_Sqrt'Result = 2.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0 then Checked_Sqrt'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 1.0 then Checked_Sqrt'Result >= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "abs (Checked_Sqrt'Result * Checked_Sqrt'Result - X)\n         <= 1.0E-12"
+          }
+        ],
+        "contract_count": 11,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "sequential_sampling.draw",
+        "name": "Draw",
+        "kind": "procedure",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+        "line": 44,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(G => (G, Sigma), Sample => (G, Location, Sigma))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Sample >= Location - 18.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Sample <= Location + 18.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma = 0.0 then Sample = Location)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma = 0.0 then G.State = G.State'Old)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma <= 1.0 then Sample >= Location - 9.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma <= 1.0 then Sample <= Location + 9.0)"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [],
+        "imported": false
+      }
+    ],
+    "sources": [
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.adb",
+        "sha256": "f206e204440e140549e9898d4495a161d2660cef5364ecb78e5fb3f38dbb8eef"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "sha256": "b54444637c766d09c8e1b2027ad353ae8d1251bb729af636ef8ec594a473bb00"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.adb",
+        "sha256": "62673fa160f539305ac2f83fd32a0d9ca9912c1d6ac8fdbca2514f99c56511d6"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "sha256": "ae5482eb0776e516e881e09d1f5e2477402fee0df95d075c33391cbf251b8457"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_run.adb",
+        "sha256": "381d984e09ec7a408e48742388f2ecaa74b2936a5d74aa3c46f6eb73b730a561"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.adb",
+        "sha256": "1ee0c13fafedde3a6ea07185ccf390154d5c5a249257f083eafe264cb470f8a2"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+        "sha256": "5a3a90397a3a0e6471f6f9e3ca4b4f3281933edb37dc1d9fde59b47bc82ce264"
+      }
+    ],
+    "excluded_completions": [
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_run.adb",
+        "line": 16,
+        "name": "Sequential_Run",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.adb",
+        "line": 7,
+        "name": "Checked_Sqrt",
+        "reason": "SPARK_Mode Off completion"
+      }
+    ],
+    "insufficient": [],
+    "missing_native": [],
+    "invalid_native": [],
+    "unmatched_native": [],
+    "native_cross_check": false,
+    "complete": true
+  },
+  "ten_contract_target": {
+    "target_contracts": 10,
+    "total_entities": 11,
+    "entities_at_target": 8,
+    "entities_below_target": 3
+  },
+  "reused_contract_floor": {
+    "schema": "explicit-contract-clauses-v1",
+    "minimum_required": 5,
+    "minimum_observed": 5,
+    "functions": 33,
+    "procedures": 16,
+    "contracts": 275,
+    "entities": [
+      {
+        "identity": "hoeflin_boundary_models.calculation_payload",
+        "name": "Calculation_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 161,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.N = N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.Factor = Factor)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.Z = Z)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Calculation_Payload'Result.Score = Score)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Calculation_Payload'Result => (N, Factor, Z, Score))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.can_emit",
+        "name": "Can_Emit",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 196,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = No_Event then not Can_Emit'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = Options_Read then Can_Emit'Result = (Data.Trials >= 2))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = Example_Event then Can_Emit'Result = (Trace.Section = Examples))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Can_Emit'Result => (Trace, Event, Data))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.column_count",
+        "name": "Column_Count",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 141,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event in Simulation_Header_Event | Simulation_Row_Event then Column_Count'Result = 11)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event in Calculations_Header_Event | Calculation_Row_Event | Infinite_Row_Event then Column_Count'Result = 4)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event = Example_Event then Column_Count'Result = 2)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Event in No_Event | Options_Read | Examples_Header_Event then Column_Count'Result = 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Column_Count'Result => Event)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.decimal_image",
+        "name": "Decimal_Image",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 253,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Decimal_Image'Result then Valid_Column_Label (Text))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text'Length = 0 then not Decimal_Image'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Text'Length > 1 and then Text (Text'First) = '0' then not Decimal_Image'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Decimal_Image'Result => (N, Text))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.erfc_scaling",
+        "name": "Erfc_Scaling",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 64,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Raw in 0.0 .. 2.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Probability_Value (Erfc_Scaling'Result))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Erfc_Scaling'Result = 0.5 * Raw)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Erfc_Scaling'Result => Raw)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.example_payload",
+        "name": "Example_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 189,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Example_Payload'Result.Label_Length = Label_Length)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Example_Payload'Result.Value = Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Example_Payload'Result.N = 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Example_Payload'Result => (Label_Length, Value))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.inverse_bracket_acceptable",
+        "name": "Inverse_Bracket_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 26,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Inverse_Bracket_Acceptable'Result then Lower_SF >= P)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Inverse_Bracket_Acceptable'Result then Upper_SF <= P)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Lower_SF >= P and then Upper_SF <= P then Inverse_Bracket_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Inverse_Bracket_Acceptable'Result => (P, Lower_SF, Upper_SF))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.log_acceptable",
+        "name": "Log_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 41,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Log_Acceptable'Result then Value >= -38.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Log_Acceptable'Result then Value <= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in -38.0 .. 0.0 then Log_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Log_Acceptable'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.note",
+        "name": "Note",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 231,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Trace = Transition (Trace'Old, Event, Data))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Trace.Last_Event = Event)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Trace.Data = Data)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trace => (Trace, Event, Data))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.numeric_format",
+        "name": "Numeric_Format",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 238,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Numeric_Format'Result then Digits_After = 12 or else Digits_After = 14)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Digits_After = 12 then Numeric_Format'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Digits_After = 14 then Numeric_Format'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Numeric_Format'Result => Digits_After)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_decimal_image",
+        "name": "Observe_Decimal_Image",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 259,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Decimal_Image (N, Text)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid_Column_Label (Text)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Text'Length > 0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (N, Text))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_erfc",
+        "name": "Observe_Erfc",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 82,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Raw in 0.0 .. 2.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Scaled = Erfc_Scaling (Raw)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Probability_Value (Scaled)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Scaled = Erfc_Scaling (Raw)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Raw, Scaled))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_inverse_bracket",
+        "name": "Observe_Inverse_Bracket",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 88,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Inverse_Bracket_Acceptable (P, Lower_SF, Upper_SF)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Lower_SF >= P"
+          },
+          {
+            "aspect": "post",
+            "clause": "Upper_SF <= P"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (P, Lower_SF, Upper_SF))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_label",
+        "name": "Observe_Label",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 293,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Length = Text'Length"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Commas <= Text'Length"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Line_Feeds <= Text'Length"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Carriage_Returns <= Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Projection.Length = Text'Length"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Text, Projection))"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_log_radius",
+        "name": "Observe_Log_Radius",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 99,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Log_Acceptable (Log_U)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Radius_Acceptable (U, Radius)"
+          },
+          {
+            "aspect": "post",
+            "clause": "U > 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Radius in 0.0 .. 9.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (U, Log_U, Radius))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_number",
+        "name": "Observe_Number",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 277,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Value = Value"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Projection.Decimal_Places = Decimal_Places"
+          },
+          {
+            "aspect": "post",
+            "clause": "Projection.Value = Value"
+          },
+          {
+            "aspect": "post",
+            "clause": "Projection.Decimal_Places = Decimal_Places"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (Value, Decimal_Places, Projection))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_probability",
+        "name": "Observe_Probability",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 76,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Probability_Value (Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value <= 1.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_rare_quantile",
+        "name": "Observe_Rare_Quantile",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 93,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Rare_Quantile_Acceptable (Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= 3.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value <= 10.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_sqrt",
+        "name": "Observe_Sqrt",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 70,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Sqrt_Acceptable (X, Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0 then Value <= 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (X, Value))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.observe_trig",
+        "name": "Observe_Trig",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 104,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Trig_Acceptable (Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value >= -1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value <= 1.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.options_payload",
+        "name": "Options_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 153,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Options_Payload'Result.Trials = Trials)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Options_Payload'Result.Seed = Seed)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Options_Payload'Result.N = 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Options_Payload'Result => (Trials, Seed))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.probability_value",
+        "name": "Probability_Value",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 8,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Probability_Value'Result then Value >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Probability_Value'Result then Value <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in 0.0 .. 1.0 then Probability_Value'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Probability_Value'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.project_label",
+        "name": "Project_Label",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 286,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Length = Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Commas <= Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Line_Feeds <= Text'Length"
+          },
+          {
+            "aspect": "post",
+            "clause": "Project_Label'Result.Carriage_Returns <= Text'Length"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Project_Label'Result => Text)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.project_number",
+        "name": "Project_Number",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 269,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Numeric_Format (Decimal_Places)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Project_Number'Result.Value = Value)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Project_Number'Result.Decimal_Places = Decimal_Places)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Project_Number'Result => (Value, Decimal_Places))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.radius_acceptable",
+        "name": "Radius_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 48,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Radius_Acceptable'Result then U in 2.0 ** (-53) .. 1.0 - 2.0 ** (-53))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Radius_Acceptable'Result then Radius in 0.0 .. 9.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if U in 2.0 ** (-53) .. 1.0 - 2.0 ** (-53)\n      and then Radius in 0.0 .. 9.0 then Radius_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Radius_Acceptable'Result => (U, Radius))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.rare_quantile_acceptable",
+        "name": "Rare_Quantile_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 34,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Rare_Quantile_Acceptable'Result then Value >= 3.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Rare_Quantile_Acceptable'Result then Value <= 10.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in 3.0 .. 10.0 then Rare_Quantile_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Rare_Quantile_Acceptable'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.simulation_payload",
+        "name": "Simulation_Payload",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 171,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.N = N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Trials = Trials)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Mean = Mean)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Variance = Variance)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Counts = C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Rate_Two = Rate_Two)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Rate_Three = Rate_Three)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Expected_Two = Expected_Two)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Simulation_Payload'Result.Expected_Three = Expected_Three)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Simulation_Payload'Result => (N, Trials, Mean, Variance, C, Rate_Two, Rate_Three, Expected_Two, Expected_Three))"
+          }
+        ],
+        "contract_count": 11,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.sqrt_acceptable",
+        "name": "Sqrt_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 15,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sqrt_Acceptable'Result then Value >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sqrt_Acceptable'Result then (if X <= 1.0 then Value <= 1.0) and then (if X >= 1.0E-6 then Value >= 0.0005))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value >= 0.0\n      and then (if X <= 1.0 then Value <= 1.0)\n      and then (if X >= 1.0E-6 then Value >= 0.0005) then Sqrt_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Sqrt_Acceptable'Result => (X, Value))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.transition",
+        "name": "Transition",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 216,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Last_Event = Event"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Events = Trace.Events + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Columns = Column_Count (Event)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Data = Data"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Last_Call_Admissible = Can_Emit (Trace, Event, Data)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Transition'Result.Section =\n         (case Event is\n            when Simulation_Header_Event => Simulation,\n            when Calculations_Header_Event => Calculations,\n            when Examples_Header_Event => Examples,\n            when others => Trace.Section)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Transition'Result => (Trace, Event, Data))"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.trig_acceptable",
+        "name": "Trig_Acceptable",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 57,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Trig_Acceptable'Result then Value >= -1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Trig_Acceptable'Result then Value <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Value in -1.0 .. 1.0 then Trig_Acceptable'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Trig_Acceptable'Result => Value)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_boundary_models.valid_column_label",
+        "name": "Valid_Column_Label",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "line": 245,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Column_Label'Result then Label'Length > 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid_Column_Label'Result then (for all C of Label => C /= ',' and then C /= ASCII.LF and then C /= ASCII.CR))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Label'Length > 0 and then (for all C of Label => C /= ',' and then C /= ASCII.LF and then C /= ASCII.CR) then Valid_Column_Label'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid_Column_Label'Result => Label)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.composite",
+        "name": "Composite",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 54,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Composite'Result >= Mean_Z)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Scale = 1.0 then Composite'Result = Mean_Z)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Mean_Z = 0.0 then Composite'Result = 0.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Composite'Result => (Mean_Z, Scale))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.iq",
+        "name": "IQ",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 62,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Z = 0.0 => IQ'Result = 100.0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Z = 20_000.0 => IQ'Result = 320_100.0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "others => IQ'Result = 100.0 + 16.0 * Z"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(IQ'Result => Z)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.latent_reliability",
+        "name": "Latent_Reliability",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 38,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Latent_Reliability'Result in 0.0 .. 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 0 then Latent_Reliability'Result = 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 1_000 then Latent_Reliability'Result = 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Latent_Reliability'Result => (N, R))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.observe",
+        "name": "Observe",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 86,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Valid (C)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "C.Total < Sample_Count'Last"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Rare_Cutoff >= 3.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Total = C.Total'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Above_Two = C.Above_Two'Old + (if Z > 2.0 then 1 else 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Above_Three = C.Above_Three'Old + (if Z > 3.0 then 1 else 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "C.Above_Rare = C.Above_Rare'Old + (if Z > Rare_Cutoff then 1 else 0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(C => (C, Z, Rare_Cutoff))"
+          }
+        ],
+        "contract_count": 10,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.threshold",
+        "name": "Threshold",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 46,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Threshold'Result <= Quantile)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Scale = 1.0 then Threshold'Result = Quantile)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Quantile = 0.0 then Threshold'Result = 0.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Threshold'Result => (Quantile, Scale))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.valid",
+        "name": "Valid",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 77,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then C.Above_Rare <= C.Above_Three)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then C.Above_Three <= C.Above_Two and then C.Above_Two <= C.Total)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C.Above_Rare <= C.Above_Three and then C.Above_Three <= C.Above_Two and then C.Above_Two <= C.Total then Valid'Result)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid'Result => C)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.variance_factor",
+        "name": "Variance_Factor",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 30,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Variance_Factor'Result = Real (Variance_Numerator (N, R)) / Real (1_000 * Long_Long_Integer (N)))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if N = 1 then Variance_Factor'Result = 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 1_000 then Variance_Factor'Result = 1.0)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Variance_Factor'Result => (N, R))"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "hoeflin_core.variance_numerator",
+        "name": "Variance_Numerator",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "line": 13,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Variance_Numerator'Result = 1_000 + Long_Long_Integer (R) * Long_Long_Integer (N - 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Variance_Numerator'Result <= 1_000 * Long_Long_Integer (N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Variance_Numerator'Result >= 1_000"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if N = 1 then Variance_Numerator'Result = 1_000)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 0 then Variance_Numerator'Result = 1_000)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 1_000 then\n          Variance_Numerator'Result = 1_000 * Long_Long_Integer (N))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if N >= 2 then\n          Variance_Numerator'Result >= 1_000 + Long_Long_Integer (R))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if N >= 2 and R > 0 then Variance_Numerator'Result > 1_000)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Variance_Numerator'Result => (N, R))"
+          }
+        ],
+        "contract_count": 10,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.check_inverse_bracket",
+        "name": "Check_Inverse_Bracket",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 39,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P > 0.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P < 1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Survival (Lo) >= P"
+          },
+          {
+            "aspect": "post",
+            "clause": "Survival (Hi) <= P"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(null => (P, Lo, Hi))"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.checked_radius",
+        "name": "Checked_Radius",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 101,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Radius'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Checked_Radius'Result <= 9.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Hoeflin_Boundary_Models.Radius_Acceptable (U, Checked_Radius'Result))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Radius'Result => U)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.inverse_survival",
+        "name": "Inverse_Survival",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 23,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P > 0.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "P < 1.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Inverse_Survival'Result in -12.0 .. 12.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Inverse_Survival'Result => P)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.normal_pair",
+        "name": "Normal_Pair",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 63,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "X >= -9.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "X <= 9.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y >= -9.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Y <= 9.0"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((G, X, Y) => G)"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.rare_quantile",
+        "name": "Rare_Quantile",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 35,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Rare_Quantile'Result >= 3.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Rare_Quantile'Result <= 10.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Hoeflin_Boundary_Models.Rare_Quantile_Acceptable (Rare_Quantile'Result))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Rare_Quantile'Result => null)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.reset",
+        "name": "Reset",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 52,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "State_Value (G) = Seed"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(G => Seed)"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Seed = 0 => G.State = 0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "Seed = Interfaces.Unsigned_64'Last => G.State = Interfaces.Unsigned_64'Last"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "others => G.State = Seed"
+          }
+        ],
+        "contract_count": 6,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.square_root",
+        "name": "Square_Root",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 28,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "Square_Root'Result >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0 then Square_Root'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 1.0E-6 then Square_Root'Result >= 0.0005)"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Square_Root'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.state_value",
+        "name": "State_Value",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 46,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "G.State = 0 => State_Value'Result = 0"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "G.State = Interfaces.Unsigned_64'Last => State_Value'Result = Interfaces.Unsigned_64'Last"
+          },
+          {
+            "aspect": "contract_cases",
+            "clause": "others => State_Value'Result = G.State"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(State_Value'Result => G)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.survival",
+        "name": "Survival",
+        "kind": "function",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 17,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Survival'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Survival'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(Hoeflin_Boundary_Models.Probability_Value (Survival'Result))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Survival'Result => X)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      },
+      {
+        "identity": "normal_support.uniform",
+        "name": "Uniform",
+        "kind": "procedure",
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "line": 57,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "post",
+            "clause": "(State_Value (G) = State_Value (G)'Old * 6_364_136_223_846_793_005 + 1_442_695_040_888_963_407)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(U >= 2.0 ** (-53))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(U <= 1.0 - 2.0 ** (-53))"
+          },
+          {
+            "aspect": "depends",
+            "clause": "((G, U) => G)"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [],
+        "imported": false
+      }
+    ],
+    "sources": [
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.adb",
+        "sha256": "5267b007bb39bcac90ede078d990f76b4d00f5c66ffca86670ca1c21a714f042"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_boundary_models.ads",
+        "sha256": "839ebab31197f22730951148820c37557a73866d6ed3dbb70a45298acd78cce3"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb",
+        "sha256": "199ab5501247cbea6d4c2fe3787a49ffd8212b13b4d90d9c07385d68bb8311d1"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/hoeflin_core.ads",
+        "sha256": "4b8d3b4011151fbafdcef628a47bbcf2b266bf564b97958dab372c88c1a6ec27"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "sha256": "b6450eaf8af3f0d935e9a53385c1fb421e0002a2a464ab6ce54b69285a552acb"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.ads",
+        "sha256": "2d205ee1fbd3494bd3ab44c98c012b9d07699dfd0232be3e84a68ac3183e5f1f"
+      }
+    ],
+    "excluded_completions": [
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 7,
+        "name": "C_Erfc",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 10,
+        "name": "Square_Root",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 25,
+        "name": "Survival",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 44,
+        "name": "Check_Inverse_Bracket",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 75,
+        "name": "Rare_Quantile",
+        "reason": "SPARK_Mode Off completion"
+      },
+      {
+        "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+        "line": 107,
+        "name": "Checked_Radius",
+        "reason": "SPARK_Mode Off completion"
+      }
+    ],
+    "insufficient": [],
+    "missing_native": [],
+    "invalid_native": [],
+    "unmatched_native": [],
+    "native_cross_check": false,
+    "complete": true
+  },
+  "trusted_reused_completions": [
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "line": 7,
+      "name": "C_Erfc",
+      "reason": "SPARK_Mode Off completion"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "line": 10,
+      "name": "Square_Root",
+      "reason": "SPARK_Mode Off completion"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "line": 25,
+      "name": "Survival",
+      "reason": "SPARK_Mode Off completion"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "line": 44,
+      "name": "Check_Inverse_Bracket",
+      "reason": "SPARK_Mode Off completion"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "line": 75,
+      "name": "Rare_Quantile",
+      "reason": "SPARK_Mode Off completion"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/ada/src/normal_support.adb",
+      "line": 107,
+      "name": "Checked_Radius",
+      "reason": "SPARK_Mode Off completion"
+    }
+  ],
+  "excluded_cli": {
+    "path": "analyses/sequential-conditional-means/ada/src/sequential_run.adb",
+    "reason": "SPARK_Mode Off command-line, filesystem and diagnostics boundary"
+  },
+  "build": {
+    "argv": [
+      "/home/anonymous/.config/alire/cache/dependencies/gprbuild_22.0.1_24dfc1b5/bin/gprbuild",
+      "-P",
+      "sequential.gpr",
+      "-p",
+      "-f",
+      "-j2"
+    ],
+    "cwd": "/tmp/sequential-fresh-ml0wtp6t/analyses/sequential-conditional-means/ada",
+    "started_utc": "2026-11-14T20:28:15.904255+00:00",
+    "finished_utc": "2026-11-14T20:28:17.625095+00:00",
+    "elapsed_seconds": 1.7208417920628563,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "8c98226a36e952cc8bbd6f37dd9bab2029c1056efaf27008e9a401c1facea052"
+  },
+  "proof": {
+    "argv": [
+      "/home/anonymous/.config/alire/cache/dependencies/gnatprove_13.2.1_28fc3583/bin/gnatprove",
+      "-P",
+      "sequential_proof.gpr",
+      "--mode=all",
+      "--level=2",
+      "--steps=0",
+      "--checks-as-errors",
+      "--warnings=error",
+      "--report=statistics",
+      "--counterexamples=off",
+      "-f",
+      "-U",
+      "-j2",
+      "--no-subprojects",
+      "--timeout=30",
+      "--prover=cvc5,z3,altergo,Colibri_Classic,Yices",
+      "--why3-conf=/home/anonymous/Documents/ChatGPT/composite_iq_checked_claims/analyses/sequential-conditional-means/evidence/campaign-20261114-current/provers.conf"
+    ],
+    "cwd": "/tmp/sequential-fresh-ml0wtp6t/analyses/sequential-conditional-means/ada",
+    "started_utc": "2026-11-14T20:28:17.625376+00:00",
+    "finished_utc": "2026-11-14T20:38:31.722951+00:00",
+    "elapsed_seconds": 614.0975994720357,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "163877f878983dd2ba391433ed50cd133ab363505fe034741ecebc2fdc65d6eb"
+  },
+  "native": {
+    "categories": {
+      "Data Dependencies": {
+        "total": 54,
+        "flow": 54,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Initialization": {
+        "total": 16,
+        "flow": 16,
+        "provers": 0,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Run-time Checks": {
+        "total": 229,
+        "flow": 0,
+        "provers": 229,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Assertions": {
+        "total": 8,
+        "flow": 0,
+        "provers": 8,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Functional Contracts": {
+        "total": 69,
+        "flow": 0,
+        "provers": 69,
+        "justified": 0,
+        "unproved": 0
+      },
+      "Total": {
+        "total": 430,
+        "flow": 124,
+        "provers": 306,
+        "justified": 0,
+        "unproved": 0
+      }
+    },
+    "analyzed_units": 6,
+    "contains_not_proved": false,
+    "report_sha256": "9c6c8e6f83ed30a7650af47129860fddd211d97d1419627ab274461b8055403b"
+  },
+  "coverage": {
+    "source_names": [
+      "sequential_core.adb",
+      "sequential_core.ads",
+      "sequential_experiments.adb",
+      "sequential_experiments.ads",
+      "sequential_sampling.adb",
+      "sequential_sampling.ads"
+    ],
+    "analysis_mode": "all",
+    "proof_metadata_complete": true,
+    "counts": {
+      "all": 13,
+      "spec": 1,
+      "no": 0
+    },
+    "total_entities": 14,
+    "entities": [
+      {
+        "name": "Sequential_Core",
+        "file": "sequential_core.ads",
+        "line": 9,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_core.ads",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Core.D_Numerator",
+        "file": "sequential_core.ads",
+        "line": 26,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_core.ads",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Core.Valid",
+        "file": "sequential_core.ads",
+        "line": 49,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_core.ads",
+            "line": 49
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Core.Calculate",
+        "file": "sequential_core.ads",
+        "line": 92,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_core.ads",
+            "line": 92
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Core.Limits",
+        "file": "sequential_core.ads",
+        "line": 157,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_core.ads",
+            "line": 157
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Experiments",
+        "file": "sequential_experiments.ads",
+        "line": 11,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_experiments.ads",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Experiments.Value",
+        "file": "sequential_experiments.ads",
+        "line": 16,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_experiments.ads",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Experiments.From_Coefficients",
+        "file": "sequential_experiments.ads",
+        "line": 36,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_experiments.ads",
+            "line": 36
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Experiments.Reset",
+        "file": "sequential_experiments.ads",
+        "line": 83,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_experiments.ads",
+            "line": 83
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Experiments.Add",
+        "file": "sequential_experiments.ads",
+        "line": 90,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_experiments.ads",
+            "line": 90
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Experiments.Finish",
+        "file": "sequential_experiments.ads",
+        "line": 117,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_experiments.ads",
+            "line": 117
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Sampling",
+        "file": "sequential_sampling.ads",
+        "line": 9,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_sampling.ads",
+            "line": 9
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Sampling.Checked_Sqrt",
+        "file": "sequential_sampling.ads",
+        "line": 24,
+        "status": "spec",
+        "sloc": [
+          {
+            "file": "sequential_sampling.ads",
+            "line": 24
+          }
+        ]
+      },
+      {
+        "name": "Sequential_Sampling.Draw",
+        "file": "sequential_sampling.ads",
+        "line": 44,
+        "status": "all",
+        "sloc": [
+          {
+            "file": "sequential_sampling.ads",
+            "line": 44
+          }
+        ]
+      }
+    ],
+    "raw_files": [
+      {
+        "path": "obj-proof/gnatprove/hoeflin_boundary_models.spark",
+        "sha256": "23b99ff1de440906b5ecb78df23d0cea9f96abdd838f76607821ecc14ef4dce3",
+        "entity_count": 32,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/hoeflin_core.spark",
+        "sha256": "0f59f51bd2507451675425e54d37badacafa60df41697fcf797f13423d26a6bd",
+        "entity_count": 9,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/normal_support.spark",
+        "sha256": "921af4fe39693d0e634909da4e08c6c5d2854e11ad9e4b3f9afe9e5f7f8b9989",
+        "entity_count": 11,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/sequential_core.spark",
+        "sha256": "f572cd72d0ed57645f97398abcc128356a7277d0f4b1374850205f6d2a6ae59a",
+        "entity_count": 5,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/sequential_experiments.spark",
+        "sha256": "27a20428e8fdb4706a5ebc4135ced412dfe3a2ef766f9a72217ca9e26e2c5cc1",
+        "entity_count": 6,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/sequential_run.spark",
+        "sha256": "a020309e96daf3931c6e07cc7f8a66260beac3ca8f3762146b9479bd704ad3bc",
+        "entity_count": 0,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      },
+      {
+        "path": "obj-proof/gnatprove/sequential_sampling.spark",
+        "sha256": "b5231096c31c1251f134a6ad39edc4e0742732d5935fbacc7439d42fd056b822",
+        "entity_count": 3,
+        "sections_present": [
+          "assumptions",
+          "flow",
+          "pragma_assume",
+          "progress",
+          "proof",
+          "session_map",
+          "spark",
+          "stop_reason",
+          "timings"
+        ]
+      }
+    ],
+    "pragma_assume": [],
+    "suppressed": [],
+    "no_assumptions_or_suppressions": true
+  },
+  "native_contract_floor": {
+    "schema": "explicit-contract-clauses-v1",
+    "minimum_required": 5,
+    "minimum_observed": 5,
+    "functions": 8,
+    "procedures": 3,
+    "contracts": 139,
+    "entities": [
+      {
+        "identity": "sequential_core.calculate",
+        "name": "Calculate",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 92,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Calculate'Result => (R, K, C))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Valid (R, K, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Prediction.Num = Long_Long_Integer (R) * Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Prediction.Den = D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Mean.Num = Long_Long_Integer (R) *\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Mean.Den = Long_Long_Integer (R + K) *\n         D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Population_Variance.Num =\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Population_Variance.Den =\n         Scale * Long_Long_Integer (R + K)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Conditional_Variance.Num =\n         Long_Long_Integer (K) * (Scale - Long_Long_Integer (C)) *\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Conditional_Variance.Den =\n         Scale * Long_Long_Integer (R + K) * Long_Long_Integer (R + K) *\n         D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Regression_Coefficient.Num = Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Regression_Coefficient.Den = D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Residual_Variance.Num =\n         (Scale - Long_Long_Integer (C)) *\n         (D_Numerator (R, C) + Long_Long_Integer (C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Residual_Variance.Den = Scale * D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Common_Eigenvalue.Num =\n         D_Numerator (Count (R + K), C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Common_Eigenvalue.Den = Scale"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Contrast_Eigenvalue.Num = Scale - Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Contrast_Eigenvalue.Den = Scale"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Mean.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Population_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Conditional_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Residual_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Calculate'Result.Has_Inverse = (R = 1 or else C < 1_000)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R = 1 then\n         Calculate'Result.Inverse_Diagonal.Num = 1 and then\n         Calculate'Result.Inverse_Diagonal.Den = 1 and then\n         Calculate'Result.Inverse_Off_Diagonal.Num = 0 and then\n         Calculate'Result.Inverse_Off_Diagonal.Den = 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R > 1 and then C < 1_000 then\n         Calculate'Result.Inverse_Diagonal.Num =\n           Scale * (D_Numerator (R, C) - Long_Long_Integer (C)) and then\n         Calculate'Result.Inverse_Diagonal.Den =\n           (Scale - Long_Long_Integer (C)) * D_Numerator (R, C) and then\n         Calculate'Result.Inverse_Off_Diagonal.Num = -Scale * Long_Long_Integer (C) and then\n         Calculate'Result.Inverse_Off_Diagonal.Den =\n           (Scale - Long_Long_Integer (C)) * D_Numerator (R, C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if not Calculate'Result.Has_Inverse then\n         Calculate'Result.Inverse_Diagonal.Num = 0 and then\n         Calculate'Result.Inverse_Diagonal.Den = 1 and then\n         Calculate'Result.Inverse_Off_Diagonal.Num = 0 and then\n         Calculate'Result.Inverse_Off_Diagonal.Den = 1)"
+          }
+        ],
+        "contract_count": 27,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_core.d_numerator",
+        "name": "D_Numerator",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 26,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(D_Numerator'Result => (N, C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "D_Numerator'Result = Scale + Long_Long_Integer (C) *\n         Long_Long_Integer (N - 1)"
+          },
+          {
+            "aspect": "post",
+            "clause": "D_Numerator'Result >= Scale * (2 - Long_Long_Integer (N))"
+          },
+          {
+            "aspect": "post",
+            "clause": "D_Numerator'Result <= Scale * Long_Long_Integer (N)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if N = 1 then D_Numerator'Result = Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 0 then D_Numerator'Result = Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 1_000 then\n         D_Numerator'Result = Scale * Long_Long_Integer (N))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = -1_000 then\n         D_Numerator'Result = Scale * (2 - Long_Long_Integer (N)))"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C >= 0 then D_Numerator'Result >= Scale)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C <= 0 then D_Numerator'Result <= Scale)"
+          }
+        ],
+        "contract_count": 11,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_core.limits",
+        "name": "Limits",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 157,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Limits'Result => (R, C))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "C >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Prediction.Num = Long_Long_Integer (R) * Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Prediction.Den = D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Mean.Num = Limits'Result.Prediction.Num"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Mean.Den = Limits'Result.Prediction.Den"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Population_Variance.Num = Long_Long_Integer (C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Population_Variance.Den = Scale"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Conditional_Variance.Num =\n         Long_Long_Integer (C) * (Scale - Long_Long_Integer (C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Conditional_Variance.Den = Scale * D_Numerator (R, C)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Prediction.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Population_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Limits'Result.Conditional_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 0 then Limits'Result.Mean.Num = 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 1_000 then\n         Limits'Result.Mean.Num = Limits'Result.Mean.Den)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if C = 0 or else C = 1_000 then\n         Limits'Result.Conditional_Variance.Num = 0)"
+          }
+        ],
+        "contract_count": 17,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_core.valid",
+        "name": "Valid",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "line": 49,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Valid'Result => (R, K, C))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Valid'Result =\n         (R + K <= Max_Total and then\n          D_Numerator (Count (R + K), C) >= 0 and then\n          D_Numerator (R, C) > 0 and then\n          D_Numerator (R, C) + Long_Long_Integer (C) >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then R + K <= Max_Total)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then\n         D_Numerator (Count (R + K), C) >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then D_Numerator (R, C) > 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Valid'Result then\n         D_Numerator (R, C) + Long_Long_Integer (C) >= 0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R + K > Max_Total then not Valid'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R + K <= Max_Total and then\n         D_Numerator (Count (R + K), C) < 0 then not Valid'Result)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if R + K <= Max_Total and then C >= 0 then\n         Valid'Result)"
+          }
+        ],
+        "contract_count": 10,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.add",
+        "name": "Add",
+        "kind": "procedure",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 90,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Acc => (Acc, X))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "X in -Sample_Limit .. Sample_Limit"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Count < Max_Samples"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Sum + X in Sum_Value"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Sum_Squares + X * X in Square_Sum_Value"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Count = Acc.Count'Old + 1"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum = Acc.Sum'Old + X"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum_Squares = Acc.Sum_Squares'Old + X * X"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum_Squares >= Acc.Sum_Squares'Old"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 0.0 then Acc.Sum >= Acc.Sum'Old)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 0.0 then Acc.Sum <= Acc.Sum'Old)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 0.0 then\n         Acc.Sum = Acc.Sum'Old and then\n         Acc.Sum_Squares = Acc.Sum_Squares'Old)"
+          }
+        ],
+        "contract_count": 13,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.finish",
+        "name": "Finish",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 117,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Finish'Result => Acc)"
+          },
+          {
+            "aspect": "pre",
+            "clause": "Acc.Count >= 2"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Count = Acc.Count"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Mean = Acc.Sum / Long_Float (Acc.Count)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Unbiased_Variance = Long_Float'Max\n         (0.0, (Acc.Sum_Squares - Acc.Sum * Acc.Sum / Long_Float (Acc.Count)) /\n          Long_Float (Acc.Count - 1))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Unbiased_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Unbiased_Variance <= Square_Sum_Value'Last"
+          },
+          {
+            "aspect": "post",
+            "clause": "Finish'Result.Mean in -1.0E10 .. 1.0E10"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Acc.Sum >= 0.0 then Finish'Result.Mean >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Acc.Sum <= 0.0 then Finish'Result.Mean <= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Acc.Sum = 0.0 then Finish'Result.Mean = 0.0)"
+          }
+        ],
+        "contract_count": 12,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.from_coefficients",
+        "name": "From_Coefficients",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 36,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(From_Coefficients'Result => (F, A))"
+          },
+          {
+            "aspect": "pre",
+            "clause": "A in -20.0 .. 20.0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "F.Population_Variance.Num >= 0"
+          },
+          {
+            "aspect": "pre",
+            "clause": "F.Conditional_Variance.Num >= 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Prediction = Value (F.Prediction) * A"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Mean = Value (F.Mean) * A"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Population_Variance =\n         Value (F.Population_Variance)"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Conditional_Variance =\n         Value (F.Conditional_Variance)"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Prediction =\n         IQ_Origin + IQ_SD * From_Coefficients'Result.Prediction"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Mean =\n         IQ_Origin + IQ_SD * From_Coefficients'Result.Mean"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Population_Variance =\n         IQ_Variance * From_Coefficients'Result.Population_Variance"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Conditional_Variance =\n         IQ_Variance * From_Coefficients'Result.Conditional_Variance"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Population_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.Conditional_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Population_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "From_Coefficients'Result.IQ_Conditional_Variance >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if A = 0.0 then\n         From_Coefficients'Result.Prediction = 0.0 and then\n         From_Coefficients'Result.Mean = 0.0)"
+          }
+        ],
+        "contract_count": 18,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.reset",
+        "name": "Reset",
+        "kind": "procedure",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 83,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Acc => null)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Count = 0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum = 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Acc.Sum_Squares = 0.0"
+          }
+        ],
+        "contract_count": 5,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_experiments.value",
+        "name": "Value",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "line": 16,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Value'Result => Q)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value'Result = Long_Float (Q.Num) / Long_Float (Q.Den)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Value'Result in -1.0E19 .. 1.0E19"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Q.Num >= 0 then Value'Result >= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Q.Num <= 0 then Value'Result <= 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Q.Num = 0 then Value'Result = 0.0)"
+          }
+        ],
+        "contract_count": 7,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_sampling.checked_sqrt",
+        "name": "Checked_Sqrt",
+        "kind": "function",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+        "line": 24,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(Checked_Sqrt'Result => X)"
+          },
+          {
+            "aspect": "post",
+            "clause": "Checked_Sqrt'Result >= 0.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Checked_Sqrt'Result <= 2.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 0.0 then Checked_Sqrt'Result = 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X > 0.0 then Checked_Sqrt'Result > 0.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 1.0 then Checked_Sqrt'Result = 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X = 4.0 then Checked_Sqrt'Result = 2.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X <= 1.0 then Checked_Sqrt'Result <= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if X >= 1.0 then Checked_Sqrt'Result >= 1.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "abs (Checked_Sqrt'Result * Checked_Sqrt'Result - X)\n         <= 1.0E-12"
+          }
+        ],
+        "contract_count": 11,
+        "native_statuses": [
+          "spec"
+        ],
+        "imported": false
+      },
+      {
+        "identity": "sequential_sampling.draw",
+        "name": "Draw",
+        "kind": "procedure",
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+        "line": 44,
+        "contracts": [
+          {
+            "aspect": "global",
+            "clause": "null"
+          },
+          {
+            "aspect": "depends",
+            "clause": "(G => (G, Sigma), Sample => (G, Location, Sigma))"
+          },
+          {
+            "aspect": "post",
+            "clause": "Sample >= Location - 18.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "Sample <= Location + 18.0"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma = 0.0 then Sample = Location)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma = 0.0 then G.State = G.State'Old)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma <= 1.0 then Sample >= Location - 9.0)"
+          },
+          {
+            "aspect": "post",
+            "clause": "(if Sigma <= 1.0 then Sample <= Location + 9.0)"
+          }
+        ],
+        "contract_count": 8,
+        "native_statuses": [
+          "all"
+        ],
+        "imported": false
+      }
+    ],
+    "sources": [
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.adb",
+        "sha256": "f206e204440e140549e9898d4495a161d2660cef5364ecb78e5fb3f38dbb8eef"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+        "sha256": "b54444637c766d09c8e1b2027ad353ae8d1251bb729af636ef8ec594a473bb00"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.adb",
+        "sha256": "62673fa160f539305ac2f83fd32a0d9ca9912c1d6ac8fdbca2514f99c56511d6"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+        "sha256": "ae5482eb0776e516e881e09d1f5e2477402fee0df95d075c33391cbf251b8457"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.adb",
+        "sha256": "1ee0c13fafedde3a6ea07185ccf390154d5c5a249257f083eafe264cb470f8a2"
+      },
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+        "sha256": "5a3a90397a3a0e6471f6f9e3ca4b4f3281933edb37dc1d9fde59b47bc82ce264"
+      }
+    ],
+    "excluded_completions": [
+      {
+        "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.adb",
+        "line": 7,
+        "name": "Checked_Sqrt",
+        "reason": "SPARK_Mode Off completion"
+      }
+    ],
+    "insufficient": [],
+    "missing_native": [],
+    "invalid_native": [],
+    "unmatched_native": [],
+    "native_cross_check": true,
+    "complete": true
+  },
+  "missing_bodies": [],
+  "trusted_new_entities": [
+    "Sequential_Sampling.Checked_Sqrt"
+  ],
+  "unexpected_spec_entities": [],
+  "runtime": {
+    "argv": [
+      "/tmp/sequential-fresh-ml0wtp6t/analyses/sequential-conditional-means/ada/bin/sequential_run",
+      "200000"
+    ],
+    "cwd": "/home/anonymous/Documents/ChatGPT/composite_iq_checked_claims/analyses/sequential-conditional-means/evidence/campaign-20261114-current/runtime",
+    "started_utc": "2026-11-14T20:38:31.911311+00:00",
+    "finished_utc": "2026-11-14T20:38:32.676897+00:00",
+    "elapsed_seconds": 0.765593601972796,
+    "returncode": 0,
+    "timed_out": false,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "validation": {
+    "paper": {
+      "iq_rows": 9,
+      "matrix_cases": 17,
+      "counterexample_checked": true,
+      "rounding_entries": 27,
+      "certificate_integers": 74,
+      "standardized_rows": 3,
+      "limit_rows": 3
+    },
+    "calculations": {
+      "calculation_rows": 20,
+      "matrix_cross_checks": 20,
+      "limit_rows": 16
+    },
+    "simulations": {
+      "simulation_rows": 46,
+      "minimum_trials": 200000,
+      "maximum_mean_standard_errors": 1.525037766488471
+    },
+    "checks": {
+      "identity_checks": 18,
+      "maximum_absolute_error": 1.77635683940025e-15
+    },
+    "complete": true
+  },
+  "finished_utc": "2026-11-14T20:38:32.738207+00:00",
+  "artifacts": [
+    {
+      "path": "build.log",
+      "sha256": "8c98226a36e952cc8bbd6f37dd9bab2029c1056efaf27008e9a401c1facea052"
+    },
+    {
+      "path": "gnatprove.out",
+      "sha256": "9c6c8e6f83ed30a7650af47129860fddd211d97d1419627ab274461b8055403b"
+    },
+    {
+      "path": "proof.log",
+      "sha256": "163877f878983dd2ba391433ed50cd133ab363505fe034741ecebc2fdc65d6eb"
+    },
+    {
+      "path": "provers.conf",
+      "sha256": "2097d660d64be2ff574554435c33de07e9bdcb6f51b72aa1af16e6583c1a5538"
+    },
+    {
+      "path": "runtime/calculation.csv",
+      "sha256": "8f303d9bc740c9a957934419033f7dea7a55ef6672e25484d290c9d340d42cef"
+    },
+    {
+      "path": "runtime/checks.csv",
+      "sha256": "9c31b11d17cd9ddfdb34044ba67b24a9393d0cc09dde92efd869e2b6bfd728da"
+    },
+    {
+      "path": "runtime/simulation.csv",
+      "sha256": "d4647eb637d7b2e3520a7bf694b1de8ba2eca7d281e8c41c36d53ba8e1c8a3a8"
+    },
+    {
+      "path": "runtime/validation.json",
+      "sha256": "a97044f76d104d586d83aca3986084099ea623ecbcbe617f23d13789dcb17b60"
+    },
+    {
+      "path": "runtime.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sources.tar.gz",
+      "sha256": "fb1eacf090285881912edbe664a1226dbda2f267924f4a9e382899e70239b691"
+    },
+    {
+      "path": "spark/obj-proof/gnatprove/hoeflin_boundary_models.spark",
+      "sha256": "23b99ff1de440906b5ecb78df23d0cea9f96abdd838f76607821ecc14ef4dce3"
+    },
+    {
+      "path": "spark/obj-proof/gnatprove/hoeflin_core.spark",
+      "sha256": "0f59f51bd2507451675425e54d37badacafa60df41697fcf797f13423d26a6bd"
+    },
+    {
+      "path": "spark/obj-proof/gnatprove/normal_support.spark",
+      "sha256": "921af4fe39693d0e634909da4e08c6c5d2854e11ad9e4b3f9afe9e5f7f8b9989"
+    },
+    {
+      "path": "spark/obj-proof/gnatprove/sequential_core.spark",
+      "sha256": "f572cd72d0ed57645f97398abcc128356a7277d0f4b1374850205f6d2a6ae59a"
+    },
+    {
+      "path": "spark/obj-proof/gnatprove/sequential_experiments.spark",
+      "sha256": "27a20428e8fdb4706a5ebc4135ced412dfe3a2ef766f9a72217ca9e26e2c5cc1"
+    },
+    {
+      "path": "spark/obj-proof/gnatprove/sequential_run.spark",
+      "sha256": "a020309e96daf3931c6e07cc7f8a66260beac3ca8f3762146b9479bd704ad3bc"
+    },
+    {
+      "path": "spark/obj-proof/gnatprove/sequential_sampling.spark",
+      "sha256": "b5231096c31c1251f134a6ad39edc4e0742732d5935fbacc7439d42fd056b822"
+    }
+  ]
+}

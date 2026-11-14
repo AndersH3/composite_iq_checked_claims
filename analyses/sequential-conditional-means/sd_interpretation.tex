@@ -1,0 +1,177 @@
+\section{Interpreting population SD and conditional SD in the examples}
+\label{sec:sd-interpretation}
+
+\subsection{Which experiment does each SD describe?}
+The \emph{population SD} of the actual mean describes repeated draws of a
+whole \(N=r+k\)-test battery from the stated population model. Every
+score, including the first \(r\), is random in this experiment. On the
+IQ scale the mean of those battery averages is \(100\), and their SD is
+\(15\sqrt{d_N/N}\). The population SD column is consequently a property
+of a battery size and its covariance structure, rather than a spread around
+the particular fixed starting IQ of \(150\).
+
+The \emph{conditional SD} describes the remaining variation in actual
+future outcomes after the first \(r\) scores have been observed to equal
+\(150\). Those first scores contribute fixed values to the inclusive
+mean; the later scores remain random and correlated under the conditional
+Gaussian law. The centre of this conditional distribution is
+\(m_{r,k}^{\mathrm{IQ}}\), and its SD is
+\(15\sqrt{k(1-c)d_N/d_r}/N\), by
+Theorem~\ref{thm:multiple-sd} and Corollary~\ref{cor:iq-reporting}.
+The conditional SD is independent of the numerical starting value in this
+Gaussian model, although the conditional mean depends on that value.
+
+Replacing every later outcome by its conditional prediction produces a
+third object: a fixed list of numbers. Its recursive average is the
+conditional centre just described and has SD \(0\). The nonzero SD
+columns describe actual outcome means, not a repeated computation of that
+fixed list. These distinctions follow from the moment and conditioning
+theorems in Section~\ref{sec:foundations}.
+
+For example, two initial IQ-150 scores and ten subsequent predictions give
+an inclusive conditional mean of \(1675/12\approx139.583333\).
+For a randomly drawn twelve-test battery, the population SD is
+\(\sqrt{285/2}\approx11.937336\) IQ points. After the first two scores
+are fixed at \(150\), the actual twelve-score mean has conditional SD
+\(\sqrt{475/16}\approx5.448624\) IQ points. The recursively filled list
+\(150,150,137.5,\ldots,137.5\) has the fixed arithmetic mean
+\(1675/12\) and SD zero for that mean. Section~\ref{sec:certificates}
+proves the displayed decimal rounding.
+
+\subsection{The variance decomposition}
+\begin{proposition}[The contribution of the observed starting block]
+\label{prop:variance-components-general}
+For \(0\leq c<1\), let \(Z=(X_0,\ldots,X_{r-1})^{\T}\) be a random
+starting block, without constraining its entries to be equal. Then
+\begin{align}
+ \E[C_{r,k}\given Z]
+  &=\frac{d_N}{N d_r}\sum_{i=0}^{r-1}X_i,
+    \label{eq:random-starting-block-centre}\\
+ \Var\bigl(\E[C_{r,k}\given Z]\bigr)
+  &=\frac{r d_N^2}{N^2d_r},
+    \label{eq:starting-block-centre-variance}\\
+ \Var(C_{r,k})
+  &=\frac{r d_N^2}{N^2d_r}
+    +\frac{k(1-c)d_N}{N^2d_r}
+   =\frac{d_N}{N}.
+    \label{eq:general-total-variance}
+\end{align}
+\end{proposition}
+\begin{proof}
+Theorem~\ref{thm:regression} gives each future conditional mean as
+\((c/d_r)\sum_{i<r}X_i\). Conditional linearity, with the first block
+known, therefore gives
+\[
+ \E[C_{r,k}\given Z]
+ =\frac1N\left(1+\frac{kc}{d_r}\right)\sum_{i<r}X_i
+ =\frac{d_N}{N d_r}\sum_{i<r}X_i.
+\]
+Theorem~\ref{thm:moments} gives
+\(\Var(\sum_{i<r}X_i)=r d_r\); multiplying by the square of the
+displayed coefficient proves
+\eqref{eq:starting-block-centre-variance}. The conditional variance from
+Theorem~\ref{thm:multiple-sd} is independent of the particular block
+values. The law of total variance in Theorem~\ref{thm:conditional}
+therefore gives the sum in \eqref{eq:general-total-variance}.
+Finally,
+\(r d_N+k(1-c)=N d_r\), by expanding with \(N=r+k\), which simplifies
+the sum to \(d_N/N\).
+\end{proof}
+
+Thus population variance contains both variation of conditional centres
+across starting blocks and the variation remaining within a conditioned
+model. In the two-start, ten-prediction IQ example, this exact decomposition
+is
+\[
+ \frac{285}{2}=\frac{1805}{16}+\frac{475}{16}
+ \quad\text{IQ points squared}.
+\]
+The decomposition adds variances. The square roots of the total variance
+and of the remaining conditional variance are the two SDs reported in the
+example table. It is a population statement about random starting
+blocks; a separate random distribution for several initial scores forced
+to share a single common value has not been postulated.
+
+\subsection{Why the conditional SD can increase with more predictions}
+At \(c=0.6\), the conditional SD columns for \(k=1,2,10\) increase
+towards the positive limits in Corollary~\ref{cor:iq150-limits}, even
+while the population SD decreases. Initially, the fixed starting scores
+account for a large fraction of the mean, and their conditional variance
+is zero. As more future tests enter the average, that fixed fraction
+decreases. Correlation leaves a common uncertain component in the future
+mean, which accounts for a positive limiting conditional SD when
+\(0<c<1\).
+
+\begin{proposition}[The directions of change in the selected examples]
+\label{prop:conditional-sd-growth-examples}
+For every fixed \(r\geq1\) at \(c=3/5\), the population variance of
+\(C_{r,k}\) strictly decreases with integer \(k\geq1\), while its
+conditional variance given the initial block strictly increases.
+\end{proposition}
+\begin{proof}
+The population variance is \(c+(1-c)/(r+k)\), so increasing \(k\) by
+one changes it by
+\(- (1-c)/[(r+k)(r+k+1)]<0\).
+For the conditional variance put
+\[
+ f(k)=\frac{k(d_r+ck)}{(r+k)^2},\qquad
+ \Var(C_{r,k}\given Z)=\frac{1-c}{d_r}f(k).
+\]
+Direct multiplication gives
+\[
+ f(k+1)-f(k)
+ =\frac{(2cr-d_r)k^2+(2cr^2+2cr-d_r)k+r^2(c+d_r)}
+        {(r+k)^2(r+k+1)^2}.
+\]
+At \(c=3/5\), the three numerator coefficients are
+\[
+ \frac{3r-2}{5},\qquad
+ \frac{6r^2+3r-2}{5},\qquad
+ \frac{r^2(3r+5)}{5},
+\]
+which are all strictly positive for \(r\geq1\). The denominator and
+\((1-c)/d_r\) are positive as well. This proves the increasing direction.
+Taking square roots preserves both strict comparisons, so the same
+directions apply to SDs. Multiplication by \(15\) gives the IQ-scale
+statements.
+\end{proof}
+This direction of conditional change is established for the selected
+correlation; no universal monotonicity claim for every admissible \(c\)
+is needed.
+
+\subsection{What population and conditional simulations should sample}
+For the nonnegative-correlation examples, one exact aggregate Gaussian
+representation of the population mean is
+\begin{equation}
+ C_{r,k}\ \stackrel{d}{=}
+ \sqrt c\,G+\sqrt{\frac{1-c}{N}}\,E,
+ \label{eq:population-aggregate-sampler}
+\end{equation}
+where \(G,E\) are independent standard normals. A corresponding
+conditional representation is
+\begin{equation}
+ C_{r,k}\given Z=a\one_r\ \stackrel{d}{=}
+ B_{r,k}+\frac1N\left[
+   k\sqrt{\frac{c(1-c)}{d_r}}\,G+
+   \sqrt{k(1-c)}\,E\right].
+ \label{eq:conditional-aggregate-sampler}
+\end{equation}
+Here \(\stackrel{d}{=}\) denotes equality in distribution, rather than
+equality of individual draws. The Gaussian affine-closure and uniqueness
+theorem, Theorem~\ref{thm:gaussian}, proves these representations: their
+means and variances, computed using Theorem~\ref{thm:moments}, are exactly
+those in Theorem~\ref{thm:multiple-sd}. On the IQ scale, apply
+\(100+15C_{r,k}\) to either representation.
+At \(c=1\), the conditional representation reduces to the constant
+\(a\), in agreement with the equal-score support argument in
+Proposition~\ref{prop:multiple-boundaries}.
+
+A population simulation lets the starting tests vary together with the
+other tests, while a conditional simulation samples the conditional law
+after the starting scores are fixed. The latter can be generated directly
+from \eqref{eq:conditional-aggregate-sampler}; exact equality to 150 is a
+probability-zero event in the unconditioned continuous model, so accepting
+unconditioned draws only when the starting scores equal 150 is not a
+conditional sampler. Empirical means and SDs from finite simulation runs
+are numerical diagnostics of the implemented model and generator. The
+mathematical calculations and proofs above supply the target values.

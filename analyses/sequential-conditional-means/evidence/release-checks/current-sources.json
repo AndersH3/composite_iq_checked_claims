@@ -1,0 +1,110 @@
+{
+  "schema": "sequential-release-sources-v1",
+  "source_context": "/home/anonymous/Documents/ChatGPT/composite_iq_checked_claims",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "901a6003ccd16bcb96264c5d50a06702a36299b1992581af63174033a737b8ed"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/README.md",
+      "sha256": "b759915b4a09218e2f895b0b9fe4ceb0147f29d40b6d57d2bcc73e1551586beb"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/sequential.gpr",
+      "sha256": "88d1b8147543b0e956ff6c8920e5d6023adf96f6fd3189e996cc506544fa76b1"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/sequential_core_proof.gpr",
+      "sha256": "b6ba7a1d05e5e4e6945d6b99c4e21a5ddf05461a0ada03f6a3e5f139650abef5"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/sequential_proof.gpr",
+      "sha256": "7bdcb4a554b32822055148206b2c6c1d1b7437949c628c520835b9c7a3e82102"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_core.adb",
+      "sha256": "f206e204440e140549e9898d4495a161d2660cef5364ecb78e5fb3f38dbb8eef"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_core.ads",
+      "sha256": "b54444637c766d09c8e1b2027ad353ae8d1251bb729af636ef8ec594a473bb00"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.adb",
+      "sha256": "62673fa160f539305ac2f83fd32a0d9ca9912c1d6ac8fdbca2514f99c56511d6"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_experiments.ads",
+      "sha256": "ae5482eb0776e516e881e09d1f5e2477402fee0df95d075c33391cbf251b8457"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_run.adb",
+      "sha256": "381d984e09ec7a408e48742388f2ecaa74b2936a5d74aa3c46f6eb73b730a561"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.adb",
+      "sha256": "1ee0c13fafedde3a6ea07185ccf390154d5c5a249257f083eafe264cb470f8a2"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/ada/src/sequential_sampling.ads",
+      "sha256": "5a3a90397a3a0e6471f6f9e3ca4b4f3281933edb37dc1d9fde59b47bc82ce264"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/asymptotic_limits.tex",
+      "sha256": "170bffb6ca0251f1bd078cfb547aff28fa0be84b3d542e3493e9d6617847d243"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/computational_verification.tex",
+      "sha256": "d80aa9a39838270a14dd9ac0471f22dcd76e02c23914a1dcbac243e951f714eb"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/exact_numeric_certificates.tex",
+      "sha256": "cdd72b91fc9fc5b617147d836783232d4f81d8dfaf9c830654e8d18b12754f0f"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/output/pdf/sequential_conditional_means.pdf",
+      "sha256": "8c7a085af9bdcf55d0aa43e9dfcff5868cd519cc80b6ac3e403b33b3118020c2"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/reference_notes.md",
+      "sha256": "97258b2da92435b0366eda7befb20713670826ea313501fa3c032a70cdc9d309"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/references.bib",
+      "sha256": "03df52cf117fb1fbbf6f2415959cb75064e55cc4ad20aa20d5ce4ee2d3aea4e0"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/scripts/audit_spark.py",
+      "sha256": "d61796861899d324cc8e3e3957b53929d7ae5b0d3ccc0d75de556f8e0b388923"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/scripts/run_spark.py",
+      "sha256": "30488444b6f98370c9220354c7ddf97c1c79d43194eb419b97c31563a157cf36"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/scripts/validate_spark.py",
+      "sha256": "0ea8aa48028f6e4ff6aac8d0d8904aaa7a58d2a4e7f892e31aa08cc07d7d900e"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/sd_interpretation.tex",
+      "sha256": "c52fa6b2f1d62a6d7e24132b495249ff3c83714448e7f3696812f5bc2eb873df"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/sequential_conditional_means.tex",
+      "sha256": "b106d70147c257e9adf91cf829fe2c6ff53ffd3fc9ae5d3fe728f05af5c5fb11"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/theorem_foundations.tex",
+      "sha256": "a8bc945d4f15dc8a1d45d15a3bc0432f315baa53f71f3c9a0793e93c9ef015f7"
+    },
+    {
+      "path": "requirements-dev.txt",
+      "sha256": "40dce803d1533194da231e078be536eec4086f882ef91f13b52893b237c45c82"
+    },
+    {
+      "path": "tests/test_sequential_spark_validation.py",
+      "sha256": "c8d093d3b67163e4da7d3d12120a25b2b14a599d093d01db1b581ee75efdb82a"
+    }
+  ]
+}

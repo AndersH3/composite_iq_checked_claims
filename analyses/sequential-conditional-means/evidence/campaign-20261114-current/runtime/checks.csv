@@ -1,0 +1,19 @@
+name,actual,expected,tolerance
+prediction_recursion_r1, 4.44089209850063E-16,0,1e-11
+inverse_identity_r1, 0.00000000000000E+00,0,1e-11
+prediction_recursion_r2, 4.44089209850063E-16,0,1e-11
+inverse_identity_r2, 0.00000000000000E+00,0,1e-11
+prediction_recursion_r3, 8.88178419700125E-16,0,1e-11
+inverse_identity_r3, 0.00000000000000E+00,0,1e-11
+covariance_eigen_common, 1.77635683940025E-15,0,1e-11
+covariance_eigen_contrast, 0.00000000000000E+00,0,1e-11
+total_variance_decomposition, 2.22044604925031E-16,0,1e-11
+conditional_growth_identity, 1.63064006741820E-16,0,1e-11
+counterexample_mean_x0, 0.00000000000000E+00,0,1e-11
+counterexample_variance_x0, 1.00000000000000E+00,1,1e-11
+counterexample_mean_x1, 2.22044604925031E-16,0,1e-11
+counterexample_variance_x1, 1.00000000000000E+00,1,1e-11
+counterexample_covariance, 0.00000000000000E+00,0,1e-11
+counterexample_conditional,-1.00000000000000E+00,-1,1e-11
+counterexample_inclusive_mean,-5.00000000000000E-01,-.5,1e-11
+counterexample_independent_conditional, 2.22044604925031E-16,0,1e-11

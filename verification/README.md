@@ -1,9 +1,11 @@
 # Ada/SPARK verification on computer10
 
-The two analysis folders contain standalone Ada implementations:
+The analysis folders contain standalone Ada implementations:
 
 - [Hoeflin/Ferguson](../analyses/hoeflin-ferguson/ada/): corrected thresholds, composite and latent-factor examples, and a Gaussian common-factor simulation.
 - [Towers](../analyses/towers-multiple-test-admissions/ada/): bivariate-normal probabilities, the BASIC grid, calibrated admission cutoffs, and correlated-score simulations.
+
+- [Sequential conditional means](../analyses/sequential-conditional-means/ada/README.md): exact finite and infinite-count coefficients, bounded evaluation/accumulation and scalar Gaussian aggregate sampling, with a separate source-pinned campaign and independent Deal validator. Its explicit trusted CLI/numerical boundaries differ from the older projects described below.
 
 The [symbolic-check follow-up](evidence/symbolic-fixture-computer10-20261105/REPORT.md) records fresh Python checks and re-audits the unchanged 1,100 native SPARK checks from the [five-contract computer10 campaign](evidence/five-contracts-computer10-20261104/REPORT.md). No new GNATprove invocation is claimed for this Python-only fix. The native campaign retains source scope, proof results, raw `.spark` coverage, source-bound Ghost models, checked interfaces, erasure regressions and numerical comparisons. The [earlier expanded campaign](evidence/spark-expanded-computer10-20261031/REPORT.md) preserves its 209/434-check results against revision `ce0e895`; those are historical counts for the implementation before the Ghost additions. The [original campaign](evidence/computer10-20261031/REPORT.md) and [earlier integration campaign](evidence/deal-lint-spark-computer10-20261031/REPORT.md) remain immutable historical snapshots. Their 47-check Hoeflin and 31-check Towers totals apply to the old projects containing only the arithmetic cores; they are not totals for the expanded implementation.
 

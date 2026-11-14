@@ -63,3 +63,11 @@ The chapter draft's preliminary multivariate characteristic-function uniqueness 
 ## Verification scope
 
 Source references support the stated mathematical foundations. The mathematical proofs in the report are written arguments conditional on the stated assumptions. Repository runtime/property tests, structural contract audits, and scoped symbolic checks have their own documented targets; they are not a machine-checked proof of this new exposition or an empirical proof of its statistical model. No source is cited as evidence that actual IQ-test data necessarily satisfy equicorrelation or joint Gaussianity.
+
+## Added computational and limit foundations
+
+The infinite-count section derives its bounds directly from the finite formulas and proves the square-root limit inequality. The SD explanation proves the general total-variance decomposition and the finite-difference identity for the selected correlation. Neither requires an unverified additional source theorem.
+
+The simulation diagnostic proposition uses Axler, **Theorem 6.36, printed p. 203** (PDF page index 216 in the version above): every orthonormal list extends to an orthonormal basis. Gaussian affine closure and Gaussian independence then prove the standard normal sample-mean law and chi-square sample-variance law, with the chi-square law defined as a sum of independent squared standard normals. Its statement explicitly requires an integer sample count at least two.
+
+Software references are the official [SPARK User’s Guide](https://docs.adacore.com/spark2014-docs/html/ug/index.html), including its [proof limitations](https://docs.adacore.com/spark2014-docs/html/ug/en/source/proof_limitations.html), and [Deal’s runtime-contract documentation](https://deal.readthedocs.io/basic/runtime.html). They describe tools and trust boundaries; they are not references for the mathematical model or proofs that the Gaussian assumptions describe IQ data. Actual pinned local tool versions and native results are retained in the new campaign evidence.

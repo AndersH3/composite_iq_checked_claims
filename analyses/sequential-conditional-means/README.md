@@ -61,32 +61,51 @@ All initial scores are included in the following means. `k` is the number of sub
 
 The PDF derives the scale conversion, mean and SD formulas and works through the two-start, ten-prediction row. Calculations use the exact standardized score `10/3` and exact correlation `3/5`, with rounding applied only to displayed results. The fixed recursive mean has SD 0 in every row; the nonzero SDs describe actual test outcomes.
 
-## Build
+## Infinite-count limits and SD interpretation
 
-From this directory, run:
+For fixed `r` and `c` in `[0,1]`, each subsequent prediction already equals `r c a / (1+(r-1)c)`. The inclusive mean tends to that same value. Actual-mean population SD tends to `sqrt(c)` and conditional SD tends to `sqrt(c(1-c)/(1+(r-1)c))`. A fixed negative correlation cannot remain admissible as the battery grows without bound.
+
+For the IQ-150 examples at `c=0.6`, the limiting rows are:
+
+| Initial scores | Mean IQ limit | Population SD limit | Conditional SD limit |
+|---:|---:|---:|---:|
+| 1 | 130.000000 | 11.618950 | 7.348469 |
+| 2 | 137.500000 | 11.618950 | 5.809475 |
+| 3 | 140.909091 | 11.618950 | 4.954337 |
+
+Population SD describes random whole batteries centred at IQ 100, with the initial scores also random. Conditional SD describes variation of actual outcomes around the conditional mean after fixing the initial scores at IQ 150. Replacing future outcomes by their predictions gives a fixed numerical list whose mean has SD zero. The report proves the general variance decomposition and explains why conditional SD increases with `k` in these selected examples while population SD decreases.
+
+## Calculations, simulations and verification
+
+The [Ada/SPARK implementation](ada/README.md) separates exact coefficient construction, floating evaluation, bounded accumulation, sampling and the trusted command-line/CSV boundary. All eleven new SPARK interfaces have at least five meaningful explicit behavioral/flow contracts; eight have at least ten. The [Python validator](scripts/VALIDATION.md) uses Deal contracts on every named function, including helpers and tests, and reuses Fraction, NumPy and SciPy rather than duplicating their algorithms.
+
+The implementation covers all numerical examples, finite negative and singular endpoints, inverse/eigenvector/recursion identities, analytic limits, total variance, conditional-growth arithmetic and the non-Gaussian counterexample. Foundational probability and linear-algebra theorems remain written proofs with primary references. Simulations and finite calculations do not prove universal mathematical theorems or the empirical IQ model.
+
+Reproduce a fresh build, native proof and numerical campaign from the repository root:
 
 ```sh
-make pdf
+.venv/bin/python analyses/sequential-conditional-means/scripts/run_spark.py --trials 200000
 ```
 
-The build requires XeLaTeX, BibTeX, `latexmk`, KOMA-Script, the packages loaded by the source, TeX Gyre Pagella text and mathematics, TeX Gyre Heros, and Latin Modern Mono. `latexmk` follows the included theorem/certificate files and runs BibTeX for `references.bib`. The output is `output/pdf/sequential_conditional_means.pdf`. `make clean` removes auxiliary files while retaining the PDF.
+Every run uses a fresh source/object mirror and an unused evidence directory. See [Ada reproduction instructions and trust boundaries](ada/README.md) and [validator schemas](scripts/VALIDATION.md). Run the repository gates with `make check PYTHON=.venv/bin/python`. No historical campaign records are modified.
 
-The report follows the typography and output layout of the existing [Hoeflin/Ferguson analysis](../hoeflin-ferguson/). It introduces no Python or SPARK implementation and has no additional runtime dependencies.
+## Recorded results (14 November 2026)
 
-## Verification and limits
+The [retained campaign and current-source audit](evidence/REPORT.md) record:
 
-The derivations, theorem attributions and source locators were reviewed by collaborating AI agents. Validation for the referenced-proof revision was completed on 14 November 2026:
+- **430 native checks discharged** across six new/reused SPARK units: 124 flow checks and 306 prover checks, zero unproved or justified checks, with no retained assumptions or suppressions. All ten new analyzed subprogram bodies are covered; the checked square-root completion and CLI remain explicit trusted boundaries.
+- **20 finite calculations**, 20 independent matrix comparisons, **46 simulation batches of 200,000 observations** each, and 18 algebraic/PMF diagnostics passed. The independent self-check verified all 74 printed rounding-certificate integers.
+- `make check PYTHON=.venv/bin/python` passed, including **420 runtime/property tests**, static lint with its expected negative control, contract inventories, and the existing scoped symbolic gate. A final lint/coverage rerun includes the new evidence auditor; its rejection checks reject altered current Ada and changed retained artifacts.
+- The **32-page PDF** compiled without unresolved references, missing glyphs or overfull/underfull boxes, and every page was visually reviewed.
 
-- `make pdf` passed; the PDF, including the bibliography and proof certificates, was rendered and visually inspected. The final LaTeX log had no unresolved references, missing glyphs, or overfull/underfull boxes.
-- From the repository root, `make check PYTHON=.venv/bin/python` passed using the exact versions in `requirements-dev.txt`. This includes Python contract coverage, the SPARK structural contract audit, static lint with its required negative control, **343 runtime/property tests**, and the existing scoped symbolic acceptance gate.
-- The symbolic gate proved its six expected postcondition obligations and found the required negative-control counterexample. Those obligations concern the existing software; they do not formally verify this new analysis.
+The native record is immutable. A later Python-only import/path normalization for the updated Astroid dependency is disclosed in the [current-source audit](evidence/current-source-audit.json); every Ada/project hash still matches, and the current validator rechecks the original CSVs. The audit makes no extra prover-invocation claim.
 
-The report contains written mathematical proofs under its stated assumptions. Build and software checks are separate from those arguments and do not machine-check the new exposition or empirically validate the Gaussian test model. No new SPARK prover campaign was run.
+## Build the report
 
-The text explicitly specifies the continuous Gaussian conditional-mean version so that recursive evaluation at probability-zero point histories is well defined. For `k` future tests and one starting test, the correlation domain is `-1/k <= c <= 1`; an arbitrarily long collection requires `0 <= c <= 1`.
+From this analysis directory, run `make pdf`. The build uses XeLaTeX, BibTeX, `latexmk`, KOMA-Script, the packages loaded by the source, TeX Gyre Pagella text/mathematics, TeX Gyre Heros and Latin Modern Mono. The output is `output/pdf/sequential_conditional_means.pdf`. `make clean` removes auxiliary files while retaining the PDF.
+
+The new sections are [asymptotic limits](asymptotic_limits.tex), [SD interpretation](sd_interpretation.tex) and [computational scope and proofs](computational_verification.tex). The final PDF is rendered and visually inspected after changes. Written mathematical proofs, native SPARK results, runtime Deal tests, static lint, scoped symbolic verification, numerical accuracy and model validity are reported separately.
 
 ## AI disclosure and license
 
-The mathematical exposition, documentation and typesetting were prepared with OpenAI Codex and collaborating AI agents in response to the requester's problem, indexing clarifications and request for proofs with references. Review took place within that workflow; independent human peer review is not claimed. The report includes its own disclosure dated 14 November 2026. Historical verification evidence for other analyses is not evidence of a new formal verification of this report.
-
-The repository's existing [LICENSE](../../LICENSE) governs its original material, subject to third-party rights.
+The mathematical exposition, documentation, typesetting, Ada/SPARK and Python/Deal software were prepared with OpenAI Codex and collaborating AI agents in response to the requester's problem and verification requirements. The report contains its own disclosure dated 14 November 2026. Independent human peer review and empirical psychometric validation are not claimed. The repository's existing [LICENSE](../../LICENSE) governs its original material, subject to third-party rights.

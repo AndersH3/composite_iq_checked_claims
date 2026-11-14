@@ -1,0 +1,433 @@
+Phase 1 of 2: generation of Global contracts ...
+Phase 2 of 2: flow analysis and proof ...
+hoeflin_core.adb:8:39: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_core.adb:10:14: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_core.adb:19:20: info: range check proved (Trivial)
+hoeflin_core.adb:19:25: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 352 steps)
+hoeflin_core.adb:19:25: info: float overflow check proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+hoeflin_core.adb:19:25: info: range check proved (altergo: 1 VC in max 1.2 seconds and 20404 steps)
+hoeflin_core.adb:19:33: info: range check proved (Trivial)
+hoeflin_core.adb:29:20: info: range check proved (Trivial)
+hoeflin_core.adb:29:25: info: float overflow check proved (Trivial)
+hoeflin_core.adb:29:25: info: range check proved (Trivial)
+hoeflin_core.adb:29:25: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 353 steps)
+hoeflin_core.adb:29:33: info: range check proved (Trivial)
+hoeflin_core.adb:34:45: info: float overflow check proved (Trivial)
+hoeflin_core.adb:34:45: info: range check proved (Trivial)
+hoeflin_core.adb:34:52: info: float overflow check proved (Trivial)
+hoeflin_core.adb:36:23: info: float overflow check proved (Trivial)
+hoeflin_core.adb:36:23: info: range check proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+hoeflin_core.adb:41:43: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:50: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: float overflow check proved (Trivial)
+hoeflin_core.adb:41:60: info: range check proved (Trivial)
+hoeflin_core.adb:41:60: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 314 steps)
+hoeflin_core.adb:43:21: info: float overflow check proved (Trivial)
+hoeflin_core.adb:43:21: info: range check proved (CVC5: 1 VC in max 9.8 seconds and 31685 steps)
+hoeflin_core.adb:48:20: info: float overflow check proved (Trivial)
+hoeflin_core.adb:48:20: info: range check proved (Trivial)
+hoeflin_core.adb:48:27: info: float overflow check proved (Trivial)
+hoeflin_core.adb:53:26: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 403 steps)
+hoeflin_core.adb:55:37: info: range check proved (CVC5: 2 VC in max 0.1 seconds and 448 steps)
+hoeflin_core.adb:58:41: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 484 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.adb:61:39: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 576 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:15:06: info: data dependencies proved
+hoeflin_core.ads:18:14: info: postcondition proved (CVC5: 7 VC in max 0.0 seconds and 1 step; Trivial: 5 VC in max 0.0 seconds and 2 steps; Z3: 1 VC in max 0.2 seconds and 177 steps)
+hoeflin_core.ads:28:06: info: flow dependencies proved
+hoeflin_core.ads:32:06: info: data dependencies proved
+hoeflin_core.ads:33:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 322 steps; Trivial: 2 VC in max 0.0 seconds and 2 steps; altergo: 1 VC in max 0.2 seconds and 2127 steps)
+hoeflin_core.ads:33:46: info: range check proved (Trivial)
+hoeflin_core.ads:33:73: info: float overflow check proved (Trivial)
+hoeflin_core.ads:33:73: info: division check proved (CVC5: 1 VC in max 1.4 seconds and 19119 steps)
+hoeflin_core.ads:33:87: info: range check proved (Trivial)
+hoeflin_core.ads:36:06: info: flow dependencies proved
+hoeflin_core.ads:40:06: info: data dependencies proved
+hoeflin_core.ads:41:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 2 VC in max 0.0 seconds and 2 steps; altergo: 3 VC in max 0.3 seconds and 4281 steps)
+hoeflin_core.ads:44:06: info: flow dependencies proved
+hoeflin_core.ads:48:06: info: data dependencies proved
+hoeflin_core.ads:49:14: info: postcondition proved (CVC5: 3 VC in max 1.5 seconds and 7477 steps; Trivial: 2 VC in max 0.0 seconds and 2 steps)
+hoeflin_core.ads:52:06: info: flow dependencies proved
+hoeflin_core.ads:56:06: info: data dependencies proved
+hoeflin_core.ads:57:14: info: postcondition proved (CVC5: 3 VC in max 2.2 seconds and 24935 steps; Trivial: 2 VC in max 0.0 seconds and 2 steps)
+hoeflin_core.ads:60:06: info: flow dependencies proved
+hoeflin_core.ads:63:06: info: data dependencies proved
+hoeflin_core.ads:64:06: info: disjoint contract cases proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:64:33: info: contract case proved (CVC5: 1 VC in max 0.1 seconds and 1406 steps; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+hoeflin_core.ads:65:21: info: contract case proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+hoeflin_core.ads:66:15: info: contract case proved (CVC5: 1 VC in max 0.1 seconds and 1419 steps; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+hoeflin_core.ads:66:36: info: float overflow check proved (Trivial)
+hoeflin_core.ads:66:43: info: float overflow check proved (Trivial)
+hoeflin_core.ads:67:06: info: flow dependencies proved
+hoeflin_core.ads:80:06: info: data dependencies proved
+hoeflin_core.ads:81:14: info: postcondition proved (CVC5: 4 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_core.ads:84:06: info: flow dependencies proved
+hoeflin_core.ads:87:06: info: data dependencies proved
+hoeflin_core.ads:90:14: info: postcondition proved (CVC5: 3 VC in max 0.1 seconds and 657 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:91:47: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 656 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:92:51: info: overflow check proved (CVC5: 2 VC in max 0.1 seconds and 693 steps)
+hoeflin_core.ads:93:49: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 698 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_core.ads:94:06: info: flow dependencies proved
+hoeflin_boundary_models.adb:4:18: info: float overflow check proved (Trivial)
+hoeflin_boundary_models.adb:4:18: info: range check proved (Trivial)
+hoeflin_boundary_models.adb:21:25: info: range check proved (CVC5: 2 VC in max 0.1 seconds and 1 step)
+hoeflin_boundary_models.adb:42:07: info: initialization of "Digit" proved
+hoeflin_boundary_models.adb:45:45: info: index check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:51:37: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:52:35: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:52:44: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:53:25: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:53:30: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:62:41: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:65:33: info: loop invariant preservation proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:65:33: info: loop invariant initialization proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:65:52: info: overflow check proved (CVC5: 4 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:66:33: info: loop invariant initialization proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:66:33: info: loop invariant preservation proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:66:56: info: overflow check proved (CVC5: 4 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:67:33: info: loop invariant initialization proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:67:33: info: loop invariant preservation proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:67:62: info: overflow check proved (CVC5: 4 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:68:64: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:69:77: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.adb:70:89: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:10:06: info: data dependencies proved
+hoeflin_boundary_models.ads:11:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:14:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:19:06: info: data dependencies proved
+hoeflin_boundary_models.ads:20:14: info: postcondition proved (CVC5: 4 VC in max 0.0 seconds and 1 step; Trivial: 5 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:25:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:29:06: info: data dependencies proved
+hoeflin_boundary_models.ads:30:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:33:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:36:06: info: data dependencies proved
+hoeflin_boundary_models.ads:37:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:40:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:43:06: info: data dependencies proved
+hoeflin_boundary_models.ads:44:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:47:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:51:06: info: data dependencies proved
+hoeflin_boundary_models.ads:52:14: info: postcondition proved (CVC5: 5 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:56:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:59:06: info: data dependencies proved
+hoeflin_boundary_models.ads:60:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:63:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:65:06: info: data dependencies proved
+hoeflin_boundary_models.ads:67:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 600 steps)
+hoeflin_boundary_models.ads:68:35: info: float overflow check proved (Trivial)
+hoeflin_boundary_models.ads:69:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:72:06: info: data dependencies proved
+hoeflin_boundary_models.ads:74:14: info: postcondition proved (Trivial: 1 VC in max 0.0 seconds and 2 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:75:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:78:06: info: data dependencies proved
+hoeflin_boundary_models.ads:80:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:81:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:83:06: info: data dependencies proved
+hoeflin_boundary_models.ads:85:26: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:86:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:86:23: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:87:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:89:06: info: data dependencies proved
+hoeflin_boundary_models.ads:91:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 748 steps)
+hoeflin_boundary_models.ads:92:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:95:06: info: data dependencies proved
+hoeflin_boundary_models.ads:97:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:98:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:100:06: info: data dependencies proved
+hoeflin_boundary_models.ads:102:14: info: postcondition proved (CVC5: 3 VC in max 0.1 seconds and 797 steps)
+hoeflin_boundary_models.ads:103:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:106:06: info: data dependencies proved
+hoeflin_boundary_models.ads:108:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:109:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:147:06: info: data dependencies proved
+hoeflin_boundary_models.ads:148:14: info: postcondition proved (CVC5: 4 VC in max 0.0 seconds and 1 step; Trivial: 4 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:152:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:156:06: info: data dependencies proved
+hoeflin_boundary_models.ads:157:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:160:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:165:06: info: data dependencies proved
+hoeflin_boundary_models.ads:166:14: info: postcondition proved (CVC5: 2 VC in max 0.1 seconds and 807 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:170:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:178:06: info: data dependencies proved
+hoeflin_boundary_models.ads:179:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Z3: 6 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:188:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:191:06: info: data dependencies proved
+hoeflin_boundary_models.ads:192:14: info: postcondition proved (CVC5: 3 VC in max 0.1 seconds and 640 steps)
+hoeflin_boundary_models.ads:195:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:211:06: info: data dependencies proved
+hoeflin_boundary_models.ads:212:14: info: postcondition proved (CVC5: 4 VC in max 0.1 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:215:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:218:06: info: data dependencies proved
+hoeflin_boundary_models.ads:219:14: info: postcondition proved (CVC5: 6 VC in max 0.1 seconds and 730 steps; Z3: 1 VC in max 0.2 seconds and 1 step)
+hoeflin_boundary_models.ads:230:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:232:06: info: data dependencies proved
+hoeflin_boundary_models.ads:233:14: info: postcondition proved (CVC5: 2 VC in max 0.2 seconds and 2679 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:236:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:240:06: info: data dependencies proved
+hoeflin_boundary_models.ads:241:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:244:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:248:06: info: data dependencies proved
+hoeflin_boundary_models.ads:249:14: info: postcondition proved (CVC5: 5 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+hoeflin_boundary_models.ads:252:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:254:06: info: data dependencies proved
+hoeflin_boundary_models.ads:255:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:257:47: info: index check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:258:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:261:06: info: data dependencies proved
+hoeflin_boundary_models.ads:263:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:264:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:272:06: info: data dependencies proved
+hoeflin_boundary_models.ads:274:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:276:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:279:06: info: data dependencies proved
+hoeflin_boundary_models.ads:281:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:282:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:287:06: info: data dependencies proved
+hoeflin_boundary_models.ads:288:14: info: postcondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step; Z3: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:288:48: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:289:54: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:290:58: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:291:64: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:292:06: info: flow dependencies proved
+hoeflin_boundary_models.ads:294:06: info: data dependencies proved
+hoeflin_boundary_models.ads:295:37: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:295:79: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:296:48: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:297:54: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:298:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:298:38: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+hoeflin_boundary_models.ads:299:06: info: flow dependencies proved
+normal_support.adb:64:07: info: initialization of "Mid" proved
+normal_support.adb:66:07: info: precondition proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+normal_support.adb:68:33: info: loop invariant initialization proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_support.adb:68:33: info: loop invariant preservation proved (Colibri_Classic: 1 VC in max 0.5 seconds and 1 step)
+normal_support.adb:69:20: info: float overflow check proved (Trivial)
+normal_support.adb:69:20: info: range check proved (CVC5: 1 VC in max 2.8 seconds and 10227 steps)
+normal_support.adb:69:26: info: float overflow check proved (Trivial)
+normal_support.adb:69:32: info: float overflow check proved (Trivial)
+normal_support.adb:69:32: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_support.adb:72:17: info: float overflow check proved (Trivial)
+normal_support.adb:72:17: info: range check proved (CVC5: 1 VC in max 6.8 seconds and 11703 steps)
+normal_support.adb:72:23: info: float overflow check proved (Trivial)
+normal_support.adb:72:29: info: float overflow check proved (Trivial)
+normal_support.adb:72:29: info: division check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_support.adb:93:07: info: initialization of "Bits" proved
+normal_support.adb:97:19: info: range check proved (Trivial)
+normal_support.adb:97:25: info: float overflow check proved (Trivial)
+normal_support.adb:97:32: info: float overflow check proved (Trivial)
+normal_support.adb:97:32: info: range check proved (CVC5: 1 VC in max 0.3 seconds and 3891 steps)
+normal_support.adb:125:07: info: initialization of "U" proved
+normal_support.adb:125:10: info: initialization of "V" proved
+normal_support.adb:126:07: info: initialization of "Radius" proved
+normal_support.adb:127:07: info: initialization of "Angle" proved
+normal_support.adb:127:14: info: initialization of "Cosine" proved
+normal_support.adb:127:22: info: initialization of "Sine" proved
+normal_support.adb:132:49: info: float overflow check proved (Trivial)
+normal_support.adb:132:49: info: range check proved (Trivial)
+normal_support.adb:133:21: info: range check proved (Z3: 1 VC in max 0.1 seconds and 1 step)
+normal_support.adb:134:30: info: precondition proved (Z3: 1 VC in max 0.1 seconds and 1 step)
+normal_support.adb:135:19: info: float overflow check proved (Trivial)
+normal_support.adb:135:19: info: range check proved (CVC5: 1 VC in max 0.8 seconds and 10367 steps)
+normal_support.adb:136:19: info: range check proved (Z3: 1 VC in max 0.2 seconds and 1 step)
+normal_support.adb:137:30: info: precondition proved (Z3: 1 VC in max 0.2 seconds and 1 step)
+normal_support.adb:138:19: info: float overflow check proved (Trivial)
+normal_support.adb:138:19: info: range check proved (CVC5: 1 VC in max 1.1 seconds and 14636 steps)
+normal_support.ads:24:06: info: data dependencies proved
+normal_support.ads:26:14: info: postcondition proved (CVC5: 2 VC in max 5.1 seconds and 10905 steps)
+normal_support.ads:27:06: info: flow dependencies proved
+normal_support.ads:47:06: info: data dependencies proved
+normal_support.ads:48:06: info: disjoint contract cases proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+normal_support.ads:48:37: info: contract case proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+normal_support.ads:49:46: info: contract case proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+normal_support.ads:50:15: info: contract case proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+normal_support.ads:51:06: info: flow dependencies proved
+normal_support.ads:52:21: info: initialization of "G" proved
+normal_support.ads:53:06: info: data dependencies proved
+normal_support.ads:54:14: info: postcondition proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_support.ads:55:06: info: flow dependencies proved
+normal_support.ads:56:06: info: disjoint contract cases proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+normal_support.ads:56:34: info: contract case proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+normal_support.ads:56:85: info: contract case proved (Trivial: 1 VC in max 0.0 seconds and 2 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+normal_support.ads:56:134: info: contract case proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Trivial: 1 VC in max 0.0 seconds and 2 steps)
+normal_support.ads:57:45: info: initialization of "U" proved
+normal_support.ads:58:06: info: data dependencies proved
+normal_support.ads:59:14: info: postcondition proved (CVC5: 3 VC in max 0.3 seconds and 3823 steps)
+normal_support.ads:62:06: info: flow dependencies proved
+normal_support.ads:63:49: info: initialization of "X" proved
+normal_support.ads:63:52: info: initialization of "Y" proved
+normal_support.ads:64:06: info: data dependencies proved
+normal_support.ads:65:14: info: postcondition proved (CVC5: 4 VC in max 1.3 seconds and 14642 steps)
+normal_support.ads:66:06: info: flow dependencies proved
+sequential_core.adb:23:39: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:26:43: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:27:51: info: overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:27:51: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:28:50: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:28:50: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:29:53: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:29:53: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:30:60: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:30:67: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:30:67: info: range check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:31:59: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:33:35: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:33:48: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:34:46: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:34:46: info: range check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:35:58: info: overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:35:58: info: range check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:38:26: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:38:31: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:38:36: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:38:36: info: range check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:39:55: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:41:47: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:41:47: info: range check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:43:47: info: overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:58:26: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:58:32: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:58:53: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:58:59: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:58:59: info: range check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:60:20: info: overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:60:27: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:60:47: info: overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:60:53: info: overflow check proved (CVC5: 2 VC in max 0.1 seconds and 1 step)
+sequential_core.adb:60:53: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:76:35: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:76:48: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:77:29: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:77:42: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:80:23: info: overflow check proved (CVC5: 2 VC in max 0.1 seconds and 1 step)
+sequential_core.adb:80:32: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:80:52: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.adb:80:52: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:28:06: info: data dependencies proved
+sequential_core.ads:29:06: info: flow dependencies proved
+sequential_core.ads:31:08: info: postcondition proved (CVC5: 9 VC in max 0.0 seconds and 1 step; Trivial: 6 VC in max 0.0 seconds and 2 steps)
+sequential_core.ads:52:29: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:54:26: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:56:06: info: data dependencies proved
+sequential_core.ads:57:06: info: flow dependencies proved
+sequential_core.ads:59:08: info: postcondition proved (CVC5: 12 VC in max 0.0 seconds and 1 step; Trivial: 7 VC in max 0.0 seconds and 2 steps)
+sequential_core.ads:61:33: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:63:30: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:66:32: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:69:29: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:72:32: info: range check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:94:06: info: data dependencies proved
+sequential_core.ads:95:06: info: flow dependencies proved
+sequential_core.ads:98:08: info: postcondition proved (CVC5: 8 VC in max 0.1 seconds and 67 steps; Trivial: 3 VC in max 0.0 seconds and 2 steps; Z3: 26 VC in max 0.1 seconds and 1 step)
+sequential_core.ads:100:67: info: overflow check proved (CVC5: 1 VC in max 0.1 seconds and 3 steps; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:101:32: info: range check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:102:71: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:105:32: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:109:66: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:110:32: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:112:72: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:117:42: info: overflow check proved (Z3: 2 VC in max 0.1 seconds and 1 step)
+sequential_core.ads:118:30: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:119:64: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:121:32: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 1 step; Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:137:18: info: overflow check proved (Z3: 2 VC in max 0.1 seconds and 1 step)
+sequential_core.ads:137:40: info: overflow check proved (Z3: 2 VC in max 0.1 seconds and 1 step)
+sequential_core.ads:139:44: info: overflow check proved (Z3: 2 VC in max 0.1 seconds and 1 step)
+sequential_core.ads:142:44: info: overflow check proved (Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:159:06: info: data dependencies proved
+sequential_core.ads:160:06: info: flow dependencies proved
+sequential_core.ads:163:08: info: postcondition proved (CVC5: 10 VC in max 0.0 seconds and 1 step; Trivial: 3 VC in max 0.0 seconds and 2 steps; Z3: 4 VC in max 0.0 seconds and 1 step)
+sequential_core.ads:171:64: info: overflow check proved (CVC5: 2 VC in max 0.0 seconds and 1 step)
+sequential_experiments.adb:8:45: info: range check proved (Trivial)
+sequential_experiments.adb:8:58: info: range check proved (Trivial)
+sequential_experiments.adb:9:47: info: range check proved (Trivial)
+sequential_experiments.adb:9:60: info: range check proved (Trivial)
+sequential_experiments.adb:10:52: info: float overflow check proved (Trivial)
+sequential_experiments.adb:10:52: info: range check proved (Trivial)
+sequential_experiments.adb:10:52: info: division check proved (CVC5: 1 VC in max 0.1 seconds and 1016 steps)
+sequential_experiments.adb:22:64: info: float overflow check proved (CVC5: 1 VC in max 1.4 seconds and 23857 steps)
+sequential_experiments.adb:23:52: info: float overflow check proved (CVC5: 1 VC in max 3.2 seconds and 47695 steps)
+sequential_experiments.adb:35:37: info: float overflow check proved (Z3: 1 VC in max 6.4 seconds and 14617 steps)
+sequential_experiments.adb:35:45: info: float overflow check proved (CVC5: 1 VC in max 7.7 seconds and 102376 steps)
+sequential_experiments.adb:36:31: info: float overflow check proved (Z3: 1 VC in max 2.5 seconds and 2472 steps)
+sequential_experiments.adb:36:39: info: float overflow check proved (CVC5: 1 VC in max 8.4 seconds and 97841 steps)
+sequential_experiments.adb:37:48: info: float overflow check proved (CVC5: 1 VC in max 6.5 seconds and 94284 steps)
+sequential_experiments.adb:38:49: info: float overflow check proved (Z3: 1 VC in max 4.4 seconds and 10468 steps)
+sequential_experiments.adb:53:30: info: range check proved (CVC5: 1 VC in max 0.0 seconds and 1 step; Z3: 1 VC in max 0.1 seconds and 1 step)
+sequential_experiments.adb:54:26: info: float overflow check proved (CVC5: 1 VC in max 0.1 seconds and 728 steps)
+sequential_experiments.adb:54:26: info: range check proved (CVC5: 1 VC in max 0.1 seconds and 732 steps)
+sequential_experiments.adb:55:42: info: float overflow check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.adb:55:42: info: range check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.adb:55:46: info: float overflow check proved (Z3: 1 VC in max 0.1 seconds and 1 step)
+sequential_experiments.adb:63:38: info: range check proved (altergo: 1 VC in max 0.3 seconds and 3357 steps)
+sequential_experiments.adb:63:53: info: range check proved (Trivial)
+sequential_experiments.adb:64:42: info: range check proved (CVC5: 1 VC in max 0.2 seconds and 1942 steps)
+sequential_experiments.adb:64:64: info: range check proved (Trivial)
+sequential_experiments.adb:65:57: info: float overflow check proved (Trivial)
+sequential_experiments.adb:65:67: info: float overflow check proved (Trivial)
+sequential_experiments.adb:65:67: info: division check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.adb:65:67: info: range check proved (CVC5: 1 VC in max 9.3 seconds and 27076 steps)
+sequential_experiments.adb:66:61: info: float overflow check proved (Trivial)
+sequential_experiments.adb:66:61: info: range check proved (Trivial)
+sequential_experiments.adb:67:58: info: float overflow check proved (Trivial)
+sequential_experiments.adb:67:58: info: range check proved (Trivial)
+sequential_experiments.adb:67:58: info: division check proved (Z3: 1 VC in max 0.4 seconds and 1 step)
+sequential_experiments.adb:69:19: info: range check proved (CVC5: 1 VC in max 2.8 seconds and 43533 steps)
+sequential_experiments.adb:75:26: info: float overflow check proved (Trivial)
+sequential_experiments.adb:75:26: info: division check proved (Z3: 1 VC in max 1.1 seconds and 1 step)
+sequential_experiments.ads:17:06: info: data dependencies proved
+sequential_experiments.ads:18:06: info: flow dependencies proved
+sequential_experiments.ads:20:08: info: postcondition proved (CVC5: 6 VC in max 1.3 seconds and 19552 steps; Trivial: 3 VC in max 0.0 seconds and 2 steps)
+sequential_experiments.ads:20:36: info: range check proved (Trivial)
+sequential_experiments.ads:20:42: info: float overflow check proved (Trivial)
+sequential_experiments.ads:20:42: info: division check proved (Z3: 1 VC in max 0.3 seconds and 1 step)
+sequential_experiments.ads:20:57: info: range check proved (Trivial)
+sequential_experiments.ads:39:06: info: data dependencies proved
+sequential_experiments.ads:40:06: info: flow dependencies proved
+sequential_experiments.ads:45:08: info: postcondition proved (CVC5: 8 VC in max 0.5 seconds and 6485 steps; Trivial: 1 VC in max 0.0 seconds and 2 steps; Z3: 6 VC in max 2.0 seconds and 1 step)
+sequential_experiments.ads:45:67: info: float overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.ads:46:64: info: float overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.ads:52:20: info: float overflow check proved (CVC5: 1 VC in max 0.4 seconds and 6666 steps)
+sequential_experiments.ads:52:28: info: float overflow check proved (CVC5: 1 VC in max 0.5 seconds and 6387 steps)
+sequential_experiments.ads:54:20: info: float overflow check proved (CVC5: 1 VC in max 0.5 seconds and 7128 steps)
+sequential_experiments.ads:54:28: info: float overflow check proved (CVC5: 1 VC in max 0.4 seconds and 6262 steps)
+sequential_experiments.ads:56:22: info: float overflow check proved (Z3: 1 VC in max 1.7 seconds and 1 step)
+sequential_experiments.ads:58:22: info: float overflow check proved (Z3: 1 VC in max 1.7 seconds and 1 step)
+sequential_experiments.ads:83:21: info: initialization of "Acc" proved
+sequential_experiments.ads:84:06: info: data dependencies proved
+sequential_experiments.ads:85:06: info: flow dependencies proved
+sequential_experiments.ads:86:14: info: postcondition proved (CVC5: 3 VC in max 0.0 seconds and 1 step)
+sequential_experiments.ads:91:06: info: data dependencies proved
+sequential_experiments.ads:92:06: info: flow dependencies proved
+sequential_experiments.ads:95:25: info: float overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1346 steps)
+sequential_experiments.ads:96:33: info: float overflow check proved (CVC5: 1 VC in max 0.3 seconds and 6644 steps)
+sequential_experiments.ads:96:37: info: float overflow check proved (CVC5: 1 VC in max 0.2 seconds and 5212 steps)
+sequential_experiments.ads:97:14: info: postcondition proved (CVC5: 6 VC in max 2.2 seconds and 8333 steps; Trivial: 3 VC in max 0.0 seconds and 2 steps; Z3: 2 VC in max 0.2 seconds and 1 step)
+sequential_experiments.ads:98:39: info: float overflow check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.ads:99:55: info: float overflow check proved (CVC5: 1 VC in max 0.1 seconds and 787 steps)
+sequential_experiments.ads:99:59: info: float overflow check proved (CVC5: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.ads:118:06: info: data dependencies proved
+sequential_experiments.ads:119:06: info: flow dependencies proved
+sequential_experiments.ads:121:14: info: postcondition proved (CVC5: 4 VC in max 4.2 seconds and 62386 steps; Trivial: 3 VC in max 0.0 seconds and 2 steps; Z3: 4 VC in max 1.6 seconds and 1 step; altergo: 2 VC in max 0.5 seconds and 5506 steps)
+sequential_experiments.ads:122:46: info: division check proved (Z3: 1 VC in max 1.4 seconds and 1 step)
+sequential_experiments.ads:122:46: info: float overflow check proved (Z3: 1 VC in max 1.5 seconds and 1 step)
+sequential_experiments.ads:122:63: info: range check proved (Trivial)
+sequential_experiments.ads:124:33: info: float overflow check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.ads:124:43: info: float overflow check proved (Trivial)
+sequential_experiments.ads:124:53: info: division check proved (Z3: 1 VC in max 1.4 seconds and 1 step)
+sequential_experiments.ads:124:53: info: float overflow check proved (CVC5: 1 VC in max 0.1 seconds and 1583 steps)
+sequential_experiments.ads:124:70: info: range check proved (Trivial)
+sequential_experiments.ads:124:79: info: division check proved (Z3: 1 VC in max 1.5 seconds and 1 step)
+sequential_experiments.ads:124:79: info: float overflow check proved (Z3: 1 VC in max 0.0 seconds and 1 step)
+sequential_experiments.ads:125:33: info: range check proved (Trivial)
+sequential_sampling.adb:42:07: info: initialization of "Noise" proved
+sequential_sampling.adb:51:29: info: float overflow check proved (Trivial)
+sequential_sampling.adb:51:29: info: range check proved (Trivial)
+sequential_sampling.adb:51:37: info: float overflow check proved (Trivial)
+sequential_sampling.ads:48:07: info: initialization of "Sample" proved
+sequential_sampling.ads:50:06: info: data dependencies proved
+sequential_sampling.ads:51:06: info: flow dependencies proved
+sequential_sampling.ads:52:14: info: postcondition proved (Colibri_Classic: 4 VC in max 0.6 seconds and 1 step; Trivial: 4 VC in max 0.0 seconds and 2 steps; Z3: 2 VC in max 0.0 seconds and 1 step)
+sequential_sampling.ads:52:33: info: float overflow check proved (Trivial)
+sequential_sampling.ads:53:36: info: float overflow check proved (Trivial)
+sequential_sampling.ads:56:58: info: float overflow check proved (Trivial)
+sequential_sampling.ads:57:58: info: float overflow check proved (Trivial)
+Summary logged in /tmp/sequential-fresh-ml0wtp6t/analyses/sequential-conditional-means/ada/obj-proof/gnatprove/gnatprove.out

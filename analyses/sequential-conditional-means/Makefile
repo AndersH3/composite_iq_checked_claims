@@ -1,14 +1,24 @@
 LATEXMK ?= latexmk
 TEX_SOURCE := sequential_conditional_means.tex
 PDF_DIR := output/pdf
+PYTHON ?= ../../.venv/bin/python
+TRIALS ?= 200000
 
-.PHONY: all pdf clean
+.PHONY: all pdf spark validate clean
 
 all: pdf
 
 pdf:
 	mkdir -p $(PDF_DIR)
 	$(LATEXMK) -xelatex -outdir=$(PDF_DIR) -interaction=nonstopmode -halt-on-error $(TEX_SOURCE)
+
+# The runner discovers a matching toolchain through the existing contracted
+# Alire environment helper, then uses a fresh source mirror and object tree.
+spark:
+	$(PYTHON) scripts/run_spark.py --trials $(TRIALS)
+
+validate:
+	$(PYTHON) scripts/validate_spark.py $(RESULTS)
 
 clean:
 	$(LATEXMK) -c -outdir=$(PDF_DIR) $(TEX_SOURCE)

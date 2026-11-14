@@ -19,3 +19,14 @@
 
 # Local PDF rendering files.
 tmp/
+
+# Rebuildable Ada objects and executables; evidence is stored separately.
+ada/obj*/
+ada/bin/
+ada/bin-proof/
+ada/results/
+ada/tmp/
+
+# Native verification logs are scientific evidence, not LaTeX intermediates.
+!evidence/**/*.log
+!evidence/**/*.out

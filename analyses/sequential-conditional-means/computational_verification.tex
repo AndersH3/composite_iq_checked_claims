@@ -1,0 +1,174 @@
+\section{Contracted calculations, simulations and independent checks}
+\label{sec:computational-verification}
+
+\subsection{Implementation and mathematical coverage}
+The accompanying \texttt{ada/} implementation separates exact formula
+construction, floating-point evaluation, sampling and reporting. It uses
+Ada's integer and elementary-function libraries and the repository's existing
+contracted \texttt{Normal\_Support} generator. The independent
+\texttt{scripts/validate\_spark.py} uses Python's \texttt{Fraction} and
+\texttt{csv}, NumPy matrix operations and SciPy distributions; it does not
+implement another matrix solver, square-root algorithm, PRNG or probability
+library. Comments explain the mathematical meaning, counting convention and
+numerical limits at each interface.
+
+\texttt{Sequential\_Core} constructs unreduced integer numerator/denominator
+pairs for the prediction and inclusive-mean coefficients, both actual-mean
+variances, regression coefficient, residual variance, covariance eigenvalues,
+initial-block inverse and infinite-count limits. The pairs represent exact
+rational numbers; the implementation does not round the coefficients before
+constructing other formulas. The executable supports signed correlations in
+integer thousandths and total finite counts at most \(1000\). Its domain
+predicate checks covariance admissibility and invertibility of the initial
+block; the perfectly correlated case has an explicit singular-inverse flag.
+This bounded computational domain is narrower than the real-parameter
+mathematical theorems. In particular, an analytic limit is returned directly,
+rather than representing infinity by the maximum supported finite count.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.60\textwidth}}
+\hline
+Mathematical content & Computational counterpart \\
+\hline
+\endfirsthead
+\hline
+Mathematical content & Computational counterpart \\
+\hline
+\endhead
+\hline
+\endfoot
+Covariance domain, eigenvalues and inverse &
+Exact coefficients, rejection of inadmissible inputs, numerical eigenvector
+residuals, inverse multiplication, NumPy block covariance conditioning and
+singular-endpoint checks. \\
+\hline
+Gaussian regression and prediction recursion &
+Exact regression and residual-variance coefficients; original recursion
+iterated independently for \(r=1,2,3\), compared with the constant-prediction
+formula. NumPy independently obtains conditional moments by a Schur complement. \\
+\hline
+Inclusive means, population and conditional variances, fixed-list SD zero &
+Exact rational and independent matrix calculations for all nine requested IQ
+rows, the earlier \(a=2\) illustrations and finite boundary cases; separate
+population and conditional Monte Carlo batches; deterministic zero-SD draws. \\
+\hline
+IQ transformation and all printed arithmetic &
+Affine mean and squared-SD transformations; independent rational checks of the
+finite examples, limits, variance decomposition and integer rounding certificates. \\
+\hline
+Infinite-count results &
+Exact limit coefficients, independent rational limit calculations and separate
+population/conditional limiting-law batches for \(r=1,2,3\). \\
+\hline
+Nonidentification from moments &
+Direct weighted calculation of the paper's three-atom probability law,
+including its covariance, conditional value \(-1\), inclusive mean \(-1/2\)
+and comparison with an independent score having the same marginal law. \\
+\hline
+Foundational probability and linear-algebra theorems &
+Written proofs and primary references in Section~\ref{sec:foundations}; finite
+program tests and simulations do not establish these universal theorems. \\
+\end{longtable}
+
+\subsection{What the simulations sample}
+For each finite example, the population batch samples a Gaussian random
+variable with location \(0\) and variance \(d_N/N\). The conditional batch
+samples one with location \(B_{r,k}\) and variance
+\(k(1-c)d_N/(N^2d_r)\). These are exactly the scalar laws of the actual means
+by Gaussian affine closure and the conditional-covariance theorem already
+proved. On the IQ scale the respective centres are \(100\) and
+\(100+15B_{r,k}\). The limiting batches use the limiting Gaussian laws with
+variances \(c\) and \(c(1-c)/d_r\), respectively. A zero variance returns the
+location without consuming random state. This also checks the deterministic
+fixed-list case.
+
+The scalar sampler avoids constructing a large vector when only its mean is
+needed. Consequently, matching empirical scalar moments is a check of the
+sampling/evaluation pipeline, rather than an independent derivation of the
+variance formulas. The separate full-matrix NumPy calculation and exact
+\texttt{Fraction} calculation provide that independent finite arithmetic
+cross-check. Neither checks whether real test data follow the assumed model.
+
+Each reported Monte Carlo row uses an explicit seed, sample count, sample
+mean and sample variance with denominator \(n-1\). A bounded accumulator
+records the count, sum and sum of squares. Its final nonnegative clamp makes
+floating-point cancellation explicit. For theoretical variance \(v>0\), the
+validator compares the mean with its Gaussian standard error
+\(\sqrt{v/n}\), and the variance with the SciPy chi-square reference interval
+for \((n-1)S^2/v\). The recorded very small tail probability is a conservative
+diagnostic for the fixed case grid. The ideal reference distributions are proved below from independent Gaussian
+observations. The finite-state pseudorandom implementation supplies an approximation, whose
+independence and exact normality are not formal-program claims. Zero-variance
+rows instead require numerically constant output. A passing finite simulation
+cannot prove a distributional identity or an asymptotic statement.
+
+\begin{proposition}[Reference laws for the simulation diagnostics]
+\label{prop:simulation-reference-laws}
+For an integer \(n\geq2\), if \(Y_1,\ldots,Y_n\) are independent \(N(m,v)\) variables, \(v>0\),
+then \(\sqrt{n}(\overline Y-m)/\sqrt v\) is standard normal, and
+\((n-1)S^2/v\) has the chi-square distribution with \(n-1\) degrees
+of freedom, where \(S^2=\sum_i(Y_i-\overline Y)^2/(n-1)\).
+\end{proposition}
+\begin{proof}
+Let \(Z_i=(Y_i-m)/\sqrt v\). Extend the unit vector
+\(n^{-1/2}\one_n\) to an orthonormal basis, and let \(Q\) have those
+basis vectors as rows, with that vector first. Such an extension follows
+by finite-dimensional orthogonal decomposition (or Gram--Schmidt), as in
+\citet[Theorem 6.36, p.~203]{axler2024}. By Theorem~\ref{thm:gaussian}, \(T=QZ\)
+is Gaussian with covariance \(QQ^{\T}=I\); its components are therefore
+independent standard normals. Its first component is
+\(T_1=\sqrt n(\overline Y-m)/\sqrt v\). Preservation of squared norm gives
+\[
+ \frac{1}{v}\sum_i(Y_i-\overline Y)^2
+ =\sum_i Z_i^2-T_1^2=\sum_{j=2}^{n}T_j^2.
+\]
+The chi-square distribution with \(n-1\) degrees of freedom is, by
+definition, the law of the sum of squares of \(n-1\) independent standard
+normals. This proves both claims from Gaussian closure and orthogonality;
+SciPy evaluates the corresponding normal and chi-square quantiles, rather
+than supplying a new mathematical assumption.
+\end{proof}
+
+\subsection{Contracts, native proof and trust boundaries}
+Every new SPARK subprogram specification has at least five explicit behavioral
+or flow contract entries. Exact formula functions have at least ten. The
+floating evaluator, accumulator and sampler have more entries where distinct
+properties are useful; reset needs only its three state-reset properties and
+two flow properties. Every named supplementary Python function, including
+tests and helpers, has at least five Deal decorators. Higher counts specify
+independent domain, output, exception, side-effect and frame requirements;
+the structural audit counts declarations and cannot establish their adequacy.
+
+\texttt{Sequential\_Core} uses proved bounded integer operations.
+\texttt{Sequential\_Experiments} specifies the floating operations actually
+executed, not exact real division or a universal rounding-error bound.
+\texttt{Sequential\_Sampling.Draw} specifies state flow, bounded displacement
+and zero-SD behavior. Its normal generator is reused from the existing
+analysis. The square-root adapter calls Ada's standard library and explicitly
+checks its advertised endpoint, range and squared-residual properties on
+normal return. That adapter's body remains outside SPARK, as do the reused
+transcendental numerical completions and the command-line/CSV driver. The
+latter is one disclosed trusted procedure: physical I/O, parsing, diagnostic
+loops and orchestration are runtime checked, rather than represented by
+contracts that would claim operating-system success. These boundaries are
+visible in native body/spec coverage.
+
+The standard recorded numerical run evaluates 20 finite cases and compares
+each with an independent full-matrix calculation. Forty finite simulation
+batches and six limiting-parameter batches each contain 200,000 observations,
+for 9.2 million scalar aggregate values. Eighteen identity/counterexample
+checks have maximum absolute discrepancy less than \(1.8\times10^{-15}\).
+All sampling diagnostics pass; the largest empirical-mean discrepancy is
+less than \(1.53\) theoretical standard errors. These are reproducible
+finite-run observations, rather than universal numerical or statistical
+proofs. The independent exact checks also verify all 74 printed integer
+rounding-certificate entries.
+
+The retained campaign contains native prover logs and entity metadata,
+source and result hashes, contract inventories and the independent validation
+report. Its precise results are summarized in the accompanying README.
+GNATprove proof concerns the stated bounded program contracts, under the
+contracts of trusted boundaries. Runtime Deal checks, static lint, property
+tests, symbolic checks on their supported scope and simulations are reported
+separately. None machine-checks this entire mathematical exposition, the
+external math library's implementation, PRNG normality or the psychometric
+assumptions. Historical proof records for other analyses are preserved.

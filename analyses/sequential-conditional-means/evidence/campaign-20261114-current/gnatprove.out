@@ -1,0 +1,95 @@
+Summary of SPARK analysis
+=========================
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+SPARK Analysis results        Total         Flow                                                                Provers   Justified   Unproved
+----------------------------------------------------------------------------------------------------------------------------------------------
+Data Dependencies                54           54                                                                      .           .          .
+Flow Dependencies                54           54                                                                      .           .          .
+Initialization                   16           16                                                                      .           .          .
+Non-Aliasing                      .            .                                                                      .           .          .
+Run-time Checks                 229            .    229 (CVC5 46%, Colibri_Classic 1%, Trivial 20%, Z3 32%, altergo 1%)           .          .
+Assertions                        8            .                              8 (CVC5 63%, Colibri_Classic 13%, Z3 25%)           .          .
+Functional Contracts             69            .     69 (CVC5 53%, Colibri_Classic 1%, Trivial 26%, Z3 18%, altergo 2%)           .          .
+LSP Verification                  .            .                                                                      .           .          .
+Termination                       .            .                                                                      .           .          .
+Concurrency                       .            .                                                                      .           .          .
+----------------------------------------------------------------------------------------------------------------------------------------------
+Total                           430    124 (29%)                                                              306 (71%)           .          .
+
+
+max steps used for successful proof: 102376
+
+Analyzed 6 units
+in unit hoeflin_boundary_models, 32 subprograms and packages out of 32 analyzed
+  Hoeflin_Boundary_Models at hoeflin_boundary_models.ads:3 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Hoeflin_Boundary_Models.Calculation_Payload at hoeflin_boundary_models.ads:161 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Can_Emit at hoeflin_boundary_models.ads:196 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Column_Count at hoeflin_boundary_models.ads:141 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Decimal_Image at hoeflin_boundary_models.ads:253 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+  Hoeflin_Boundary_Models.Erfc_Scaling at hoeflin_boundary_models.ads:64 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (4 checks)
+  Hoeflin_Boundary_Models.Example_Payload at hoeflin_boundary_models.ads:189 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Inverse_Bracket_Acceptable at hoeflin_boundary_models.ads:26 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Log_Acceptable at hoeflin_boundary_models.ads:41 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Note at hoeflin_boundary_models.ads:231 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Numeric_Format at hoeflin_boundary_models.ads:238 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Decimal_Image at hoeflin_boundary_models.ads:259 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Erfc at hoeflin_boundary_models.ads:82 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (3 checks)
+  Hoeflin_Boundary_Models.Observe_Inverse_Bracket at hoeflin_boundary_models.ads:88 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Label at hoeflin_boundary_models.ads:293 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Hoeflin_Boundary_Models.Observe_Log_Radius at hoeflin_boundary_models.ads:99 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Number at hoeflin_boundary_models.ads:277 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Probability at hoeflin_boundary_models.ads:76 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Rare_Quantile at hoeflin_boundary_models.ads:93 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Sqrt at hoeflin_boundary_models.ads:70 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Observe_Trig at hoeflin_boundary_models.ads:104 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Options_Payload at hoeflin_boundary_models.ads:153 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Probability_Value at hoeflin_boundary_models.ads:8 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Project_Label at hoeflin_boundary_models.ads:286 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (18 checks)
+  Hoeflin_Boundary_Models.Project_Number at hoeflin_boundary_models.ads:269 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Radius_Acceptable at hoeflin_boundary_models.ads:48 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Rare_Quantile_Acceptable at hoeflin_boundary_models.ads:34 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Simulation_Payload at hoeflin_boundary_models.ads:171 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Sqrt_Acceptable at hoeflin_boundary_models.ads:15 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Transition at hoeflin_boundary_models.ads:216 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (2 checks)
+  Hoeflin_Boundary_Models.Trig_Acceptable at hoeflin_boundary_models.ads:57 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Boundary_Models.Valid_Column_Label at hoeflin_boundary_models.ads:245 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+in unit hoeflin_core, 9 subprograms and packages out of 9 analyzed
+  Hoeflin_Core at hoeflin_core.ads:2 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Hoeflin_Core.Composite at hoeflin_core.ads:54 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+  Hoeflin_Core.IQ at hoeflin_core.ads:62 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (9 checks)
+  Hoeflin_Core.Latent_Reliability at hoeflin_core.ads:38 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Hoeflin_Core.Observe at hoeflin_core.ads:86 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+  Hoeflin_Core.Threshold at hoeflin_core.ads:46 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (6 checks)
+  Hoeflin_Core.Valid at hoeflin_core.ads:77 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Hoeflin_Core.Variance_Factor at hoeflin_core.ads:30 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (10 checks)
+  Hoeflin_Core.Variance_Numerator at hoeflin_core.ads:13 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (3 checks)
+in unit normal_support, 6 subprograms and packages out of 11 analyzed
+  Normal_Support at normal_support.ads:4 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Normal_Support.Check_Inverse_Bracket at normal_support.adb:39 skipped; body is SPARK_Mode => Off
+  Normal_Support.Checked_Radius at normal_support.adb:101 skipped; body is SPARK_Mode => Off
+  Normal_Support.Inverse_Survival at normal_support.ads:23 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (14 checks)
+  Normal_Support.Normal_Pair at normal_support.ads:63 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (11 checks)
+  Normal_Support.Rare_Quantile at normal_support.ads:35 skipped; body is SPARK_Mode => Off
+  Normal_Support.Reset at normal_support.ads:52 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (5 checks)
+  Normal_Support.Square_Root at normal_support.ads:28 skipped; body is SPARK_Mode => Off
+  Normal_Support.State_Value at normal_support.ads:46 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (4 checks)
+  Normal_Support.Survival at normal_support.ads:17 skipped; body is SPARK_Mode => Off
+  Normal_Support.Uniform at normal_support.ads:57 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (5 checks)
+in unit sequential_core, 5 subprograms and packages out of 5 analyzed
+  Sequential_Core at sequential_core.ads:9 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Sequential_Core.Calculate at sequential_core.ads:92 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (52 checks)
+  Sequential_Core.D_Numerator at sequential_core.ads:26 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Sequential_Core.Limits at sequential_core.ads:157 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (10 checks)
+  Sequential_Core.Valid at sequential_core.ads:49 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
+in unit sequential_experiments, 6 subprograms and packages out of 6 analyzed
+  Sequential_Experiments at sequential_experiments.ads:11 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Sequential_Experiments.Add at sequential_experiments.ads:90 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (13 checks)
+  Sequential_Experiments.Finish at sequential_experiments.ads:117 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (28 checks)
+  Sequential_Experiments.From_Coefficients at sequential_experiments.ads:36 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (17 checks)
+  Sequential_Experiments.Reset at sequential_experiments.ads:83 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (1 checks)
+  Sequential_Experiments.Value at sequential_experiments.ads:16 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (12 checks)
+in unit sequential_sampling, 2 subprograms and packages out of 3 analyzed
+  Sequential_Sampling at sequential_sampling.ads:9 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (0 checks)
+  Sequential_Sampling.Checked_Sqrt at sequential_sampling.ads:24 skipped; body is SPARK_Mode => Off
+  Sequential_Sampling.Draw at sequential_sampling.ads:44 flow analyzed (0 errors, 0 checks, 0 warnings and 0 pragma Assume statements) and proved (8 checks)
