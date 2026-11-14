@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **1,159 public theorem/lemma/example claims**, plus
+The current branch has **1,193 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**1,162 proof scripts** across eleven Rocq modules. The claims and scripts
+**1,196 proof scripts** across twelve Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -2279,7 +2279,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `equicorr_schur_variance_reduction` (theorem) | Reuse Schur identities and the common equicorrelation denominator to factor and bound the residual quadratic form. | Stdlib.Reals, Lra, Psatz, Ring, Field; SequentialReport.sequential_d and checked residual covariance lemmas. | Feasible energy/sum algebra or block inverse/Schur identities only; no Gaussian covariance realization or conditional-expectation construction. |
 
 
-## EquicorrelationVectors.v — 31 proof scripts
+## EquicorrelationVectors.v — 34 proof scripts
 
 | Declaration (proof script) | Refactoring / proof method | Existing libraries or lemmas reused | Scope and boundary |
 |---|---|---|---|
@@ -2314,3 +2314,6 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `vector_schur_pd` (theorem) | Schur residual block PD on nonzero actual future-score lists. | Rocq Stdlib.List/Reals/Lra/Psatz/Field/Ring; FiniteSum, EquicorrelationSpectral. | Actual finite score vectors, algebraic quadratic forms, and explicit positivity premises; no Gaussian realization or conditional law. |
 | `vector_equicorrelation_action_sum` (theorem) | Finite list sum of the rank-one matrix-vector action equals d_n times original sum. | Rocq Stdlib.List/Reals/Lra/Psatz/Field/Ring; FiniteSum, EquicorrelationSpectral. | Actual finite score vectors, algebraic quadratic forms, and explicit positivity premises; no Gaussian realization or conditional law. |
 | `vector_equicorrelation_action_repeat` (theorem) | Whole constant vector is an eigenvector of the map-defined matrix action. | Rocq Stdlib.List/Reals/Lra/Psatz/Field/Ring; FiniteSum, EquicorrelationSpectral. | Actual finite score vectors, algebraic quadratic forms, and explicit positivity premises; no Gaussian realization or conditional law. |
+| `vector_equicorrelation_dot_action_identity` (theorem) | Expand actual matrix-action dot products and reuse finite_sum_ext/add/scale to identify the explicit quadratic form. | Stdlib.Ring, FiniteSum, EquicorrelationSpectral. | Genuine finite vector and rank-one matrix-action equality; no Gaussian model. |
+| `vector_equicorrelation_contrast_action_eigenvector` (theorem) | Use Stdlib.map_ext_in to identify the full matrix action on every zero-sum vector. | Stdlib.List, EquicorrelationSpectral.equicorr_action. | Exact contrast eigenspace on finite real lists, no general spectral package. |
+| `vector_equicorrelation_pd_kernel_trivial` (theorem) | Combine previously checked vector positive-definiteness with square-norm zero support and finite-sum extensionality. | FiniteSum, Stdlib.Forall_forall, vector_equicorrelation_pd. | Trivial kernel under strict eigenvalue hypotheses, not a Gaussian realization. |
