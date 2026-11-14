@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 597 proof scripts
+## FiniteMoments.v — 601 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1416,6 +1416,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_residual_bilinear_block_decomposition` (theorem) | Expand both projection/remainder decompositions and cancel mixed terms via bilinearity. | projection_remainder_decomposition, projection_remainder_orthogonal, bilinear_add_first/second. | **New: Exact orthogonal block splitting of any finite typed covariance bilinear form.** |
 | `indexed_basis_covariance_pivot_residual_bilinear_decomposition` (theorem) | Rewrite the generic block decomposition and apply pivot-section covariance homogeneity. | residual_bilinear_block_decomposition, pivot_section_pairing. | **New: General rank-one pivot covariance term plus unconstrained residual covariance.** |
 | `indexed_basis_covariance_pivot_residual_quadratic_decomposition` (theorem) | Specialize the generic scalar-residual decomposition to equal arguments. | residual_bilinear_decomposition, Reals. | **New: Generic covariance self-pairing decomposes into pivot-coordinate square and residual quadratic.** |
+| `indexed_basis_covariance_pivot_schur_complement_identity` (theorem) | Eliminate normalized scalar coordinates from the general residual block with a single nonzero real denominator. | residual_bilinear_decomposition, Field, Lra. | **New: Exact signed/unnormalized Schur complement of a scalar covariance pivot.** |
+| `indexed_basis_covariance_pivot_schur_determinant_identity` (theorem) | Specialize Schur complement diagonally, cancel the pivot denominator and normalize products. | schur_complement_identity, Field, Psatz.nra. | **New: Gram pivot determinant equals pivot pairing times residual quadratic.** |
+| `indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_residual_psd` (theorem) | Characterize full PSD using the positive pivot and nonnegative residual block, testing the pivot for necessity. | residual_quadratic_decomposition, Rle_0_sqr, Rmult_le_pos, Lra. | **New: Arbitrary finite signed covariance PSD iff pivot positive and entire residual PSD.** |
+| `indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_residual_nsd` (theorem) | Characterize full NSD with negative pivot and residual NSD; use real square sign with diagonal block split. | residual_quadratic_decomposition, Rle_0_sqr, Psatz.nra. | **New: Arbitrary finite signed covariance NSD iff pivot negative and entire residual NSD.** |
 | `indexed_basis_two_samples_pivot_decomposition_unique_components` (theorem) | Reduce radical membership to scalar zero coordinate and apply the generic component uniqueness theorem, eliminating duplicate VectorSpec proof. | two_samples_radical_iff_pivot_coordinate_zero, covariance_pivot_decomposition_unique_components. | **Refactored: Specialized radical uniqueness delegates to generic covariance splitting.** |
 | `indexed_basis_two_samples_pivot_decomposition_exists_unique` (theorem) | Construct the section/remainder witness and use both previously checked decomposition and new pair uniqueness. | indexed_basis_two_samples_pivot_remainder_in_radical, indexed_basis_covariance_pivot_projection_remainder_decomposition, indexed_basis_two_samples_pivot_decomposition_unique_components. | **New: Constructive exists-unique typed scalar/radical splitting for every coefficient vector.** |
 | `indexed_basis_two_samples_bilinear_gram_determinant_zero` (theorem) | Specialize existing four-direction minor to the two-direction Gram matrix and rewrite covariance symmetry. | indexed_basis_two_samples_bilinear_all_minors_zero, indexed_basis_covariance_bilinear_symmetric. | **New: Exact zero Gram determinant without nonzero pivot or sign assumptions.** |
@@ -1988,3 +1992,31 @@ proof, Python/SPARK code or archived evidence alterations.
 Expected pinned CI totals after this additional batch:
 **1008 public claims; 1011 proof scripts; 1100 documented
 declarations**, including **597 FiniteMoments proof scripts**.
+
+
+## Exact Schur residual and semidefinite pivot classification (14 November 2026)
+
+Four new kernel-checkable, declaration-documented Rocq theorems extend the
+existing generic orthogonal covariance splitting with (i) the exact
+scalar Schur-complement residual formula for every pair of typed
+coefficient directions; (ii) the corresponding pivot/Gram determinant
+identity; (iii) equivalence between global positive semidefiniteness
+and a *positive* nonisotropic pivot plus nonnegative residual quadratic;
+and (iv) the dual negative-semidefinite equivalence with a *negative*
+pivot and nonpositive residual quadratic.
+
+All results explicitly require B(p,p)<>0 and permit **arbitrarily many
+finite sample occurrences, signed and unnormalized real weights, and
+dependent basis scores**. The sign equivalences are conditional
+characterizations; they do not assume or infer that signed-weight
+covariance is necessarily PSD or NSD.
+
+The proofs reuse the previously verified scalar/residual covariance
+block identity, symmetric typed pairing, standard real Field, Ring,
+Lra, Psatz and nonnegative-square/product lemmas. They introduce no
+extra matrix representation, vector recursion, summation evaluator,
+axiom, admitted proof, Python/SPARK modification or evidence edits.
+The exact checked inventory is determined by the pinned Rocq 9.2
+documentation and kernel CI, not by this commentary: expected **1012
+public checked claims, 1015 proof scripts, 1104 declarations**, with
+**601 FiniteMoments proof scripts**.

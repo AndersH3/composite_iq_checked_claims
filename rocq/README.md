@@ -4397,3 +4397,31 @@ interval arithmetic is available.
 This work is AI-generated and requires independent review of the
 **mapping between the English report and the exact formal statements**,
 even when the Rocq kernel accepts all proofs.
+
+
+## Exact Schur residual and semidefinite pivot classification (14 November 2026)
+
+Four new kernel-checkable, declaration-documented Rocq theorems extend the
+existing generic orthogonal covariance splitting with (i) the exact
+scalar Schur-complement residual formula for every pair of typed
+coefficient directions; (ii) the corresponding pivot/Gram determinant
+identity; (iii) equivalence between global positive semidefiniteness
+and a *positive* nonisotropic pivot plus nonnegative residual quadratic;
+and (iv) the dual negative-semidefinite equivalence with a *negative*
+pivot and nonpositive residual quadratic.
+
+All results explicitly require B(p,p)<>0 and permit **arbitrarily many
+finite sample occurrences, signed and unnormalized real weights, and
+dependent basis scores**. The sign equivalences are conditional
+characterizations; they do not assume or infer that signed-weight
+covariance is necessarily PSD or NSD.
+
+The proofs reuse the previously verified scalar/residual covariance
+block identity, symmetric typed pairing, standard real Field, Ring,
+Lra, Psatz and nonnegative-square/product lemmas. They introduce no
+extra matrix representation, vector recursion, summation evaluator,
+axiom, admitted proof, Python/SPARK modification or evidence edits.
+The exact checked inventory is determined by the pinned Rocq 9.2
+documentation and kernel CI, not by this commentary: expected **1012
+public checked claims, 1015 proof scripts, 1104 declarations**, with
+**601 FiniteMoments proof scripts**.
