@@ -150,6 +150,9 @@ Proof.
   { apply (Rmult_lt_reg_r Q); [exact HQ |].
     rewrite Hscaled.
     nra. }
+  assert (HlowerNonnegative : 0 <= 2 * IZR t - 1) by lra.
+  assert (HupperNonnegative : 0 <= 2 * IZR t + 1) by lra.
+  assert (HscaledNonnegative : 0 <= 2 * T * sqrt (P / Q)) by nra.
   unfold report_strict_rounding_interval.
   split; nra.
 Qed.
