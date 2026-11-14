@@ -779,3 +779,83 @@ Proof.
  unfold equicorr_action, sequential_d; ring.
 Qed.
 
+
+(**
+ [vector_equicorrelation_dot_action_identity] (theorem) — The concrete equicorrelation quadratic form equals the Euclidean pairing of each score with its matrix-action output.
+ Mathematical meaning: The concrete equicorrelation quadratic form equals the Euclidean pairing of each score with its matrix-action output.
+ Exact checked proposition: forall c : R, forall xs : list R, finite_sum (fun x => x * equicorr_action c x (vector_real_sum xs)) xs = vector_equicorrelation_form c xs.
+ Premises and side conditions: Matrix coordinates are finite real lists; positive eigenvalues or zero-sum constraints are explicitly stated where used.
+ Proof/definition method: Expand the pointwise covariance action, then apply finite_sum_ext, additivity and scalar linearity to obtain xᵀCx.
+ Library reuse: Stdlib.List/Reals/Ring/Lra/Psatz, FiniteSum linearity and support lemmas, plus EquicorrelationSpectral and prior concrete-vector results.
+ Boundary: Only deterministic finite-dimensional matrix/quadratic algebra; no Gaussian sampling, conditional expectation or empirical calibration.
+ *)
+Theorem vector_equicorrelation_dot_action_identity :
+ forall c : R, forall xs : list R,
+ finite_sum (fun x => x * equicorr_action c x (vector_real_sum xs)) xs =
+ vector_equicorrelation_form c xs.
+Proof.
+ intros c xs.
+ transitivity (finite_sum
+   (fun x => (1-c)*(x*x) + c*(vector_real_sum xs)*x) xs).
+ { apply finite_sum_ext; intro x; unfold equicorr_action; ring. }
+ rewrite finite_sum_add, finite_sum_scale, finite_sum_scale.
+ unfold vector_equicorrelation_form, vector_square_energy,
+   vector_real_sum, equicorr_energy.
+ ring.
+Qed.
+
+(**
+ [vector_equicorrelation_contrast_action_eigenvector] (theorem) — Every zero-sum finite score vector is an exact contrast eigenvector with eigenvalue 1-c.
+ Mathematical meaning: Every zero-sum finite score vector is an exact contrast eigenvector with eigenvalue 1-c.
+ Exact checked proposition: forall c : R, forall xs : list R, vector_real_sum xs=0 -> vector_equicorrelation_action c xs = map (fun x => (1-c)*x) xs.
+ Premises and side conditions: Matrix coordinates are finite real lists; positive eigenvalues or zero-sum constraints are explicitly stated where used.
+ Proof/definition method: Apply the Stdlib.map_ext_in theorem and the already established rank-one coordinate action.
+ Library reuse: Stdlib.List/Reals/Ring/Lra/Psatz, FiniteSum linearity and support lemmas, plus EquicorrelationSpectral and prior concrete-vector results.
+ Boundary: Only deterministic finite-dimensional matrix/quadratic algebra; no Gaussian sampling, conditional expectation or empirical calibration.
+ *)
+Theorem vector_equicorrelation_contrast_action_eigenvector :
+ forall c : R, forall xs : list R, vector_real_sum xs=0 ->
+ vector_equicorrelation_action c xs =
+ map (fun x => (1-c)*x) xs.
+Proof.
+ intros c xs Hsum.
+ unfold vector_equicorrelation_action.
+ rewrite Hsum.
+ apply map_ext_in; intros x _.
+ unfold equicorr_action; ring.
+Qed.
+
+(**
+ [vector_equicorrelation_pd_kernel_trivial] (theorem) — When both eigenvalues are strictly positive, the only vector with vanishing quadratic form is the all-zero finite vector.
+ Mathematical meaning: When both eigenvalues are strictly positive, the only vector with vanishing quadratic form is the all-zero finite vector.
+ Exact checked proposition: forall c : R, forall xs : list R, c<1 -> 0<sequential_d (INR(length xs)) c -> (vector_equicorrelation_form c xs=0 <-> Forall (fun x => x=0) xs).
+ Premises and side conditions: Matrix coordinates are finite real lists; positive eigenvalues or zero-sum constraints are explicitly stated where used.
+ Proof/definition method: Combine the strict PD theorem, finite energy-zero equivalence, and standard finite-sum extensionality.
+ Library reuse: Stdlib.List/Reals/Ring/Lra/Psatz, FiniteSum linearity and support lemmas, plus EquicorrelationSpectral and prior concrete-vector results.
+ Boundary: Only deterministic finite-dimensional matrix/quadratic algebra; no Gaussian sampling, conditional expectation or empirical calibration.
+ *)
+Theorem vector_equicorrelation_pd_kernel_trivial :
+ forall c : R, forall xs : list R,
+ c<1 -> 0<sequential_d (INR(length xs)) c ->
+ (vector_equicorrelation_form c xs=0 <-> Forall (fun x => x=0) xs).
+Proof.
+ intros c xs Hc Hd; split.
+ - intro Hform.
+   destruct (Rlt_dec 0 (vector_square_energy xs)) as [Hpositive|Hnonpositive].
+   + pose proof (vector_equicorrelation_pd xs c Hc Hd Hpositive) as Hstrict.
+     lra.
+   + apply (proj1 (vector_energy_zero_iff_zero_components xs)).
+     pose proof (vector_square_energy_nonnegative xs); lra.
+ - intro Hall.
+   assert (He : vector_square_energy xs=0).
+   { apply (proj2 (vector_energy_zero_iff_zero_components xs)); exact Hall. }
+   assert (Hs : vector_real_sum xs=0).
+   { unfold vector_real_sum.
+     transitivity (finite_sum (fun _ : R => 0) xs).
+     - apply finite_sum_ext_in; intros x Hin.
+       exact ((proj1 (@Forall_forall R (fun y => y=0) xs)) Hall x Hin).
+     - apply finite_sum_zero. }
+   unfold vector_equicorrelation_form.
+   rewrite He, Hs; unfold equicorr_energy; ring.
+Qed.
+
