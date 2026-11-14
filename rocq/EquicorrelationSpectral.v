@@ -410,7 +410,7 @@ Theorem equicorr_inverse_contrast_direction :
   forall n c y, 1-c<>0 ->
   equicorr_inverse_entry n c y 0 = y/(1-c).
 Proof.
-  intros n c y Hc; unfold equicorr_inverse_entry; field; nra.
+  intros n c y _; unfold equicorr_inverse_entry, Rdiv; ring.
 Qed.
 
 (**
