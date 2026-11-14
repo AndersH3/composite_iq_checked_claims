@@ -3717,4 +3717,21 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 
 ## Sequential report arithmetic proof module (14 November 2026)
 
-The source file `SequentialReport.v` implements **5 report-specific definitions and 31 kernel-targeted real-algebra theorems**, mapped precisely to the labelled formulas in the sequential conditional-means report. The symbolic count parameters are real scalars so these identities also apply to positive-integer test counts; interpreting them as expectations or conditional Gaussian variances requires the separately identified Gaussian hypotheses. It reuses `Hoeflin.equal_weight_variance` and Rocq Stdlib Reals, Lra, Psatz, Ring and Field, with no additional axioms or admits. For exact scope and Gaussian proof gaps see `rocq/REPORT_THEOREM_INVENTORY.md`.
+The source file `SequentialReport.v` implements **7 report-specific definitions and 37 kernel-checked real-algebra and finite-induction theorems**, mapped precisely to the labelled formulas in the sequential conditional-means report. The symbolic count parameters are real scalars so these identities also apply to positive-integer test counts; interpreting them as expectations or conditional Gaussian variances requires the separately identified Gaussian hypotheses. It reuses `Hoeflin.equal_weight_variance` and Rocq Stdlib Reals, Lra, Psatz, Ring and Field, with no additional axioms or admits. For exact scope and Gaussian proof gaps see `rocq/REPORT_THEOREM_INVENTORY.md`.
+
+
+### Kernel-checked report-facing recursion (14 November 2026)
+
+`SequentialReport.v` includes a proper natural-number induction for the
+entire prescribed scalar recursive score history; it is not limited to
+checking one fixed-point equation. The pinned Rocq 9.2 kernel confirms
+**7 definitions and 37 proof scripts** in this module and **1,199
+fully documented declarations, 1,100 theorem proofs including local
+helper lemmas, and 1,102 proof scripts** across eight modules.
+The public checked-claim count is **1,099**. Both
+[Rocq push CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43627749197)
+and [Rocq PR CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43627753031)
+passed at source commit `a6d3135c`. These are exact scalar algebra and
+recursion proofs under supplied regression formulas, not proofs of the
+Gaussian conditional distribution, spectral theorem or continuous-version
+conditional expectation; see `REPORT_THEOREM_INVENTORY.md`.
