@@ -979,7 +979,12 @@ Proof.
   assert (Hdiv : (P/Q)*Q=P).
   { field; lra. }
   assert (Hv : 0 <= P/Q).
-  { apply Rdiv_le_0_compat; lra. }
+  {
+    unfold Rdiv.
+    apply Rmult_le_pos.
+    - exact HP.
+    - left; apply Rinv_0_lt_compat; exact HQ.
+  }
   assert (Hlower : (2*IZR t-1)*(2*IZR t-1) < 4*T*T*(P/Q)).
   { nra. }
   assert (Hupper : 4*T*T*(P/Q) < (2*IZR t+1)*(2*IZR t+1)).
