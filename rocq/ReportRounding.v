@@ -1,18 +1,18 @@
 (** Module: ReportRounding.v
    Purpose: Formalize the strict rational and square-root decimal-rounding
    certificates used by the sequential conditional-means IQ report.
-   Mathematical model: Decimal reports are unique integer lattice indices
+   Mathematical representation: Decimal reports are unique integer lattice indices
    in an open half-unit interval for the scaled real quantity. Integer
    certificate formulas match exact rational variance and mean fractions.
-   Hypotheses: Rational denominator Q>0, positive scale T, nonnegative
+   Explicit hypotheses: Rational denominator Q>0, positive scale T, nonnegative
    variance and nonnegative square-root grid indices where applicable.
-   Boundaries: Arithmetic only. No Gaussian conditional-law construction,
+   Limitations: Arithmetic only. No Gaussian conditional-law construction,
    empirical population inference, or floating-point approximation is
    claimed. The nine instances are exact integer checks for the published
    values, not independent model-validation of the inputs.
-   Library reuse: Stdlib.Reals, Lra, Psatz, ZArith, and the built-in
+   Library use: Stdlib.Reals, Lra, Psatz, ZArith, and the built-in
    integer normalization/decision procedures; no new summation engine.
-   Verification: rocq compile ReportRounding.v under Rocq 9.2, after the
+   Reproduction: rocq compile ReportRounding.v under Rocq 9.2, after the
    maintained report modules. The theorem inventory links each result to
    the exact report appendix.
 *)
@@ -24,9 +24,9 @@ Open Scope R_scope.
  [report_strict_rounding_interval] (definition) — Open nearest-grid cell.
  Mathematical meaning: The positive scale T sends a real quantity x
  into the unique open integer-centered half-unit cell indexed by t.
- Exact statement: 2*IZR t-1 < 2*T*x < 2*IZR t+1.
- Premises: None at definition level; sound certificate theorems assume T>0.
- Method: Transparent real inequalities, with no rounding algorithm.
+ Exact declaration: 2*IZR t-1 < 2*T*x < 2*IZR t+1.
+ Premises and side conditions: None at definition level; sound certificate theorems assume T>0.
+ Proof/definition method: Transparent real inequalities, with no rounding algorithm.
  Library reuse: Stdlib.Reals.IZR and ordered-field operations.
  Boundary: Strict intervals exclude all halfway ties.
 *)
@@ -40,9 +40,9 @@ Definition report_strict_rounding_interval
  of a strictly nearest integer grid index.
  Mathematical meaning: Open half-unit cells associated with distinct
  integers do not overlap.
- Exact proposition: cell(T,t,x) and cell(T,j,x) imply t=j.
- Premises: Arbitrary real T and x; the inequalities themselves suffice.
- Method: Integer trichotomy and integer-to-real order compatibility,
+ Exact checked proposition: cell(T,t,x) and cell(T,j,x) imply t=j.
+ Premises and side conditions: Arbitrary real T and x; the inequalities themselves suffice.
+ Proof/definition method: Integer trichotomy and integer-to-real order compatibility,
  reducing overlapping interval constraints by Stdlib.Lra.
  Library reuse: Stdlib.ZArith.Z_lt_ge_dec, Z.eq_dec, IZR_le,
  plus_IZR, Stdlib.Lia and Lra.
@@ -76,10 +76,10 @@ Qed.
  rounding from the strict gap certificate in the report.
  Mathematical meaning: The integer test Q>2|T*P-t*Q| puts the exact
  rational P/Q in the unique nearest grid cell t/T.
- Exact proposition: T>0, Q>0 and Q-2*|TP-tQ|>0 imply
+ Exact checked proposition: T>0, Q>0 and Q-2*|TP-tQ|>0 imply
  cell(T,t,P/Q).
- Premises: Positive scale and denominator; P may be any signed real.
- Method: Split the standard real absolute-value definition by sign;
+ Premises and side conditions: Positive scale and denominator; P may be any signed real.
+ Proof/definition method: Split the standard real absolute-value definition by sign;
  cancel the nonzero real denominator and use ordered-field arithmetic.
  Library reuse: Stdlib.Reals.Rcase_abs/Rabs, Stdlib.Field, Psatz.nra.
  Boundary: Strict gap excludes ties. It proves exact arithmetic, not
@@ -106,12 +106,12 @@ Qed.
  rounded standard deviation from the two squared-interval tests.
  Mathematical meaning: Positive lower and upper square differences
  imply that sqrt(P/Q) lies strictly within the nearest grid cell.
- Exact proposition: With P>=0,Q>0,T>0,IZR t>=1,
+ Exact checked proposition: With P>=0,Q>0,T>0,IZR t>=1,
  4*T²*P>(2t-1)²*Q and (2t+1)²*Q>4*T²*P imply
  cell(T,t,sqrt(P/Q)).
- Premises: Nonnegative variance; positive denominator and decimal scale;
+ Premises and side conditions: Nonnegative variance; positive denominator and decimal scale;
  t is positive so the lower threshold is nonnegative.
- Method: The maintained real square-root-square identity and
+ Proof/definition method: The maintained real square-root-square identity and
  polynomial inequalities on positive quantities, without numerical sqrt.
  Library reuse: Stdlib.Reals.sqrt_pos, sqrt_sqrt, Stdlib.Psatz.nra.
  Boundary: The inequalities are strict and exclude halfway ties;
@@ -159,9 +159,10 @@ Qed.
 
 (**
  [report_mean_integer_certificate] (definition) — Integer numerator gap.
- Meaning: D_100=Q-2*abs(100*P-t*Q) for exact mean P/Q.
- Premises: To interpret as a rounding certificate, Q and 100 are positive.
- Method: Standard Z arithmetic; no floating-point evaluation.
+ Mathematical meaning: D_100=Q-2*abs(100*P-t*Q) for exact mean P/Q.
+ Exact declaration: Q-2*Z.abs(100*P-t*Q) in integer arithmetic.
+ Premises and side conditions: To interpret as a rounding certificate, Q and 100 are positive.
+ Proof/definition method: Standard Z arithmetic; no floating-point evaluation.
  Library reuse: Stdlib.ZArith.Z.abs.
  Boundary: This is a candidate certificate; positivity is proved per row.
 *)
@@ -170,9 +171,10 @@ Definition report_mean_integer_certificate (P Q t : Z) : Z :=
 
 (**
  [report_sd_integer_lower] (definition) — Lower positive squared gap.
- Meaning: L_100=40000*P-(2*t-1)^2*Q for variance P/Q.
- Premises: Positive Q and positive t when used for rounding.
- Method: Direct integer expression mirroring the report.
+ Mathematical meaning: L_100=40000*P-(2*t-1)^2*Q for variance P/Q.
+ Exact declaration: 40000*P-(2*t-1)*(2*t-1)*Q in integer arithmetic.
+ Premises and side conditions: Positive Q and positive t when used for rounding.
+ Proof/definition method: Direct integer expression mirroring the report.
  Library reuse: Stdlib.ZArith.Z.mul.
  Boundary: No square root is calculated here.
 *)
@@ -181,9 +183,10 @@ Definition report_sd_integer_lower (P Q t : Z) : Z :=
 
 (**
  [report_sd_integer_upper] (definition) — Upper positive squared gap.
- Meaning: U_100=(2*t+1)^2*Q-40000*P for variance P/Q.
- Premises: Positive Q and positive t when used for rounding.
- Method: Direct integer expression mirroring the report.
+ Mathematical meaning: U_100=(2*t+1)^2*Q-40000*P for variance P/Q.
+ Exact declaration: (2*t+1)*(2*t+1)*Q-40000*P in integer arithmetic.
+ Premises and side conditions: Positive Q and positive t when used for rounding.
+ Proof/definition method: Direct integer expression mirroring the report.
  Library reuse: Stdlib.ZArith.Z.mul.
  Boundary: No square root is calculated here.
 *)
@@ -192,11 +195,12 @@ Definition report_sd_integer_upper (P Q t : Z) : Z :=
 
 (**
  [report_certificate_values] (definition) — Five exact table certificates.
- Meaning: The listed integer mean difference and lower/upper SD
+ Mathematical meaning: The listed integer mean difference and lower/upper SD
+ Exact declaration: Five nested integer results (mean gap, two population SD gaps, two conditional SD gaps) generated from their explicit components.
  differences are collected for one IQ-150 report row.
  Exact representation: (D_mean,(L_pop,(U_pop,(L_cond,U_cond)))).
- Premises: Integer numerators, denominators and hundredth-grid indices.
- Method: Reuse the three separately defined integer certificate formulas.
+ Premises and side conditions: Integer numerators, denominators and hundredth-grid indices.
+ Proof/definition method: Reuse the three separately defined integer certificate formulas.
  Library reuse: Stdlib.Init.Datatypes.prod and Stdlib.ZArith.
  Boundary: The returned integers are verified by individual kernel proofs.
 *)
