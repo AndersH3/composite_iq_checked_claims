@@ -484,8 +484,11 @@ Theorem vector_equicorrelation_centered_decomposition :
 Proof.
  intros xs c Hxs.
  assert (Hdim : INR(length xs)<>0).
- { destruct xs as [|x rest]; [contradiction|simpl].
-   pose proof (vector_nat_to_real_successor_positive (length rest)); lra. }
+ { destruct xs as [|x rest]; [contradiction|].
+   intro Hzero.
+   assert (Hpos : 0 < INR(length (x::rest))).
+   { simpl; apply vector_nat_to_real_successor_positive. }
+   lra. }
  unfold vector_equicorrelation_form.
  apply equicorr_centered_energy_decomposition; exact Hdim.
 Qed.
