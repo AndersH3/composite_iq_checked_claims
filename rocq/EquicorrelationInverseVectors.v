@@ -383,8 +383,10 @@ Proof.
  - contradiction.
  - rewrite vector_inverse_quadratic_formula by assumption.
    assert (Hlen : INR(length (y::ys))<>0).
-   { pose proof (vector_nat_to_real_successor_positive (length ys)).
-     simpl; lra. }
+   { intro Hzero.
+     assert (Hpositive : 0 < INR(length (y::ys))).
+     { simpl; apply vector_nat_to_real_successor_positive. }
+     lra. }
    unfold sequential_d in *; field; nra.
 Qed.
 
