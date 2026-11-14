@@ -913,7 +913,7 @@ Theorem finite_two_cell_variance_reduction :
     (finite_weighted_mean samples weight score).
 Proof.
  intros A samples weight score event Ht Hf.
- rewrite finite_two_cell_total_variance by lra.
+ rewrite (finite_two_cell_total_variance A samples weight score event) by lra.
  pose proof (finite_two_cell_between_variance_nonnegative A
    samples weight score event (Rlt_le _ _ Ht) (Rlt_le _ _ Hf)) as Hbetween.
  lra.
