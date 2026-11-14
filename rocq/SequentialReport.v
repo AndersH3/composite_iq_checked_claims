@@ -268,8 +268,8 @@ Proof.
   assert (Hone : sequential_d 1 c <> 0).
   { rewrite sequential_denominator_one; lra. }
   specialize (H Hone Hn).
-  rewrite sequential_denominator_one in H.
-  ring_simplify in H.
+  rewrite Rmult_1_l in H.
+  rewrite Rmult_1_r in H.
   exact H.
 Qed.
 
