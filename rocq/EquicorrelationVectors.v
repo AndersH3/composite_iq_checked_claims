@@ -754,7 +754,7 @@ Proof.
    = sequential_d (INR(length xs)) c * vector_real_sum xs).
  unfold equicorr_action.
  rewrite finite_sum_add, finite_sum_scale, finite_sum_const.
- unfold sequential_d; ring.
+ unfold vector_real_sum, sequential_d; ring.
 Qed.
 
 (**
