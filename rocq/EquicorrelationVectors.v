@@ -20,7 +20,7 @@
    after the established dependency compilation under Rocq 9.2.
  *)
 From Stdlib Require Import Reals Lra Psatz List.
-Require Import FiniteSum EquicorrelationSpectral.
+Require Import FiniteSum SequentialReport EquicorrelationSpectral.
 Import ListNotations.
 Open Scope R_scope.
 
