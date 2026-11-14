@@ -446,9 +446,20 @@ Theorem equicorr_regression_risk_minimizer :
 Proof.
  intros r c b Hr Hd.
  rewrite equicorr_regression_risk_completed_square by lra.
- assert (Hs : 0 <= Rsqr (b-equicorr_regression_coefficient r c)) by apply Rle_0_sqr.
+ assert (Hs : 0 <= Rsqr (b-equicorr_regression_coefficient r c))
+   by apply Rle_0_sqr.
  unfold Rsqr in Hs.
- nra.
+ assert (Hpen : 0 <= r*sequential_d r c*
+   (b-equicorr_regression_coefficient r c)*
+   (b-equicorr_regression_coefficient r c)).
+ { replace (r*sequential_d r c*
+     (b-equicorr_regression_coefficient r c)*
+     (b-equicorr_regression_coefficient r c))
+     with ((r*sequential_d r c)*
+       ((b-equicorr_regression_coefficient r c)*
+        (b-equicorr_regression_coefficient r c))) by ring.
+   apply Rmult_le_pos; [nra|exact Hs]. }
+ lra.
 Qed.
 
 (**
