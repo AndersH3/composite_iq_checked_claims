@@ -6,9 +6,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **969 public theorem/lemma/example claims**, plus
+The current branch has **976 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**972 proof scripts** across seven Rocq modules. The claims and scripts
+**979 proof scripts** across seven Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 558 proof scripts
+## FiniteMoments.v — 565 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1383,6 +1383,13 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_projection_image_iff_section` (theorem) | Project to its scalar section; conversely each section is fixed by retraction. | indexed_basis_covariance_pivot_coordinate_section. | **New: Projection image is exactly the one-scalar pivot line.** |
 | `indexed_basis_two_samples_projection_radical_iff_zero_section` (theorem) | Reuse the radical iff zero-coordinate criterion and the projection retraction. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero, indexed_basis_covariance_pivot_projection_coordinate. | **New: Covariance radical equals concrete projection kernel.** |
 | `indexed_basis_two_samples_projection_preserves_bilinear` (theorem) | Factor both pairings into normalized coordinates and preserve each projection coordinate. | indexed_basis_two_samples_bilinear_pivot_coordinate_factorization, indexed_basis_covariance_pivot_projection_coordinate. | **New: Projecting both directions leaves covariance unchanged.** |
+| `indexed_basis_covariance_pivot_section_add` (theorem) | Prove standard Vector.map scalar-section additivity coordinatewise through VectorSpec equality and map2. | VectorSpec.eq_nth_iff, nth_map, nth_map2, Stdlib.Ring. | **New: The pivot section preserves addition without any probability assumptions.** |
+| `indexed_basis_covariance_pivot_section_scale` (theorem) | Apply VectorSpec map extensionality and ring associativity for nested scalar maps. | VectorSpec.eq_nth_iff, nth_map, Stdlib.Ring. | **New: Pivot scalar section preserves real scalar multiplication.** |
+| `indexed_basis_covariance_pivot_section_zero` (theorem) | Use standard VectorSpec nth_map and const_nth to identify zero-scaled pivot with Vector.const 0. | VectorSpec.eq_nth_iff, nth_map, const_nth, Stdlib.Ring. | **New: The zero scalar section is exactly the standard zero vector.** |
+| `indexed_basis_covariance_pivot_coordinate_surjective` (theorem) | Choose the already established scalar section as a witness and invoke coordinate-section retraction. | indexed_basis_covariance_pivot_coordinate_section. | **New: The normalized covariance pivot coordinate is onto all real numbers.** |
+| `indexed_basis_covariance_pivot_projection_add` (theorem) | Compose normalized covariance-coordinate additivity and scalar-section additivity. | indexed_basis_covariance_pivot_coordinate_add, indexed_basis_covariance_pivot_section_add. | **New: The idempotent covariance pivot projection is additive.** |
+| `indexed_basis_covariance_pivot_projection_scale` (theorem) | Compose normalized covariance-coordinate homogeneity and scalar-section homogeneity. | indexed_basis_covariance_pivot_coordinate_scale, indexed_basis_covariance_pivot_section_scale. | **New: The pivot projection respects arbitrary real scalar multiplication.** |
+| `indexed_basis_two_samples_projection_radical_iff_zero_vector` (theorem) | Rewrite the checked radical/zero-section equivalence using the certified section-zero vector identity. | indexed_basis_two_samples_projection_radical_iff_zero_section, indexed_basis_covariance_pivot_section_zero. | **New: For two signed unit-mass outcomes, the linear projection kernel equals covariance radical.** |
 
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
@@ -1733,9 +1740,11 @@ idempotent, has fibers classified by one real scalar, and has image
 exactly the scalar pivot line. Under two unit-mass sampled outcomes,
 its kernel is precisely the existing covariance bilinear radical
 and projecting both arguments **preserves every covariance pairing**.
-The first ten results require only a nonzero pivot and do not need
-probability mass normalization; the factorization and radical
-identities state exactly the two-sample unit-mass hypotheses.
+Coordinate/section retraction and linearity, projection idempotence,
+image and fiber identities require only a nonzero pivot, independently
+of probability mass normalization. The factorization, radical kernel
+and covariance-preservation identities additionally state the exact
+two-sample unit-mass hypotheses.
 
 The implementation reuses indexed-basis bilinearity, prior typed
 pivot reconstruction, the existing radical and Stdlib.Reals,
@@ -1749,3 +1758,30 @@ theorem** over a maintained vector-space theory.
 Expected inventory after pinned Rocq 9.2 validation:
 **969 public claims, 972 proof scripts, 1060 documented declarations**
 across seven modules; **558 FiniteMoments proof scripts**.
+
+## Stdlib-backed linearity and zero-kernel of the covariance pivot projection (14 November 2026)
+
+Seven additional fully documented Rocq theorems complete the linear
+retraction interface: the scalar-to-pivot section preserves addition
+and scaling and maps zero to the standard Vector.const zero vector.
+The normalized pivot-coordinate functional is surjective onto all
+real scalars whenever B(p,p) is nonzero. The already certified
+idempotent pivot projection itself preserves both vector addition
+and scalar multiplication, so it is a concrete linear endomorphism
+of the existing fixed-length real Vector.t. In a two-sample model
+with unit total mass, its kernel equals the covariance radical
+**using the standard typed zero vector**.
+
+The proofs reuse VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth,
+Stdlib.Ring, the existing covariance bilinearity, coordinate and
+section retraction lemmas, and the earlier signed two-sample
+radical/zero-section theorem. No new vector recursion, finite sums,
+matrix code, axioms, admission, Python, SPARK or historical evidence
+changes are introduced.
+
+Expected inventory: **976 public checked claims, 979 proof scripts,
+1067 documented declarations**, including **565 FiniteMoments proof
+scripts** across seven Rocq modules. The linear projection and its
+explicit scalar-line image and covariance radical kernel are now
+represented with typed standard-library vectors, but an abstract
+vector-space dimension and general rank-nullity result remain open.

@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **972 proof scripts** in seven
+for the two reports. **979 proof scripts** in seven
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -4166,9 +4166,11 @@ idempotent, has fibers classified by one real scalar, and has image
 exactly the scalar pivot line. Under two unit-mass sampled outcomes,
 its kernel is precisely the existing covariance bilinear radical
 and projecting both arguments **preserves every covariance pairing**.
-The first ten results require only a nonzero pivot and do not need
-probability mass normalization; the factorization and radical
-identities state exactly the two-sample unit-mass hypotheses.
+Coordinate/section retraction and linearity, projection idempotence,
+image and fiber identities require only a nonzero pivot, independently
+of probability mass normalization. The factorization, radical kernel
+and covariance-preservation identities additionally state the exact
+two-sample unit-mass hypotheses.
 
 The implementation reuses indexed-basis bilinearity, prior typed
 pivot reconstruction, the existing radical and Stdlib.Reals,
@@ -4182,6 +4184,34 @@ theorem** over a maintained vector-space theory.
 Expected inventory after pinned Rocq 9.2 validation:
 **969 public claims, 972 proof scripts, 1060 documented declarations**
 across seven modules; **558 FiniteMoments proof scripts**.
+
+
+## Stdlib-backed linearity and zero-kernel of the covariance pivot projection (14 November 2026)
+
+Seven additional fully documented Rocq theorems complete the linear
+retraction interface: the scalar-to-pivot section preserves addition
+and scaling and maps zero to the standard Vector.const zero vector.
+The normalized pivot-coordinate functional is surjective onto all
+real scalars whenever B(p,p) is nonzero. The already certified
+idempotent pivot projection itself preserves both vector addition
+and scalar multiplication, so it is a concrete linear endomorphism
+of the existing fixed-length real Vector.t. In a two-sample model
+with unit total mass, its kernel equals the covariance radical
+**using the standard typed zero vector**.
+
+The proofs reuse VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth,
+Stdlib.Ring, the existing covariance bilinearity, coordinate and
+section retraction lemmas, and the earlier signed two-sample
+radical/zero-section theorem. No new vector recursion, finite sums,
+matrix code, axioms, admission, Python, SPARK or historical evidence
+changes are introduced.
+
+Expected inventory: **976 public checked claims, 979 proof scripts,
+1067 documented declarations**, including **565 FiniteMoments proof
+scripts** across seven Rocq modules. The linear projection and its
+explicit scalar-line image and covariance radical kernel are now
+represented with typed standard-library vectors, but an abstract
+vector-space dimension and general rank-nullity result remain open.
 
 ## Research extensions
 

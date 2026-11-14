@@ -21391,6 +21391,257 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_covariance_pivot_section_add] (theorem) —
+   The scalar pivot-section map preserves real addition.
+   Mathematical meaning: The sum of two coefficient directions
+   scaled from a common pivot is the same direction scaled by
+   the sum of their two real scalar coefficients.
+   Exact checked proposition: section(p,a+b)=
+   Vector.map2 Rplus (section(p,a)) (section(p,b)).
+   Premises and side conditions: Every typed finite basis including
+   empty and dependent bases, all real signs and weights. No
+   nonzero-pivot or two-sample premise is required.
+   Proof/definition method: Use Stdlib.VectorSpec.eq_nth_iff for
+   extensional equality and nth_map/nth_map2 for both sides; close
+   the one-coordinate distributive identity using Stdlib.Ring.
+   Library reuse: Stdlib.Vectors.VectorSpec.eq_nth_iff, nth_map,
+   nth_map2, Stdlib.Ring, indexed_basis_covariance_pivot_section.
+   Boundary: A standard vector-map homomorphism, not a custom
+   vector-space structure or rank calculation.
+   *)
+  Theorem indexed_basis_covariance_pivot_section_add :
+    forall basis (pivot : Vector.t R (length basis)) a b,
+      indexed_basis_covariance_pivot_section basis pivot (a + b) =
+      Vector.map2 Rplus
+        (indexed_basis_covariance_pivot_section basis pivot a)
+        (indexed_basis_covariance_pivot_section basis pivot b).
+  Proof.
+    intros basis pivot a b.
+    unfold indexed_basis_covariance_pivot_section.
+    apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
+      (Vector.map (fun c => (a + b) * c) pivot)
+      (Vector.map2 Rplus
+        (Vector.map (fun c => a * c) pivot)
+        (Vector.map (fun c => b * c) pivot)))).
+    intros i j Hij.
+    subst j.
+    rewrite (VectorSpec.nth_map (fun c => (a + b) * c)
+      pivot i i eq_refl).
+    rewrite (VectorSpec.nth_map2 Rplus
+      (Vector.map (fun c => a * c) pivot)
+      (Vector.map (fun c => b * c) pivot)
+      i i i eq_refl eq_refl).
+    rewrite (VectorSpec.nth_map (fun c => a * c) pivot i i eq_refl).
+    rewrite (VectorSpec.nth_map (fun c => b * c) pivot i i eq_refl).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_section_scale] (theorem) —
+   The scalar pivot-section map preserves real scalar multiplication.
+   Mathematical meaning: Scaling a pivot-line direction by alpha
+   after constructing it from beta equals constructing it directly
+   with the product alpha*beta.
+   Exact checked proposition: section(p,alpha*beta)=
+   Vector.map (fun c => alpha*c) (section(p,beta)).
+   Premises and side conditions: No nonzero pivot, weight sign,
+   total mass, score independence, or positive dimension required.
+   Proof/definition method: Use the established VectorSpec
+   extensionality and nth_map to expose the same real coordinate,
+   with scalar associativity normalized by Stdlib.Ring.
+   Library reuse: Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map,
+   Stdlib.Ring and indexed_basis_covariance_pivot_section.
+   Boundary: Concrete typed vector-scaling compatibility, not
+   a generic implementation of a linear-map algebra.
+   *)
+  Theorem indexed_basis_covariance_pivot_section_scale :
+    forall basis (pivot : Vector.t R (length basis)) alpha beta,
+      indexed_basis_covariance_pivot_section basis pivot (alpha * beta) =
+      Vector.map (fun c => alpha * c)
+        (indexed_basis_covariance_pivot_section basis pivot beta).
+  Proof.
+    intros basis pivot alpha beta.
+    unfold indexed_basis_covariance_pivot_section.
+    apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
+      (Vector.map (fun c => (alpha * beta) * c) pivot)
+      (Vector.map (fun c => alpha * c)
+        (Vector.map (fun c => beta * c) pivot)))).
+    intros i j Hij.
+    subst j.
+    rewrite (VectorSpec.nth_map (fun c => (alpha * beta) * c)
+      pivot i i eq_refl).
+    rewrite (VectorSpec.nth_map (fun c => alpha * c)
+      (Vector.map (fun c => beta * c) pivot) i i eq_refl).
+    rewrite (VectorSpec.nth_map (fun c => beta * c)
+      pivot i i eq_refl).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_section_zero] (theorem) —
+   Scalar zero maps to the standard all-zero typed coefficient vector.
+   Mathematical meaning: The zero point on the pivot line is the
+   standard Vector.const zero of the coefficient basis length.
+   Exact checked proposition: section(pivot,0)=
+   Vector.const 0 (length basis), for every typed finite pivot.
+   Premises and side conditions: No nonzero-pivot or normalization
+   assumptions; empty vectors, signed weights and all bases allowed.
+   Proof/definition method: Compare each Fin.t coordinate through
+   maintained VectorSpec.eq_nth_iff, nth_map and const_nth, and
+   discharge multiplication by zero with Stdlib.Ring.
+   Library reuse: Stdlib.Vectors.VectorSpec.eq_nth_iff, nth_map,
+   const_nth, Stdlib.Ring and Vector.const.
+   Boundary: Exact zero-vector identity, not kernel dimension.
+   *)
+  Theorem indexed_basis_covariance_pivot_section_zero :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_pivot_section basis pivot 0 =
+      Vector.const 0 (length basis).
+  Proof.
+    intros basis pivot.
+    unfold indexed_basis_covariance_pivot_section.
+    apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
+      (Vector.map (fun c => 0 * c) pivot)
+      (Vector.const 0 (length basis)))).
+    intros i j Hij.
+    subst j.
+    rewrite (VectorSpec.nth_map (fun c => 0 * c) pivot i i eq_refl).
+    rewrite (VectorSpec.const_nth R 0 (length basis) i).
+    ring.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_surjective] (theorem) —
+   Every real number is a normalized covariance coordinate.
+   Mathematical meaning: A nonzero self-covariance pivot provides
+   a concrete typed coefficient vector with any desired scalar
+   coordinate, using the established pivot-section map.
+   Exact checked proposition: B(p,p)<>0 implies
+   forall alpha:R, exists left, coordinate(p,left)=alpha.
+   Premises and side conditions: All finite bases and real signed,
+   unnormalized weights are permitted, subject to a nonzero pivot.
+   Proof/definition method: Choose left=section(p,alpha) and reuse
+   the previously checked coordinate-section retraction directly.
+   Library reuse: indexed_basis_covariance_pivot_coordinate_section,
+   indexed_basis_covariance_pivot_section, Stdlib.Logic.ex_intro.
+   Boundary: Surjectivity of a scalar functional, not an
+   abstract dimension formula for its kernel.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_surjective :
+    forall basis (pivot : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      forall alpha : R,
+        exists left : Vector.t R (length basis),
+          indexed_basis_covariance_pivot_coordinate basis pivot left =
+          alpha.
+  Proof.
+    intros basis pivot Hpivot alpha.
+    exists (indexed_basis_covariance_pivot_section basis pivot alpha).
+    apply indexed_basis_covariance_pivot_coordinate_section;
+      exact Hpivot.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_add] (theorem) —
+   The concrete pivot projection is an additive coefficient map.
+   Mathematical meaning: Projecting the sum of two typed coefficient
+   directions equals the componentwise sum of their projected vectors.
+   Exact checked proposition: B(p,p)<>0 implies
+   P(left+right)=Vector.map2 Rplus (P(left)) (P(right)).
+   Premises and side conditions: Any finite score basis, arbitrary
+   signed and unnormalized weights; no two-outcome requirement.
+   Proof/definition method: Compose the existing additive pivot
+   coordinate law with the new Stdlib.VectorSpec-backed section
+   additivity result, without reimplementing any vector recursion.
+   Library reuse: indexed_basis_covariance_pivot_coordinate_add,
+   indexed_basis_covariance_pivot_section_add, Vector.map2.
+   Boundary: Exact linearity property of a concrete finite operator;
+   generic vector-space rank-nullity still awaits library transport.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_add :
+    forall basis (pivot left right : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_projection basis pivot
+        (Vector.map2 Rplus left right) =
+      Vector.map2 Rplus
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        (indexed_basis_covariance_pivot_projection basis pivot right).
+  Proof.
+    intros basis pivot left right Hpivot.
+    unfold indexed_basis_covariance_pivot_projection.
+    rewrite (indexed_basis_covariance_pivot_coordinate_add
+      basis pivot left right Hpivot).
+    apply indexed_basis_covariance_pivot_section_add.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_projection_scale] (theorem) —
+   The concrete pivot projection respects all real scalars.
+   Mathematical meaning: Projecting a scaled coefficient direction
+   equals scaling the previously projected direction by the same real.
+   Exact checked proposition: B(p,p)<>0 implies
+   P(Vector.map (alpha*.) left)=Vector.map (alpha*.) (P(left)).
+   Premises and side conditions: Any dimension, signed and
+   unnormalized sample weights, repeated basis scores; alpha arbitrary.
+   Proof/definition method: Rewrite the composed projection using
+   the already established covariance-coordinate homogeneity and the
+   new standard-vector-backed section homogeneity law.
+   Library reuse: indexed_basis_covariance_pivot_coordinate_scale,
+   indexed_basis_covariance_pivot_section_scale, Stdlib.Vectors.Vector.map.
+   Boundary: A complete scalar linearity certificate for one
+   concrete projection, not a vector-space rank theorem.
+   *)
+  Theorem indexed_basis_covariance_pivot_projection_scale :
+    forall basis (pivot left : Vector.t R (length basis)) alpha,
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_projection basis pivot
+        (Vector.map (fun c => alpha * c) left) =
+      Vector.map (fun c => alpha * c)
+        (indexed_basis_covariance_pivot_projection basis pivot left).
+  Proof.
+    intros basis pivot left alpha Hpivot.
+    unfold indexed_basis_covariance_pivot_projection.
+    rewrite (indexed_basis_covariance_pivot_coordinate_scale
+      basis pivot left alpha Hpivot).
+    apply indexed_basis_covariance_pivot_section_scale.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_projection_radical_iff_zero_vector]
+   (theorem) — Covariance radical equals the kernel of a linear projection.
+   Mathematical meaning: The previously certified idempotent,
+   additive, scalar-homogeneous covariance projection annihilates
+   exactly the radical directions in a two-sample unit-mass model.
+   Exact checked proposition: Under samples=[x;y], total_mass=1
+   and B(p,p)<>0, Radical(left) iff P(left)=Vector.const 0 n.
+   Premises and side conditions: Any finite basis and signed
+   sample weights; nonzero pivot excludes a vacuous zero form.
+   Proof/definition method: Rewrite the zero-section form of the
+   previously checked projection radical theorem with the
+   Stdlib.VectorSpec-certified section(0)=Vector.const(0) identity.
+   Library reuse: indexed_basis_two_samples_projection_radical_iff_zero_section,
+   indexed_basis_covariance_pivot_section_zero, Vector.const.
+   Boundary: Exact finite linear-operator kernel, without a
+   separate abstract nullspace dimension or rank-nullity proof.
+   *)
+  Theorem indexed_basis_two_samples_projection_radical_iff_zero_vector :
+    forall basis (pivot left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_bilinear_radical basis left <->
+       indexed_basis_covariance_pivot_projection basis pivot left =
+       Vector.const 0 (length basis)).
+  Proof.
+    intros basis pivot left x y Hsamples Hmass Hpivot.
+    rewrite <- (indexed_basis_covariance_pivot_section_zero basis pivot).
+    exact (indexed_basis_two_samples_projection_radical_iff_zero_section
+      basis pivot left x y Hsamples Hmass Hpivot).
+  Qed.
+
+
 End FiniteProbabilityMoments.
 
 
