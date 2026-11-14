@@ -1,11 +1,13 @@
 """The explicit Ada contract floor is structural and must fail closed."""
 from conftest import ROOT, protected_history_intact, reference_inputs_intact
+from pathlib import Path
 
 import deal
 import pytest
 
 from verification.spark_contracts import (
-    clauses, contract_entries, current_sources, inventory, masked,
+    clauses, contract_entries, current_sources, declarations, inventory, masked,
+    split_top, unparenthesized, ten_contract_summary,
 )
 
 SPEC = """package P with SPARK_Mode is
@@ -38,6 +40,12 @@ def test_mask_preserves_locations_and_ignores_comments_strings_and_characters():
         i for i, char in enumerate(source) if char == "\n"]
     assert "Fake" not in result and "Hidden" not in result and "quoted" not in result
     assert "X :=" in result and "C :=" in result
+    # The contract also protects exact source line widths and must
+    # replace non-comment syntax only by the original character/space.
+    assert [len(s) for s in source.split("\n")] == [
+        len(s) for s in result.split("\n")]
+    assert all(a == b or b == " " for a, b in zip(source, result))
+    assert result.count(";") <= source.count(";")
 
 
 @deal.pre(lambda: protected_history_intact())
@@ -51,6 +59,18 @@ def test_forward_declaration_pairs_with_body_and_qualified_parameter_types():
     row, = result["entities"]
     assert row["identity"] == "p.f" and row["path"] == "p.ads"
     assert row["contract_count"] == 5
+    # Preserve source attribution and exact dictionary schema when
+    # counting explicit behavioral clauses; comments alone never count.
+    entries = contract_entries({
+        "global": "null",
+        "depends": "F'Result => X",
+        "pre": "X >= 0",
+        "post": "F'Result >= 0 and then F'Result = X",
+    })
+    assert len(entries) == 5
+    assert all(set(entry) == {"aspect", "clause"} for entry in entries)
+    assert [entry["aspect"] for entry in entries] == [
+        "global", "depends", "pre", "post", "post"]
 
 
 @deal.pre(lambda: protected_history_intact())
@@ -112,6 +132,11 @@ end P;
 @deal.has("read")
 def test_top_level_conjunctions_and_atomic_conditionals(text, expected):
     assert clauses(text) == expected
+    # Fully wrapping pairs disappear but unrelated top-level clauses are
+    # not stripped: these are separately contract-checked parser laws.
+    assert unparenthesized("  (((A)))  ") == "A"
+    assert unparenthesized("(A) and then (B)") == "(A) and then (B)"
+    assert unparenthesized("  ") == ""
 
 
 @pytest.mark.parametrize("text", ["", "()", "   "])
@@ -277,3 +302,152 @@ def test_aspect_comments_neither_hide_nor_pad_contracts(position):
         assert result["complete"]
         assert result["entities"][0]["contract_count"] == 5
     return None
+
+
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_staged_spark_ten_contract_accounting_is_exact():
+    """Report the optional ten-clause target without weakening the five-clause gate."""
+    result = inventory({"p.ads": SPEC, "p.adb": BODY})
+    assert result["minimum_required"] == 5
+    assert result["complete"]
+    assert set(result) == {
+        "schema", "minimum_required", "minimum_observed", "functions",
+        "procedures", "contracts", "entities", "sources",
+        "excluded_completions", "insufficient", "missing_native",
+        "invalid_native", "unmatched_native", "native_cross_check", "complete",
+    }, "Historical exact-schema SPARK evidence compatibility must be preserved"
+    stage = ten_contract_summary(result)
+    assert stage["target_contracts"] == 10
+    assert stage["entities_at_target"] == 0
+    assert stage["entities_below_target"] == 1
+    assert stage["total_entities"] == len(result["entities"])
+
+
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_admission_exact_arithmetic_has_ten_native_contract_entries():
+    """Enforce ten-clause targets for eight exact-arithmetic SPARK interfaces."""
+    result = inventory(current_sources(ROOT))
+    targets = {
+        "admission_core.total": ("Total'Result >= C.N00", "Total'Result = 0"),
+        "admission_core.union_count": ("Union_Count'Result >= C.N10", "C.N00 = 0"),
+        "admission_core.fraction": ("Fraction'Result.Denominator > 0", "Numerator = 0"),
+        "admission_core.complement": ("Complement'Result = Scale - P", "Scale / 2"),
+        "admission_core.conditional": ("Conditional'Result.Denominator > 0", "Joint = 0"),
+        "admission_core.marginal_a": ("Marginal_A'Result >= C.N10", "Marginal_A'Result = 0"),
+        "admission_core.marginal_b": ("Marginal_B'Result >= C.N01", "Marginal_B'Result = 0"),
+        "hoeflin_core.variance_numerator": ("N = 1", "R = 1_000"),
+    }
+    by_name = {row["identity"]: row for row in result["entities"]}
+    assert targets.keys() <= by_name.keys()
+    assert result["complete"] and result["minimum_observed"] >= 5
+    for name, phrases in targets.items():
+        row = by_name[name]
+        assert row["contract_count"] >= 10, (name, row)
+        clauses_text = "\n".join(entry["clause"] for entry in row["contracts"])
+        assert all(phrase in clauses_text for phrase in phrases), (name, clauses_text)
+    assert ten_contract_summary(result)["entities_at_target"] >= len(targets)
+
+
+@pytest.mark.parametrize("source, separator, expected", [
+    (" A, B , C ", ",", ["A", "B", "C"]),
+    ("(A, B), C", ",", ["(A, B)", "C"]),
+    ("A and then (B and C)", r"\band\s+then\b|\band\b",
+     ["A", "(B and C)"]),
+    ("", ",", [""]),
+    ("A,", ",", ["A", ""]),
+])
+@deal.pre(lambda source, separator, expected: protected_history_intact())
+@deal.ensure(lambda source, separator, expected, *, result:
+             protected_history_intact())
+@deal.ensure(lambda source, separator, expected, *, result:
+             reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_split_top_preserves_original_fragment_order(source, separator, expected):
+    """Top-level splitting retains parenthesized clauses and source order."""
+    result = split_top(source, separator)
+    assert result == expected
+    assert sum(map(len, result)) <= len(source)
+    assert source.strip().startswith(result[0])
+    assert source.strip().endswith(result[-1])
+
+
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write")
+def test_current_ada_sources_preserve_sorted_relative_paths_and_exact_text(tmp_path):
+    """Select only requested Ada source trees; retain the source byte semantics."""
+    specification = tmp_path / "analyses" / "example" / "ada" / "src" / "core.ads"
+    body = tmp_path / "verification" / "sample" / "src" / "checker.adb"
+    ignored = tmp_path / "analyses" / "example" / "ada" / "other" / "hidden.ads"
+    for path in (specification, body, ignored):
+        path.parent.mkdir(parents=True, exist_ok=True)
+    specification.write_text("package Core is\nend Core;\n", encoding="utf-8")
+    body.write_text("package body Checker is\nend Checker;\n", encoding="utf-8")
+    ignored.write_text("ignore me", encoding="utf-8")
+    report = current_sources(tmp_path)
+    assert list(report) == [
+        "analyses/example/ada/src/core.ads",
+        "verification/sample/src/checker.adb",
+    ]
+    assert report["analyses/example/ada/src/core.ads"] == specification.read_text(
+        encoding="utf-8")
+    assert report["verification/sample/src/checker.adb"] == body.read_text(
+        encoding="utf-8")
+    assert all(not Path(key).is_absolute() and ".." not in Path(key).parts
+               for key in report)
+
+
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_ada_declarations_keep_schema_and_exact_source_attribution():
+    """Parse the known Ada spec and body without inventing extra records."""
+    specification = declarations(SPEC)
+    body = declarations(BODY)
+    assert len(specification) == len(body) == 1
+    required = {"name", "kind", "line", "end_line", "expression",
+                "form", "profile", "aspects", "off"}
+    assert set(specification[0]) == set(body[0]) == required
+    assert specification[0]["name"] == body[0]["name"] == "F"
+    assert specification[0]["kind"] == body[0]["kind"] == "function"
+    assert specification[0]["form"] == "declaration"
+    assert body[0]["form"] == "body"
+    assert specification[0]["line"] == body[0]["line"] == 2
+    assert specification[0]["aspects"]["pre"] == "X >= 0"
+    assert not specification[0]["expression"]
+    assert not body[0]["off"]
+
+
+@pytest.mark.parametrize("source, expected", [
+    ("A and B", ["A", "B"]),
+    ("(A and B)", ["A", "B"]),
+    ("A and (B and C)", ["A", "(B and C)"]),
+    ("if X = 0 then A and B else C",
+     ["if X = 0 then A and B else C"]),
+    ("for all X => A and then B", ["for all X => A and then B"]),
+])
+@deal.pre(lambda source, expected: protected_history_intact())
+@deal.ensure(lambda source, expected, *, result: protected_history_intact())
+@deal.ensure(lambda source, expected, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_source_attributed_ada_clauses_do_not_split_quantifiers(
+        source, expected):
+    """Standard conjunction splitting must respect nested/quantified clauses."""
+    parts = clauses(source)
+    assert parts == expected
+    assert all(part in source for part in parts)
+    assert sum(map(len, parts)) <= len(source)

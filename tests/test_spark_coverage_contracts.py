@@ -7,7 +7,7 @@ from pathlib import Path
 import deal
 import pytest
 
-from verification.spark_coverage import read_coverage
+from verification.spark_coverage import read_coverage, unique_object
 
 
 @deal.ensure(lambda name, status='all', file='sample.ads', line=1, *, result: protected_history_intact())
@@ -249,3 +249,41 @@ def test_unknown_analysis_mode_is_explicitly_rejected(tmp_path):
     write_native(tmp_path.joinpath("body.spark"), [entity("Body")])
     with pytest.raises(ValueError, match="Unknown native coverage analysis mode"):
         read_coverage(tmp_path, analysis_mode="quiet")
+
+
+@deal.pre(lambda: protected_history_intact())
+@deal.ensure(lambda *, result: protected_history_intact())
+@deal.ensure(lambda *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_native_unique_object_preserves_key_order_value_identity_and_nulls():
+    """A duplicate-free JSON object retains order and original nested values."""
+    nested = {"observations": [1, None, "value"]}
+    pairs = [("unit", nested), ("missing", None), ("positive", 17)]
+    mapping = unique_object(pairs)
+    assert list(mapping) == ["unit", "missing", "positive"]
+    assert mapping["unit"] is nested
+    assert mapping["missing"] is None
+    assert mapping["positive"] is pairs[2][1]
+    with pytest.raises(ValueError, match="Duplicate"):
+        unique_object([("unit", nested), ("unit", None)])
+
+
+@deal.pre(lambda tmp_path: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write")
+def test_native_coverage_receipt_keeps_sorted_hashed_source_provenance(tmp_path):
+    """File hashes, path ordering and source filtering retain exact receipts."""
+    write_native(tmp_path / "z.spark", [entity("Z", file="z.ads")])
+    write_native(tmp_path / "a.spark", [entity("A", file="a.ads")])
+    report = read_coverage(tmp_path, {"z.ads", "a.ads"})
+    assert report["source_names"] == ["a.ads", "z.ads"]
+    assert [f["path"] for f in report["raw_files"]] == ["a.spark", "z.spark"]
+    assert len({f["sha256"] for f in report["raw_files"]}) == 2
+    for row in report["raw_files"]:
+        assert row["sha256"] == hashlib.sha256(
+            (tmp_path / row["path"]).read_bytes()).hexdigest()
+    assert [(r["file"], r["name"]) for r in report["entities"]] == [
+        ("a.ads", "A"), ("z.ads", "Z")]

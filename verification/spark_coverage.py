@@ -27,6 +27,18 @@ def require(condition: bool, message: str) -> None:
 @deal.ensure(lambda pairs, result: isinstance(result, dict) and len(result) == len(pairs))
 @deal.raises(ValueError)
 @deal.has()
+# JSON object decoding must not normalize keys, reorder fields, change
+# references to nested values, or lose explicit null-valued mappings.
+@deal.post(lambda result: all(isinstance(key, str) for key in result))
+@deal.ensure(lambda pairs, result:
+             list(result) == [key for key, _ in pairs])
+@deal.ensure(lambda pairs, result:
+             set(result) == {key for key, _ in pairs})
+@deal.ensure(lambda pairs, result:
+             all(result[key] is value for key, value in pairs))
+@deal.ensure(lambda pairs, result:
+             {key for key, value in result.items() if value is None} ==
+             {key for key, value in pairs if value is None})
 def unique_object(pairs: list) -> dict:
     """Reject ambiguous JSON objects rather than keeping the last duplicate key."""
     result = {}
@@ -41,6 +53,13 @@ def unique_object(pairs: list) -> dict:
 @deal.post(lambda result: isinstance(result, dict))
 @deal.raises(ValueError)
 @deal.has()
+# Preserve the exact GNATprove source locator, its Ada extension and the
+# normalized two-field schema; do not fabricate line numbers or file names.
+@deal.post(lambda result: set(result) == {"file", "line"})
+@deal.ensure(lambda value, result: result["file"] == value["file"])
+@deal.ensure(lambda value, result: result["line"] == value["line"])
+@deal.post(lambda result: Path(result["file"]).suffix in {".ads", ".adb"})
+@deal.post(lambda result: bool(result["file"].strip()))
 def location(value: object) -> dict:
     require(isinstance(value, dict), "Source location must be an object")
     require(isinstance(value.get("file"), str) and bool(value["file"].strip()),
@@ -56,6 +75,16 @@ def location(value: object) -> dict:
 @deal.post(lambda result: isinstance(result, dict))
 @deal.raises(ValueError)
 @deal.has()
+# Source/coverage normalization must not silently change an entity's
+# identity, analysis status, number of locations or first source line.
+@deal.post(lambda result:
+           set(result) == {"name", "file", "line", "status", "sloc"})
+@deal.ensure(lambda value, result: result["name"] == value["name"])
+@deal.ensure(lambda value, result: result["status"] == value["spark"])
+@deal.ensure(lambda value, result:
+             len(result["sloc"]) == len(value["sloc"]))
+@deal.ensure(lambda value, result:
+             result["sloc"][0]["line"] == value["sloc"][0]["line"])
 def normalize_entity(value: object) -> dict:
     require(isinstance(value, dict), "SPARK entity must be an object")
     require(isinstance(value.get("name"), str) and bool(value["name"].strip()),
@@ -85,6 +114,27 @@ def normalize_entity(value: object) -> dict:
                    and not result["pragma_assume"] and not result["suppressed"]))
 @deal.raises(OSError, ValueError, JSONDecodeError)
 @deal.has("read")
+# The original archive-sensitive result dictionary must keep its
+# exact schema. These additional independent receipt properties verify
+# source-selection provenance, deterministic file order and uniqueness,
+# and the canonical shape of every retained SHA-256 digest.
+@deal.post(lambda result: set(result) == {
+    "source_names", "analysis_mode", "proof_metadata_complete",
+    "counts", "total_entities", "entities", "raw_files",
+    "pragma_assume", "suppressed", "no_assumptions_or_suppressions"})
+@deal.ensure(lambda folder, source_names=None, analysis_mode="all", *, result:
+             result["source_names"] ==
+             (sorted(source_names) if source_names is not None else None))
+@deal.post(lambda result:
+           [row["path"] for row in result["raw_files"]] ==
+           sorted(row["path"] for row in result["raw_files"]))
+@deal.post(lambda result:
+           len({row["path"] for row in result["raw_files"]}) ==
+           len(result["raw_files"]))
+@deal.post(lambda result:
+           all(len(row["sha256"]) == 64
+               and all(char in "0123456789abcdef" for char in row["sha256"])
+               for row in result["raw_files"]))
 def read_coverage(folder: Path, source_names: set[str] | None = None,
                   analysis_mode: str = "all") -> dict:
     """Return coverage, raw-file hashes, and all explicit assumption/suppression flags.

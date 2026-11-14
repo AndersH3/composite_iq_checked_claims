@@ -74,3 +74,24 @@ The repository's [license](../../../LICENSE) applies to original material, subje
 
 
 Every SPARK function/procedure has at least five explicit behavioral clauses or Global/Depends aspects; see the [contract counting rules](../../../verification/README.md#five-explicit-contracts-per-subprogram). The inventory is structural and does not establish five independent guarantees or prove trusted completions. Earlier evidence remains immutable.
+
+
+## Staged ten-clause exact-arithmetic SPARK extensions
+
+Five `Admission_Core` operations have strengthened source contracts:
+`Total` protects individual cell contributions and the all-zero case;
+`Union_Count` protects each contributor and the no-neither-cell case;
+`Fraction` and `Conditional` protect selected-denominator positivity
+and exact boundary cases; and `Complement` specifies interior and
+half-scale behavior. The project-wide five-clause minimum is unchanged.
+The Python structural inventory now reports how many SPARK entities
+reach ten clauses, and tests enforce the five upgraded targets.
+
+These are specification-level changes pending a fresh GNATprove proof
+campaign using the modified sources. Older published native coverage
+and proof records are evidence only for their historical, source-pinned
+revisions; they have not been rewritten or relabeled.
+
+The staged target now also covers `Admission_Core.Marginal_A` and
+`Marginal_B`, each with ten explicit clause/flow entries and
+separate lower-bound and empty-cell behavior specifications.

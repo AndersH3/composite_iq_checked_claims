@@ -1,8 +1,8 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **393 theorem, lemma and example declarations** in seven
-Rocq files have passed Rocq 9.2 compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
+for the two reports. **979 proof scripts** in seven
+Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
 ## Reproduction
@@ -988,13 +988,3350 @@ fixed_basis_weighted_variance_identity to transfer those
 strict inequalities to quadratic forms. No determinant, eigenvalue
 or matrix-rank routine was introduced.
 
-The current source has **393 public claims**, **396 proof scripts**
+At the previous stage there were **393 public claims**, **396 proof scripts**
 and **451 fully documented declarations** in seven Rocq modules.
+
+## Positive-definiteness and support-nonconstancy equivalences
+
+Three finite weighted-score results identify strictly positive
+variance and fixed-basis quadratic form with the absence of a
+constant positive-weight score. Using Stdlib.List.repeat for the
+zero coefficient vector, a general equivalence states that all
+nonzero compatible coefficient vectors yield strictly positive
+covariance quadratic form precisely when none yields a constant
+weighted score on positive-weight support. The two previous
+positive-variance witness proofs now reuse this generic lemma.
+This is a finite-list positive-definiteness characterization;
+spectral matrix rank and determinant algorithms are deliberately
+not implemented.
+
+At the preceding stage: **396 public claims**, **399 proof scripts**,
+**454 documented named declarations** across seven Rocq modules.
+
+## Positive-definiteness witnesses and zero-covariance characterization
+
+The newest `FiniteMoments.v` theorems provide two sufficient
+conditions for positive definiteness of a finite fixed-basis
+covariance matrix: every nonzero coefficient vector must
+separate two positive-weight sampled outcomes, or differ
+from its expected score at a positive-weight outcome.
+A further iff theorem characterizes strict positive
+definiteness as the absence of a nonzero direction
+uncorrelated with every finite comparison score. These
+are direct applications of existing null/strict-variance
+theorems, without new rank, determinant or list recursion.
+
+At the preceding stage: **399 public claims**,
+**402 proof scripts**, **457 fully documented named declarations**.
+
+## Finite support-constant covariance and variance equivalences
+
+Three additional `FiniteMoments.v` theorems show that a score
+constant on positive-weight sampled support has zero covariance
+with any score in either argument, and characterize zero
+variance by the existence of a constant supported by all
+positive-weight observations. The prior zero-variance
+converse proof now delegates to the generic covariance-zero
+lemma. These changes reuse Stdlib, existing support-extensional
+moment lemmas, and symmetry rather than implementing new sums.
+
+**Earlier inventory: 402 public claims, 405 proof scripts,
+460 fully documented named declarations** across seven modules.
+
+## Existential finite covariance nullity and duplicate-score obstruction
+
+Four further `FiniteMoments.v` theorems use the established
+support-constant variance criteria and fixed-basis variance
+bridge to characterize strict variance positivity and matrix
+null/positive quadratic forms through the existence of an
+arbitrary common positive-support score value. The concrete
+duplicate-basis covariance result rules out positive definiteness
+from the existing nonzero [1;-1] null direction using
+Stdlib.List.repeat. No new list, matrix, rank or eigenvalue
+implementation has been introduced.
+
+**Earlier source totals: 406 public claims, 409 proof scripts,
+464 documented named declarations** across seven Rocq modules.
+
+## Affine transformations of finite covariance matrices
+
+Two newly verified finite-moment matrix theorems lift the
+pre-existing scalar `covariance_of_affine_scores` law to
+rectangular cross-covariance matrices and square fixed-basis
+covariance matrices. The former scales entries by the product
+of the two affine slopes; the latter scales entries by the
+square of a common slope. Additive score offsets cancel
+under unit total mass. The proof uses Stdlib.List.map_map
+and map_ext at both levels, then reuses the established
+cross-matrix representation; there is no new matrix
+library, recursive list traversal or custom linear algebra.
+
+**Earlier source totals: 408 public claims, 411 proof scripts,
+466 documented named declarations** in seven Rocq files.
+
+## Affine dependence and finite covariance degeneracy
+
+Three new theorems generalize the previous duplicate-score
+quadratic nullity result. Affine-dependent scores on all sampled
+outcomes yield a nonzero [1;-a] null coefficient vector even for
+signed normalized weights. The former duplicate-score proof now
+uses this stronger theorem rather than repeating its finite sum.
+A positive-weight-support version permits zero-weight exceptions
+under nonnegative normalized weights, and yields a concrete
+obstruction to covariance positive definiteness. These are exact
+two-score statements, not full spectral rank results.
+
+**Earlier source totals: 411 public claims, 414 proof scripts,
+469 documented named declarations** in seven Rocq files.
+
+## Covariance nullity from finitely many basis coordinates
+
+Three results in `FiniteMoments.v` characterize quadratic-form
+nullity through zero covariance with each member of the finite
+score basis, rather than all possible comparison score functions.
+The converse folds individual zero covariance values with the
+existing `covariance_of_general_weighted_second_unconditional`
+and library-backed `FiniteSum.finite_sum_ext_in` and
+`finite_sum_zero` lemmas. A strict-positive quadratic iff
+and an all-nonzero-directions positive-definiteness iff
+follow from the existing positive-semidefinite theorem.
+No new matrix rank, nullspace, list sum or eigenvalue library
+is implemented.
+
+**Earlier source totals: 414 public claims, 417 proof scripts,
+472 fully documented named declarations** across seven modules.
+
+## Covariance row-dot identities and matrix nullity
+
+A new theorem identifies covariance with a coefficient-weighted
+basis score as the dot product of that coefficient list with
+the comparison score's covariance row. It reuses existing
+weighted covariance and covariance-row lemmas, plus
+Stdlib.List.map_map and canonical List.combine projections.
+A second result proves that covariance quadratic nullity is
+equivalent to the coefficient vector having zero dot product
+with each actual row of the list-of-lists covariance matrix,
+using Stdlib.List.in_map_iff and the existing coordinate-level
+nullity result. No new matrix product or rank implementation
+is needed.
+
+**Earlier totals: 416 public claims, 419 proof scripts,
+474 fully documented named declarations** in seven Rocq files.
+
+## Matrix-row positive-definiteness equivalence and comment audit
+
+Two additional theorems identify strict positive covariance
+quadratic curvature with a nonzero dot product against at least
+one covariance matrix row, expressed constructively as the
+negation of zero for all rows, and identify positive definiteness
+with the absence of nonzero vectors in the row-dot kernel.
+They reuse the rowwise nullity iff and checked positive
+semidefiniteness rather than implementing matrix operations.
+
+Detailed declaration comments were rewritten on the six core
+dependencies vector_dot, basis_covariance_matrix,
+basis_cross_covariance_matrix, covariance_row_as_vector_dot,
+basis_of_combine, and fixed_basis_covariance_matrix_positive_semidefinite,
+including exact truncation/length/weight assumptions and the
+actual Stdlib/FiniteSum proof dependencies.
+
+**Earlier counts: 418 public claims, 421 proof scripts and
+476 documented named declarations** across seven Rocq modules.
+
+## General quadratic-null obstruction to positive definiteness
+
+Two new theorems formalize a finite arbitrary-basis obstruction:
+any nonzero compatible coefficient vector whose covariance
+quadratic form is zero prevents strict positive definiteness;
+no normalization or sign constraint is necessary for this
+algebraic contradiction. A stronger model-specific corollary
+uses the supported-constant nullity equivalence for normalized
+nonnegative sampled weights. The existing duplicate-score
+and affine-dependent pair proofs now reuse the general theorem,
+eliminating duplicated strict-positivity reasoning.
+
+Earlier source inventory: **420 public claims, 423 proof scripts,
+478 documented named declarations** across seven Rocq modules.
+
+## Positive-support constants and covariance row-kernel witnesses
+
+Two additional results use the previously established null
+quadratic-form equivalences. A composite score constant on
+positive-weight sampled outcomes yields a coefficient vector
+whose dot product with every row of its finite covariance
+matrix is zero. A compatible nonzero vector with this rowwise
+property prevents strict positive definiteness, by direct
+reuse of the general quadratic-null obstruction lemma.
+The proof introduces no matrix product, kernel basis, rank
+or numerical algorithm.
+
+Earlier audited inventory: **422 public claims, 425 proof scripts,
+480 documented named declarations** in seven Rocq modules.
+
+## Exact covariance row-kernel and support-constant equivalence
+
+The row-dot kernel of the finite covariance matrix is exactly
+the set of compatible coefficient vectors whose composite
+scores equal some constant on every positive-weight sampled
+outcome, under unit total mass and nonnegative sampled weights.
+Positive definiteness is equivalently the absence of such a
+nonzero compatible direction. Both iff results use existing
+covariance nullity and strict positivity lemmas without a new
+matrix operation or rank computation.
+
+Five core declarations were also redocumented with detailed
+mathematical definitions and precise Stdlib/FiniteSum reuse:
+matrix_bilinear_form, matrix_quadratic_form,
+weighted_basis_sum, fixed_basis_weighted_variance_identity,
+and zero_variance_is_constant_on_positive_mass.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+
+## Generic finite conditional-independence interface
+
+The finite Boolean-event model now exposes the transparent
+`finite_conditional_independent` predicate: the conditioning event must
+have strictly positive mass and the conditional intersection mass must equal
+the product of the two conditional marginals. Ten new checked theorems
+establish that conditional intersection is symmetric, conditional independence
+is symmetric, and that the independence predicate is invariant under changes
+to either target event or the conditioning predicate outside the
+enumerated finite sample. Reordering the same weighted sample multiset also
+preserves the independence predicate by Stdlib permutation invariance.
+A conditional event-partition identity further proves independence is
+preserved by complementing the first target, the second target, or both,
+using only the existing conditional inclusion–exclusion and complement laws.
+
+These results reuse `Stdlib.Bool.andb_comm`, the already checked
+conditional-event extensionality lemmas, and real multiplication
+commutativity. They add no second conditional-probability implementation,
+finite-list traversal, Gaussian assumption, or external measure-theory axiom.
+Signed weights remain algebraically meaningful but require nonnegativity for
+probability interpretation; no unit-mass normalization is assumed.
+The interface is a starting point for future conditional-independence
+cross-product factorization and stronger four-cell bridge rules, not a certified stochastic process model.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Generic conditional independence specialized to the four-cell model
+
+Two finite-union theorems show that normalizing the underlying outcome
+list to total mass one turns conditioning on the universally true event
+into ordinary event mass. Under the same normalization, the generic
+`finite_conditional_independent` predicate is equivalent to the exact
+joint-event product of its two marginal event masses.
+
+Two new `FourCellBridge.v` theorems instantiate that result with the
+already verified Boolean-pair enumeration and four-cell model weights:
+generic independence of A and B given true is equivalent both to
+`p_both m = p_A m * p_B m` and to
+`joint m * neither m = only_A m * only_B m`. The latter equivalence
+delegates to `Admissions.binary_independence_criterion`; there is
+no new four-cell enumeration, cross-product calculation, or assumption
+of observed independence. All results retain the existing normalized,
+nonnegative four-cell interpretation.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Degenerate Boolean-event independence laws
+
+Four new kernel-checkable consequences of the generic finite
+conditional-independence interface show that the always-true and
+always-false events are each conditionally independent of any other
+Boolean event in either target position, whenever the conditioning
+event has strictly positive finite mass. The first-target results
+reuse conditional event extensionality and the checked unit/zero
+conditional-mass laws; their reverse-order partners use only
+the already checked symmetry theorem. No new list recursion, event
+sum, or conditional quotient is introduced.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq files.
+
+## True-conditioning independence and zero indicator covariance
+
+Two new bridge theorems compose previously checked propositions
+without expanding event sums or covariance polynomials. In `FiniteBridge`,
+unit finite total mass makes conditional independence given the certain
+event equivalent to zero finite covariance of the two event-indicator
+scores. In `FourCellBridge`, the same equivalence holds for the
+normalized, nonnegative four-cell admissions model by direct
+instantiation of the general result and `four_cell_total_mass`.
+The formalization does not assume that observed admissions are
+independent and does not generalize zero covariance to independence
+of arbitrary real-valued scores.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Finite conditional independence as a cross-product equation
+
+Under strictly positive conditioning mass, a new `FiniteUnion`
+theorem equates generic conditional independence with the
+denominator-free identity
+
+```text
+P(G and A and B) * P(G) = P(G and A) * P(G and B)
+```
+
+where `P` is the shared finite weighted Boolean-event mass.
+The proof reuses the existing conditional quotient and positive
+denominator cancellation by the standard real-field tactic.
+The equality needs no unit-mass normalization and remains algebraic
+for signed weights; interpreting it probabilistically requires
+nonnegative sample weights. No additional conditional probability
+operator or finite-sum implementation is introduced.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Conditioning-event independence and finite union factorization
+
+Two results show that a strictly positive-mass conditioning event
+is conditionally independent of any other Boolean target when
+that event itself occupies either target position. The proofs
+reuse the existing conditioned-support extensionality and symmetry
+results rather than rebuilding the finite event sum.
+
+A third theorem specializes conditional inclusion–exclusion under
+the already checked conditional-independence factorization:
+`P(A or B | G) = P(A | G) + P(B | G) - P(A | G)*P(B | G)`.
+This is a two-event finite algebraic identity, not an extension
+to mutually independent families of events.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Three-event conditional factorization
+
+A new checked finite Boolean-event theorem proves
+
+```text
+P(A and B and C | G) = P(A | G) * P(B | G) * P(C | G)
+```
+
+under the **two explicit hypotheses** that A is conditionally
+independent of B given G and that (A and B) is conditionally
+independent of C given G. Three merely pairwise conditional
+independence premises are deliberately **not** treated as sufficient.
+The proof delegates to the existing two-event conditional
+factorization and Stdlib.Boolean conjunction associativity, without
+introducing a new list fold or general mutual-independence axiom.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Conditional-support refactoring of the independence interface
+
+The generic conditional-independence API now has checked target
+extensionality for **both targets on conditioned sample support**:
+two target predicates need agree only at enumerated outcomes for
+which the conditioning event is true. This strengthens the older
+theorem requiring agreement on every outcome and makes the older
+first-target theorem a short corollary rather than a duplicate
+conditional quotient calculation.
+
+Two consequences show that the complement of the conditioning
+event is conditionally independent of any target under the
+original positive-mass conditioning event. They reuse the already
+checked impossible-event theorem, stronger support extensionality
+and independence symmetry. No additional weighted summation or
+probability definition is introduced.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Finite conditioning by standard-library list filtering
+
+Three checked representation results identify `P(A|G)` on an
+original weighted sample with `P(A|true)` after filtering
+the sample by `G`. The generic conditional-independence
+predicate is likewise equivalent to the true-conditioned
+predicate on the filtered list, including its strict positive
+mass guard. A third theorem restates the denominator-free
+conditional-independence cross product directly in terms of
+the filtered sample's mass and its event marginals.
+
+The proofs reuse `Stdlib.List.filter`, previously checked
+`finite_prob_on_filtered_samples` and
+`finite_prob_as_filtered_mass`, and the generic
+cross-product theorem. No new event sums, conditional quotients,
+or probability wrappers are introduced. Zero-denominator cases
+remain algebraic and are not interpreted as probabilities.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Arbitrary finite conditional event products
+
+The event-intersection operator `all_events` is the standard
+`Stdlib.List.forallb` applied to a finite list of Boolean
+predicates. The report-specific `finite_conditional_prefix_independent`
+predicate records the exact factorization assumptions along
+each suffix of that list. Under positive conditioning mass, a
+checked induction now proves
+
+```text
+P(all events | G) =
+  fold_right (*) 1 (map (fun A => P(A | G)) events)
+```
+
+when each current event is independent (given G) of the
+**conjunction of all remaining events**. This is explicitly
+stronger than pairwise independence. Companion theorems
+validate event-list concatenation via `Stdlib.List.forallb_app`
+and singleton intersection via standard computation.
+
+The proof does not define a new finite sum or probability
+quotient: conjunction and product use `forallb`, `map`,
+`fold_right` and the existing conditional-independence API.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Conditional finite-family union and intersection bounds
+
+Three checked inequalities extend the original report's
+distribution-free union/intersection reasoning to a strictly
+positive finite conditioning event. Any listed event has no
+greater conditional mass than the union of all events;
+the union's conditional mass is bounded above by the
+original `arbitrary_union_bound` applied to the filtered
+sample and divided by the conditioning mass. Dually, the
+conditional intersection of the finite event list has
+no greater mass than any of its members.
+
+These proofs invoke `finite_conditional_prob_monotone`,
+the existing `arbitrary_union_bound`, `List.filter_In`,
+and `List.forallb_forall` rather than implementing new
+probability sums, event-set recursion, or an independent
+conjunction calculus.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Direct finite conditional Boole union bound
+
+The conditional upper bound is also checked in its familiar
+marginal-sum form:
+
+```text
+P(any listed event | G) <=
+  fold_right (+) 0 (map (fun A => P(A | G)) events)
+```
+
+for nonnegative sampled weights and strictly positive `P(G)`.
+A reusable algebraic lemma uses the existing
+`FiniteSum.finite_sum_scale` and `finite_sum_ext` lemmas to
+factor out the common conditioning denominator from the
+finite sum of event marginals. The final union theorem simply
+composes that identity with the prior filtered conditional
+union bound, without a second union-bound proof or new
+finite-sum recursion.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Positive common scaling of finite outcome weights
+
+Three checked lemmas establish the exact invariance under
+a uniform strictly positive reweighting of the finite
+outcome list. The finite event mass is homogeneous in
+the weights by `FiniteSum.finite_sum_scale`; conditional
+event masses cancel the common numerator/denominator
+factor by Rocq's standard real-field tactic. The
+explicit positive-conditioning guard and entire
+conditional-independence predicate are preserved
+in both directions. The original event list and all
+multiplicities stay unchanged, and no new summation
+or probability quotient is introduced.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Set-extensional finite event families and permutation invariance
+
+Four checked results connect the previously defined
+`all_events` operator to standard library membership and
+permutation reasoning. The conjunction predicate is
+determined entirely by event-list membership, independent
+of duplicates and order, by `Stdlib.List.forallb_forall`.
+`Stdlib.Sorting.Permutation.Permutation_in` then gives
+event-list permutation invariance of both pointwise
+conjunction and its conditional event mass. Finally,
+conditional intersection mass is monotone when more
+Boolean-event constraints are added, under the existing
+nonnegative sampled-weight and positive conditioning-mass
+assumptions.
+
+These theorems reuse `finite_conditional_prob_monotone`,
+the shared conditional target-event extensionality theorem
+and Stdlib rather than adding more finite-list recursion.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Conditional indicator covariance under normalized filtered weights
+
+A new `FiniteBridge` definition represents the normalized
+weighted sample obtained by filtering on a strictly
+positive-mass Boolean conditioning event and multiplying
+each retained original weight by the reciprocal of the
+conditioning mass. Two checked theorems establish that
+the resulting finite weights sum to exactly one and
+preserve nonnegativity of original sampled weights.
+
+A third theorem composes the existing selected-sample
+independence bridge, positive scaling invariance and
+normalized indicator covariance equivalence to prove
+
+```text
+A independent of B given G  iff
+  Cov_{filter G, normalized weights}(1_A, 1_B) = 0
+```
+
+for any positive-mass G. This is exact for finite
+Boolean indicator scores; it makes no claim that
+uncorrelated general real-valued scores are independent
+or that arbitrary continuous conditional densities exist.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Exact conditional Bernoulli moments and covariance residual
+
+Three new `FiniteBridge` results establish that an
+original conditional event mass `P(A|G)` equals the
+ordinary event mass on the G-filtered sample with
+weights scaled by `1/P(G)`. By delegating to the
+pre-existing Boolean-indicator variance and covariance
+formulas, they also prove the exact finite identities
+
+```text
+Var(1_A | G) = P(A|G) * (1 - P(A|G))
+Cov(1_A, 1_B | G) =
+  P(A and B | G) - P(A|G)*P(B|G)
+```
+
+under strictly positive conditioning mass. The
+covariance residual gives a second, directly interpretable
+form of the general conditional-independence bridge.
+Nonnegative original sample weights are still needed
+for probability interpretations; none of the proofs
+redefines the finite covariance or conditional quotient.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Normalized conditional indicator variance bounds
+
+Three additional finite conditional Bernoulli lemmas are
+proved solely by reusing the existing checked indicator
+variance results on the normalized, filtered outcome list:
+variance is at most one quarter; it equals zero exactly
+when the conditional event mass is zero or one (under
+positive conditioning mass); and complementing the target
+preserves its conditional indicator variance (under
+positive conditioning mass). The first upper bound is
+an algebraic inequality for arbitrary real weights;
+a statistical probability interpretation additionally
+requires normalized, nonnegative selected weights.
+
+The Python Deal audit is already enforced for **every
+named function**, not just five decorators per file:
+28 tracked Python files, 292 named functions, 1460 Deal
+contracts and no violations on the pinned Python CI
+verification for commit `001fdfe`. The minimum observed
+number of distinct contracts per named function is five.
+
+Current audited Rocq totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Conditional indicator covariance complement laws
+
+A reusable `conditioned_weights_moment_total_mass_one`
+bridge connects the normalized Boolean-filtered sample's
+unit total mass to the `FiniteMoments.total_mass` API.
+The existing conditional complement-variance proof
+now uses this bridge rather than repeating the
+model conversion.
+
+Three new covariance theorems instantiate the checked
+unconditional Bernoulli indicator complement laws on
+this same normalized, selected finite sample:
+complementing exactly one indicator reverses
+conditional covariance sign, whereas complementing
+both indicators leaves covariance unchanged.
+Each result retains a strictly positive conditioning
+mass requirement; nonnegative individual weights
+are additionally needed for probabilistic semantics.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Cauchy–Schwarz and conditional degenerate-event independence
+
+The existing `FiniteMoments.finite_covariance_cauchy_schwarz_squared`
+is instantiated on the normalized conditioning-selected
+finite sample to prove the conditional Boolean-indicator
+covariance inequality, with positive mass and nonnegative
+sample weights explicit. A second theorem imports the
+existing zero-variance-implies-zero-covariance result
+through the same finite-moment normalization bridge.
+
+Combining the already checked
+`zero indicator variance iff conditional mass is zero or one`,
+the covariance zero consequence and the
+`conditional independence iff zero indicator covariance`
+bridge, the new theorems derive that any Boolean target
+with **exact conditional mass zero or one** is independent
+of any other Boolean event given G, in either target order.
+These are real-algebraic, kernel-checked consequences of
+existing finite moment results, not a claim that
+near-extreme observed frequencies are independent.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Quantitative finite conditional Bernoulli covariance bounds
+
+Using the checked selected-weight normalization, three
+more theorems establish variance nonnegativity of
+conditioned zero-one indicator scores and combine
+`FiniteMoments.finite_covariance_cauchy_schwarz_squared`
+with the exact indicator variance upper bound of 1/4
+to prove `Cov(1_A,1_B | G)^2 <= 1/16` and its
+signed consequence `-1/4 <= Cov(1_A,1_B | G) <= 1/4`.
+
+The bounds require strictly positive conditioning mass
+and nonnegative original sampled weights; neither event
+independence nor whole-list mass normalization is needed.
+All proof steps reuse existing finite moments and the
+standard Rocq `nra` tactic, without manual covariance
+sum expansion.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Dimension-preserving groundwork for covariance matrices
+
+Five structural results in `FiniteMoments` prepare the
+existing list-based covariance representation for a
+checked finite-indexed matrix translation. They
+show that the square basis covariance matrix is
+the equal-left-right instance of the rectangular
+cross-covariance matrix, that splitting a row-side
+basis or column-side basis is compatible with
+standard list appending, and that positional
+matrix access by `Stdlib.List.nth_error` returns
+the covariance of the selected score pair.
+The latter gives a componentwise transpose law
+using the previously proved scalar covariance
+symmetry.
+
+These are exact finite-list representation results;
+they do not yet claim a dimension-indexed matrix
+isomorphism, generic transpose operation, rank or
+eigenvalue theorem. The implementation reuses
+`Stdlib.List.map_app`, `combine`,
+`nth_error_map`, and the existing scalar covariance,
+rather than inventing custom matrix traversal.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Certified finite covariance rows and square symmetry
+
+The rectangular covariance matrix now has a
+`nth_error` row-selection theorem proving a selected
+matrix row is exactly the covariance map of its
+corresponding left-side basis score. Another theorem
+proves every such row has the right-side basis length,
+explicitly preserving the rectangular column dimension.
+
+The square-basis covariance representation inherits a
+checked selected-cell identity and componentwise
+symmetry at every valid pair of basis positions from
+the previous rectangular covariance entry/transpose
+results. No new indexing algorithm, out-of-bounds
+sentinel, matrix transpose operator or covariance
+calculation is introduced.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## First finite-indexed matrix representation with a checked cell bridge
+
+The first dimension-indexed rectangular covariance
+matrix is now represented by a function
+`Fin.t (length left) -> Fin.t (length right) -> R`,
+where bounded `Fin.t` indices select scores from
+the standard `Vector.of_list` conversion.
+This replaces unbounded lookup and its fallback
+value with maintained Rocq `Fin` and `Vector`
+types, retaining both rectangular dimensions.
+
+A generic theorem uses `VectorSpec.to_list_nth_order`,
+`to_list_of_list_opp`, `Fin.of_nat_to_nat_inv`
+and `List.nth_error_nth'` to certify that a bounded
+index retrieves the same element from a list
+and its vector conversion. Applying the previously
+checked list-matrix entry theorem establishes
+**exact equality at every valid covariance cell**
+between the old and new representations. The
+indexed rectangular transpose law follows from
+scalar covariance symmetry.
+
+No rank, nullspace or continuous-distribution
+conclusion is claimed yet. Those need separate
+checked matrix-theory connections.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Total source-matrix access for bounded covariance indices
+
+The new `indexed_basis_cross_covariance_matrix_entry_total`
+theorem removes the row-existence premise from the
+earlier list/vector covariance-entry bridge. For every
+pair of `Fin.t` bounded row and column indices,
+it constructs the corresponding actual list-matrix
+row and proves successful `nth_error` lookups
+return the same scalar as the indexed matrix.
+This relies only on the certified vector/list
+element conversion, existing covariance-row
+selection and checked entry equality.
+
+For a square score basis, the indexed matrix
+also inherits exact symmetry directly from
+the rectangular covariance swap theorem.
+The representation is a dimension-safe,
+fully checked transport of individual
+covariance entries; rank and nullspace
+algorithms remain separate unproved work.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Bounded covariance rows and diagonal-variance bridge
+
+Four additional Rocq 9.2 source-level proof obligations make the
+`Stdlib.Vectors.Fin`/`Vector` interface more directly useful:
+`indexed_basis_cross_covariance_matrix_row` establishes that every valid
+finite index selects an actual row of the original list matrix;
+`indexed_basis_cross_covariance_matrix_row_length` certifies its exact
+number of columns; `indexed_basis_covariance_matrix_diagonal` identifies
+each diagonal cell with the corresponding score's variance; and
+`indexed_basis_covariance_matrix_diagonal_nonnegative` applies the
+preexisting variance theorem under explicit unit-mass and nonnegative
+weight assumptions. The earlier total cell-bridge proof now reuses
+the new row theorem instead of repeating its list/vector conversion.
+
+These are finite algebraic facts, not a rank/nullspace algorithm or
+a proof about continuous probability distributions. No new matrix
+traversal, library dependency, axiom, Python code or changed source-pinned
+verification artifact is introduced.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Indexed finite covariance inequalities and zero-variance support
+
+Three direct, fully documented consequences of the checked vector/list
+bridge extend the diagonal characterization. Under normalized, nonnegative
+finite weights, `indexed_basis_covariance_matrix_cauchy_schwarz_squared`
+bounds the square of an off-diagonal entry by the product of its two
+diagonal cells. The theorem
+`indexed_basis_covariance_matrix_diagonal_zero_iff_constant_on_support`
+characterizes a zero diagonal as a selected score constant on every
+positive-weight sample occurrence. Finally,
+`indexed_basis_covariance_matrix_zero_diagonal_implies_zero_row`
+proves that a zero diagonal forces its entire covariance row to vanish.
+
+Each proof is reduced to an existing scalar finite-covariance theorem;
+no new induction, custom matrix data structure or Gaussian assumption
+is introduced. Rank-nullity remains a separate library-integration task.
+
+Current audited totals: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Rectangular covariance nullity and two-coordinate minors
+
+Six documented theorems extend the indexed `Fin.t` interface. The
+rectangular covariance row/column theorems transport zero scalar
+variance to arbitrary covariance entries with different left/right
+score bases, using the already checked covariance symmetry. The
+existing square zero-row proof now reuses the rectangular result.
+
+The next three theorems certify that a zero square diagonal forces
+the corresponding column to zero and that an entire zero row or column
+is equivalent to its diagonal being zero, under normalized
+nonnegative finite sample weights. The sixth theorem verifies the
+nonnegative two-coordinate principal-minor expression
+`M(i,i)*M(j,j)-M(i,j)*M(j,i)` from existing Cauchy-Schwarz and
+indexed symmetry, including repeated indices.
+
+No new list recursion, matrix algorithms, external dependencies,
+axioms, Python modules, or historical source-pinned SPARK evidence
+have been introduced. Rank-nullity and spectral decompositions
+remain separate, unproved extensions.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Exact coordinate nullity and positive-support constancy
+
+Three further formal results complete a coordinatewise characterization.
+`indexed_basis_covariance_matrix_zero_row_iff_zero_column` uses
+indexed symmetry to prove that a row is identically zero iff its
+corresponding column is identically zero, **without** assuming
+normalized or nonnegative weights. Theorems
+`indexed_basis_covariance_matrix_zero_row_iff_constant_on_support`
+and `indexed_basis_covariance_matrix_zero_column_iff_constant_on_support`
+then show, for normalized nonnegative finite sample weights, that
+zero rows and columns characterize scores constant on positive-weight
+sample support. Both implications reuse previously certified
+zero-diagonal and support-constancy iff results and the standard
+propositional `tauto` tactic.
+
+The model still lacks a generic matrix rank/kernel dimension theorem;
+no such claim is made. The changes introduce no custom matrix
+operation, new external dependency, Python code or SPARK modifications.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Indexed covariance positivity and positive-support variation
+
+Three certified consequences of the prior scalar covariance library
+extend the bounded matrix interface. The positive-diagonal theorem
+characterizes strict variance by absence of a constant selected score
+on positively weighted sample outcomes. A nonzero indexed covariance
+entry implies strictly positive variances for both selected scores,
+and consequently neither score can be constant on positive-weight
+support. The final implication is necessary, not sufficient:
+two varying scores may still have zero covariance.
+
+The proofs use only existing scalar covariance/variance theorems
+and the prior `Fin.t` diagonal bridge. They introduce no separate
+finite-sample recursion, matrix algorithm, Gaussian measure, new
+Rocq axiom, Python file, or historical source modification.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Rectangular indexed covariance bounds and variation
+
+Three documented, library-backed theorems lift scalar finite covariance
+laws to rectangular `Fin.t`-indexed matrices. They show the
+Cauchy-Schwarz squared bound against the two selected score variances,
+strictly positive selected variances when a cross-covariance is nonzero,
+and the consequent nonconstancy of both scores on positive-weight
+sample support. Bases can have different dimensions and repeated scores.
+
+The existing square indexed Cauchy-Schwarz proof was also refactored:
+it now reuses the more general rectangular theorem and the established
+diagonal-to-variance identity instead of unfolding scalar covariance
+again. No custom matrix traversal, new external dependency, axiom,
+Python source change or historical evidence modification was needed.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** in seven Rocq modules.
+
+## Two-coordinate indexed covariance quadratic via scalar variance
+
+The bounded covariance interface now includes
+`indexed_basis_covariance_two_coordinate_form`, a purpose-specific
+polynomial in already verified dimension-indexed covariance entries.
+The `_as_variance` theorem uses the library-backed
+`variance_of_two_weighted_scores` identity without requiring
+normalized weights. Its `_nonnegative` theorem follows from scalar
+finite variance nonnegativity with explicit mass-one/nonnegative
+sample weights. Further iff results characterize a zero form and
+a strictly positive form exactly by constancy or nonconstancy of
+the two-score linear combination on positive-weight sample support.
+
+No list iteration, matrix multiplication, general determinant
+algorithm, axiom or external library was added. Full matrix
+kernel/rank results and continuous distribution theory remain
+separately unproved. No Python source or archived SPARK evidence
+was modified.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Two-coordinate bridge to the established list-matrix quadratic
+
+The `indexed_basis_covariance_two_coordinate_form_as_list_matrix`
+theorem connects two bounded covariance cells to the already verified
+`matrix_quadratic_form` on a two-score list covariance matrix,
+without any normalized-mass assumption. It reuses the existing
+two-weighted-score variance theorem, score variance extensionality
+and unconditional list-matrix covariance quadratic identity.
+No independent generic matrix multiplication or list recursion
+was introduced. Later positive-semidefiniteness proofs can use
+the existing general fixed-basis matrix theorem through this bridge.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Generic fixed-basis positive-semidefinite theorem reuse
+
+The two-coordinate form nonnegativity proof was refactored to reuse
+`fixed_basis_covariance_matrix_positive_semidefinite` through the
+kernel-checked `indexed_basis_covariance_two_coordinate_form_as_list_matrix`
+bridge. Its theorem statement and exact normalization/nonnegative-weight
+assumptions are unchanged. This removes a duplicated scalar variance
+positivity step in favor of the existing general finite matrix theorem.
+
+Current inventory remains **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Arbitrary-dimensional vector coefficients and covariance nullity
+
+The new `indexed_basis_covariance_quadratic_form` takes a
+`Vector.t R (length basis)` rather than an unconstrained list of
+coefficients. It delegates matrix arithmetic to the existing
+`matrix_quadratic_form` and `basis_covariance_matrix` functions.
+`Stdlib.Vectors.VectorSpec.length_to_list` certifies the exact
+dimension equality whenever an established list-matrix theorem is reused.
+
+Six documented proofs lift **existing all-dimensional** finite
+covariance theorems: weighted-basis variance equality, PSD,
+zero quadratic iff a supported-constant score, strict positivity
+iff no positive-support constant, zero quadratic iff the
+composite score is uncorrelated with every basis score, and
+zero quadratic iff its coefficient list has zero dot product
+with every covariance row. All probability statements retain
+mass-one/nonnegative sample-weight hypotheses. Empty and
+dependent bases are allowed. This is a dimension-safe coefficient
+interface, not an independent indexed-matrix multiplication
+implementation or a kernel-dimension theorem.
+
+No Python files, new Rocq axioms, external dependencies or
+historical source-pinned SPARK verification artifacts were changed.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Dimension-safe covariance orthogonality and strict positivity
+
+Five additional proofs lift the existing general finite list covariance
+results to `Vector.t R (length basis)` coefficients. Zero covariance
+quadratic is equivalent to uncorrelatedness with **every** outcome
+score, not just the basis. Strictly positive quadratic is equivalent
+to non-orthogonality with all basis scores, and also to failure of
+every covariance-row dot product to vanish. A separate iff equates
+zero covariance row dots with a composite score constant over
+positive-weight sampled support. Finally, a nonzero covariance
+with any comparison score provides a strictly positive
+coefficient-vector quadratic witness.
+
+Every theorem delegates to established scalar or general
+fixed-basis results and `VectorSpec.length_to_list` where required.
+Theorems preserve the normalized nonnegative-weight assumptions;
+none asserts finite matrix rank or continuous probability results.
+There are no new Python changes, matrix algorithms, dependencies,
+axioms or edits to source-pinned SPARK evidence.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Two-coordinate algebra and bounded covariance row consequences
+
+Five kernel-checkable consequences extend the indexed interface
+without implementing any new matrix or vector algorithm. The
+two-coordinate covariance form is invariant under exchanging
+its score indices and coefficients; it is homogeneous of degree
+two under a common real coefficient scaling. Both identities
+reuse the checked covariance symmetry and Stdlib real `ring`.
+
+For arbitrary-dimensional `Vector.t` coefficient vectors,
+a vanishing covariance quadratic forces the dot product
+against **every Fin.t-selected covariance row** to vanish.
+The proof composes the earlier general row-dot kernel iff,
+the bounded-row list correspondence and Stdlib.List.nth_error_In.
+A null direction is also uncorrelated with every bounded basis
+score; conversely a *witnessed nonzero covariance* with one
+bounded basis score certifies a strictly positive quadratic.
+The row kernel result is one-way at this stage; full indexed
+row-kernel equivalence and rank dimensions remain future work.
+
+All theorem comments and the proof inventory were updated;
+no Python sources, new axioms, custom finite sums or
+source-pinned SPARK evidence were changed.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Complete Fin.t-indexed covariance-row nullspace criterion
+
+The new `indexed_basis_covariance_matrix_row_has_bounded_index`
+theorem establishes that **every** row in the existing list
+covariance matrix has a corresponding bounded `Fin.t` index,
+even with repeated score functions. It composes the standard
+`In_nth_error`, `nth_error_Some`, `length_map`,
+`Fin.of_nat_lt`, and `Fin.to_nat_of_nat` lemmas with the
+already checked list/Fin row bridge. No custom list induction
+or index enumeration is introduced.
+
+This completes the earlier one-way implication:
+`indexed_basis_covariance_quadratic_zero_iff_bounded_row_dots_zero`
+proves that, under normalized nonnegative sample weights, a
+dimension-safe coefficient direction has covariance quadratic
+zero **iff all bounded indexed covariance row dot products
+vanish**. The converse follows from completeness of the
+row-index bridge and the existing general fixed-basis nullity
+theorem. The result does not compute rank or nullspace dimension.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Indexed covariance positive definiteness and bounded row kernel
+
+Five further theorem proofs reuse the complete Fin.t row
+kernel iff. Strict positivity of an arbitrary-dimensional
+typed coefficient covariance quadratic is now equivalent
+to the bounded row dot products not all vanishing. A
+vanishing bounded row system is equivalent both to a
+positive-support-constant composite score and to a
+composite score uncorrelated with every outcome score.
+These are propositional compositions of existing checked
+results and do not repeat covariance algebra.
+
+The `indexed_basis_covariance_positive_definite` definition
+quantifies over all nonzero `Vector.t R (length basis)`
+coefficient directions, using the existing `Vector.to_list`
+and `List.repeat` representation of a zero vector.
+Two further iff theorems characterize positive definiteness
+as the absence of any nonzero supported-constant score
+direction, equivalently the absence of a nonzero bounded
+covariance row-kernel direction, under unit-mass nonnegative
+weights. The existing fixed-basis results supply the
+substantive mathematics. **No rank dimension, eigenvalue,
+spectral theorem or determinant algorithm is claimed.**
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Indexed positive definiteness: composite variance and PSD null directions
+
+Three more extensively commented, library-backed theorems
+characterize the typed finite covariance positive-definiteness
+predicate. First, positive definiteness is equivalent (under unit
+sample mass) to strictly positive variance of every nonzero
+vector-coefficient composite score. Second, under normalized
+nonnegative weights, it is equivalent to the absence of nonzero
+directions orthogonal to all chosen basis scores. Third, combining
+the previously checked positive-semidefinite property with
+real linear arithmetic, positive definiteness is equivalent to
+**no nonzero direction having an exactly zero quadratic form**.
+
+These statements reuse earlier indexed covariance/variance
+bridges and Stdlib.Lra. They neither implement matrix
+elimination nor claim numerical rank, eigenvalue bounds or
+new statistical evidence. All seven Rocq file headers remain
+in place and no Python source hashes are altered in this batch.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Constructive witnesses for typed covariance positivity and degeneracy
+
+Four further checked theorem statements link typed coefficient
+directions to concrete finite-support and matrix-row witnesses.
+Two distinct composite-score evaluations on positive-weight sampled
+outcomes force strictly positive coefficient quadratic form,
+reusing the existing strict-positivity iff support nonconstancy.
+If every nonzero vector direction admits such a sample pair,
+the covariance basis is positive definite. A single nonzero
+bounded-index covariance row dot similarly certifies positivity
+using the previously checked Fin.t row-kernel equivalence.
+Conversely, one explicit nonzero coefficient direction annihilating
+all bounded covariance rows refutes positive definiteness.
+
+These arguments compose existing finite variance/covariance lemmas;
+they introduce no duplicated finite-sum implementations, new axioms,
+rank algorithms or dependence on external matrix libraries.
+The boundary is finite, normalized, nonnegative weighted samples.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Typed covariance nullity through positive-support anchors
+
+Four new Rocq proofs reuse the existing finite coefficient
+nullity and positive-definiteness library without new summations
+or matrix algorithms. A zero dimension-safe covariance quadratic
+forces identical weighted composite-score values on every pair
+of positive-weight sampled outcomes, using the general list
+quadratic theorem and `VectorSpec.length_to_list`.
+With a specified positive-weight sampled anchor, the converse
+holds: equality with the anchor on all positive-weight outcomes
+is exactly equivalent to a zero coefficient quadratic.
+A nonzero bounded coefficient direction constant on positive
+sample support refutes positive definiteness, as does an
+explicit nonzero zero-quadratic direction; both use previously
+checked indexed positive-definiteness iff theorems.
+
+Every new declaration has a complete adjacent mathematical
+comment; the proof inventory and library audit are synchronized.
+The statements retain finite normalized nonnegative-weight
+premises and assert neither Gaussianity nor numerical rank.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Duplicate Boolean-event invariance for finite union and intersection
+
+Four new extensively documented Rocq proofs establish that
+duplicating one event predicate at the head of a required-event
+or alternative-event list leaves its finite event mass unchanged.
+The identities apply both to unconditional finite event mass
+and to conditional probability given an arbitrary conditioning
+event. They need no nonnegative/normalized weight hypothesis:
+the existing probability target extensionality lemmas also
+handle the zero-conditioner-mass branch. The proofs use the
+existing `any_event` (`existsb`) and `all_events` (`forallb`)
+definitions and the standard Boolean conjunction/disjunction
+identities, not duplicate list recursion or weighted summation.
+
+The statements clarify an important distinction: duplicate
+constraints do not alter union/intersection truth, but a sum
+of separate marginal event probabilities can double-count.
+All theorem comments, module headers, proof-register rows
+and the library audit remain synchronized.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Refactored event idempotence and general append-existing laws
+
+A duplicate-head union-mass theorem introduced in the preceding
+batch had an equivalent existing checked
+`union_prob_duplicate_route` result. It was **replaced rather
+than maintained as a redundant proof** by a stronger
+`finite_union_append_existing` theorem: appending any event
+already in the list preserves its finite union mass.
+One `event_append_existing_membership_iff` helper reuses
+`Stdlib.List.in_app_iff` and supplies its membership
+equivalence to that union theorem and to two new statements:
+unconditional and conditioned intersections are invariant
+under appending an already-required event. These proofs delegate
+to `union_prob_membership_extensional`,
+`all_events_membership_ext` and existing finite target
+extensionality, rather than reimplementing event Booleans
+or sample summations.
+
+The earlier duplicated-intersection head proofs were also
+refactored to reuse `all_events_membership_ext` directly.
+No event independence, probability normalization or positive
+conditioning mass is required. The proof register reflects
+each refactor and the complete explanatory comments remain.
+
+Current inventory: **573 public claims, 576 proof scripts,
+639 documented declarations** across seven Rocq modules.
+
+## Shared conditional union membership equivalences
+
+The finite union membership proof is factored into a pure event predicate
+lemma using `Stdlib.List.existsb_exists`. It now serves the existing
+unconditional union theorem and three new conditional union results:
+membership-extensional equality, event-list permutation, and appending
+an already-present event. The new theorems reuse the existing conditional
+target extensionality and permutation and append-membership lemmas.
+They retain exact equality even when the conditioning mass is zero.
+
+The new intended inventory is **580 claims, 583 proof scripts, 646
+documented declarations** across seven Rocq modules. All new claims
+require the Rocq kernel and existing documentation CI gates.
+
+## Reuse generic finite event monotonicity for event-family inclusion
+
+A shared `any_event_membership_monotone` lemma uses the maintained
+`existsb_exists` membership bridge rather than Boolean recursion.
+Ordinary and positive-conditioner conditional union inclusion inequalities
+follow from `finite_prob_event_monotone` and
+`finite_conditional_prob_monotone`. Both require only nonnegative sampled
+weights; the conditional result also requires positive conditioning mass.
+
+## Conditional union identity base cases and concatenation
+
+Three documented theorems now cover empty-family zero mass, singleton-family
+identity and appended event-family Boolean OR under the same conditioning
+predicate. The proofs reuse `finite_conditional_prob_false`,
+`finite_conditional_prob_event_ext_on_samples` and the existing
+`any_event_append` lemma built on `Stdlib.List.existsb_app`.
+They are exact equalities even when conditioning mass is zero; that
+case has no ordinary statistical conditional-probability interpretation.
+
+Current intended inventory: **583 public claims, 586 proof scripts and
+649 documented declarations** across seven Rocq files, subject to the
+Rocq 9.2 kernel and documentation CI.
+
+## Conditional conjunction base case and head-tail structure
+
+Two additional documented theorems reduce `all_events []` to true and
+`all_events (head :: rest)` to a Boolean conjunction, using the
+maintained `Stdlib.List.forallb` and generic conditional extensionality.
+The empty conjunction equals conditional probability one only with
+explicitly positive conditioning mass. No independence premise is
+inferred from the Boolean conjunction representation.
+
+Current intended inventory: **585 public claims, 588 proof scripts and
+651 documented declarations** across seven Rocq modules, subject to CI.
+
+## Monotonic append-family admission alternatives
+
+The ordinary and conditioned union append-left corollaries use
+`Stdlib.List.in_or_app` and the existing family-inclusion theorems,
+without new list recursion or finite-sum algebra. Nonnegative weights
+are explicit, and positive conditioning mass is additionally needed
+for conditional inequalities.
+
+Current intended inventory: **587 public claims, 590 proof scripts and
+653 documented declarations** across seven Rocq modules, pending CI.
+
+## Append-family order for unions and conjunctions
+
+Four documented Rocq theorems derive right-sided union monotonicity
+(ordinary and conditional) and both-sided conditional conjunction
+antitonicity. All use `Stdlib.List.in_or_app` as a pure membership
+bridge and the previously established family-subset probability laws.
+Nonnegative sampled weights and strictly positive conditioning mass
+remain explicit for conditional inequalities. No event recursion,
+custom sum or independence claim was introduced.
+
+Current intended inventory: **591 public claims, 594 proof scripts,
+657 documented declarations** across seven Rocq modules, subject to CI.
+
+## Shared conjunction membership and ordinary intersection monotonicity
+
+A documented `all_events_membership_antitone` lemma now centralizes the
+maintained `Stdlib.List.forallb_forall` reasoning for Boolean conjunctions.
+The existing conditional conjunction family-subset theorem delegates
+to this helper rather than duplicating the witness proof. The ordinary
+finite-mass counterpart `finite_all_events_subset` combines the helper
+with existing `finite_prob_event_monotone`; two unconditional append
+corollaries use `Stdlib.List.in_or_app`. No new sums or recursions appear.
+
+Current intended inventory: **595 public claims, 598 proof scripts,
+661 documented declarations** across seven Rocq modules, subject to CI.
+
+## Shared append semantics and unconditional conjunction identities
+
+The maintained `Stdlib.List.forallb_app` fact is now used by a
+single documented `all_events_append` helper, replacing the
+duplicated Boolean reduction in the pre-existing conditional
+conjunction-append theorem. Its unconditional counterpart and
+empty/singleton conjunction identities are derived from existing
+`finite_prob_event_ext_on_samples` and `finite_prob_true`.
+No new list recursion, custom finite sum or independence assumption
+is introduced.
+
+Current intended inventory: **599 public claims, 602 proof scripts,
+665 documented declarations** in seven Rocq modules, subject to CI.
+
+## Unconditional conjunction structure, membership and marginal bounds
+
+Four more well-documented declarations lift standard Boolean-list
+semantics to finite weighted mass: head-tail conjunction via
+`Stdlib.List.forallb`, membership extensionality via the existing
+`all_events_membership_ext`, permutation invariance via
+`Stdlib.Sorting.Permutation`, and the upper bound by any required
+event via the existing `finite_all_events_subset` and singleton
+law. All remain independent of sample normalization and event
+independence; only the inequality assumes nonnegative weights.
+
+Current intended inventory: **603 public claims, 606 proof scripts,
+669 documented declarations** in seven modules, subject to CI.
+
+## Finite event-family intersection versus union
+
+Two documented theorems bound the mass of an event-family conjunction
+by its union, both unconditionally and under positive-mass
+conditioning. Both results chain existing `finite_all_events_at_most_member`
+(or conditional counterpart) with the previously proved
+member-to-union inequality using standard real-order transitivity.
+The explicit `In member events` witness avoids the empty-family
+counterexample; nonnegative sample weights and positive conditioning
+mass are visible wherever needed. No new Boolean recursion or
+probability normalization assumption is introduced.
+
+Current intended inventory: **605 public claims, 608 proof scripts,
+671 documented declarations** across seven modules, subject to CI.
+
+## Two-event family inclusion-exclusion without duplicated algebra
+
+A shared `all_events_pair` lemma reduces `Stdlib.List.forallb`
+on two event predicates to ordinary `andb`. New unconditional
+and conditional inclusion-exclusion theorems then lift the maintained
+generic indicator-mass identities into the event-family notation.
+Both reuse existing target-event extensionality lemmas. The
+conditional equality also covers a zero-mass conditioner as an
+identity of totalized real quotients; probabilistic interpretation
+still requires a strictly positive conditioner and nonnegative
+weights. There is no new summation, independence assumption or axiom.
+
+Current intended inventory: **608 public claims, 611 proof scripts,
+674 documented declarations** across seven modules, subject to CI.
+
+## Two-member family conditional independence without duplicated algebra
+
+The two-event conditional factorization and sum-minus-product union
+identities now have explicit event-family formulations. A new
+`finite_conditional_two_event_family_product` theorem projects
+the factorization already required by `finite_conditional_independent`
+and uses the shared `all_events_pair` Boolean identity.
+`finite_conditional_two_event_family_independent_union` delegates to
+the existing independent-union theorem after a standard `existsb`
+reduction. These are not new independence assumptions or Gaussian
+probability theorems; both rely on a strictly positive conditioner
+inside the conditional-independence predicate.
+
+Current intended inventory: **610 public claims, 613 proof scripts,
+676 documented declarations** across seven modules, subject to CI.
+
+## Shared two-event Boolean disjunction refactor
+
+A documented `any_event_pair` lemma replaces the duplicated
+`existsb` unfolding and `orb_false_r` normalization in both the
+conditional two-event family inclusion-exclusion proof and the
+independent two-event union proof. It parallels the already checked
+`all_events_pair` helper and reuses only maintained Rocq 9.2
+standard-library operations.
+
+Current intended inventory: **662 public claims, 665 proof scripts,
+730 documented declarations** across seven modules, subject to CI.
+
+## Generic positive finite sums and strict monotonicity (9 November 2026)
+
+The shared `FiniteSum.v` layer now proves three more reusable facts:
+`finite_sum_nonnegative_zero_iff` characterizes a zero aggregate
+by the vanishing of **every** nonnegative listed summand;
+`finite_sum_positive_of_positive_member` derives strict positivity
+from one positive term; and `finite_sum_strict_monotone_at_member`
+lifts pointwise weak comparison plus a single strict comparison
+to strict comparison of the two totals.
+
+All three proofs reuse the existing finite sum, its zero and
+subtraction laws, Rocq's decidable real order and `Lra`; they
+introduce no new finite sum implementation, induction, axioms or
+admitted proofs. The new statements require their explicit
+support-membership and sign/order hypotheses. Multiplicities of
+repeated sample entries are retained.
+
+Inventory after these generic sum additions and strict event bounds: **662 public claims,
+665 proof scripts, 730 documented declarations** across seven
+Rocq modules; final acceptance depends on the Rocq 9.2 CI kernel
+and source-documentation audits.
+
+### Existing event-mass proofs refactored to the shared sum layer
+
+The propositions of `finite_prob_zero_iff_no_positive_mass_support`
+and `finite_prob_positive_of_positive_support` are unchanged. Their
+proofs now use the generic zero-sum equivalence and positive-member
+lemma in `FiniteSum.v`, rather than duplicating the finite-sum
+reasoning in `FiniteUnion.v`. They preserve the nonnegative-weight,
+Boolean event and sample-membership assumptions. Both theorem comments
+now explain the exact witness semantics, proof dependencies, and
+limits of probabilistic interpretation.
+
+### Conditional-event positivity from finite joint support
+
+The two new theorems
+`finite_conditional_prob_positive_of_positive_joint_support` and
+`finite_conditional_prob_positive_of_joint_support_witness` derive a
+strictly positive conditional event mass from a sampled outcome where
+both Boolean events hold with positive weight. The first makes the
+positive conditioning denominator explicit; the second proves that
+denominator condition from the same witness. Both reuse the generic
+positive support theorem and the standard `Rdiv_lt_0_compat` rule,
+without assuming independence or normalized total sample mass.
+
+## Strict event inclusion and filtered-mass comparison
+
+Three new Rocq theorems express strict mass comparisons rather than
+only non-strict event bounds:
+`finite_prob_event_strict_monotone`,
+`finite_prob_filtered_mass_strict`, and
+`union_prob_filtered_mass_strict`.
+
+They require a **positively weighted enumerated witness** belonging
+to the larger event but not the smaller one (or an outcome discarded
+by filtering). All sample weights must be nonnegative. They reuse the
+already checked strict finite-sum comparison, event indicator order,
+filtered-mass equivalence, and the existing union operator.
+No independence, normality, unit normalization, extra axioms,
+or custom finite-sum recursion are introduced.
+
+### Strict conditional target comparison and interior conditional mass
+
+Two further finite conditional-event theorems preserve the existing
+strict-positive denominator semantics. The first lifts strict target
+event inclusion through a **common positive conditioning denominator**,
+using `finite_prob_event_strict_monotone` and Rocq's positive-inverse
+order laws. The second derives `0 < P(E|G) < 1` when the selected
+sample contains positive-weight witnesses for both `E` and its
+complement, reusing the already verified conditional positivity and
+complement identities. These statements concern the exact enumerated
+finite sample; they assert neither independence nor empirical or
+continuous probability results.
+
+### Strict event-family extension from a genuinely new sample witness
+
+The pair `union_prob_append_strict_of_fresh_support` and
+`finite_conditional_union_append_strict_of_fresh_support`
+proves that appending an event family strictly enlarges its
+unconditional and (under a positive conditioner) conditional union
+mass when a new positively weighted sampled outcome enters the
+union. Both are immediate reductions to the maintained strict event
+comparison theorems, with `Stdlib.List.existsb_app` supplied via
+`any_event_append`. No fresh Boolean-family recursion, enumeration,
+or independence premise is introduced.
+
+### Three-event conditional product from hierarchical independence
+
+The new `all_events_triple` helper rewrites the standard
+three-member `Stdlib.List.forallb` into a left-associated Boolean
+conjunction using `Stdlib.Bool.andb_assoc`. The theorem
+`finite_conditional_three_event_family_product` then proves the
+three-way conditional product rule by reusing the two-event conditional
+product and the explicitly assumed independence between the first
+pair's conjunction and the third event.
+
+**Pairwise independence alone is not sufficient** for this conclusion.
+The statement is a finite Boolean event identity under two explicit
+hierarchical conditional-factorization premises; it does not claim
+that the observed report data satisfies these premises.
+
+### Nonempty chain factorization and triple-proof consolidation
+
+`finite_conditional_prefix_independent_cons_positive` projects
+positive conditioning-event mass from the **first** independence
+assumption of any nonempty suffix-factorization chain.
+`finite_conditional_nonempty_all_events_product` thereby removes
+the otherwise redundant explicit denominator premise of
+`finite_conditional_all_events_product` for nonempty families.
+The empty-family theorem intentionally still requires a positive
+denominator: an empty chain alone is `True`.
+
+The earlier `finite_conditional_three_event_family_product` now
+delegates to the already checked `finite_conditional_three_event_product`
+after the standard Boolean associativity rewrite. This removes
+duplicated factorization algebra without weakening or changing either
+theorem's statement or hierarchical independence requirements.
+
+### Arbitrary finite conditional union from complement-family independence
+
+`all_negated_events_eq_negated_any` proves the pointwise
+Boolean De Morgan bridge between `Stdlib.List.forallb` on
+pointwise complements and `Stdlib.List.existsb` on the
+original family. The proof uses the standard `negb_orb` lemma.
+
+`finite_conditional_union_complement_chain_product` applies
+the pre-existing arbitrary-list conditional intersection product
+to this complement list, and transports each complement mass via
+the already checked conditional complement identity, obtaining
+
+`P(A_1 ∪ ... ∪ A_n | G) = 1 - ∏_(i=1)^n (1 - P(A_i | G))`.
+
+The explicit premise is **suffix conditional factorization of the
+complementary events**; pairwise independence alone is not asserted
+to suffice. The empty-list case has a separate positive-denominator
+premise, while the nonempty corollary derives that premise from
+the first independence assertion. No new finite-sum or real-product
+implementation is introduced: products use `Stdlib.List.fold_right`.
+
+### Explicit unconditional and conditional union/complement partitions
+
+`finite_union_complement_partition` states that the weighted
+mass of a finite union plus the mass of outcomes failing
+**every** member equals the full enumerated sample mass, for
+arbitrary real weights. Its conditional companion establishes
+that these complementary conditional masses sum to one under
+a positive conditioning denominator.
+
+Both are direct applications of the existing complement mass
+identities after the finite-family De Morgan bridge. The
+general union product proof now reuses the new conditional
+partition theorem rather than repeating the De Morgan rewrite.
+No new independence premise or list-fold implementation is needed.
+
+### Finite union mass determined by event support
+
+The zero-mass law `union_prob_zero_iff_no_positive_support`
+is a specialization of the existing finite-event support theorem.
+`union_prob_zero_iff_each_member_zero` strengthens it to
+an event-family equivalence: under nonnegative sampled weights,
+the mass of a union vanishes exactly when the mass of **every
+listed member** vanishes. The proof uses
+`Stdlib.List.existsb_exists` and the checked
+`event_member_implies_union` lemma instead of implementing a
+second union search.
+
+The positive counterparts,
+`union_prob_positive_of_positive_support` and
+`union_prob_positive_of_positive_member_support`,
+reuse single-event positivity and show that one positive-weight
+sampled witness suffices. These results require no independence
+or normalized total mass and remain specific to finite lists.
+
+### Conditional zero mass and union-member support
+
+`finite_conditional_prob_zero_iff_joint_zero` proves that an
+exact finite conditional quotient is zero precisely when its
+joint numerator is zero, when the conditioning marginal
+is strictly positive. It reuses Rocq's real-product
+zero-divisor and positive-reciprocal lemmas.
+
+With nonnegative sampled weights,
+`finite_conditional_prob_zero_iff_no_positive_joint_support`
+then characterizes the same zero conditional mass by the absence
+of positively weighted sampled outcomes satisfying both
+the condition and the target. Finally,
+`finite_conditional_union_zero_iff_each_member_zero`
+extends the unconditional union support equivalence to
+**conditional** union masses under the same positive conditioner.
+Its only event-family witness conversion is
+`Stdlib.List.existsb_exists`. No additional
+independence, normalized-total-mass assumption, conditional
+measure implementation, or custom finite-sum recursion is used.
+
+### Zero mass propagates through finite intersections
+
+The new `finite_all_events_zero_of_zero_member` and
+`finite_conditional_all_events_zero_of_zero_member` state
+that a finite intersection cannot have positive finite mass
+when any listed required event has zero mass, unconditionally
+or under a common positive-mass conditioner. Both results
+reuse the existing zero-support equivalences and
+`Stdlib.List.forallb_forall`, rather than a new
+induction on the event family.
+
+The older `finite_all_events_at_most_member` has also been
+refactored to use generic event monotonicity and the same
+standard forallb membership theorem as its conditional
+counterpart. This removes its unnecessary singleton conversion
+while retaining the exact statement and side conditions.
+
+### Constructive positive-support witnesses for sums and event probabilities
+
+`FiniteSum.finite_sum_positive_iff_positive_member` now shows
+constructively that a sum of nonnegative real contributions
+is positive **if and only if** an actual listed contribution
+is positive. It uses the previously checked one-witness
+sufficiency theorem and only a minimal standard-list induction
+for extracting a witness in the reverse direction.
+
+`finite_prob_positive_iff_positive_support` specializes the
+generic sum law to existing Boolean-weight indicators.
+`union_prob_positive_iff_positive_member_support` uses
+`Stdlib.List.existsb_exists` to identify both an actual
+event-family member and an actual positively weighted sampled
+outcome. The conditional companion
+`finite_conditional_prob_positive_iff_joint_support`
+requires a positive denominator and nonnegative sampled
+weights, and reuses the existing quotient-zero and
+conditional-witness results instead of reimplementing the
+conditional probability quotient.
+
+### Conditional-union witness and necessary intersection marginals
+
+The new `finite_conditional_union_positive_iff_positive_member_joint_support`
+extends the constructive conditional positive-support iff to a
+finite union. It identifies both a *listed event* and a *sampled
+outcome* satisfying that event and the conditioner with positive
+weight. The only family witness conversion is the standard
+`Stdlib.List.existsb_exists` lemma.
+
+Theorems `finite_all_events_positive_implies_member_positive`
+and `finite_conditional_all_events_positive_implies_member_positive`
+then reuse existing intersection-vs-member bounds to show that
+positive joint mass forces every required marginal positive,
+unconditionally and with a fixed positive conditioner.
+The converses are **not** asserted without overlap assumptions.
+
+The generic `FiniteSum.finite_sum_positive_of_positive_member`
+proof was also shortened to the existing
+`finite_sum_member_le` member bound and `Stdlib.Lra`.
+This removes the former redundant real-decision case analysis.
+
+### Constructive positive variance and indexed covariance curvature
+
+`variance_positive_iff_exists_positive_weight_deviation`
+uses the generic constructive finite-sum positivity theorem
+on nonnegative weighted squared score deviations. Under unit
+total mass and nonnegative sampled weights, strictly positive
+variance now yields an actual enumerated, positive-weight
+sample with score different from its finite mean, rather than
+only a negated universal constancy predicate.
+
+`indexed_basis_covariance_quadratic_positive_iff_supported_deviation`
+transfers this witness through the maintained dimension-safe
+covariance quadratic = composite-score variance identity.
+It characterizes strictly positive covariance curvature for
+any `Vector.t R (length basis)` coefficient direction by
+positive-weight sampled deviation. This is useful evidence
+for later kernel and rank reasoning but **does not yet
+compute rank or prove a rank-nullity dimension formula**.
+
+### Positive definiteness through constructive support separation
+
+`indexed_basis_covariance_positive_definite_iff_all_nonzero_supported_deviations`
+lifts the previous typed quadratic positivity iff pointwise
+to **all nonzero coefficient directions**. For normalized
+nonnegative weights, a covariance basis is positive definite
+precisely when each nonzero typed linear combination deviates
+from its finite mean on some *actual positive-weight sampled
+outcome*. The proof invokes the already checked quadratic
+support-witness iff and does not introduce a matrix implementation,
+rank function or classical-existence assumption.
+
+The result is a constructive bridge toward finite covariance
+kernel and rank questions. A dimension or numerical eigenvalue
+claim would still require a separately checked linear-algebra
+formalization with its own explicit assumptions.
+
+### Weighted centered sample evaluation as a covariance-kernel bridge
+
+The new `indexed_basis_centered_weighted_score` is a transparent
+function evaluating the weight times the deviation of a
+dimension-correct composite basis score from its expectation.
+It reuses existing `weighted_basis_sum`, `expect`, and
+`Stdlib.Vectors.Vector.to_list` without reimplementing
+a matrix, finite sum or linear map.
+
+`indexed_basis_covariance_quadratic_zero_iff_centered_weighted_score_zero`
+shows that the indexed covariance quadratic vanishes exactly
+when this centered weighted function vanishes at every sampled
+outcome, given unit mass and nonnegative sampled weights.
+`indexed_basis_covariance_bounded_row_kernel_iff_centered_weighted_score_zero`
+identifies this sample evaluation kernel with the existing
+Fin.t-indexed covariance row kernel.
+
+`indexed_basis_covariance_positive_definite_iff_no_nonzero_centered_weighted_sample_kernel`
+lifts this kernel equivalence to all nonzero typed coefficient
+vectors, relating positive definiteness to the triviality of
+the centered evaluation kernel. A future finite-dimensional
+rank-nullity theorem requires a maintained linear-algebra
+library and an explicitly proved linear-map/dimension bridge;
+none is assumed here.
+
+### Centered evaluation zero-sum constraint
+
+`indexed_basis_centered_weighted_score_sum_zero` reuses
+`centered_score_has_zero_expectation` to prove that the centered
+weighted sample evaluations sum to zero whenever the total
+sample mass is one. This exact identity holds even for signed
+weights and does not assume covariance positive semidefiniteness.
+
+For nonnegative sampled weights, the
+`indexed_basis_centered_weighted_score_nonnegative_implies_quadratic_zero`
+and
+`indexed_basis_centered_weighted_score_nonpositive_implies_quadratic_zero`
+theorems show that if every centered sample evaluation
+has the same weak sign, all evaluations vanish and the
+covariance quadratic is zero. The proofs reuse the generic
+`FiniteSum.finite_sum_nonnegative_zero_iff`, `finite_sum_neg`
+and previously established sample-evaluation kernel equivalence.
+
+Geometrically, this is the explicit zero-total constraint
+needed before constructing a finite-dimensional centered
+evaluation linear map. No codomain dimension, covariance
+rank bound, or rank-nullity theorem is claimed yet.
+
+### Detecting nonnull covariance directions by sampled evaluations
+
+`indexed_basis_covariance_quadratic_positive_iff_nonzero_centered_sample`
+characterizes strictly positive indexed covariance quadratic
+curvature by an actual sample where the existing weighted
+centered score is nonzero. Its forward direction reuses the
+constructive supported-deviation witness, and its backward
+direction uses the maintained positive-semidefinite bound
+and zero-evaluation kernel iff. Both directions retain
+normalized nonnegative sample assumptions.
+
+`indexed_basis_covariance_positive_definite_iff_every_nonzero_direction_detected`
+lifts the result to all nonzero typed coefficient vectors.
+Together with the zero-sum image and row-kernel bridge,
+this supplies a concrete input-to-observation interface
+for subsequent dimension/rank work, without treating
+the interface itself as a full linear-map/rank theorem.
+
+### Dimension-safe indexed centered sample evaluations
+
+`indexed_basis_centered_sample_evaluation` now gives a
+finite coordinate function with input coefficients typed
+by `Vector.t R (length basis)` and output sample
+coordinates indexed by `Fin.t (length samples)`.
+It reuses standard `Vector.of_list`, `Vector.nth` and
+the already checked centered weighted sample score.
+
+`indexed_basis_centered_sample_evaluation_zero_iff_all_sample_scores_zero`
+proves the output coordinate function vanishes everywhere
+precisely when all enumerated sample outcome evaluations
+vanish, using the existing `vector_of_list_nth_error` lemma
+and maintained list/finite-index conversions. The
+`indexed_basis_covariance_bounded_row_kernel_iff_bounded_sample_kernel`
+theorem identifies this typed finite sample kernel with the
+typed covariance row kernel.
+
+Finally,
+`indexed_basis_covariance_positive_definite_iff_no_nonzero_bounded_sample_kernel`
+connects positive definiteness to triviality of the
+dimension-checked sample evaluation kernel. This explicitly
+separates the basis and sample dimensions without asserting
+equal length, invertibility, or a rank theorem. A future
+linear-map proof and standard algebraic dimension theorem
+are still required before a numeric rank claim.
+
+## Ordered finite-sum comparison equivalences (10 November 2026)
+
+Two new finite-sum lemmas strengthen the reusable order interface without
+adding recursion or axioms. `finite_sum_monotone_equality_iff_pointwise`
+shows that pointwise ordered summands have equal total sums exactly when
+they agree on every enumerated item. The complementary
+`finite_sum_strict_monotone_iff_strict_member` identifies a concrete
+strictly ordered list member precisely when the total sums differ strictly.
+Both require pointwise `f x <= g x` on the listed domain and preserve
+empty-list and duplicate-entry cases. Their proofs reuse the existing
+nonnegative zero/positive member equivalences, sum subtraction, and
+Rocq standard-library real linear arithmetic. No matrix rank theorem
+or continuous-measure claim is inferred.
+
+Inventory for this preceding sum-only batch: **664 public claims, 667 proof scripts,
+732 documented declarations** across seven Rocq modules, pending CI.
+
+## Exact order characterization for finite expectations (10 November 2026)
+
+The new `finite_expectation_monotone_equality_iff_positive_support`
+and `finite_expectation_strict_monotone_iff_positive_support_witness`
+theorems transport the generic ordered-sum equivalences to weighted
+expectations. Under nonnegative weights and a pointwise score order,
+equality of expectations means that the scores agree at every listed
+**positive-weight** sample. Strict expectation order holds precisely
+when some listed positive-weight sample has a strict score order.
+No normalized-total-mass premise or separate sample induction is used.
+The proofs reuse `FiniteSum` and the standard Rocq real algebra
+libraries; they do not establish general measure-theoretic or
+empirical-statistical conclusions.
+
+Inventory at the end of this preceding batch: **666 public claims, 669 proof scripts,
+734 documented declarations** across seven modules, pending CI.
+
+## Zero and positive finite expectations via support witnesses (10 November 2026)
+
+Two nonnegative-moment corollaries reuse the maintained order-equivalence
+theorems with the identically zero score. With nonnegative listed
+weights and nonnegative listed scores, an expectation is zero exactly
+when every positive-weight sample score is zero; the expectation is
+strictly positive exactly when a listed positive-weight sample has a
+strictly positive score. Zero-weight entries are irrelevant, repetitions
+remain counted, and no total-mass normalization is needed. No new
+sum fold, induction, axiom or decidable equality was introduced.
+
+Inventory for the preceding nonnegative expectation batch: **668 public claims, 671 proof scripts,
+736 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Finite expected-square nullity and positive witnesses (10 November 2026)
+
+The new `finite_expectation_square_zero_iff_zero_on_positive_support`
+identifies the exact positive-weight kernel of a finite expected square:
+it is zero if and only if the sampled score is zero at every
+positive-weight occurrence. The companion
+`finite_expectation_square_positive_iff_nonzero_positive_support`
+produces an enumerated nonzero sample score precisely when the
+expected square is strictly positive. These are reusable quadratic
+support facts, obtained from the preceding expectation sign
+characterizations and Rocq standard real-arithmetic libraries.
+No fresh sum induction, matrix engine or rank claim is introduced.
+
+Inventory for preceding expected-square batch: **670 public claims, 673 proof scripts,
+738 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Homogeneity of dimension-checked finite sample evaluation (10 November 2026)
+
+Three new lemmas connect the coefficient list, typed coefficient
+vector, and typed sample index representations: coefficient-wise
+scaling of `weighted_basis_sum`, centered weighted-score scaling,
+and bounded indexed sample-evaluation scaling. The latter establishes
+`E(a*c)[i] = a*E(c)[i]` for every real `a` and bounded sample index
+`i`, with no mass normalization or nonnegative-weight condition.
+The library bridge `VectorSpec.to_list_map` transfers the
+type-indexed vector operation to the existing finite list sum,
+while `expectation_scale` and `expectation_ext` avoid new
+expectation implementations. Vector additivity and a packaged
+rank-nullity theorem remain future targets.
+
+Inventory for preceding scalar-homogeneity batch: **673 public claims, 676 proof scripts,
+741 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Pointwise additivity of the bounded sample evaluation (10 November 2026)
+
+The next four checked claims establish componentwise coefficient
+addition in the existing `weighted_basis_sum`, the structural
+`Vector.map2 Rplus`/list-pair bridge, additivity of the centered
+weighted score and additivity at each dimension-safe sample index.
+Combined with `indexed_basis_centered_sample_evaluation_scale`, the
+final coordinate evaluator now satisfies both pointwise real-linear
+identities for the maintained vector operations. The sole new
+representation bridge uses `Stdlib.Vectors.Vector.rect2` rather
+than a custom vector recursion. Both finite expectation additivity
+and composite sums reuse existing library laws, without a new matrix
+engine or numerical rank claim.
+
+Inventory for preceding additivity batch: **677 public claims, 680 proof scripts,
+745 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Typed bounded sample kernel closure (10 November 2026)
+
+Five small, separately registered lemmas show that the canonical
+`Vector.const 0` coefficient direction evaluates to zero; the
+sample-evaluation kernel is closed under coefficient-vector addition
+and arbitrary real scalar multiplication; and multiplying by a
+nonzero real scalar preserves the kernel in both directions.
+These results reuse the newly checked additivity/homogeneity
+identities, standard `VectorSpec.to_list_const`,
+`expectation_zero`/`expectation_ext`, and `Rmult_integral`.
+They certify the elementary kernel-subspace laws as explicit
+predicates but do not yet package them into a maintained library's
+linear-map/subspace abstraction or assert a numeric rank-nullity law.
+
+Inventory for preceding typed sample-kernel batch: **682 public claims, 685 proof scripts,
+750 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Typed covariance-row kernel bridge and closure (10 November 2026)
+
+Two extensively commented transparent predicates name the already-checked
+bounded sample-evaluation kernel and bounded covariance-row kernel, so new
+proofs no longer duplicate long indexed covariance row dot-product
+expressions. A direct bridge theorem transports their membership under
+unit total mass and nonnegative listed weights. Three corollaries prove
+membership of the canonical all-zero coefficient vector and closure of
+the covariance-row kernel under componentwise vector addition and all
+real scalar multipliers. Every proof reuses the earlier sample-kernel
+linearity and closure theorems; no new matrix implementation, generic
+vector recursion, Gaussian assumption, or rank calculation is added.
+
+Inventory for preceding named-kernel bridge batch: **686 public claims, 689 proof scripts,
+756 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Named covariance kernel scaling and positive definiteness (10 November 2026)
+
+The named bounded covariance-row kernel is now also shown invariant
+under all nonzero real coefficient scalings. The proof composes the
+checked named row/sample-kernel equivalence with the earlier
+nonzero-scaling sample-nullspace equivalence, without opening a
+covariance sum. Two additional equivalences state the existing
+positive-definite covariance criterion directly using the reusable
+named row and sample kernel predicates: positive definiteness holds
+precisely when no nonzero, dimension-correct coefficient direction
+belongs to either kernel. No false assumption of rank equality,
+full column rank or a numerical rank-nullity formula is introduced.
+
+Inventory for preceding positive-definiteness batch: **689 public claims, 692 proof scripts,
+759 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Covariance quadratic nullity as named typed kernel membership (10 November 2026)
+
+Two kernel-checked interface equivalences identify exact zero covariance
+quadratic values with membership in the named bounded centered-sample
+kernel and, equivalently, the named bounded covariance-row kernel.
+They are obtained by composing the existing quadratic-zero support
+result with the established Fin.t sample-index bridge and row/sample
+kernel equivalence. Both require unit total sample mass and
+nonnegative listed weights and permit degenerate or repeated score
+bases. No additional covariance formula, new real-sum induction or
+spectral/rank arithmetic is introduced.
+
+Inventory for preceding covariance-nullity batch: **691 public claims, 694 proof scripts,
+761 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Full typed centered sample output vector (11 November 2026)
+
+The `indexed_basis_centered_sample_vector` definition maps each length-typed
+coefficient vector into a standard `Vector.t R (length samples)` using the
+existing single-outcome centered score and `Vector.map`/`Vector.of_list`.
+`indexed_basis_centered_sample_vector_nth` identifies every Fin.t-indexed
+coordinate with the previously checked sample evaluator through the
+standard `VectorSpec.nth_map` rule. The typed output equals
+`Vector.const 0 (length samples)` exactly when the existing named
+bounded sample-kernel predicate holds, proved using the standard
+`VectorSpec.eq_nth_iff` extensionality theorem and `const_nth`.
+This is a concrete dimension-preserving representation bridge and
+not yet a library-packaged linear map or rank calculation.
+
+Inventory for preceding typed output-vector bridge: **693 public claims, 696 proof scripts,
+764 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Real-linearity and covariance nullity of the full sample vector (11 November 2026)
+
+Two new checked `Vector.t` identities establish full-output real scalar
+homogeneity and componentwise additivity of the existing typed
+coefficient-to-sample-vector function. Rather than adding a second
+summation or vector-recursion implementation, each proof uses Rocq's
+standard `VectorSpec.eq_nth_iff` and `nth_map`/`nth_map2` laws,
+then delegates to the previously checked coordinate linearity results.
+Two further equivalences identify exact zero covariance quadratic form
+with an all-zero output vector, and positive definiteness with the
+absence of a nonzero coefficient vector mapping to the zero output.
+The latter characterizes injectivity through the kernel, but no
+finite-dimensional rank, nullity, or library linear-map record is claimed.
+
+Inventory for preceding full-vector linearity batch: **697 public claims, 700 proof scripts,
+768 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Normalized sample-vector image has coordinate sum zero (11 November 2026)
+
+The full centered sample-output vector now has a checked `Vector.to_list`
+representation equal to mapping the established centered weighted score
+across the original samples. Under unit total mass, the sum of all
+output coordinates is exactly zero; this proof is delegated to the
+existing centered-score sum theorem through the generic
+`FiniteSum.finite_sum_map` lemma. A further result proves that a
+normalized sample of length one has identically zero centered output
+for all coefficient vectors; the proof isolates the singleton scalar sum
+and transports it through the checked kernel equivalences to avoid
+destructing the dependent sample-vector index. This is a genuine zero-sum image
+constraint and concrete one-sample degeneracy, but no numeric
+rank bound, image-dimension or rank-nullity identity is asserted.
+
+Current target inventory: **700 public claims, 703 proof scripts,
+771 documented declarations** across seven modules, pending Rocq 9.2 CI.
+
+## Shared singleton sum and typed output nullity (11 November 2026)
+
+The singleton centered-score degeneracy proof now reuses a generic
+`FiniteSum` length-one sum-zero equivalence instead of a local
+list induction. New dimension-correct corollaries prove zero
+preservation, a direct zero-vector/list-score iff, and invariance of
+zero output under nonzero scalar rescaling. All covariance and rank
+boundaries remain unchanged; no numeric rank or rank-nullity
+theorem is asserted.
+
+Target inventory: **704 public checked claims, 707 proof scripts,
+775 documented declarations**, subject to Rocq 9.2 CI.
+
+## Normalized two-sample centered output (11 November 2026)
+
+The shared FiniteSum module now provides two-element sum evaluation
+and the corresponding zero iff opposite-scores lemma. In FiniteMoments,
+the previously verified normalized centered-score sum-zero theorem
+implies that the two listed centered scores are additive inverses.
+The complete typed sample vector also has list coordinates [s; -s].
+This handles repeated sample outcomes and signed weights without
+introducing new matrix infrastructure.
+
+Current target inventory: **708 public checked claims,
+711 proof scripts, 779 documented declarations**, subject
+to Rocq 9.2 kernel and documentation checks for this commit.
+
+## Two-sample kernel test and one-sample non-positive-definiteness (11 November 2026)
+
+A new checked two-sample criterion states that its entire centered
+output vector vanishes iff the first listed centered score is zero.
+The existing two-outcome opposite-score theorem supplies the second
+coordinate automatically. A separate explicit witness (the
+standard all-ones coefficient vector) establishes that no normalized
+single sample has positive definite covariance for a nonempty basis,
+under the original nonnegative-weight assumption.
+
+Current target inventory: **710 public checked claims,
+713 proof scripts, 781 documented declarations** across seven
+Rocq modules, subject to Rocq 9.2 CI for this batch.
+
+## Two-sample positive definiteness as scalar detection (11 November 2026)
+
+For a normalized two-outcome sample with nonnegative weights,
+positive definiteness of the indexed covariance quadratic form
+is equivalent to requiring a nonzero first centered score for
+every nonzero typed coefficient direction. The new proof composes
+the existing positive-definite/zero-output equivalence with the
+two-outcome kernel test, without recomputing covariance entries.
+
+Current target inventory: **711 public checked claims,
+714 proof scripts, 782 documented declarations** across seven
+Rocq modules, subject to Rocq 9.2 CI for this commit.
+
+## Two-sample quadratic nullity and nonzero scaling (11 November 2026)
+
+Three new finite-moment equivalences/corollaries transport prior
+typed kernel results to the covariance quadratic. For two
+normalized nonnegative-weight samples, zero quadratic equals zero
+centered score at the first sample; a normalized singleton always
+has zero quadratic in every coefficient direction; and nonzero
+scalar coefficient scaling preserves exact quadratic nullity.
+These are finite exact results, not numerical rank-nullity or
+Gaussian conclusions.
+
+Current target inventory: **714 public checked claims,
+717 proof scripts, 785 documented declarations** across seven
+Rocq modules, subject to Rocq 9.2 and documentation CI.
+
+## Exact typed covariance quadratic homogeneity and polarization (11 November 2026)
+
+The indexed coefficient-vector covariance quadratic now has
+two stronger checked interfaces under unit total sample mass:
+`Q(a*c)=a*a*Q(c)` for all real scalars and
+`Q(u+v)=Q(u)+Q(v)+2*Cov(score(u),score(v))`.
+These are composed from the existing vector/list transport
+and the checked variance scaling and sum formulas.
+They require no nonnegative sample weights or new custom
+matrix, vector or finite-sum implementation. Rank, kernel
+dimension, numerical covariance rank and Gaussian inferences
+are not claimed.
+
+Current target inventory: **716 public checked claims,
+719 proof scripts, 787 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 kernel CI.
+
+## Composite coefficient Cauchy-Schwarz and sign-free scale nullity (11 November 2026)
+
+Exact quadratic homogeneity now gives a nonzero scalar nullity iff
+with only normalized total mass, even when individual weights are
+signed. This strictly weakens the hypotheses of the earlier
+nonnegative-weight-specific kernel bridge while retaining it
+for backwards compatibility.
+
+A further theorem bounds squared covariance between two
+dimension-correct composite score functions by the product
+of their covariance quadratic values. The implementation
+delegates to the existing generic finite Cauchy-Schwarz
+theorem and quadratic-as-variance bridge, without any new
+discriminant, matrix, or summation proof.
+
+Current target inventory: **718 public checked claims,
+721 proof scripts, 789 documented declarations** over seven
+Rocq modules, pending Rocq 9.2 verification.
+
+## Refactored old covariance scaling nullity proof (11 November 2026)
+
+The exact quadratic scaling theorem and the stronger unit-mass-only
+nonzero-scaling nullity criterion were moved ahead of the older
+nonnegative-weight-specific criterion. The old theorem keeps its
+original interface but now delegates to the stronger algebraic
+equivalence in one step instead of repeating covariance/output
+kernel transports. No additional claim, axiom or matrix operation
+was introduced; the inventory remains **718 public claims,
+721 proof scripts, 789 documented declarations**.
+
+## First covariance bilinear-form interface (11 November 2026)
+
+A dimension-correct `indexed_basis_covariance_bilinear_form`
+pairs two coefficient vectors through their existing
+weighted composite-score covariance. The first checked
+laws establish symmetry, homogeneity and additivity in the
+first argument, using maintained vector/list bridges and
+previously verified finite covariance formulas. These
+identities permit arbitrary signed sample weights and do
+not depend on mass normalization, score independence,
+or a custom matrix representation.
+
+Current target inventory: **721 public checked claims,
+724 proof scripts, 793 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 CI.
+
+## Complete typed covariance pairing algebra (11 November 2026)
+
+Second-argument homogeneity and additivity now follow by
+symmetry, completing the four bilinearity laws for arbitrary
+signed finite weights without a unit-mass requirement.
+Three additional checked bridges state that under unit mass
+`B(c,c)=Q(c)` and `Q(u+v)=Q(u)+Q(v)+2*B(u,v)`,
+and under normalized nonnegative weights
+`B(u,v)^2 <= Q(u)*Q(v)`. Each proof delegates to prior
+checked covariance/variance theorems; there is no custom
+vector-space, matrix, determinant or rank algorithm.
+
+Current target inventory: **726 public checked claims,
+729 proof scripts, 798 documented declarations** across
+seven Rocq modules, subject to the Rocq 9.2 CI check.
+
+## Typed bilinear radical and row-kernel identification (11 November 2026)
+
+The covariance bilinear radical is now defined as the
+coefficient directions with zero pairing against every
+same-dimension coefficient vector. Its closure under
+coefficient addition and arbitrary real scalar scaling
+is proved by reusing the new bilinearity lemmas.
+
+For normalized nonnegative weights, zero covariance
+quadratic is equivalent to radical membership, which
+is equivalent to the existing bounded covariance
+row kernel. Consequently covariance positive definiteness
+is equivalent to the absence of nonzero radical directions.
+The proofs reuse the earlier score-orthogonality,
+self-pairing, row-kernel, and positive-definiteness
+results, not a new matrix or rank implementation.
+
+Current target inventory: **731 public checked claims,
+734 proof scripts, 804 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI.
+
+## Covariance radical zero and centered sample-output kernel (11 November 2026)
+
+The canonical typed zero coefficient vector is now proved to
+lie in the covariance bilinear radical without sample-weight
+restrictions. Radical membership is invariant under every
+nonzero real coefficient scaling, again without requiring
+normalized probability weights. Both proofs reuse previously
+checked covariance identities and maintained vector/list laws.
+
+For normalized nonnegative finite weights, radical membership
+is exactly equivalent to a zero concrete centered sample
+output vector. This links the bilinear pairing's kernel to
+the existing typed data-evaluation map without claiming
+numerical rank or abstract rank-nullity.
+
+Current target inventory: **734 public checked claims,
+737 proof scripts, 807 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 kernel verification.
+
+## Exact covariance invariance along radical shifts (11 November 2026)
+
+Under arbitrary signed and unnormalized finite weights,
+adding a coefficient vector in the covariance bilinear
+radical to either argument leaves the covariance pairing
+unchanged. The second-argument proof delegates to the
+first-argument theorem via symmetry.
+
+Under unit total mass, the indexed covariance quadratic
+likewise satisfies `Q(c+r)=Q(c)` for radical coefficients
+`r`. This is proved solely from the preexisting diagonal
+and radical-shift pairing laws; it does not assume
+nonnegative weights or build a quotient-space/rank library.
+
+Current target inventory: **737 public checked claims,
+740 proof scripts, 810 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 verification.
+
+## Sample-output invariance precisely characterizes radical shifts (12 November 2026)
+
+Two new checked results connect the typed covariance radical
+to the full sample-output map in an operational way. With
+normalized nonnegative weights, adding a radical coefficient
+direction leaves every weighted centered sample score
+unchanged. Conversely, if the full output is invariant under
+a coefficient shift, that shift is a radical direction.
+Only the maintained VectorSpec coordinate lemmas, existing
+output additivity, and the checked radical/zero-output kernel
+equivalence are used; no custom vector or matrix operations.
+
+Current target inventory: **739 public checked claims,
+742 proof scripts, 812 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 verification.
+
+## Radical membership by universal covariance shift invariance (12 November 2026)
+
+Two additional typed covariance pairing results characterize
+the bilinear radical without any sample weight normalization
+or nonnegative-weight requirement. A coefficient shift
+preserves the pairing against every test direction in the
+first slot if and only if the shift is radical. The same
+criterion holds for the second slot, derived directly by
+covariance symmetry. The proofs use previously checked
+bilinearity and radical-shift laws, not duplicate score
+or finite-matrix implementations.
+
+Current target inventory: **741 public checked claims,
+744 proof scripts, 814 documented declarations** across
+seven Rocq modules, pending Rocq 9.2 verification.
+
+## Simultaneous covariance-radical shifts and proof reuse (12 November 2026)
+
+The covariance pairing is now proved invariant under **independent**
+radical shifts of both coefficient arguments. It is an exact
+arbitrary-weight identity, obtained by composing the two previously
+checked single-slot invariance lemmas. The earlier unit-mass covariance
+quadratic-shift theorem is refactored to invoke this single new
+two-sided result after reducing its quadratic terms to self-pairings.
+No new matrix algorithm, vector recursion, axioms, or unsound
+signed-weight positive-definiteness assumptions were introduced.
+
+Current target inventory: **742 public checked claims,
+745 proof scripts, 815 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Radical membership is invariant under radical translation (12 November 2026)
+
+A follow-on theorem establishes that, when `r` belongs to the
+finite covariance bilinear radical, `c+r` belongs to that radical
+**if and only if** `c` does. Both implications use the existing
+first-slot pairing invariance rather than a new coefficient
+subtraction, custom vector construction or matrix nullspace
+algorithm. The equivalence holds for signed and unnormalized
+finite sample weights.
+
+Current target inventory: **743 public checked claims,
+746 proof scripts, 816 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Coincident sample evaluations and coefficient differences (12 November 2026)
+
+Two exact theorems now identify when coefficient directions have the
+same complete centered-sample output. For arbitrary signed and
+unnormalized finite weights, equality of outputs is equivalent to
+zero output for the typed signed difference `left + (-1)*right`,
+using the existing vector additivity, scaling and Stdlib VectorSpec
+coordinate theorems. Under unit total mass and nonnegative weights,
+the difference lies exactly in the covariance bilinear radical.
+
+These results prepare an algebraic fiber/kernel characterization
+without defining custom subtraction, vector spaces, covariance
+ranks or quotient structures.
+
+Current target inventory: **745 public checked claims,
+748 proof scripts, 818 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Positive-definite covariance separates nonzero coefficient differences (12 November 2026)
+
+A further typed consequence of the sample-equality/radical bridge
+states that positive definite indexed covariance forbids equal full
+centered sample-output vectors when the signed coefficient
+difference is nonzero. This proof is a direct contradiction using
+the earlier positive-definite iff trivial-radical criterion; it
+introduces neither another evaluator nor new covariance arithmetic.
+Its probability hypotheses and the list-level nonzero criterion
+remain explicit.
+
+Current target inventory: **746 public checked claims,
+749 proof scripts, 819 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Covariance separation by quadratic nullity and bounded row kernel (12 November 2026)
+
+Three further exact consequences reuse the existing finite sample-output
+map and covariance algebra. Under normalized nonnegative finite weights,
+two full centered sample outputs agree exactly when the signed coefficient
+difference (1) has zero indexed covariance quadratic and (2) belongs to
+the existing bounded covariance row kernel. Strict positivity of that
+difference quadratic, together with its established nonnegativity, is
+equivalent to the two full sample outputs being distinct.
+
+The two equivalence proofs use only the previously checked
+difference-output, covariance radical, quadratic-zero and row-kernel
+bridges. The strict positivity result additionally uses Stdlib.Lra.
+No new matrix representation, rank assertion, score independence
+assumption or numeric covariance approximation is introduced.
+
+Current target inventory: **749 public checked claims,
+752 proof scripts, 822 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI verification.
+
+## Equal sample outputs as universal covariance annihilation (12 November 2026)
+
+Two further theorems characterize equal centered sample-output
+vectors through zero covariance pairing of their signed coefficient
+difference against every test coefficient direction. First-slot
+annihilation is the definition of the already verified covariance
+bilinear radical, so the proof reuses the checked equality-to-radical
+bridge; the second-slot result follows by covariance symmetry.
+
+Both retain the explicit normalized nonnegative sample-weight
+premises of the radical-to-output equivalence, allow degenerate
+or repeated outcomes, and add no new matrix, sum, or vector library.
+
+Current target inventory: **751 public checked claims,
+754 proof scripts, 824 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI.
+
+## Positive difference self-covariance exactly detects distinct outputs (12 November 2026)
+
+A further finite covariance result identifies strict positivity
+of `B(left-right,left-right)` with inequality of the two
+complete centered sample-output vectors. Its proof uses only the
+existing unit-mass bilinear diagonal law and the already verified
+strict covariance quadratic difference criterion; it does not
+presume positive definiteness of the entire covariance matrix.
+All nonnegative normalized finite-weight premises remain explicit.
+
+Current target inventory: **752 public checked claims,
+755 proof scripts, 825 documented declarations** across
+seven Rocq modules, subject to Rocq 9.2 CI.
+
+## Positive-semidefinite bilinear covariance interface (12 November 2026)
+
+Four new lemmas expose the existing normalized nonnegative finite
+covariance results directly through the typed symmetric bilinear
+pairing. Self-pairing is nonnegative; it vanishes precisely on
+the bilinear radical; it is strictly positive exactly outside
+that radical; and the squared Cauchy–Schwarz inequality can now
+be stated wholly as `B(u,v)^2 <= B(u,u) B(v,v)`.
+
+Each theorem delegates to existing checked indexed quadratic,
+diagonal, kernel and Cauchy–Schwarz lemmas and Rocq Stdlib real
+arithmetic. No new vector-space, matrix, finite-sum, eigenvalue,
+rank or dimension implementation is introduced. Weight sign and
+normalization assumptions remain visible in each statement.
+
+Current intended inventory: **756 public checked claims,
+759 proof scripts, 829 documented declarations** in seven
+modules, subject to Rocq 9.2 kernel and contract CI.
+
+## Positive definiteness as strict bilinear self-pairing (12 November 2026)
+
+The project now states and proves that finite covariance positive
+definiteness is equivalent to strictly positive bilinear
+self-covariance for **every nonzero typed coefficient direction**,
+under unit total mass and nonnegative sample weights.
+This characterization is a direct composition of the existing
+trivial-radical positive-definiteness criterion and the new
+strict-self-pairing iff not-radical theorem.
+
+In the same refactoring batch, the older distinct-sample-output
+self-covariance theorem was moved after the generic PSD-form laws
+and its proof was rewritten to compose the new self-positivity/
+radical bridge with the already checked full-output-equality
+iff difference-radical result. Its proposition and premises
+are unchanged. No new finite sums, vectors, covariance matrices,
+axioms or unchecked rank claims were introduced.
+
+Current intended inventory: **757 public checked claims,
+760 proof scripts, 830 documented declarations** in seven
+modules, subject to Rocq 9.2 kernel and contract CI.
+
+## Generic real-vector cancellation and proof consolidation (12 November 2026)
+
+Two reusable Stdlib-based lemmas now characterize equality of
+equal-length real vectors by zero signed difference, and typed
+zero real vectors by their zero repeated-list representation.
+Both are dimension-generic, including the empty vector, and
+require no sample-weight or probabilistic assumptions.
+
+The existing centered-sample-output equality iff zero difference
+theorem has an unchanged statement but now consists solely of
+the maintained evaluator additivity/scaling rewrites and a
+single application of generic real-vector cancellation; its
+previous duplicated coordinate-level proof was eliminated.
+The previously checked positive-definite sample-output
+separation theorem also has an unchanged statement and now
+delegates directly to the original nonzero-direction detection
+criterion and signed-difference zero-output equivalence,
+rather than detouring through a separate covariance radical.
+
+Current intended inventory: **759 public checked claims,
+762 proof scripts, 832 documented declarations** across seven
+Rocq modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
+
+## Positive definiteness iff the centered sample evaluator separates coefficient vectors (12 November 2026)
+
+Building on the generic signed-difference and zero-list vector lemmas,
+the project now proves a two-way separation criterion: with normalized,
+nonnegative finite weights, indexed covariance is positive definite
+if and only if every pair of **unequal typed coefficient vectors**
+has unequal full centered sample-output vectors. The forward argument
+uses the previously verified nonzero-direction detection theorem.
+The converse applies separation against the ordinary zero vector,
+using the already checked zero-output preservation theorem.
+
+The proof is constructive in its use of inequality implications,
+retains exact signed-difference and zero-list conversions through
+Rocq Stdlib's maintained VectorSpec theorems, and introduces no
+new matrix infrastructure or general dimension/rank calculation.
+
+Current intended inventory: **760 public checked claims,
+763 proof scripts, 833 documented declarations** in seven
+modules, subject to Rocq 9.2 and Python/SPARK CI verification.
+
+## Exact injectivity of the centered finite sample evaluator (12 November 2026)
+
+The finite covariance model now proves the usual **injectivity**
+statement: with normalized nonnegative weights, covariance is
+positive definite if and only if equality of the complete
+centered sample-output vectors forces equality of their
+coefficient vectors. The proof composes the previously checked
+strict separation-of-distinct-coefficients criterion with a
+reusable real-vector equality stability result.
+
+The supporting equality-stability lemma uses Rocq's maintained
+`VectorSpec.eq_nth_iff` and `Reals.Req_dec` rather than
+introducing a vector induction or a new classical axiom
+declaration. The result concerns the existing Rocq axiomatized
+real numbers and has no numerical decision or rank content.
+
+Current intended inventory: **762 public checked claims,
+765 proof scripts, 835 documented declarations** across seven
+modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
+
+## Linear zero-coordinate-sum target for finite centered sample outputs (12 November 2026)
+
+The finite model now exposes a shared typed real-vector
+coordinate-sum functional and its zero-sum kernel predicate.
+Six new checked results cover zero-vector preservation,
+coordinate-sum homogeneity and additivity, closure of the
+zero-sum family under scalar multiplication and addition,
+and membership of **every normalized centered sample output**
+in that zero-sum family. The final image-containment theorem
+requires only total mass one, not nonnegative weights.
+
+The generic functional reuses `FiniteSum.finite_sum` and
+`Vector.to_list`, with `VectorSpec.to_list_map`, the shared
+finite-sum map and scaling laws, and `Vector.rect2` for
+aligned addition. No second summation implementation, matrix
+library or dimension theorem has been introduced. In particular,
+this does **not** yet prove that the zero-sum target has
+codimension one or that the covariance rank is bounded.
+
+Current intended inventory: **768 public checked claims,
+771 proof scripts and 843 documented declarations**
+across seven Rocq modules, subject to pinned CI verification.
+
+## Nonzero constant outputs excluded by the zero-sum constraint (12 November 2026)
+
+Three further checked results expose the constant-vector
+coordinate-sum formula, show that a nonzero constant vector
+of positive dimension cannot be zero-sum, and apply this to
+the existing normalized centered sample evaluator.
+Consequently, when the sample enumeration is nonempty and
+has unit mass, **no nonzero constant sample vector is in
+the evaluator's image**. This remains true for signed weights
+and repeated sample entries.
+
+The proof reuses the same generic coordinate functional,
+Rocq Stdlib `VectorSpec.to_list_const`, `S_INR`,
+`pos_INR` and `Rmult_integral`. It gives an explicit
+obstruction to surjectivity but deliberately does not infer
+a matrix rank, abstract dimension or rank-nullity formula.
+
+Current intended inventory: **771 public checked claims,
+774 proof scripts and 846 documented declarations**
+in seven Rocq modules, subject to pinned Rocq 9.2 CI.
+
+## Explicit zero-sum coordinate parametrization (12 November 2026)
+
+Four additional generic Rocq lemmas establish the first-coordinate
+formula for a nonempty real vector, the precise zero-sum condition
+`head = -coordinate_sum tail`, a canonical zero-sum extension of
+each arbitrary tail, and constructive surjectivity of the nonempty
+coordinate-sum functional onto `R`. These are exact properties of
+the existing finite-dimensional typed vector representation.
+
+The implementation reuses standard `Vector.cons`/`Vector.const`,
+the existing `FiniteSum.finite_sum`, the proven zero-vector
+coordinate-sum identity, and Rocq `Lra`/`Ring`, without creating
+new matrix, fold, or vector-recursion code. These lemmas give
+explicit witnesses for the functional and its zero-sum fibers; a
+maintained linear-algebra package is still needed to turn these
+identities into a kernel-dimension or rank-nullity certificate.
+
+Current intended inventory: **775 public checked claims,
+778 proof scripts and 850 documented declarations**
+across seven Rocq modules. The final branch CI result, not the
+documentation, determines whether these counts are verified.
+
+## Linear zero-sum extension and left inverse (12 November 2026)
+
+A transparent `indexed_real_vector_zero_sum_extension` now
+uses Stdlib `Vector.cons` to embed any real vector of length
+`n` as a zero-sum vector of length `n+1`. Five documented
+proofs establish target membership, exact recovery of the tail
+with Stdlib `Vector.tl`, preservation of componentwise addition
+and real scalar multiplication, and injectivity. This constructs
+a concrete, linear embedding, using the existing finite coordinate
+sum and standard vector operations without another vector algebra.
+
+The left-inverse and linearity properties prepare the zero-sum
+interface for a maintained abstract finite-dimensional linear
+algebra library. The embedding alone does not establish an
+abstract subspace dimension, its surjectivity onto all zero-sum
+vectors, or a covariance-matrix rank/nullity result.
+
+Current intended inventory: **780 public checked claims,
+783 proof scripts and 856 documented declarations**
+across seven Rocq modules, subject to final Rocq 9.2 and
+Python/SPARK CI checks.
+
+## Exact inverse on the zero-sum target (12 November 2026)
+
+Three checked lemmas now complete the concrete tail representation
+of the zero-sum family in every positive dimension. The canonical
+extension of the standard `Vector.tl` of a zero-sum vector equals
+that vector; consequently the extension is surjective onto the
+zero-sum family. An iff result characterizes zero-sum membership
+as equality to this canonical extension.
+
+The converse uses maintained `Stdlib.Vectors.VectorSpec.eta`
+rather than implementing vector decomposition or new induction.
+Together with previously proved injectivity and linearity, it
+gives explicit algebraic witnesses on both sides of a concrete
+finite zero-sum correspondence. No abstract dimension or covariance
+rank/nullity claim is made.
+
+Current intended inventory: **783 public checked claims,
+786 proof scripts and 859 documented declarations**
+across seven Rocq modules, subject to the final CI results.
+
+## Zero preservation and equality by zero-sum tails (12 November 2026)
+
+Three further documented lemmas show that the canonical zero-sum
+extension maps the typed zero vector to zero, that any two
+positive-length zero-sum vectors are equal exactly when their
+standard vector tails are equal, and that an extension vanishes
+if and only if its input tail vanishes. These are small consequences
+of the already checked inverse/retraction and standard
+`Vector.tl` operations: no new summation or vector recursion.
+
+Current intended inventory: **786 public checked claims,
+789 proof scripts and 862 documented declarations**
+across the seven Rocq modules, subject to Rocq 9.2 kernel and
+documentation CI verification.
+
+## Automatic nonempty-sample exclusion under unit mass (12 November 2026)
+
+Two checked results now eliminate an unnecessary caller premise.
+Any sample list with total mass one is nonempty, because the
+empty shared finite sum is exactly zero, irrespective of weight
+signs. Consequently, a normalized centered evaluator cannot
+produce a nonzero constant sample-output vector without also
+requiring the caller to supply a positive sample-length witness.
+The proof reuses the existing nonzero-constant result rather
+than repeating the centering or zero-sum calculation.
+
+Current intended inventory: **788 public checked claims,
+791 proof scripts and 864 documented declarations**
+across seven Rocq modules, subject to pinned CI checks.
+
+## Canonical zero-sum projection (12 November 2026)
+
+A transparent projection now maps any real vector of length `n+1`
+to its uniquely determined zero-sum reconstruction with the same
+ordinary tail. Seven checked lemmas show that it maps into zero
+sum, preserves the tail, fixes exactly the zero-sum family, is
+idempotent, reaches every zero-sum vector, vanishes precisely
+for zero-tail inputs, and gives equal outputs exactly for equal
+input tails. All proofs reuse maintained `Vector.tl`/`Vector.const`
+and the existing extension/retraction laws, rather than implementing
+matrix or coordinate-recursion code.
+
+Current intended inventory: **795 public checked claims,
+798 proof scripts and 872 documented declarations**
+across seven Rocq modules, subject to final Rocq 9.2 and
+Python/SPARK CI. These concrete projection identities do not
+yet establish a subspace dimension or covariance rank formula.
+
+## Linearity of the canonical zero-sum projection (12 November 2026)
+
+The explicit projection now also preserves the zero vector,
+componentwise real-vector addition, and multiplication by any
+real scalar. The proofs reuse the checked extension additivity
+and homogeneity plus standard `VectorSpec.eta` to expose
+`Vector.tl` of `Vector.map2` and `Vector.map`.
+No custom vector data structure, matrix library imitation,
+additional summation or new induction was introduced.
+
+Current intended inventory: **798 public checked claims,
+801 proof scripts and 875 documented declarations**
+across seven Rocq modules, subject to final CI. The concrete
+linear retraction does not, by itself, certify the hyperplane's
+abstract dimension or a covariance-matrix rank formula.
+
+## Projection fixed points and head-coordinate erasure (12 November 2026)
+
+Three new documented and registered lemmas prove that every
+canonical zero-sum extension is fixed by projection, that
+projection ignores arbitrary differences in the first coordinate,
+and that no positive-length nonzero constant vector is fixed.
+Each proof composes the previously checked projection and
+extension interface with standard `Vector.cons/tl`, without
+additional vector induction or hand-written linear algebra.
+
+Current intended inventory: **801 public checked claims,
+804 proof scripts and 878 documented declarations**
+across seven Rocq modules, pending pinned Rocq 9.2 and
+Python/SPARK CI verification.
+
+## Explicit head-only projection-kernel normal form (12 November 2026)
+
+The zero-sum projection's kernel is now characterized in both
+directions by an explicit normal form: precisely vectors with
+one arbitrary first coordinate and a zero tail. The proof
+composes the checked projection-zero criterion with
+`Stdlib.Vectors.VectorSpec.eta`, rather than defining
+additional vector algebra.
+
+Current intended inventory: **802 public checked claims,
+805 proof scripts and 879 documented declarations**
+across seven Rocq modules, pending final pinned CI.
+The concrete normal form alone does not establish an abstract
+kernel dimension or covariance rank theorem.
+
+## Exact projection range and preimage fibers (12 November 2026)
+
+Three new checked results establish uniqueness of the tail
+representing any zero-sum extension target, characterize every
+projection preimage by zero-sum target membership and equality
+of standard input/output tails, and prove that the projection's
+range is exactly the zero-sum family. These follow by composing
+the already kernel-checked inverse, retraction, target-membership
+and surjectivity lemmas with Rocq Stdlib `Vector.tl` and
+`f_equal`. No matrix API or new vector recursion is introduced.
+
+Current intended inventory: **805 public checked claims,
+808 proof scripts and 882 documented declarations**
+across seven Rocq modules, subject to pinned CI verification.
+No abstract subspace dimension, covariance rank or rank-nullity
+formula is claimed.
+
+## Projection plus total sum uniquely recovers a vector (12 November 2026)
+
+Three further generic Rocq lemmas show that the projected head
+is the input head minus the input's total coordinate sum,
+that equal projections and total sums force equality of
+the original nonempty vectors, and that this recovery
+criterion holds in both directions. These proofs use
+`VectorSpec.eta`, the checked coordinate-sum cons identity,
+the existing projection tail law, and standard
+`Ring`/`Lra` normalization; there is no new vector recursion.
+
+Current intended inventory: **808 public checked claims,
+811 proof scripts and 885 documented declarations**
+across seven Rocq modules, subject to pinned CI. This
+concrete equality criterion does not establish abstract
+dimension, matrix rank or rank-nullity.
+
+## Constructive inverse to projection-plus-total data (12 November 2026)
+
+A transparent standard-vector constructor now reconstructs a
+nonempty real vector from its freely chosen tail and prescribed
+coordinate sum. Five additional kernel-checkable lemmas establish
+the exact reconstructed tail, full sum, canonical projection,
+round-trip of every input vector, and the uniqueness of an input
+having any specified zero-sum projection and real total.
+
+The implementation composes prior verified projection and sum laws
+with Rocq Stdlib `Vector.cons/tl` and `Ring`; no custom vector
+recursion or matrix code has been introduced.
+
+Current intended inventory: **813 public checked claims,
+816 proof scripts and 891 documented declarations**
+across seven Rocq modules, subject to final pinned CI.
+The abstract vector-space dimension and covariance-rank proofs
+remain separate outstanding obligations.
+
+## A two-sided standard-product correspondence (12 November 2026)
+
+The concrete tail-and-total encoding now uses the ordinary
+Rocq product `(Vector.t R n * R)%type`, with two transparent
+encode/decode wrappers. Both compositions have been proved
+the identity, and the resulting injectivity laws are separately
+registered. Every proof composes previously checked reconstruction
+results, standard product projections and `f_equal`, without
+repeating vector calculations or implementing a bespoke algebra.
+
+Current intended inventory: **817 public checked claims,
+820 proof scripts and 897 documented declarations**
+across seven Rocq modules, subject to pinned Rocq 9.2 CI.
+The certified type-level bijection is not asserted to be an
+abstract linear isomorphism or a rank-nullity/dimension theorem.
+
+## Additive and homogeneous tail/total correspondence (12 November 2026)
+
+Nine additional generic finite-real-vector lemmas establish that the
+reconstruction constructor, ordinary product encoder and ordinary
+product decoder each preserve the zero vector, componentwise
+addition and real scalar multiplication. The source proofs use
+the existing coordinate-sum zero/add/scale laws, standard
+`Vector.map/map2/cons/tl` and `VectorSpec.eta`, and `Ring`.
+No new recursive vector implementation, matrix algorithm or axiom is needed.
+
+Current intended inventory: **826 public checked claims, 829 proof
+scripts and 906 documented declarations** across seven Rocq modules,
+subject to pinned Rocq 9.2 CI. These concrete homomorphism laws plus
+the previous two-sided inverse show an additive and homogeneous
+coordinate correspondence, but do not instantiate a maintained
+abstract linear-isomorphism API or prove dimension/rank-nullity.
+
+## Shortened normalized centered-sample evaluator (12 November 2026)
+
+Five new checked finite-vector results use Rocq Stdlib `List.tl`,
+`Vector.to_list`, `VectorSpec.eta`, and the existing zero-sum
+and covariance-injectivity theorems. A zero-sum real vector (including the empty vector)
+is uniquely determined by its ordinary post-head list tail; its
+vanishing can be tested on those same entries. Under unit sample
+mass this applies to all centered sample outputs, yielding exact
+output equality and zero-output criteria. Combined with the existing
+covariance positive-definiteness iff full-output injectivity theorem,
+it yields a stricter, shorter list-tail evaluator criterion.
+
+Current intended inventory: **831 public checked claims, 834 proof
+scripts, and 911 documented declarations** in seven Rocq modules,
+subject to pinned Rocq 9.2 CI. No matrix rank, dimension, abstract
+isomorphism or rank-nullity formula is claimed.
+
+## Covariance kernels via truncated centered sample tails (12 November 2026)
+
+Five exact finite results connect the ordinary `List.tl` of the
+centered sample-evaluator output to existing covariance characterizations:
+quadratic-form nullity, bilinear radical membership, the named bounded
+covariance-row kernel, equality of outputs via the signed coefficient
+difference, and positive definiteness as detection of all nonzero
+coefficient directions. Each proof composes the previously checked
+full-vector criterion and normalized list-tail equivalence; the
+finite covariance form is not expanded again.
+
+The repository now contains **836 public claims, 839 proof scripts,
+and 916 documented declarations** across seven modules, subject to
+pinned Rocq 9.2 and Python/Deal/SPARK workflow verification.
+The results are not abstract dimension or matrix rank-nullity theorems.
+
+## Zero-total product representation and projection factoring (12 November 2026)
+
+Six concrete kernel-checked candidates refine the earlier
+`Vector.t R (S n)` to `(Vector.t R n * R)%type` encoding:
+zero-sum membership is characterized by zero stored total;
+the decoder of `(tail,0)` is definitionally compatible with the
+canonical zero-sum extension; the extension encodes as `(tail,0)`;
+and the zero-sum projection factors through the same decoder.
+These results reuse Stdlib product, Vector.cons/tl, Ring and the
+existing verified reconstruction and zero-sum lemmas. No custom
+vector recursion or matrix library is introduced.
+
+Intended inventory after this change: **842 public checked claims,
+845 proof scripts and 922 documented declarations** across the
+seven modules, subject to pinned Rocq 9.2 CI. Concrete
+zero-total coordinate equivalences do not by themselves prove
+abstract vector-space dimension or rank-nullity results.
+
+## Explicit zero-sum plus scalar-axis additive decomposition (12 November 2026)
+
+A new standard-vector head-only axis constructor embeds any real total
+as `Vector.cons R total n (Vector.const 0 n)`. Nine generic
+kernel-checkable candidates connect it to the existing finite-vector
+coordinate sum and canonical zero-sum projection. These show the axis's
+exact sum and injectivity, its annihilation under the projection,
+the projection's kernel as a uniquely prescribed scalar-axis vector,
+and an explicit additive decomposition with unique zero-sum and total
+coordinates. The one generic vector identity used in the new proofs,
+addition with the zero vector, follows from Stdlib `VectorSpec`
+extensionality and `Ring` rather than custom recursive vector code.
+
+Intended inventory: **851 public claims, 854 proof scripts and
+932 documented declarations** across seven Rocq modules, subject to
+pinned Rocq 9.2 verification and independent Deal/SPARK CI.
+No abstract finite-dimensional vector-space isomorphism, dimension
+formula or covariance-matrix rank theorem is claimed here.
+
+## Scalar-axis homomorphism and affine shifts (12 November 2026)
+
+Nine new generic finite-real-vector lemmas continue the checked
+zero-sum plus head-axis decomposition. They prove scalar-axis
+preservation of zero, addition and scaling; a zero-sum projection
+kernel characterization using an existential scalar witness; and
+zero detection of the axis embedding. They also certify that adding
+a head-only axis vector preserves the zero-sum projection, changes
+the coordinate total by exactly its scalar, and updates only the
+scalar component of the existing unique decomposition.
+
+All arguments reuse maintained Rocq Stdlib `VectorSpec`, `Ring`,
+`Vector.map`/`Vector.map2`, and the existing zero-sum projection,
+coordinate sum and pair-injectivity lemmas. The single generic
+scale-zero vector identity is proved via library extensionality;
+no new recursive vector code or matrix operations are introduced.
+
+The intended inventory is **860 public claims, 863 proof scripts and
+941 documented declarations** across seven modules, pending Rocq
+9.2 kernel checks and Python/Deal/SPARK CI. This is an exact
+concrete linearity interface, not an abstract vector-space
+dimension or covariance rank certificate.
+
+## Affine projection fibers and scalar normalization (12 November 2026)
+
+Four new commented finite-vector lemmas reuse the canonical
+zero-sum projection and head-axis embedding. They establish
+injectivity of scalar-axis shifts, characterize projection fibers,
+identify the unique axis shift that makes a vector zero-sum, and
+show that this normalization is exactly the existing projection.
+Proofs use established pair-injectivity, idempotence, coordinate
+sums and the maintained Stdlib Lra/Ring tactics, without
+additional recursive vector or matrix code.
+
+Intended inventory: **864 public claims, 867 proof scripts
+and 945 documented declarations**, subject to pinned Rocq 9.2
+and Python/Deal/SPARK CI. The abstract rank-nullity and covariance
+rank extensions remain unproved.
+
+## Unique affine-fiber coordinates (13 November 2026)
+
+Four documented `FiniteMoments.v` lemmas advance the concrete
+zero-sum projection interface. Any scalar translation has a uniquely
+determined coordinate equal to the difference of the two sums;
+equality of two projections is equivalent to translation by that
+exact scalar and to existence of exactly one scalar witness.
+The projector itself is the unique minus-total axis shift.
+Each proof composes already verified affine-axis lemmas and Stdlib
+`f_equal`/`Lra`, avoiding a new vector or matrix package.
+
+Intended inventory: **868 public claims, 871 proof scripts and
+949 documented declarations**, pending pinned Rocq 9.2 and
+Python/Deal/SPARK CI. Abstract rank and dimension assertions remain
+out of scope at this stage.
+
+## Zero-sum translation laws (13 November 2026)
+
+Three generic finite-vector lemmas complement the affine head-axis
+translation results: a zero-sum translation moves the projected
+component by itself, leaves the coordinate total unchanged, and
+changes only the zero-sum term of the existing additive splitting.
+The proof code composes existing Stdlib-backed projection
+additivity, zero-sum fixed-point membership, finite-vector sum
+additivity, and canonical decomposition. No new vector recursion,
+matrix implementation, unproved assumptions or empirical claims.
+
+Targeted inventory: **871 public claims, 874 proof scripts and
+952 documented declarations**, subject to Rocq 9.2 and
+Python/Deal/SPARK CI. Library-level direct-sum dimensions and
+covariance-rank formalization remain separate work.
+
+## Bijective linear tail coordinates for zero-sum vectors (13 November 2026)
+
+Five new checked-claim candidates package previously separate
+zero-sum-extension retraction, injectivity, finite-vector addition
+and scalar multiplication facts into a concrete two-sided interface.
+A zero-sum vector has exactly one canonical tail witness. Tail
+extraction preserves addition and scaling on zero-sum vectors, and
+extending those tail combinations reconstructs the corresponding
+full vectors. The proofs reuse the maintained tail-total product
+encoder, canonical extension, and Stdlib fst/f_equal rather than
+writing fresh vector recursion or matrix arithmetic.
+
+Target inventory: **876 public claims, 879 proof scripts, and
+957 documented declarations** (seven Rocq modules), subject to
+pinned kernel and Python/Deal/SPARK workflow checks. This concrete
+linear bijection is not yet a packaged algebra-library linear
+equivalence, hyperplane dimension calculation, covariance rank,
+or empirical psychometric proof.
+
+## Mixed affine translations in canonical coordinates (13 November 2026)
+
+Five new fully commented Rocq lemmas combine zero-sum shifts with
+head-axis scalar shifts. Their effects on the canonical projection
+and coordinate sum are independent; the existing decomposition
+produces an explicit normal form. A mixed shift is zero-sum, and
+equals its resulting projected component, exactly when the axis
+scalar cancels the original vector total. The scripts reuse
+established laws and Stdlib.Vector.map2 without new vector or
+matrix recursion or additional axioms.
+
+Intended inventory: **881 public claims, 884 proof scripts,
+962 documented declarations** across seven Rocq modules, pending
+pinned Rocq and Python/Deal/SPARK CI. These concrete coordinate
+identities do not constitute a maintained abstract vector-space
+direct-sum isomorphism or dimension/rank theorem.
+
+## Unique additive/scalar direct-sum coordinates (13 November 2026)
+
+Six documented generic real-vector lemmas formalize uniqueness of
+the zero-sum summand and scalar-axis coordinate, and show that
+both coordinates—and their reconstruction—respect addition and
+real scaling. The source reuses existing zero-sum closure,
+projection and coordinate-total linearity, axis coordinates
+and unique reconstruction, rather than defining vector
+arithmetic, a matrix class, or a second abstract vector type.
+
+Target inventory: **887 public claims, 890 proof scripts and
+968 documented declarations** across seven Rocq modules, subject
+to pinned Rocq 9.2 and Python/Deal/SPARK workflows. The
+concrete additive equivalence does not yet certify an abstract
+dimension or covariance matrix rank bound.
+
+## Affinely dependent prefix in any covariance basis (13 November 2026)
+
+Eight new documented lemmas/theorems and one typed witness constructor
+generalize the earlier two-score affine-dependence result to bases
+with arbitrarily many additional scores. If the first two basis scores
+satisfy f=a*g+c on the listed samples, (1,-a,0,...,0) is a nonzero
+coefficient direction with identically zero centered sample output
+and zero covariance quadratic under unit sample mass, even for
+signed weights. The covariance is therefore not strictly positive
+definite. With nonnegative listed weights, the witness also
+annihilates the covariance bilinear form and every named matrix row.
+
+The proofs rely on maintained Stdlib.Vector constructors,
+finite-sum zero coefficients, expectation/variance extensionality
+and the project's already checked covariance-kernel theorems;
+no duplicate matrix/spectral/rank implementation is added.
+
+Intended inventory: **895 public claims, 898 proof scripts and
+977 documented declarations** in seven Rocq modules, subject to
+Rocq 9.2 kernel checking and Python/Deal/SPARK workflows.
+This gives a concrete rank-deficiency witness but does not
+prove a general rank-nullity dimension formula or assess
+any empirical IQ covariance matrix.
+
+## Sample-constant signed-weight covariance radical (13 November 2026)
+
+Two documented Rocq theorems establish that a typed composite constant
+on every enumerated sample is a covariance-radical direction when total
+mass equals one, even with negative weights. The explicit affine-prefix
+witness specializes this general statement. The original theorem with
+nonnegative weights now delegates to the stronger result, preserving
+its signature. Proofs use covariance_extensional_on_samples,
+covariance_with_constant_first and indexed_basis_affine_prefix_weighted_score
+rather than implementing new matrices, sums or positivity arguments.
+The intended inventory is **897 public claims, 900 proof scripts and
+979 documented declarations** across seven modules; Rocq 9.2 and
+Python/Deal/SPARK CI remain the verification authorities. No
+rank/nullity theorem or signed-weight positive-semidefiniteness is claimed.
+
+## Signed-weight covariance row-kernel witnesses (13 November 2026)
+
+The sampled-constant composite criterion now also implies exact annihilation
+of every typed covariance row for unit total mass, with no individual
+weight-sign restriction. The proof turns each row dot product into a
+covariance using the preexisting unconditional
+covariance_with_weighted_basis_as_row_dot theorem, then uses covariance
+symmetry and support extensionality to reduce to constant-first
+covariance zero. A second result instantiates the affine-prefix witness;
+the older nonnegative-weight row theorem now delegates to it. No
+new summation, matrix implementation or positivity assertion is made.
+The intended inventory is **899 public claims, 902 proof scripts, 981
+documented declarations** across seven modules, subject to Rocq 9.2
+kernel and existing Python/Deal/SPARK CI. Rank/nullity remains open.
+
+## Unconditional covariance radical and row-kernel equivalence (13 November 2026)
+
+Four documented results establish that the covariance bilinear radical
+is exactly the bounded covariance row kernel for arbitrary finite signed
+or unnormalized weights. A typed coordinate-selector lemma uses existing
+Vector.cons/const and the zero-composite theorem. Two other theorems
+characterize the radical and the row kernel separately through covariance
+orthogonality to every listed basis score, using shared FiniteSum laws,
+the unconditional covariance linearity, and existing bounded index bridges.
+The original normalized nonnegative theorem now delegates to the stronger
+result. The affine signed-weight row theorem likewise delegates to its
+already checked radical witness through the new equivalence.
+
+Intended inventory: **903 public claims, 906 proof scripts, 985 documented
+declarations** over seven modules, pending pinned Rocq 9.2 and Python
+CI. This is a purely algebraic kernel equivalence, not a general
+quadratic-nullity equivalence for signed weights, PSD claim or rank
+calculation.
+
+## Algebraic covariance-row kernel closure and shift invariance (13 November 2026)
+
+Five documented theorems certify zero membership, addition closure,
+scalar closure, nonzero-scaling equivalence, and invariance under
+row-kernel shifts **without normalizing sample weights or assuming
+their nonnegativity**. All results reuse the unconditional equivalence
+between the bilinear covariance radical and the indexed covariance
+row kernel, plus existing radical lemmas; no second matrix, vector,
+or finite-sum implementation is introduced. The older normalized
+row-kernel APIs remain intact as separately defined compatibility
+statements (their source-order dependencies precede the radical
+interface). The positive-definiteness iff trivial radical theorem
+now uses the unconditional bridge in both directions, retaining its
+own probability premises because strict positivity requires them.
+
+Inventory: **908 public claims, 911 proof scripts, 990 documented
+declarations**, with **497 proof scripts in FiniteMoments.v**, across
+seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal/SPARK
+CI. No signed-weight PSD, covariance rank, abstract nullity or
+empirical IQ result follows from these kernel identities.
+
+## A concrete unit-mass signed-weight isotropic counterexample (13 November 2026)
+
+The finite natural-number sample [0,1,2] carries outcome weights
+(1,1,-1), totaling exactly one, but the last is negative. The two
+indicator-like scores are f=1 only at sample one and g=1 only
+at sample two. The checked finite moment calculations give
+Var(f)=0 and Cov(f,g)=1. A typed direction selecting f therefore
+has zero indexed covariance quadratic but **does not** lie in the
+bilinear radical: the unconditional radical/basis-score theorem
+detects its nonzero covariance against g. The construction is
+deliberately synthetic and disproves the tempting signed-weight
+converse of quadratic nullity to radical membership. It does
+not challenge positive-semidefinite covariance under
+nonnegative normalized probability weights. All computations
+use the existing finite-sum, indexed-basis and covariance
+interfaces; there is no new numerical matrix implementation.
+
+Inventory after this addition: **913 public claims, 916 proof scripts,
+1001 documented declarations** (502 FiniteMoments proofs) across seven
+modules, subject to pinned Rocq 9.2 and Python/Deal/SPARK CI.
+
+## Exact two-sample covariance rank-one certificates (13 November 2026)
+
+Seven documented Rocq results prove that every covariance over two
+enumerated sample occurrences and unit total mass has the form
+w(x)w(y)(f(x)-f(y))(g(x)-g(y)), without nonnegative-weight assumptions.
+Every two-by-two covariance minor therefore vanishes for every
+four bounded Fin-indexed score coordinates; the same factorization
+applies to arbitrary typed coefficient composite scores. The row
+kernel is exactly the kernel of the sample contrast functional when
+both weights have nonzero product and the basis includes a score
+separating the two outcomes. Such a separating score also yields
+a nonzero covariance diagonal, completing an explicit rank-one
+certificate. Proofs reuse the established finite covariance and
+FiniteSum operators, Stdlib.Vectors.Fin/Vector, and standard ring
+and zero-product lemmas. No custom matrix or determinant implementation
+or general rank-nullity theorem is added.
+
+Expected total: **920 public claims, 923 proof scripts, 1008
+documented declarations**, including **509 FiniteMoments proof
+scripts**, pending pinned Rocq 9.2 and Python regression CI.
+Signed weights can produce negative covariance diagonals, so no
+signed-weight positive-semidefiniteness is claimed.
+
+## Pivot reconstruction and exact one-row kernels (13 November 2026)
+
+Seven documented Rocq theorems strengthen the two-sample rank-one
+certificate. Under samples=[x;y], total_mass=1, and a nonzero
+Fin-indexed diagonal pivot M(p,p), the existing bounded covariance
+matrix has exact entrywise reconstruction
+M(i,j)=M(i,p)*M(p,j)/M(p,p). That pivot is shown to separate the two
+outcomes and requires a nonzero product of their weights. A single
+ordinary pivot-row dot product is therefore an exact membership test
+for the entire covariance row kernel and, through the previously
+checked unconditional radical-row equivalence, for the bilinear
+radical. Separately, a zero weight product implies every indexed
+matrix entry is exactly zero. A reusable scalar two-sample
+zero-covariance iff contrast theorem replaces repeated
+zero-product reasoning in the existing two-sample kernel proof.
+The construction reuses FiniteSum, Stdlib.Vectors.Fin/Vector,
+the maintained indexed covariance matrix and real-field lemmas;
+it defines no competing matrix type, determinant or rank routine.
+Signed weights are supported but no PSD claim is made.
+
+Expected inventory: **927 public claims, 930 proof scripts and
+1015 documented declarations** in seven modules, including
+**516 FiniteMoments proof scripts**, subject to pinned Rocq 9.2
+kernel verification and existing Python/Deal/SPARK regression gates.
+Rank-zero and rank-one here are structural entry certificates,
+not an abstract dimension/rank-nullity formalization.
+
+
+## Diagonal detection of all two-sample covariance entries (13 November 2026)
+
+Three documented and library-reusing Rocq theorems extend the structural
+rank-one certificate beyond pivot reconstruction. The checked two-by-two
+minor theorem and covariance symmetry imply M(i,j)^2=M(i,i)M(j,j).
+Consequently a cross-covariance entry is nonzero exactly when **both**
+corresponding diagonal entries are nonzero, regardless of the sign of
+the sample weights. The entire Fin-indexed covariance matrix vanishes
+exactly when every diagonal vanishes. This includes empty and dependent
+score bases, repeated outcomes and signed unit-mass weights. Proofs
+reuse the existing Fin-indexed covariance, two-sample minor theorem,
+covariance symmetry, Stdlib.Reals.Rmult_integral and Psatz.nra; no
+new matrix data type, determinant, rank algorithm or axiom is added.
+
+Expected inventory: **930 public claims, 933 proof scripts, 1018
+documented declarations**, with **519 FiniteMoments proof scripts**
+in seven modules. Pinned Rocq 9.2 kernel and Python regression checks
+must validate the branch head before these counts are reported as
+verified. This is an entrywise rank-zero/rank-one certificate, not
+a general finite-dimensional rank-nullity theorem or a claim about
+empirical IQ covariance.
+
+
+## Typed two-sample covariance sign and nullity classification (13 November 2026)
+
+Eight carefully documented theorems extend the exact two-outcome rank-one
+factorization beyond matrix entries to every typed coefficient direction.
+Four-direction bilinear cross minors vanish without signed-weight restrictions.
+When the product of the two normalized sampled weights is nonnegative,
+all coefficient self-pairings are nonnegative; when nonpositive, they are
+nonpositive. An existing typed single-score coordinate representation gives
+strictly negative or positive self-pairing witnesses for strictly negative or
+positive weight products, provided a listed score separates the outcomes.
+Consequently, **in a separating basis**, the covariance bilinear form is
+positive semidefinite exactly when the weight product is nonnegative, and
+negative semidefinite exactly when it is nonpositive. If every listed score
+assigns equal values to the two sampled outcomes, every indexed covariance
+matrix entry is zero, independently of the signed weight product.
+
+The proofs reuse the already kernel-checked two-sample factorization,
+indexed_basis_score_has_typed_coordinate_representation, established vector
+nth_error/membership bridges, Stdlib.Reals square and sign laws, Psatz.nra
+and Ring. No additional finite sums, coordinate selectors, matrices, rank
+calculators, axioms or admitted proofs are introduced.
+
+Expected inventory: **938 public checked claims, 941 proof scripts,
+1026 documented declarations**, including **527 FiniteMoments proof
+scripts**, across seven modules. These figures and all proof theorems
+require Rocq 9.2 CI verification. This is a signed two-sample
+semidefinite classification, not general covariance inertia, an abstract
+rank-nullity theorem or empirical IQ inference.
+
+
+## Signed two-sample covariance isotropy and complete degeneracy (13 November 2026)
+
+Nine new fully documented Rocq theorems strengthen the already checked
+two-sample rank-one covariance factorization. The self-pairing of any
+typed coefficient direction vanishes exactly when the product of the two
+sample weights is zero or the coefficient composite has the same value
+on both outcomes. **Even for signed weights**, this is equivalent to
+membership in the full bilinear radical and to annihilating every
+indexed covariance row. The original typed covariance quadratic has
+exactly the same zero set under samples=[x;y] and unit mass, without
+requiring individual weights to be nonnegative.
+
+The results also characterize complete covariance degeneracy:
+all typed bilinear pairings vanish, all self-pairings vanish, or all
+typed quadratics vanish **if and only if** the sample weight product
+is zero or no listed score separates the two samples. This distinction
+matters because the checked signed *three*-sample counterexample
+admits an isotropic direction that is not in the bilinear radical.
+The new equivalences are explicitly confined to two outcomes.
+
+The proofs reuse the existing signed two-sample factorization,
+indexed-basis covariance/radical/row-kernel interfaces, the maintained
+typed basis-coordinate selector lemma, the bilinear diagonal identity,
+Stdlib.Reals.Rmult_integral/Req_EM_T, Lra, Ring and tauto.
+No competing finite-sum, matrix representation, generic rank algorithm,
+axiom or admitted lemma is introduced. No Python, Ada/SPARK or archived
+evidence source is modified.
+
+Intended inventory: **947 public checked claims, 950 proof scripts,
+1035 documented declarations**, including **536 FiniteMoments proof
+scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal/SPARK CI
+remain the verification authorities; these counts alone do not imply
+generic rank-nullity or empirical IQ-test validity.
+
+
+## Typed coefficient-pivot covariance reconstruction (13 November 2026)
+
+Four new fully documented theorems extend the already checked
+two-sample all-minors-zero theorem to a **single typed coefficient pivot**
+with nonzero covariance self-pairing. The first specializes the
+four-direction determinant-free cross identity. The second reconstructs
+every bilinear covariance pairing from two pivot covariances divided by
+the nonzero pivot self-pairing. The third proves that radical membership
+is exactly the vanishing of one pivot covariance. The fourth proves that
+a zero covariance between two directions occurs exactly when one of
+their corresponding pivot covariances vanishes.
+
+The proofs reuse the maintained indexed-basis covariance bilinear form
+and radical, its all-minors identity, Stdlib.Reals.Rmult_integral,
+Stdlib.Ring and Stdlib.Field. No new matrix operations, coefficient
+selectors, finite sums, axioms or admitted proofs have been introduced.
+The sign of either individual sample weight is unrestricted under
+two-sample unit-mass normalization. The nonzero-pivot premise is
+essential for the reconstruction and one-pivot nullity converses.
+
+Intended inventory: **951 public checked claims, 954 proof scripts,
+1039 documented declarations**, including **540 FiniteMoments proof
+scripts** in seven modules. GitHub Actions Rocq 9.2 kernel checks and
+the existing Python/Deal/SPARK workflows are the verification authority.
+The result does not yet prove an abstract linear-map rank-nullity theorem
+or an empirical covariance inference.
+
+
+## Typed two-sample covariance functional normal form (14 November 2026)
+
+Five Rocq kernel-checkable and fully documented theorems extend the
+two-sample typed pivot reconstruction. Given a nonzero self-pairing of a
+typed coefficient pivot, every covariance functional is a scalar multiple
+of the pivot functional and that scalar is **unique**. Every coefficient
+direction has exactly one pivot multiplier whose subtraction leaves a
+coefficient direction in the covariance bilinear radical. Two coefficient
+directions induce the same covariance against every test direction if and
+only if they agree against the pivot. The original typed covariance
+quadratic equals the square of its pivot covariance divided by the
+nonzero pivot self-pairing, under the existing unit-mass premise.
+
+All five proofs reuse the already checked bilinear normalizations,
+additive/scalar linearity, radical predicate, diagonal identity,
+symmetry, and Stdlib.Field/Ring/Psatz. No new finite-sum, custom
+matrix algebra, coefficient-selector, axioms or admitted code is added.
+Signed weights are permitted because the algebra is specific to
+two unit-mass sampled occurrences. The construction supplies a
+unique one-scalar/radical normal form, but does not yet supply a
+maintained abstract vector-space dimension or rank-nullity theorem.
+
+Expected inventory: **956 public checked claims, 959 proof scripts,
+1044 documented declarations**, including **545 FiniteMoments proof
+scripts** across seven modules; pinned Rocq 9.2 CI remains mandatory.
+
+
+## Covariance pivot-coordinate retraction and rank-one projection (14 November 2026)
+
+Three thoroughly commented thin definitions and thirteen documented
+theorems organize the previously proved two-sample scalar-plus-radical
+normal form as an explicit **coordinate / section / projection** triple
+over the existing Stdlib.Vectors.Vector.t representation. The normalized
+coordinate is additive and homogeneous and sends the chosen pivot
+to one when its self-covariance is nonzero. The standard Vector.map
+scalar section is an injective right inverse to the coordinate map.
+The covariance pairing for two unit-mass outcomes factors exactly
+through the two real normalized coordinates and one pivot self-pairing.
+
+The induced coefficient projection preserves its coordinate, is
+idempotent, has fibers classified by one real scalar, and has image
+exactly the scalar pivot line. Under two unit-mass sampled outcomes,
+its kernel is precisely the existing covariance bilinear radical
+and projecting both arguments **preserves every covariance pairing**.
+Coordinate/section retraction and linearity, projection idempotence,
+image and fiber identities require only a nonzero pivot, independently
+of probability mass normalization. The factorization, radical kernel
+and covariance-preservation identities additionally state the exact
+two-sample unit-mass hypotheses.
+
+The implementation reuses indexed-basis bilinearity, prior typed
+pivot reconstruction, the existing radical and Stdlib.Reals,
+Stdlib.Field, Stdlib.Psatz, Stdlib.Vectors.Vector.map and f_equal.
+No new finite sum, vector recursion, matrix evaluator, determinant,
+axiom or admitted proof is introduced. No Python, SPARK or archived
+evidence code is changed. The operator is a concrete, certified
+rank-one-style retraction, **not yet an abstract dimension/rank-nullity
+theorem** over a maintained vector-space theory.
+
+Expected inventory after pinned Rocq 9.2 validation:
+**969 public claims, 972 proof scripts, 1060 documented declarations**
+across seven modules; **558 FiniteMoments proof scripts**.
+
+
+## Stdlib-backed linearity and zero-kernel of the covariance pivot projection (14 November 2026)
+
+Seven additional fully documented Rocq theorems complete the linear
+retraction interface: the scalar-to-pivot section preserves addition
+and scaling and maps zero to the standard Vector.const zero vector.
+The normalized pivot-coordinate functional is surjective onto all
+real scalars whenever B(p,p) is nonzero. The already certified
+idempotent pivot projection itself preserves both vector addition
+and scalar multiplication, so it is a concrete linear endomorphism
+of the existing fixed-length real Vector.t. In a two-sample model
+with unit total mass, its kernel equals the covariance radical
+**using the standard typed zero vector**.
+
+The proofs reuse VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth,
+Stdlib.Ring, the existing covariance bilinearity, coordinate and
+section retraction lemmas, and the earlier signed two-sample
+radical/zero-section theorem. No new vector recursion, finite sums,
+matrix code, axioms, admission, Python, SPARK or historical evidence
+changes are introduced.
+
+Expected inventory: **976 public checked claims, 979 proof scripts,
+1067 documented declarations**, including **565 FiniteMoments proof
+scripts** across seven Rocq modules. The linear projection and its
+explicit scalar-line image and covariance radical kernel are now
+represented with typed standard-library vectors, but an abstract
+vector-space dimension and general rank-nullity result remain open.
+
+
+## Explicit pivot-line / radical complement and quotient fibers (14 November 2026)
+
+The maintained covariance projection now has an explicit **typed complementary
+remainder**, using only `Vector.map2 Rplus` and the existing scalar pivot
+section. Seven documented Rocq theorems certify: exact vector reconstruction
+as projection plus remainder without normalization; zero pivot coordinate
+and projection of that remainder under nonzero pivot; full bilinear-radical
+membership of the remainder under exactly two unit-mass sample occurrences;
+pointwise fixation of every pivot-line vector; trivial intersection of that
+line with the covariance radical; and equality of projected vectors exactly
+when their difference belongs to the radical.
+
+All theorems work with signed weights where logically allowed. Only the
+radical-specific theorems assume two occurrences and unit mass; none claims
+an abstract vector-space rank, dimension, or a general PSD statement. The
+proofs reuse established `indexed_basis_covariance_pivot_*` interfaces,
+`Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2`,
+`Stdlib.Ring` and `Stdlib.Lra`. No new matrix, summation, recursive vector,
+axiom, admitted proof, Python/SPARK source or historical evidence was added.
+
+Expected inventory after Rocq CI: **983 public claims**, **986 proof scripts**
+and **1075 documented declarations** across seven modules, including
+**572 FiniteMoments proof scripts**. The surviving research gap is transport to
+maintained abstract linear maps, subspaces and a generic rank-nullity theorem.
+
+
+## Nonisotropic pivot transitions and mixed-projection covariance (14 November 2026)
+
+**New structural step:** Two one-sided, kernel-checked covariance preservation
+theorems permit the left and right coefficient arguments to be projected
+independently. The original same-pivot two-sided theorem is refactored to
+compose them, replacing duplicated covariance-factorization arithmetic.
+
+Seven further documented results describe how **two different nonisotropic
+coefficient pivots** act on the same two-unit-mass-outcome covariance pairing:
+the first projection absorbs a preceding projection with another pivot;
+the corresponding normalized real coordinates differ by an explicit scalar
+transition; the two oriented transition factors multiply to one and are
+nonzero; their zero-coordinate kernels agree; mixed-pivot projections leave
+all covariance values invariant; and projected representatives differ by
+a vector in the full bilinear covariance radical. Absorption is **not**
+commutativity, and the representatives need not coincide as vectors.
+
+All new two-sample theorems allow signed weights and dependent score bases;
+each requires the indicated nonzero pivot self-pairings. These are exact
+quotient-style statements, not a formal abstract rank-nullity theorem,
+generic semidefinite classification, or observed IQ covariance estimate.
+
+The proofs reuse established \`indexed_basis_covariance_pivot_*\`,
+the certified projection-fiber/radical difference equivalence, covariance
+symmetry, \`Stdlib.Vectors.Vector.map\`, \`Stdlib.Psatz\`, and \`Stdlib.Logic\`.
+No new recursive vector, matrix or finite-sum code, axioms, admits,
+Python/SPARK implementations, or archived verification evidence.
+
+Source-order audit inventory: **992 public checked theorem/lemma/example
+claims**, **995 proof scripts**, **1084 documented declarations** across seven
+Rocq modules, including **581 FiniteMoments proof scripts**. Verify with the
+pinned Rocq 9.2 kernel and independent documentation/no-placeholder gate.
+
+
+## Unique two-sample scalar-plus-radical coefficient decomposition (14 November 2026)
+
+Two documented theorems complete the concrete **direct-sum-style uniqueness**
+interface. If a direction is represented as a scalar multiple of a chosen
+nonisotropic covariance pivot plus a radical vector, then both the scalar
+and the remainder are uniquely determined, exactly as the previously defined
+normalized pivot coordinate and \`indexed_basis_covariance_pivot_remainder\`.
+A second theorem packages the existence and uniqueness as a single Rocq
+\`exists!\` witness of type \`R * Vector.t R (length basis)\`, with a
+radical remainder and exact coefficient reconstruction.
+
+The proof factors through already checked covariance-coordinate linearity,
+the two-sample radical/kernel equivalence and the pivot reconstruction
+law. It uses \`Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map2/nth_map\` only
+for the unavoidable equality of the typed remainder itself; there is
+no new vector recursion, finite-sum or matrix implementation.
+
+The two-outcome unit-mass and nonzero-pivot premises remain explicit;
+weights can be signed and basis functions dependent. This is a fully
+concrete split representation, **not** an abstract rank-nullity theorem,
+Gaussian moment result, or empirical covariance estimate.
+
+Expected inventory upon pinned CI verification: **994 public claims**,
+**997 proof scripts**, **1086 documented declarations** across seven
+modules, with **583 FiniteMoments proof scripts**.
+
+
+## Rank-one Gram identities and pivot-based semidefinite classification (14 November 2026)
+
+Five extensively documented Rocq theorems further classify **all typed
+coefficient directions** in the signed two-unit-mass-sample model. The
+two-direction Gram determinant is identically zero without any pivot
+assumption: `B(u,v)^2=B(u,u) B(v,v)`. This implies that zero cross-covariance
+is equivalent to at least one zero self-covariance, and nonzero
+cross-covariance is equivalent to both self-covariances being nonzero.
+With an explicitly nonisotropic pivot `p`, positive semidefiniteness
+(`forall u, 0<=B(u,u)`) is equivalent to `B(p,p)>0`; likewise negative
+semidefiniteness is equivalent to `B(p,p)<0`.
+
+The first three results reuse the existing **four-direction all-minors
+identity**, covariance symmetry, real `Rmult_integral`, and propositional
+logic without expanding a covariance evaluator. The last two reuse
+the previous pivot-coordinate factorization, standard nonnegative
+squares and real arithmetic. All claims allow signed sample weights
+and dependent score bases, but require exactly two sample occurrences
+and total mass one. Nonisotropic pivots are necessary only for the
+two sign-classification equivalences. No abstract matrix rank,
+dimension theorem, generic signed-weight PSD, empirical correlations,
+new finite-sum/vector recursion, Python/SPARK code or archived evidence
+modifications are claimed.
+
+Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
+1091 documented declarations**, including **588 FiniteMoments proofs**.
 
 ## Research extensions
 
-The next valuable targets are: (1) a generic conditional-event API extending beyond the verified
-four-cell `TwoEventModel` bridges, (2) certified covariance-matrix rank statements beyond the
+The next valuable targets are: (1) extending the generic finite conditional-independence interface to
+multi-event conditional factorization and conditioning-event transformations, (2) certified covariance-matrix rank statements beyond the
 zero-quadratic-form support result, (3) using a maintained measure-theory
 library with checked finite-to-continuous interpretation lemmas,
 (4) bivariate Gaussian density normalization and certified tail

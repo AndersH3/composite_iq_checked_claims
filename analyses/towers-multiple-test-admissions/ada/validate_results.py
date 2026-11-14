@@ -15,6 +15,15 @@ ROOT = Path(__file__).resolve().parent
 @deal.post(lambda result: math.isfinite(result) and 0 < result < 1)
 @deal.raises()
 @deal.has()
+# An open-unit Park--Miller state preserves its exact quotient, lower
+# unit, upper-complement and floating-point reconstruction constraints.
+@deal.ensure(lambda numerator, denominator, result: result == numerator / denominator)
+@deal.ensure(lambda numerator, denominator, result: result <= numerator)
+@deal.ensure(lambda numerator, denominator, result: result >= 1 / denominator)
+@deal.ensure(lambda numerator, denominator, result: result <=
+             1 - 1 / denominator + 1e-15)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(
+    result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-8))
 def _open_unit_ratio(numerator, denominator):
     """Map a positive Park--Miller state to an open-unit-interval float."""
     return numerator / denominator
@@ -38,6 +47,16 @@ def require(condition, message):
                                  for key, value in row.items()) for row in result))
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.has("read")
+# The result retains a consistent complete CSV schema, never accepts
+# a missing parsed column, and contains only nonempty string headers.
+@deal.post(lambda result: all(None not in row for row in result))
+@deal.post(lambda result: all(
+    value is not None for row in result for value in row.values()))
+@deal.post(lambda result: not result or
+           all(row.keys() == result[0].keys() for row in result))
+@deal.post(lambda result: all(
+    isinstance(key, str) and bool(key) for row in result for key in row))
+@deal.post(lambda result: not result or len(result[0]) > 0)
 def read(path):
     with path.open(newline="") as stream:
         reader = csv.DictReader(stream)

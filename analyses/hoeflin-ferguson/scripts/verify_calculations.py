@@ -27,6 +27,16 @@ FIELDS = ("tests", "mean_z", "mean_score_sd16")
 @deal.raises()
 @deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
 @deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
+# Explicitly guard each non-finite input category, including the Boolean
+# subclass of int, without strengthening finite numeric input preconditions.
+@deal.ensure(lambda value, result: not isinstance(value, bool) or result is False)
+@deal.ensure(lambda value, result: isinstance(value, (int, float)) or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or not math.isnan(value) or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or value != math.inf or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or value != -math.inf or result is False)
 def _finite(value) -> bool:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return False
@@ -43,6 +53,13 @@ def _finite(value) -> bool:
     n * result, 1 + (n - 1) * rho, rel_tol=8e-15, abs_tol=1e-15))
 @deal.has()
 @deal.raises()
+# Independently specify no correlation, perfect correlation, singleton basis,
+# and the two lower variance bounds implied by the equicorrelation model.
+@deal.ensure(lambda n, rho, result: rho != 0 or math.isclose(result, 1 / n, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: rho != 1 or math.isclose(result, 1, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: n != 1 or math.isclose(result, 1, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: result + 2e-15 >= rho)
+@deal.ensure(lambda n, rho, result: result + 2e-15 >= 1 / n)
 def variance_factor(n: int, rho: float) -> float:
     """Variance of an equally weighted mean for the nonnegative-correlation model."""
     return rho + (1 - rho) / n
@@ -55,6 +72,13 @@ def variance_factor(n: int, rho: float) -> float:
 @deal.ensure(lambda n, rho, quantile, result: result <= quantile)
 @deal.has()
 @deal.raises()
+# The component threshold must reduce correctly at zero, singleton, perfect
+# and zero correlation, and never undershoot the independent-score bound.
+@deal.ensure(lambda n, rho, quantile, result: quantile != 0 or result == 0)
+@deal.ensure(lambda n, rho, quantile, result: n != 1 or math.isclose(result, quantile, rel_tol=0, abs_tol=2e-14))
+@deal.ensure(lambda n, rho, quantile, result: rho != 1 or math.isclose(result, quantile, rel_tol=0, abs_tol=2e-14))
+@deal.ensure(lambda n, rho, quantile, result: rho != 0 or math.isclose(result, quantile / math.sqrt(n), rel_tol=5e-15, abs_tol=2e-14))
+@deal.ensure(lambda n, rho, quantile, result: result + 2e-14 >= quantile / math.sqrt(n))
 def mean_threshold(n: int, rho: float, quantile: float) -> float:
     """Convert a positive composite quantile to a required component mean."""
     return quantile * math.sqrt(variance_factor(n, rho))
@@ -65,6 +89,14 @@ def mean_threshold(n: int, rho: float, quantile: float) -> float:
 @deal.post(lambda result: _finite(result))
 @deal.has()
 @deal.raises()
+# Check exact zero and unit denominators, quotient sign preservation
+# and numerical recovery of the numerator on the declared finite domain.
+@deal.ensure(lambda numerator, denominator, result: numerator != 0 or result == 0)
+@deal.ensure(lambda numerator, denominator, result: denominator != 1 or result == numerator)
+@deal.ensure(lambda numerator, denominator, result: numerator <= 0 or result >= 0)
+@deal.ensure(lambda numerator, denominator, result: numerator >= 0 or result <= 0)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(
+    result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-15))
 def _positive_ratio(numerator: float, denominator: float) -> float:
     """A finite scalar quotient on the documented numerical working range."""
     return numerator / denominator
@@ -75,6 +107,18 @@ def _positive_ratio(numerator: float, denominator: float) -> float:
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or len(rows) == len(COUNTS) + 1)
 @deal.ensure(lambda rows, result: not result or [row[0] for row in rows] == [str(n) for n in COUNTS] + ["infinity"])
+# Accepted rows must preserve tuple width, finite numerical content,
+# nonnegative mean values, the IQ transform, and list-like shape.
+@deal.ensure(lambda rows, result: not result or isinstance(rows, (list, tuple)))
+@deal.ensure(lambda rows, result: not result or
+             all(isinstance(row, (tuple, list)) and len(row) == 3 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row[1]) and _finite(row[2]) for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(row[1] >= 0 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(math.isclose(row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
+                 for row in rows))
 def _valid_rows(rows) -> bool:
     if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
         return False
@@ -93,6 +137,18 @@ def _valid_rows(rows) -> bool:
 @deal.raises()
 @deal.pre(lambda: bool(COUNTS) and len(COUNTS) == len(set(COUNTS)) and all(type(n) is int and 1 <= n <= 1_000_000 for n in COUNTS))
 @deal.pre(lambda: _finite(RHO) and 0 <= RHO <= 1 and _finite(Q) and 0 < Q <= 10)
+# Every threshold-table entry preserves the expected label, independent
+# positive-scale bounds and exact IQ = 100 + 16 z conversion.
+@deal.post(lambda result: not result or len(result) == len(COUNTS) + 1)
+@deal.post(lambda result: all(isinstance(row, tuple) and len(row) == 3
+                              for row in result))
+@deal.post(lambda result: all(0 <= row[1] <= Q + 2e-14 for row in result))
+@deal.post(lambda result: all(math.isclose(
+    row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
+    for row in result))
+@deal.post(lambda result: not result or math.isclose(
+    result[-1][1], Q * math.sqrt(RHO),
+    rel_tol=2e-14, abs_tol=1e-14))
 def thresholds() -> list[tuple[str, float, float]]:
     rows = []
     for n in COUNTS:
@@ -120,6 +176,28 @@ def check_close(actual: float, expected: float, label: str) -> None:
 @deal.has("read", "write")
 @deal.raises(OSError, csv.Error)
 @deal.ensure(lambda rows, result: CSV_PATH.is_file())
+# Preserve the actual on-disk source table: exact column names,
+# complete row count, source labels, and the declared twelve-decimal
+# formatting of each separately calculated z and IQ-score field.
+# Since this is a writer, these properties are checked after I/O.
+@deal.ensure(lambda rows, result:
+             CSV_PATH.read_text(encoding="utf-8").splitlines()[0] ==
+             ",".join(FIELDS))
+@deal.ensure(lambda rows, result:
+             len(CSV_PATH.read_text(encoding="utf-8").splitlines()) ==
+             len(rows) + 1)
+@deal.ensure(lambda rows, result:
+             [line.split(",")[0] for line in
+              CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
+             [name for name, _, _ in rows])
+@deal.ensure(lambda rows, result:
+             [line.split(",")[1] for line in
+              CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
+             [f"{z:.12f}" for _, z, _ in rows])
+@deal.ensure(lambda rows, result:
+             [line.split(",")[2] for line in
+              CSV_PATH.read_text(encoding="utf-8").splitlines()[1:]] ==
+             [f"{score:.12f}" for _, _, score in rows])
 def write_csv(rows: list[tuple[str, float, float]]) -> None:
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:

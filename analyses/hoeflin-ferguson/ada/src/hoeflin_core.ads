@@ -13,7 +13,18 @@ package Hoeflin_Core with SPARK_Mode is
    function Variance_Numerator
      (N : Test_Count; R : Correlation_Permille) return Numerator_Value with
      Global => null,
-     Post => Variance_Numerator'Result = 1_000 + Long_Long_Integer (R) * Long_Long_Integer (N - 1) and then Variance_Numerator'Result <= 1_000 * Long_Long_Integer (N) and then Variance_Numerator'Result >= 1_000,
+     --  Exact correlation and singleton boundary laws supplement the
+     --  equicorrelation formula, without floating-point approximation.
+     Post => Variance_Numerator'Result = 1_000 + Long_Long_Integer (R) * Long_Long_Integer (N - 1)
+       and then Variance_Numerator'Result <= 1_000 * Long_Long_Integer (N)
+       and then Variance_Numerator'Result >= 1_000
+       and then (if N = 1 then Variance_Numerator'Result = 1_000)
+       and then (if R = 0 then Variance_Numerator'Result = 1_000)
+       and then (if R = 1_000 then
+          Variance_Numerator'Result = 1_000 * Long_Long_Integer (N))
+       and then (if N >= 2 then
+          Variance_Numerator'Result >= 1_000 + Long_Long_Integer (R))
+       and then (if N >= 2 and R > 0 then Variance_Numerator'Result > 1_000),
      Depends => (Variance_Numerator'Result => (N, R));
 
    function Variance_Factor

@@ -1,6 +1,7 @@
 """Check domain rejection and independent mathematical properties."""
 from conftest import protected_history_intact, reference_inputs_intact
 import math
+import csv
 
 import deal
 from hypothesis import given, settings, strategies as st
@@ -208,6 +209,18 @@ def test_higher_correlation_increases_mixed_overlap(towers):
 @deal.has('stdout', 'stderr', 'read')
 def test_towers_reference_csvs(towers):
     admissions, grid = towers.admission_rows(), towers.basic_grid()
+    # Independent table-level provenance and arithmetic laws: these
+    # guards fail even if a stale CSV happens to contain plausible totals.
+    assert [row["case"] for row in admissions] == [
+        label for label, _, _ in towers.CASES]
+    assert all(row["rho"] == towers.RHO for row in admissions)
+    assert all(row["union"] == row["p_a"] + row["p_b"] - row["joint"]
+               for row in admissions)
+    assert [row["cutoff_iq"] for row in grid] == [133, 150, 164]
+    assert all(row["grid_minus_published"] ==
+               row["grid_joint"] - row["published_joint"] for row in grid)
+    assert all(row["grid_conditional"] ==
+               row["grid_joint"] / row["grid_marginal"] for row in grid)
     towers.verify_csv(towers.ROOT / "data/admission_probabilities.csv", towers.ADMISSION_FIELDS, admissions)
     towers.verify_csv(towers.ROOT / "data/followup_grid.csv", towers.GRID_FIELDS, grid)
     towers.verify_known_results(admissions, grid)
@@ -233,3 +246,65 @@ def test_deal_generated_contract_cases(hoeflin, towers, kernel):
     for case in cases:
         result = case()
         assert math.isfinite(result) and 0 <= result <= 1
+
+@pytest.mark.parametrize("value,expected", [
+    (None, False), ("0.5", False), (False, False), (True, False),
+    (complex(1, 2), False), (math.nan, False), (math.inf, False),
+    (-math.inf, False), (0, True), (-11, True), (0.25, True),
+    (10 ** 500, False),
+])
+@deal.pre(lambda hoeflin, towers, value, expected: protected_history_intact())
+@deal.ensure(lambda hoeflin, towers, value, expected, *, result: protected_history_intact())
+@deal.ensure(lambda hoeflin, towers, value, expected, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read")
+def test_legacy_finite_number_guards_reject_invalid_types(hoeflin, towers, value, expected):
+    """Both original model scripts must reject non-finite input categories."""
+    assert hoeflin._finite(value) is expected
+    assert towers._finite(value) is expected
+
+
+@deal.pre(lambda hoeflin, tmp_path, monkeypatch: protected_history_intact())
+@deal.ensure(lambda hoeflin, tmp_path, monkeypatch, *, result:
+             protected_history_intact())
+@deal.ensure(lambda hoeflin, tmp_path, monkeypatch, *, result:
+             reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "global", "import")
+def test_legacy_hoeflin_csv_writer_retains_exact_twelve_digit_rows(
+        hoeflin, tmp_path, monkeypatch):
+    """Write only into a temporary path and independently parse every field."""
+    destination = tmp_path / "thresholds.csv"
+    monkeypatch.setattr(hoeflin, "CSV_PATH", destination)
+    rows = hoeflin.thresholds()
+    hoeflin.write_csv(rows)
+    with destination.open(newline="", encoding="utf-8") as stream:
+        stored = list(csv.reader(stream))
+    assert stored[0] == list(hoeflin.FIELDS)
+    assert stored[1:] == [[name, f"{z:.12f}", f"{score:.12f}"]
+                          for name, z, score in rows]
+    assert len(stored) == len(rows) + 1
+
+
+@deal.pre(lambda towers, tmp_path: protected_history_intact())
+@deal.ensure(lambda towers, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda towers, tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "import")
+def test_legacy_towers_csv_writer_preserves_quoted_rows_and_field_order(
+        towers, tmp_path):
+    """Exercise csv.DictWriter with a real embedded delimiter/newline."""
+    path = tmp_path / "quoted-original-model.csv"
+    fields = ("case", "rho", "source notes")
+    records = [
+        {"case": "first,case", "rho": 0.25, "source notes": "two\nlines"},
+        {"case": "second", "rho": 0.5, "source notes": "has,comma"},
+    ]
+    towers.write_csv(path, fields, records)
+    with path.open(newline="", encoding="utf-8") as stream:
+        reader = csv.DictReader(stream)
+        assert reader.fieldnames == list(fields)
+        assert list(reader) == [
+            {column: str(row[column]) for column in fields}
+            for row in records
+        ]

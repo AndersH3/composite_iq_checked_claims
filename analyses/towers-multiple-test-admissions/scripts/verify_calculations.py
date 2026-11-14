@@ -3,6 +3,7 @@
 
 import argparse
 import csv
+import io
 import math
 from pathlib import Path
 
@@ -40,6 +41,16 @@ GRID_FIELDS = (
 @deal.raises()
 @deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
 @deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
+# Explicitly guard each non-finite input category, including the Boolean
+# subclass of int, without strengthening finite numeric input preconditions.
+@deal.ensure(lambda value, result: not isinstance(value, bool) or result is False)
+@deal.ensure(lambda value, result: isinstance(value, (int, float)) or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or not math.isnan(value) or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or value != math.inf or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or value != -math.inf or result is False)
 def _finite(value) -> bool:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return False
@@ -56,6 +67,14 @@ def _finite(value) -> bool:
              max(p_a, p_b) - 5e-15 <= result <= min(1, p_a + p_b) + 5e-15)
 @deal.has()
 @deal.raises()
+# Inclusion-exclusion also constrains each marginal contribution,
+# its upper sum bound, and the disjoint-events boundary exactly.
+@deal.ensure(lambda p_a, p_b, joint, result: result == p_a + p_b - joint)
+@deal.ensure(lambda p_a, p_b, joint, result: result + 5e-15 >= p_a)
+@deal.ensure(lambda p_a, p_b, joint, result: result + 5e-15 >= p_b)
+@deal.ensure(lambda p_a, p_b, joint, result: result <= p_a + p_b + 5e-15)
+@deal.ensure(lambda p_a, p_b, joint, result: joint != 0 or math.isclose(
+    result, p_a + p_b, rel_tol=0, abs_tol=5e-15))
 def probability_union(p_a: float, p_b: float, joint: float) -> float:
     """Inclusion-exclusion for a feasible pair of event probabilities."""
     return p_a + p_b - joint
@@ -66,6 +85,14 @@ def probability_union(p_a: float, p_b: float, joint: float) -> float:
 @deal.post(lambda result: _finite(result) and 0 <= result <= 1)
 @deal.has()
 @deal.raises()
+# Recover the joint mass from its conditional, and check the
+# empty-intersection, equal-event and certain-conditioning boundaries.
+@deal.ensure(lambda joint, marginal, result: result == joint / marginal)
+@deal.ensure(lambda joint, marginal, result: math.isclose(
+    result * marginal, joint, rel_tol=8e-15, abs_tol=1e-15))
+@deal.ensure(lambda joint, marginal, result: joint != 0 or result == 0)
+@deal.ensure(lambda joint, marginal, result: joint != marginal or result == 1)
+@deal.ensure(lambda joint, marginal, result: marginal != 1 or result == joint)
 def conditional_probability(joint: float, marginal: float) -> float:
     """Conditional rate with its explicitly positive marginal denominator."""
     return joint / marginal
@@ -124,6 +151,16 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
 @deal.raises()
 @deal.ensure(lambda fields, rows, result: not result or len(fields) == len(set(fields)) and all(isinstance(field, str) and field for field in fields))
 @deal.ensure(lambda fields, rows, result: not result or all(isinstance(row, dict) and set(row) == set(fields) for row in rows))
+# Successful CSV-schema validation guarantees usable sequence types,
+# a nonempty header, safe typed values, and no absent field values.
+@deal.ensure(lambda fields, rows, result: not result or isinstance(fields, (list, tuple)))
+@deal.ensure(lambda fields, rows, result: not result or bool(fields))
+@deal.ensure(lambda fields, rows, result: not result or isinstance(rows, (list, tuple)))
+@deal.ensure(lambda fields, rows, result: not result or
+             all(isinstance(value, str) or _finite(value)
+                 for row in rows for value in row.values()))
+@deal.ensure(lambda fields, rows, result: not result or
+             all(value is not None for row in rows for value in row.values()))
 def _valid_fields_rows(fields, rows) -> bool:
     if not isinstance(fields, (tuple, list)) or not fields:
         return False
@@ -146,6 +183,25 @@ def _valid_fields_rows(fields, rows) -> bool:
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or len(rows) == len(CASES))
 @deal.ensure(lambda rows, result: not result or [(row["case"], row["p_a"], row["p_b"]) for row in rows] == list(CASES))
+# The accepted admissions table preserves its declared complete schema,
+# row label uniqueness, probability bounds, and correlation bounds.
+@deal.ensure(lambda rows, result: not result or
+             _valid_fields_rows(ADMISSION_FIELDS, rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["joint"]) and 0 <= row["joint"] <= 1 + 5e-14
+                 and _finite(row["union"]) and 0 <= row["union"] <= 1 + 5e-14
+                 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["conditional_b_given_a"])
+                 and 0 <= row["conditional_b_given_a"] <= 1 + 5e-14
+                 and _finite(row["conditional_a_given_b"])
+                 and 0 <= row["conditional_a_given_b"] <= 1 + 5e-14
+                 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["phi"]) and abs(row["phi"]) <= 1 + 5e-14
+                 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             len({row["case"] for row in rows}) == len(CASES))
 def _valid_admissions(rows) -> bool:
     if not _valid_fields_rows(ADMISSION_FIELDS, rows) or len(rows) != len(CASES):
         return False
@@ -165,6 +221,19 @@ def _valid_admissions(rows) -> bool:
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164))
 @deal.ensure(lambda rows, result: not result or all(_finite(row[field]) and 0 <= row[field] <= 1 for row in rows for field in ("marginal_continuous", "joint_continuous", "conditional_continuous", "grid_joint", "grid_marginal", "grid_conditional")))
+# Preserve the exact grid size, complete numeric schema, and independent
+# probability-domain checks for continuous and discretized outputs.
+@deal.ensure(lambda rows, result: not result or len(rows) == 3)
+@deal.ensure(lambda rows, result: not result or _valid_fields_rows(GRID_FIELDS, rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["joint_continuous"]) and
+                 0 <= row["joint_continuous"] <= 1 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["grid_joint"]) and
+                 0 <= row["grid_joint"] <= 1 for row in rows))
+@deal.ensure(lambda rows, result: not result or
+             all(_finite(row["conditional_continuous"]) and
+                 0 <= row["conditional_continuous"] <= 1 for row in rows))
 def _valid_grid(rows) -> bool:
     return (_valid_fields_rows(GRID_FIELDS, rows) and len(rows) == 3
             and tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164)
@@ -178,6 +247,21 @@ def _valid_grid(rows) -> bool:
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: bool(CASES) and len({row[0] for row in CASES}) == len(CASES) and all(isinstance(label, str) and label and _finite(p_a) and _finite(p_b) and 0 < p_a < 1 and 0 < p_b < 1 for label, p_a, p_b in CASES))
+# Each modeled row must retain its source-case identity and raw
+# probabilities; the derived union must obey inclusion-exclusion
+# exactly as calculated rather than trusting a rounded CSV fixture.
+# The preexisting _valid_admissions postcondition rejects empty tables;
+# the guarded length assertion also supports Deal's empty-return abstraction.
+@deal.post(lambda result: not result or len(result) == len(CASES))
+@deal.post(lambda result: not result or
+           [row["case"] for row in result] ==
+           [label for label, _, _ in CASES])
+@deal.post(lambda result: all(row["rho"] == RHO for row in result))
+@deal.post(lambda result: all(row["p_a"] == p_a and row["p_b"] == p_b
+                              for row, (_, p_a, p_b) in zip(result, CASES)))
+@deal.post(lambda result: all(row["union"] ==
+                              row["p_a"] + row["p_b"] - row["joint"]
+                              for row in result))
 def admission_rows() -> list[dict]:
     rows = []
     for label, p_a, p_b in CASES:
@@ -202,6 +286,24 @@ def admission_rows() -> list[dict]:
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == len(GRID_FIELDS) and all(isinstance(field, str) and field for field in GRID_FIELDS))
+# Preserve the exact three BASIC cutoffs and the algebraic dependence
+# of each published comparison and conditional ratio on its recorded
+# unrounded joint/marginal values. The existing _valid_grid
+# postcondition rejects emptiness; a guarded length law avoids the
+# static linter's intermediate empty-list abstraction.
+@deal.post(lambda result: not result or len(result) == 3)
+@deal.post(lambda result: not result or
+           tuple(row["cutoff_iq"] for row in result) == (133, 150, 164))
+@deal.post(lambda result: all(row["grid_minus_published"] ==
+                              row["grid_joint"] - row["published_joint"]
+                              for row in result))
+@deal.post(lambda result: all(row["grid_conditional"] ==
+                              row["grid_joint"] / row["grid_marginal"]
+                              for row in result))
+@deal.post(lambda result: all(row["grid_div_rounded"] ==
+                              row["grid_joint"] /
+                              row["published_rounded_denominator"]
+                              for row in result))
 def basic_grid() -> list[dict]:
     """Reproduce Q..199 STEP .5 point sums in the published BASIC program.
 
@@ -243,6 +345,23 @@ def basic_grid() -> list[dict]:
 @deal.post(lambda result: result is None)
 @deal.has("write")
 @deal.raises(OSError, csv.Error)
+# Retain the exact source schema and cell serialization in the
+# independently inspectable on-disk CSV. Parsing the written bytes
+# through the standard csv module also correctly handles embedded
+# delimiters, quoted headers and multiline string fields.
+@deal.ensure(lambda path, fields, rows, result: path.is_file())
+@deal.ensure(lambda path, fields, rows, result:
+             next(csv.reader(io.StringIO(path.read_text(encoding="utf-8"))))
+             == list(fields))
+@deal.ensure(lambda path, fields, rows, result:
+             len(list(csv.DictReader(io.StringIO(
+                 path.read_text(encoding="utf-8"))))) == len(rows))
+@deal.ensure(lambda path, fields, rows, result:
+             list(csv.DictReader(io.StringIO(path.read_text(encoding="utf-8"))))
+             == [{field: str(row[field]) for field in fields} for row in rows])
+@deal.ensure(lambda path, fields, rows, result:
+             all(len(record) == len(fields) for record in
+                 csv.reader(io.StringIO(path.read_text(encoding="utf-8")))))
 def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as stream:

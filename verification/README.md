@@ -142,13 +142,46 @@ python verification/check_symbolic.py
 python -O verification/check_symbolic.py
 ```
 
-The project gate requires Deal 4.24.6 and Deal Solver 0.1.2. It checks both pure acceptance functions and both functions in the unchanged negative fixture. The three correct theorems prove; the deliberately incorrect function yields an actual counterexample to its nonnegative-result postcondition. All seven postcondition obligations are inspected individually: six prove and one has the expected counterexample. An empty counterexample mapping is valid for the no-argument negative function. Skips, unsupported operations, tool errors, missing clauses or unexpected outcomes fail the gate. `make check` and GitHub Actions run this gate.
+The project gate requires Deal 4.24.6 and Deal Solver 0.1.2. It checks both pure acceptance functions and both functions in the unchanged negative fixture. The three correct theorems prove; the deliberately incorrect function yields an actual counterexample to its nonnegative-result postcondition. All seventeen postcondition obligations are inspected individually: sixteen prove and one has the expected counterexample. Both proof-gate functions now expose six separately checked postconditions each; the symbolic source and result checks reject missing or unsupported clauses. An empty counterexample mapping is valid for the no-argument negative function. Skips, unsupported operations, tool errors, missing clauses or unexpected outcomes fail the gate. `make check` and GitHub Actions run this gate.
 
 Stock Deal Solver cannot resolve `isinstance` in this fixture. The gate temporarily registers a project-local model of positional `isinstance(value, int)` for known primitive solver sorts. Integer and Boolean values return true, preserving Python's Boolean subtype behavior; float and string values return false. Other classes, sorts and unsupported source forms fail closed. The registry is restored even after an exception. Original fixture bytes, runtime contracts and installed dependency files are unchanged. The unextended `python -m deal prove` command still lacks this model and is not the reproduction command for the resolved check.
 
 The pinned solver also evaluates only the first comparison in a chain. Before symbolic extraction, the gate expands chains with simple name/constant operands into conjunctions, retaining every bound and Python's short-circuit order in this restricted scalar subset. It rejects operands unsafe to repeat, such as calls, attributes and subscripts. The record pins both original and normalized source hashes. Regression cases detect a dropped upper bound, distinguish integer/Boolean returns from numerically equal floats, and exercise failure/skip handling and registry restoration.
 
+The source-pinned historical campaign `symbolic-fixture-computer10-20261105` contains only one verified postcondition on each original proof-gate function. The validator retains that exact earlier obligation inventory **only** when the report identifies the original proof-gate SHA-256 (`1d32d786b1fc84f11de10d37a99e75c46cbcd5d9c1ac6e857d53da45fa10f51a`). The evidence auditor separately checks that the recorded hash matches the selected historical source tree and the release manifest. The current proof-gate source requires all six obligations per function; deleting any of them remains a failure. Historical evidence bytes, their source hashes, and the deliberately false fixture are unchanged.
+
 This adapter and normalization use private, version-pinned solver APIs and belong to the trusted verification tooling; tests do not prove their general correctness. They support the two recorded source files, not arbitrary Python or universal verification of the project. Runtime/property tests, static lint, limited symbolic results, native SPARK proofs and statistical-model validity remain distinct evidence.
+
+## Staged ten-clause SPARK contracts
+
+The mandatory floor remains **five** distinct explicit Global, Depends,
+Pre, Post, Refined_Post or Contract_Cases clauses per current SPARK
+function/procedure. As with Python Deal, ten is an aspirational per-entity
+target, **not** a global gate. A separate `ten_contract_summary(inventory(...))`
+reports `target_contracts`, `entities_at_target` and
+`entities_below_target`. The original `inventory` function retains its
+**exact historical JSON schema** for immutable evidence comparisons,
+and the CLI includes the derived counters under `ten_contract_target`.
+The counters are checked by Deal contracts and regression tests.
+
+Seven exact-arithmetic routines in `Admission_Core` have strengthened
+specifications with ten or more explicit conditions: `Total`,
+`Union_Count`, `Fraction`, `Complement`, `Conditional`,
+`Marginal_A`, and `Marginal_B`. One additional operation,
+`Hoeflin_Core.Variance_Numerator`, has ten explicit contracts.
+These specify cell lower bounds, zero-cell conditions, positive
+denominators, exact complement regimes and correlation extremes. The extensions introduce no floating-point
+accuracy assumptions, operating-system success guarantees or new
+`SPARK_Mode` exclusions. The formal clause definitions and source
+integrity rules are explained in [TEN_SPARK_CONTRACTS.md](TEN_SPARK_CONTRACTS.md).
+
+**Verification distinction:** GitHub Actions structurally checks
+the declarations and Python regressions, but its workflow does not
+execute GNATprove. Until a new native compilation/proof campaign runs
+against the changed Ada source and its outputs are inspected, these
+new postconditions are **asserted specifications, not newly certified
+SPARK discharge results**. All retained campaigns remain immutable and
+continue to be audited against their original pinned source revisions.
 
 ## Python contracts
 

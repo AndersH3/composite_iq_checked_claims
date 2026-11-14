@@ -672,3 +672,361 @@ Proof.
   apply finite_sum_permutation.
   apply Permutation_sym, Permutation_rev.
 Qed.
+
+(**
+   [finite_sum_nonnegative_zero_iff] (lemma) — Exact zero criterion for a
+   nonnegative finite real sum.
+   Mathematical meaning: A finite sum of nonnegative terms is zero exactly
+   when every term at an enumerated sample position is zero.
+   Exact checked proposition: Given nonnegative f on xs, finite_sum f xs = 0
+   if and only if each x in xs satisfies f x = 0.
+   Premises and side conditions: Nonnegativity is required only on the
+   enumerated list, which may be empty or contain repeated elements; signed
+   cancellation would invalidate the forward implication.
+   Proof/definition method: Reuse the established zero-sum implication
+   in one direction and support-restricted sum extensionality in the other.
+   Library reuse: finite_sum_nonnegative_zero, finite_sum_ext_in,
+   finite_sum_zero and Stdlib.List.In; no additional fold or induction.
+   Boundary: This is a real-valued finite list identity, not a statement
+   about continuous integration or strictly positive sampling weights.
+ *)
+Lemma finite_sum_nonnegative_zero_iff {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    (forall x, In x xs -> 0 <= f x) ->
+    (finite_sum f xs = 0 <->
+       forall x, In x xs -> f x = 0).
+Proof.
+  intros xs f Hnonnegative.
+  split.
+  - apply finite_sum_nonnegative_zero; exact Hnonnegative.
+  - intro Hzero.
+    rewrite (finite_sum_ext_in xs f (fun _ => 0) Hzero).
+    apply finite_sum_zero.
+Qed.
+
+(**
+   [finite_sum_positive_of_positive_member] (lemma) — Strictly positive
+   aggregate mass from one positive contribution.
+   Mathematical meaning: A single strictly positive term prevents a
+   finite sum of otherwise nonnegative terms from vanishing.
+   Exact checked proposition: For x in xs, nonnegative f on xs and
+   0 < f x imply 0 < finite_sum f xs.
+   Premises and side conditions: The witness x must occur in the list;
+   all other listed terms must be nonnegative, and duplicates are counted.
+   Proof/definition method: Reuse the earlier
+   finite_sum_member_le theorem, which directly bounds the weight
+   of any enumerated member by the total nonnegative sum.
+   Finish by linear real arithmetic. This removes the previous
+   unnecessary real-order case split and zero-mass contradiction.
+   Library reuse: finite_sum_member_le and Stdlib.Lra;
+   no list recursion, extra decision procedure or new axiom.
+   Boundary: No conclusion follows for signed sums where cancellation
+   can occur, and the lemma says nothing about infinite sample spaces.
+ *)
+Lemma finite_sum_positive_of_positive_member {A : Type} :
+  forall (xs : list A) (f : A -> R) (x : A),
+    (forall y, In y xs -> 0 <= f y) ->
+    In x xs ->
+    0 < f x ->
+    0 < finite_sum f xs.
+Proof.
+  intros xs f x Hnonnegative Hin Hpositive.
+  pose proof (finite_sum_member_le xs f x Hnonnegative Hin).
+  lra.
+Qed.
+
+(**
+   [finite_sum_strict_monotone_at_member] (lemma) — Strict comparison
+   of two finite sums from one strict pointwise comparison.
+   Mathematical meaning: Pointwise domination of one score by another
+   is strict at the sum level if at least one enumerated contribution
+   is strictly dominated.
+   Exact checked proposition: If f y <= g y for every y in xs, and
+   x occurs in xs with f x < g x, then finite_sum f xs < finite_sum g xs.
+   Premises and side conditions: The pointwise comparison is required
+   at all list entries; no signs are required separately for f or g.
+   Multiplicities in xs are preserved in both sums.
+   Proof/definition method: Apply the preceding strictly-positive
+   contribution lemma to the nonnegative difference g-f, then
+   rewrite the difference sum using existing finite-sum linearity.
+   Library reuse: finite_sum_positive_of_positive_member,
+   finite_sum_sub, Stdlib.Reals and Stdlib.Lra, without a duplicate
+   induction or a project-specific summation primitive.
+   Boundary: This is a finite additive strict-order comparison;
+   it does not prove monotonicity of a general nonlinear statistic.
+ *)
+Lemma finite_sum_strict_monotone_at_member {A : Type} :
+  forall (xs : list A) (f g : A -> R) (x : A),
+    (forall y, In y xs -> f y <= g y) ->
+    In x xs ->
+    f x < g x ->
+    finite_sum f xs < finite_sum g xs.
+Proof.
+  intros xs f g x Hle Hin Hlt.
+  assert (Hnonnegative :
+      forall y, In y xs -> 0 <= g y - f y).
+  { intros y Hy.
+    specialize (Hle y Hy).
+    lra. }
+  pose proof (finite_sum_positive_of_positive_member xs
+    (fun y => g y - f y) x Hnonnegative Hin) as Hdiff.
+  assert (Hpositive : 0 < g x - f x) by lra.
+  specialize (Hdiff Hpositive).
+  rewrite finite_sum_sub in Hdiff.
+  lra.
+Qed.
+
+(**
+   [finite_sum_positive_iff_positive_member] (lemma) —
+   Constructive positive-support characterization of a finite real sum.
+   Mathematical meaning: A finite sum of nonnegative listed terms is
+   strictly positive if and only if some enumerated term is strictly
+   positive. The witness is an actual list member, not merely an
+   abstract value of the summand function.
+   Exact checked proposition: If f x >= 0 for each In x xs,
+   then 0 < finite_sum f xs iff there exists x with In x xs
+   and 0 < f x.
+   Premises and side conditions: The list may be empty and may
+   contain repeated elements. Nonnegativity is required only
+   on enumerated entries; signed terms would admit cancellation.
+   No decidable equality or total ordering on the element type
+   A is required.
+   Proof/definition method: The backwards implication delegates
+   entirely to finite_sum_positive_of_positive_member. For the
+   forwards implication, induct on the standard list, using the
+   standard real-order decision Rlt_dec to select a positive head
+   or show that its nonnegative value must be zero, after which
+   the existing Stdlib.List.map/fold_right sum reduces to the tail.
+   Library reuse: finite_sum_positive_of_positive_member,
+   Stdlib.List.map/fold_right, Stdlib.Reals.Rlt_dec and Stdlib.Lra.
+   Boundary: This is a finite list-support theorem, not
+   countable additivity or a general measure-theoretic positivity law.
+ *)
+Lemma finite_sum_positive_iff_positive_member {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    (forall x, In x xs -> 0 <= f x) ->
+    (0 < finite_sum f xs <->
+      exists x, In x xs /\ 0 < f x).
+Proof.
+  intros xs f.
+  induction xs as [|a rest IH]; intros Hnonnegative.
+  - split.
+    + intro Hpositive.
+      change (0 < 0) in Hpositive.
+      lra.
+    + intros [x [Hin _]].
+      inversion Hin.
+  - split.
+    + intros Hpositive.
+      destruct (Rlt_dec 0 (f a)) as [Ha | Hnot].
+      * exists a; split.
+        -- left; reflexivity.
+        -- exact Ha.
+      * assert (Hhead_nonnegative : 0 <= f a).
+        { apply Hnonnegative; left; reflexivity. }
+        assert (Hhead_zero : f a = 0) by lra.
+        assert (Htail_positive : 0 < finite_sum f rest).
+        { change (0 < f a + finite_sum f rest) in Hpositive.
+          lra. }
+        assert (Htail_nonnegative :
+          forall y, In y rest -> 0 <= f y).
+        { intros y Hy; apply Hnonnegative; right; exact Hy. }
+        destruct ((proj1 (IH Htail_nonnegative)) Htail_positive)
+          as [y [Hy Hfy]].
+        exists y; split.
+        -- right; exact Hy.
+        -- exact Hfy.
+    + intros [x [Hin Hpositive]].
+      apply (finite_sum_positive_of_positive_member
+        (a :: rest) f x Hnonnegative Hin Hpositive).
+Qed.
+
+(**
+   [finite_sum_monotone_equality_iff_pointwise] (lemma) —
+   Characterization of equality in finite-sum monotonicity.
+   Mathematical meaning: When one real-valued summand is pointwise
+   no larger than another on the enumerated support, equality of
+   their two finite sums is equivalent to pointwise equality at
+   every enumerated item, including repeated list entries.
+   Exact checked proposition: If f x <= g x whenever In x xs,
+   then finite_sum f xs = finite_sum g xs iff
+   forall x, In x xs -> f x = g x.
+   Premises and side conditions: The input type requires no
+   decidable equality; empty and repeated lists are permitted.
+   The pointwise comparison is essential: without it,
+   signed differences might cancel even when sums agree.
+   Proof/definition method: Apply the already checked zero-sum
+   characterization to the nonnegative difference g-f and rewrite
+   its finite sum using the generic subtraction law; Lra
+   converts zero differences to equal pointwise values.
+   Library reuse: finite_sum_nonnegative_zero_iff,
+   finite_sum_sub, Stdlib.List.In and Stdlib.Lra.
+   Boundary: This is an exact finite-list equivalence, not
+   an almost-everywhere statement on a continuous measure.
+ *)
+Lemma finite_sum_monotone_equality_iff_pointwise {A : Type} :
+  forall (xs : list A) (f g : A -> R),
+    (forall x, In x xs -> f x <= g x) ->
+    (finite_sum f xs = finite_sum g xs <->
+      forall x, In x xs -> f x = g x).
+Proof.
+  intros xs f g Hle.
+  assert (Hnonnegative :
+      forall x, In x xs -> 0 <= g x - f x).
+  { intros x Hx.
+    specialize (Hle x Hx).
+    lra. }
+  split.
+  - intro Hequal.
+    assert (Hzero : finite_sum (fun x => g x - f x) xs = 0).
+    { rewrite finite_sum_sub; lra. }
+    pose proof
+      ((proj1 (finite_sum_nonnegative_zero_iff
+        xs (fun y => g y - f y) Hnonnegative)) Hzero)
+      as Hzero_at_member.
+    intros x Hx.
+    specialize (Hzero_at_member x Hx).
+    lra.
+  - intro Hpointwise.
+    assert (Hzero : finite_sum (fun x => g x - f x) xs = 0).
+    { apply (proj2 (finite_sum_nonnegative_zero_iff
+        xs (fun x => g x - f x) Hnonnegative)).
+      intros x Hx.
+      specialize (Hpointwise x Hx).
+      lra. }
+    rewrite finite_sum_sub in Hzero.
+    lra.
+Qed.
+
+(**
+   [finite_sum_strict_monotone_iff_strict_member] (lemma) —
+   Constructive witness characterization of strict finite-sum order.
+   Mathematical meaning: Under a pointwise non-strict comparison,
+   strict inequality of total sums occurs exactly when at least
+   one actual enumerated item has a strict comparison.
+   Exact checked proposition: If f x <= g x on all In x xs,
+   then finite_sum f xs < finite_sum g xs iff
+   exists x, In x xs /\ f x < g x.
+   Premises and side conditions: The list may be empty, can
+   repeat items, and does not need decidable equality.
+   The pointwise inequality rules out cancellation by
+   negative contributions to the difference g-f.
+   Proof/definition method: The forward implication converts
+   the strict inequality to positivity of a nonnegative
+   difference sum and invokes the previously established
+   constructive positive-member iff. The reverse direction
+   delegates to the checked strict-monotonicity-at-member lemma.
+   Library reuse: finite_sum_positive_iff_positive_member,
+   finite_sum_strict_monotone_at_member, finite_sum_sub,
+   Stdlib.List.In and Stdlib.Lra.
+   Boundary: Only finite enumerated sums are compared;
+   no inference about continuous distributions is made.
+ *)
+Lemma finite_sum_strict_monotone_iff_strict_member {A : Type} :
+  forall (xs : list A) (f g : A -> R),
+    (forall x, In x xs -> f x <= g x) ->
+    (finite_sum f xs < finite_sum g xs <->
+      exists x, In x xs /\ f x < g x).
+Proof.
+  intros xs f g Hle.
+  assert (Hnonnegative :
+      forall x, In x xs -> 0 <= g x - f x).
+  { intros x Hx.
+    specialize (Hle x Hx).
+    lra. }
+  split.
+  - intro Hstrict.
+    assert (Hpositive : 0 < finite_sum (fun x => g x - f x) xs).
+    { rewrite finite_sum_sub; lra. }
+    pose proof
+      ((proj1 (finite_sum_positive_iff_positive_member
+        xs (fun y => g y - f y) Hnonnegative)) Hpositive)
+      as Hpositive_at_member.
+    destruct Hpositive_at_member as [x [Hx Hdiff]].
+    exists x; split; [exact Hx | lra].
+  - intros [x [Hx Hstrict]].
+    exact (finite_sum_strict_monotone_at_member
+      xs f g x Hle Hx Hstrict).
+Qed.
+
+(**
+   [finite_sum_singleton_zero_iff] (lemma) — Zero sum on a singleton.
+   Mathematical meaning: A list with one real summand has zero sum
+   exactly when that summand is zero; cancellation is impossible.
+   Exact checked proposition: If length xs = 1, finite_sum f xs = 0
+   iff forall x, In x xs -> f x = 0.
+   Premises and side conditions: Arbitrary element type, arbitrary
+   real summand, no nonnegativity or normalization requirements.
+   Proof/definition method: Analyze the ordinary list using its
+   length-one constraint and discharge the real sum by linear
+   arithmetic; avoid implementing another finite sum.
+   Library reuse: Stdlib.List.In, length; Stdlib.Reals and Lra.
+   Boundary: Finite one-element fold; no continuous integral claim.
+ *)
+Lemma finite_sum_singleton_zero_iff {A : Type} :
+  forall (xs : list A) (f : A -> R),
+    length xs = 1%nat ->
+    (finite_sum f xs = 0 <-> forall x, In x xs -> f x = 0).
+Proof.
+  intros xs f Hlength.
+  destruct xs as [| head [| next rest]].
+  - discriminate Hlength.
+  - unfold finite_sum; simpl.
+    split.
+    + intros Hsum x Hmember.
+      destruct Hmember as [Heq | []].
+      subst x.
+      lra.
+    + intro Hzero.
+      specialize (Hzero head (or_introl eq_refl)).
+      lra.
+  - discriminate Hlength.
+Qed.
+ 
+(**
+   [finite_sum_pair] (lemma) — Exact evaluation of a two-element
+   list by the shared real finite sum.
+   Mathematical meaning: An enumerated pair of samples contributes
+   precisely the sum of its two real values, including duplicates.
+   Exact checked proposition: finite_sum f [x; y] = f x + f y.
+   Premises and side conditions: The element type and values are
+   arbitrary; no sign, normalization or equality hypotheses.
+   Proof/definition method: Unfold the existing list map/fold,
+   simplify, and apply the maintained ring tactic.
+   Library reuse: Stdlib.List.map/fold_right and Stdlib.Reals ring.
+   Boundary: A finite two-occurrence computation, not a
+   general continuous integral or covariance formula.
+ *)
+Lemma finite_sum_pair {A : Type} :
+  forall (f : A -> R) x y,
+    finite_sum f [x; y] = f x + f y.
+Proof.
+  intros f x y.
+  unfold finite_sum.
+  simpl.
+  ring.
+Qed.
+
+(**
+   [finite_sum_pair_zero_iff_opposite] (lemma) — Zero sum
+   characterization for a pair of listed real scores.
+   Mathematical meaning: Exactly two finite summands cancel iff
+   their values are real additive inverses of one another.
+   Exact checked proposition: finite_sum f [x; y] = 0 iff
+   f x = - f y, whether or not x and y are distinct.
+   Premises and side conditions: No nonnegative or positive
+   score assumptions and no probability normalization.
+   Proof/definition method: Apply finite_sum_pair then
+   the standard real linear arithmetic tactic in both directions.
+   Library reuse: finite_sum_pair and Stdlib.Lra.
+   Boundary: This two-element cancellation criterion does
+   not hold as stated for arbitrary-length signed lists.
+ *)
+Lemma finite_sum_pair_zero_iff_opposite {A : Type} :
+  forall (f : A -> R) x y,
+    (finite_sum f [x; y] = 0 <-> f x = - f y).
+Proof.
+  intros f x y.
+  rewrite finite_sum_pair.
+  split; intro H; lra.
+Qed.

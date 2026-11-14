@@ -23,6 +23,14 @@ COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 @deal.post(lambda result: math.isfinite(result) and 0 <= result <= 2)
 @deal.raises()
 @deal.has()
+# Verify quotient boundary behavior and a numerical round-trip separately
+# from the basic interval/range contract of the old Ada validator.
+@deal.ensure(lambda numerator, denominator, result: numerator != 0 or result == 0)
+@deal.ensure(lambda numerator, denominator, result: denominator != 1 or result == numerator)
+@deal.ensure(lambda numerator, denominator, result: result <= numerator)
+@deal.ensure(lambda numerator, denominator, result: numerator > denominator or result <= 1)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(
+    result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-15))
 def _positive_ratio(numerator, denominator):
     """Divide bounded variance terms by a positive test count or variance sum."""
     return numerator / denominator
@@ -44,6 +52,16 @@ def require_close(actual, expected, label, *, atol=5e-11):
 @deal.post(lambda result: isinstance(result, list))
 @deal.raises(ValueError, csv.Error)
 @deal.has()
+# A successful CSV parse never inserts synthetic missing columns,
+# drops values, changes header schema between rows or accepts blank keys.
+@deal.post(lambda result: all(None not in row for row in result))
+@deal.post(lambda result: all(
+    value is not None for row in result for value in row.values()))
+@deal.post(lambda result: not result or
+           all(row.keys() == result[0].keys() for row in result))
+@deal.post(lambda result: all(
+    isinstance(key, str) and bool(key) for row in result for key in row))
+@deal.post(lambda result: not result or len(result[0]) > 0)
 def csv_rows(content):
     """Reject missing, duplicate, or uneven fields instead of accepting zip truncation."""
     reader = csv.DictReader(io.StringIO(content))
@@ -64,6 +82,15 @@ def csv_rows(content):
            and result["tolerance"] == 5e-11)
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.has("read")
+# A validated calculation report must have exactly the expected
+# result fields, integer sample counts and a finite error certificate.
+@deal.post(lambda result: set(result) == {
+    "threshold_rows", "worked_examples", "max_absolute_numeric_error", "tolerance"})
+@deal.post(lambda result: type(result["threshold_rows"]) is int)
+@deal.post(lambda result: type(result["worked_examples"]) is int)
+@deal.post(lambda result: result["tolerance"] > 0)
+@deal.post(lambda result: math.isfinite(result["max_absolute_numeric_error"])
+           and result["max_absolute_numeric_error"] <= 5e-11)
 def validate_calculations(path):
     content = path.read_text(encoding="utf-8")
     table, example_text = content.split("# examples\n")
@@ -74,9 +101,16 @@ def validate_calculations(path):
         raise ValueError("Unexpected threshold table row labels")
     q = float(norm.isf(1e-6))
     max_error = 0.0
+    # The exact label sequence above is already validated against COUNTS.
+    # Build the variance map only from these known-positive integer counts,
+    # so neither runtime code nor the Deal linter passes Optional[int] into
+    # _positive_ratio's strictly positive denominator contract.
+    variance_factors = {str(count): .6 + _positive_ratio(.4, count)
+                        for count in COUNTS}
+    variance_factors["infinity"] = .6
     for row in rows:
         n = None if row["tests"] == "infinity" else int(row["tests"])
-        factor = .6 if n is None else .6 + _positive_ratio(.4, n)
+        factor = variance_factors[row["tests"]]
         z = q * math.sqrt(factor)
         for field, expected in (("variance_factor", factor), ("mean_z", z),
                                 ("mean_score_sd16", 100 + 16*z)):
@@ -113,6 +147,13 @@ def validate_calculations(path):
              and successes / total - 1e-15 <= result[1])
 @deal.raises()
 @deal.has()
+# Wilson intervals retain list shape and correctly cover the zero-count
+# and all-success limiting cases, including positive finite-width bounds.
+@deal.post(lambda result: isinstance(result, list))
+@deal.ensure(lambda successes, total, result: successes != 0 or result[0] <= 1e-14)
+@deal.ensure(lambda successes, total, result: successes != total or result[1] >= 1 - 1e-14)
+@deal.ensure(lambda successes, total, result: successes != 0 or result[1] > 0)
+@deal.ensure(lambda successes, total, result: successes != total or result[0] < 1)
 def wilson(successes, total):
     z = float(norm.isf(.025))
     phat = successes / total
@@ -133,6 +174,19 @@ def wilson(successes, total):
                    for case in result["cases"]))
 @deal.raises(OSError, ValueError, csv.Error)
 @deal.has("read")
+# The Monte-Carlo diagnostic report separates observed finite counts
+# from any claim of a mathematical tail proof, and exposes both tail cases.
+@deal.post(lambda result: set(result) == {"cases", "limitation"})
+@deal.post(lambda result: isinstance(result["limitation"], str)
+           and "formal proof" in result["limitation"])
+@deal.post(lambda result: all(set(case) == {
+    "tests", "trials", "mean", "variance", "tails", "rare_count_descriptive_only"}
+    for case in result["cases"]))
+@deal.post(lambda result: all(
+    set(case["tails"]) == {"2", "3"} for case in result["cases"]))
+@deal.post(lambda result: all(
+    0 <= case["tails"][q]["observed"] <= 1
+    for case in result["cases"] for q in ("2", "3")))
 def validate_simulation(path):
     lines = [s for s in path.read_text(encoding="utf-8").splitlines()
              if not s.startswith("#")]

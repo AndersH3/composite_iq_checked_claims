@@ -49,11 +49,34 @@ def copied_root(tmp_path) -> Path:
 @deal.has("read", "write", "global", "import", "syscall", "stdout", "stderr")
 def test_real_fixture_has_a_negative_counterexample_and_all_other_posts_prove(good_report) -> None:
     assert good_report["complete"] and symbolic.accepted(good_report)
+    # The ten-contract proof gates each contribute their original equality
+    # postcondition and five independently checked safety implications.
+    positive = good_report["files"][0]["theorems"]
+    assert {row["name"] for row in positive} == {
+        "totals_balanced", "successful_checks"}
+    assert all(len(row["obligations"]) == 6 for row in positive)
+    assert all(obligation["outcome"] == "proved"
+               for row in positive for obligation in row["obligations"])
     negative = good_report["files"][1]["theorems"][1]
     assert negative["name"] == "negative_probability"
     assert negative["conclusion"] == "FAIL"
     assert negative["counterexample"] == {} and negative["counterexample"] is not None
     assert [row["outcome"] for row in negative["obligations"]] == ["counterexample", "proved", "proved"]
+    # The archived report was emitted by the pinned one-postcondition version.
+    # Accept its actual source-bound obligations, but never tolerate removing
+    # clauses from a current report or corrupting an archived obligation.
+    historical_path = (ROOT / "verification/evidence"
+                       / "symbolic-fixture-computer10-20261105/symbolic/result.json")
+    historical = json.loads(historical_path.read_text())
+    assert symbolic.accepted(historical)
+    assert all(len(row["obligations"]) == 1 for row in historical["files"][0]["theorems"])
+    corrupted = deepcopy(historical)
+    corrupted["files"][0]["theorems"][0]["obligations"][0]["outcome"] = "unsupported"
+    assert not symbolic.accepted(corrupted)
+    unpinned = deepcopy(historical)
+    unpinned["files"][0]["sha256"] = "0" * 64
+    unpinned["sources"][0]["sha256"] = "0" * 64
+    assert not symbolic.accepted(unpinned)
 
 
 @deal.pre(lambda good_report: protected_history_intact())

@@ -14,6 +14,9 @@ import deal
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"}
 MINIMUM_CONTRACTS = 5
+# Ten is a staged, nonredundant contract target; only five are compulsory
+# until every production function has a defensible ten-contract specification.
+TARGET_CONTRACTS = 10
 
 
 @deal.pre(lambda node, aliases: isinstance(node, ast.expr))
@@ -21,6 +24,25 @@ MINIMUM_CONTRACTS = 5
 @deal.post(lambda result: isinstance(result, bool))
 @deal.raises()
 @deal.has()
+# Protect against distinct ways to spoof a Deal decorator in Python AST:
+# bare names, constants, non-attribute call targets and nested attributes.
+# The positive implication separately protects an explicitly imported
+# direct Deal attribute from being overlooked by a later AST refactor.
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Name) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Constant) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Call) or
+             isinstance(node.func, ast.Attribute) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not isinstance(node, ast.Attribute) or
+             isinstance(node.value, ast.Name) or result is False)
+@deal.ensure(lambda node, aliases, result:
+             not (isinstance(node, ast.Attribute) and
+                  isinstance(node.value, ast.Name) and
+                  node.value.id in aliases and node.attr in CONTRACTS)
+             or result is True)
 def is_contract(node: ast.expr, aliases: set) -> bool:
     expression = node.func if isinstance(node, ast.Call) else node
     return (isinstance(expression, ast.Attribute) and isinstance(expression.value, ast.Name)
@@ -33,6 +55,14 @@ def is_contract(node: ast.expr, aliases: set) -> bool:
            and isinstance(result["imports_deal"], bool) and result["contract_count"] >= 0)
 @deal.raises(OSError, ValueError, SyntaxError, TypeError)
 @deal.has("read", "import")
+# These invariants protect the audit's quantitative claims rather than merely
+# checking that its dictionary happens to have the expected field types.
+@deal.post(lambda result: result["function_count"] == len(result["function_contracts"]))
+@deal.post(lambda result: result["contract_count"] ==
+           sum(row["contract_count"] for row in result["function_contracts"]))
+@deal.post(lambda result: result["minimum_contracts"] == MINIMUM_CONTRACTS)
+@deal.post(lambda result: len(result["missing"]) <= len(result["insufficient"]))
+@deal.post(lambda result: len(result["duplicated"]) <= result["function_count"])
 def audit_file(path: Path) -> dict:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)
@@ -75,6 +105,17 @@ def audit_file(path: Path) -> dict:
            and len(result) == len(set(result)) and all(p.suffix == ".py" for p in result))
 @deal.raises(OSError, ValueError, subprocess.SubprocessError)
 @deal.has("read", "syscall")
+# Enumerated code must be repository-relative, regular, non-symlink
+# Python source and deterministic. A malicious or stale Git index must
+# not silently introduce outside paths or missing files into the audit.
+@deal.post(lambda result: result == sorted(result))
+@deal.ensure(lambda root, result: all(path.is_relative_to(root)
+                                     for path in result))
+@deal.post(lambda result: all(path.is_file() for path in result))
+@deal.post(lambda result: all(not path.is_symlink() for path in result))
+@deal.ensure(lambda root, result:
+             all(".." not in path.relative_to(root).parts
+                 for path in result))
 def python_files(root: Path) -> list:
     try:
         output = subprocess.check_output(["git", "-C", str(root), "ls-files", "--cached", "--others",
@@ -110,6 +151,13 @@ def main() -> None:
               "minimum_contracts": MINIMUM_CONTRACTS,
               "minimum_observed": min(row["distinct_contract_count"] for r in rows for row in r["function_contracts"]),
               "complete": not problems}
+    contract_counts = [function["distinct_contract_count"] for row in rows
+                       for function in row["function_contracts"]]
+    report["target_contracts"] = TARGET_CONTRACTS
+    report["functions_at_target"] = sum(count >= TARGET_CONTRACTS
+                                        for count in contract_counts)
+    report["functions_below_target"] = sum(count < TARGET_CONTRACTS
+                                           for count in contract_counts)
     print(json.dumps(report, indent=2))
     raise SystemExit(1 if problems else 0)
 

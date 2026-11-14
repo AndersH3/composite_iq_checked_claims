@@ -1,6 +1,6 @@
 (** Module: FiniteBridge.v
    Purpose: Checked interpretation between Boolean event mass and finite moments.
-   Connects FiniteUnion event indicators to FiniteMoments expectation, variance, covariance and algebraic independence conditions.
+   Connects FiniteUnion event indicators to FiniteMoments expectation, variance, covariance and algebraic independence conditions, including positive-event filtering and explicitly normalized conditional weights.
    Mathematical representation: Both imported models use the same FiniteSum fold, and Boolean true/false indicators are represented by real 1/0.
    Explicit hypotheses: Probability interpretations require normalized nonnegative weights; algebraic equalities may hold for any real weights.
    Library use: FiniteSum, FiniteUnion, FiniteMoments and Rocq's Bool/Reals tactics.
@@ -636,4 +636,643 @@ Proof.
   rewrite (finite_event_indicator_covariance_complement_second
     A samples weight a b Hmass).
   ring.
+Qed.
+
+
+(**
+   [finite_normalized_conditional_independence_iff_zero_indicator_covariance] (theorem) — The same finite independence assertion in event and moment form.
+   Mathematical meaning: Under unit total sample weight, conditional independence of two finite Boolean events given the certain event is equivalent to zero covariance of their two real-valued 0–1 indicator scores. This is a bridge between the established finite event and finite moment representations.
+   Exact checked proposition: For any type A, sample list, real weight function and Boolean events a and b, FiniteUnion.finite_sum weight samples=1 implies finite_conditional_independent weight samples a b (fun _ => true) iff FiniteMoments.covariance of the a and b indicator scores is zero.
+   Premises and side conditions: Total enumerated weight must be exactly one, so that conditioning on true has positive mass and reduces to unconditioned finite event mass. Nonnegative weights are required for probability interpretation, but not for the purely algebraic equivalence. Duplicate sample occurrences count separately.
+   Proof/definition method: Apply the previously verified normalized true-conditioning product equivalence, followed by the established finite indicator covariance/product equivalence; merely reverse the iff orientation, with no new variance algebra or list traversal.
+   Library reuse: FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product, finite_event_independence_iff_zero_indicator_covariance and Stdlib.Logic. Reuse the common FiniteSum fold indirectly through existing model bridges.
+   Boundary: Zero covariance characterizes factorization only for these Boolean indicator scores; it is not a general zero-covariance-implies-independence theorem for arbitrary scores or continuous distributions.
+ *)
+Theorem finite_normalized_conditional_independence_iff_zero_indicator_covariance :
+  forall (A : Type) (samples : list A) (weight : A -> R)
+         (a b : A -> bool),
+    @FiniteUnion.finite_sum A weight samples = 1 ->
+    (@FiniteUnion.finite_conditional_independent A
+       weight samples a b (fun _ => true) <->
+     @FiniteMoments.covariance A samples weight
+       (fun x => FiniteUnion.indicator (a x))
+       (fun x => FiniteUnion.indicator (b x)) = 0).
+Proof.
+  intros A samples weight a b Hmass.
+  rewrite (@FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product
+    A weight samples a b Hmass).
+  pose proof (finite_event_independence_iff_zero_indicator_covariance
+    A samples weight a b) as Hcriterion.
+  split; intro H.
+  - apply (proj2 Hcriterion); exact H.
+  - apply (proj1 Hcriterion); exact H.
+Qed.
+
+
+
+(**
+   [conditioned_weights] (definition) — Explicit normalization of a finite sample selected by a Boolean conditioning event.
+   Mathematical meaning: When conditioning a weighted finite outcome list on a positive-mass Boolean event G, multiply every retained outcome's original weight by the reciprocal of the original mass P(G). The weighting function is defined on the entire outcome type, while the intended sample list is Stdlib.List.filter G samples.
+   Exact declaration: conditioned_weights A weight samples given x := / (FiniteUnion.finite_prob weight samples given) * weight x, for an arbitrary outcome type A.
+   Premises and side conditions: The definition itself is a total real expression even if the conditioning mass is zero, but the downstream probability theorem requires this mass to be strictly positive. Repeated sampled outcomes remain repeated and get their scaled original weights.
+   Proof/definition method: Compose the existing finite event mass with Rocq's standard real reciprocal and scalar multiplication; there is no independent probability measure, list traversal or normalization algorithm.
+   Library reuse: FiniteUnion.finite_prob, Stdlib.Reals.Rinv and Stdlib.List.filter for the associated restricted sample.
+   Boundary: This is a finite exact mass normalization of a selected outcome list, not a continuous conditional-density construction or an arbitrary change of weights.
+ *)
+Definition conditioned_weights (A : Type) (weight : A -> R)
+    (samples : list A) (given : A -> bool) : A -> R :=
+  fun x => / (@FiniteUnion.finite_prob A weight samples given) * weight x.
+
+(**
+   [conditioned_weights_total_mass_one] (theorem) — Exact normalization of the Boolean-filtered finite sample.
+   Mathematical meaning: The total original weight of the G-filtered outcome list is exactly the original event mass P(G), so division by that strictly positive mass makes the filtered list's total weight exactly one, even if the original complete sample was not normalized.
+   Exact checked proposition: For arbitrary A, samples, weights and given, 0 < FiniteUnion.finite_prob weight samples given implies FiniteUnion.finite_sum (conditioned_weights A weight samples given) (filter given samples) = 1.
+   Premises and side conditions: Strict positivity of the finite conditioning mass is required to cancel the reciprocal. Original total mass need not be one, and repeated sample occurrences retain their contributions; individual signed weights are permitted for the algebraic identity.
+   Proof/definition method: Unfold only the shared finite-sum alias and the new scalar weight definition, pull out the constant reciprocal using FiniteSum.finite_sum_scale, identify filtered total mass with the existing finite_prob_as_filtered_mass, and cancel with Rocq's real field tactic.
+   Library reuse: FiniteSum.finite_sum_scale, FiniteUnion.finite_prob_as_filtered_mass, Stdlib.List.filter, Stdlib.Reals field and Stdlib.Lra; no new summation or filtered-normalization recursion is implemented.
+   Boundary: A unit total real mass is not by itself a probability measure when any original retained weight is negative; nonnegativity has a separate theorem.
+ *)
+Theorem conditioned_weights_total_mass_one :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteUnion.finite_sum A
+      (conditioned_weights A weight samples given)
+      (filter given samples) = 1.
+Proof.
+  intros A samples weight given Hpositive.
+  unfold conditioned_weights, FiniteUnion.finite_sum.
+  rewrite (FiniteSum.finite_sum_scale (filter given samples)
+    (/ (@FiniteUnion.finite_prob A weight samples given)) weight).
+  rewrite <- (@FiniteUnion.finite_prob_as_filtered_mass
+    A weight samples given).
+  field; lra.
+Qed.
+
+
+(**
+   [conditioned_weights_moment_total_mass_one] (theorem) — Connect the normalized conditional sample's unit mass to the existing finite-moment interface.
+   Mathematical meaning: The finite real weights of outcomes retained by a Boolean selector of strictly positive original mass have total moment-model mass exactly one after scaling by the reciprocal of that mass. This expresses the prior event-model normalization directly in the established FiniteMoments.total_mass representation.
+   Exact checked proposition: For any type A, weighted list samples and Boolean given event with positive FiniteUnion.finite_prob weight samples given, FiniteMoments.total_mass A (filter given samples) (conditioned_weights A weight samples given) = 1.
+   Premises and side conditions: Strict positivity of the original conditioning event mass is required by the existing normalized selected-sample theorem. Nonnegative individual weights and unit mass of the unfiltered list are unnecessary for this real-algebra equality.
+   Proof/definition method: Convert the FiniteMoments.total_mass expression definitionally to the shared FiniteUnion.finite_sum and invoke conditioned_weights_total_mass_one. This avoids repeating the finite-sum scale and normalization calculation in each covariance or complement lemma.
+   Library reuse: conditioned_weights_total_mass_one, FiniteMoments.total_mass, FiniteUnion.finite_sum and the common FiniteSum implementation by definitional equality; no additional summation or moment definition.
+   Boundary: Unit total signed mass does not establish nonnegative probability weights; nonnegative retained weights are checked separately by conditioned_weights_nonnegative_on_filtered_samples.
+ *)
+Theorem conditioned_weights_moment_total_mass_one :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.total_mass A (filter given samples)
+      (conditioned_weights A weight samples given) = 1.
+Proof.
+  intros A samples weight given Hpositive.
+  change (@FiniteUnion.finite_sum A
+    (conditioned_weights A weight samples given)
+    (filter given samples) = 1).
+  apply conditioned_weights_total_mass_one.
+  exact Hpositive.
+Qed.
+
+
+(**
+   [conditioned_weights_nonnegative_on_filtered_samples] (theorem) — Nonnegative conditional weights on retained sampled outcomes.
+   Mathematical meaning: If the original finite samples carry nonnegative weights and the conditioning event has positive mass, the rescaled weights of each retained G-satisfying outcome remain nonnegative. Together with conditioned_weights_total_mass_one, the conditioned list is an explicitly normalized nonnegative finite probability model.
+   Exact checked proposition: For any A, original samples, weight and given, positive original given mass and nonnegative original sampled weights imply 0 <= conditioned_weights A weight samples given x for every x in filter given samples.
+   Premises and side conditions: Strict positivity of P(G) and nonnegativity of each weight on the original sample are explicit. No distinct-outcome assumption is needed and no positivity is demanded outside the selected finite sample.
+   Proof/definition method: Use Stdlib.List.filter_In to recover original-sample membership, Stdlib.Reals.Rinv_0_lt_compat for the positive normalization factor and Rmult_le_pos to preserve nonnegativity.
+   Library reuse: Stdlib.List.filter_In, Stdlib.Reals.Rinv_0_lt_compat/Rmult_le_pos and the existing conditioned_weights definition.
+   Boundary: Nonnegative finite list masses are not a statement about unenumerated outcomes or continuous measures; the selection predicate is the exact supplied Boolean event.
+ *)
+Theorem conditioned_weights_nonnegative_on_filtered_samples :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    forall x, In x (filter given samples) ->
+      0 <= conditioned_weights A weight samples given x.
+Proof.
+  intros A samples weight given Hpositive Hw x Hx.
+  unfold conditioned_weights.
+  apply Rmult_le_pos.
+  - apply Rlt_le, Rinv_0_lt_compat; exact Hpositive.
+  - apply Hw.
+    apply filter_In in Hx.
+    tauto.
+Qed.
+
+(**
+   [finite_conditional_independence_iff_conditioned_indicator_covariance_zero] (theorem) — Generic Boolean conditional independence as zero covariance under the normalized conditional sample.
+   Mathematical meaning: For any strictly positive-mass conditioning event G, finite conditional independence of Boolean events A and B under G is equivalent to zero covariance of their indicator scores when computed over the G-filtered sample with weights normalized by P(G). This extends the earlier true-conditioning covariance bridge to arbitrary positive-mass finite Boolean selectors.
+   Exact checked proposition: If 0 < finite_prob weight samples given, finite_conditional_independent weight samples first second given iff FiniteMoments.covariance (filter given samples) (conditioned_weights A weight samples given) (indicator first) (indicator second) = 0.
+   Premises and side conditions: Strictly positive original conditioning mass is required for the normalization. The real-algebra equivalence does not need individual nonnegative weights; to interpret covariance and independence statistically the original sample must have nonnegative weights, established as preserved by the separate nonnegativity theorem. No full-sample unit normalization is needed.
+   Proof/definition method: Rewrite original conditioning as true-event conditioning on the existing filtered sample; use the positive global scaling invariance of finite conditional independence to replace retained weights with normalized ones, and then instantiate the previously checked normalized indicator covariance/independence equivalence using conditioned_weights_total_mass_one.
+   Library reuse: FiniteUnion.finite_conditional_independent_iff_filtered_true, FiniteUnion.finite_conditional_independent_scale_weights, finite_normalized_conditional_independence_iff_zero_indicator_covariance, conditioned_weights_total_mass_one and Stdlib.Reals.Rinv_0_lt_compat. No independent covariance calculation, finite sum or conditioning definition is introduced.
+   Boundary: This is a discrete finite Boolean-indicator result under one conditioning selector, not an equivalence for arbitrary real-valued scores or continuous conditional covariance operators.
+ *)
+Theorem finite_conditional_independence_iff_conditioned_indicator_covariance_zero :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (first second given : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (@FiniteUnion.finite_conditional_independent A
+       weight samples first second given <->
+     @FiniteMoments.covariance A (filter given samples)
+       (conditioned_weights A weight samples given)
+       (fun x => FiniteUnion.indicator (first x))
+       (fun x => FiniteUnion.indicator (second x)) = 0).
+Proof.
+  intros A samples weight first second given Hpositive.
+  rewrite (@FiniteUnion.finite_conditional_independent_iff_filtered_true
+    A weight samples first second given).
+  assert (Hscale :
+      0 < / (@FiniteUnion.finite_prob A weight samples given)).
+  { apply Rinv_0_lt_compat; exact Hpositive. }
+  rewrite <- (@FiniteUnion.finite_conditional_independent_scale_weights
+    A (/ (@FiniteUnion.finite_prob A weight samples given))
+    weight (filter given samples) first second
+    (fun _ => true) Hscale).
+  unfold conditioned_weights.
+  apply finite_normalized_conditional_independence_iff_zero_indicator_covariance.
+  apply conditioned_weights_total_mass_one.
+  exact Hpositive.
+Qed.
+
+
+(**
+   [finite_conditioned_event_mass] (theorem) — Exact event mass of the normalized conditional sample.
+   Mathematical meaning: After restricting an original finite weighted sample to outcomes satisfying Boolean event G and dividing every retained weight by the positive original mass of G, the ordinary event mass of any target A is exactly the original conditional probability P(A|G). This certifies the semantics of the normalized filtered representation independently of covariance.
+   Exact checked proposition: For any A, samples, original weight, Boolean given and target, 0 < FiniteUnion.finite_prob weight samples given implies FiniteUnion.finite_prob (conditioned_weights A weight samples given) (filter given samples) target = FiniteUnion.finite_conditional_prob weight samples target given.
+   Premises and side conditions: Strictly positive conditioning mass is essential for real division cancellation. Original unit total mass, target positivity and independence are not assumed; real signed weights still satisfy the equality algebraically, while genuine conditional probability additionally needs nonnegative weights.
+   Proof/definition method: Unfold only the scalar conditional-weight definition, rewrite ordinary event mass by finite_prob_scale_weights, use finite_prob_on_filtered_samples to transfer the Boolean conjunction back to the original list, then cancel the strictly positive denominator with Rocq's real field tactic.
+   Library reuse: FiniteUnion.finite_prob_scale_weights, FiniteUnion.finite_prob_on_filtered_samples, FiniteUnion.finite_conditional_prob, Stdlib.List.filter, Stdlib.Reals field and Stdlib.Lra. No alternative finite-sum, conditional quotient or event recursion is introduced.
+   Boundary: This represents an explicit finite selected-outcome distribution; it does not construct a continuous regular conditional distribution.
+ *)
+Theorem finite_conditioned_event_mass :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteUnion.finite_prob A
+      (conditioned_weights A weight samples given)
+      (filter given samples) event =
+    @FiniteUnion.finite_conditional_prob A
+      weight samples event given.
+Proof.
+  intros A samples weight given event Hpositive.
+  unfold conditioned_weights.
+  rewrite (@FiniteUnion.finite_prob_scale_weights A
+    (/ (@FiniteUnion.finite_prob A weight samples given))
+    weight (filter given samples) event).
+  rewrite (@FiniteUnion.finite_prob_on_filtered_samples
+    A weight samples given event).
+  unfold FiniteUnion.finite_conditional_prob.
+  field; lra.
+Qed.
+
+(**
+   [finite_conditioned_indicator_variance] (theorem) — Conditional Bernoulli indicator variance on the normalized selected finite sample.
+   Mathematical meaning: The variance of the zero-one indicator score of event A in the normalized finite sample selected by G is exactly P(A|G) * (1 - P(A|G)). It is the finite conditional Bernoulli variance identity, not an unproved distributional approximation.
+   Exact checked proposition: If the original conditioning-event mass is strictly positive, FiniteMoments.variance (filter given samples) (conditioned_weights A weight samples given) (fun x => FiniteUnion.indicator (event x)) equals FiniteUnion.finite_conditional_prob weight samples event given multiplied by one minus that same conditional probability.
+   Premises and side conditions: Positive conditioning mass is explicit, while the algebraic variance identity does not need a unit-mass premise in addition to the already normalized weights. To interpret the variance probabilistically, the original sampled weights must be nonnegative, preserved by conditioned_weights_nonnegative_on_filtered_samples.
+   Proof/definition method: Instantiate the previously checked finite_event_indicator_variance on the filtered normalized list, and rewrite its single event-mass term with finite_conditioned_event_mass. No second-moment expansion or Boolean indicator multiplication is reproved.
+   Library reuse: finite_event_indicator_variance, finite_conditioned_event_mass, FiniteMoments.variance and FiniteUnion.indicator.
+   Boundary: Only the variance of a Boolean indicator is characterized; arbitrary real-valued scores need not have this Bernoulli variance formula.
+ *)
+Theorem finite_conditioned_indicator_variance :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)) =
+    @FiniteUnion.finite_conditional_prob A
+      weight samples event given *
+      (1 - @FiniteUnion.finite_conditional_prob A
+        weight samples event given).
+Proof.
+  intros A samples weight given event Hpositive.
+  rewrite (finite_event_indicator_variance
+    A (filter given samples)
+    (conditioned_weights A weight samples given) event).
+  rewrite (finite_conditioned_event_mass
+    A samples weight given event Hpositive).
+  reflexivity.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_residual] (theorem) — Conditional event-factorization residual as finite indicator covariance.
+   Mathematical meaning: Covariance of the two Boolean event-indicator scores in the normalized sample selected by G equals the conditional intersection mass P(A∩B|G) minus the product of conditional marginal masses P(A|G) P(B|G). It makes the exact algebraic residual behind conditional independence explicit.
+   Exact checked proposition: Under positive finite_prob weight samples given, FiniteMoments.covariance (filter given samples) (conditioned_weights A weight samples given) (indicator first) (indicator second) = FiniteUnion.finite_conditional_prob weight samples (fun x => andb (first x) (second x)) given - finite_conditional_prob first given * finite_conditional_prob second given.
+   Premises and side conditions: Only positive mass of G is needed for the real equality; nonnegative original weights give genuine probability and covariance semantics but are not needed for the algebra. No event independence is assumed, and the sample can contain duplicate outcomes.
+   Proof/definition method: Instantiate the already checked finite_event_indicator_covariance formula with the normalized filtered weight function, then rewrite its joint and both individual event masses by finite_conditioned_event_mass. This avoids recomputing a single covariance or finite list integral.
+   Library reuse: finite_event_indicator_covariance, finite_conditioned_event_mass, FiniteMoments.covariance, FiniteUnion.indicator and Stdlib.Bool.andb.
+   Boundary: The residual identity applies to finite Boolean indicator variables only and does not imply stochastic independence for arbitrary real-valued scores.
+ *)
+Theorem finite_conditioned_indicator_covariance_residual :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) =
+    @FiniteUnion.finite_conditional_prob A
+      weight samples (fun x => andb (first x) (second x)) given -
+    @FiniteUnion.finite_conditional_prob A
+      weight samples first given *
+    @FiniteUnion.finite_conditional_prob A
+      weight samples second given.
+Proof.
+  intros A samples weight given first second Hpositive.
+  rewrite (finite_event_indicator_covariance
+    A (filter given samples)
+    (conditioned_weights A weight samples given) first second).
+  rewrite (finite_conditioned_event_mass A samples weight given
+    (fun x => andb (first x) (second x)) Hpositive).
+  rewrite (finite_conditioned_event_mass A samples weight given
+    first Hpositive).
+  rewrite (finite_conditioned_event_mass A samples weight given
+    second Hpositive).
+  reflexivity.
+Qed.
+
+
+(**
+   [finite_conditioned_indicator_variance_at_most_quarter] (theorem) — Universal upper bound for conditional finite Bernoulli variance.
+   Mathematical meaning: The real-valued variance of a finite zero-one event indicator computed in the positive-mass conditioning-selected, normalized sample does not exceed one quarter. This bound holds algebraically from p(1-p) <= 1/4 even for nonprobability signed weights.
+   Exact checked proposition: For every outcome type A, original finite samples, real weight function, given Boolean selector and event, FiniteMoments.variance on filter given samples with conditioned_weights and indicator event is at most /4.
+   Premises and side conditions: No positive mass or sampled nonnegativity is required for the raw algebraic upper bound because FiniteMoments' indicator-variance identity and completing-the-square bound are valid for any finite real weights. A probabilistic conditional-variance interpretation requires the separately established strictly positive conditioning mass and nonnegative original sample weights.
+   Proof/definition method: Instantiate the already proved finite_event_indicator_variance_at_most_quarter on the restricted list and its existing conditioned_weights function, rather than expand a variance polynomial or repeat real completing-the-square arguments.
+   Library reuse: finite_event_indicator_variance_at_most_quarter, FiniteMoments.variance, FiniteUnion.indicator, and Stdlib.List.filter through the shared finite sample model; no new summation, inequality or moment operator is introduced.
+   Boundary: This is the specific Bernoulli indicator variance upper bound, not an upper bound on arbitrary real-valued score variance or on a continuous conditional covariance matrix.
+ *)
+Theorem finite_conditioned_indicator_variance_at_most_quarter :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)) <= /4.
+Proof.
+  intros A samples weight given event.
+  apply finite_event_indicator_variance_at_most_quarter.
+Qed.
+
+(**
+   [finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass] (theorem) — Conditional Bernoulli degeneracy exactly at probability zero or one.
+   Mathematical meaning: Under a strictly positive selected conditioning mass, a zero-one indicator has zero variance in the normalized selected sample if and only if its conditional event probability is exactly zero or exactly one.
+   Exact checked proposition: If 0 < FiniteUnion.finite_prob weight samples given, then variance of indicator event on filter given samples under conditioned_weights is zero iff finite_conditional_prob weight samples event given = 0 or = 1.
+   Premises and side conditions: Strictly positive original conditioning mass is required to identify normalized selected event mass with the original conditional quotient. Neither original total-mass normalization nor nonnegative weights is needed for the algebraic iff; nonnegative selected weights provide the usual probabilistic interpretation of indicator degeneracy.
+   Proof/definition method: Instantiate the already kernel-checked finite_event_indicator_zero_variance_iff_extreme_mass equivalence and rewrite its ordinary selected-sample event mass through finite_conditioned_event_mass.
+   Library reuse: finite_event_indicator_zero_variance_iff_extreme_mass, finite_conditioned_event_mass, FiniteMoments.variance, and Stdlib.List.filter. No polynomial-factorization proof or custom variance implementation is duplicated.
+   Boundary: Zero indicator variance in the finite selected sample is equivalent to an extreme conditional event mass; it does not establish nontrivial independence or imply zero variance for arbitrary real-valued scores.
+ *)
+Theorem finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (@FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)) = 0 <->
+     @FiniteUnion.finite_conditional_prob A weight samples event given = 0 \/
+     @FiniteUnion.finite_conditional_prob A weight samples event given = 1).
+Proof.
+  intros A samples weight given event Hpositive.
+  pose proof (finite_event_indicator_zero_variance_iff_extreme_mass
+    A (filter given samples)
+    (conditioned_weights A weight samples given) event) as Hextreme.
+  rewrite (finite_conditioned_event_mass
+    A samples weight given event Hpositive) in Hextreme.
+  exact Hextreme.
+Qed.
+
+(**
+   [finite_conditioned_indicator_complement_variance] (theorem) — Complement invariance of conditional Bernoulli indicator variance.
+   Mathematical meaning: In the filtered finite outcome distribution whose weight sum has been normalized to one, complementing a Boolean target event preserves the variance of its zero-one indicator, as the centered scores differ only by sign.
+   Exact checked proposition: If the original conditioning event has strictly positive finite mass, the FiniteMoments variance of indicator (negb event) and indicator event on filter given samples with conditioned_weights are exactly equal.
+   Premises and side conditions: Positive finite mass of the conditioning selector is required to establish the unit total conditional weight needed by the existing complement-variance theorem. Nonnegative sampled weights are not needed for the algebraic equality, although they are required to view these scores as probability variables.
+   Proof/definition method: Apply the established finite_event_indicator_complement_variance theorem using the reusable conditioned_weights_moment_total_mass_one mass-interface bridge rather than redoing definitional conversion to FiniteSum in this proof.
+   Library reuse: conditioned_weights_moment_total_mass_one, finite_event_indicator_complement_variance and Stdlib.List.filter. No duplicated mass conversion, Boolean indicator expansion or finite summation is constructed.
+   Boundary: Complement invariance applies only to Boolean indicator variance under the same conditioning selector, not to arbitrary continuous variables or to a change in the sample conditioning event itself.
+ *)
+Theorem finite_conditioned_indicator_complement_variance :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (negb (event x))) =
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)).
+Proof.
+  intros A samples weight given event Hpositive.
+  apply finite_event_indicator_complement_variance.
+  apply conditioned_weights_moment_total_mass_one.
+  exact Hpositive.
+Qed.
+
+
+(**
+   [finite_conditioned_indicator_covariance_complement_first] (theorem) — Complementing the first conditional indicator reverses covariance sign.
+   Mathematical meaning: On a strictly positive-mass conditioning-selected finite sample with normalized weights, replacing the first Boolean target A with its complement changes the covariance of its indicator with the indicator of B by a factor of minus one.
+   Exact checked proposition: Under 0 < finite_prob weight samples given, covariance of indicator (negb first) and indicator second on filter given samples under conditioned_weights equals the negation of the covariance of indicator first and indicator second on that same finite model.
+   Premises and side conditions: Strict positivity of the conditioning mass establishes unit total selected weight. No independence or nonnegative weight premise is required for the exact real identity; nonnegative original weights are needed for statistical covariance semantics.
+   Proof/definition method: Instantiate the established finite_event_indicator_covariance_complement_first with the conditioned filtered list, and discharge its unit-mass premise using conditioned_weights_moment_total_mass_one rather than recompute conditional expectations.
+   Library reuse: finite_event_indicator_covariance_complement_first, conditioned_weights_moment_total_mass_one, FiniteMoments.covariance and Stdlib.Bool.negb; no new covariance algebra.
+   Boundary: Complemented-target covariance is only the normalized conditional Boolean-indicator covariance, not a causal or general continuous-distribution covariance assertion.
+ *)
+Theorem finite_conditioned_indicator_covariance_complement_first :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (negb (first x)))
+      (fun x => FiniteUnion.indicator (second x)) =
+    - @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)).
+Proof.
+  intros A samples weight given first second Hpositive.
+  apply finite_event_indicator_covariance_complement_first.
+  apply conditioned_weights_moment_total_mass_one.
+  exact Hpositive.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_complement_second] (theorem) — Complementing the second conditional indicator reverses covariance sign.
+   Mathematical meaning: Replacing the second Boolean target B by not-B changes the signed finite covariance with the indicator of A to its negative while retaining the same positive-mass conditioning event, selected outcomes and normalized weights.
+   Exact checked proposition: If finite_prob weight samples given is positive, covariance of indicator first with indicator (negb second), computed on the filtered normalized sample, equals minus covariance of indicator first with indicator second on the same sample.
+   Premises and side conditions: A positive original conditioning mass is required for the unit-mass bridge; the algebraic identity makes no independence, original normalization or nonnegative-weight assumption.
+   Proof/definition method: Invoke the existing finite_event_indicator_covariance_complement_second theorem after supplying the positive-mass normalized selected-sample unit total from conditioned_weights_moment_total_mass_one.
+   Library reuse: finite_event_indicator_covariance_complement_second, conditioned_weights_moment_total_mass_one, FiniteMoments.covariance, Stdlib.Bool.negb. No second covariance calculation is performed.
+   Boundary: This finite Boolean event complement law is not a statement about arbitrary nonlinear transformations of real-valued scores.
+ *)
+Theorem finite_conditioned_indicator_covariance_complement_second :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (negb (second x))) =
+    - @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)).
+Proof.
+  intros A samples weight given first second Hpositive.
+  apply finite_event_indicator_covariance_complement_second.
+  apply conditioned_weights_moment_total_mass_one.
+  exact Hpositive.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_complement_both] (theorem) — Complementing both conditional indicators preserves covariance.
+   Mathematical meaning: If both Boolean event indicators are complemented in the same normalized finite model conditioned on G, each would independently reverse the covariance's sign, so complementing both leaves the covariance unchanged.
+   Exact checked proposition: Under a strictly positive original conditioning mass, covariance of indicator (negb first) with indicator (negb second) on the filtered selected sample equals covariance of the original two indicators on that same filtered sample and weights.
+   Premises and side conditions: The positive conditioning-mass premise supplies the unit selected-sample total. The identity holds as real algebra for arbitrary original weights; nonnegativity is needed for its probability interpretation but not for its Rocq proof.
+   Proof/definition method: Apply the existing finite_event_indicator_covariance_complement_both theorem for normalized samples and discharge its sole mass requirement with the shared conditioned_weights_moment_total_mass_one bridge.
+   Library reuse: finite_event_indicator_covariance_complement_both, conditioned_weights_moment_total_mass_one, FiniteMoments.covariance and Stdlib.List.filter; no manual double-complement algebra.
+   Boundary: Only Boolean indicator complement covariance on a single fixed conditioning selector is covered, not arbitrary continuous random variables.
+ *)
+Theorem finite_conditioned_indicator_covariance_complement_both :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (negb (first x)))
+      (fun x => FiniteUnion.indicator (negb (second x))) =
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)).
+Proof.
+  intros A samples weight given first second Hpositive.
+  apply finite_event_indicator_covariance_complement_both.
+  apply conditioned_weights_moment_total_mass_one.
+  exact Hpositive.
+Qed.
+
+
+
+(**
+   [finite_conditioned_indicator_cauchy_schwarz_squared] (theorem) — Conditional indicator covariance satisfies the finite Cauchy–Schwarz inequality.
+   Mathematical meaning: The square of the covariance of two Boolean event indicators on the normalized G-filtered finite sample is bounded above by the product of their two conditional indicator variances. The result is a direct instance of the maintained finite-score covariance Cauchy–Schwarz theorem, with all normalization side conditions discharged by the conditioning bridge.
+   Exact checked proposition: For A, weights, samples, first, second and given, positive original conditioning event mass and nonnegative weight on each original sampled outcome imply conditional indicator covariance squared <= the product of conditional indicator variances, all computed with conditioned_weights on filter given samples.
+   Premises and side conditions: Strictly positive conditioning mass makes the selected normalization well defined; nonnegative original sampled weights ensure the finite covariance inequality is valid. Unit total mass of the original unfiltered samples is not assumed.
+   Proof/definition method: Instantiate the existing FiniteMoments.finite_covariance_cauchy_schwarz_squared on the selected sample; supply unit total mass through conditioned_weights_moment_total_mass_one and nonnegative selected weights through conditioned_weights_nonnegative_on_filtered_samples.
+   Library reuse: FiniteMoments.finite_covariance_cauchy_schwarz_squared, conditioned_weights_moment_total_mass_one, conditioned_weights_nonnegative_on_filtered_samples, and Stdlib.List.filter; no new discriminant argument or quadratic-form expansion.
+   Boundary: This is a finite selected-indicator covariance inequality, not a certified Cauchy–Schwarz theorem for arbitrary continuous conditional distributions or a psychometric model.
+ *)
+Theorem finite_conditioned_indicator_cauchy_schwarz_squared :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) *
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) <=
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x)) *
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (second x)).
+Proof.
+  intros A samples weight given first second Hpositive Hw.
+  apply FiniteMoments.finite_covariance_cauchy_schwarz_squared.
+  - apply conditioned_weights_moment_total_mass_one.
+    exact Hpositive.
+  - apply conditioned_weights_nonnegative_on_filtered_samples;
+      assumption.
+Qed.
+
+(**
+   [finite_conditioned_zero_indicator_variance_implies_zero_covariance] (theorem) — Conditional degenerate Boolean indicator is uncorrelated with every other Boolean indicator.
+   Mathematical meaning: When a Boolean event indicator has zero variance on the normalized finite sample conditioned on G, its covariance with the indicator of any second Boolean event is also zero, assuming nonnegative selected weights and a positive conditioning mass.
+   Exact checked proposition: If original sampled weights are nonnegative, finite_prob weight samples given is positive, and the first selected indicator variance equals zero, then the selected normalized finite covariance of the first and second indicators equals zero.
+   Premises and side conditions: Nonnegative original weights and strictly positive conditioning mass are required for the existing finite Cauchy–Schwarz implication. The unfiltered sample need not have unit mass; no independence assumption is made.
+   Proof/definition method: Apply the existing FiniteMoments.zero_variance_implies_zero_covariance_first lemma, reusing the same selected-mass and nonnegativity bridges as in finite_conditioned_indicator_cauchy_schwarz_squared rather than repeating a square-bound proof.
+   Library reuse: FiniteMoments.zero_variance_implies_zero_covariance_first, conditioned_weights_moment_total_mass_one, conditioned_weights_nonnegative_on_filtered_samples.
+   Boundary: This establishes zero covariance for the specified selected Boolean scores; it is not a general statement that any zero-variance score is independent in a continuous probability model.
+ *)
+Theorem finite_conditioned_zero_indicator_variance_implies_zero_covariance :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x)) = 0 ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) = 0.
+Proof.
+  intros A samples weight given first second Hpositive Hw Hzero.
+  apply FiniteMoments.zero_variance_implies_zero_covariance_first.
+  - apply conditioned_weights_moment_total_mass_one.
+    exact Hpositive.
+  - apply conditioned_weights_nonnegative_on_filtered_samples;
+      assumption.
+  - exact Hzero.
+Qed.
+
+(**
+   [finite_conditional_extreme_first_independent] (theorem) — A conditional event with extreme probability is conditionally independent of any other finite Boolean event.
+   Mathematical meaning: Under strictly positive conditioning mass and nonnegative finite weights, if the first Boolean target has conditional probability zero or one given G, then its indicator has zero selected-sample variance; Cauchy–Schwarz makes its indicator covariance with every second event vanish, and the established indicator covariance criterion yields conditional independence.
+   Exact checked proposition: For any A, sample list, original nonnegative sampled weights, first, second and given, positive finite_prob weight samples given and either finite_conditional_prob first given=0 or =1 imply finite_conditional_independent weight samples first second given.
+   Premises and side conditions: Strictly positive conditioning mass and nonnegative weights on the original enumerated outcomes are explicit; neither unit unfiltered total mass nor positivity of the second event mass is required. Only exact zero or one conditional probability, not approximate extremes, is covered.
+   Proof/definition method: Compose the already checked zero-variance iff extreme-conditional-mass theorem, the selected zero-variance-implies-zero-covariance theorem, and the generic conditioned indicator-covariance independence iff, avoiding an independent intersection-probability calculation.
+   Library reuse: finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass, finite_conditioned_zero_indicator_variance_implies_zero_covariance, finite_conditional_independence_iff_conditioned_indicator_covariance_zero.
+   Boundary: Exact conditional independence at a degenerate Boolean event is proved; no pairwise-to-mutual independence, continuous conditional independence or near-extreme statistical approximation follows.
+ *)
+Theorem finite_conditional_extreme_first_independent :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    (@FiniteUnion.finite_conditional_prob A weight samples first given = 0 \/
+     @FiniteUnion.finite_conditional_prob A weight samples first given = 1) ->
+    @FiniteUnion.finite_conditional_independent A
+      weight samples first second given.
+Proof.
+  intros A samples weight given first second Hpositive Hw Hextreme.
+  apply (proj2
+    (finite_conditional_independence_iff_conditioned_indicator_covariance_zero
+      A samples weight first second given Hpositive)).
+  apply (finite_conditioned_zero_indicator_variance_implies_zero_covariance
+    A samples weight given first second Hpositive Hw).
+  apply (proj2
+    (finite_conditioned_indicator_zero_variance_iff_extreme_conditional_mass
+      A samples weight given first Hpositive)).
+  exact Hextreme.
+Qed.
+
+(**
+   [finite_conditional_extreme_second_independent] (theorem) — Symmetric conditional independence of an extreme-probability second Boolean event.
+   Mathematical meaning: If the second target has finite conditional probability exactly zero or one given a positive-mass conditioning event, it is conditionally independent of any first Boolean target with nonnegative sample weights; this is the same degenerate-factorization fact with target order reversed.
+   Exact checked proposition: For any A, weights, samples, Boolean given, first and second, nonnegative original sampled weights, positive given mass and finite_conditional_prob second given=0 or =1 imply finite_conditional_independent weight samples first second given.
+   Premises and side conditions: All positivity and nonnegativity premises from the first-target theorem are retained. The other event requires no positive marginal mass, and the unfiltered list need not be normalized.
+   Proof/definition method: Reuse the established finite conditional-independence symmetry biconditional and the just-proved first-target extreme-event theorem; do not duplicate any conditional covariance or zero-variance argument.
+   Library reuse: FiniteUnion.finite_conditional_independent_symmetric and finite_conditional_extreme_first_independent. The entire proof is a logical iff projection and theorem application.
+   Boundary: This is an exact finite Boolean conditional fact about probability zero or one, not a statistical test of approximate independence or an empirical covariance claim.
+ *)
+Theorem finite_conditional_extreme_second_independent :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    (@FiniteUnion.finite_conditional_prob A weight samples second given = 0 \/
+     @FiniteUnion.finite_conditional_prob A weight samples second given = 1) ->
+    @FiniteUnion.finite_conditional_independent A
+      weight samples first second given.
+Proof.
+  intros A samples weight given first second Hpositive Hw Hextreme.
+  apply (proj2 (@FiniteUnion.finite_conditional_independent_symmetric
+    A weight samples first second given)).
+  apply (finite_conditional_extreme_first_independent
+    A samples weight given second first Hpositive Hw Hextreme).
+Qed.
+
+
+
+(**
+   [finite_conditioned_indicator_variance_nonnegative] (theorem) — Positivity of conditional Bernoulli indicator variance.
+   Mathematical meaning: The variance of a Boolean target's zero-one indicator in the selected finite probability model cannot be negative when the original sampled weights are nonnegative and the Boolean conditioning event has strictly positive mass. This provides the lower bound complementary to the existing universal one-quarter upper bound.
+   Exact checked proposition: For arbitrary A, original finite weighted samples, given and event, if P(G)>0 and each enumerated original weight is nonnegative, then 0 <= FiniteMoments.variance of indicator event with conditioned_weights on filter given samples.
+   Premises and side conditions: Positive conditioning mass is required for unit total selected mass and nonnegative original weights ensure nonnegative retained weights. The full original sample need not be normalized, and repeated sample occurrences remain significant.
+   Proof/definition method: Instantiate the already established FiniteMoments.variance_nonnegative theorem on the filtered weighted sample, discharging its normalized-mass and weight-positivity hypotheses with the reusable conditioned_weights_moment_total_mass_one and conditioned_weights_nonnegative_on_filtered_samples bridges.
+   Library reuse: FiniteMoments.variance_nonnegative, conditioned_weights_moment_total_mass_one, conditioned_weights_nonnegative_on_filtered_samples. No fresh centered-sum or square-positivity argument is implemented.
+   Boundary: The result is a genuine variance inequality only for normalized nonnegative selected weights; arbitrary signed weighted sums do not necessarily yield nonnegative variance.
+ *)
+Theorem finite_conditioned_indicator_variance_nonnegative :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given event : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    0 <= @FiniteMoments.variance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (event x)).
+Proof.
+  intros A samples weight given event Hpositive Hw.
+  apply FiniteMoments.variance_nonnegative.
+  - apply conditioned_weights_moment_total_mass_one.
+    exact Hpositive.
+  - apply conditioned_weights_nonnegative_on_filtered_samples;
+      assumption.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_squared_at_most_sixteenth] (theorem) — Sharp universal finite conditional Bernoulli covariance-square bound.
+   Mathematical meaning: Covariance between the zero-one indicators of any two events conditioned on a positive-mass finite selector has absolute magnitude at most one quarter, equivalently covariance squared at most one sixteenth. This applies without assuming the two target events are conditionally independent.
+   Exact checked proposition: With positive P(G) and nonnegative original sampled weights, the product of conditional indicator covariance with itself, on the normalized G-filtered sample, is bounded above by /16.
+   Premises and side conditions: The original conditioning mass must be strictly positive and all originally enumerated weights must be nonnegative. No target independence, marginal positivity, unit full-sample normalization, or distinctness of samples is assumed.
+   Proof/definition method: Combine the previously verified conditional squared Cauchy–Schwarz inequality, the nonnegative conditional variance theorem and the unconditional algebraic one-quarter variance bound for both indicators. A standard nonlinear real arithmetic step bounds their product and hence the covariance square.
+   Library reuse: finite_conditioned_indicator_cauchy_schwarz_squared, finite_conditioned_indicator_variance_nonnegative, finite_conditioned_indicator_variance_at_most_quarter, Stdlib.Psatz.nra.
+   Boundary: The bound concerns only Boolean indicator covariance under exact normalized finite conditioning; it does not provide a universal bound for arbitrary score covariance or statistical estimation error.
+ *)
+Theorem finite_conditioned_indicator_covariance_squared_at_most_sixteenth :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) *
+    @FiniteMoments.covariance A (filter given samples)
+      (conditioned_weights A weight samples given)
+      (fun x => FiniteUnion.indicator (first x))
+      (fun x => FiniteUnion.indicator (second x)) <= /16.
+Proof.
+  intros A samples weight given first second Hpositive Hw.
+  pose proof (finite_conditioned_indicator_cauchy_schwarz_squared
+    A samples weight given first second Hpositive Hw) as Hcs.
+  pose proof (finite_conditioned_indicator_variance_nonnegative
+    A samples weight given first Hpositive Hw) as Hfirst_nonnegative.
+  pose proof (finite_conditioned_indicator_variance_nonnegative
+    A samples weight given second Hpositive Hw) as Hsecond_nonnegative.
+  pose proof (finite_conditioned_indicator_variance_at_most_quarter
+    A samples weight given first) as Hfirst_bound.
+  pose proof (finite_conditioned_indicator_variance_at_most_quarter
+    A samples weight given second) as Hsecond_bound.
+  nra.
+Qed.
+
+(**
+   [finite_conditioned_indicator_covariance_between_quarters] (theorem) — The signed finite conditional Boolean-indicator covariance bound.
+   Mathematical meaning: The covariance between any pair of zero-one indicators in a normalized, nonnegative, finite sample selected by a positive-mass Boolean event lies between minus one quarter and plus one quarter. This is the signed version of the preceding squared bound, valid without any independence assumption.
+   Exact checked proposition: Under strictly positive original conditioning mass and nonnegative original sampled weights, - /4 <= FiniteMoments.covariance of two indicator targets on filter given samples with conditioned_weights, and that covariance <= /4.
+   Premises and side conditions: Positive conditioning mass and nonnegative original sampled weights are required; full-sample unit normalization and Boolean target independence are not. Duplicate sampled outcomes retain their original weighted multiplicity.
+   Proof/definition method: Instantiate finite_conditioned_indicator_covariance_squared_at_most_sixteenth and apply Stdlib nonlinear real arithmetic to extract both signed bounds from the upper bound on the square of the same real covariance.
+   Library reuse: finite_conditioned_indicator_covariance_squared_at_most_sixteenth, Stdlib.Psatz.nra, FiniteMoments.covariance; no new variance expansion or probabilistic enumeration.
+   Boundary: This is a sharp worst-case algebraic bound for finite Bernoulli covariance, not a confidence interval, an empirical correlation bound, or a Gaussian approximation.
+ *)
+Theorem finite_conditioned_indicator_covariance_between_quarters :
+  forall (A : Type) (samples : list A)
+         (weight : A -> R) (given first second : A -> bool),
+    0 < @FiniteUnion.finite_prob A weight samples given ->
+    (forall x, In x samples -> 0 <= weight x) ->
+    - /4 <=
+      @FiniteMoments.covariance A (filter given samples)
+        (conditioned_weights A weight samples given)
+        (fun x => FiniteUnion.indicator (first x))
+        (fun x => FiniteUnion.indicator (second x)) /\
+      @FiniteMoments.covariance A (filter given samples)
+        (conditioned_weights A weight samples given)
+        (fun x => FiniteUnion.indicator (first x))
+        (fun x => FiniteUnion.indicator (second x)) <= /4.
+Proof.
+  intros A samples weight given first second Hpositive Hw.
+  pose proof (finite_conditioned_indicator_covariance_squared_at_most_sixteenth
+    A samples weight given first second Hpositive Hw) as Hsquare.
+  split; nra.
 Qed.

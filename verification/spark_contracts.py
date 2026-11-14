@@ -17,6 +17,9 @@ import deal
 
 SCHEMA = "explicit-contract-clauses-v1"
 MINIMUM = 5
+# Staged target: structural inventory reports ten independently written
+# explicit SPARK clauses/aspects without making ten mandatory globally.
+TARGET = 10
 ROOT = Path(__file__).resolve().parents[1]
 SPACE = re.compile(r"\s+")
 QUALIFIER = re.compile(r"\b(?:[a-z_]\w*\.)+")
@@ -38,6 +41,22 @@ def require(condition: bool, message: str) -> None:
 @deal.ensure(lambda text, result: len(result) == len(text))
 @deal.raises()
 @deal.has()
+# A masked Ada source must never acquire new syntactic tokens or move
+# native line offsets. The five additional laws check positional
+# preservation, line widths, symbol conservation and delimiter bounds.
+@deal.ensure(lambda text, result: result.count("\n") == text.count("\n"))
+@deal.ensure(lambda text, result:
+             [len(part) for part in result.split("\n")] ==
+             [len(part) for part in text.split("\n")])
+@deal.ensure(lambda text, result:
+             all(actual == original or actual == " "
+                 for original, actual in zip(text, result)))
+@deal.ensure(lambda text, result:
+             result.count("(") <= text.count("(") and
+             result.count(")") <= text.count(")"))
+@deal.ensure(lambda text, result:
+             result.count(";") <= text.count(";") and
+             result.count(",") <= text.count(","))
 def masked(text: str) -> str:
     # Retain newlines and character positions for native source-location checks.
     return MASK.sub(lambda match: "".join("\n" if char == "\n" else " " for char in match.group()), text)
@@ -48,6 +67,18 @@ def masked(text: str) -> str:
 @deal.post(lambda result: isinstance(result, list) and bool(result))
 @deal.raises(ValueError)
 @deal.has()
+# A top-level split may remove separators and adjacent whitespace but
+# cannot fabricate clause characters, reverse prefix/suffix fragments,
+# change source token order or leave whitespace on returned fragments.
+@deal.post(lambda result: all(isinstance(part, str) for part in result))
+@deal.post(lambda result: all(part == part.strip() for part in result))
+@deal.ensure(lambda text, separator=",", *, result:
+             all(not part or part in text for part in result))
+@deal.ensure(lambda text, separator=",", *, result:
+             sum(len(part) for part in result) <= len(text))
+@deal.ensure(lambda text, separator=",", *, result:
+             text.strip().startswith(result[0]) and
+             text.strip().endswith(result[-1]))
 def split_top(text: str, separator: str = ",") -> list:
     result = []
     start = 0
@@ -71,6 +102,16 @@ def split_top(text: str, separator: str = ",") -> list:
 @deal.ensure(lambda text, result: len(result) <= len(text))
 @deal.raises(ValueError)
 @deal.has()
+# Parsing may remove only complete outer parenthesis pairs; no token may be
+# synthesized, and ordinary top-level conjunctions must remain untouched.
+@deal.ensure(lambda text, result: result == result.strip())
+@deal.ensure(lambda text, result: result in text)
+@deal.ensure(lambda text, result:
+             result == text.strip() or text.strip().startswith("("))
+@deal.ensure(lambda text, result:
+             result == text.strip() or text.strip().endswith(")"))
+@deal.ensure(lambda text, result:
+             result == text.strip() or len(result) + 2 <= len(text.strip()))
 def unparenthesized(text: str) -> str:
     text = text.strip()
     while text.startswith("(") and text.endswith(")"):
@@ -96,6 +137,20 @@ def unparenthesized(text: str) -> str:
 @deal.post(lambda result: bool(result) and all(isinstance(item, str) and bool(item) for item in result))
 @deal.raises(ValueError)
 @deal.has()
+# Normalized contract clauses must be exact source fragments. In
+# particular a quantified/conditional Ada expression remains atomic:
+# splitting its internal conjunction would silently change the logic.
+@deal.post(lambda result: all(part == part.strip() for part in result))
+@deal.ensure(lambda text, result:
+             all(part in unparenthesized(text) for part in result))
+@deal.ensure(lambda text, result:
+             sum(len(part) for part in result) <= len(unparenthesized(text)))
+@deal.ensure(lambda text, result:
+             not re.match(r"(?:if|for)\b", unparenthesized(text), re.IGNORECASE)
+             or result == [unparenthesized(text)])
+@deal.ensure(lambda text, result:
+             unparenthesized(text).startswith(result[0]) and
+             unparenthesized(text).endswith(result[-1]))
 def clauses(text: str) -> list:
     require(bool(text.strip()), "Empty behavioral contract clause")
     text = unparenthesized(text)
@@ -112,6 +167,26 @@ def clauses(text: str) -> list:
 @deal.post(lambda result: all(row["line"] > 0 and row["end_line"] >= row["line"] for row in result))
 @deal.raises(ValueError)
 @deal.has()
+# An Ada parser result is a source-attributed typed declaration record,
+# never a guessed body, aspect, boolean flag, or synthesized field.
+# Keep the existing tuple of schema keys stable for historic evidence.
+@deal.post(lambda result: all(set(row) == {
+    "name", "kind", "line", "end_line", "expression",
+    "form", "profile", "aspects", "off"} for row in result))
+@deal.post(lambda result: all(row["kind"] in {"function", "procedure"}
+                              for row in result))
+@deal.post(lambda result: all(row["form"] in {
+    "declaration", "body", "expression"} and
+    type(row["expression"]) is bool and type(row["off"]) is bool
+    for row in result))
+@deal.post(lambda result: all(isinstance(row["name"], str) and
+                              bool(row["name"]) and
+                              isinstance(row["profile"], str)
+                              for row in result))
+@deal.post(lambda result: all(isinstance(row["aspects"], dict) and
+                              all(isinstance(key, str) and isinstance(value, str)
+                                  for key, value in row["aspects"].items())
+                              for row in result))
 def declarations(text: str) -> list:
     code = masked(text)
     result = []
@@ -177,6 +252,15 @@ def declarations(text: str) -> list:
 @deal.post(lambda result: isinstance(result, list))
 @deal.raises(ValueError)
 @deal.has()
+# No generated clause may have a foreign aspect, lose its string source,
+# or escape the exact two-field evidence representation.
+@deal.post(lambda result: all(isinstance(row, dict) for row in result))
+@deal.post(lambda result: all(set(row) == {"aspect", "clause"} for row in result))
+@deal.post(lambda result: all(isinstance(row["clause"], str) for row in result))
+@deal.ensure(lambda aspects, result: all(row["aspect"] in aspects for row in result))
+@deal.post(lambda result: all(row["aspect"] in
+             {"global", "depends", "pre", "post", "refined_post", "contract_cases"}
+             for row in result))
 def contract_entries(aspects: dict) -> list:
     result = []
     identities = set()
@@ -208,6 +292,23 @@ def contract_entries(aspects: dict) -> list:
 @deal.post(lambda result: result["schema"] == SCHEMA and result["minimum_required"] == MINIMUM)
 @deal.raises(ValueError)
 @deal.has()
+# This legacy inventory is intentionally source/evidence schema stable.
+# Check five independent accounting equations without changing its keys:
+# historical SPARK campaign audits compare complete inventory dictionaries.
+@deal.post(lambda result:
+           result["functions"] + result["procedures"] == len(result["entities"]))
+@deal.post(lambda result:
+           result["contracts"] == sum(row["contract_count"] for row in result["entities"]))
+@deal.post(lambda result:
+           result["minimum_observed"] == min(row["contract_count"] for row in result["entities"]))
+@deal.post(lambda result:
+           result["insufficient"] == [row["identity"] for row in result["entities"]
+                                      if row["contract_count"] < MINIMUM])
+@deal.post(lambda result:
+           result["complete"] == (not (result["insufficient"] or
+                                     result["missing_native"] or
+                                     result["invalid_native"] or
+                                     result["unmatched_native"])))
 def inventory(sources: dict, coverage: dict | None = None) -> dict:
     candidates = {}
     excluded = []
@@ -287,18 +388,64 @@ def inventory(sources: dict, coverage: dict | None = None) -> dict:
             "complete": not insufficient and not missing_native and not invalid_native and not unmatched_native}
 
 
+
+@deal.pre(lambda report: isinstance(report, dict))
+@deal.pre(lambda report: isinstance(report.get("entities"), list))
+@deal.post(lambda result: result["target_contracts"] == TARGET)
+@deal.ensure(lambda report, result: result["total_entities"] == len(report["entities"]))
+@deal.ensure(lambda report, result:
+             result["entities_at_target"] ==
+             sum(row["contract_count"] >= TARGET for row in report["entities"]))
+@deal.ensure(lambda report, result:
+             result["entities_below_target"] ==
+             sum(row["contract_count"] < TARGET for row in report["entities"]))
+@deal.post(lambda result:
+           result["entities_at_target"] + result["entities_below_target"]
+           == result["total_entities"])
+@deal.post(lambda result: set(result) ==
+           {"target_contracts", "total_entities", "entities_at_target",
+            "entities_below_target"})
+@deal.raises(KeyError, TypeError)
+@deal.has()
+def ten_contract_summary(report: dict) -> dict:
+    """Summarize staged SPARK ten-clause progress without changing archive schemas.
+
+    The immutable evidence campaigns persist the original inventory's exact
+    keys. This separate derived report is not part of those archived checks.
+    The target concerns clause-count coverage, not GNATprove proof status.
+    """
+    counts = [row["contract_count"] for row in report["entities"]]
+    return {"target_contracts": TARGET, "total_entities": len(counts),
+            "entities_at_target": sum(count >= TARGET for count in counts),
+            "entities_below_target": sum(count < TARGET for count in counts)}
+
+
 @deal.pre(lambda root: isinstance(root, Path))
 @deal.pre(lambda root: root.is_dir())
 @deal.post(lambda result: isinstance(result, dict) and bool(result))
 @deal.raises(OSError, UnicodeDecodeError)
 @deal.has("read")
+# Return sorted, strictly source-root-relative Ada file receipts; every
+# returned value is the exact current UTF-8 source, not a masked or
+# normalized text that could be accidentally mistaken for native evidence.
+@deal.post(lambda result: list(result) == sorted(result))
+@deal.post(lambda result: all(Path(path).suffix in {".ads", ".adb"}
+                              for path in result))
+@deal.post(lambda result: all(path.startswith(("analyses/", "verification/"))
+                              for path in result))
+@deal.post(lambda result: all(not Path(path).is_absolute()
+                              and ".." not in Path(path).parts
+                              for path in result))
+@deal.ensure(lambda root, result:
+             all(root.joinpath(path).read_text(encoding="utf-8") == content
+                 for path, content in result.items()))
 def current_sources(root: Path) -> dict:
     paths = sorted(root.glob("analyses/*/ada/src/*.ad[bs]"))
     paths += sorted(root.glob("verification/*/src/*.ad[bs]"))
     return {path.relative_to(root).as_posix(): path.read_text(encoding="utf-8") for path in paths}
 
 
-@deal.raises(SystemExit, OSError, ValueError, UnicodeDecodeError, TypeError)
+@deal.raises(SystemExit, OSError, ValueError, UnicodeDecodeError, TypeError, KeyError)
 @deal.has("read", "stdout", "stderr")
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
@@ -308,7 +455,10 @@ def main() -> None:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     result = inventory(current_sources(args.root))
-    print(json.dumps(result, indent=2))
+    # Keep the evidence-sensitive inventory unchanged. Only the CLI report
+    # contains the derived staged target accounting.
+    print(json.dumps({**result, "ten_contract_target": ten_contract_summary(result)},
+                     indent=2))
     raise SystemExit(0 if result["complete"] else 1)
 
 

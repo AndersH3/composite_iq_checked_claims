@@ -753,3 +753,89 @@ Proof.
   2: { intros x _; apply andb_comm. }
   apply four_cell_conditional_not_A_given_B; exact Hpositive.
 Qed.
+
+
+(**
+   [four_cell_generic_independence_iff_marginal_product] (theorem) — Generic conditional independence on the four-cell admissions model.
+   Mathematical meaning: The normalized four-outcome Boolean product interpretation satisfies the generic finite conditional-independence predicate under certain-event conditioning exactly when its existing joint admission mass equals the product of the two marginal admission masses.
+   Exact checked proposition: For any Admissions.TwoEventModel m, FiniteUnion.finite_conditional_independent (four_cell_weight m) four_cell_samples four_cell_A four_cell_B (fun _ => true) iff p_both m = p_A m * p_B m.
+   Premises and side conditions: The model's four nonnegative cell weights summing to one are supplied by TwoEventModel and verified by four_cell_total_mass; no independence is assumed before the iff. All four listed Boolean pairs are retained.
+   Proof/definition method: Translate the verified four-cell mass normalization definitionally to the common FiniteSum fold, apply the generic true-conditioning independence/product theorem, then rewrite the already verified joint and marginal masses.
+   Library reuse: FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product, four_cell_total_mass, four_cell_intersection_mass, four_cell_first_marginal and four_cell_second_marginal.
+   Boundary: The bridge proves a structural equivalence within an exact four-cell report model, not an empirical claim of independent admissions or Gaussian cognition.
+ *)
+Theorem four_cell_generic_independence_iff_marginal_product :
+  forall m,
+    (@FiniteUnion.finite_conditional_independent (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      four_cell_A four_cell_B (fun _ => true) <->
+     p_both m = p_A m * p_B m).
+Proof.
+  intro m.
+  assert (Hunit :
+      @FiniteUnion.finite_sum (bool * bool)
+        (four_cell_weight m) four_cell_samples = 1).
+  { change (@FiniteMoments.total_mass (bool * bool)
+      four_cell_samples (four_cell_weight m) = 1).
+    apply four_cell_total_mass. }
+  rewrite (@FiniteUnion.finite_conditional_independent_given_true_iff_marginal_product
+    (bool * bool) (four_cell_weight m) four_cell_samples
+    four_cell_A four_cell_B Hunit).
+  rewrite (four_cell_intersection_mass m).
+  rewrite (four_cell_first_marginal m).
+  rewrite (four_cell_second_marginal m).
+  reflexivity.
+Qed.
+
+(**
+   [four_cell_generic_independence_iff_cross_product_cells] (theorem) — Exact four-cell conditional-independence criterion.
+   Mathematical meaning: The generic finite conditional-independence predicate with true conditioning is equivalent to the determinant-like four-cell product equality joint * neither = only_A * only_B.
+   Exact checked proposition: For every TwoEventModel m, finite_conditional_independent on the four_cell_samples and four_cell_weight m for events A and B given true iff joint m * neither m = only_A m * only_B m.
+   Premises and side conditions: Cell nonnegativity and unit sum are inherited from TwoEventModel; independence is not assumed. A zero marginal is permitted because the conditioning event itself has unit mass.
+   Proof/definition method: Rewrite with the new generic-to-marginal-product bridge, then apply the previously checked Admissions.binary_independence_criterion; no four-cell product algebra or list traversal is rederived.
+   Library reuse: four_cell_generic_independence_iff_marginal_product and Admissions.binary_independence_criterion.
+   Boundary: This criterion is exact for the specified four Boolean cells; it does not establish any observed admissions process or continuous random-variable conditional independence.
+ *)
+Theorem four_cell_generic_independence_iff_cross_product_cells :
+  forall m,
+    (@FiniteUnion.finite_conditional_independent (bool * bool)
+      (four_cell_weight m) four_cell_samples
+      four_cell_A four_cell_B (fun _ => true) <->
+     joint m * neither m = only_A m * only_B m).
+Proof.
+  intro m.
+  rewrite (four_cell_generic_independence_iff_marginal_product m).
+  apply binary_independence_criterion.
+Qed.
+
+
+(**
+   [four_cell_generic_independence_iff_zero_indicator_covariance] (theorem) — Verified four-cell independence as a zero-covariance predicate.
+   Mathematical meaning: The generic finite conditional-independence statement for the admissions Boolean pair A,B given true is logically equivalent to zero covariance of their indicator score functions, computed using the existing four-cell weights.
+   Exact checked proposition: For every Admissions.TwoEventModel m, FiniteUnion.finite_conditional_independent (four_cell_weight m) four_cell_samples four_cell_A four_cell_B (fun _ => true) iff FiniteMoments.covariance (indicator ∘ four_cell_A) (indicator ∘ four_cell_B) = 0 in the existing four-cell finite moment model.
+   Premises and side conditions: The four-cell record supplies nonnegative cells and a unit total weight, already established by four_cell_total_mass. Independence itself is not assumed; four sample outcomes and all their weights are left intact.
+   Proof/definition method: Convert the existing four-cell normalization identity definitionally to the common FiniteUnion finite sum, then instantiate the generic checked normalized independence/indicator covariance equivalence. No re-enumeration of Boolean pairs or algebraic recomputation of covariance is performed.
+   Library reuse: four_cell_total_mass, FiniteBridge.finite_normalized_conditional_independence_iff_zero_indicator_covariance, FiniteUnion.finite_sum, FiniteMoments.total_mass and the shared FiniteSum implementation.
+   Boundary: This identifies equivalent propositions within the finite four-cell model, not an empirical zero-correlation finding, a causal claim or a Gaussian independence assertion.
+ *)
+Theorem four_cell_generic_independence_iff_zero_indicator_covariance :
+  forall m,
+    (@FiniteUnion.finite_conditional_independent (bool * bool)
+       (four_cell_weight m) four_cell_samples
+       four_cell_A four_cell_B (fun _ => true) <->
+     @FiniteMoments.covariance (bool * bool) four_cell_samples
+       (four_cell_weight m)
+       (fun x => FiniteUnion.indicator (four_cell_A x))
+       (fun x => FiniteUnion.indicator (four_cell_B x)) = 0).
+Proof.
+  intro m.
+  assert (Hunit :
+    @FiniteUnion.finite_sum (bool * bool)
+      (four_cell_weight m) four_cell_samples = 1).
+  { change (@FiniteMoments.total_mass (bool * bool)
+      four_cell_samples (four_cell_weight m) = 1).
+    apply four_cell_total_mass. }
+  apply (finite_normalized_conditional_independence_iff_zero_indicator_covariance
+    (bool * bool) four_cell_samples (four_cell_weight m)
+    four_cell_A four_cell_B Hunit).
+Qed.
