@@ -108,6 +108,44 @@ For PVS or Isabelle, runtime compatibility is not established merely by a
 successful archive extraction. Avoid system-wide links until the launcher
 and a representative proof/check have run successfully.
 
+## Resuming Isabelle when SSH disconnects
+
+A dropped SSH session can terminate an interactive `curl` or Bash script
+even when the download server is working. In the reported run, the HTTPS
+transfer had already reached hundreds of megabytes; the partially
+downloaded `~/Isabelle2026_linux.tar.gz` must be retained. **Do not
+delete it or restart from byte zero.** Do not paste the full contents of
+the shell script into an interactive Bash prompt: execute the file itself.
+
+On `computer10`, from a normal shell:
+
+```sh
+cd ~/src/composite_iq_formal_tools
+git pull --ff-only
+bash scripts/retry_isabelle_computer10.sh --detach
+```
+
+The `--detach` flag launches the installer with `setsid` and `nohup`,
+outside the invoking SSH session, and redirects progress to
+`~/isabelle2026-install.log`. A `flock` lock prevents duplicate jobs.
+For recoverable network interruptions, each new `curl -C -` attempt resumes
+from the current file size. HTTPS certificate errors are not retried or
+bypassed. This mechanism usually survives SSH disconnection; it cannot
+survive a machine reboot or a server policy that forcibly terminates all
+user processes. If that happens, rerun `--detach` to resume the archive.
+
+Check status without launching a second installer:
+
+```sh
+bash ~/src/composite_iq_formal_tools/scripts/retry_isabelle_computer10.sh --status
+```
+
+Once the download has finished, the worker checks the archive's exact
+1,412,134,191 byte size and the pinned SHA256, installs it, and lists
+the Isabelle launcher in the log. The status command reports whether the
+worker holds its exclusive lock and shows recent log output. "No installer
+process" does not alone mean success; inspect the end of the log.
+
 ## Isabelle download failures and official mirror
 
 **November 14, 2026 correction:** The original script mistakenly used
