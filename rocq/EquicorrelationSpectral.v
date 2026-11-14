@@ -253,7 +253,7 @@ Proof.
         by (unfold equicorr_energy, sequential_d; ring).
       nra.
   - intros [Hc Hd] energy total Hf.
-    eapply equicorr_psd_on_feasible_summaries; eauto.
+    exact (equicorr_psd_on_feasible_summaries n c energy total Hn Hc Hd Hf).
 Qed.
 
 (**
@@ -283,7 +283,7 @@ Proof.
         by (unfold equicorr_energy, sequential_d; ring).
       nra.
   - intros [Hc Hd] energy total He Hf.
-    eapply equicorr_pd_on_nonzero_feasible_summaries; eauto.
+    exact (equicorr_pd_on_nonzero_feasible_summaries n c energy total Hn Hc Hd He Hf).
 Qed.
 
 (**
