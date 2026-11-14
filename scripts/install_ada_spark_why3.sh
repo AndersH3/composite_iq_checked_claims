@@ -18,6 +18,7 @@ METIS_URL="https://github.com/gilith/metis.git"
 METIS_SHA="7a23e4ea68bc92927716777ebc98bea09e91fe24"
 METIS_DIR="$HOME/.local/src/metis-pinned"
 SPARK_PREFIX="$HOME/.local/opt/ada-spark"
+SPARK_VERSION="16.1.0"
 
 mode="${1:---plan}"
 case "$mode" in
@@ -44,12 +45,12 @@ if [[ "$mode" == "--plan" ]]; then
   printf 'Debian 13 Ada/SPARK/Why3 stack; no changes made.\n'
   printf 'Debian apt packages:'
   printf ' %s' "${ADA_PACKAGES[@]}"
-  printf '\nGNATprove: alr install --prefix=%s gnatprove\n' "$SPARK_PREFIX"
+  printf '\nGNATprove: alr -n get gnatprove=%s into %s\n' "$SPARK_VERSION" "$SPARK_PREFIX"
   printf 'Metis prover: official development snapshot %s\n' "$METIS_SHA"
   printf '%s\n' 'NOTE: apt install metis is WRONG (graph partitioning).'
   printf '%s\n' 'NOTE: Metis build needs a separate MLton, Poly/ML or Moscow ML compiler.'
   printf '%s\n' 'For the GNATprove Alire workspace, use: alr with gnatprove; alr gnatprove'
-  printf '%s\n' 'Why3 integration is verified by: why3 config --detect'
+  printf '%s\n' 'Why3 integration is verified by: why3 config detect'
   exit 0
 fi
 
@@ -102,14 +103,63 @@ fi
 
 if [[ "$mode" == "--install-spark" ]]; then
   if ! command -v alr >/dev/null; then
-    printf 'Alire not found. First use --install-apt.\n' >&2
+    printf 'Alire is missing. First use --install-apt.\n' >&2
     exit 3
   fi
+  # Debian 13 packages Alire 1.2.1. Its CLI has "get" and "with", but
+  # NO "install" subcommand. Retrieve a versioned binary crate without
+  # installing a different Alire release or modifying the system PATH.
   mkdir -p "$SPARK_PREFIX"
-  printf 'Installing GNATprove into user prefix %s\n' "$SPARK_PREFIX"
-  alr install --prefix="$SPARK_PREFIX" gnatprove
-  printf 'GNATprove executable (if provided): %s/bin/gnatprove\n' "$SPARK_PREFIX"
-  printf '%s\n' 'In each Alire/SPARK project: alr with gnatprove; alr gnatprove'
+  wrapper_dir="$SPARK_PREFIX/bin"
+  wrapper="$wrapper_dir/gnatprove"
+  if [[ -x "$wrapper" ]]; then
+    printf 'Existing GNATprove wrapper: %s\n' "$wrapper"
+    "$wrapper" --version
+    exit 0
+  fi
+
+  printf 'Retrieving GNATprove %s using Alire 1.2-compatible get.\n' "$SPARK_VERSION"
+  (
+    cd "$SPARK_PREFIX"
+    alr -n get "gnatprove=$SPARK_VERSION"
+  )
+  # Alire get produces a versioned directory gnatprove_VERSION_HASH.
+  # Restrict discovery to the requested version, not arbitrary binaries
+  # from other releases or other crates in the prefix.
+  mapfile -d '' -t candidates < <(
+    find "$SPARK_PREFIX" -type f -perm /111 \
+      -path "*/gnatprove_${SPARK_VERSION}_*/bin/gnatprove" -print0
+  )
+  if (( ${#candidates[@]} != 1 )); then
+    printf 'ERROR: Expected exactly one GNATprove %s executable; found %s.\n' \
+      "$SPARK_VERSION" "${#candidates[@]}" >&2
+    printf 'Check release layout under %s before continuing.\n' "$SPARK_PREFIX" >&2
+    exit 4
+  fi
+  binary="${candidates[0]}"
+  binary_dir="$(dirname "$binary")"
+
+  # A wrapper supplies the vendor bundle's own executables and solvers,
+  # without changing PATH or system packages outside this process.
+  mkdir -p "$wrapper_dir"
+  printf -v quoted_binary '%q' "$binary"
+  printf -v quoted_directory '%q' "$binary_dir"
+  cat > "$wrapper" <<EOF
+#!/usr/bin/env bash
+# User-local GNATprove $SPARK_VERSION launcher for the Alire binary crate.
+# Keep the crate's bundled prover executables available to GNATprove.
+set -euo pipefail
+export PATH=$quoted_directory:"\$PATH"
+exec $quoted_binary "\$@"
+EOF
+  chmod 755 "$wrapper"
+  if ! "$wrapper" --version; then
+    rm -f -- "$wrapper"
+    printf 'ERROR: GNATprove binary did not pass its version probe.\n' >&2
+    exit 5
+  fi
+  printf 'GNATprove %s launcher: %s\n' "$SPARK_VERSION" "$wrapper"
+  printf 'In an Alire project, use: alr with gnatprove; alr gnatprove\n'
   exit 0
 fi
 
@@ -185,20 +235,11 @@ if [[ "$mode" == "--detect" ]]; then
     printf 'FOUND Metis theorem prover: %s/bin/polyml/metis\n' "$METIS_DIR"
   fi
   if command -v why3 >/dev/null; then
-    # Debian 13 ships Why3 1.8.0, while Why3 1.9 changes the config
-    # command interface from options to subcommands. Inspect the local
-    # help before choosing syntax; do not silently assume 1.9 semantics.
-    help_text="$(why3 config --help 2>&1 || true)"
-    if grep -q -- '--detect' <<< "$help_text"; then
-      why3 config --detect
-      why3 config --list-provers
-    elif grep -qE '(^|[[:space:]])detect([[:space:]]|$)' <<< "$help_text"; then
-      why3 config detect
-      why3 config list-provers
-    else
-      why3 config
-      printf '%s\n' 'Detected Why3 provers; inspect the user configuration.'
-    fi
+    # Debian 13 Why3 1.8.0 uses the "config detect" subcommand, not
+    # "--detect". List installed known provers using the 1.8 top-level
+    # option, rather than the 1.9-specific config list-provers command.
+    why3 config detect
+    why3 --list-provers
   fi
   exit 0
 fi
