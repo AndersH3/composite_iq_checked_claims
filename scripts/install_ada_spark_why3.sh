@@ -159,8 +159,20 @@ if [[ "$mode" == "--detect" ]]; then
     printf 'FOUND Metis theorem prover: %s/bin/polyml/metis\n' "$METIS_DIR"
   fi
   if command -v why3 >/dev/null; then
-    why3 config --detect
-    why3 config --list-provers
+    # Debian 13 ships Why3 1.8.0, while Why3 1.9 changes the config
+    # command interface from options to subcommands. Inspect the local
+    # help before choosing syntax; do not silently assume 1.9 semantics.
+    help_text="$(why3 config --help 2>&1 || true)"
+    if grep -q -- '--detect' <<< "$help_text"; then
+      why3 config --detect
+      why3 config --list-provers
+    elif grep -qE '(^|[[:space:]])detect([[:space:]]|$)' <<< "$help_text"; then
+      why3 config detect
+      why3 config list-provers
+    else
+      why3 config
+      printf '%s\n' 'Detected Why3 provers; inspect the user configuration.'
+    fi
   fi
   exit 0
 fi
