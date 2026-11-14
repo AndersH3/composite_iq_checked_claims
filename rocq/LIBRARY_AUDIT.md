@@ -3763,3 +3763,17 @@ balanced comparison has conditional mean 0; the fixed recursive
 averages are respectively -1/2 and 0. Every expectation reuses
 FiniteSum.finite_sum. This checks the finite `prop:counterexample`
 without asserting any Gaussian law or any general independence theorem.
+
+
+### Current report-claim CI (14 November 2026)
+
+The report inventory distinguishes a kernel-verified **61-theorem**
+`SequentialReport.v` (13 definitions) from the non-formalized Gaussian
+conditional-law, spectral and inverse-normal assertions. The verified
+finite counterexample matches score marginals and zero cross-covariance
+but differs in positive-event conditional predictions. The five
+strict-rounding theorems reuse Stdlib Reals/Field instead of constructing
+numerical approximations; individual table certificate inputs must still
+be instantiated. Rocq 9.2 push run 43630400889 passed on c7c7a293,
+verifying 1,126 proof scripts in eight modules. No other proof trust base,
+new Gaussian axiom, or Python/SPARK modification was introduced.

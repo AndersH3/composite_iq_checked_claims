@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Baseline:** `main` at merge commit `0946d858b6fec14a1823cf50bd6db0beeca607df` (merged PR #4). **Proof-development branch:** `rocq-report-claim-proofs-20261114`.
+**Audit date:** November 14, 2026. **Baseline:** current `main` at `826222f1afd0f878fb97cbe2904b5cdd4521c656` (PR #4 already merged at `0946d858`). **Additional report-directed proofs:** branch `rocq-report-used-theorems-20261114`, commit `c7c7a2933b3a1bceaf27447706595014398c2280`.
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
@@ -14,7 +14,7 @@ The inventory is organized **by the claims in the actual report sources**, not b
 
 **K — Kernel-checked at stated mathematical scope:** a named Rocq theorem proves the displayed finite/algebraic proposition, with its explicit hypotheses. **A — Algebraic consequence formalized:** the report's rational formula is checked, but the stochastic Gaussian premise from which the report derives it is **not** proved. **P — Report proof / cited established theorem only:** the typeset report gives a mathematical proof or reference, but no corresponding general Rocq kernel theorem has been supplied. **E — Empirical or numerical/modeling claim:** its correctness requires numerical/error-certified evaluation or assumptions about a real test population. A claim labelled P or E is not converted to K merely by a successful Rocq build.
 
-The `SequentialReport.v` module now has **seven definitions and 37 Rocq 9.2 kernel-checked real-algebra and natural-induction theorems**. Both [Rocq push CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43627749197) and [Rocq pull-request CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43627753031) passed on commit `a6d3135c`. This verifies the stated arithmetic and finite recursion, **not** the Gaussian conditional-law claims, which remain P.
+The `SequentialReport.v` module now has **13 documented definitions and 61 Rocq 9.2 kernel-checked theorems**: the initial 37 arithmetic/induction results, **five general strict rounding theorems** for `lem:rounding`, and **19 exact finite probability counterexample theorems** for `prop:counterexample`. The latest [Rocq push CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43630400889) passed on commit `c7c7a293` (1,229 documented declarations and 1,126 proof scripts across eight modules). These proofs verify their exact finite/algebraic assumptions, **not** general Gaussian conditional expectations, spectral decomposition, continuous Gaussian integrals, or all individual numeric certificates, which remain separate tasks.
 
 ## I. Sequential conditional-means report — explicitly stated results
 
@@ -88,9 +88,9 @@ The report gives labelled equations rather than a separate list of theorem envir
 ## IV. Proof-development priorities based on report dependence
 
 1. **Highest impact, genuinely missing:** Gaussian regression, conditional expectation (with regular conditional laws and continuous versions), and equicorrelation positive-semidefinite/spectral construction. The current Schur covariance theorems do **not** establish these stochastic claims.
-2. **Checked in the maintained finite/reals infrastructure:** complete finite-history induction, two/three-start closed-form means, residual variance and exact IQ arithmetic. `SequentialReport.v` proves **37** real-algebra and induction statements, conditioned on the stated model inputs. General Gaussian regression and conditional probability laws remain open.
+2. **Checked in the maintained finite/reals infrastructure:** complete finite-history induction, two/three-start closed-form means, residual variance, exact IQ arithmetic, general strict rounding criteria and a discrete conditional-mean counterexample. `SequentialReport.v` now proves **61** results with explicit finite/algebraic assumptions. General Gaussian regression and conditional probability laws remain open.
 3. **Numerical certification:** checked individual numeric certificate instances and bivariate-normal tail/quantile error bounds. Existing Python/SciPy regression tests are valuable but do not constitute Rocq proofs of continuous probability integrals.
-4. **Finite-model counterexample:** explicitly exhibit two finite joint distributions with the same marginals and covariance but different conditional means, discharging `prop:counterexample` without introducing unsupported Gaussian claims.
+4. **Completed finite-model counterexample:** `SequentialReport.v` checks the two eight-occurrence finite joint distributions, matching balanced binary marginals and vanishing correlations while producing conditional means -1 and 0 on the positive-mass event X=0. Next strengthen this with a formal event-support iff test and add machine-checked integer rounding certificates.
 
 The table is a scope audit: it intentionally does **not** claim that every source theorem has already been formalized. Existing checked results retain their exact finite-model hypotheses; a well-documented report proof or citation is not automatically a kernel proof.
 
@@ -98,12 +98,12 @@ The table is a scope audit: it intentionally does **not** claim that every sourc
 
 ## Appendix — Complete AI disclosure
 
-This inventory was researched, extracted, organized, and drafted by OpenAI's AI assistant using the connected GitHub repository. The assistant read the three primary XeLaTeX reports, two sequential-report appendices, existing Rocq theorem modules, compilation workflow, and proof-refactor register. It generated the 37-theorem and seven-definition `SequentialReport.v` algebraic and natural-induction formalization and mapped individual report labels to named proof declarations. Where a theorem involves Gaussian laws, measure-theoretic conditional expectations, matrix spectral properties, inverse-normal calculations, or floating-point error bounds not represented in Rocq, the inventory explicitly says so. The assistant did not independently validate the empirical applicability of any IQ model or change any evidence artifacts. Final source-proof claims must be checked by the pinned Rocq 9.2 CI workflow, not inferred from this document's prose.
+This inventory was researched, extracted, organized, and drafted by OpenAI's AI assistant using the connected GitHub repository. The assistant read the three primary XeLaTeX reports, two sequential-report appendices, existing Rocq theorem modules, compilation workflow, and proof-refactor register. It generated the original 37-theorem/seven-definition arithmetic formalization and the follow-up 24-theorem/six-definition rounding and finite counterexample extensions to `SequentialReport.v` and mapped individual report labels to named proof declarations. Where a theorem involves Gaussian laws, measure-theoretic conditional expectations, matrix spectral properties, inverse-normal calculations, or floating-point error bounds not represented in Rocq, the inventory explicitly says so. The assistant did not independently validate the empirical applicability of any IQ model or change any evidence artifacts. Final source-proof claims must be checked by the pinned Rocq 9.2 CI workflow, not inferred from this document's prose.
 
 
 ## November 14 follow-up: checked report rounding criteria
 
-Five new Rocq 9.2 candidate proofs correspond directly to `lem:rounding`:
+Five kernel-verified Rocq 9.2 proofs correspond directly to `lem:rounding`:
 integer grid separation, the strict midpoint unique-nearest criterion,
 exact rational certificate sufficiency, strict squared-interval transfer
 to nonnegative standard deviation, and exact SD certificate sufficiency.
@@ -116,7 +116,7 @@ numerical integration claims remain outside this arithmetic layer.
 
 ## Concrete positive-probability conditional-mean counterexample
 
-Nineteen report-directed Rocq theorems certify an eight-outcome uniform
+Nineteen kernel-verified report-directed Rocq theorems certify an eight-outcome uniform
 finite probability construction. The common first score has marginal
 (-sqrt(2),0,sqrt(2)) with weights (1/4,1/2,1/4). Both second-score
 marginals are ±1 with probabilities 1/2 each. In both joint models the

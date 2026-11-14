@@ -1,7 +1,7 @@
 # Rocq formalization of checked claims
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the two reports. **979 proof scripts** in seven
+for the three reports. **1,126 proof scripts** in eight
 Rocq files are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -19,7 +19,15 @@ rocq compile FiniteUnion.v
 rocq compile FiniteMoments.v
 rocq compile FiniteBridge.v
 rocq compile FourCellBridge.v
+rocq compile SequentialReport.v
 ```
+
+The source-matched [report theorem inventory](REPORT_THEOREM_INVENTORY.md)
+links each actual report claim to checked Rocq theorem names, distinguishes
+finite/algebraic scope from Gaussian-law assumptions, and records
+outstanding numerical/analytic formalization. The 61 checked theorems
+in `SequentialReport.v` include 37 original identities/induction proofs,
+five strict-rounding theorems, and 19 finite counterexample results.
 
 The GitHub Actions workflow at
 [rocq-proofs.yml](../.github/workflows/rocq-proofs.yml) compiles the
