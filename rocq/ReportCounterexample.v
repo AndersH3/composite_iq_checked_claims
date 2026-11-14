@@ -36,7 +36,7 @@ Open Scope R_scope.
  Library reuse: Stdlib.List and FiniteSum.
  Boundary: No Gaussian distribution is assumed.
 *)
-Definition report_dependent_samples : list nat := [0;1;2].
+Definition report_dependent_samples : list nat := [0%nat;1%nat;2%nat].
 
 (**
  [report_independent_samples] (definition) — Six-atom independent coupling.
@@ -48,7 +48,7 @@ Definition report_dependent_samples : list nat := [0;1;2].
  Library reuse: Stdlib.List.
  Boundary: Independence is witnessed by exact marginal/conditional masses.
 *)
-Definition report_independent_samples : list nat := [0;1;2;3;4;5].
+Definition report_independent_samples : list nat := [0%nat;1%nat;2%nat;3%nat;4%nat;5%nat].
 
 (**
  [report_dependent_weight] (definition) — Dependent joint mass function.
