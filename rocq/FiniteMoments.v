@@ -23146,7 +23146,7 @@ Section FiniteProbabilityMoments.
     rewrite indexed_basis_covariance_bilinear_add_second.
     pose proof
       (indexed_basis_covariance_pivot_projection_remainder_orthogonal
-        basis pivot right left Hpivot) as [_ Hcross].
+        basis pivot left right Hpivot) as [_ Hcross].
     rewrite Hcross.
     ring.
   Qed.
