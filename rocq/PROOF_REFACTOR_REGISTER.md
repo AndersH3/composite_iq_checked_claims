@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 601 proof scripts
+## FiniteMoments.v — 618 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1420,6 +1420,23 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_schur_determinant_identity` (theorem) | Specialize Schur complement diagonally, cancel the pivot denominator and normalize products. | schur_complement_identity, Field, Psatz.nra. | **New: Gram pivot determinant equals pivot pairing times residual quadratic.** |
 | `indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_residual_psd` (theorem) | Characterize full PSD using the positive pivot and nonnegative residual block, testing the pivot for necessity. | residual_quadratic_decomposition, Rle_0_sqr, Rmult_le_pos, Lra. | **New: Arbitrary finite signed covariance PSD iff pivot positive and entire residual PSD.** |
 | `indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_residual_nsd` (theorem) | Characterize full NSD with negative pivot and residual NSD; use real square sign with diagonal block split. | residual_quadratic_decomposition, Rle_0_sqr, Psatz.nra. | **New: Arbitrary finite signed covariance NSD iff pivot negative and entire residual NSD.** |
+| `indexed_basis_covariance_pivot_residual_bilinear_symmetric` (theorem) | Covariance symmetry at both remainders. | bilinear_symmetric. | **New: Residual pairing symmetry.** |
+| `indexed_basis_covariance_pivot_residual_bilinear_add_first` (theorem) | Schur quotient and original first-slot bilinearity. | schur_complement_identity, bilinear_add_first, Field. | **New: First-slot residual additivity.** |
+| `indexed_basis_covariance_pivot_residual_bilinear_scale_first` (theorem) | Scale the original covariance Schur terms then apply Field. | schur_complement_identity, bilinear_scale_first. | **New: First-slot residual homogeneity.** |
+| `indexed_basis_covariance_pivot_residual_bilinear_add_second` (theorem) | Reuse residual symmetry and first-slot residual additivity. | residual_bilinear_symmetric, residual_bilinear_add_first. | **New: Second-slot residual additivity.** |
+| `indexed_basis_covariance_pivot_residual_bilinear_scale_second` (theorem) | Transfer first-slot homogeneity by residual symmetry. | residual_bilinear_scale_first, residual_bilinear_symmetric. | **New: Second-slot residual homogeneity.** |
+| `indexed_basis_covariance_pivot_remainder_orthogonal_to_section_first` (theorem) | Scale the established remainder/pivot orthogonality. | remainder_orthogonal, bilinear_scale_second, Ring. | **New: Residual orthogonality to all pivot sections.** |
+| `indexed_basis_covariance_pivot_remainder_orthogonal_to_section_second` (theorem) | Use covariance symmetry and first section orthogonality. | bilinear_symmetric, remainder_orthogonal_to_section_first. | **New: Reverse-slot pivot-line orthogonality.** |
+| `indexed_basis_covariance_pivot_residual_pairing_first_absorption` (theorem) | Use decomposition of the right input and cancel mixed block. | projection_remainder_decomposition, projection_remainder_orthogonal, bilinear_add_second. | **New: Residual first-slot absorption.** |
+| `indexed_basis_covariance_pivot_residual_pairing_second_absorption` (theorem) | Use covariance symmetry and first-slot absorption. | bilinear_symmetric, residual_pairing_first_absorption, residual_bilinear_symmetric. | **New: Residual second-slot absorption.** |
+| `indexed_basis_covariance_pivot_schur_zero_iff_pivot_product` (theorem) | Cancel nonzero Schur denominator and rearrange products. | schur_complement_identity, Field, Psatz.nra. | **New: Residual cross-zero iff pivot-product factorization.** |
+| `indexed_basis_covariance_pivot_schur_determinant_zero_iff_residual_zero` (theorem) | Apply nonzero pivot to the determinant product identity. | schur_determinant_identity, Psatz.nra. | **New: Gram equality iff residual quadratic zero.** |
+| `indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonnegative` (theorem) | Transport determinant sign across strictly positive pivot factor. | schur_determinant_identity, Psatz.nra. | **New: Positive-pivot Gram sign equivalence.** |
+| `indexed_basis_covariance_pivot_schur_nonnegative_iff_residual_nonpositive` (theorem) | Transport determinant sign across strictly negative pivot factor. | schur_determinant_identity, Psatz.nra. | **New: Negative-pivot Gram sign equivalence.** |
+| `indexed_basis_covariance_pivot_schur_determinant_nonnegative_of_probability_weights` (theorem) | Use genuine covariance PSD at pivot and remainder, and Schur sign criterion. | bilinear_self_nonnegative, schur_nonnegative_iff_residual_nonnegative. | **New: Nonnegative Gram minor for finite probabilities.** |
+| `indexed_basis_covariance_pivot_residual_cauchy_schwarz_squared` (theorem) | Specialize standard finite covariance Cauchy–Schwarz to residuals. | bilinear_cauchy_schwarz_self_squared. | **New: Residual Cauchy–Schwarz for probability weights.** |
+| `indexed_basis_covariance_pivot_psd_iff_positive_pivot_and_all_gram_minors_nonnegative` (theorem) | Compose PSD pivot/residual splitting and Gram sign equivalence. | pivot_psd_iff_positive_pivot_and_residual_psd, schur_nonnegative_iff_residual_nonnegative. | **New: Full PSD iff positive pivot and every two-direction Gram minor nonnegative.** |
+| `indexed_basis_covariance_pivot_nsd_iff_negative_pivot_and_all_gram_minors_nonnegative` (theorem) | Compose NSD pivot/residual splitting and negative-pivot Gram sign equivalence. | pivot_nsd_iff_negative_pivot_and_residual_nsd, schur_nonnegative_iff_residual_nonpositive. | **New: Full NSD iff negative pivot and every two-direction Gram minor nonnegative.** |
 | `indexed_basis_two_samples_pivot_decomposition_unique_components` (theorem) | Reduce radical membership to scalar zero coordinate and apply the generic component uniqueness theorem, eliminating duplicate VectorSpec proof. | two_samples_radical_iff_pivot_coordinate_zero, covariance_pivot_decomposition_unique_components. | **Refactored: Specialized radical uniqueness delegates to generic covariance splitting.** |
 | `indexed_basis_two_samples_pivot_decomposition_exists_unique` (theorem) | Construct the section/remainder witness and use both previously checked decomposition and new pair uniqueness. | indexed_basis_two_samples_pivot_remainder_in_radical, indexed_basis_covariance_pivot_projection_remainder_decomposition, indexed_basis_two_samples_pivot_decomposition_unique_components. | **New: Constructive exists-unique typed scalar/radical splitting for every coefficient vector.** |
 | `indexed_basis_two_samples_bilinear_gram_determinant_zero` (theorem) | Specialize existing four-direction minor to the two-direction Gram matrix and rewrite covariance symmetry. | indexed_basis_two_samples_bilinear_all_minors_zero, indexed_basis_covariance_bilinear_symmetric. | **New: Exact zero Gram determinant without nonzero pivot or sign assumptions.** |
@@ -2020,3 +2037,26 @@ The exact checked inventory is determined by the pinned Rocq 9.2
 documentation and kernel CI, not by this commentary: expected **1012
 public checked claims, 1015 proof scripts, 1104 declarations**, with
 **601 FiniteMoments proof scripts**.
+
+
+## Residual bilinearity and all-direction Gram sign classification (14 November 2026)
+
+**17 fully documented Rocq theorems** certify scalar Schur residual
+symmetry and two-sided additivity/homogeneity, orthogonality to every
+pivot-line section, and exact first/second-slot residual absorption.
+They further characterize Schur cross-zero and diagonal determinant
+zero, positive/negative pivot Gram signs, and **global PSD/NSD iff
+pivot sign and all pivot Gram minors are nonnegative**. Genuine
+normalized nonnegative weights separately imply a nonnegative Gram
+bound and a residual Cauchy--Schwarz bound.
+
+General statements allow arbitrary finite sample lengths, signed or
+unnormalized weights and dependent bases; B(p,p)<>0 where required.
+The statements about normalized nonnegative weights explicitly carry
+those hypotheses. We reuse existing covariance bilinearity, symmetry,
+Schur decomposition, Rocq Stdlib Field/Psatz/Lra, vector reconstruction,
+positive-semidefinite and Cauchy--Schwarz theorems. No new custom sum,
+vector recursion, matrix evaluator, axioms, admits, Python/SPARK source,
+or archived evidence edits. The expected Rocq 9.2 inventory is **1029
+public claims, 1032 proof scripts, 1121 documented declarations**
+including **618 FiniteMoments scripts**; verify by pinned CI.

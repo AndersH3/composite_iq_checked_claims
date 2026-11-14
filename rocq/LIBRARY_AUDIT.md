@@ -3628,3 +3628,26 @@ The exact checked inventory is determined by the pinned Rocq 9.2
 documentation and kernel CI, not by this commentary: expected **1012
 public checked claims, 1015 proof scripts, 1104 declarations**, with
 **601 FiniteMoments proof scripts**.
+
+
+## Residual bilinearity and all-direction Gram sign classification (14 November 2026)
+
+**17 fully documented Rocq theorems** certify scalar Schur residual
+symmetry and two-sided additivity/homogeneity, orthogonality to every
+pivot-line section, and exact first/second-slot residual absorption.
+They further characterize Schur cross-zero and diagonal determinant
+zero, positive/negative pivot Gram signs, and **global PSD/NSD iff
+pivot sign and all pivot Gram minors are nonnegative**. Genuine
+normalized nonnegative weights separately imply a nonnegative Gram
+bound and a residual Cauchy--Schwarz bound.
+
+General statements allow arbitrary finite sample lengths, signed or
+unnormalized weights and dependent bases; B(p,p)<>0 where required.
+The statements about normalized nonnegative weights explicitly carry
+those hypotheses. We reuse existing covariance bilinearity, symmetry,
+Schur decomposition, Rocq Stdlib Field/Psatz/Lra, vector reconstruction,
+positive-semidefinite and Cauchy--Schwarz theorems. No new custom sum,
+vector recursion, matrix evaluator, axioms, admits, Python/SPARK source,
+or archived evidence edits. The expected Rocq 9.2 inventory is **1029
+public claims, 1032 proof scripts, 1121 documented declarations**
+including **618 FiniteMoments scripts**; verify by pinned CI.
