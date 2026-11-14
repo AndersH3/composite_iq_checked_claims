@@ -3,7 +3,7 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1,162 proof scripts** across eleven
+for the three principal reports. **1,196 proof scripts** across twelve
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -4600,8 +4600,10 @@ OpenAI's assistant designed the theorem statements, wrote the annotated Rocq pro
 
 ## November 14: concrete vector PSD and PD criteria
 
-`EquicorrelationVectors.v` extends the algebraic `EquicorrelationSpectral.v` criteria to genuine finite lists of real coordinates by proving finite-vector Cauchy–Schwarz, mean-centered energy nonnegativity, and the exact PSD/PD iff eigenvalue conditions for any fixed dimension n>=2. The implementation uses `FiniteSum` rather than creating a new summation operator and `Stdlib.List` for vector construction, concatenation and affine maps. The new module contains 31 theorem scripts, including dimensional and finite-list support lemmas. Theorems are deterministic finite algebra; Gaussian realization, general spectral theorem and conditional Gaussian prediction remain open.
+`EquicorrelationVectors.v` extends the algebraic `EquicorrelationSpectral.v` criteria to genuine finite lists of real coordinates by proving finite-vector Cauchy–Schwarz, mean-centered energy nonnegativity, and the exact PSD/PD iff eigenvalue conditions for any fixed dimension n>=2. The implementation uses `FiniteSum` rather than creating a new summation operator and `Stdlib.List` for vector construction, concatenation and affine maps. The new module contains 34 theorem scripts, including dimensional and finite-list support lemmas and three matrix-action/nullspace refinements. Theorems are deterministic finite algebra; Gaussian realization, general spectral theorem and conditional Gaussian prediction remain open.
 
 ### Complete AI disclosure — finite-vector bridge
 
 OpenAI's assistant designed the finite-vector theorem statements, composed the Rocq proof scripts and accompanying documentation, and wired the module into the pinned CI validation. The independent operational evidence is the Rocq 9.2 kernel compilation and repository-wide Python/Deal/SPARK CI gates; no extrapolation from a successful algebraic proof to empirical IQ calibration or continuous Gaussian probability is made.
+
+The final algebraic refinements identify the aggregate equicorrelation quadratic form with the **literal finite sum of each coordinate times its rank-one covariance-matrix action**; show every zero-sum vector is a contrast eigenvector; and characterize the exact nullspace under strict eigenvalue positivity using Stdlib.Forall and the shared finite-sum support lemmas. These statements are a finite real-vector realization, not a general matrix spectral theorem or probabilistic Gaussian model.
