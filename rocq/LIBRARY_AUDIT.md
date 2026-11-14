@@ -3537,6 +3537,33 @@ modifications are claimed.
 Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
 1091 documented declarations**, including **588 FiniteMoments proofs**.
 
+## Generic covariance pivot-coordinate splitting (14 November 2026)
+
+Three new extensively documented Rocq theorems extract the algebraic
+component of the former two-sample radical decomposition:
+(1) a pivot projection has exactly the scalar coordinate-zero kernel;
+(2) a scalar pivot-section plus a zero-coordinate complement has
+uniquely determined real and typed vector components; and
+(3) every typed vector has an **exists!** pair realizing that split.
+
+**Only B(p,p)<>0 is assumed.** These results support all finite
+sample lengths, unnormalized signed weights and dependent bases. The
+original two-sample radical uniqueness theorem now delegates to
+the generic component theorem after invoking the existing radical
+iff zero-coordinate lemma. This removes its duplicate 50-line
+VectorSpec extensionality/cancellation proof, reusing Stdlib.Vector
+and the existing scalar coordinate laws instead.
+
+The generic complement is **not** claimed to be the full covariance
+radical for arbitrary sample counts; that special identification
+requires two normalized sampled occurrences. No abstract rank-nullity,
+new vector or matrix implementation, admits, axioms, Python/SPARK
+changes, or archived evidence alterations.
+
+Expected pinned Rocq 9.2 counts: **1002 public checked claims**,
+**1005 proof scripts**, **1094 documented declarations**, including
+**591 FiniteMoments proof scripts**.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

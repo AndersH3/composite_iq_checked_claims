@@ -22319,6 +22319,180 @@ Section FiniteProbabilityMoments.
   Qed.
 
 
+
+  (**
+   [indexed_basis_covariance_pivot_coordinate_zero_iff_projection_zero]
+   (theorem) — Exact kernel of the finite covariance pivot projection.
+   Mathematical meaning: Projection onto a nonisotropic covariance
+   pivot vanishes precisely for input directions with normalized
+   pivot coordinate zero.
+   Exact checked proposition: B(p,p)<>0 implies
+   c_p(left)=0 iff P_p(left)=Vector.const 0 (length basis).
+   Premises and side conditions: Arbitrary finite samples, signed or
+   unnormalized weights, and dependent bases; only B(p,p)<>0.
+   Proof/definition method: Rewrite the typed zero vector as the
+   established zero scalar pivot section; use injectivity of the
+   section and direct coordinate rewriting, not vector recursion.
+   Library reuse: indexed_basis_covariance_pivot_section_zero,
+   indexed_basis_covariance_pivot_section_injective, Vector.const.
+   Boundary: This kernel need not equal the full covariance radical
+   for three or more sampled outcomes.
+   *)
+  Theorem indexed_basis_covariance_pivot_coordinate_zero_iff_projection_zero :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      (indexed_basis_covariance_pivot_coordinate basis pivot left = 0 <->
+       indexed_basis_covariance_pivot_projection basis pivot left =
+         Vector.const 0 (length basis)).
+  Proof.
+    intros basis pivot left Hpivot.
+    rewrite <- (indexed_basis_covariance_pivot_section_zero basis pivot).
+    unfold indexed_basis_covariance_pivot_projection.
+    split.
+    - intro Hzero.
+      now rewrite Hzero.
+    - intro Hprojected.
+      exact (indexed_basis_covariance_pivot_section_injective
+        basis pivot
+        (indexed_basis_covariance_pivot_coordinate basis pivot left)
+        0 Hpivot Hprojected).
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_decomposition_unique_components]
+   (theorem) — Generic component uniqueness for the pivot scalar and
+   its exact complementary coordinate-kernel direction.
+   Mathematical meaning: A representation as a scalar pivot section
+   plus a zero-pivot-coordinate coefficient vector has precisely the
+   canonical pivot coordinate and its explicit remainder.
+   Exact checked proposition: If B(p,p)<>0 and c_p(r)=0 and
+   section(p,alpha)+r=left, then alpha=c_p(left) and
+   r=remainder(p,left) as equal typed coefficient vectors.
+   Premises and side conditions: Any finite sample list, real
+   signed weights, nonunit mass, and dependent basis allowed;
+   no covariance-radical hypothesis is needed.
+   Proof/definition method: Use existing pivot-coordinate additivity
+   and section retraction to determine alpha. Prove vector equality
+   once via Stdlib.VectorSpec.eq_nth_iff, nth_map/nth_map2 and nra.
+   This factors the componentwise proof from the earlier specialized
+   two-sample radical decomposition into a reusable generic lemma.
+   Library reuse: pivot_coordinate_add, pivot_coordinate_section,
+   VectorSpec.eq_nth_iff, nth_map, nth_map2 and Stdlib.Psatz.nra.
+   Boundary: Generic scalar-kernel complement, not abstract linear
+   algebra rank-nullity or general identification with the radical.
+   *)
+  Theorem indexed_basis_covariance_pivot_decomposition_unique_components :
+    forall basis
+           (pivot left complement : Vector.t R (length basis))
+           (alpha : R),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot complement = 0 ->
+      Vector.map2 Rplus
+        (indexed_basis_covariance_pivot_section basis pivot alpha)
+        complement = left ->
+      alpha = indexed_basis_covariance_pivot_coordinate basis pivot left /\
+      complement = indexed_basis_covariance_pivot_remainder basis pivot left.
+  Proof.
+    intros basis pivot left complement alpha Hpivot Hzero Hsum.
+    pose proof
+      (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
+        Hsum) as Hsumcoord.
+    rewrite (indexed_basis_covariance_pivot_coordinate_add
+      basis pivot
+        (indexed_basis_covariance_pivot_section basis pivot alpha)
+        complement Hpivot) in Hsumcoord.
+    rewrite (indexed_basis_covariance_pivot_coordinate_section
+      basis pivot alpha Hpivot) in Hsumcoord.
+    rewrite Hzero in Hsumcoord.
+    assert (Halpha :
+      alpha = indexed_basis_covariance_pivot_coordinate basis pivot left).
+    { lra. }
+    split.
+    - exact Halpha.
+    - subst alpha.
+      unfold indexed_basis_covariance_pivot_remainder,
+        indexed_basis_covariance_pivot_section.
+      unfold indexed_basis_covariance_pivot_section in Hsum.
+      set (beta :=
+        indexed_basis_covariance_pivot_coordinate basis pivot left) in *.
+      change (Vector.map2 Rplus
+        (Vector.map (fun c => beta * c) pivot) complement = left) in Hsum.
+      apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
+        complement
+        (Vector.map2 Rplus left
+          (Vector.map (fun c => (- beta) * c) pivot)))).
+      intros i j Hij.
+      subst j.
+      pose proof
+        (f_equal (fun vector : Vector.t R (length basis) =>
+          Vector.nth vector i) Hsum) as Hnth.
+      change (Vector.nth
+        (Vector.map2 Rplus
+          (Vector.map (fun c => beta * c) pivot) complement) i =
+        Vector.nth left i) in Hnth.
+      rewrite (VectorSpec.nth_map2 Rplus
+        (Vector.map (fun c => beta * c) pivot) complement
+        i i i eq_refl eq_refl) in Hnth.
+      rewrite (VectorSpec.nth_map (fun c => beta * c)
+        pivot i i eq_refl) in Hnth.
+      rewrite (VectorSpec.nth_map2 Rplus left
+        (Vector.map (fun c => (- beta) * c) pivot)
+        i i i eq_refl eq_refl).
+      rewrite (VectorSpec.nth_map (fun c => (- beta) * c)
+        pivot i i eq_refl).
+      nra.
+  Qed.
+
+  (**
+   [indexed_basis_covariance_pivot_decomposition_exists_unique]
+   (theorem) — Universal constructive scalar-plus-kernel decomposition.
+   Mathematical meaning: Every typed coefficient direction is the
+   unique sum of one normalized pivot scalar section and one
+   coefficient vector of zero pivot coordinate.
+   Exact checked proposition: B(p,p)<>0 implies exists! pair of
+   type R*Vector.t R n such that c_p(snd pair)=0 and
+   section(p,fst pair)+snd pair=left.
+   Premises and side conditions: No two-sample restriction,
+   total mass, nonnegative weights, basis independence or radical
+   premise; the pivot self-covariance must be nonzero.
+   Proof/definition method: Construct pair using existing normalized
+   pivot coordinate and explicit remainder; reconstruct via the
+   established Vector.map2 decomposition and prove uniqueness using
+   the new generic component theorem and ordinary product equality.
+   Library reuse: pivot_remainder_coordinate_zero,
+   pivot_projection_remainder_decomposition, generic component
+   uniqueness, Stdlib.Init.Datatypes.prod and Stdlib.Logic.ex_unique.
+   Boundary: Explicit single-functional split, not a packaged
+   quotient dimension or general rank-nullity theorem.
+   *)
+  Theorem indexed_basis_covariance_pivot_decomposition_exists_unique :
+    forall basis (pivot left : Vector.t R (length basis)),
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      exists! pair : (R * Vector.t R (length basis))%type,
+        indexed_basis_covariance_pivot_coordinate basis pivot (snd pair) = 0 /\
+        Vector.map2 Rplus
+          (indexed_basis_covariance_pivot_section basis pivot (fst pair))
+          (snd pair) = left.
+  Proof.
+    intros basis pivot left Hpivot.
+    exists
+      (indexed_basis_covariance_pivot_coordinate basis pivot left,
+       indexed_basis_covariance_pivot_remainder basis pivot left).
+    split.
+    - split.
+      + apply indexed_basis_covariance_pivot_remainder_coordinate_zero.
+        exact Hpivot.
+      + apply indexed_basis_covariance_pivot_projection_remainder_decomposition.
+    - intros [alpha complement] [Hzero Hsum].
+      simpl in *.
+      pose proof
+        (indexed_basis_covariance_pivot_decomposition_unique_components
+          basis pivot left complement alpha Hpivot Hzero Hsum)
+        as [Halpha Hremainder].
+      rewrite Halpha, Hremainder.
+      reflexivity.
+  Qed.
+
   (**
    [indexed_basis_two_samples_pivot_decomposition_unique_components]
    (theorem) — Uniqueness of both scalar and vector components of a
@@ -22334,16 +22508,13 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: Every coefficient is typed by the same
    finite basis, which may be dependent. Signed weights are permitted;
    positivity and independence are not presumed.
-   Proof/definition method: Apply the existing linear coordinate to the
-   proposed decomposition and use radical iff zero-coordinate to
-   identify alpha. Then compare the typed remainder coordinatewise using
-   VectorSpec.eq_nth_iff and nth_map2/nth_map; ordinary real arithmetic
-   cancels the pivot terms. The standard vector library handles indexing.
-   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero,
-   indexed_basis_covariance_pivot_coordinate_add,
-   indexed_basis_covariance_pivot_coordinate_section,
-   Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2,
-   Stdlib.Psatz.lra/nra.
+   Proof/definition method: Translate two-sample radical membership
+   to zero scalar pivot coordinate, then delegate both component
+   uniqueness assertions to the new generic splitting theorem.
+   This removes duplicated library-backed VectorSpec extensionality.
+   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+   and indexed_basis_covariance_pivot_decomposition_unique_components;
+   the generic proof shares Stdlib.VectorSpec and real algebra.
    Boundary: Unique concrete decomposition for two normalized
    occurrences, not a generic vector-space rank-nullity identity.
    *)
@@ -22363,57 +22534,13 @@ Section FiniteProbabilityMoments.
   Proof.
     intros basis pivot left radical alpha x y
       Hsamples Hmass Hpivot Hradical Hsum.
-    pose proof
-      ((proj1 (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
-        basis pivot radical x y Hsamples Hmass Hpivot)) Hradical)
-      as Hradcoord.
-    pose proof
-      (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
-        Hsum) as Hsumcoord.
-    rewrite (indexed_basis_covariance_pivot_coordinate_add
-      basis pivot
-        (indexed_basis_covariance_pivot_section basis pivot alpha)
-        radical Hpivot) in Hsumcoord.
-    rewrite (indexed_basis_covariance_pivot_coordinate_section
-      basis pivot alpha Hpivot) in Hsumcoord.
-    rewrite Hradcoord in Hsumcoord.
-    assert (Halpha :
-      alpha = indexed_basis_covariance_pivot_coordinate basis pivot left).
-    { lra. }
-    split.
-    - exact Halpha.
-    - subst alpha.
-      unfold indexed_basis_covariance_pivot_remainder,
-        indexed_basis_covariance_pivot_section.
-      unfold indexed_basis_covariance_pivot_section in Hsum.
-      set (beta :=
-        indexed_basis_covariance_pivot_coordinate basis pivot left) in *.
-      change (Vector.map2 Rplus
-        (Vector.map (fun c => beta * c) pivot) radical = left) in Hsum.
-      apply (proj1 (VectorSpec.eq_nth_iff R (length basis)
-        radical
-        (Vector.map2 Rplus left
-          (Vector.map (fun c => (- beta) * c) pivot)))).
-      intros i j Hij.
-      subst j.
-      pose proof
-        (f_equal (fun vector : Vector.t R (length basis) =>
-          Vector.nth vector i) Hsum) as Hnth.
-      change (Vector.nth
-        (Vector.map2 Rplus
-          (Vector.map (fun c => beta * c) pivot) radical) i =
-        Vector.nth left i) in Hnth.
-      rewrite (VectorSpec.nth_map2 Rplus
-        (Vector.map (fun c => beta * c) pivot) radical
-        i i i eq_refl eq_refl) in Hnth.
-      rewrite (VectorSpec.nth_map (fun c => beta * c)
-        pivot i i eq_refl) in Hnth.
-      rewrite (VectorSpec.nth_map2 Rplus left
-        (Vector.map (fun c => (- beta) * c) pivot)
-        i i i eq_refl eq_refl).
-      rewrite (VectorSpec.nth_map (fun c => (- beta) * c)
-        pivot i i eq_refl).
-      nra.
+    apply (indexed_basis_covariance_pivot_decomposition_unique_components
+      basis pivot left radical alpha Hpivot).
+    - apply (proj1
+        (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+          basis pivot radical x y Hsamples Hmass Hpivot)).
+      exact Hradical.
+    - exact Hsum.
   Qed.
 
   (**

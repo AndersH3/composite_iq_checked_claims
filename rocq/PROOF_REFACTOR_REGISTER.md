@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 588 proof scripts
+## FiniteMoments.v — 591 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1407,7 +1407,10 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_two_samples_pivot_coordinate_zero_iff_other` (theorem) | Compose two preexisting radical iff zero-coordinate theorems. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero, Stdlib.Logic.tauto. | **New: Kernel predicate is independent of pivot.** |
 | `indexed_basis_two_samples_cross_pivot_preserves_bilinear` (theorem) | Apply the first-argument projection law at one pivot and second-argument law at the other. | indexed_basis_two_samples_projection_preserves_bilinear_first/second. | **New: Independently selected nonisotropic pivots preserve all covariance pairings.** |
 | `indexed_basis_two_samples_cross_pivot_projections_differ_by_radical` (theorem) | Combine projection-fiber iff radical difference with idempotence and cross-pivot absorption. | indexed_basis_two_samples_projection_fiber_iff_radical_difference, indexed_basis_covariance_pivot_projection_idempotent. | **New: Pivot-line representatives from different pivots lie in the same radical coset.** |
-| `indexed_basis_two_samples_pivot_decomposition_unique_components` (theorem) | Apply the normalized pivot coordinate and its radical-zero equivalence to determine the scalar; use Stdlib.VectorSpec extensionality and ring arithmetic for remainder equality. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero, indexed_basis_covariance_pivot_coordinate_add/section, VectorSpec.eq_nth_iff/nth_map2/nth_map, Stdlib.Psatz. | **New: A scalar pivot plus radical decomposition has uniquely determined scalar and coefficient remainder.** |
+| `indexed_basis_covariance_pivot_coordinate_zero_iff_projection_zero` (theorem) | Rewrite the typed zero vector as scalar-zero section; use section injectivity and standard vector constants. | pivot_section_zero, pivot_section_injective, Stdlib.Vector.const. | **New: Exact generic projection kernel iff scalar coordinate zero.** |
+| `indexed_basis_covariance_pivot_decomposition_unique_components` (theorem) | Apply generic coordinate additivity and section retraction, then one maintained VectorSpec pointwise equality proof. | pivot_coordinate_add/section, VectorSpec.eq_nth_iff/nth_map/nth_map2, nra. | **New: Full scalar/complement uniqueness for arbitrary samples and masses.** |
+| `indexed_basis_covariance_pivot_decomposition_exists_unique` (theorem) | Construct canonical coordinate and remainder, then invoke the new generic component uniqueness theorem. | pivot_remainder_coordinate_zero, projection_remainder_decomposition, Stdlib.Logic.ex_unique. | **New: Constructive generic exact splitting with a unique witness.** |
+| `indexed_basis_two_samples_pivot_decomposition_unique_components` (theorem) | Reduce radical membership to scalar zero coordinate and apply the generic component uniqueness theorem, eliminating duplicate VectorSpec proof. | two_samples_radical_iff_pivot_coordinate_zero, covariance_pivot_decomposition_unique_components. | **Refactored: Specialized radical uniqueness delegates to generic covariance splitting.** |
 | `indexed_basis_two_samples_pivot_decomposition_exists_unique` (theorem) | Construct the section/remainder witness and use both previously checked decomposition and new pair uniqueness. | indexed_basis_two_samples_pivot_remainder_in_radical, indexed_basis_covariance_pivot_projection_remainder_decomposition, indexed_basis_two_samples_pivot_decomposition_unique_components. | **New: Constructive exists-unique typed scalar/radical splitting for every coefficient vector.** |
 | `indexed_basis_two_samples_bilinear_gram_determinant_zero` (theorem) | Specialize existing four-direction minor to the two-direction Gram matrix and rewrite covariance symmetry. | indexed_basis_two_samples_bilinear_all_minors_zero, indexed_basis_covariance_bilinear_symmetric. | **New: Exact zero Gram determinant without nonzero pivot or sign assumptions.** |
 | `indexed_basis_two_samples_bilinear_cross_zero_iff_self_zero` (theorem) | Factor the self-pairing product in the Gram-square identity, and recover zero cross-pairing from a vanishing real square. | Rmult_integral, Psatz.nra, Gram determinant identity. | **New: Cross-zero iff at least one self-covariance zero.** |
@@ -1923,3 +1926,30 @@ modifications are claimed.
 
 Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
 1091 documented declarations**, including **588 FiniteMoments proofs**.
+
+## Generic covariance pivot-coordinate splitting (14 November 2026)
+
+Three new extensively documented Rocq theorems extract the algebraic
+component of the former two-sample radical decomposition:
+(1) a pivot projection has exactly the scalar coordinate-zero kernel;
+(2) a scalar pivot-section plus a zero-coordinate complement has
+uniquely determined real and typed vector components; and
+(3) every typed vector has an **exists!** pair realizing that split.
+
+**Only B(p,p)<>0 is assumed.** These results support all finite
+sample lengths, unnormalized signed weights and dependent bases. The
+original two-sample radical uniqueness theorem now delegates to
+the generic component theorem after invoking the existing radical
+iff zero-coordinate lemma. This removes its duplicate 50-line
+VectorSpec extensionality/cancellation proof, reusing Stdlib.Vector
+and the existing scalar coordinate laws instead.
+
+The generic complement is **not** claimed to be the full covariance
+radical for arbitrary sample counts; that special identification
+requires two normalized sampled occurrences. No abstract rank-nullity,
+new vector or matrix implementation, admits, axioms, Python/SPARK
+changes, or archived evidence alterations.
+
+Expected pinned Rocq 9.2 counts: **1002 public checked claims**,
+**1005 proof scripts**, **1094 documented declarations**, including
+**591 FiniteMoments proof scripts**.
