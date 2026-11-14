@@ -540,7 +540,11 @@ Proof.
  rewrite equicorr_regression_risk_at_optimum by lra.
  unfold equicorr_schur_diagonal.
  rewrite sequential_residual_variance_identity by lra.
- apply Rdiv_lt_0_compat; nra.
+ assert (Hrc : 0 <= r*c).
+ { apply Rmult_le_pos; lra. }
+ apply Rdiv_lt_0_compat.
+ - apply Rmult_lt_0_compat; lra.
+ - exact Hd.
 Qed.
 
 (**
