@@ -22454,8 +22454,7 @@ Section FiniteProbabilityMoments.
     - split.
       + apply (indexed_basis_two_samples_pivot_remainder_in_radical
           basis pivot left x y Hsamples Hmass Hpivot).
-      + symmetry.
-        apply indexed_basis_covariance_pivot_projection_remainder_decomposition.
+      + apply indexed_basis_covariance_pivot_projection_remainder_decomposition.
     - intros [alpha radical] [Hradical Hsum].
       simpl in *.
       pose proof
