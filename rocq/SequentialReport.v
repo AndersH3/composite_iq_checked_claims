@@ -24,7 +24,7 @@
  *)
 From Stdlib Require Import Reals Lra Psatz Lia ZArith List.
 Require Import Hoeflin FiniteSum.
-Import ListNotations;
+Import ListNotations.
 Open Scope R_scope.
 
 (**
