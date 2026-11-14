@@ -72,7 +72,7 @@ SPECS = {
 }
 ALLOWED_HOSTS = ("https://github.com/", "https://isabelle.in.tum.de/")
 ISABELLE_CLARKSON = (
-    "https://mirror.cosi.clarkson.edu/isabelle/dist/Isabelle2026_linux.tar.gz"
+    "https://mirror.clarkson.edu/isabelle/dist/Isabelle2026_linux.tar.gz"
 )
 MIRRORS = ("primary", "clarkson")
 HEX = frozenset("0123456789abcdef")
@@ -117,7 +117,7 @@ def release_spec(name: str) -> tuple[str, str, int, str]:
 @deal.post(lambda result: result.endswith((".tar.gz", ".tgz")))
 @deal.post(lambda result: result.startswith(
     ("https://github.com/", "https://isabelle.in.tum.de/",
-     "https://mirror.cosi.clarkson.edu/")))
+     "https://mirror.clarkson.edu/")))
 @deal.ensure(lambda tool, mirror, result:
              result.rsplit("/", maxsplit=1)[-1] ==
              SPECS[tool][0].rsplit("/", maxsplit=1)[-1])
@@ -246,10 +246,16 @@ if __name__ == "__main__":
             except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
                 print(f"Download failed from {url}: {error}", file=sys.stderr)
                 if args.tool == "isabelle":
-                    print("If the network is reachable, try the official"
-                          " alternate mirror:", file=sys.stderr)
-                    print("  .venv/bin/python scripts/install_formal_provers.py"
-                          " --tool isabelle --mirror clarkson --install", file=sys.stderr)
+                    if args.mirror == "primary":
+                        print("Try the official Clarkson mirror instead:",
+                              file=sys.stderr)
+                        print("  .venv/bin/python scripts/install_formal_provers.py"
+                              " --tool isabelle --mirror clarkson --install",
+                              file=sys.stderr)
+                    else:
+                        print("The Clarkson mirror failed; try the primary"
+                              " Isabelle host or a verified local archive.",
+                              file=sys.stderr)
                     print("Alternatively, download Isabelle2026_linux.tar.gz"
                           " on another computer and invoke --archive /path/to/file",
                           file=sys.stderr)
