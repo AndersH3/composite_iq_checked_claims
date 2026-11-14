@@ -23842,13 +23842,11 @@ Section FiniteProbabilityMoments.
         (indexed_basis_covariance_pivot_schur_zero_iff_pivot_product
           basis pivot left right Hpivot)).
       apply Hall.
-    - intro Hresrad.
-      apply (proj1 Hrad) in Hresrad.
-      intro right.
+    - intros Hresrad right.
       apply (proj1
         (indexed_basis_covariance_pivot_schur_zero_iff_pivot_product
           basis pivot left right Hpivot)).
-      apply Hresrad.
+      exact ((proj1 Hrad) Hresrad right).
   Qed.
 
   (**
