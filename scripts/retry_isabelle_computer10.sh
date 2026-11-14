@@ -19,7 +19,8 @@ script="$repo/scripts/retry_isabelle_computer10.sh"
 log="$HOME/isabelle2026-install.log"
 lock="$HOME/.cache/isabelle2026-install.lock"
 
-case "${1:---run}" in
+mode="${1:---run}"
+case "$mode" in
   --help|-h)
     printf 'Usage: bash %s [--detach | --status | --run]\n' "$script"
     printf '%s\n' '--detach: start the resumable job outside the current SSH session'
@@ -28,8 +29,8 @@ case "${1:---run}" in
     exit 0
     ;;
   --detach|--status|--run)
-    mode="$1"
     ;;
+
   *)
     printf 'ERROR: Unknown option: %s\n' "$1" >&2
     exit 2
@@ -141,11 +142,20 @@ if (( ! verified )); then
        --output "$archive" "$url"; then
       success=1
       break
+    else
+      rc=$?
+    fi
+    # Do not repeatedly retry certificate failures, invalid URLs or
+    # servers that reject resumable Range requests.
+    if [[ "$rc" == 22 || "$rc" == 33 || "$rc" == 60 ||
+          "$rc" == 77 ]]; then
+      printf 'ERROR: Non-retriable curl failure (%s).\n' "$rc" >&2
+      exit "$rc"
     fi
     if (( attempt == 40 )); then
       break
     fi
-    printf 'Download interrupted; retrying with preserved partial file.\n'
+    printf 'Download interrupted (curl code %s); partial file preserved.\n' "$rc"
     sleep 15
   done
   if (( ! success )); then
