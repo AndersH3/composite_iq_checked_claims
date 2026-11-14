@@ -3448,6 +3448,40 @@ and **1075 documented declarations** across seven modules, including
 **572 FiniteMoments proof scripts**. The surviving research gap is transport to
 maintained abstract linear maps, subspaces and a generic rank-nullity theorem.
 
+
+## Nonisotropic pivot transitions and mixed-projection covariance (14 November 2026)
+
+**New structural step:** Two one-sided, kernel-checked covariance preservation
+theorems permit the left and right coefficient arguments to be projected
+independently. The original same-pivot two-sided theorem is refactored to
+compose them, replacing duplicated covariance-factorization arithmetic.
+
+Seven further documented results describe how **two different nonisotropic
+coefficient pivots** act on the same two-unit-mass-outcome covariance pairing:
+the first projection absorbs a preceding projection with another pivot;
+the corresponding normalized real coordinates differ by an explicit scalar
+transition; the two oriented transition factors multiply to one and are
+nonzero; their zero-coordinate kernels agree; mixed-pivot projections leave
+all covariance values invariant; and projected representatives differ by
+a vector in the full bilinear covariance radical. Absorption is **not**
+commutativity, and the representatives need not coincide as vectors.
+
+All new two-sample theorems allow signed weights and dependent score bases;
+each requires the indicated nonzero pivot self-pairings. These are exact
+quotient-style statements, not a formal abstract rank-nullity theorem,
+generic semidefinite classification, or observed IQ covariance estimate.
+
+The proofs reuse established \`indexed_basis_covariance_pivot_*\`,
+the certified projection-fiber/radical difference equivalence, covariance
+symmetry, \`Stdlib.Vectors.Vector.map\`, \`Stdlib.Psatz\`, and \`Stdlib.Logic\`.
+No new recursive vector, matrix or finite-sum code, axioms, admits,
+Python/SPARK implementations, or archived verification evidence.
+
+Source-order audit inventory: **992 public checked theorem/lemma/example
+claims**, **995 proof scripts**, **1084 documented declarations** across seven
+Rocq modules, including **581 FiniteMoments proof scripts**. Verify with the
+pinned Rocq 9.2 kernel and independent documentation/no-placeholder gate.
+
 ## Scope limitation
 
 This audit covers all seven proof modules; it does **not** claim that each

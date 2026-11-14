@@ -821,7 +821,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 The preexisting `union_prob_membership_extensional` proof now uses the shared
 `any_event_membership_ext` lemma instead of repeating both Boolean cases.
 
-## FiniteMoments.v — 572 proof scripts
+## FiniteMoments.v — 581 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -1382,7 +1382,9 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_projection_fiber_iff_coordinate` (theorem) | Apply the normalized coordinate to equal projections, and vice versa. | indexed_basis_covariance_pivot_projection_coordinate, f_equal. | **New: Projection equality iff one real coordinate equality.** |
 | `indexed_basis_covariance_pivot_projection_image_iff_section` (theorem) | Project to its scalar section; conversely each section is fixed by retraction. | indexed_basis_covariance_pivot_coordinate_section. | **New: Projection image is exactly the one-scalar pivot line.** |
 | `indexed_basis_two_samples_projection_radical_iff_zero_section` (theorem) | Reuse the radical iff zero-coordinate criterion and the projection retraction. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero, indexed_basis_covariance_pivot_projection_coordinate. | **New: Covariance radical equals concrete projection kernel.** |
-| `indexed_basis_two_samples_projection_preserves_bilinear` (theorem) | Factor both pairings into normalized coordinates and preserve each projection coordinate. | indexed_basis_two_samples_bilinear_pivot_coordinate_factorization, indexed_basis_covariance_pivot_projection_coordinate. | **New: Projecting both directions leaves covariance unchanged.** |
+| `indexed_basis_two_samples_projection_preserves_bilinear_first` (theorem) | Factor the pairing through the pivot coordinate and preserve the first argument's coordinate. | indexed_basis_two_samples_bilinear_pivot_coordinate_factorization, indexed_basis_covariance_pivot_projection_coordinate. | **New: Projecting the first coefficient direction alone preserves the full two-sample covariance pairing.** |
+| `indexed_basis_two_samples_projection_preserves_bilinear_second` (theorem) | Transfer the checked first-slot invariance across covariance symmetry without redoing factorization. | indexed_basis_covariance_bilinear_symmetric, indexed_basis_two_samples_projection_preserves_bilinear_first. | **New: Projecting the second coefficient direction alone preserves the pairing.** |
+| `indexed_basis_two_samples_projection_preserves_bilinear` (theorem) | Compose the new one-sided covariance-preserving projection theorems rather than duplicating the scalar factorization. | indexed_basis_two_samples_projection_preserves_bilinear_first/second. | **Refactored: Same-pivot two-sided covariance preservation delegates to stronger separate-argument results.** |
 | `indexed_basis_covariance_pivot_section_add` (theorem) | Prove standard Vector.map scalar-section additivity coordinatewise through VectorSpec equality and map2. | VectorSpec.eq_nth_iff, nth_map, nth_map2, Stdlib.Ring. | **New: The pivot section preserves addition without any probability assumptions.** |
 | `indexed_basis_covariance_pivot_section_scale` (theorem) | Apply VectorSpec map extensionality and ring associativity for nested scalar maps. | VectorSpec.eq_nth_iff, nth_map, Stdlib.Ring. | **New: Pivot scalar section preserves real scalar multiplication.** |
 | `indexed_basis_covariance_pivot_section_zero` (theorem) | Use standard VectorSpec nth_map and const_nth to identify zero-scaled pivot with Vector.const 0. | VectorSpec.eq_nth_iff, nth_map, const_nth, Stdlib.Ring. | **New: The zero scalar section is exactly the standard zero vector.** |
@@ -1398,6 +1400,13 @@ The preexisting `union_prob_membership_extensional` proof now uses the shared
 | `indexed_basis_covariance_pivot_projection_fixes_section` (theorem) | Reuse coordinate-section retraction in the projection's thin composition. | indexed_basis_covariance_pivot_coordinate_section. | **New: Every pivot-line vector is fixed by the projection.** |
 | `indexed_basis_two_samples_radical_pivot_line_trivial` (theorem) | Rewrite radical membership via the scalar coordinate and section retraction. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero. | **New: Radical and nonisotropic pivot line intersect only at zero.** |
 | `indexed_basis_two_samples_projection_fiber_iff_radical_difference` (theorem) | Combine projection and radical coordinate-fiber equivalences, then simplify linear differences. | indexed_basis_covariance_pivot_coordinate_add/scale, Stdlib.Ring, Stdlib.Lra. | **New: Projection fibers are exactly covariance-radical cosets.** |
+| `indexed_basis_two_samples_cross_pivot_projection_absorption` (theorem) | Use the scalar projection-fiber criterion and one-sided covariance preservation to show P_p(P_q(u))=P_p(u). | indexed_basis_covariance_pivot_projection_fiber_iff_coordinate, indexed_basis_two_samples_projection_preserves_bilinear_first. | **New: Cross-pivot projection absorption without assuming commutativity.** |
+| `indexed_basis_two_samples_pivot_coordinate_change` (theorem) | Apply the first pivot coordinate to cross-pivot absorption, then use scalar homogeneity. | indexed_basis_covariance_pivot_projection_coordinate, indexed_basis_covariance_pivot_coordinate_scale. | **New: Transition law between two normalized nonisotropic covariance coordinates.** |
+| `indexed_basis_two_samples_pivot_coordinate_transition_reciprocal` (theorem) | Specialize the transition law at the first pivot and cancel with its unit coordinate. | indexed_basis_covariance_pivot_coordinate_pivot_one, Stdlib.Psatz.nra. | **New: Oriented scalar transition factors multiply to one.** |
+| `indexed_basis_two_samples_pivot_coordinate_transition_nonzero` (theorem) | Derive nonvanishing from the reciprocal transition identity. | indexed_basis_two_samples_pivot_coordinate_transition_reciprocal, Stdlib.Psatz.nra. | **New: Every nonisotropic change-of-pivot scalar is invertible.** |
+| `indexed_basis_two_samples_pivot_coordinate_zero_iff_other` (theorem) | Compose two preexisting radical iff zero-coordinate theorems. | indexed_basis_two_samples_radical_iff_pivot_coordinate_zero, Stdlib.Logic.tauto. | **New: Kernel predicate is independent of pivot.** |
+| `indexed_basis_two_samples_cross_pivot_preserves_bilinear` (theorem) | Apply the first-argument projection law at one pivot and second-argument law at the other. | indexed_basis_two_samples_projection_preserves_bilinear_first/second. | **New: Independently selected nonisotropic pivots preserve all covariance pairings.** |
+| `indexed_basis_two_samples_cross_pivot_projections_differ_by_radical` (theorem) | Combine projection-fiber iff radical difference with idempotence and cross-pivot absorption. | indexed_basis_two_samples_projection_fiber_iff_radical_difference, indexed_basis_covariance_pivot_projection_idempotent. | **New: Pivot-line representatives from different pivots lie in the same radical coset.** |
 | `finite_signed_three_mass_one` (lemma) | Reduce the concrete signed three-sample sum and normalize arithmetic using ring. | FiniteMoments.total_mass, FiniteSum.finite_sum, Stdlib.Ring. | **New:** (1,1,-1) has unit total mass but is not a nonnegative probability weighting. |
 | `finite_signed_three_first_score_variance_zero` (lemma) | Evaluate finite expectations and the shared variance/covariance definition at all three samples. | FiniteMoments.variance, FiniteMoments.covariance, FiniteSum.finite_sum, ring. | **New:** First nonconstant score has zero signed-weight quadratic. |
 | `finite_signed_three_scores_cross_covariance_one` (lemma) | Evaluate the same finite moment definitions and normalize the real expression. | FiniteMoments.covariance, FiniteMoments.expect, FiniteSum.finite_sum, ring. | **New:** First and second score have cross-covariance one despite zero first-score variance. |
@@ -1818,3 +1827,37 @@ Expected inventory after Rocq CI: **983 public claims**, **986 proof scripts**
 and **1075 documented declarations** across seven modules, including
 **572 FiniteMoments proof scripts**. The surviving research gap is transport to
 maintained abstract linear maps, subspaces and a generic rank-nullity theorem.
+
+
+## Nonisotropic pivot transitions and mixed-projection covariance (14 November 2026)
+
+**New structural step:** Two one-sided, kernel-checked covariance preservation
+theorems permit the left and right coefficient arguments to be projected
+independently. The original same-pivot two-sided theorem is refactored to
+compose them, replacing duplicated covariance-factorization arithmetic.
+
+Seven further documented results describe how **two different nonisotropic
+coefficient pivots** act on the same two-unit-mass-outcome covariance pairing:
+the first projection absorbs a preceding projection with another pivot;
+the corresponding normalized real coordinates differ by an explicit scalar
+transition; the two oriented transition factors multiply to one and are
+nonzero; their zero-coordinate kernels agree; mixed-pivot projections leave
+all covariance values invariant; and projected representatives differ by
+a vector in the full bilinear covariance radical. Absorption is **not**
+commutativity, and the representatives need not coincide as vectors.
+
+All new two-sample theorems allow signed weights and dependent score bases;
+each requires the indicated nonzero pivot self-pairings. These are exact
+quotient-style statements, not a formal abstract rank-nullity theorem,
+generic semidefinite classification, or observed IQ covariance estimate.
+
+The proofs reuse established \`indexed_basis_covariance_pivot_*\`,
+the certified projection-fiber/radical difference equivalence, covariance
+symmetry, \`Stdlib.Vectors.Vector.map\`, \`Stdlib.Psatz\`, and \`Stdlib.Logic\`.
+No new recursive vector, matrix or finite-sum code, axioms, admits,
+Python/SPARK implementations, or archived verification evidence.
+
+Source-order audit inventory: **992 public checked theorem/lemma/example
+claims**, **995 proof scripts**, **1084 documented declarations** across seven
+Rocq modules, including **581 FiniteMoments proof scripts**. Verify with the
+pinned Rocq 9.2 kernel and independent documentation/no-placeholder gate.

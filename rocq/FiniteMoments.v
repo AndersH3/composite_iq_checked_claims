@@ -21346,6 +21346,84 @@ Section FiniteProbabilityMoments.
       exact Hcoordinate.
   Qed.
 
+
+  (**
+   [indexed_basis_two_samples_projection_preserves_bilinear_first]
+   (theorem) — Replacing only the first covariance direction by its
+   pivot projection preserves the pairing.
+   Mathematical meaning: Although the projection changes coefficient
+   vectors, their covariance against every test coefficient remains
+   unchanged in a two-occasion normalized model, even with signed weights.
+   Exact checked proposition: Under samples=[x;y], total_mass=1 and
+   B(pivot,pivot)<>0, B(P_p(left),right)=B(left,right).
+   Premises and side conditions: No positivity, independent basis,
+   nonempty basis or assumption on the right coefficient vector is added.
+   Proof/definition method: Factor each pairing through the previously
+   certified normalized pivot coordinate and rewrite the coordinate
+   invariance of the projection; no new matrix or finite-sum algebra.
+   Library reuse: indexed_basis_two_samples_bilinear_pivot_coordinate_factorization,
+   indexed_basis_covariance_pivot_projection_coordinate, Stdlib.Logic.
+   Boundary: Covariance equivalence for two occurrences, not
+   coefficient-vector equality or generic orthogonal projection.
+   *)
+  Theorem indexed_basis_two_samples_projection_preserves_bilinear_first :
+    forall basis (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_projection basis pivot left) right =
+      indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
+      basis pivot
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        right x y Hsamples Hmass Hpivot).
+    rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
+      basis pivot left right x y Hsamples Hmass Hpivot).
+    rewrite (indexed_basis_covariance_pivot_projection_coordinate
+      basis pivot left Hpivot).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_projection_preserves_bilinear_second]
+   (theorem) — Replacing only the second covariance direction leaves the
+   pairing invariant.
+   Mathematical meaning: The same pivot-line projection can be performed
+   independently in the right argument of a two-sample covariance form.
+   Exact checked proposition: Under two unit-mass samples and B(p,p)<>0,
+   B(left,P_p(right))=B(left,right) for all same-dimension typed vectors.
+   Premises and side conditions: Arbitrary signed weights, duplicate
+   outcomes and dependent basis functions remain permitted if a nonzero
+   pivot exists; no PSD assumption is hidden in covariance symmetry.
+   Proof/definition method: Rewrite the two pairing directions using
+   the existing unconditional symmetry, then apply the new first-slot
+   invariance theorem to avoid a second factorization proof.
+   Library reuse: indexed_basis_covariance_bilinear_symmetric,
+   indexed_basis_two_samples_projection_preserves_bilinear_first.
+   Boundary: Concrete two-sample covariance invariance, not a
+   rank/dimension or statistical estimation assertion.
+   *)
+  Theorem indexed_basis_two_samples_projection_preserves_bilinear_second :
+    forall basis (pivot left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis left
+        (indexed_basis_covariance_pivot_projection basis pivot right) =
+      indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis pivot left right x y Hsamples Hmass Hpivot.
+    rewrite (indexed_basis_covariance_bilinear_symmetric
+      basis left
+        (indexed_basis_covariance_pivot_projection basis pivot right)).
+    rewrite (indexed_basis_two_samples_projection_preserves_bilinear_first
+      basis pivot right left x y Hsamples Hmass Hpivot).
+    apply indexed_basis_covariance_bilinear_symmetric.
+  Qed.
+
   (**
    [indexed_basis_two_samples_projection_preserves_bilinear] (theorem) —
    The canonical pivot projection preserves all covariance pairings.
@@ -21356,11 +21434,11 @@ Section FiniteProbabilityMoments.
    Premises and side conditions: A nonzero pivot self-covariance,
    exactly two unit-mass sampled outcomes and arbitrary signed
    weights. No positive-semidefinite or score-independence hypothesis.
-   Proof/definition method: Rewrite both sides by the established
-   scalar-coordinate factorization of the bilinear form and apply
-   the coordinate preservation theorem in each projection argument.
-   Library reuse: indexed_basis_two_samples_bilinear_pivot_coordinate_factorization,
-   indexed_basis_covariance_pivot_projection_coordinate, Stdlib.Logic.
+   Proof/definition method: Compose the two independently checked
+   one-sided covariance preservation lemmas, eliminating the previous
+   duplicated scalar-factorization calculation.
+   Library reuse: indexed_basis_two_samples_projection_preserves_bilinear_first,
+   indexed_basis_two_samples_projection_preserves_bilinear_second.
    Boundary: A concrete covariance-preserving rank-one projection,
    not a generic spectral theorem or an abstract dimension count.
    *)
@@ -21376,18 +21454,12 @@ Section FiniteProbabilityMoments.
       indexed_basis_covariance_bilinear_form basis left right.
   Proof.
     intros basis pivot left right x y Hsamples Hmass Hpivot.
-    rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
-      basis pivot
-        (indexed_basis_covariance_pivot_projection basis pivot left)
+    rewrite (indexed_basis_two_samples_projection_preserves_bilinear_first
+      basis pivot left
         (indexed_basis_covariance_pivot_projection basis pivot right)
-      x y Hsamples Hmass Hpivot).
-    rewrite (indexed_basis_two_samples_bilinear_pivot_coordinate_factorization
+        x y Hsamples Hmass Hpivot).
+    apply (indexed_basis_two_samples_projection_preserves_bilinear_second
       basis pivot left right x y Hsamples Hmass Hpivot).
-    rewrite (indexed_basis_covariance_pivot_projection_coordinate
-      basis pivot left Hpivot).
-    rewrite (indexed_basis_covariance_pivot_projection_coordinate
-      basis pivot right Hpivot).
-    reflexivity.
   Qed.
 
 
@@ -21963,6 +22035,287 @@ Section FiniteProbabilityMoments.
       apply (proj1 Hradical) in Hrad.
       rewrite Hdifference in Hrad.
       lra.
+  Qed.
+
+
+  (**
+   [indexed_basis_two_samples_cross_pivot_projection_absorption] (theorem) —
+   Composition absorbs a change of covariance pivot.
+   Mathematical meaning: Projecting with one nonisotropic pivot after
+   projecting with any other nonisotropic pivot yields exactly the same
+   coefficient vector as projecting immediately with the first pivot.
+   Exact checked proposition: P_p(P_q(left))=P_p(left) whenever the
+   two-outcome covariance mass is one and B(p,p), B(q,q) are nonzero.
+   Premises and side conditions: Signed weights and dependent bases are
+   admitted; neither projection is claimed to commute with the other.
+   Proof/definition method: Use the established equivalence of projection
+   fibers with normalized pivot-coordinate equality, then cancel
+   the intermediate projection using one-sided covariance invariance
+   against the first pivot.
+   Library reuse: indexed_basis_covariance_pivot_projection_fiber_iff_coordinate,
+   indexed_basis_two_samples_projection_preserves_bilinear_first.
+   Boundary: Absorption of rank-one-style concrete representatives,
+   not equality of the two operators or generic matrix commutation.
+   *)
+  Theorem indexed_basis_two_samples_cross_pivot_projection_absorption :
+    forall basis
+           (pivot other left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis other other <> 0 ->
+      indexed_basis_covariance_pivot_projection basis pivot
+        (indexed_basis_covariance_pivot_projection basis other left) =
+      indexed_basis_covariance_pivot_projection basis pivot left.
+  Proof.
+    intros basis pivot other left x y Hsamples Hmass Hpivot Hother.
+    apply (proj2 (indexed_basis_covariance_pivot_projection_fiber_iff_coordinate
+      basis pivot
+        (indexed_basis_covariance_pivot_projection basis other left)
+        left Hpivot)).
+    unfold indexed_basis_covariance_pivot_coordinate.
+    rewrite (indexed_basis_two_samples_projection_preserves_bilinear_first
+      basis other left pivot x y Hsamples Hmass Hother).
+    reflexivity.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_coordinate_change] (theorem) —
+   Explicit scalar transition between two nonisotropic covariance pivots.
+   Mathematical meaning: Two pivot coordinates on the same signed
+   two-sample quotient differ by a scalar transition independent of the
+   original coefficient direction.
+   Exact checked proposition: c_p(left)=c_q(left)*c_p(q) under unit
+   total mass, two sampled outcomes, and nonzero self-pairings for p,q.
+   Premises and side conditions: No nonnegative weights, score-basis
+   linear independence or dimension bounds beyond typed vectors.
+   Proof/definition method: Apply c_p to the already checked
+   cross-pivot projection absorption equality, simplify the outside
+   projections by coordinate preservation and the inside section by
+   the generic covariance-coordinate scalar homogeneity theorem.
+   Library reuse: indexed_basis_two_samples_cross_pivot_projection_absorption,
+   indexed_basis_covariance_pivot_projection_coordinate,
+   indexed_basis_covariance_pivot_coordinate_scale, Vector.map.
+   Boundary: A transition formula for a concrete one-scalar quotient;
+   not an abstract linear-map change-of-basis matrix theorem.
+   *)
+  Theorem indexed_basis_two_samples_pivot_coordinate_change :
+    forall basis
+           (pivot other left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis other other <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot left =
+        indexed_basis_covariance_pivot_coordinate basis other left *
+        indexed_basis_covariance_pivot_coordinate basis pivot other.
+  Proof.
+    intros basis pivot other left x y Hsamples Hmass Hpivot Hother.
+    pose proof
+      (f_equal (indexed_basis_covariance_pivot_coordinate basis pivot)
+        (indexed_basis_two_samples_cross_pivot_projection_absorption
+          basis pivot other left x y Hsamples Hmass Hpivot Hother))
+      as Hcoordinates.
+    rewrite (indexed_basis_covariance_pivot_projection_coordinate
+      basis pivot
+      (indexed_basis_covariance_pivot_projection basis other left)
+      Hpivot) in Hcoordinates.
+    rewrite (indexed_basis_covariance_pivot_projection_coordinate
+      basis pivot left Hpivot) in Hcoordinates.
+    unfold indexed_basis_covariance_pivot_projection,
+      indexed_basis_covariance_pivot_section in Hcoordinates.
+    rewrite (indexed_basis_covariance_pivot_coordinate_scale
+      basis pivot other
+      (indexed_basis_covariance_pivot_coordinate basis other left)
+      Hpivot) in Hcoordinates.
+    symmetry.
+    exact Hcoordinates.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_coordinate_transition_reciprocal]
+   (theorem) — Two oriented pivot transitions multiply to one.
+   Mathematical meaning: Switching from the p coordinate to q and back
+   cannot lose information; the transition scalars are reciprocals.
+   Exact checked proposition: c_p(q)*c_q(p)=1 for two unit-mass
+   sample occurrences with B(p,p)<>0 and B(q,q)<>0.
+   Premises and side conditions: Signed weights and arbitrary dependent
+   score bases are allowed; no chosen positive square root or sign.
+   Proof/definition method: Specialize the scalar change-of-pivot
+   identity to left=pivot, rewrite the pivot's own coordinate as one,
+   and apply standard real polynomial normalization.
+   Library reuse: indexed_basis_two_samples_pivot_coordinate_change,
+   indexed_basis_covariance_pivot_coordinate_pivot_one, Stdlib.Psatz.
+   Boundary: Exact reciprocal transition, not abstract matrix rank.
+   *)
+  Theorem indexed_basis_two_samples_pivot_coordinate_transition_reciprocal :
+    forall basis (pivot other : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis other other <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot other *
+      indexed_basis_covariance_pivot_coordinate basis other pivot = 1.
+  Proof.
+    intros basis pivot other x y Hsamples Hmass Hpivot Hother.
+    pose proof
+      (indexed_basis_two_samples_pivot_coordinate_change
+        basis pivot other pivot x y Hsamples Hmass Hpivot Hother)
+      as Hchange.
+    rewrite (indexed_basis_covariance_pivot_coordinate_pivot_one
+      basis pivot Hpivot) in Hchange.
+    nra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_coordinate_transition_nonzero]
+   (theorem) — Changing between nonisotropic pivots is invertible.
+   Mathematical meaning: Neither covariance coordinate normalization
+   may vanish on the alternative pivot, because the two scalar
+   transitions have a multiplicative inverse.
+   Exact checked proposition: If B(p,p),B(q,q)<>0 in a normalized
+   two-sample model, then c_p(q)<>0.
+   Premises and side conditions: The theorem permits negative mass
+   weights and indefinite covariance signs when compatible with two
+   samples; it assumes no positive-definite covariance matrix.
+   Proof/definition method: Contradict the verified scalar reciprocal
+   identity and simplify a product with a zero factor.
+   Library reuse: indexed_basis_two_samples_pivot_coordinate_transition_reciprocal,
+   Stdlib.Psatz.nra and Stdlib.Reals.
+   Boundary: Invertibility of a scalar transition only.
+   *)
+  Theorem indexed_basis_two_samples_pivot_coordinate_transition_nonzero :
+    forall basis (pivot other : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis other other <> 0 ->
+      indexed_basis_covariance_pivot_coordinate basis pivot other <> 0.
+  Proof.
+    intros basis pivot other x y Hsamples Hmass Hpivot Hother Hzero.
+    pose proof
+      (indexed_basis_two_samples_pivot_coordinate_transition_reciprocal
+        basis pivot other x y Hsamples Hmass Hpivot Hother)
+      as Hreciprocal.
+    rewrite Hzero in Hreciprocal.
+    nra.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_pivot_coordinate_zero_iff_other]
+   (theorem) — The scalar kernel is independent of nonisotropic pivot.
+   Mathematical meaning: Two normalized pivot functionals detect exactly
+   the same radical directions in the rank-one signed covariance model.
+   Exact checked proposition: c_p(left)=0 iff c_q(left)=0 when
+   B(p,p), B(q,q) are nonzero and samples=[x;y] have mass one.
+   Premises and side conditions: No positivity, score independence or
+   assumption that the two coefficient pivots coincide.
+   Proof/definition method: Compose two instances of the already
+   established radical iff zero-coordinate equivalence, avoiding a
+   duplicate field cancellation or new kernel implementation.
+   Library reuse: indexed_basis_two_samples_radical_iff_pivot_coordinate_zero,
+   Stdlib.Logic.tauto.
+   Boundary: Equality of finite covariance kernels, not a generic
+   nullspace dimension or matrix eigenspace classification.
+   *)
+  Theorem indexed_basis_two_samples_pivot_coordinate_zero_iff_other :
+    forall basis (pivot other left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis other other <> 0 ->
+      (indexed_basis_covariance_pivot_coordinate basis pivot left = 0 <->
+       indexed_basis_covariance_pivot_coordinate basis other left = 0).
+  Proof.
+    intros basis pivot other left x y Hsamples Hmass Hpivot Hother.
+    pose proof (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+      basis pivot left x y Hsamples Hmass Hpivot) as Hp.
+    pose proof (indexed_basis_two_samples_radical_iff_pivot_coordinate_zero
+      basis other left x y Hsamples Hmass Hother) as Hq.
+    tauto.
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_cross_pivot_preserves_bilinear]
+   (theorem) — Covariance is invariant under independently chosen pivots.
+   Mathematical meaning: Each argument of a two-sample covariance can be
+   replaced with its projection onto a different nonisotropic pivot line
+   without changing the result of the signed bilinear covariance pairing.
+   Exact checked proposition: B(P_p(left),P_q(right))=B(left,right)
+   under two unit-mass sampled occurrences and nonzero self-pairings.
+   Premises and side conditions: Score bases may be dependent and
+   sample weights signed; no shared pivot or PSD assumption is needed.
+   Proof/definition method: Compose established one-sided invariance
+   laws with their appropriate independent pivot arguments.
+   Library reuse: indexed_basis_two_samples_projection_preserves_bilinear_first,
+   indexed_basis_two_samples_projection_preserves_bilinear_second.
+   Boundary: Concrete covariance equivalence, not equality of projected
+   vectors, matrix diagonalization or a canonical geometric complement.
+   *)
+  Theorem indexed_basis_two_samples_cross_pivot_preserves_bilinear :
+    forall basis (pivot other left right : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis other other <> 0 ->
+      indexed_basis_covariance_bilinear_form basis
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        (indexed_basis_covariance_pivot_projection basis other right) =
+      indexed_basis_covariance_bilinear_form basis left right.
+  Proof.
+    intros basis pivot other left right x y Hsamples Hmass Hpivot Hother.
+    rewrite (indexed_basis_two_samples_projection_preserves_bilinear_first
+      basis pivot left
+        (indexed_basis_covariance_pivot_projection basis other right)
+      x y Hsamples Hmass Hpivot).
+    apply (indexed_basis_two_samples_projection_preserves_bilinear_second
+      basis other left right x y Hsamples Hmass Hother).
+  Qed.
+
+  (**
+   [indexed_basis_two_samples_cross_pivot_projections_differ_by_radical]
+   (theorem) — Two pivot-line representatives belong to one radical coset.
+   Mathematical meaning: A coefficient vector projected along two
+   different nonisotropic pivot choices produces vectors differing only
+   by a direction orthogonal to every covariance test coefficient.
+   Exact checked proposition: Radical(P_p(left)-P_q(left)), with
+   subtraction represented by Vector.map2 Rplus and Vector.map (-1*.).
+   Premises and side conditions: Exactly two unit-mass sample
+   occurrences, B(p,p)<>0, B(q,q)<>0, signed weights permitted.
+   Proof/definition method: Apply the previously proved equivalence of
+   projection fibers and radical differences to the two projected
+   vectors, reduce the first projection by idempotence, then rewrite
+   the cross-pivot composition using the new absorption law.
+   Library reuse: indexed_basis_two_samples_projection_fiber_iff_radical_difference,
+   indexed_basis_covariance_pivot_projection_idempotent,
+   indexed_basis_two_samples_cross_pivot_projection_absorption.
+   Boundary: Independence of the covariance quotient class from pivot,
+   not literal equality of different pivot-line representatives.
+   *)
+  Theorem indexed_basis_two_samples_cross_pivot_projections_differ_by_radical :
+    forall basis (pivot other left : Vector.t R (length basis)) x y,
+      samples = [x; y] ->
+      total_mass = 1 ->
+      indexed_basis_covariance_bilinear_form basis pivot pivot <> 0 ->
+      indexed_basis_covariance_bilinear_form basis other other <> 0 ->
+      indexed_basis_covariance_bilinear_radical basis
+        (Vector.map2 Rplus
+          (indexed_basis_covariance_pivot_projection basis pivot left)
+          (Vector.map (fun c => (-1) * c)
+            (indexed_basis_covariance_pivot_projection basis other left))).
+  Proof.
+    intros basis pivot other left x y Hsamples Hmass Hpivot Hother.
+    apply (proj1
+      (indexed_basis_two_samples_projection_fiber_iff_radical_difference
+        basis pivot
+        (indexed_basis_covariance_pivot_projection basis pivot left)
+        (indexed_basis_covariance_pivot_projection basis other left)
+        x y Hsamples Hmass Hpivot)).
+    rewrite (indexed_basis_covariance_pivot_projection_idempotent
+      basis pivot left Hpivot).
+    rewrite (indexed_basis_two_samples_cross_pivot_projection_absorption
+      basis pivot other left x y Hsamples Hmass Hpivot Hother).
+    reflexivity.
   Qed.
 
 End FiniteProbabilityMoments.
