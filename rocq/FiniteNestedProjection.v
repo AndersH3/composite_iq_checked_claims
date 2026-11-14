@@ -822,7 +822,7 @@ Theorem nested_refinement_variance_decomposition :
  refined_between_loss xs weight score p q.
 Proof.
  intros A xs weight score p q Htt Htf Hft Hff.
- rewrite nested_coarse_risk_as_candidate.
+ rewrite (nested_coarse_risk_as_candidate A xs weight score p q).
  unfold refined_candidate_risk at 1.
  rewrite (finite_two_cell_risk_completed_square A
    (filter p xs) weight score q
