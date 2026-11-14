@@ -209,6 +209,9 @@ Definition report_certificate_values
       report_sd_integer_upper cP cQ ct)))).
 
 
+(* The remaining exact certificate equalities are integer, not real, numerals. *)
+Open Scope Z_scope.
+
 (** 
  [report_iq150_certificate_r1_k1] (theorem) — Exact integer certification of the
  published IQ-150 report row with r=1 initial and k=1 later scores.
