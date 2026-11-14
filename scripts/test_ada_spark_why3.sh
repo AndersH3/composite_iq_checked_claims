@@ -8,6 +8,7 @@ installer=scripts/install_ada_spark_why3.sh
 bash -n "$installer"
 bash "$installer" --help | grep -F -- '--metis-source' >/dev/null
 bash "$installer" --help | grep -F -- '--install-spark' >/dev/null
+bash "$installer" --help | grep -F -- '--smoke-ada' >/dev/null
 plan="$(bash "$installer" --plan)"
 grep -F 'gappa' <<<"$plan" >/dev/null
 grep -F 'why3' <<<"$plan" >/dev/null
@@ -15,6 +16,10 @@ grep -F 'gprbuild' <<<"$plan" >/dev/null
 grep -F 'gnat' <<<"$plan" >/dev/null
 grep -F 'cvc5' <<<"$plan" >/dev/null
 grep -F 'gnatprove' <<<"$plan" >/dev/null
+# Run the real Ada smoke test only on hosts where GNAT is present.
+if command -v gnatmake >/dev/null; then
+  bash "$installer" --smoke-ada | grep -F 'succeeded' >/dev/null
+fi
 grep -F '7a23e4ea68bc92927716777ebc98bea09e91fe24' <<<"$plan" >/dev/null
 grep -F 'apt install metis is WRONG' <<<"$plan" >/dev/null
 
