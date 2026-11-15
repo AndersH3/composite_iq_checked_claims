@@ -1038,7 +1038,7 @@ Qed.
 Theorem mix_between_zero_if_first_gap_zero :
   forall j1 x1 y1 n1 j0 x0 y0 n0 : R, mix_gap_first j1 x1 y1 n1 j0 x0 y0 n0=0->mix_between j1 x1 y1 n1 j0 x0 y0 n0=0.
 Proof.
-  intros j1 x1 y1 n1 j0 x0 y0 n0 HA HB.
+  intros j1 x1 y1 n1 j0 x0 y0 n0 HA.
   rewrite mix_between_explicit; nra.
 Qed.
 
@@ -1060,7 +1060,7 @@ Qed.
 Theorem mix_between_zero_if_second_gap_zero :
   forall j1 x1 y1 n1 j0 x0 y0 n0 : R, mix_gap_second j1 x1 y1 n1 j0 x0 y0 n0=0->mix_between j1 x1 y1 n1 j0 x0 y0 n0=0.
 Proof.
-  intros j1 x1 y1 n1 j0 x0 y0 n0 HA HB.
+  intros j1 x1 y1 n1 j0 x0 y0 n0 HA.
   rewrite mix_between_explicit; nra.
 Qed.
 
