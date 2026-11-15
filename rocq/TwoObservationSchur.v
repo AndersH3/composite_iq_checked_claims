@@ -379,8 +379,10 @@ Proof.
  rewrite cov2_quad_completed_square by lra.
  unfold Rdiv.
  assert (Hi:0< /a) by (apply Rinv_0_lt_compat; exact Ha).
- assert (Hsq1:0<=(a*x+c*y)*(a*x+c*y)) by nra.
- assert (Hsq2:0<=y*y) by nra.
+ assert (Hsq1:0<=(a*x+c*y)*(a*x+c*y)).
+ { change (0<=Rsqr (a*x+c*y)); apply Rle_0_sqr. }
+ assert (Hsq2:0<=y*y).
+ { change (0<=Rsqr y); apply Rle_0_sqr. }
  assert (Hfirst:0<=(a*x+c*y)*(a*x+c*y)* /a).
  { apply Rmult_le_pos; lra. }
  assert (Hsecond:0<=cov2_det a b c* /a*(y*y)).
@@ -409,7 +411,8 @@ Proof.
  rewrite cov2_quad_completed_square by lra.
  unfold Rdiv.
  assert (Hi:0< /a) by (apply Rinv_0_lt_compat; exact Ha).
- assert (Hsq:0<=(a*x+c*y)*(a*x+c*y)) by nra.
+ assert (Hsq:0<=(a*x+c*y)*(a*x+c*y)).
+ { change (0<=Rsqr (a*x+c*y)); apply Rle_0_sqr. }
  assert (Hfirst:0<=(a*x+c*y)*(a*x+c*y)* /a).
  { apply Rmult_le_pos; lra. }
  destruct (Req_EM_T y 0) as [Hy|Hy].
