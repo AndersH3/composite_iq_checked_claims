@@ -36,6 +36,7 @@ paths_by_module = {
     "Hoeflin": Path("analyses/hoeflin-ferguson/rocq/Hoeflin.v"),
     "Admissions": Path("analyses/towers-multiple-test-admissions/rocq/Admissions.v"),
     "FourCellBridge": Path("analyses/towers-multiple-test-admissions/rocq/FourCellBridge.v"),
+    "ThreeTestAdmissions": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestAdmissions.v"),
     "SequentialReport": Path("analyses/sequential-conditional-means/rocq/SequentialReport.v"),
     "SequentialSensitivity": Path("analyses/sequential-conditional-means/rocq/SequentialSensitivity.v"),
     "ReportRounding": Path("analyses/sequential-conditional-means/rocq/ReportRounding.v"),
