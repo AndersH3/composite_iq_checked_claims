@@ -98,4 +98,48 @@ if grep -Eq '^[[:space:]]*(opam[[:space:]]+switch|apt-get[[:space:]]+dist-upgrad
   exit 1
 fi
 
+# Check the real proof-result audit script with a deterministic mock. The
+# production script must accept a true goal, reject a false goal, and never
+# equate process exit code 0 with successful proof verification.
+smoke=verification/why3/check_backends.sh
+test -f verification/why3/backend_smoke.why
+bash -n "$smoke"
+grep -F 'goal TrueGoal' verification/why3/backend_smoke.why >/dev/null
+grep -F 'goal FalseGoal' verification/why3/backend_smoke.why >/dev/null
+cat > "$fixture/bin/why3" <<'MOCK_PROOF_WHY3'
+#!/usr/bin/env bash
+set -euo pipefail
+case "${1:-}" in
+  --version)
+    printf '%s\n' 'Why3 1.8.0 (mock)'
+    ;;
+  prove)
+    [[ "$*" == *" -T BackendSmoke -G "* ]] || exit 78
+    [[ "$*" == *" -P Z3 "* || "$*" == *" -P CVC5 "* ]] || exit 79
+    if [[ "$*" == *" -G TrueGoal" ]]; then
+      printf '%s\n' 'backend_smoke.why BackendSmoke TrueGoal: Valid (0.01s)'
+    elif [[ "$*" == *" -G FalseGoal" ]]; then
+      printf 'backend_smoke.why BackendSmoke FalseGoal: %s (0.01s)\n' \
+        "${WHY3_FAKE_NEGATIVE:-Invalid}"
+    else
+      exit 80
+    fi
+    ;;
+  *)
+    printf '%s\n' 'Unknown mock why3 command' >&2
+    exit 81
+    ;;
+esac
+MOCK_PROOF_WHY3
+chmod 755 "$fixture/bin/why3"
+HOME="$fixture/home" PATH="$fixture/bin:$PATH" \
+  bash "$smoke" >"$fixture/proof-smoke.out"
+grep -F 'Both Why3 backends passed' "$fixture/proof-smoke.out" >/dev/null
+# Detect regression if a falsely claimed Valid on 0=1 were ever accepted.
+if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Valid \
+    bash "$smoke" >"$fixture/unsound.out" 2>&1; then
+  printf '%s\n' 'ERROR: Why3 proof audit accepted a false goal as Valid' >&2
+  exit 1
+fi
+
 printf '%s\n' 'Ada/SPARK/Why3 offline plan, Alire 1.2 GNATprove, and Why3 detection regression tests passed'
