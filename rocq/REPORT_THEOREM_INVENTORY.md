@@ -181,6 +181,11 @@ An additional **24 new Rocq theorem scripts** extend D031x to **53 proposed repo
 
 **19 proposed additional Rocq theorems** characterize exact finite linear predictability, the equivalence between zero Schur residual, singular two-score covariance determinant, and supportwise affine target/feature equality, along with strict positivity for a non-affine supported observation. The work also derives directional regression-coefficient sign reciprocity and covariance normalization bounds. All formal claims require the pinned Rocq 9.2 kernel and documentation CI before being called proved. These statements apply to a finite nonnegative weighted enumeration and do not establish a Gaussian conditional distribution or any empirical IQ population model.
 
+
+### D032x phase 2 — sharp fitted/residual covariance bounds and equality on supported outcomes
+
+This phase proposes **26 further Rocq theorems**, bringing D032x to **45 named theorem scripts**. It formalizes Cauchy–Schwarz and positive-semidefinite Gram bounds for conditional fitted/residual scores, the between-cell and within-cell covariance matrices, exact supportwise conditions for zero residual variance or zero fitted variance, sharp equality characterizations of the finite total-variance decomposition, and links between conditional cross-covariance and strictly positive original-score variances. All work reuses existing finite two-cell projection, finite conditional covariance, and previously proved finite Cauchy–Schwarz rather than duplicating integration or regression routines. Claims count as formally proved only after pinned Rocq 9.2 and repository CI pass. These results do not establish Gaussian conditional laws or empirical IQ distribution parameters.
+
 ## Appendix — Complete AI disclosure
 
 D032x source theorems, mathematical scope analysis, comments, and report-to-proof mapping were prepared with AI assistance. Kernel compilation checks proof terms for exact propositions; source documentation or compilation does not independently validate IQ population assumptions, normality, Gaussian tail integrals, or empirical test parameters.
