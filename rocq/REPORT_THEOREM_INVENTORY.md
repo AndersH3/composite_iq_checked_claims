@@ -135,6 +135,32 @@ Only the pinned Rocq 9.2 kernel can certify these proofs. Their scope is
 finite normalized event algebra, not Gaussian joint tails, Gaussian
 conditioning or measured psychometric correlations.
 
+### D038x — selection and Simpson reversal for three admission tests
+
+The Towers report's admitted-by-any-test and overlap formulas depend
+on the interaction among multiple test results. The new
+[`ThreeTestConditionalStrata.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestConditionalStrata.v)
+derives six explicit conditional two-test models, distinguishing
+AB|C and AB|not-C, AC|B and AC|not-B, BC|A and BC|not-A.
+Conditional masses are obtained by dividing the relevant four
+raw three-test atoms by the **strictly positive** selected stratum
+probability. This is a *finite* conditional probability model, not
+a claim of continuous Gaussian regular conditional distributions.
+
+Its 15 generic and 102 specialized theorems connect
+conditional union/marginal/exclusive rates, association sign,
+raw cross-product independence, conditional odds ratios, and
+Fréchet bounds to the original eight-event model. The other nine
+theorems verify an exact **Simpson's paradox** witness with
+pooled (P(A)=P(B)=1/2), (P(A\cap B)=33/100), and
+negative AB association separately in C-positive and C-negative
+strata. Thus naïvely transporting pairwise dependence across
+selection strata is mathematically invalid even for fully specified
+finite contingency tables. No report source's normal-tail integrals,
+empirical IQ correlations, or institutional test-admissions
+parameters are thereby certified. All claims require pinned Rocq
+9.2 compilation on the final source.
+
 ## IV. Proof-development priorities based on report dependence
 
 1. **Highest impact, genuinely missing:** Gaussian regression, conditional expectation (with regular conditional laws and continuous versions), and equicorrelation positive-semidefinite/spectral construction. The current Schur covariance theorems do **not** establish these stochastic claims.

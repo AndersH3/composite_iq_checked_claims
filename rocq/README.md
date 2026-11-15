@@ -3,9 +3,34 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1879 proof scripts** across twenty-one
+for the three principal reports. **2013 proof scripts** across twenty-two
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
+
+## D038x — third-test conditioning, selection and Simpson reversal
+
+The Towers specialized [`ThreeTestConditionalStrata.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestConditionalStrata.v)
+adds **126 theorem scripts** and **eight certified model-construction
+proofs**, for 134 additional proof scripts. A single
+`normalized_four_stratum` normalizer converts four nonnegative raw
+contingency cells into an `Admissions.TwoEventModel`, provided their
+sum is strictly positive. Six conditioned pair models examine AB given
+C=pass/fail, AC given B=pass/fail and BC given A=pass/fail.
+
+The 15 general results include scaled conditional masses, raw-cell
+odds-ratio invariance, conditional rates, association sign, and
+independence iff zero raw cross-product determinant. The 102
+stratum-specific results apply these laws to the actual three-test
+outcomes, with conditional Fréchet bounds. Nine further theorems verify
+a concrete exact rational eight-atom **Simpson reversal**: pooled AB
+association is positive although AB association is negative inside
+both C strata. These statements are about finite selection effects,
+not about trivariate normal tails or actual IQ/admission calibration.
+
+The exact source has `2013` registered proof blocks across 22 Rocq
+modules, counting model constructors and local helpers separately
+from public theorem statements. The strict positive conditioning and
+ratio denominators in the theorem statements are part of the claims.
 
 ## Canonical library migration (D033x)
 
