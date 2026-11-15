@@ -1088,7 +1088,13 @@ Qed.
 Theorem finite_centered_cauchy_schwarz :
  forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> finite_centered_cross xs w f g*finite_centered_cross xs w f g<=finite_centered_cross xs w f f*finite_centered_cross xs w g g.
 Proof.
- intros A xs w f g Hw; unfold finite_centered_cross; apply finite_cross_cauchy_schwarz; exact Hw.
+ intros A xs w f g Hw.
+ unfold finite_centered_cross.
+ rewrite (finite_weighted_cross_same_is_loss A xs w f
+   (finite_weighted_mean xs w f)).
+ rewrite (finite_weighted_cross_same_is_loss A xs w g
+   (finite_weighted_mean xs w g)).
+ apply finite_cross_cauchy_schwarz; exact Hw.
 Qed.
 
 (**
