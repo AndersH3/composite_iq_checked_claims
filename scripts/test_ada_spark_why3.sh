@@ -134,8 +134,11 @@ case "${1:-}" in
     elif [[ "$*" == *" -G FalseGoal" ]]; then
       printf '%s\n' 'File "backend_smoke.why", line 25, characters 18-23:'
       printf '%s\n' 'Goal FalseGoal.'
-      printf 'Prover result is: %s (0.00s, 18 steps).\n' \
-        "${WHY3_FAKE_NEGATIVE:-Invalid}"
+      printf 'Prover result is: %s (0.00s, 11 steps).\n' \
+        "${WHY3_FAKE_NEGATIVE:-Unknown (sat)}"
+      # Reproduce nonzero Why3 exit code for an unproved goal as observed
+      # on computer10; a well-formed result must still be parsed.
+      exit "${WHY3_FAKE_NEGATIVE_RC:-1}"
     else
       exit 80
     fi
@@ -149,13 +152,16 @@ MOCK_PROOF_WHY3
 chmod 755 "$fixture/bin/why3"
 HOME="$fixture/home" PATH="$fixture/bin:$PATH" \
   bash "$smoke" >"$fixture/proof-smoke.out"
-grep -F 'Both Why3 backends passed' "$fixture/proof-smoke.out" >/dev/null
+grep -F 'Both Why3 backend smoke checks completed' "$fixture/proof-smoke.out" >/dev/null
+grep -F 'FalseGoal was NOT proved (Unknown (sat))' "$fixture/proof-smoke.out" >/dev/null
 grep -F 'Z3,4.13.3,' "$fixture/proof-smoke.out" >/dev/null
 grep -F 'CVC5,1.1.2,' "$fixture/proof-smoke.out" >/dev/null
-# Negative controls against falsely claimed validity, Unknown results,
-# and a status accidentally attributed to the wrong named goal. Each must
-# fail before a passing summary is printed; a CLI exit code of zero alone
-# is not sufficient evidence of successful proof.
+# Negative controls against incorrectly claiming that a false goal is Valid,
+# accepting an arbitrary Unknown, a timeout, or a result for the wrong goal.
+# A code 1 is accepted only with an exact Invalid or Unknown (sat) answer.
+HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Invalid \
+  bash "$smoke" >"$fixture/invalid-negative.out"
+grep -F 'Why3 classified FalseGoal Invalid' "$fixture/invalid-negative.out" >/dev/null
 if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Valid \
     bash "$smoke" >"$fixture/unsound.out" 2>&1; then
   printf '%s\n' 'ERROR: Why3 proof audit accepted a false goal as Valid' >&2
@@ -168,7 +174,7 @@ if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Unknown \
   printf '%s\n' 'ERROR: Why3 proof audit accepted Unknown for FalseGoal' >&2
   exit 1
 fi
-grep -F 'did not reject FalseGoal as Invalid' "$fixture/unknown-negative.out" >/dev/null
+grep -F 'FalseGoal must report Invalid or Unknown (sat)' "$fixture/unknown-negative.out" >/dev/null
 
 if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_POSITIVE=Unknown \
     bash "$smoke" >"$fixture/unknown-positive.out" 2>&1; then
@@ -176,6 +182,13 @@ if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_POSITIVE=Unknown \
   exit 1
 fi
 grep -F 'did not prove TrueGoal as Valid' "$fixture/unknown-positive.out" >/dev/null
+
+if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE_RC=124 \
+    bash "$smoke" >"$fixture/timeout-negative.out" 2>&1; then
+  printf '%s\n' 'ERROR: Why3 proof audit accepted an interrupted solver call' >&2
+  exit 1
+fi
+grep -F 'negative control exited unexpectedly' "$fixture/timeout-negative.out" >/dev/null
 
 if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_GOAL=UnrelatedGoal \
     bash "$smoke" >"$fixture/wrong-goal.out" 2>&1; then
