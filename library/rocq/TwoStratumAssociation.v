@@ -557,7 +557,7 @@ Qed.
 Theorem mix_first_rate_gap_exact :
   forall j1 x1 y1 n1 j0 x0 y0 n0 : R, 0<mix_total_yes j1 x1 y1 n1 j0 x0 y0 n0->0<mix_total_no j1 x1 y1 n1 j0 x0 y0 n0->(j1+x1)/mix_total_yes j1 x1 y1 n1 j0 x0 y0 n0-(j0+x0)/mix_total_no j1 x1 y1 n1 j0 x0 y0 n0=mix_gap_first j1 x1 y1 n1 j0 x0 y0 n0/(mix_total_yes j1 x1 y1 n1 j0 x0 y0 n0*mix_total_no j1 x1 y1 n1 j0 x0 y0 n0).
 Proof.
-  intros j1 x1 y1 n1 j0 x0 y0 n0 HU HV; unfold mix_gap_first; field; nra.
+  intros j1 x1 y1 n1 j0 x0 y0 n0 HU HV; unfold mix_gap_first, mix_total_yes, mix_total_no in *; field; nra.
 Qed.
 
 (**
@@ -578,7 +578,7 @@ Qed.
 Theorem mix_second_rate_gap_exact :
   forall j1 x1 y1 n1 j0 x0 y0 n0 : R, 0<mix_total_yes j1 x1 y1 n1 j0 x0 y0 n0->0<mix_total_no j1 x1 y1 n1 j0 x0 y0 n0->(j1+y1)/mix_total_yes j1 x1 y1 n1 j0 x0 y0 n0-(j0+y0)/mix_total_no j1 x1 y1 n1 j0 x0 y0 n0=mix_gap_second j1 x1 y1 n1 j0 x0 y0 n0/(mix_total_yes j1 x1 y1 n1 j0 x0 y0 n0*mix_total_no j1 x1 y1 n1 j0 x0 y0 n0).
 Proof.
-  intros j1 x1 y1 n1 j0 x0 y0 n0 HU HV; unfold mix_gap_second; field; nra.
+  intros j1 x1 y1 n1 j0 x0 y0 n0 HU HV; unfold mix_gap_second, mix_total_yes, mix_total_no in *; field; nra.
 Qed.
 
 (**
