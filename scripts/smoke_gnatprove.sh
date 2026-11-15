@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Real GNATprove 16 integration smoke test for a ten-postcondition SPARK unit.
-# AI disclosure: authored with AI assistance; not yet executed on computer10.
+# AI disclosure: authored with AI assistance; user-validated on computer10
+# against GNATprove FSF 16.1.0 with 11/11 checks proved. Future changes
+# require fresh local proof runs; an archived raw report is not retained.
 #
 # No network, sudo, package changes, opam switches, Alire index changes,
 # repository writes, or global PATH updates are performed. All proof artifacts
