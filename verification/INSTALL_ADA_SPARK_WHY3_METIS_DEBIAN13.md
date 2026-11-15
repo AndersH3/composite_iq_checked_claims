@@ -168,6 +168,37 @@ still require actual execution on computer10. If versions change, use
 `why3 --list-provers` to inspect the available configurations instead
 of silently selecting a different version.
 
+### Why3 1.8 multiline proof-result parser correction
+
+On computer10, the corrected fully qualified selector
+`Z3,4.13.3,` successfully invoked Z3 for `TrueGoal`. Why3 returned:
+
+```text
+Goal TrueGoal.
+Prover result is: Valid (0.00s, 18 steps).
+```
+
+That result **establishes the positive Z3 smoke test passed on the real
+host**, but the previous shell audit mistakenly expected a *single-line*
+`TrueGoal: Valid` status; it therefore stopped before the negative
+control or any CVC5 check. The corrected audit explicitly matches the
+goal header and prover-result line separately, requires exactly one of
+each, and confirms the intended `Valid` or `Invalid` outcome.
+The offline regression now reproduces the actual multiline text and
+rejects unknown, falsely valid, and wrong-goal replies.
+
+To run the corrected smoke test on computer10:
+
+```sh
+cd ~/src/composite_iq_formal_tools
+git pull --ff-only
+bash scripts/test_ada_spark_why3.sh
+bash verification/why3/check_backends.sh
+```
+
+Only when the final script runs to completion and prints two PASS
+messages can both backends be marked verified for these small controls.
+
 ### Functional proof tests for recognized backends
 
 After updating this branch, run:
@@ -220,6 +251,8 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+A further error in the AI-generated Why3 smoke test assumed a single-line goal/result format. The user supplied authentic output with separate `Goal TrueGoal.` and `Prover result is: Valid` lines, demonstrating a successful Z3 proof but a false failure in the script's output parser. The AI updated the parser and added multiline regression cases with negative controls. These regression cases remain mocked and do not replace live Z3/CVC5 verification on computer10.
 
 The initial Why3 smoke script erroneously passed ambiguous bare prover names to Why3 1.8.0. The user supplied the resulting multi-prover error. A subsequent fix explicitly selects pinned name, version and empty alternative, and the offline mock test now rejects ambiguous shorthand. The exact real prover behavior after that correction is unverified until it is rerun on computer10.
 
