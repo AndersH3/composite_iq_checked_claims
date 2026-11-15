@@ -24,7 +24,7 @@
  AI disclosure: OpenAI's assistant drafted source and explanations;
  independently executed Rocq kernel checking establishes any proof claim.
  *)
-From Stdlib Require Import Reals Lra Psatz List Bool.
+From Stdlib Require Import Reals Lra Psatz List Bool Classical_Prop.
 Require Import FiniteSum FiniteTwoCellProjection FiniteNestedProjection.
 Import ListNotations.
 Open Scope R_scope.
