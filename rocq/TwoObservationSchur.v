@@ -1845,7 +1845,9 @@ Qed.
 Theorem cov2_innovation_gain_parallelogram :
  forall a b c u v p q, cov2_innovation_gain a b c (u+p) (v+q) + cov2_innovation_gain a b c (u-p) (v-q) = 2*cov2_innovation_gain a b c u v + 2*cov2_innovation_gain a b c p q.
 Proof.
- intros a b c u v p q; unfold cov2_innovation_gain,Rdiv,cov2_innovation_covariance.
+ intros a b c u v p q.
+ (* Unfold division last: residualized covariances contain nested quotients. *)
+ unfold cov2_innovation_gain,cov2_innovation_covariance,Rdiv.
  ring.
 Qed.
 
