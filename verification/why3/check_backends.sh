@@ -68,7 +68,7 @@ for selector in "Z3,4.13.3," "CVC5,1.1.2,"; do
   fi
 
   printf '\n== %s: false-goal negative control ==\n' "$prover"
-  # Why3's "prove" command may exit with status 1 for an unproved goal.
+  # Why3 1.8 "prove" exits 2 for the unproved goal observed on computer10.
   # Capture the result anyway; unlike an invocation error, "Unknown (sat)"
   # is a structured Why3 answer observed on computer10 for 0 = 1.
   # Do NOT treat a generic Unknown, timeout, or tool failure as success.
@@ -76,8 +76,11 @@ for selector in "Z3,4.13.3," "CVC5,1.1.2,"; do
   negative="$(timeout 30s why3 prove -P "$selector" "$fixture" \
     -T BackendSmoke -G FalseGoal 2>&1)" || negative_rc=$?
   printf '%s\n' "$negative"
-  if (( negative_rc != 0 && negative_rc != 1 )); then
-    printf 'ERROR: %s negative control exited unexpectedly (%d).\n' \
+  # Require the actual unproved-goal exit status observed with Why3
+  # 1.8.0 on computer10, rather than accepting status 1 (CLI failure).
+  # An output string alone is not sufficient if the invocation failed.
+  if (( negative_rc != 2 )); then
+    printf 'ERROR: %s negative control exited with %d (expected Why3 unproved-goal status 2).\n' \
       "$prover" "$negative_rc" >&2
     exit 5
   fi
