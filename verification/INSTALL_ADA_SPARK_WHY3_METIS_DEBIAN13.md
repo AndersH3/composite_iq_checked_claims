@@ -199,6 +199,26 @@ bash verification/why3/check_backends.sh
 Only when the final script runs to completion and prints two PASS
 messages can both backends be marked verified for these small controls.
 
+### False-goal result on computer10: Unknown (sat)
+
+On November 15, 2026, the user ran the smoke test on the actual Why3
+1.8.0 / Z3 4.13.3 environment. The positive control returned
+`Valid (0.00s, 18 steps)`. The negative control returned:
+
+```text
+Goal FalseGoal.
+Prover result is: Unknown (sat) (0.00s, 11 steps).
+```
+
+The Why3 CLI also returned a nonzero exit code for that unproved goal,
+which the earlier smoke script incorrectly interpreted as a failed
+solver invocation. **This is not a proof of the false goal**. The
+`sat` annotation is encouraging for a false-goal check, but Why3's
+formal result category is `Unknown`, so it must not be renamed
+`Invalid`. The corrected script distinguishes this exact observed
+outcome from other `Unknown` messages, and from an erroneously reported
+`Valid`. CVC5 has not yet been tested by the user in this sequence.
+
 ### Functional proof tests for recognized backends
 
 After updating this branch, run:
@@ -212,13 +232,24 @@ bash verification/why3/check_backends.sh
 The Bash script in `verification/why3/check_backends.sh` invokes Z3 and
 CVC5 **through Why3** on
 [`verification/why3/backend_smoke.why`](why3/backend_smoke.why).
-Both must report `Valid` for integer addition by zero, and `Invalid`
-for the deliberately false statement `0 = 1`. Every prover invocation
-has a 30-second limit. The test checks Why3's **reported proof result**,
-not just whether the command exits with status zero. It does not
-touch the user's Why3 configuration and does not claim the solver's
-general soundness. Unlike the offline regression test, the functional
-test must actually run on computer10 before any pass claim is made.
+Both must report `Valid` for integer addition by zero.
+For the deliberately false statement `0 = 1`, the script accepts
+**`Invalid`** (Why3 explicitly reports an invalid goal), or the exact
+**`Unknown (sat)`** indication seen on the user's Z3 4.13.3 driver.
+`Unknown (sat)` is **not** the same as `Invalid`: the Why3 interface
+has not established invalidity, although its message indicates a
+satisfiable negated goal. The script prints distinct messages for those
+two outcomes and does not count generic `Unknown`, timeout or tool
+errors as successful negative controls.
+
+Every prover invocation has a 30-second limit. Unlike a positive proof
+check, an unproved negative goal may cause `why3 prove` to return
+nonzero, so the script inspects both the exit code and the *exact*
+structured goal/result output. It accepts exit code 0 or 1 with the
+expected answer but rejects timeout and abnormal statuses. It never
+touches the user's Why3 configuration and does not establish the
+solver's general soundness. A functional test must execute on computer10
+before any backend is marked verified.
 
 You can inspect registered names using `why3 --list-provers`, and
 the installed Why3 configuration data with `why3 --print-datadir`.
@@ -251,6 +282,8 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The initial test incorrectly demanded `Invalid` on a deliberately false goal and treated Why3's nonzero exit for `Unknown (sat)` as an invocation failure. User-provided logs showed a correctly completed Z3 invocation with Why3 category `Unknown (sat)` and a nonzero process result. The AI revised the test to accept and distinctly report this exact qualified nonproof status, without equating it with a formally established `Invalid` response, and extended the offline mock regression cases. No real CVC5 run has yet been validated by the AI.
 
 A further error in the AI-generated Why3 smoke test assumed a single-line goal/result format. The user supplied authentic output with separate `Goal TrueGoal.` and `Prover result is: Valid` lines, demonstrating a successful Z3 proof but a false failure in the script's output parser. The AI updated the parser and added multiline regression cases with negative controls. These regression cases remain mocked and do not replace live Z3/CVC5 verification on computer10.
 
