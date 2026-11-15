@@ -364,7 +364,7 @@ Proof.
     by (apply sequential_denominator_positive_nonnegative_correlation; lra).
   pose proof (sensitivity_beta_complement r c (Rgt_not_eq _ _ Hd)) as Hgap.
   assert (Hnonneg : 0 <= (1-c)/sequential_d r c).
-  { apply Rdiv_le_0_compat; nra. }
+  { unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]. }
   lra.
 Qed.
 
@@ -497,7 +497,7 @@ Proof.
   pose proof (sensitivity_beta_count_gap r k c
     (Rgt_not_eq _ _ H1) (Rgt_not_eq _ _ H2)) as Hgap.
   assert (Hge : 0 <= k*c*(1-c)/(sequential_d r c*sequential_d (r+k) c)).
-  { apply Rdiv_le_0_compat; nra. }
+  { unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]. }
   lra.
 Qed.
 
@@ -525,7 +525,7 @@ Proof.
   pose proof (sensitivity_beta_correlation_gap r c1 c2
     (Rgt_not_eq _ _ H1) (Rgt_not_eq _ _ H2)) as Hgap.
   assert (Hge : 0 <= r*(c2-c1)/(sequential_d r c1*sequential_d r c2)).
-  { apply Rdiv_le_0_compat; nra. }
+  { unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]. }
   lra.
 Qed.
 
@@ -605,7 +605,7 @@ Proof.
   intros n c Hn Hc.
   pose proof (sensitivity_population_common_idiosyncratic n c
     (Rgt_not_eq _ _ Hn)) as H.
-  assert (Htail : 0 <= (1-c)/n) by (apply Rdiv_le_0_compat; lra).
+  assert (Htail : 0 <= (1-c)/n) by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
   lra.
 Qed.
 
@@ -649,7 +649,7 @@ Proof.
   assert (Hnz : n <> 0) by lra.
   specialize (Hgap Hnz).
   assert (Htail : 0 <= (n-1)*(1-c)/n)
-    by (apply Rdiv_le_0_compat; nra).
+    by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
   lra.
 Qed.
 
@@ -712,7 +712,7 @@ Proof.
   pose proof (sensitivity_population_count_gap n k c
     (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hnk)) as Hgap.
   assert (Hge : 0 <= k*(1-c)/(n*(n+k)))
-    by (apply Rdiv_le_0_compat; nra).
+    by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
   lra.
 Qed.
 
@@ -762,7 +762,7 @@ Proof.
   assert (Hnz : n <> 0) by lra.
   specialize (Hgap Hnz).
   assert (Hge : 0 <= (n-1)*(c2-c1)/n)
-    by (apply Rdiv_le_0_compat; nra).
+    by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
   lra.
 Qed.
 
@@ -1119,7 +1119,7 @@ Proof.
   pose proof (sensitivity_mean_observed_gap r k c a
     (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hd)) as Hgap.
   assert (Hge : 0 <= k*(1-c)*a/((r+k)*sequential_d r c))
-    by (apply Rdiv_le_0_compat; nra).
+    by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
   lra.
 Qed.
 
@@ -1146,7 +1146,7 @@ Proof.
   pose proof (sensitivity_mean_prediction_gap r k c a
     (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hd)) as Hgap.
   assert (Hge : 0 <= r*(1-c)*a/((r+k)*sequential_d r c))
-    by (apply Rdiv_le_0_compat; nra).
+    by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
   lra.
 Qed.
 
