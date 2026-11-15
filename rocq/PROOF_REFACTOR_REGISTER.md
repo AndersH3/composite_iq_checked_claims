@@ -10,9 +10,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **1873 public theorem/lemma/example claims**, plus
+The current branch has **1888 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**1886 proof scripts** across twenty-two Rocq modules. The claims and scripts
+**1901 proof scripts** across twenty-two Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -2383,7 +2383,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `triple_bc_phi_unit_interval` (theorem) | With strictly positive Bernoulli variances, projected B/C phi correlation lies in [-1,1]. Reuses a checked two-event theorem or a canonical eight-cell equality. | Admissions, ThreeTestAdmissions, FiniteUnion/FiniteSum, Stdlib.Lra/Psatz. | Exactly finite Boolean outcomes; conditional interpretation requires positive denominators; no Gaussian-tail inference. |
 | `triple_bc_union_unit_interval` (theorem) | The projection of B/C admissions has a normalized nonnegative union probability at most one. Reuses a checked two-event theorem or a canonical eight-cell equality. | Admissions, ThreeTestAdmissions, FiniteUnion/FiniteSum, Stdlib.Lra/Psatz. | Exactly finite Boolean outcomes; conditional interpretation requires positive denominators; no Gaussian-tail inference. |
 
-## ThreeTestConditionalStrata.v — 7 proof scripts
+## ThreeTestConditionalStrata.v — 22 proof scripts
 
 | Declaration (proof script) | Refactoring / proof method | Existing libraries or lemmas reused | Scope and boundary |
 |---|---|---|---|
@@ -2394,6 +2394,22 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `stratum_ac_b_no` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
 | `stratum_bc_a_yes` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
 | `stratum_bc_a_no` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
+
+| `normalized_four_joint_scaled` (theorem) | Scaling the joint conditional-admission probability by the positive stratum total recovers the original joint mass. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_only_first_scaled` (theorem) | The conditional first-only cell rescales to the corresponding unnormalized exclusive mass. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_only_second_scaled` (theorem) | The conditional second-only cell rescales to the corresponding unnormalized exclusive mass. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_neither_scaled` (theorem) | The conditional neither-cell rescales to the corresponding raw neither mass. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_first_scaled` (theorem) | Multiplying the first conditional admission marginal by the selection mass yields its joint plus exclusive raw masses. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_second_scaled` (theorem) | Multiplying the second conditional admission marginal by the selection mass yields its joint plus exclusive raw masses. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_union_scaled` (theorem) | Conditional union mass equals the joint-plus-two-exclusive raw masses divided by the stratum total. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_exclusive_scaled` (theorem) | The two-route exactly-one conditional admission probability rescales to the sum of two exclusive masses. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_association_scaled` (theorem) | Selection probability squared times conditional association equals the unnormalized two-by-two determinant of raw strata cells. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_independent_iff` (theorem) | Conditional independence in a normalized stratum is equivalent to the exact zero determinant of its four raw cells. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_positive_association_iff` (theorem) | Positive conditional association is equivalent to concordant raw cell product exceeding discordant product. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_negative_association_iff` (theorem) | Negative conditional association is equivalent to the concordant raw cell product lying below discordant product. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_odds_ratio_raw` (theorem) | Conditioning on a nonempty stratum preserves the odds ratio of its four unnormalized cells, provided both discordant masses are positive. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_second_given_first` (theorem) | Among successful first-route admissions within a stratum, the conditional second-route admission rate is joint over first-row mass. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
+| `normalized_four_first_given_second` (theorem) | Among successful second-route admissions within a stratum, the conditional first-route admission rate is joint over second-column mass. | Reuses positive-total normalized_four_stratum and existing Admissions theorems with Stdlib.Field and real algebra. | Strict positivity for conditional rate and odds denominators; no Gaussian model. |
 
 ## SequentialReport.v — 37 proof scripts
 
