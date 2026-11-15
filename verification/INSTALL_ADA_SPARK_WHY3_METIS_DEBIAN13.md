@@ -4,7 +4,7 @@
 
 ## Purpose and host separation
 
-Target: `computer10`, Debian 13 (Trixie), Linux x86_64. This complements the existing Rocq 9.2, Lean 4.35.0, Yices 2, PVS, Isabelle2026 and COLIBRI2 setup. The Isabelle download may be running in a detached process: **do not interrupt it**. Installing packages while it downloads could compete for disk space and network resources.
+Target: `computer10`, Debian 13 (Trixie), Linux x86_64. This complements the existing Rocq 9.2, Lean 4.35.0, Yices 2, PVS, Isabelle2026 and COLIBRI2 setup. An official Isabelle2026 archive has now been downloaded, verified, and extracted on computer10; verify the launcher before calling its installation operational.
 
 Use [`scripts/install_ada_spark_why3.sh`](../scripts/install_ada_spark_why3.sh). The script is non-mutating unless an explicit install/build flag is supplied. It **does not touch any opam switch**. Debian's `metis` is a graph partitioner — it must **not** be installed for the Joe Hurd theorem prover.
 
@@ -20,7 +20,7 @@ Use [`scripts/install_ada_spark_why3.sh`](../scripts/install_ada_spark_why3.sh).
 | Why3 verification platform | Debian `why3` | 1.8.0 | apt |
 | Additional SMT/ATP solvers | Debian `z3`, `cvc5`, `eprover` | distribution versions | apt |
 | Why3 examples | Debian `why3-examples` | distribution version | apt |
-| GNATprove SPARK checker | Alire crate `gnatprove` | pinned 16.1.0 | versioned user-local binary download via `alr -n get` |
+| GNATprove SPARK checker | [Official GNAT-FSF-builds release](https://github.com/alire-project/GNAT-FSF-builds/releases/tag/gnatprove-16.1.0-1), SHA-256 from upstream Alire index | 16.1.0, Linux x86-64 | 473 MB user-local vendor download; no Alire-version upgrade |
 | Joe Hurd Metis theorem prover | [gilith/metis](https://github.com/gilith/metis) | pinned development commit `7a23e4ea68bc92927716777ebc98bea09e91fe24` | separate source checkout; build requires Standard ML compiler |
 
 **Two similarly named products:** Metis from `gilith/metis` is a first-order resolution theorem prover for TPTP problems. The Debian binary package `metis` is an entirely unrelated graph partitioner. The script never requests the Debian `metis` package.
@@ -41,6 +41,33 @@ The user's separately submitted `why3 config --detect` command also
 reported `unrecognized option '--detect'`. The fixed installer avoids both
 unsupported invocations. These are observed host facts, not test results from
 the GitHub Actions runner.
+
+### New computer10 installation results: Ada and Isabelle
+
+The user ran `bash scripts/install_ada_spark_why3.sh --smoke-ada` and
+obtained `Ada compiler smoke test succeeded`. GNAT's compilation,
+link, and execution are therefore confirmed for that minimal Ada file.
+
+The detached Isabelle2026 installer reported the completed download
+of **1,412,134,191 bytes**, a passing published SHA-256 check
+(`858c995b32216b3876bf395c3be843147d1f1eee404bc6c958d7534ee335e48d`),
+and successful extraction under
+`~/.local/opt/formal-provers/isabelle-2026/Isabelle2026/`.
+The installer lock was released. The exact discovered launcher was:
+
+```text
+/home/anonymous/.local/opt/formal-provers/isabelle-2026/Isabelle2026/bin/isabelle
+```
+
+For a runtime version check (without changing global `PATH`), run:
+
+```sh
+"$HOME/.local/opt/formal-provers/isabelle-2026/Isabelle2026/bin/isabelle" version
+```
+
+This version check has not yet been reported by the user; archive
+verification and successful extraction are not proof that the runtime
+works for Isabelle theories.
 
 ## User commands on computer10
 
@@ -80,15 +107,37 @@ To obtain GNATprove in a **separate user prefix**:
 bash scripts/install_ada_spark_why3.sh --install-spark
 ```
 
-**Correction for Debian 13:** The installed `alire` version is 1.2.1 and
-does not provide an `install` subcommand. A previous version of this script
-incorrectly used `alr install`, which failed as reported on computer10.
-The corrected script uses `alr -n get gnatprove=16.1.0` within
-`~/.local/opt/ada-spark/`, locates the versioned executable, checks
-`--version` and creates the isolated launcher
-`~/.local/opt/ada-spark/bin/gnatprove`. The wrapper adds the downloaded
-GNATprove bundle's own `bin/` directory to its subprocess `PATH`, so
-its packaged solvers are visible without modifying the shell's global PATH.
+**Correction for Debian 13 (Alire index compatibility):** The user's
+Debian Alire is **1.2.1** and has no `install` subcommand. The initial
+`alr install` attempt therefore failed. The next attempted command,
+`alr -n get gnatprove=16.1.0`, also failed with *Release ... does not
+exist in the catalog.* The official community index has GNATprove
+13.2.1 on branch `stable-1.2.1` (for Alire 1.2.1), but GNATprove
+16.1.0 appears only in the newer `stable-1.4.0` index.
+
+The corrected `--install-spark` action downloads **the original vendor
+binary archive referenced by the official newer Alire index** rather
+than modifying Debian's `alire` or its index. The release asset is
+`gnatprove-x86_64-linux-16.1.0-1.tar.gz` (472,919,963 bytes).
+Its independently pinned manifest SHA-256 is
+
+```text
+82528bef29857e239373fcc36732837d743f5a00805d502c70455422ffc97191
+```
+
+The installer checks both the size and SHA-256 **before extraction**,
+uses a temporary extraction directory and installs under
+`~/.local/opt/ada-spark/gnatprove-16.1.0`. It creates the user-local
+wrapper `~/.local/opt/ada-spark/bin/gnatprove` after finding a unique
+vendor executable, adds only that bundle's `bin` to the child process
+`PATH`, and verifies the version invocation. A 473 MB archive may
+require substantial additional temporary disk space. Installation
+remains opt-in. A package checksum is an integrity measure, not
+independent auditing of the third-party binaries.
+
+Upstream sources: [GNAT-FSF-builds release](https://github.com/alire-project/GNAT-FSF-builds/releases/tag/gnatprove-16.1.0-1),
+[stable-1.2.1 index](https://github.com/alire-project/alire-index/tree/stable-1.2.1/index/gn/gnatprove),
+and [stable-1.4.0 GNATprove manifest](https://github.com/alire-project/alire-index/blob/stable-1.4.0/index/gn/gnatprove/gnatprove-16.1.0.toml).
 
 To query the GNATprove launcher after installation:
 
@@ -96,9 +145,7 @@ To query the GNATprove launcher after installation:
 ~/.local/opt/ada-spark/bin/gnatprove --version
 ```
 
-GNATprove is not included in Debian's `gnat` package. The download requires
-a configured Alire community index and network access. If it fails, retain
-the error output; don't claim a successful SPARK installation.
+GNATprove is not included in Debian's `gnat` package. This direct vendor download requires network access and sufficient free space but **does not require an updated Alire index**. If it fails, retain the diagnostics; do not claim GNATprove was installed. The Debian GNAT 14 compiler may also be too old for some GNATprove 16/SPARK workflows; verify actual SPARK proof execution rather than equating a successful `--version` probe with toolchain compatibility.
 
 For **project-specific SPARK checking**, go to an Alire crate containing your Ada/SPARK code, run `alr with gnatprove`, and then `alr gnatprove`. Work through the GNATprove warnings and proof-obligation reports, rather than treating a tool's `--version` output as evidence that source-level contracts are established. Depending on your setup, use `alr gnatprove --mode=all` or `gnatprove -Pproject.gpr --mode=all`; verify the flags of the installed release.
 
@@ -299,9 +346,9 @@ For Why3, further candidates include Alt-Ergo, veriT, Vampire and SPASS. Availab
 ## Validation limits
 
 The offline test `bash scripts/test_ada_spark_why3.sh` validates shell
-syntax, command-plan outputs, a mocked Alire 1.2 that accepts `get` but
-rejects `install`, a fake GNATprove binary and launcher, the exact
-`why3 config detect` dispatch, negative controls for the wrong Metis
+syntax, exact vendor size/SHA-256 metadata, and rejection of an
+unsupported OS before download. It additionally checks the exact
+`why3 config detect` dispatch and negative controls for the wrong Metis
 package, and the absence of prohibited automatic system changes. GitHub Actions runs that test as part of its existing Python-contracts workflow, alongside the separate Deal coverage and runtime-test gates.
 
 The user's computer has not been operated remotely by the assistant. Installation, real compiler execution, SPARK proof closure, Metis build success, and Why3 backend acceptance are **not confirmed** until the appropriate commands have run on computer10. Runtime success is distinct from a formal proof of software correctness.
@@ -314,6 +361,17 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The November 15 computer10 logs further showed that Ada compilation
+succeeded and Isabelle2026 passed its official archive SHA-256 check
+and extraction. They also showed `alr -n get gnatprove=16.1.0` failing,
+because Alire 1.2.1's index does not contain this recent release.
+The assistant inspected both upstream Alire index branches and the
+official GNAT-FSF GitHub release, then replaced the erroneous Alire
+installation path with a verified-hash vendor archive installer.
+The new download/extraction path has not yet been executed on computer10
+and the downloaded vendor executable has not been tested in this chat.
+
 
 On November 15, 2026, the user supplied an additional real computer10 run confirming that both Z3 and CVC5 completed the Why3 smoke test with an overall exit status of 0. Both positive goals were Valid; both false goals were Unknown (sat), not Invalid. User-provided ShellCheck output also exposed SC2154 in the AI-generated error trap. The assistant refactored that diagnostic and recorded these results. No new live proof execution was performed by the assistant.
 
