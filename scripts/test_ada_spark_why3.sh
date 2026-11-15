@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Offline, non-mutating regression tests for the Ada/SPARK and Why3 installer.
-# The tests do not use sudo, apt, network, Alire, or a Standard ML compiler.
+# Tests avoid sudo, apt, downloads, Alire, and Standard ML compilers.
 set -euo pipefail
 # Make unexpected regressions visible instead of exiting silently under
 # 'set -e'. Capture the original exit code as a trap argument, rather than
@@ -34,41 +34,43 @@ if command -v gnatmake >/dev/null; then
 fi
 grep -F '7a23e4ea68bc92927716777ebc98bea09e91fe24' <<<"$plan" >/dev/null
 grep -F 'apt install metis is WRONG' <<<"$plan" >/dev/null
-grep -F 'alr -n get gnatprove=16.1.0' <<<"$plan" >/dev/null
+# The Alire 1.2.1 catalog cannot supply GNATprove 16.1.0. The
+# installer must instead point to the exact official upstream asset
+# with immutable length and SHA256 pinned in the stable-1.4.0 index.
+grep -F 'GNATprove 16.1.0' <<<"$plan" >/dev/null
+grep -F 'gnatprove-x86_64-linux-16.1.0-1.tar.gz' <<<"$plan" >/dev/null
+grep -F '82528bef29857e239373fcc36732837d743f5a00805d502c70455422ffc97191' <<<"$plan" >/dev/null
+grep -F '472919963 bytes' <<<"$plan" >/dev/null
+grep -F 'Alire 1.2.1 catalog lists only older GNATprove releases' <<<"$plan" >/dev/null
 grep -F 'why3 config detect' <<<"$plan" >/dev/null
 
-# Simulate Alire 1.2.1, which supports "get" but rejects "install".
-# A fake downloaded GNATprove tree tests bundle selection, wrapper PATH
-# behavior, version checking, and idempotent reuse without network access.
+# Offline preflight: the install action must reject an unsupported
+# platform before network/download/extraction or any user-prefix changes.
+# No fake upstream binaries or checksum bypasses are accepted by the
+# production installer; the real vendor SHA256 is tested only on computer10.
 fixture="$(mktemp -d)"
 trap 'rm -rf -- "$fixture"' EXIT
 mkdir -p "$fixture/home" "$fixture/bin"
-cat > "$fixture/bin/alr" <<'MOCK_ALR'
+cat > "$fixture/bin/uname" <<'MOCK_UNAME'
 #!/usr/bin/env bash
 set -euo pipefail
-printf '%s\n' "$*" >>"$HOME/alr-calls"
-[[ "$#" -eq 3 && "$1" == "-n" && "$2" == "get" &&
-   "$3" == "gnatprove=16.1.0" ]] || exit 77
-mkdir -p gnatprove_16.1.0_test/bin
-cat > gnatprove_16.1.0_test/bin/gnatprove <<'MOCK_PROVER'
-#!/usr/bin/env bash
-set -euo pipefail
-[[ "${1:-}" == "--version" ]] || exit 78
-echo 'GNATprove 16.1.0 (offline test stub)'
-MOCK_PROVER
-chmod 755 gnatprove_16.1.0_test/bin/gnatprove
-MOCK_ALR
-chmod 755 "$fixture/bin/alr"
-
-HOME="$fixture/home" PATH="$fixture/bin:$PATH" \
-  bash "$installer" --install-spark >"$fixture/install.out"
-grep -F 'GNATprove 16.1.0 (offline test stub)' "$fixture/install.out" >/dev/null
-wrapper="$fixture/home/.local/opt/ada-spark/bin/gnatprove"
-test -x "$wrapper"
-"$wrapper" --version | grep -F 'GNATprove 16.1.0' >/dev/null
-HOME="$fixture/home" PATH="$fixture/bin:$PATH" \
-  bash "$installer" --install-spark >"$fixture/reinstall.out"
-[[ "$(wc -l <"$fixture/home/alr-calls")" -eq 1 ]]
+if [[ "${1:-}" == "-s" ]]; then
+  printf '%s\n' 'FreeBSD'
+elif [[ "${1:-}" == "-m" ]]; then
+  printf '%s\n' 'amd64'
+else
+  exit 90
+fi
+MOCK_UNAME
+chmod 755 "$fixture/bin/uname"
+if HOME="$fixture/home" PATH="$fixture/bin:$PATH" \
+    bash "$installer" --install-spark >"$fixture/wrong-platform.out" 2>&1; then
+  printf '%s\n' 'ERROR: GNATprove installation accepted non-Linux platform' >&2
+  exit 1
+fi
+grep -F 'only for Linux x86_64' "$fixture/wrong-platform.out" >/dev/null
+test ! -e "$fixture/home/.local/opt/ada-spark"
+rm "$fixture/bin/uname"
 
 # Debian Why3 1.8.0 requires "config detect" and "--list-provers".
 # A fake binary that refuses the obsolete "--detect" checks exact dispatch.
@@ -222,4 +224,4 @@ if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_GOAL=UnrelatedGoal \
 fi
 grep -F 'did not prove TrueGoal as Valid' "$fixture/wrong-goal.out" >/dev/null
 
-printf '%s\n' 'Ada/SPARK/Why3 offline plan, Alire 1.2 GNATprove, and Why3 detection regression tests passed'
+printf '%s\n' 'Ada/SPARK/Why3 offline checksum-plan, safe-platform, and Why3 regression tests passed'
