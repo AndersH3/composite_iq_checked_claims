@@ -65,3 +65,14 @@ to a concrete pair of disjoint Boolean event cells.
 ## Complete AI disclosure
 
 ChatGPT assisted with source placement and documentation. Kernel compilation validates only the declared theorem statements and hypotheses; empirical admissions rates and Gaussian assumptions remain unverified.
+
+
+## D041x — trivariate covariance algebra
+
+`ThreeTestSchur.v` contains 81 conditional pair-specific theorem scripts
+(AB|C, AC|B, BC|A) and imports the canonical 27-theorem
+`library/rocq/TrivariateSchur.v`. Each checks exact real Schur-covariance
+identities or inequalities and explicitly states any conditioning-variance
+hypotheses. It does **not** construct a joint Gaussian law, prove conditional
+normal distributions or evaluate any normal tail. The source and comments are
+AI-assisted; validity depends on the pinned Rocq 9.2 kernel.
