@@ -431,7 +431,7 @@ def ten_contract_summary(report: dict) -> dict:
 @deal.post(lambda result: list(result) == sorted(result))
 @deal.post(lambda result: all(Path(path).suffix in {".ads", ".adb"}
                               for path in result))
-@deal.post(lambda result: all(path.startswith(("analyses/", "verification/"))
+@deal.post(lambda result: all(path.startswith(("analyses/", "verification/", "library/spark/"))
                               for path in result))
 @deal.post(lambda result: all(not Path(path).is_absolute()
                               and ".." not in Path(path).parts
@@ -445,7 +445,7 @@ def current_sources(root: Path) -> dict:
     # Source-owned common contracts count alongside report-local units.
     # Historical campaigns continue to use their pinned source trees.
     paths += sorted(root.glob("library/spark/src/*.ad[bs]"))
-    return {path.relative_to(root).as_posix(): path.read_text(encoding="utf-8") for path in paths}
+    return {path.relative_to(root).as_posix(): path.read_text(encoding="utf-8") for path in sorted(paths)}
 
 
 @deal.raises(SystemExit, OSError, ValueError, UnicodeDecodeError, TypeError, KeyError)
