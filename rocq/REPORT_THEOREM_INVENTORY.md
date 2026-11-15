@@ -116,6 +116,25 @@ sample of the eight Boolean patterns**. They need the final pinned Rocq
 9.2 kernel CI before being labelled checked and do not verify a trivariate
 normal integral or empirical psychometric parameters.
 
+### D037x — certified pairwise marginalization of the three-test model
+
+The Towers report's two-test formulas are connected to the three-test model
+using the **three certified** `TwoEventModel` projections
+`pair_AB3`, `pair_AC3` and `pair_BC3` from
+[`ThreeTestPairBridge.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestPairBridge.v).
+Each projection sums out the omitted Boolean admission outcome while retaining
+eight-atom nonnegativity and unit total mass. The **84 report-specific
+bridge theorems** tie pairwise marginal success, intersection, exclusive
+success, conditional rates, binary-indicator variance/covariance, odds ratio,
+phi correlation, independence criteria, Fréchet lower bounds and positivity
+conditions to the original three-route probabilities. Nearly all pairwise
+properties are delegated to the existing checked `Admissions.v` laws;
+there are no duplicate four-cell event engines or Gaussian assumptions.
+
+Only the pinned Rocq 9.2 kernel can certify these proofs. Their scope is
+finite normalized event algebra, not Gaussian joint tails, Gaussian
+conditioning or measured psychometric correlations.
+
 ## IV. Proof-development priorities based on report dependence
 
 1. **Highest impact, genuinely missing:** Gaussian regression, conditional expectation (with regular conditional laws and continuous versions), and equicorrelation positive-semidefinite/spectral construction. The current Schur covariance theorems do **not** establish these stochastic claims.
