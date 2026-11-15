@@ -1126,7 +1126,7 @@ Qed.
 (**
  [stratum_ab_c_no_joint_scaled] (theorem) — The conditional joint AB probability multiplied by selection mass recovers its triple-test joint atom.
  Mathematical meaning: The conditional joint AB probability multiplied by selection mass recovers its triple-test joint atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_both (stratum_ab_c_no m H)=mass3 m (true,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_both (stratum_ab_c_no m H)=mass3 m (true,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1144,7 +1144,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_joint_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_both (stratum_ab_c_no m H)=mass3 m (true,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_both (stratum_ab_c_no m H)=mass3 m (true,true,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1155,7 +1155,7 @@ Qed.
 (**
  [stratum_ab_c_no_only_first_scaled] (theorem) — The conditional first-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
  Mathematical meaning: The conditional first-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_A (stratum_ab_c_no m H)=mass3 m (true,false,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.only_A (stratum_ab_c_no m H)=mass3 m (true,false,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1173,7 +1173,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_only_first_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_A (stratum_ab_c_no m H)=mass3 m (true,false,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.only_A (stratum_ab_c_no m H)=mass3 m (true,false,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1184,7 +1184,7 @@ Qed.
 (**
  [stratum_ab_c_no_only_second_scaled] (theorem) — The conditional second-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
  Mathematical meaning: The conditional second-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_B (stratum_ab_c_no m H)=mass3 m (false,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.only_B (stratum_ab_c_no m H)=mass3 m (false,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1202,7 +1202,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_only_second_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_B (stratum_ab_c_no m H)=mass3 m (false,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.only_B (stratum_ab_c_no m H)=mass3 m (false,true,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1213,7 +1213,7 @@ Qed.
 (**
  [stratum_ab_c_no_neither_scaled] (theorem) — The conditional neither-AB-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
  Mathematical meaning: The conditional neither-AB-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.neither (stratum_ab_c_no m H)=mass3 m (false,false,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.neither (stratum_ab_c_no m H)=mass3 m (false,false,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1231,7 +1231,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_neither_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.neither (stratum_ab_c_no m H)=mass3 m (false,false,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.neither (stratum_ab_c_no m H)=mass3 m (false,false,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1242,7 +1242,7 @@ Qed.
 (**
  [stratum_ab_c_no_first_marginal_scaled] (theorem) — The first-route conditional AB marginal is the selected first-row mass divided by the conditioning probability.
  Mathematical meaning: The first-route conditional AB marginal is the selected first-row mass divided by the conditioning probability.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_A (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_A (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1260,7 +1260,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_first_marginal_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_A (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_A (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1271,7 +1271,7 @@ Qed.
 (**
  [stratum_ab_c_no_second_marginal_scaled] (theorem) — The second-route conditional AB marginal is the selected second-column mass divided by the conditioning probability.
  Mathematical meaning: The second-route conditional AB marginal is the selected second-column mass divided by the conditioning probability.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_B (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (false,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_B (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (false,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1289,7 +1289,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_second_marginal_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_B (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (false,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_B (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (false,true,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1300,7 +1300,7 @@ Qed.
 (**
  [stratum_ab_c_no_union_scaled] (theorem) — The conditional probability of passing at least one AB route has the correct three-cell selection-mass numerator.
  Mathematical meaning: The conditional probability of passing at least one AB route has the correct three-cell selection-mass numerator.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_either (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_either (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1318,7 +1318,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_union_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_either (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_either (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1329,7 +1329,7 @@ Qed.
 (**
  [stratum_ab_c_no_exclusive_scaled] (theorem) — The conditional probability of exactly one AB success has the sum of two exclusive selected atoms as numerator.
  Mathematical meaning: The conditional probability of exactly one AB success has the sum of two exclusive selected atoms as numerator.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_exactly_one (stratum_ab_c_no m H)=mass3 m (true,false,false)+mass3 m (false,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_exactly_one (stratum_ab_c_no m H)=mass3 m (true,false,false)+mass3 m (false,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1347,7 +1347,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_exclusive_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_exactly_one (stratum_ab_c_no m H)=mass3 m (true,false,false)+mass3 m (false,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*Admissions.p_exactly_one (stratum_ab_c_no m H)=mass3 m (true,false,false)+mass3 m (false,true,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -1358,7 +1358,7 @@ Qed.
 (**
  [stratum_ab_c_no_association_scaled] (theorem) — The third-route selection probability squared times conditional AB association equals the determinant of the four unnormalized selected contingency cells.
  Mathematical meaning: The third-route selection probability squared times conditional AB association equals the determinant of the four unnormalized selected contingency cells.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*1-pC3 m*Admissions.admission_association (stratum_ab_c_no m H)=mass3 m (true,true,false)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*(1-pC3 m)*Admissions.admission_association (stratum_ab_c_no m H)=mass3 m (true,true,false)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -1376,7 +1376,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ab_c_no_association_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*1-pC3 m*Admissions.admission_association (stratum_ab_c_no m H)=mass3 m (true,true,false)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (1-pC3 m)*(1-pC3 m)*Admissions.admission_association (stratum_ab_c_no m H)=mass3 m (true,true,false)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,true,false).
 Proof.
   intros m H.
     rewrite (stratum_ab_c_no_total_atoms m H).
@@ -2090,7 +2090,7 @@ Qed.
 (**
  [stratum_ac_b_no_joint_scaled] (theorem) — The conditional joint AC probability multiplied by selection mass recovers its triple-test joint atom.
  Mathematical meaning: The conditional joint AC probability multiplied by selection mass recovers its triple-test joint atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_both (stratum_ac_b_no m H)=mass3 m (true,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_both (stratum_ac_b_no m H)=mass3 m (true,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2108,7 +2108,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_joint_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_both (stratum_ac_b_no m H)=mass3 m (true,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_both (stratum_ac_b_no m H)=mass3 m (true,false,true).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2119,7 +2119,7 @@ Qed.
 (**
  [stratum_ac_b_no_only_first_scaled] (theorem) — The conditional first-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
  Mathematical meaning: The conditional first-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_A (stratum_ac_b_no m H)=mass3 m (true,false,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.only_A (stratum_ac_b_no m H)=mass3 m (true,false,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2137,7 +2137,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_only_first_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_A (stratum_ac_b_no m H)=mass3 m (true,false,false).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.only_A (stratum_ac_b_no m H)=mass3 m (true,false,false).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2148,7 +2148,7 @@ Qed.
 (**
  [stratum_ac_b_no_only_second_scaled] (theorem) — The conditional second-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
  Mathematical meaning: The conditional second-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_B (stratum_ac_b_no m H)=mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.only_B (stratum_ac_b_no m H)=mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2166,7 +2166,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_only_second_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_B (stratum_ac_b_no m H)=mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.only_B (stratum_ac_b_no m H)=mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2177,7 +2177,7 @@ Qed.
 (**
  [stratum_ac_b_no_neither_scaled] (theorem) — The conditional neither-AC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
  Mathematical meaning: The conditional neither-AC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.neither (stratum_ac_b_no m H)=mass3 m (false,false,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.neither (stratum_ac_b_no m H)=mass3 m (false,false,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2195,7 +2195,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_neither_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.neither (stratum_ac_b_no m H)=mass3 m (false,false,false).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.neither (stratum_ac_b_no m H)=mass3 m (false,false,false).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2206,7 +2206,7 @@ Qed.
 (**
  [stratum_ac_b_no_first_marginal_scaled] (theorem) — The first-route conditional AC marginal is the selected first-row mass divided by the conditioning probability.
  Mathematical meaning: The first-route conditional AC marginal is the selected first-row mass divided by the conditioning probability.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_A (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_A (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2224,7 +2224,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_first_marginal_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_A (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_A (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2235,7 +2235,7 @@ Qed.
 (**
  [stratum_ac_b_no_second_marginal_scaled] (theorem) — The second-route conditional AC marginal is the selected second-column mass divided by the conditioning probability.
  Mathematical meaning: The second-route conditional AC marginal is the selected second-column mass divided by the conditioning probability.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_B (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_B (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2253,7 +2253,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_second_marginal_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_B (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_B (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2264,7 +2264,7 @@ Qed.
 (**
  [stratum_ac_b_no_union_scaled] (theorem) — The conditional probability of passing at least one AC route has the correct three-cell selection-mass numerator.
  Mathematical meaning: The conditional probability of passing at least one AC route has the correct three-cell selection-mass numerator.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_either (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_either (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2282,7 +2282,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_union_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_either (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_either (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2293,7 +2293,7 @@ Qed.
 (**
  [stratum_ac_b_no_exclusive_scaled] (theorem) — The conditional probability of exactly one AC success has the sum of two exclusive selected atoms as numerator.
  Mathematical meaning: The conditional probability of exactly one AC success has the sum of two exclusive selected atoms as numerator.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_exactly_one (stratum_ac_b_no m H)=mass3 m (true,false,false)+mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_exactly_one (stratum_ac_b_no m H)=mass3 m (true,false,false)+mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2311,7 +2311,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_exclusive_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_exactly_one (stratum_ac_b_no m H)=mass3 m (true,false,false)+mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*Admissions.p_exactly_one (stratum_ac_b_no m H)=mass3 m (true,false,false)+mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -2322,7 +2322,7 @@ Qed.
 (**
  [stratum_ac_b_no_association_scaled] (theorem) — The third-route selection probability squared times conditional AC association equals the determinant of the four unnormalized selected contingency cells.
  Mathematical meaning: The third-route selection probability squared times conditional AC association equals the determinant of the four unnormalized selected contingency cells.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*1-pB3 m*Admissions.admission_association (stratum_ac_b_no m H)=mass3 m (true,false,true)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*(1-pB3 m)*Admissions.admission_association (stratum_ac_b_no m H)=mass3 m (true,false,true)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -2340,7 +2340,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_ac_b_no_association_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*1-pB3 m*Admissions.admission_association (stratum_ac_b_no m H)=mass3 m (true,false,true)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (1-pB3 m)*(1-pB3 m)*Admissions.admission_association (stratum_ac_b_no m H)=mass3 m (true,false,true)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_ac_b_no_total_atoms m H).
@@ -3054,7 +3054,7 @@ Qed.
 (**
  [stratum_bc_a_no_joint_scaled] (theorem) — The conditional joint BC probability multiplied by selection mass recovers its triple-test joint atom.
  Mathematical meaning: The conditional joint BC probability multiplied by selection mass recovers its triple-test joint atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_both (stratum_bc_a_no m H)=mass3 m (false,true,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_both (stratum_bc_a_no m H)=mass3 m (false,true,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3072,7 +3072,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_joint_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_both (stratum_bc_a_no m H)=mass3 m (false,true,true).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_both (stratum_bc_a_no m H)=mass3 m (false,true,true).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3083,7 +3083,7 @@ Qed.
 (**
  [stratum_bc_a_no_only_first_scaled] (theorem) — The conditional first-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
  Mathematical meaning: The conditional first-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_A (stratum_bc_a_no m H)=mass3 m (false,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.only_A (stratum_bc_a_no m H)=mass3 m (false,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3101,7 +3101,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_only_first_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_A (stratum_bc_a_no m H)=mass3 m (false,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.only_A (stratum_bc_a_no m H)=mass3 m (false,true,false).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3112,7 +3112,7 @@ Qed.
 (**
  [stratum_bc_a_no_only_second_scaled] (theorem) — The conditional second-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
  Mathematical meaning: The conditional second-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_B (stratum_bc_a_no m H)=mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.only_B (stratum_bc_a_no m H)=mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3130,7 +3130,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_only_second_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_B (stratum_bc_a_no m H)=mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.only_B (stratum_bc_a_no m H)=mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3141,7 +3141,7 @@ Qed.
 (**
  [stratum_bc_a_no_neither_scaled] (theorem) — The conditional neither-BC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
  Mathematical meaning: The conditional neither-BC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.neither (stratum_bc_a_no m H)=mass3 m (false,false,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.neither (stratum_bc_a_no m H)=mass3 m (false,false,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3159,7 +3159,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_neither_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.neither (stratum_bc_a_no m H)=mass3 m (false,false,false).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.neither (stratum_bc_a_no m H)=mass3 m (false,false,false).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3170,7 +3170,7 @@ Qed.
 (**
  [stratum_bc_a_no_first_marginal_scaled] (theorem) — The first-route conditional BC marginal is the selected first-row mass divided by the conditioning probability.
  Mathematical meaning: The first-route conditional BC marginal is the selected first-row mass divided by the conditioning probability.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_A (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_A (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3188,7 +3188,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_first_marginal_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_A (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_A (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3199,7 +3199,7 @@ Qed.
 (**
  [stratum_bc_a_no_second_marginal_scaled] (theorem) — The second-route conditional BC marginal is the selected second-column mass divided by the conditioning probability.
  Mathematical meaning: The second-route conditional BC marginal is the selected second-column mass divided by the conditioning probability.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_B (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_B (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3217,7 +3217,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_second_marginal_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_B (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_B (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3228,7 +3228,7 @@ Qed.
 (**
  [stratum_bc_a_no_union_scaled] (theorem) — The conditional probability of passing at least one BC route has the correct three-cell selection-mass numerator.
  Mathematical meaning: The conditional probability of passing at least one BC route has the correct three-cell selection-mass numerator.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_either (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_either (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3246,7 +3246,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_union_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_either (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_either (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3257,7 +3257,7 @@ Qed.
 (**
  [stratum_bc_a_no_exclusive_scaled] (theorem) — The conditional probability of exactly one BC success has the sum of two exclusive selected atoms as numerator.
  Mathematical meaning: The conditional probability of exactly one BC success has the sum of two exclusive selected atoms as numerator.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_exactly_one (stratum_bc_a_no m H)=mass3 m (false,true,false)+mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_exactly_one (stratum_bc_a_no m H)=mass3 m (false,true,false)+mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3275,7 +3275,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_exclusive_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_exactly_one (stratum_bc_a_no m H)=mass3 m (false,true,false)+mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*Admissions.p_exactly_one (stratum_bc_a_no m H)=mass3 m (false,true,false)+mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
@@ -3286,7 +3286,7 @@ Qed.
 (**
  [stratum_bc_a_no_association_scaled] (theorem) — The third-route selection probability squared times conditional BC association equals the determinant of the four unnormalized selected contingency cells.
  Mathematical meaning: The third-route selection probability squared times conditional BC association equals the determinant of the four unnormalized selected contingency cells.
- Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*1-pA3 m*Admissions.admission_association (stratum_bc_a_no m H)=mass3 m (false,true,true)*mass3 m (false,false,false)-mass3 m (false,true,false)*mass3 m (false,false,true).
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*(1-pA3 m)*Admissions.admission_association (stratum_bc_a_no m H)=mass3 m (false,true,true)*mass3 m (false,false,false)-mass3 m (false,true,false)*mass3 m (false,false,true).
  Premises and side conditions: The eight nonnegative atom masses sum to
  one by ThreeTestModel. Conditioning is performed only on a positive-mass
  third-route stratum (pass or fail, as specified). Conditional admission
@@ -3304,7 +3304,7 @@ Qed.
  Gaussian conditional law, continuous tail integral or IQ calibration.
 *)
 Theorem stratum_bc_a_no_association_scaled :
-  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*1-pA3 m*Admissions.admission_association (stratum_bc_a_no m H)=mass3 m (false,true,true)*mass3 m (false,false,false)-mass3 m (false,true,false)*mass3 m (false,false,true).
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (1-pA3 m)*(1-pA3 m)*Admissions.admission_association (stratum_bc_a_no m H)=mass3 m (false,true,true)*mass3 m (false,false,false)-mass3 m (false,true,false)*mass3 m (false,false,true).
 Proof.
   intros m H.
     rewrite (stratum_bc_a_no_total_atoms m H).
