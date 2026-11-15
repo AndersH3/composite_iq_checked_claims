@@ -122,10 +122,19 @@ case "${1:-}" in
       printf 'More than one prover corresponds to the abbreviated name\n' >&2
       exit 79
     }
+    # Match the real Why3 1.8 text format observed on computer10:
+    # File "..." line ..., Goal TrueGoal., Prover result is: Valid (...).
+    # A one-line mock used previously allowed the broken result parser
+    # to pass CI while failing on the actual Debian installation.
     if [[ "$*" == *" -G TrueGoal" ]]; then
-      printf '%s\n' 'backend_smoke.why BackendSmoke TrueGoal: Valid (0.01s)'
+      printf '%s\n' 'File "backend_smoke.why", line 20, characters 17-41:'
+      printf 'Goal %s.\n' "${WHY3_FAKE_GOAL:-TrueGoal}"
+      printf 'Prover result is: %s (0.00s, 18 steps).\n' \
+        "${WHY3_FAKE_POSITIVE:-Valid}"
     elif [[ "$*" == *" -G FalseGoal" ]]; then
-      printf 'backend_smoke.why BackendSmoke FalseGoal: %s (0.01s)\n' \
+      printf '%s\n' 'File "backend_smoke.why", line 25, characters 18-23:'
+      printf '%s\n' 'Goal FalseGoal.'
+      printf 'Prover result is: %s (0.00s, 18 steps).\n' \
         "${WHY3_FAKE_NEGATIVE:-Invalid}"
     else
       exit 80
@@ -143,11 +152,36 @@ HOME="$fixture/home" PATH="$fixture/bin:$PATH" \
 grep -F 'Both Why3 backends passed' "$fixture/proof-smoke.out" >/dev/null
 grep -F 'Z3,4.13.3,' "$fixture/proof-smoke.out" >/dev/null
 grep -F 'CVC5,1.1.2,' "$fixture/proof-smoke.out" >/dev/null
-# Detect regression if a falsely claimed Valid on 0=1 were ever accepted.
+# Negative controls against falsely claimed validity, Unknown results,
+# and a status accidentally attributed to the wrong named goal. Each must
+# fail before a passing summary is printed; a CLI exit code of zero alone
+# is not sufficient evidence of successful proof.
 if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Valid \
     bash "$smoke" >"$fixture/unsound.out" 2>&1; then
   printf '%s\n' 'ERROR: Why3 proof audit accepted a false goal as Valid' >&2
   exit 1
 fi
+grep -F 'incorrectly proved a false goal' "$fixture/unsound.out" >/dev/null
+
+if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Unknown \
+    bash "$smoke" >"$fixture/unknown-negative.out" 2>&1; then
+  printf '%s\n' 'ERROR: Why3 proof audit accepted Unknown for FalseGoal' >&2
+  exit 1
+fi
+grep -F 'did not reject FalseGoal as Invalid' "$fixture/unknown-negative.out" >/dev/null
+
+if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_POSITIVE=Unknown \
+    bash "$smoke" >"$fixture/unknown-positive.out" 2>&1; then
+  printf '%s\n' 'ERROR: Why3 proof audit accepted Unknown for TrueGoal' >&2
+  exit 1
+fi
+grep -F 'did not prove TrueGoal as Valid' "$fixture/unknown-positive.out" >/dev/null
+
+if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_GOAL=UnrelatedGoal \
+    bash "$smoke" >"$fixture/wrong-goal.out" 2>&1; then
+  printf '%s\n' 'ERROR: Why3 audit attributed a Valid result to the wrong goal' >&2
+  exit 1
+fi
+grep -F 'did not prove TrueGoal as Valid' "$fixture/wrong-goal.out" >/dev/null
 
 printf '%s\n' 'Ada/SPARK/Why3 offline plan, Alire 1.2 GNATprove, and Why3 detection regression tests passed'
