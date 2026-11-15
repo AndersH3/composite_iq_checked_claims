@@ -1627,7 +1627,12 @@ Proof.
  rewrite (cov2_beta_second_from_innovation a b c u v ltac:(lra) ltac:(lra)).
  pose proof (cov2_innovation_variance_positive a b c Ha Hd) as Hv.
  unfold Rdiv; assert (Hi:0< / cov2_innovation_variance a b c) by (apply Rinv_0_lt_compat; exact Hv).
- split; intro H; nra.
+ split; intro H.
+ - apply Rmult_integral in H.
+   destruct H as [Hz|Hinv].
+   + apply Rmult_integral in Hz; destruct Hz as [Hz|Hz]; exact Hz.
+   + lra.
+ - rewrite H; ring.
 Qed.
 
 (**
@@ -1743,7 +1748,12 @@ Proof.
  pose proof (cov2_innovation_variance_positive a b c Ha Hd) as Hv.
  unfold cov2_innovation_gain,Rdiv.
  assert (Hi:0< / cov2_innovation_variance a b c) by (apply Rinv_0_lt_compat; exact Hv).
- split; intro H; nra.
+ split.
+ - intro H; intro Hz; rewrite Hz in H; nra.
+ - intro Hz.
+   assert (Hsq:0<cov2_innovation_covariance a c u v *
+                  cov2_innovation_covariance a c u v) by nra.
+   apply Rmult_lt_0_compat; assumption.
 Qed.
 
 (**
