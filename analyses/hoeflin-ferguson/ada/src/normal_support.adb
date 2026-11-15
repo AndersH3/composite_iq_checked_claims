@@ -1,6 +1,7 @@
 with Ada.Numerics.Long_Elementary_Functions;
 with Interfaces.C;
 with Hoeflin_Boundary_Models;
+with Shared_Normal_Sampling;
 package body Normal_Support with SPARK_Mode is
    package Math renames Ada.Numerics.Long_Elementary_Functions;
    use type Interfaces.Unsigned_64;
@@ -82,59 +83,23 @@ package body Normal_Support with SPARK_Mode is
       return Value;
    end Rare_Quantile;
 
-   function State_Value (G : Generator) return Interfaces.Unsigned_64 is (G.State);
+   --  Compatibility functions retain the report's established API while
+   --  delegating all stochastic state transitions to the shared library.
+   function State_Value (G : Generator) return Interfaces.Unsigned_64 is
+     (Shared_Normal_Sampling.State_Value (G));
 
    procedure Reset (G : out Generator; Seed : Interfaces.Unsigned_64) is
    begin
-      G.State := Seed;
+      Shared_Normal_Sampling.Reset (G, Seed);
    end Reset;
 
    procedure Uniform (G : in out Generator; U : out Open_Unit) is
-      Bits : Interfaces.Unsigned_64;
    begin
-      G.State := G.State * 6_364_136_223_846_793_005 + 1_442_695_040_888_963_407;
-      Bits := Interfaces.Shift_Right (G.State, 12);
-      U := (Real (Bits) + 0.5) * 2.0 ** (-52);
+      Shared_Normal_Sampling.Uniform (G, U);
    end Uniform;
 
-   subtype Radius_Value is Real range 0.0 .. 9.0;
-   function Checked_Radius (U : Open_Unit) return Radius_Value with
-     Global => null,
-     Post => (Checked_Radius'Result >= 0.0) and then
-       (Checked_Radius'Result <= 9.0) and then
-       (Hoeflin_Boundary_Models.Radius_Acceptable (U, Checked_Radius'Result)),
-     Depends => (Checked_Radius'Result => U);
-   function Checked_Radius (U : Open_Unit) return Radius_Value
-     with SPARK_Mode => Off
-   is
-      Log_U : constant Long_Float := Math.Log (U);
-      Value : Long_Float;
-   begin
-      if not (Log_U >= -38.0 and then Log_U <= 0.0) then
-         raise Constraint_Error with "logarithm range contract failed";
-      end if;
-      Value := Math.Sqrt (-2.0 * Log_U);
-      if not (Value >= 0.0 and then Value <= 9.0) then
-         raise Constraint_Error with "normal radius range contract failed";
-      end if;
-      Hoeflin_Boundary_Models.Observe_Log_Radius (U, Log_U, Value);
-      return Value;
-   end Checked_Radius;
-
    procedure Normal_Pair (G : in out Generator; X, Y : out Normal_Value) is
-      U, V : Open_Unit;
-      Radius : Radius_Value;
-      Angle, Cosine, Sine : Real;
    begin
-      Uniform (G, U);
-      Uniform (G, V);
-      Radius := Checked_Radius (U);
-      Angle := 6.283185307179586476925286766559 * V;
-      Cosine := Math.Cos (Angle);
-      Hoeflin_Boundary_Models.Observe_Trig (Cosine);
-      X := Radius * Cosine;
-      Sine := Math.Sin (Angle);
-      Hoeflin_Boundary_Models.Observe_Trig (Sine);
-      Y := Radius * Sine;
+      Shared_Normal_Sampling.Normal_Pair (G, X, Y);
    end Normal_Pair;
 end Normal_Support;
