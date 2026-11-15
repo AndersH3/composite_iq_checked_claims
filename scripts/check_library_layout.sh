@@ -12,6 +12,8 @@ for shared in \
   library/spark/src/shared_equicorrelation.adb \
   library/spark/src/shared_event_arithmetic.ads \
   library/spark/src/shared_event_arithmetic.adb \
+  library/spark/src/shared_normal_sampling.ads \
+  library/spark/src/shared_normal_sampling.adb \
   library/rocq/FiniteSum.v library/rocq/FiniteConditionalCovariance.v \
   library/rocq/TwoObservationSchur.v
 do
@@ -41,6 +43,21 @@ do
     { echo "No canonical SPARK source directory in $spec" >&2; exit 1; }
 done
 
+# Enforce shared normal-sampling ownership and reject cross-report source paths.
+grep -q "Shared_Normal_Sampling.Normal_Pair" analyses/hoeflin-ferguson/ada/src/normal_support.adb
+grep -q "Shared_Normal_Sampling.Normal_Pair" analyses/sequential-conditional-means/ada/src/sequential_sampling.adb
+grep -q "Shared_Normal_Sampling.Checked_Sqrt" analyses/sequential-conditional-means/ada/src/sequential_sampling.adb
+grep -q "Shared_Normal_Sampling.Reset" analyses/sequential-conditional-means/ada/src/sequential_run.adb
+if grep -qE 'hoeflin-ferguson/ada/src|hoeflin_core\.|hoeflin_boundary_models\.|normal_support\.' \
+    analyses/sequential-conditional-means/ada/sequential.gpr; then
+  echo "Sequential still links Hoeflin-specific source code" >&2
+  exit 1
+fi
+if grep -niE '^[[:space:]]*with[[:space:]]+(Hoeflin_|Normal_Support)' \
+    analyses/sequential-conditional-means/ada/src/*.ad[bs]; then
+  echo "Sequential imports Hoeflin-specific Ada packages" >&2
+  exit 1
+fi
 grep -q "Shared_Equicorrelation.Numerator" analyses/hoeflin-ferguson/ada/src/hoeflin_core.adb
 grep -q "Shared_Equicorrelation.Numerator" analyses/sequential-conditional-means/ada/src/sequential_core.adb
 grep -q "Shared_Event_Arithmetic.Union_Units" analyses/towers-multiple-test-admissions/ada/src/admission_core.adb
@@ -49,7 +66,7 @@ grep -q "from library.python.statistics import" reporting/simulate.py
 grep -q "require(finite_real(value)" analyses/sequential-conditional-means/scripts/validate_spark.py
 
 # Shared libraries must not import report-local SPARK packages.
-if grep -niE "^[[:space:]]*with[[:space:]]+(Hoeflin_Core|Sequential_Core|Admission_Core)" library/spark/src/*.ad[bs]; then
+if grep -niE "^[[:space:]]*with[[:space:]]+(Hoeflin_|Sequential_|Admission_|Normal_Support|Towers_)" library/spark/src/*.ad[bs]; then
   echo "Shared SPARK library illegally depends on specialized report source" >&2
   exit 1
 fi
