@@ -748,7 +748,12 @@ Proof.
  set (z:=a*v-c*u) in Hg.
  split; intro H.
  - assert (Hsq:z*z* /(a*cov2_det a b c)=0) by lra.
-   assert (Hz:z=0) by nra.
+   assert (Hz:z=0).
+   { apply Rmult_integral in Hsq.
+     destruct Hsq as [Hzsq|Hinv0].
+     - apply Rmult_integral in Hzsq.
+       tauto.
+     - lra. }
    unfold z in Hz; lra.
  - assert (Hz:z=0) by (unfold z; lra).
    rewrite Hz in Hg.
