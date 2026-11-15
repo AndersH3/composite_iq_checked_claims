@@ -615,3 +615,2895 @@ Proof.
   unfold Admissions.conditional_A_given_B, Admissions.p_B; simpl; field; nra.
 Qed.
 
+(**
+ [stratum_ab_c_yes_total_atoms] (theorem) — The mass of the C-pass conditioning stratum equals the sum of its four disjoint raw AB contingency-table cells.
+ Mathematical meaning: The mass of the C-pass conditioning stratum equals the sum of its four disjoint raw AB contingency-table cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m=(mass3 m (true,true,true)+mass3 m (true,false,true)+mass3 m (false,true,true)+mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_total_atoms :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m=(mass3 m (true,true,true)+mass3 m (true,false,true)+mass3 m (false,true,true)+mass3 m (false,false,true)).
+Proof.
+  intros m H; triple_lra.
+Qed.
+
+(**
+ [stratum_ab_c_yes_joint_scaled] (theorem) — The conditional joint AB probability multiplied by selection mass recovers its triple-test joint atom.
+ Mathematical meaning: The conditional joint AB probability multiplied by selection mass recovers its triple-test joint atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_both (stratum_ab_c_yes m H)=mass3 m (true,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_joint_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_both (stratum_ab_c_yes m H)=mass3 m (true,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_joint_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_only_first_scaled] (theorem) — The conditional first-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional first-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.only_A (stratum_ab_c_yes m H)=mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_only_first_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.only_A (stratum_ab_c_yes m H)=mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_only_first_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_only_second_scaled] (theorem) — The conditional second-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional second-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.only_B (stratum_ab_c_yes m H)=mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_only_second_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.only_B (stratum_ab_c_yes m H)=mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_only_second_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_neither_scaled] (theorem) — The conditional neither-AB-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Mathematical meaning: The conditional neither-AB-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.neither (stratum_ab_c_yes m H)=mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_neither_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.neither (stratum_ab_c_yes m H)=mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_neither_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_first_marginal_scaled] (theorem) — The first-route conditional AB marginal is the selected first-row mass divided by the conditioning probability.
+ Mathematical meaning: The first-route conditional AB marginal is the selected first-row mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_A (stratum_ab_c_yes m H)=mass3 m (true,true,true)+mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_first_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_A (stratum_ab_c_yes m H)=mass3 m (true,true,true)+mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_first_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_second_marginal_scaled] (theorem) — The second-route conditional AB marginal is the selected second-column mass divided by the conditioning probability.
+ Mathematical meaning: The second-route conditional AB marginal is the selected second-column mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_B (stratum_ab_c_yes m H)=mass3 m (true,true,true)+mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_second_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_B (stratum_ab_c_yes m H)=mass3 m (true,true,true)+mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_second_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_union_scaled] (theorem) — The conditional probability of passing at least one AB route has the correct three-cell selection-mass numerator.
+ Mathematical meaning: The conditional probability of passing at least one AB route has the correct three-cell selection-mass numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_either (stratum_ab_c_yes m H)=mass3 m (true,true,true)+mass3 m (true,false,true)+mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_union_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_either (stratum_ab_c_yes m H)=mass3 m (true,true,true)+mass3 m (true,false,true)+mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_union_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_exclusive_scaled] (theorem) — The conditional probability of exactly one AB success has the sum of two exclusive selected atoms as numerator.
+ Mathematical meaning: The conditional probability of exactly one AB success has the sum of two exclusive selected atoms as numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_exactly_one (stratum_ab_c_yes m H)=mass3 m (true,false,true)+mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_exclusive_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*Admissions.p_exactly_one (stratum_ab_c_yes m H)=mass3 m (true,false,true)+mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_exclusive_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_association_scaled] (theorem) — The third-route selection probability squared times conditional AB association equals the determinant of the four unnormalized selected contingency cells.
+ Mathematical meaning: The third-route selection probability squared times conditional AB association equals the determinant of the four unnormalized selected contingency cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*pC3 m*Admissions.admission_association (stratum_ab_c_yes m H)=mass3 m (true,true,true)*mass3 m (false,false,true)-mass3 m (true,false,true)*mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_association_scaled :
+  forall (m:ThreeTestModel) (H:0<pC3 m), pC3 m*pC3 m*Admissions.admission_association (stratum_ab_c_yes m H)=mass3 m (true,true,true)*mass3 m (false,false,true)-mass3 m (true,false,true)*mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_yes_total_atoms m H).
+    unfold stratum_ab_c_yes.
+    apply normalized_four_association_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_yes_independent_iff_raw] (theorem) — Conditional AB independence given C=true holds exactly when selected concordant and discordant cell products agree.
+ Mathematical meaning: Conditional AB independence given C=true holds exactly when selected concordant and discordant cell products agree.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), (Admissions.p_both (stratum_ab_c_yes m H)=Admissions.p_A (stratum_ab_c_yes m H)*Admissions.p_B (stratum_ab_c_yes m H) <-> mass3 m (true,true,true)*mass3 m (false,false,true)=mass3 m (true,false,true)*mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_independent_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pC3 m), (Admissions.p_both (stratum_ab_c_yes m H)=Admissions.p_A (stratum_ab_c_yes m H)*Admissions.p_B (stratum_ab_c_yes m H) <-> mass3 m (true,true,true)*mass3 m (false,false,true)=mass3 m (true,false,true)*mass3 m (false,true,true)).
+Proof.
+  intros m H.
+    unfold stratum_ab_c_yes.
+    apply normalized_four_independent_iff.
+Qed.
+
+(**
+ [stratum_ab_c_yes_association_positive_iff_raw] (theorem) — The selected AB pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Mathematical meaning: The selected AB pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), (0<Admissions.admission_association (stratum_ab_c_yes m H) <-> mass3 m (true,false,true)*mass3 m (false,true,true)<mass3 m (true,true,true)*mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_association_positive_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pC3 m), (0<Admissions.admission_association (stratum_ab_c_yes m H) <-> mass3 m (true,false,true)*mass3 m (false,true,true)<mass3 m (true,true,true)*mass3 m (false,false,true)).
+Proof.
+  intros m H.
+    unfold stratum_ab_c_yes.
+    apply normalized_four_positive_association_iff.
+Qed.
+
+(**
+ [stratum_ab_c_yes_association_negative_iff_raw] (theorem) — The selected AB pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Mathematical meaning: The selected AB pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), (Admissions.admission_association (stratum_ab_c_yes m H)<0 <-> mass3 m (true,true,true)*mass3 m (false,false,true)<mass3 m (true,false,true)*mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_association_negative_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pC3 m), (Admissions.admission_association (stratum_ab_c_yes m H)<0 <-> mass3 m (true,true,true)*mass3 m (false,false,true)<mass3 m (true,false,true)*mass3 m (false,true,true)).
+Proof.
+  intros m H.
+    unfold stratum_ab_c_yes.
+    apply normalized_four_negative_association_iff.
+Qed.
+
+(**
+ [stratum_ab_c_yes_second_given_first] (theorem) — The second-route success probability conditional on first-route success within the C-pass stratum is the selected joint/first-row ratio.
+ Mathematical meaning: The second-route success probability conditional on first-route success within the C-pass stratum is the selected joint/first-row ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), 0<mass3 m (true,true,true)+mass3 m (true,false,true) -> Admissions.conditional_B_given_A (stratum_ab_c_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_second_given_first :
+  forall (m:ThreeTestModel) (H:0<pC3 m), 0<mass3 m (true,true,true)+mass3 m (true,false,true) -> Admissions.conditional_B_given_A (stratum_ab_c_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,false,true)).
+Proof.
+  intros m H Hrow.
+    unfold stratum_ab_c_yes.
+    apply normalized_four_second_given_first; exact Hrow.
+Qed.
+
+(**
+ [stratum_ab_c_yes_first_given_second] (theorem) — The first-route success probability conditional on second-route success within the C-pass stratum is the selected joint/second-column ratio.
+ Mathematical meaning: The first-route success probability conditional on second-route success within the C-pass stratum is the selected joint/second-column ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), 0<mass3 m (true,true,true)+mass3 m (false,true,true) -> Admissions.conditional_A_given_B (stratum_ab_c_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_first_given_second :
+  forall (m:ThreeTestModel) (H:0<pC3 m), 0<mass3 m (true,true,true)+mass3 m (false,true,true) -> Admissions.conditional_A_given_B (stratum_ab_c_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (false,true,true)).
+Proof.
+  intros m H Hcolumn.
+    unfold stratum_ab_c_yes.
+    apply normalized_four_first_given_second; exact Hcolumn.
+Qed.
+
+(**
+ [stratum_ab_c_yes_odds_ratio] (theorem) — The normalized AB odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Mathematical meaning: The normalized AB odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), 0<mass3 m (true,false,true)*mass3 m (false,true,true) -> Admissions.admission_odds_ratio (stratum_ab_c_yes m H)=(mass3 m (true,true,true)*mass3 m (false,false,true))/(mass3 m (true,false,true)*mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_odds_ratio :
+  forall (m:ThreeTestModel) (H:0<pC3 m), 0<mass3 m (true,false,true)*mass3 m (false,true,true) -> Admissions.admission_odds_ratio (stratum_ab_c_yes m H)=(mass3 m (true,true,true)*mass3 m (false,false,true))/(mass3 m (true,false,true)*mass3 m (false,true,true)).
+Proof.
+  intros m H Hxy.
+    unfold stratum_ab_c_yes.
+    apply normalized_four_odds_ratio_raw; exact Hxy.
+Qed.
+
+(**
+ [stratum_ab_c_yes_frechet_lower] (theorem) — Conditional overlap in the C-pass stratum satisfies the Fréchet lower bound for the projected AB pair.
+ Mathematical meaning: Conditional overlap in the C-pass stratum satisfies the Fréchet lower bound for the projected AB pair.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pC3 m), Admissions.p_A (stratum_ab_c_yes m H)+Admissions.p_B (stratum_ab_c_yes m H)-1<=Admissions.p_both (stratum_ab_c_yes m H).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_yes_frechet_lower :
+  forall (m:ThreeTestModel) (H:0<pC3 m), Admissions.p_A (stratum_ab_c_yes m H)+Admissions.p_B (stratum_ab_c_yes m H)-1<=Admissions.p_both (stratum_ab_c_yes m H).
+Proof.
+  intros m H.
+    apply Admissions.frechet_lower_bound.
+Qed.
+
+(**
+ [stratum_ab_c_no_total_atoms] (theorem) — The mass of the C-failure conditioning stratum equals the sum of its four disjoint raw AB contingency-table cells.
+ Mathematical meaning: The mass of the C-failure conditioning stratum equals the sum of its four disjoint raw AB contingency-table cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m=(mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false)+mass3 m (false,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_total_atoms :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m=(mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false)+mass3 m (false,false,false)).
+Proof.
+  intros m H; triple_lra.
+Qed.
+
+(**
+ [stratum_ab_c_no_joint_scaled] (theorem) — The conditional joint AB probability multiplied by selection mass recovers its triple-test joint atom.
+ Mathematical meaning: The conditional joint AB probability multiplied by selection mass recovers its triple-test joint atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_both (stratum_ab_c_no m H)=mass3 m (true,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_joint_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_both (stratum_ab_c_no m H)=mass3 m (true,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_joint_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_only_first_scaled] (theorem) — The conditional first-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional first-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_A (stratum_ab_c_no m H)=mass3 m (true,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_only_first_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_A (stratum_ab_c_no m H)=mass3 m (true,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_only_first_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_only_second_scaled] (theorem) — The conditional second-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional second-only AB probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_B (stratum_ab_c_no m H)=mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_only_second_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.only_B (stratum_ab_c_no m H)=mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_only_second_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_neither_scaled] (theorem) — The conditional neither-AB-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Mathematical meaning: The conditional neither-AB-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.neither (stratum_ab_c_no m H)=mass3 m (false,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_neither_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.neither (stratum_ab_c_no m H)=mass3 m (false,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_neither_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_first_marginal_scaled] (theorem) — The first-route conditional AB marginal is the selected first-row mass divided by the conditioning probability.
+ Mathematical meaning: The first-route conditional AB marginal is the selected first-row mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_A (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_first_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_A (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_first_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_second_marginal_scaled] (theorem) — The second-route conditional AB marginal is the selected second-column mass divided by the conditioning probability.
+ Mathematical meaning: The second-route conditional AB marginal is the selected second-column mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_B (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_second_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_B (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_second_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_union_scaled] (theorem) — The conditional probability of passing at least one AB route has the correct three-cell selection-mass numerator.
+ Mathematical meaning: The conditional probability of passing at least one AB route has the correct three-cell selection-mass numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_either (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_union_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_either (stratum_ab_c_no m H)=mass3 m (true,true,false)+mass3 m (true,false,false)+mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_union_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_exclusive_scaled] (theorem) — The conditional probability of exactly one AB success has the sum of two exclusive selected atoms as numerator.
+ Mathematical meaning: The conditional probability of exactly one AB success has the sum of two exclusive selected atoms as numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_exactly_one (stratum_ab_c_no m H)=mass3 m (true,false,false)+mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_exclusive_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*Admissions.p_exactly_one (stratum_ab_c_no m H)=mass3 m (true,false,false)+mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_exclusive_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_association_scaled] (theorem) — The third-route selection probability squared times conditional AB association equals the determinant of the four unnormalized selected contingency cells.
+ Mathematical meaning: The third-route selection probability squared times conditional AB association equals the determinant of the four unnormalized selected contingency cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*1-pC3 m*Admissions.admission_association (stratum_ab_c_no m H)=mass3 m (true,true,false)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_association_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 1-pC3 m*1-pC3 m*Admissions.admission_association (stratum_ab_c_no m H)=mass3 m (true,true,false)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ab_c_no_total_atoms m H).
+    unfold stratum_ab_c_no.
+    apply normalized_four_association_scaled.
+Qed.
+
+(**
+ [stratum_ab_c_no_independent_iff_raw] (theorem) — Conditional AB independence given C=false holds exactly when selected concordant and discordant cell products agree.
+ Mathematical meaning: Conditional AB independence given C=false holds exactly when selected concordant and discordant cell products agree.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (Admissions.p_both (stratum_ab_c_no m H)=Admissions.p_A (stratum_ab_c_no m H)*Admissions.p_B (stratum_ab_c_no m H) <-> mass3 m (true,true,false)*mass3 m (false,false,false)=mass3 m (true,false,false)*mass3 m (false,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_independent_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (Admissions.p_both (stratum_ab_c_no m H)=Admissions.p_A (stratum_ab_c_no m H)*Admissions.p_B (stratum_ab_c_no m H) <-> mass3 m (true,true,false)*mass3 m (false,false,false)=mass3 m (true,false,false)*mass3 m (false,true,false)).
+Proof.
+  intros m H.
+    unfold stratum_ab_c_no.
+    apply normalized_four_independent_iff.
+Qed.
+
+(**
+ [stratum_ab_c_no_association_positive_iff_raw] (theorem) — The selected AB pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Mathematical meaning: The selected AB pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (0<Admissions.admission_association (stratum_ab_c_no m H) <-> mass3 m (true,false,false)*mass3 m (false,true,false)<mass3 m (true,true,false)*mass3 m (false,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_association_positive_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (0<Admissions.admission_association (stratum_ab_c_no m H) <-> mass3 m (true,false,false)*mass3 m (false,true,false)<mass3 m (true,true,false)*mass3 m (false,false,false)).
+Proof.
+  intros m H.
+    unfold stratum_ab_c_no.
+    apply normalized_four_positive_association_iff.
+Qed.
+
+(**
+ [stratum_ab_c_no_association_negative_iff_raw] (theorem) — The selected AB pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Mathematical meaning: The selected AB pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), (Admissions.admission_association (stratum_ab_c_no m H)<0 <-> mass3 m (true,true,false)*mass3 m (false,false,false)<mass3 m (true,false,false)*mass3 m (false,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_association_negative_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), (Admissions.admission_association (stratum_ab_c_no m H)<0 <-> mass3 m (true,true,false)*mass3 m (false,false,false)<mass3 m (true,false,false)*mass3 m (false,true,false)).
+Proof.
+  intros m H.
+    unfold stratum_ab_c_no.
+    apply normalized_four_negative_association_iff.
+Qed.
+
+(**
+ [stratum_ab_c_no_second_given_first] (theorem) — The second-route success probability conditional on first-route success within the C-failure stratum is the selected joint/first-row ratio.
+ Mathematical meaning: The second-route success probability conditional on first-route success within the C-failure stratum is the selected joint/first-row ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 0<mass3 m (true,true,false)+mass3 m (true,false,false) -> Admissions.conditional_B_given_A (stratum_ab_c_no m H)=mass3 m (true,true,false)/(mass3 m (true,true,false)+mass3 m (true,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_second_given_first :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 0<mass3 m (true,true,false)+mass3 m (true,false,false) -> Admissions.conditional_B_given_A (stratum_ab_c_no m H)=mass3 m (true,true,false)/(mass3 m (true,true,false)+mass3 m (true,false,false)).
+Proof.
+  intros m H Hrow.
+    unfold stratum_ab_c_no.
+    apply normalized_four_second_given_first; exact Hrow.
+Qed.
+
+(**
+ [stratum_ab_c_no_first_given_second] (theorem) — The first-route success probability conditional on second-route success within the C-failure stratum is the selected joint/second-column ratio.
+ Mathematical meaning: The first-route success probability conditional on second-route success within the C-failure stratum is the selected joint/second-column ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 0<mass3 m (true,true,false)+mass3 m (false,true,false) -> Admissions.conditional_A_given_B (stratum_ab_c_no m H)=mass3 m (true,true,false)/(mass3 m (true,true,false)+mass3 m (false,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_first_given_second :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 0<mass3 m (true,true,false)+mass3 m (false,true,false) -> Admissions.conditional_A_given_B (stratum_ab_c_no m H)=mass3 m (true,true,false)/(mass3 m (true,true,false)+mass3 m (false,true,false)).
+Proof.
+  intros m H Hcolumn.
+    unfold stratum_ab_c_no.
+    apply normalized_four_first_given_second; exact Hcolumn.
+Qed.
+
+(**
+ [stratum_ab_c_no_odds_ratio] (theorem) — The normalized AB odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Mathematical meaning: The normalized AB odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), 0<mass3 m (true,false,false)*mass3 m (false,true,false) -> Admissions.admission_odds_ratio (stratum_ab_c_no m H)=(mass3 m (true,true,false)*mass3 m (false,false,false))/(mass3 m (true,false,false)*mass3 m (false,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_odds_ratio :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), 0<mass3 m (true,false,false)*mass3 m (false,true,false) -> Admissions.admission_odds_ratio (stratum_ab_c_no m H)=(mass3 m (true,true,false)*mass3 m (false,false,false))/(mass3 m (true,false,false)*mass3 m (false,true,false)).
+Proof.
+  intros m H Hxy.
+    unfold stratum_ab_c_no.
+    apply normalized_four_odds_ratio_raw; exact Hxy.
+Qed.
+
+(**
+ [stratum_ab_c_no_frechet_lower] (theorem) — Conditional overlap in the C-failure stratum satisfies the Fréchet lower bound for the projected AB pair.
+ Mathematical meaning: Conditional overlap in the C-failure stratum satisfies the Fréchet lower bound for the projected AB pair.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pC3 m), Admissions.p_A (stratum_ab_c_no m H)+Admissions.p_B (stratum_ab_c_no m H)-1<=Admissions.p_both (stratum_ab_c_no m H).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ab_c_no_frechet_lower :
+  forall (m:ThreeTestModel) (H:0<1-pC3 m), Admissions.p_A (stratum_ab_c_no m H)+Admissions.p_B (stratum_ab_c_no m H)-1<=Admissions.p_both (stratum_ab_c_no m H).
+Proof.
+  intros m H.
+    apply Admissions.frechet_lower_bound.
+Qed.
+
+(**
+ [stratum_ac_b_yes_total_atoms] (theorem) — The mass of the B-pass conditioning stratum equals the sum of its four disjoint raw AC contingency-table cells.
+ Mathematical meaning: The mass of the B-pass conditioning stratum equals the sum of its four disjoint raw AC contingency-table cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m=(mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (false,true,true)+mass3 m (false,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_total_atoms :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m=(mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (false,true,true)+mass3 m (false,true,false)).
+Proof.
+  intros m H; triple_lra.
+Qed.
+
+(**
+ [stratum_ac_b_yes_joint_scaled] (theorem) — The conditional joint AC probability multiplied by selection mass recovers its triple-test joint atom.
+ Mathematical meaning: The conditional joint AC probability multiplied by selection mass recovers its triple-test joint atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_both (stratum_ac_b_yes m H)=mass3 m (true,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_joint_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_both (stratum_ac_b_yes m H)=mass3 m (true,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_joint_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_only_first_scaled] (theorem) — The conditional first-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional first-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.only_A (stratum_ac_b_yes m H)=mass3 m (true,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_only_first_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.only_A (stratum_ac_b_yes m H)=mass3 m (true,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_only_first_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_only_second_scaled] (theorem) — The conditional second-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional second-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.only_B (stratum_ac_b_yes m H)=mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_only_second_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.only_B (stratum_ac_b_yes m H)=mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_only_second_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_neither_scaled] (theorem) — The conditional neither-AC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Mathematical meaning: The conditional neither-AC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.neither (stratum_ac_b_yes m H)=mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_neither_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.neither (stratum_ac_b_yes m H)=mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_neither_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_first_marginal_scaled] (theorem) — The first-route conditional AC marginal is the selected first-row mass divided by the conditioning probability.
+ Mathematical meaning: The first-route conditional AC marginal is the selected first-row mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_A (stratum_ac_b_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_first_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_A (stratum_ac_b_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_first_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_second_marginal_scaled] (theorem) — The second-route conditional AC marginal is the selected second-column mass divided by the conditioning probability.
+ Mathematical meaning: The second-route conditional AC marginal is the selected second-column mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_B (stratum_ac_b_yes m H)=mass3 m (true,true,true)+mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_second_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_B (stratum_ac_b_yes m H)=mass3 m (true,true,true)+mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_second_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_union_scaled] (theorem) — The conditional probability of passing at least one AC route has the correct three-cell selection-mass numerator.
+ Mathematical meaning: The conditional probability of passing at least one AC route has the correct three-cell selection-mass numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_either (stratum_ac_b_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_union_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_either (stratum_ac_b_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_union_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_exclusive_scaled] (theorem) — The conditional probability of exactly one AC success has the sum of two exclusive selected atoms as numerator.
+ Mathematical meaning: The conditional probability of exactly one AC success has the sum of two exclusive selected atoms as numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_exactly_one (stratum_ac_b_yes m H)=mass3 m (true,true,false)+mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_exclusive_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*Admissions.p_exactly_one (stratum_ac_b_yes m H)=mass3 m (true,true,false)+mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_exclusive_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_association_scaled] (theorem) — The third-route selection probability squared times conditional AC association equals the determinant of the four unnormalized selected contingency cells.
+ Mathematical meaning: The third-route selection probability squared times conditional AC association equals the determinant of the four unnormalized selected contingency cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*pB3 m*Admissions.admission_association (stratum_ac_b_yes m H)=mass3 m (true,true,true)*mass3 m (false,true,false)-mass3 m (true,true,false)*mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_association_scaled :
+  forall (m:ThreeTestModel) (H:0<pB3 m), pB3 m*pB3 m*Admissions.admission_association (stratum_ac_b_yes m H)=mass3 m (true,true,true)*mass3 m (false,true,false)-mass3 m (true,true,false)*mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_yes_total_atoms m H).
+    unfold stratum_ac_b_yes.
+    apply normalized_four_association_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_yes_independent_iff_raw] (theorem) — Conditional AC independence given B=true holds exactly when selected concordant and discordant cell products agree.
+ Mathematical meaning: Conditional AC independence given B=true holds exactly when selected concordant and discordant cell products agree.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), (Admissions.p_both (stratum_ac_b_yes m H)=Admissions.p_A (stratum_ac_b_yes m H)*Admissions.p_B (stratum_ac_b_yes m H) <-> mass3 m (true,true,true)*mass3 m (false,true,false)=mass3 m (true,true,false)*mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_independent_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pB3 m), (Admissions.p_both (stratum_ac_b_yes m H)=Admissions.p_A (stratum_ac_b_yes m H)*Admissions.p_B (stratum_ac_b_yes m H) <-> mass3 m (true,true,true)*mass3 m (false,true,false)=mass3 m (true,true,false)*mass3 m (false,true,true)).
+Proof.
+  intros m H.
+    unfold stratum_ac_b_yes.
+    apply normalized_four_independent_iff.
+Qed.
+
+(**
+ [stratum_ac_b_yes_association_positive_iff_raw] (theorem) — The selected AC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Mathematical meaning: The selected AC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), (0<Admissions.admission_association (stratum_ac_b_yes m H) <-> mass3 m (true,true,false)*mass3 m (false,true,true)<mass3 m (true,true,true)*mass3 m (false,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_association_positive_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pB3 m), (0<Admissions.admission_association (stratum_ac_b_yes m H) <-> mass3 m (true,true,false)*mass3 m (false,true,true)<mass3 m (true,true,true)*mass3 m (false,true,false)).
+Proof.
+  intros m H.
+    unfold stratum_ac_b_yes.
+    apply normalized_four_positive_association_iff.
+Qed.
+
+(**
+ [stratum_ac_b_yes_association_negative_iff_raw] (theorem) — The selected AC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Mathematical meaning: The selected AC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), (Admissions.admission_association (stratum_ac_b_yes m H)<0 <-> mass3 m (true,true,true)*mass3 m (false,true,false)<mass3 m (true,true,false)*mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_association_negative_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pB3 m), (Admissions.admission_association (stratum_ac_b_yes m H)<0 <-> mass3 m (true,true,true)*mass3 m (false,true,false)<mass3 m (true,true,false)*mass3 m (false,true,true)).
+Proof.
+  intros m H.
+    unfold stratum_ac_b_yes.
+    apply normalized_four_negative_association_iff.
+Qed.
+
+(**
+ [stratum_ac_b_yes_second_given_first] (theorem) — The second-route success probability conditional on first-route success within the B-pass stratum is the selected joint/first-row ratio.
+ Mathematical meaning: The second-route success probability conditional on first-route success within the B-pass stratum is the selected joint/first-row ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), 0<mass3 m (true,true,true)+mass3 m (true,true,false) -> Admissions.conditional_B_given_A (stratum_ac_b_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_second_given_first :
+  forall (m:ThreeTestModel) (H:0<pB3 m), 0<mass3 m (true,true,true)+mass3 m (true,true,false) -> Admissions.conditional_B_given_A (stratum_ac_b_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,true,false)).
+Proof.
+  intros m H Hrow.
+    unfold stratum_ac_b_yes.
+    apply normalized_four_second_given_first; exact Hrow.
+Qed.
+
+(**
+ [stratum_ac_b_yes_first_given_second] (theorem) — The first-route success probability conditional on second-route success within the B-pass stratum is the selected joint/second-column ratio.
+ Mathematical meaning: The first-route success probability conditional on second-route success within the B-pass stratum is the selected joint/second-column ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), 0<mass3 m (true,true,true)+mass3 m (false,true,true) -> Admissions.conditional_A_given_B (stratum_ac_b_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_first_given_second :
+  forall (m:ThreeTestModel) (H:0<pB3 m), 0<mass3 m (true,true,true)+mass3 m (false,true,true) -> Admissions.conditional_A_given_B (stratum_ac_b_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (false,true,true)).
+Proof.
+  intros m H Hcolumn.
+    unfold stratum_ac_b_yes.
+    apply normalized_four_first_given_second; exact Hcolumn.
+Qed.
+
+(**
+ [stratum_ac_b_yes_odds_ratio] (theorem) — The normalized AC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Mathematical meaning: The normalized AC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), 0<mass3 m (true,true,false)*mass3 m (false,true,true) -> Admissions.admission_odds_ratio (stratum_ac_b_yes m H)=(mass3 m (true,true,true)*mass3 m (false,true,false))/(mass3 m (true,true,false)*mass3 m (false,true,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_odds_ratio :
+  forall (m:ThreeTestModel) (H:0<pB3 m), 0<mass3 m (true,true,false)*mass3 m (false,true,true) -> Admissions.admission_odds_ratio (stratum_ac_b_yes m H)=(mass3 m (true,true,true)*mass3 m (false,true,false))/(mass3 m (true,true,false)*mass3 m (false,true,true)).
+Proof.
+  intros m H Hxy.
+    unfold stratum_ac_b_yes.
+    apply normalized_four_odds_ratio_raw; exact Hxy.
+Qed.
+
+(**
+ [stratum_ac_b_yes_frechet_lower] (theorem) — Conditional overlap in the B-pass stratum satisfies the Fréchet lower bound for the projected AC pair.
+ Mathematical meaning: Conditional overlap in the B-pass stratum satisfies the Fréchet lower bound for the projected AC pair.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pB3 m), Admissions.p_A (stratum_ac_b_yes m H)+Admissions.p_B (stratum_ac_b_yes m H)-1<=Admissions.p_both (stratum_ac_b_yes m H).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_yes_frechet_lower :
+  forall (m:ThreeTestModel) (H:0<pB3 m), Admissions.p_A (stratum_ac_b_yes m H)+Admissions.p_B (stratum_ac_b_yes m H)-1<=Admissions.p_both (stratum_ac_b_yes m H).
+Proof.
+  intros m H.
+    apply Admissions.frechet_lower_bound.
+Qed.
+
+(**
+ [stratum_ac_b_no_total_atoms] (theorem) — The mass of the B-failure conditioning stratum equals the sum of its four disjoint raw AC contingency-table cells.
+ Mathematical meaning: The mass of the B-failure conditioning stratum equals the sum of its four disjoint raw AC contingency-table cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m=(mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true)+mass3 m (false,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_total_atoms :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m=(mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true)+mass3 m (false,false,false)).
+Proof.
+  intros m H; triple_lra.
+Qed.
+
+(**
+ [stratum_ac_b_no_joint_scaled] (theorem) — The conditional joint AC probability multiplied by selection mass recovers its triple-test joint atom.
+ Mathematical meaning: The conditional joint AC probability multiplied by selection mass recovers its triple-test joint atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_both (stratum_ac_b_no m H)=mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_joint_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_both (stratum_ac_b_no m H)=mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_joint_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_only_first_scaled] (theorem) — The conditional first-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional first-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_A (stratum_ac_b_no m H)=mass3 m (true,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_only_first_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_A (stratum_ac_b_no m H)=mass3 m (true,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_only_first_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_only_second_scaled] (theorem) — The conditional second-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional second-only AC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_B (stratum_ac_b_no m H)=mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_only_second_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.only_B (stratum_ac_b_no m H)=mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_only_second_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_neither_scaled] (theorem) — The conditional neither-AC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Mathematical meaning: The conditional neither-AC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.neither (stratum_ac_b_no m H)=mass3 m (false,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_neither_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.neither (stratum_ac_b_no m H)=mass3 m (false,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_neither_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_first_marginal_scaled] (theorem) — The first-route conditional AC marginal is the selected first-row mass divided by the conditioning probability.
+ Mathematical meaning: The first-route conditional AC marginal is the selected first-row mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_A (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_first_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_A (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_first_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_second_marginal_scaled] (theorem) — The second-route conditional AC marginal is the selected second-column mass divided by the conditioning probability.
+ Mathematical meaning: The second-route conditional AC marginal is the selected second-column mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_B (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_second_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_B (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_second_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_union_scaled] (theorem) — The conditional probability of passing at least one AC route has the correct three-cell selection-mass numerator.
+ Mathematical meaning: The conditional probability of passing at least one AC route has the correct three-cell selection-mass numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_either (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_union_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_either (stratum_ac_b_no m H)=mass3 m (true,false,true)+mass3 m (true,false,false)+mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_union_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_exclusive_scaled] (theorem) — The conditional probability of exactly one AC success has the sum of two exclusive selected atoms as numerator.
+ Mathematical meaning: The conditional probability of exactly one AC success has the sum of two exclusive selected atoms as numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_exactly_one (stratum_ac_b_no m H)=mass3 m (true,false,false)+mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_exclusive_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*Admissions.p_exactly_one (stratum_ac_b_no m H)=mass3 m (true,false,false)+mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_exclusive_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_association_scaled] (theorem) — The third-route selection probability squared times conditional AC association equals the determinant of the four unnormalized selected contingency cells.
+ Mathematical meaning: The third-route selection probability squared times conditional AC association equals the determinant of the four unnormalized selected contingency cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*1-pB3 m*Admissions.admission_association (stratum_ac_b_no m H)=mass3 m (true,false,true)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_association_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 1-pB3 m*1-pB3 m*Admissions.admission_association (stratum_ac_b_no m H)=mass3 m (true,false,true)*mass3 m (false,false,false)-mass3 m (true,false,false)*mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_ac_b_no_total_atoms m H).
+    unfold stratum_ac_b_no.
+    apply normalized_four_association_scaled.
+Qed.
+
+(**
+ [stratum_ac_b_no_independent_iff_raw] (theorem) — Conditional AC independence given B=false holds exactly when selected concordant and discordant cell products agree.
+ Mathematical meaning: Conditional AC independence given B=false holds exactly when selected concordant and discordant cell products agree.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (Admissions.p_both (stratum_ac_b_no m H)=Admissions.p_A (stratum_ac_b_no m H)*Admissions.p_B (stratum_ac_b_no m H) <-> mass3 m (true,false,true)*mass3 m (false,false,false)=mass3 m (true,false,false)*mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_independent_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (Admissions.p_both (stratum_ac_b_no m H)=Admissions.p_A (stratum_ac_b_no m H)*Admissions.p_B (stratum_ac_b_no m H) <-> mass3 m (true,false,true)*mass3 m (false,false,false)=mass3 m (true,false,false)*mass3 m (false,false,true)).
+Proof.
+  intros m H.
+    unfold stratum_ac_b_no.
+    apply normalized_four_independent_iff.
+Qed.
+
+(**
+ [stratum_ac_b_no_association_positive_iff_raw] (theorem) — The selected AC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Mathematical meaning: The selected AC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (0<Admissions.admission_association (stratum_ac_b_no m H) <-> mass3 m (true,false,false)*mass3 m (false,false,true)<mass3 m (true,false,true)*mass3 m (false,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_association_positive_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (0<Admissions.admission_association (stratum_ac_b_no m H) <-> mass3 m (true,false,false)*mass3 m (false,false,true)<mass3 m (true,false,true)*mass3 m (false,false,false)).
+Proof.
+  intros m H.
+    unfold stratum_ac_b_no.
+    apply normalized_four_positive_association_iff.
+Qed.
+
+(**
+ [stratum_ac_b_no_association_negative_iff_raw] (theorem) — The selected AC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Mathematical meaning: The selected AC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), (Admissions.admission_association (stratum_ac_b_no m H)<0 <-> mass3 m (true,false,true)*mass3 m (false,false,false)<mass3 m (true,false,false)*mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_association_negative_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), (Admissions.admission_association (stratum_ac_b_no m H)<0 <-> mass3 m (true,false,true)*mass3 m (false,false,false)<mass3 m (true,false,false)*mass3 m (false,false,true)).
+Proof.
+  intros m H.
+    unfold stratum_ac_b_no.
+    apply normalized_four_negative_association_iff.
+Qed.
+
+(**
+ [stratum_ac_b_no_second_given_first] (theorem) — The second-route success probability conditional on first-route success within the B-failure stratum is the selected joint/first-row ratio.
+ Mathematical meaning: The second-route success probability conditional on first-route success within the B-failure stratum is the selected joint/first-row ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 0<mass3 m (true,false,true)+mass3 m (true,false,false) -> Admissions.conditional_B_given_A (stratum_ac_b_no m H)=mass3 m (true,false,true)/(mass3 m (true,false,true)+mass3 m (true,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_second_given_first :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 0<mass3 m (true,false,true)+mass3 m (true,false,false) -> Admissions.conditional_B_given_A (stratum_ac_b_no m H)=mass3 m (true,false,true)/(mass3 m (true,false,true)+mass3 m (true,false,false)).
+Proof.
+  intros m H Hrow.
+    unfold stratum_ac_b_no.
+    apply normalized_four_second_given_first; exact Hrow.
+Qed.
+
+(**
+ [stratum_ac_b_no_first_given_second] (theorem) — The first-route success probability conditional on second-route success within the B-failure stratum is the selected joint/second-column ratio.
+ Mathematical meaning: The first-route success probability conditional on second-route success within the B-failure stratum is the selected joint/second-column ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 0<mass3 m (true,false,true)+mass3 m (false,false,true) -> Admissions.conditional_A_given_B (stratum_ac_b_no m H)=mass3 m (true,false,true)/(mass3 m (true,false,true)+mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_first_given_second :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 0<mass3 m (true,false,true)+mass3 m (false,false,true) -> Admissions.conditional_A_given_B (stratum_ac_b_no m H)=mass3 m (true,false,true)/(mass3 m (true,false,true)+mass3 m (false,false,true)).
+Proof.
+  intros m H Hcolumn.
+    unfold stratum_ac_b_no.
+    apply normalized_four_first_given_second; exact Hcolumn.
+Qed.
+
+(**
+ [stratum_ac_b_no_odds_ratio] (theorem) — The normalized AC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Mathematical meaning: The normalized AC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), 0<mass3 m (true,false,false)*mass3 m (false,false,true) -> Admissions.admission_odds_ratio (stratum_ac_b_no m H)=(mass3 m (true,false,true)*mass3 m (false,false,false))/(mass3 m (true,false,false)*mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_odds_ratio :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), 0<mass3 m (true,false,false)*mass3 m (false,false,true) -> Admissions.admission_odds_ratio (stratum_ac_b_no m H)=(mass3 m (true,false,true)*mass3 m (false,false,false))/(mass3 m (true,false,false)*mass3 m (false,false,true)).
+Proof.
+  intros m H Hxy.
+    unfold stratum_ac_b_no.
+    apply normalized_four_odds_ratio_raw; exact Hxy.
+Qed.
+
+(**
+ [stratum_ac_b_no_frechet_lower] (theorem) — Conditional overlap in the B-failure stratum satisfies the Fréchet lower bound for the projected AC pair.
+ Mathematical meaning: Conditional overlap in the B-failure stratum satisfies the Fréchet lower bound for the projected AC pair.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pB3 m), Admissions.p_A (stratum_ac_b_no m H)+Admissions.p_B (stratum_ac_b_no m H)-1<=Admissions.p_both (stratum_ac_b_no m H).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_ac_b_no_frechet_lower :
+  forall (m:ThreeTestModel) (H:0<1-pB3 m), Admissions.p_A (stratum_ac_b_no m H)+Admissions.p_B (stratum_ac_b_no m H)-1<=Admissions.p_both (stratum_ac_b_no m H).
+Proof.
+  intros m H.
+    apply Admissions.frechet_lower_bound.
+Qed.
+
+(**
+ [stratum_bc_a_yes_total_atoms] (theorem) — The mass of the A-pass conditioning stratum equals the sum of its four disjoint raw BC contingency-table cells.
+ Mathematical meaning: The mass of the A-pass conditioning stratum equals the sum of its four disjoint raw BC contingency-table cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m=(mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (true,false,true)+mass3 m (true,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_total_atoms :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m=(mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (true,false,true)+mass3 m (true,false,false)).
+Proof.
+  intros m H; triple_lra.
+Qed.
+
+(**
+ [stratum_bc_a_yes_joint_scaled] (theorem) — The conditional joint BC probability multiplied by selection mass recovers its triple-test joint atom.
+ Mathematical meaning: The conditional joint BC probability multiplied by selection mass recovers its triple-test joint atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_both (stratum_bc_a_yes m H)=mass3 m (true,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_joint_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_both (stratum_bc_a_yes m H)=mass3 m (true,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_joint_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_only_first_scaled] (theorem) — The conditional first-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional first-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.only_A (stratum_bc_a_yes m H)=mass3 m (true,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_only_first_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.only_A (stratum_bc_a_yes m H)=mass3 m (true,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_only_first_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_only_second_scaled] (theorem) — The conditional second-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional second-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.only_B (stratum_bc_a_yes m H)=mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_only_second_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.only_B (stratum_bc_a_yes m H)=mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_only_second_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_neither_scaled] (theorem) — The conditional neither-BC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Mathematical meaning: The conditional neither-BC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.neither (stratum_bc_a_yes m H)=mass3 m (true,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_neither_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.neither (stratum_bc_a_yes m H)=mass3 m (true,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_neither_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_first_marginal_scaled] (theorem) — The first-route conditional BC marginal is the selected first-row mass divided by the conditioning probability.
+ Mathematical meaning: The first-route conditional BC marginal is the selected first-row mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_A (stratum_bc_a_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_first_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_A (stratum_bc_a_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_first_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_second_marginal_scaled] (theorem) — The second-route conditional BC marginal is the selected second-column mass divided by the conditioning probability.
+ Mathematical meaning: The second-route conditional BC marginal is the selected second-column mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_B (stratum_bc_a_yes m H)=mass3 m (true,true,true)+mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_second_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_B (stratum_bc_a_yes m H)=mass3 m (true,true,true)+mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_second_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_union_scaled] (theorem) — The conditional probability of passing at least one BC route has the correct three-cell selection-mass numerator.
+ Mathematical meaning: The conditional probability of passing at least one BC route has the correct three-cell selection-mass numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_either (stratum_bc_a_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_union_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_either (stratum_bc_a_yes m H)=mass3 m (true,true,true)+mass3 m (true,true,false)+mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_union_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_exclusive_scaled] (theorem) — The conditional probability of exactly one BC success has the sum of two exclusive selected atoms as numerator.
+ Mathematical meaning: The conditional probability of exactly one BC success has the sum of two exclusive selected atoms as numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_exactly_one (stratum_bc_a_yes m H)=mass3 m (true,true,false)+mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_exclusive_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*Admissions.p_exactly_one (stratum_bc_a_yes m H)=mass3 m (true,true,false)+mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_exclusive_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_association_scaled] (theorem) — The third-route selection probability squared times conditional BC association equals the determinant of the four unnormalized selected contingency cells.
+ Mathematical meaning: The third-route selection probability squared times conditional BC association equals the determinant of the four unnormalized selected contingency cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*pA3 m*Admissions.admission_association (stratum_bc_a_yes m H)=mass3 m (true,true,true)*mass3 m (true,false,false)-mass3 m (true,true,false)*mass3 m (true,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_association_scaled :
+  forall (m:ThreeTestModel) (H:0<pA3 m), pA3 m*pA3 m*Admissions.admission_association (stratum_bc_a_yes m H)=mass3 m (true,true,true)*mass3 m (true,false,false)-mass3 m (true,true,false)*mass3 m (true,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_yes_total_atoms m H).
+    unfold stratum_bc_a_yes.
+    apply normalized_four_association_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_yes_independent_iff_raw] (theorem) — Conditional BC independence given A=true holds exactly when selected concordant and discordant cell products agree.
+ Mathematical meaning: Conditional BC independence given A=true holds exactly when selected concordant and discordant cell products agree.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), (Admissions.p_both (stratum_bc_a_yes m H)=Admissions.p_A (stratum_bc_a_yes m H)*Admissions.p_B (stratum_bc_a_yes m H) <-> mass3 m (true,true,true)*mass3 m (true,false,false)=mass3 m (true,true,false)*mass3 m (true,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_independent_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pA3 m), (Admissions.p_both (stratum_bc_a_yes m H)=Admissions.p_A (stratum_bc_a_yes m H)*Admissions.p_B (stratum_bc_a_yes m H) <-> mass3 m (true,true,true)*mass3 m (true,false,false)=mass3 m (true,true,false)*mass3 m (true,false,true)).
+Proof.
+  intros m H.
+    unfold stratum_bc_a_yes.
+    apply normalized_four_independent_iff.
+Qed.
+
+(**
+ [stratum_bc_a_yes_association_positive_iff_raw] (theorem) — The selected BC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Mathematical meaning: The selected BC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), (0<Admissions.admission_association (stratum_bc_a_yes m H) <-> mass3 m (true,true,false)*mass3 m (true,false,true)<mass3 m (true,true,true)*mass3 m (true,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_association_positive_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pA3 m), (0<Admissions.admission_association (stratum_bc_a_yes m H) <-> mass3 m (true,true,false)*mass3 m (true,false,true)<mass3 m (true,true,true)*mass3 m (true,false,false)).
+Proof.
+  intros m H.
+    unfold stratum_bc_a_yes.
+    apply normalized_four_positive_association_iff.
+Qed.
+
+(**
+ [stratum_bc_a_yes_association_negative_iff_raw] (theorem) — The selected BC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Mathematical meaning: The selected BC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), (Admissions.admission_association (stratum_bc_a_yes m H)<0 <-> mass3 m (true,true,true)*mass3 m (true,false,false)<mass3 m (true,true,false)*mass3 m (true,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_association_negative_iff_raw :
+  forall (m:ThreeTestModel) (H:0<pA3 m), (Admissions.admission_association (stratum_bc_a_yes m H)<0 <-> mass3 m (true,true,true)*mass3 m (true,false,false)<mass3 m (true,true,false)*mass3 m (true,false,true)).
+Proof.
+  intros m H.
+    unfold stratum_bc_a_yes.
+    apply normalized_four_negative_association_iff.
+Qed.
+
+(**
+ [stratum_bc_a_yes_second_given_first] (theorem) — The second-route success probability conditional on first-route success within the A-pass stratum is the selected joint/first-row ratio.
+ Mathematical meaning: The second-route success probability conditional on first-route success within the A-pass stratum is the selected joint/first-row ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), 0<mass3 m (true,true,true)+mass3 m (true,true,false) -> Admissions.conditional_B_given_A (stratum_bc_a_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_second_given_first :
+  forall (m:ThreeTestModel) (H:0<pA3 m), 0<mass3 m (true,true,true)+mass3 m (true,true,false) -> Admissions.conditional_B_given_A (stratum_bc_a_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,true,false)).
+Proof.
+  intros m H Hrow.
+    unfold stratum_bc_a_yes.
+    apply normalized_four_second_given_first; exact Hrow.
+Qed.
+
+(**
+ [stratum_bc_a_yes_first_given_second] (theorem) — The first-route success probability conditional on second-route success within the A-pass stratum is the selected joint/second-column ratio.
+ Mathematical meaning: The first-route success probability conditional on second-route success within the A-pass stratum is the selected joint/second-column ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), 0<mass3 m (true,true,true)+mass3 m (true,false,true) -> Admissions.conditional_A_given_B (stratum_bc_a_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_first_given_second :
+  forall (m:ThreeTestModel) (H:0<pA3 m), 0<mass3 m (true,true,true)+mass3 m (true,false,true) -> Admissions.conditional_A_given_B (stratum_bc_a_yes m H)=mass3 m (true,true,true)/(mass3 m (true,true,true)+mass3 m (true,false,true)).
+Proof.
+  intros m H Hcolumn.
+    unfold stratum_bc_a_yes.
+    apply normalized_four_first_given_second; exact Hcolumn.
+Qed.
+
+(**
+ [stratum_bc_a_yes_odds_ratio] (theorem) — The normalized BC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Mathematical meaning: The normalized BC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), 0<mass3 m (true,true,false)*mass3 m (true,false,true) -> Admissions.admission_odds_ratio (stratum_bc_a_yes m H)=(mass3 m (true,true,true)*mass3 m (true,false,false))/(mass3 m (true,true,false)*mass3 m (true,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_odds_ratio :
+  forall (m:ThreeTestModel) (H:0<pA3 m), 0<mass3 m (true,true,false)*mass3 m (true,false,true) -> Admissions.admission_odds_ratio (stratum_bc_a_yes m H)=(mass3 m (true,true,true)*mass3 m (true,false,false))/(mass3 m (true,true,false)*mass3 m (true,false,true)).
+Proof.
+  intros m H Hxy.
+    unfold stratum_bc_a_yes.
+    apply normalized_four_odds_ratio_raw; exact Hxy.
+Qed.
+
+(**
+ [stratum_bc_a_yes_frechet_lower] (theorem) — Conditional overlap in the A-pass stratum satisfies the Fréchet lower bound for the projected BC pair.
+ Mathematical meaning: Conditional overlap in the A-pass stratum satisfies the Fréchet lower bound for the projected BC pair.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<pA3 m), Admissions.p_A (stratum_bc_a_yes m H)+Admissions.p_B (stratum_bc_a_yes m H)-1<=Admissions.p_both (stratum_bc_a_yes m H).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_yes_frechet_lower :
+  forall (m:ThreeTestModel) (H:0<pA3 m), Admissions.p_A (stratum_bc_a_yes m H)+Admissions.p_B (stratum_bc_a_yes m H)-1<=Admissions.p_both (stratum_bc_a_yes m H).
+Proof.
+  intros m H.
+    apply Admissions.frechet_lower_bound.
+Qed.
+
+(**
+ [stratum_bc_a_no_total_atoms] (theorem) — The mass of the A-failure conditioning stratum equals the sum of its four disjoint raw BC contingency-table cells.
+ Mathematical meaning: The mass of the A-failure conditioning stratum equals the sum of its four disjoint raw BC contingency-table cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m=(mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true)+mass3 m (false,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_total_atoms :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m=(mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true)+mass3 m (false,false,false)).
+Proof.
+  intros m H; triple_lra.
+Qed.
+
+(**
+ [stratum_bc_a_no_joint_scaled] (theorem) — The conditional joint BC probability multiplied by selection mass recovers its triple-test joint atom.
+ Mathematical meaning: The conditional joint BC probability multiplied by selection mass recovers its triple-test joint atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_both (stratum_bc_a_no m H)=mass3 m (false,true,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_joint_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_both (stratum_bc_a_no m H)=mass3 m (false,true,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_joint_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_only_first_scaled] (theorem) — The conditional first-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional first-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_A (stratum_bc_a_no m H)=mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_only_first_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_A (stratum_bc_a_no m H)=mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_only_first_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_only_second_scaled] (theorem) — The conditional second-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Mathematical meaning: The conditional second-only BC probability multiplied by selection mass recovers its raw selected exclusive atom.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_B (stratum_bc_a_no m H)=mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_only_second_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.only_B (stratum_bc_a_no m H)=mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_only_second_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_neither_scaled] (theorem) — The conditional neither-BC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Mathematical meaning: The conditional neither-BC-route mass, scaled by the third-route stratum probability, recovers its raw all-rejected cell.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.neither (stratum_bc_a_no m H)=mass3 m (false,false,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_neither_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.neither (stratum_bc_a_no m H)=mass3 m (false,false,false).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_neither_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_first_marginal_scaled] (theorem) — The first-route conditional BC marginal is the selected first-row mass divided by the conditioning probability.
+ Mathematical meaning: The first-route conditional BC marginal is the selected first-row mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_A (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_first_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_A (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_first_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_second_marginal_scaled] (theorem) — The second-route conditional BC marginal is the selected second-column mass divided by the conditioning probability.
+ Mathematical meaning: The second-route conditional BC marginal is the selected second-column mass divided by the conditioning probability.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_B (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_second_marginal_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_B (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_second_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_union_scaled] (theorem) — The conditional probability of passing at least one BC route has the correct three-cell selection-mass numerator.
+ Mathematical meaning: The conditional probability of passing at least one BC route has the correct three-cell selection-mass numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_either (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_union_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_either (stratum_bc_a_no m H)=mass3 m (false,true,true)+mass3 m (false,true,false)+mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_union_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_exclusive_scaled] (theorem) — The conditional probability of exactly one BC success has the sum of two exclusive selected atoms as numerator.
+ Mathematical meaning: The conditional probability of exactly one BC success has the sum of two exclusive selected atoms as numerator.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_exactly_one (stratum_bc_a_no m H)=mass3 m (false,true,false)+mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_exclusive_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*Admissions.p_exactly_one (stratum_bc_a_no m H)=mass3 m (false,true,false)+mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_exclusive_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_association_scaled] (theorem) — The third-route selection probability squared times conditional BC association equals the determinant of the four unnormalized selected contingency cells.
+ Mathematical meaning: The third-route selection probability squared times conditional BC association equals the determinant of the four unnormalized selected contingency cells.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*1-pA3 m*Admissions.admission_association (stratum_bc_a_no m H)=mass3 m (false,true,true)*mass3 m (false,false,false)-mass3 m (false,true,false)*mass3 m (false,false,true).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_association_scaled :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 1-pA3 m*1-pA3 m*Admissions.admission_association (stratum_bc_a_no m H)=mass3 m (false,true,true)*mass3 m (false,false,false)-mass3 m (false,true,false)*mass3 m (false,false,true).
+Proof.
+  intros m H.
+    rewrite (stratum_bc_a_no_total_atoms m H).
+    unfold stratum_bc_a_no.
+    apply normalized_four_association_scaled.
+Qed.
+
+(**
+ [stratum_bc_a_no_independent_iff_raw] (theorem) — Conditional BC independence given A=false holds exactly when selected concordant and discordant cell products agree.
+ Mathematical meaning: Conditional BC independence given A=false holds exactly when selected concordant and discordant cell products agree.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (Admissions.p_both (stratum_bc_a_no m H)=Admissions.p_A (stratum_bc_a_no m H)*Admissions.p_B (stratum_bc_a_no m H) <-> mass3 m (false,true,true)*mass3 m (false,false,false)=mass3 m (false,true,false)*mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_independent_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (Admissions.p_both (stratum_bc_a_no m H)=Admissions.p_A (stratum_bc_a_no m H)*Admissions.p_B (stratum_bc_a_no m H) <-> mass3 m (false,true,true)*mass3 m (false,false,false)=mass3 m (false,true,false)*mass3 m (false,false,true)).
+Proof.
+  intros m H.
+    unfold stratum_bc_a_no.
+    apply normalized_four_independent_iff.
+Qed.
+
+(**
+ [stratum_bc_a_no_association_positive_iff_raw] (theorem) — The selected BC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Mathematical meaning: The selected BC pair has positive conditional association precisely when its raw concordant determinant is positive.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (0<Admissions.admission_association (stratum_bc_a_no m H) <-> mass3 m (false,true,false)*mass3 m (false,false,true)<mass3 m (false,true,true)*mass3 m (false,false,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_association_positive_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (0<Admissions.admission_association (stratum_bc_a_no m H) <-> mass3 m (false,true,false)*mass3 m (false,false,true)<mass3 m (false,true,true)*mass3 m (false,false,false)).
+Proof.
+  intros m H.
+    unfold stratum_bc_a_no.
+    apply normalized_four_positive_association_iff.
+Qed.
+
+(**
+ [stratum_bc_a_no_association_negative_iff_raw] (theorem) — The selected BC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Mathematical meaning: The selected BC pair has negative conditional association precisely when its raw concordant determinant is negative.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), (Admissions.admission_association (stratum_bc_a_no m H)<0 <-> mass3 m (false,true,true)*mass3 m (false,false,false)<mass3 m (false,true,false)*mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_association_negative_iff_raw :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), (Admissions.admission_association (stratum_bc_a_no m H)<0 <-> mass3 m (false,true,true)*mass3 m (false,false,false)<mass3 m (false,true,false)*mass3 m (false,false,true)).
+Proof.
+  intros m H.
+    unfold stratum_bc_a_no.
+    apply normalized_four_negative_association_iff.
+Qed.
+
+(**
+ [stratum_bc_a_no_second_given_first] (theorem) — The second-route success probability conditional on first-route success within the A-failure stratum is the selected joint/first-row ratio.
+ Mathematical meaning: The second-route success probability conditional on first-route success within the A-failure stratum is the selected joint/first-row ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 0<mass3 m (false,true,true)+mass3 m (false,true,false) -> Admissions.conditional_B_given_A (stratum_bc_a_no m H)=mass3 m (false,true,true)/(mass3 m (false,true,true)+mass3 m (false,true,false)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_second_given_first :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 0<mass3 m (false,true,true)+mass3 m (false,true,false) -> Admissions.conditional_B_given_A (stratum_bc_a_no m H)=mass3 m (false,true,true)/(mass3 m (false,true,true)+mass3 m (false,true,false)).
+Proof.
+  intros m H Hrow.
+    unfold stratum_bc_a_no.
+    apply normalized_four_second_given_first; exact Hrow.
+Qed.
+
+(**
+ [stratum_bc_a_no_first_given_second] (theorem) — The first-route success probability conditional on second-route success within the A-failure stratum is the selected joint/second-column ratio.
+ Mathematical meaning: The first-route success probability conditional on second-route success within the A-failure stratum is the selected joint/second-column ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 0<mass3 m (false,true,true)+mass3 m (false,false,true) -> Admissions.conditional_A_given_B (stratum_bc_a_no m H)=mass3 m (false,true,true)/(mass3 m (false,true,true)+mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_first_given_second :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 0<mass3 m (false,true,true)+mass3 m (false,false,true) -> Admissions.conditional_A_given_B (stratum_bc_a_no m H)=mass3 m (false,true,true)/(mass3 m (false,true,true)+mass3 m (false,false,true)).
+Proof.
+  intros m H Hcolumn.
+    unfold stratum_bc_a_no.
+    apply normalized_four_first_given_second; exact Hcolumn.
+Qed.
+
+(**
+ [stratum_bc_a_no_odds_ratio] (theorem) — The normalized BC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Mathematical meaning: The normalized BC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), 0<mass3 m (false,true,false)*mass3 m (false,false,true) -> Admissions.admission_odds_ratio (stratum_bc_a_no m H)=(mass3 m (false,true,true)*mass3 m (false,false,false))/(mass3 m (false,true,false)*mass3 m (false,false,true)).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_odds_ratio :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), 0<mass3 m (false,true,false)*mass3 m (false,false,true) -> Admissions.admission_odds_ratio (stratum_bc_a_no m H)=(mass3 m (false,true,true)*mass3 m (false,false,false))/(mass3 m (false,true,false)*mass3 m (false,false,true)).
+Proof.
+  intros m H Hxy.
+    unfold stratum_bc_a_no.
+    apply normalized_four_odds_ratio_raw; exact Hxy.
+Qed.
+
+(**
+ [stratum_bc_a_no_frechet_lower] (theorem) — Conditional overlap in the A-failure stratum satisfies the Fréchet lower bound for the projected BC pair.
+ Mathematical meaning: Conditional overlap in the A-failure stratum satisfies the Fréchet lower bound for the projected BC pair.
+ Exact checked proposition: forall (m:ThreeTestModel) (H:0<1-pA3 m), Admissions.p_A (stratum_bc_a_no m H)+Admissions.p_B (stratum_bc_a_no m H)-1<=Admissions.p_both (stratum_bc_a_no m H).
+ Premises and side conditions: The eight nonnegative atom masses sum to
+ one by ThreeTestModel. Conditioning is performed only on a positive-mass
+ third-route stratum (pass or fail, as specified). Conditional admission
+ ratios and odds add explicit positive row/column and discordant-product
+ hypotheses before division.
+ Proof/definition method: Reuse the general kernel-checked normalized
+ four-cell stratum identities and Admissions two-event bounds; the
+ ThreeTestAdmissions finite eight-cell lemmas identify selection mass
+ with the appropriate raw-cell total. No ad hoc probability operations,
+ unproved stochastic independence or empirical estimates are introduced.
+ Library reuse: Admissions.TwoEventModel and conditional/odds/Fréchet
+ lemmas; normalized_four_stratum; ThreeTestAdmissions.triple_lra;
+ the existing FiniteUnion/FiniteSum canonical event engine; Stdlib tactics.
+ Boundary: Exact finite Boolean-event conditional association only; no
+ Gaussian conditional law, continuous tail integral or IQ calibration.
+*)
+Theorem stratum_bc_a_no_frechet_lower :
+  forall (m:ThreeTestModel) (H:0<1-pA3 m), Admissions.p_A (stratum_bc_a_no m H)+Admissions.p_B (stratum_bc_a_no m H)-1<=Admissions.p_both (stratum_bc_a_no m H).
+Proof.
+  intros m H.
+    apply Admissions.frechet_lower_bound.
+Qed.
+
