@@ -11,11 +11,35 @@ The [symbolic-check follow-up](evidence/symbolic-fixture-computer10-20261105/REP
 
 ## Reproduce the proof campaign
 
-From the repository root on computer10:
+From the repository root on computer10, run the campaign with the
+project's isolated Python virtual environment. The runner imports the
+Deal runtime contract library (`deal==4.24.6`) and its dependent
+project modules; Debian's bare `python3` is not guaranteed to provide
+those packages. On November 15, 2026, invoking the bare interpreter
+on computer10 failed immediately with `ModuleNotFoundError: No module
+named 'deal'`, before any GNATprove execution. Prefer the existing
+`.venv/bin/python` rather than installing packages into system Python.
 
 ```sh
-python3 verification/run_computer10.py --portfolio-only
+cd ~/src/composite_iq_formal_tools
+.venv/bin/python -c 'import deal; print(deal.__version__)'
+.venv/bin/python verification/run_computer10.py --portfolio-only
 ```
+
+If the import check fails inside that virtual environment, install the
+repository's pinned dependencies into **that environment only**, then
+rerun the check and campaign:
+
+```sh
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python -c 'import deal; print(deal.__version__)'
+.venv/bin/python verification/run_computer10.py --portfolio-only
+```
+
+If `.venv/bin/python` does not exist, create a virtual environment with
+`python3 -m venv .venv` first (Debian's `python3-venv` must be installed).
+Do not use `sudo pip` or modify the system interpreter to work around
+an isolated project dependency.
 
 The runner discovers the matching toolchain through `alr -q printenv` in `~/.local/share/icar16-gnatprove-tools`. It parses an allowlist of literal exports without shell evaluation. Override the directory with `--alire-dir` if necessary.
 
