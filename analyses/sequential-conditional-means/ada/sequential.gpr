@@ -1,17 +1,15 @@
--- Reuse the repository's contracted generator and its existing numerical
--- boundary rather than maintaining a second random-number implementation.
+--  Sequential uses only its specialized Ada sources and canonical library.
+--  No Hoeflin report package is loaded: generator and checked numerical
+--  boundaries are independently shared by both report-specific adapters.
 project Sequential is
-   for Source_Dirs use ("src", "../../hoeflin-ferguson/ada/src",
-                        "../../../library/spark/src");
+   for Source_Dirs use ("src", "../../../library/spark/src");
    for Source_Files use
      ("sequential_core.ads", "sequential_core.adb",
       "sequential_experiments.ads", "sequential_experiments.adb",
       "sequential_sampling.ads", "sequential_sampling.adb",
       "sequential_run.adb",
-      "hoeflin_core.ads", "hoeflin_core.adb",
-      "hoeflin_boundary_models.ads", "hoeflin_boundary_models.adb",
-      "normal_support.ads", "normal_support.adb",
-      "shared_equicorrelation.ads", "shared_equicorrelation.adb");
+      "shared_equicorrelation.ads", "shared_equicorrelation.adb",
+      "shared_normal_sampling.ads", "shared_normal_sampling.adb");
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
    for Main use ("sequential_run.adb");
