@@ -25,9 +25,17 @@ fi
 
 printf '%s\n' 'Why3 external backend smoke test (positive and negative controls)'
 why3 --version
-for prover in Z3 CVC5; do
-  printf '\n== %s: positive control ==\n' "$prover"
-  if positive="$(timeout 30s why3 prove -P "$prover" "$fixture" \
+# Why3 1.8 treats a short name as ambiguous when it detects multiple
+# alternatives for one prover version, e.g. "Z3 4.13.3",
+# "Z3 4.13.3 (counterexamples)", and "Z3 4.13.3 (noBV)".
+# The trailing comma explicitly selects the default (empty) alternative.
+# Versions are pinned to the Debian 13 environment reported on computer10.
+# If a version changes, inspect "why3 --list-provers" rather than choosing
+# an unrelated or unsupported alternative.
+for selector in "Z3,4.13.3," "CVC5,1.1.2,"; do
+  prover="${selector%%,*}"
+  printf '\n== %s (%s): positive control ==\n' "$prover" "$selector"
+  if positive="$(timeout 30s why3 prove -P "$selector" "$fixture" \
     -T BackendSmoke -G TrueGoal 2>&1)"; then
     printf '%s\n' "$positive"
   else
@@ -43,7 +51,7 @@ for prover in Z3 CVC5; do
   fi
 
   printf '\n== %s: false-goal negative control ==\n' "$prover"
-  if negative="$(timeout 30s why3 prove -P "$prover" "$fixture" \
+  if negative="$(timeout 30s why3 prove -P "$selector" "$fixture" \
     -T BackendSmoke -G FalseGoal 2>&1)"; then
     printf '%s\n' "$negative"
   else
