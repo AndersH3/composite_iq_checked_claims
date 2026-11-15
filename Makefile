@@ -1,7 +1,7 @@
 PYTHON ?= python3
 
 .PHONY: check contracts lint test symbolic
-check: contracts lint test symbolic
+check: library contracts lint test symbolic
 
 contracts:
 	$(PYTHON) verification/check_contract_coverage.py
@@ -19,3 +19,7 @@ symbolic:
 .PHONY: simulations
 simulations:
 	$(PYTHON) -m reporting.simulate --pdf
+
+.PHONY: library
+library:
+	bash scripts/check_library_layout.sh

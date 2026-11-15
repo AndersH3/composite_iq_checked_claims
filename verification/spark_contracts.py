@@ -442,6 +442,9 @@ def ten_contract_summary(report: dict) -> dict:
 def current_sources(root: Path) -> dict:
     paths = sorted(root.glob("analyses/*/ada/src/*.ad[bs]"))
     paths += sorted(root.glob("verification/*/src/*.ad[bs]"))
+    # Source-owned common contracts count alongside report-local units.
+    # Historical campaigns continue to use their pinned source trees.
+    paths += sorted(root.glob("library/spark/src/*.ad[bs]"))
     return {path.relative_to(root).as_posix(): path.read_text(encoding="utf-8") for path in paths}
 
 

@@ -7,6 +7,9 @@ on:
       - 'library/rocq/**'
       - 'analyses/**/rocq/**'
       - 'scripts/compile_rocq.sh'
+      - 'scripts/check_library_layout.sh'
+      - 'library/spark/**'
+      - 'library/python/**'
       - '.github/workflows/rocq-proofs.yml'
       - 'scripts/check_rocq_documentation.sh'
   pull_request:
@@ -15,6 +18,9 @@ on:
       - 'library/rocq/**'
       - 'analyses/**/rocq/**'
       - 'scripts/compile_rocq.sh'
+      - 'scripts/check_library_layout.sh'
+      - 'library/spark/**'
+      - 'library/python/**'
       - '.github/workflows/rocq-proofs.yml'
       - 'scripts/check_rocq_documentation.sh'
   workflow_dispatch:
@@ -29,6 +35,10 @@ jobs:
       - name: Check module headers and per-declaration proof documentation
         shell: bash
         run: bash scripts/check_rocq_documentation.sh
+
+      - name: Check central library source ownership
+        shell: bash
+        run: bash scripts/check_library_layout.sh
 
       - name: Reject unfinished proof placeholders and new axioms
         shell: bash
