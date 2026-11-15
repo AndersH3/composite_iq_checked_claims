@@ -270,7 +270,7 @@ Ltac triple_lra :=
        FiniteUnion.finite_prob FiniteUnion.indicator
        FiniteSum.finite_sum triple_cases
        testA3 testB3 testC3 List.map List.fold_right
-       Bool.andb Bool.orb Bool.negb] in *;
+       andb orb negb] in *;
   lra.
 
 (**
