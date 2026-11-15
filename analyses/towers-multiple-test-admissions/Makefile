@@ -9,7 +9,7 @@ all: check pdf
 
 pdf:
 	mkdir -p $(PDF_DIR)
-	$(LATEXMK) -xelatex -outdir=$(PDF_DIR) -interaction=nonstopmode -halt-on-error $(TEX_SOURCE)
+	BIBINPUTS=$(abspath ../../reporting):$(CURDIR): $(LATEXMK) -xelatex -outdir=$(PDF_DIR) -interaction=nonstopmode -halt-on-error $(TEX_SOURCE)
 
 check:
 	$(PYTHON) scripts/verify_calculations.py

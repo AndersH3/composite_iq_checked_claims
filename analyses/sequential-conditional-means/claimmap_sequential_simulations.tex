@@ -1,0 +1,118 @@
+\section{Map from experimental claims to proofs and evidence}
+\label{sec:seq-sim-proof-map}
+
+Every mathematical claim in the experimental exposition belongs to a row
+below. The numbered proofs are part of this standalone report; consulting
+the companion analysis is optional. The primary references identify the
+well-known results from which the proofs proceed. Definitions, model
+choices and finite observed records have their own evidential status.
+
+\begingroup\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.25\textwidth}
+                 >{\raggedright\arraybackslash}p{.38\textwidth}
+                 >{\raggedright\arraybackslash}p{.28\textwidth}}
+\toprule
+Exposition/claim & Proof or exact record classification & Established foundation\\
+\midrule\endfirsthead
+\toprule
+Exposition/claim & Proof or exact record classification & Established foundation\\
+\midrule\endhead
+\bottomrule\endfoot
+Abstract and Section~\ref{sec:seq-sim-questions}: standardization, fixed
+starting values, three means and IQ units &
+Assumptions/definitions are stated there. Their consequences are proved in
+Propositions~\ref{seqp:recursion} and \ref{seqp:variance-decomposition};
+the exact grid is in Section~\ref{seqp:exact-grid}. &
+Moment identities and Gaussian transformations,
+\ref{pf:moments}, \ref{pf:gaussian}
+\citep{durrett2019,gallager2013}.\\\midrule
+Section~\ref{sec:seq-sim-model}: factor construction, admissible finite
+correlations and the fixed-correlation infinite domain &
+Proposition~\ref{seqp:domain} proves the two eigenspaces, the PSD
+inequalities and the nonnegative factor realization. &
+Spectral theorem/positive square root, \ref{pf:spectral}
+\citep{axler2024}; covariance expansion.\\\midrule
+Section~\ref{sec:seq-sim-model}: posterior factor, whole future block,
+independence and the probability-zero initial history &
+Proposition~\ref{seqp:conditioning} proves the inverse, residual
+independence, full conditional kernel, covariance matrix and continuous
+mean-version uniqueness; it treats \(c=1\) directly on its support. &
+Gaussian characteristic functions, regression residual and conditional
+integral identity, \ref{pf:gaussian}, \ref{pf:conditioning}
+\citep{gallager2013,durrett2019}.\\\midrule
+Sections~\ref{sec:seq-sim-model}, \ref{sec:seq-sim-means}: every prediction,
+inclusive centre, population centre, normality and SD zero &
+Proposition~\ref{seqp:recursion} proves regression plus induction, the
+inclusive numerator and denominator, Gaussian closure and constant-list
+variance. The positive difference from the next prediction is computed
+explicitly in Section~\ref{sec:seq-sim-means}. &
+Conditional regression and moment identities,
+\ref{pf:conditioning}, \ref{pf:moments}; elementary induction.\\\midrule
+Sections~\ref{sec:seq-sim-model}, \ref{sec:seq-sim-sds}: actual population
+and conditional mean SDs; dependence on total count &
+Proposition~\ref{seqp:recursion} counts all diagonal and ordered
+off-diagonal covariances; Proposition~\ref{seqp:variance-decomposition}
+separates between-history and remaining variance. &
+Covariance bilinearity, conditional expectation and total variance,
+\ref{pf:moments}, \ref{pf:expectation}
+\citep{durrett2019}.\\\midrule
+Section~\ref{sec:seq-sim-monotonicity}: decreasing population and
+increasing conditional SD at \(c=3/5\) &
+The displayed finite-difference identity and its three strictly positive
+coefficients prove the conditional assertion for all integer \(r,k\geq1\).
+The population difference is negative from \(c+(1-c)/(r+k)\). &
+Proved variance formulas; order-preservation of the nonnegative square root.
+No inference from plotted ordering is required.\\\midrule
+Section~\ref{sec:seq-sim-limits}: prediction and inclusive-mean limits,
+both SD limits, limiting Gaussian experiments and common-factor uncertainty &
+That section proves the exact \(1/N\) error, conditional variance
+expansion, square-root inequality and the common-normal mean-square
+coupling. Proposition~\ref{seqp:domain} establishes the permissible
+fixed-correlation range. &
+The proved finite targets, Gaussian affine closure and moment identities,
+\ref{pf:gaussian}, \ref{pf:moments}.\\\midrule
+Sections~\ref{sec:seq-sim-means}--\ref{sec:seq-sim-limits}: all rational
+targets and displayed analytic decimal approximations &
+Section~\ref{seqp:exact-grid} proves substitutions and supplies exact
+positive-integer certificates for every table target rounding and the
+six-decimal worked example. &
+Affine variance scaling and the proved target formulas; rational
+arithmetic and order of positive squares.\\\midrule
+Sections~\ref{sec:seq-sim-design}--\ref{sec:seq-sim-sds}: sample SD,
+theoretical MC SE, chi-square SD intervals and their scope &
+\ref{sm:normal-sample} proves the normal/chi-square sampling laws;
+\ref{sm:sd-interval} inverts the pivot. \ref{sm:multiple} proves the
+multiple-comparison bounds without assuming independent case estimates. &
+Orthogonal basis extension \citep{axler2024}, Gaussian block independence
+\citep{gallager2013}, quantile inversion and the union bound.\\\midrule
+Sections~\ref{sec:seq-sim-design}, \ref{sec:seq-sim-replication}: pooling,
+four replicates, output counts and shared random numbers &
+\ref{sm:pooling} proves count/sum/within-between-square identities;
+Section~\ref{seqp:record-scope} proves the finite grid arithmetic. The
+seed/chunk/sharing choices are implementation records. &
+Finite-sum identities. Independent-observation sampling laws are stated
+ideal assumptions, rather than consequences of seed values.\\\midrule
+Tables, figures, generated discussion and retained Ada comparison &
+Observed estimates, maxima, intervals, CSV coordinates, seeds and proof
+counts are finite reproduction records. Their exact scope and the
+counterexample to inferring universal correctness from tests appear in
+Section~\ref{seqp:record-scope}. &
+Documented Dask/SciPy interfaces \citep{daskArray,daskDelayed,scipystats};
+source-pinned program evidence has its stated separate trust boundaries.\\\midrule
+Section~\ref{sec:seq-sim-interpretation}: what the experiment establishes,
+model adequacy and distinction between predictions and outcomes &
+Propositions~\ref{seqp:recursion} and \ref{seqp:variance-decomposition}
+prove the model conclusions. Section~\ref{seqp:record-scope} separates
+finite observations from universal claims and empirical validation. &
+The stated Gaussian model and proved conditional laws. No theorem here
+asserts that real IQ data satisfy the assumptions.\\
+\end{longtable}
+\endgroup
+
+The shared probability-count results \ref{sm:binomial}, \ref{sm:wilson},
+\ref{sm:clopper-pearson}, \ref{sm:conditional-count} and \ref{sm:rare}
+are proved for completeness and use in the other two simulation reports.
+This sequential report uses means and SDs of all generated outcomes,
+rather than accepted-event proportions or random conditional-count
+denominators. Its interval claims use the Gaussian sample results above.

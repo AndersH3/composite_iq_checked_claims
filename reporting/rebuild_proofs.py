@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Rebuild all six proof-complete reports in one source-pinned Dask graph.
+
+The November simulation campaign is immutable input. This document revision
+neither reruns its random experiment nor relabels its old source hashes as
+current. Maintained XeLaTeX/BibTeX and Poppler tools handle typesetting and
+rendering; Dask schedules those tasks and the final revision manifest.
+"""
+import argparse
+import json
+from json import JSONDecodeError
+import os
+from pathlib import Path
+import re
+import subprocess
+from subprocess import CalledProcessError, TimeoutExpired
+
+import dask
+from dask.multiprocessing import RemoteException
+import deal
+
+from verification.run_computer10 import digest, dump
+
+ROOT = Path(__file__).resolve().parents[1]
+DOCUMENTS = (
+    ("hoeflin-ferguson", "composite_iq_analysis"),
+    ("hoeflin-ferguson", "hoeflin_simulations"),
+    ("towers-multiple-test-admissions", "towers_admissions_analysis"),
+    ("towers-multiple-test-admissions", "towers_simulations"),
+    ("sequential-conditional-means", "sequential_conditional_means"),
+    ("sequential-conditional-means", "sequential_simulations"),
+)
+RECORD = ROOT.joinpath("reporting", "proof-revision", "revision.json")
+CAMPAIGN = ROOT.joinpath("reporting", "run.json")
+
+
+@deal.pre(lambda: CAMPAIGN.is_file())
+@deal.post(lambda result: isinstance(result, dict) and result["verified"] is True)
+@deal.post(lambda result: len(result["campaign_sha256"]) == 64)
+@deal.post(lambda result: len(result["inputs"]) > 30)
+@deal.post(lambda result: all("/simulation-data/" in row["path"] for row in result["inputs"]))
+@deal.post(lambda result: all(len(row["sha256"]) == 64 for row in result["inputs"]))
+@deal.post(lambda result: len({row["path"] for row in result["inputs"]}) == len(result["inputs"]))
+@deal.ensure(lambda *, result: result["campaign_sha256"] == digest(CAMPAIGN))
+@deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
+@deal.has("read")
+def retained_data():
+    """Reject any changed simulation data, including the historical build logs.
+
+    The original manifest also pins PDFs and old source versions. Those are
+    deliberately not asserted current: this operation is revising the PDFs.
+    Only the complete, unchanged simulation-data subset is reused here.
+    """
+    previous = json.JSONDecoder().decode(CAMPAIGN.read_text(encoding="utf-8"))
+    inputs = [row for row in previous["outputs"] if "/simulation-data/" in row["path"]]
+    if len(inputs) <= 30 or len({row["path"] for row in inputs}) != len(inputs):
+        raise ValueError("Incomplete or duplicate retained simulation input inventory")
+    for row in inputs:
+        source = ROOT.joinpath(row["path"])
+        if not source.is_relative_to(ROOT) or digest(source) != row["sha256"]:
+            raise ValueError("Retained campaign input hash mismatch: " + row["path"])
+    return {"verified": True, "campaign_sha256": digest(CAMPAIGN), "inputs": inputs}
+
+
+@deal.pre(lambda document, retained: document in DOCUMENTS)
+@deal.pre(lambda document, retained: isinstance(retained, dict) and retained["verified"] is True)
+@deal.pre(lambda document, retained: ROOT.joinpath("analyses", document[0], document[1] + ".tex").is_file())
+@deal.post(lambda result: isinstance(result, dict) and result["xelatex"] is True)
+@deal.post(lambda result: type(result["pages"]) is int and 0 < result["pages"] < 200)
+@deal.post(lambda result: len(result["sha256"]) == 64)
+@deal.post(lambda result: result["layout_diagnostics"] == [])
+@deal.ensure(lambda document, retained, result: result["project"] == document[0] and result["stem"] == document[1])
+@deal.raises(OSError, ValueError, TypeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
+@deal.has("read", "write", "syscall")
+def build_document(document, retained):
+    """Typeset, check the final engine log, and render every page in a task.
+
+    Each report has separate output/intermediate paths. Shared appendices are
+    read-only inputs, so parallel builds cannot race on a generated asset.
+    Build stdout is new revision evidence; the old simulation build logs are
+    never overwritten. TeX diagnostics fail closed before an artifact is
+    described as successfully rebuilt.
+    """
+    project, stem = document
+    directory = ROOT.joinpath("analyses", project)
+    evidence = RECORD.parent
+    evidence.mkdir(parents=True, exist_ok=True)
+    with evidence.joinpath(stem + ".build.txt").open("w", encoding="utf-8") as stream:
+        subprocess.run(
+            ["latexmk", "-g", "-xelatex", "-outdir=output/pdf", "-interaction=nonstopmode", "-halt-on-error", stem + ".tex"],
+            cwd=directory, env={**os.environ, "BIBINPUTS": str(ROOT.joinpath("reporting")) + os.pathsep + str(directory) + os.pathsep},
+            stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=240,
+        )
+    log = directory.joinpath("output", "pdf", stem + ".log").read_text(encoding="utf-8")
+    # Only the final XeLaTeX log is checked: intermediate passes legitimately
+    # have unresolved references before BibTeX/latexmk resolve dependencies.
+    diagnostics = re.findall(r"(?:Overfull|Underfull) \\[hv]box[^\n]*|Missing character:[^\n]*|[^\n]*(?:undefined references|undefined citations|multiply defined|Citation[^\n]*undefined|Reference[^\n]*undefined)[^\n]*", log)
+    if diagnostics:
+        raise ValueError("Unresolved typesetting diagnostics for " + stem + ": " + repr(diagnostics))
+    pdf = directory.joinpath("output", "pdf", stem + ".pdf")
+    info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, check=True, timeout=30).stdout
+    pages = int(next(line.split(":", 1)[1] for line in info.splitlines() if line.startswith("Pages:")))
+    render = directory.joinpath("tmp", "pdfs", "proof-revision", stem)
+    render.mkdir(parents=True, exist_ok=True)
+    # A shorter revised PDF must not leave a stale final page in visual QA.
+    # Only this report's temporary, reproducible page images are removed.
+    for stale in render.glob("page-*.png"):
+        stale.unlink()
+    subprocess.run(["pdftoppm", "-scale-to", "1200", "-png", str(pdf), str(render.joinpath("page"))], capture_output=True, check=True, timeout=180)
+    return {"project": project, "stem": stem, "pdf": pdf.relative_to(ROOT).as_posix(),
+            "sha256": digest(pdf), "pages": pages, "xelatex": True, "layout_diagnostics": []}
+
+
+@deal.pre(lambda results, retained, graph_tasks: isinstance(results, list) and len(results) == len(DOCUMENTS))
+@deal.pre(lambda results, retained, graph_tasks: {(row["project"], row["stem"]) for row in results} == set(DOCUMENTS))
+@deal.pre(lambda results, retained, graph_tasks: type(graph_tasks) is int and graph_tasks >= 8)
+@deal.post(lambda result: result["schema"] == "dask-six-report-proof-revision-v1")
+@deal.post(lambda result: len(result["reports"]) == 6 and result["simulation_rerun"] is False)
+@deal.post(lambda result: result["new_native_proof_run"] is False)
+@deal.ensure(lambda results, retained, graph_tasks, result: result["retained_campaign"] == retained)
+@deal.ensure(lambda results, retained, graph_tasks, result: result["graph_tasks"] == graph_tasks)
+@deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
+@deal.has("read", "write")
+def record_revision(results, retained, graph_tasks):
+    """Pin this revision while keeping original campaign and evidence intact.
+
+    Hash all TeX/Bib sources in each project because a main document can input
+    several project appendices as well as the shared foundations. Rendered
+    PNGs are temporary QA assets; PDF bytes are the versioned deliverables.
+    A second input audit detects accidental writes during parallel builds.
+    """
+    if retained_data() != retained:
+        raise ValueError("Retained simulation inputs changed during the document revision")
+    sources = list(ROOT.joinpath("reporting").glob("*.tex")) + list(ROOT.joinpath("reporting").glob("*.bib"))
+    sources += [Path(__file__).resolve(), ROOT.joinpath("verification", "run_computer10.py"),
+                ROOT.joinpath("AGENTS.md"), ROOT.joinpath("requirements-dev.txt")]
+    for project in sorted({document[0] for document in DOCUMENTS}):
+        directory = ROOT.joinpath("analyses", project)
+        sources += list(directory.glob("*.tex")) + list(directory.glob("*.bib"))
+    record = {"schema": "dask-six-report-proof-revision-v1", "date": "2026-11-15",
+              "scheduler": "processes", "dask_version": dask.__version__,
+              "graph_tasks": graph_tasks, "reports": results,
+              "simulation_rerun": False, "new_native_proof_run": False, "matplotlib_used": False,
+              "retained_campaign": retained,
+              "sources": [{"path": path.relative_to(ROOT).as_posix(), "sha256": digest(path)} for path in sorted(set(sources))]}
+    dump(RECORD, record)
+    return record
+
+
+@deal.pre(lambda argv=None: argv is None or isinstance(argv, list) and all(isinstance(arg, str) and "\x00" not in arg for arg in argv))
+@deal.pre(lambda argv=None: ROOT.is_dir())
+@deal.post(lambda result: result == 0)
+@deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
+@deal.has("read", "write", "syscall", "import", "stdout", "stderr")
+def main(argv=None):
+    """Execute one shared graph: retained inputs, six builds and one manifest."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--workers", type=int, choices=range(1, 5), default=2)
+    args = parser.parse_args(argv)
+    retained = dask.delayed(retained_data)()
+    builds = [dask.delayed(build_document)(document, retained) for document in DOCUMENTS]
+    graph_tasks = len(dask.highlevelgraph.HighLevelGraph.merge(*(item.dask for item in builds))) + 1
+    terminal = dask.delayed(record_revision)(builds, retained, graph_tasks)
+    try:
+        record = dask.compute(terminal, scheduler="processes", num_workers=args.workers)[0]
+    except RemoteException as error:
+        raise RuntimeError("Dask proof-report revision failed; inspect reporting/proof-revision build logs") from error
+    print(json.dumps(record, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    deal.enable(warn=False)
+    raise SystemExit(main())

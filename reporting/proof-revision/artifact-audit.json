@@ -1,0 +1,116 @@
+{
+  "schema": "six-report-proof-revision-artifact-audit-v1",
+  "revision_sha256": "2f46e835c74f08fb07db935a065e1829f54cd7c1b21d0218948e26b9f2b643c9",
+  "current_source_hashes_match": true,
+  "retained_simulation_inputs": 50,
+  "retained_inputs_match": true,
+  "reports": [
+    {
+      "project": "hoeflin-ferguson",
+      "stem": "composite_iq_analysis",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/composite_iq_analysis.pdf",
+      "sha256": "48d58e024a42a9edffa79f4411f32dd3d76ce083ad1545747b81b5bd5127cb5f",
+      "pages": 24,
+      "xelatex": true,
+      "layout_diagnostics": [],
+      "rendered_pages": 24,
+      "unresolved_markers": false,
+      "proof_and_map_present": true,
+      "final_layout_review": true,
+      "final_changed_pages_reviewed": [],
+      "final_log_sha256": "b7e874c91779b379375c261d1b057e650c378fac0ab48e595e96906df880f9c9"
+    },
+    {
+      "project": "hoeflin-ferguson",
+      "stem": "hoeflin_simulations",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/hoeflin_simulations.pdf",
+      "sha256": "53d675009b0b0d147a1dd038b4cecacac363ad61c776154fc4731fd4d4371a31",
+      "pages": 22,
+      "xelatex": true,
+      "layout_diagnostics": [],
+      "rendered_pages": 22,
+      "unresolved_markers": false,
+      "proof_and_map_present": true,
+      "final_layout_review": true,
+      "final_changed_pages_reviewed": [],
+      "final_log_sha256": "333516cf0aa9088e21c0ddd5786836f0005c3f56fbb79a672f8052a0f6ed2ee3"
+    },
+    {
+      "project": "towers-multiple-test-admissions",
+      "stem": "towers_admissions_analysis",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_admissions_analysis.pdf",
+      "sha256": "4be317feda3f72ceafe999bdd0290e670fdb4f70a90453aa2ea955de3853edbf",
+      "pages": 26,
+      "xelatex": true,
+      "layout_diagnostics": [],
+      "rendered_pages": 26,
+      "unresolved_markers": false,
+      "proof_and_map_present": true,
+      "final_layout_review": true,
+      "final_changed_pages_reviewed": [],
+      "final_log_sha256": "7c4d8be32d5e843a3e1c1edaf95787283bb87f3010f01151790061a32ead41d9"
+    },
+    {
+      "project": "towers-multiple-test-admissions",
+      "stem": "towers_simulations",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_simulations.pdf",
+      "sha256": "f91938b12664c5382e13353359e19a3c3e7f77cfcfcc117a184c5806cc33ca15",
+      "pages": 23,
+      "xelatex": true,
+      "layout_diagnostics": [],
+      "rendered_pages": 23,
+      "unresolved_markers": false,
+      "proof_and_map_present": true,
+      "final_layout_review": true,
+      "final_changed_pages_reviewed": [],
+      "final_log_sha256": "44e8328d23a95073f3a19a765e619f4b3e350e87f98dabbe293447e51e53d65e"
+    },
+    {
+      "project": "sequential-conditional-means",
+      "stem": "sequential_conditional_means",
+      "pdf": "analyses/sequential-conditional-means/output/pdf/sequential_conditional_means.pdf",
+      "sha256": "b1c2c131141c0472ed5756e91ab22f98f719041ff259e539aca8064c22f24ad9",
+      "pages": 32,
+      "xelatex": true,
+      "layout_diagnostics": [],
+      "rendered_pages": 32,
+      "unresolved_markers": false,
+      "proof_and_map_present": true,
+      "final_layout_review": true,
+      "final_changed_pages_reviewed": [
+        "page-31.png",
+        "page-32.png"
+      ],
+      "final_log_sha256": "12fa93c9ce16e82106641556274569eb49137d1442b1352e091507890bde3ab0"
+    },
+    {
+      "project": "sequential-conditional-means",
+      "stem": "sequential_simulations",
+      "pdf": "analyses/sequential-conditional-means/output/pdf/sequential_simulations.pdf",
+      "sha256": "7078aa3b10a5e9fd93d5c92335100a4d9ae85e64118f28b5dfa0667ec1f7b618",
+      "pages": 22,
+      "xelatex": true,
+      "layout_diagnostics": [],
+      "rendered_pages": 22,
+      "unresolved_markers": false,
+      "proof_and_map_present": true,
+      "final_layout_review": true,
+      "final_changed_pages_reviewed": [],
+      "final_log_sha256": "1747529b1f91323ff4840c43f1594871c10790034e3d335b0d5db7d21df0364e"
+    }
+  ],
+  "total_reviewed_pages": 149,
+  "tests": {
+    "command": "make check PYTHON=.venv/bin/python",
+    "exit_code": 0,
+    "passed": 446,
+    "transcript": "reporting/proof-revision/check.txt",
+    "sha256": "18a2058aec803eabe84209a09c407be36206ab75ae641907da1240b5458002c8"
+  },
+  "final_render_cleanup_validation": {
+    "runtime": "all six Dask builds with Deal contracts enabled",
+    "static_and_contracts": "reporting/proof-revision/rebuild-helper-check.txt"
+  },
+  "visual_review": "All pages reviewed through contact sheets and selected full-page images. Final 147 images match the reviewed baseline; final sequential pages31\u201332 inspected at full size after reflow.",
+  "new_native_proof_run": false
+}

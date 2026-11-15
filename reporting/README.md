@@ -1,14 +1,28 @@
-# Dask simulation reports
+# Dask simulation reports and six-report proof revision
 
 Each sub-project has its own detailed XeLaTeX report:
 
 | Sub-project | Report | Pages |
 |---|---|---:|
-| Hoeflin/Ferguson | [PDF](../analyses/hoeflin-ferguson/output/pdf/hoeflin_simulations.pdf) | 9 |
-| Towers admissions | [PDF](../analyses/towers-multiple-test-admissions/output/pdf/towers_simulations.pdf) | 12 |
-| Sequential conditional means | [PDF](../analyses/sequential-conditional-means/output/pdf/sequential_simulations.pdf) | 11 |
+| Hoeflin/Ferguson | [PDF](../analyses/hoeflin-ferguson/output/pdf/hoeflin_simulations.pdf) | See revision manifest |
+| Towers admissions | [PDF](../analyses/towers-multiple-test-admissions/output/pdf/towers_simulations.pdf) | See revision manifest |
+| Sequential conditional means | [PDF](../analyses/sequential-conditional-means/output/pdf/sequential_simulations.pdf) | See revision manifest |
 
 The reports explain the simulation unit, assumed distribution, exact theoretical targets and their derivation, actual replicate/pooled results, uncertainty intervals, comparisons with preserved Ada observations, interpretation and limitations. A shared appendix derives the Gaussian mean/variance and binomial/Wilson reference calculations from named sources. Every report includes its own AI disclosure and bibliography.
+
+All three main reports and all three simulation reports now contain complete working proofs and claim-to-proof/evidence maps. The common foundations prove covariance and scaling, covariance feasibility, Gaussian closure and block independence, regression with exact continuous histories, event arithmetic and total variance. Project appendices supply the composite, admissions and sequential deductions. The statistical appendix proves the normal/chi-square pivots, interval inversion, Wilson algebra and its approximate scope, exact Clopper–Pearson coverage, conditional-binomial denominators, pooling and multiple-diagnostic bounds. Numerical estimates, historical observations and model assumptions are explicitly distinguished from mathematical consequences.
+
+## Rebuild the six proof-complete reports
+
+With the retained simulation data already present, run from the repository root:
+
+```sh
+make proof-reports PYTHON=.venv/bin/python
+```
+
+[`rebuild_proofs.py`](rebuild_proofs.py) executes one Dask graph that verifies the retained campaign inputs, builds all six PDFs with XeLaTeX/BibTeX, rejects unresolved references or layout diagnostics, renders every page with Poppler and writes [`proof-revision/revision.json`](proof-revision/revision.json). Its four named functions have five to ten distinct Deal decorators. No simulation draws or native prover runs are performed by this document revision. Rendered pages are temporary visual-QA artifacts; current source/PDF hashes and new build transcripts are retained separately from the original experiment.
+
+[`run.json`](run.json), the original `simulation-data/` files and the earlier verification records remain unchanged. Their old document/source hashes describe their original snapshots; the revision manifest describes the current reports. Re-running the original simulation command below is a new experiment campaign and overwrites its generated outputs, so it is unnecessary for rebuilding this proof-text revision.
 
 ## Reproduce
 
@@ -42,7 +56,7 @@ The original Ada observations remain immutable, source-hashed inputs. A differen
 ## Implementation and records
 
 - [simulate.py](simulate.py) constructs the lazy array/delayed graphs and schedules all artifact operations.
-- [statistics.py](statistics.py) reuses SciPy's binomial and chi-square routines, preserves conditional denominators and combines unbiased replicate variances using within/between sums of squares.
+- [The canonical statistics library](../library/python/statistics.py) reuses SciPy's binomial and chi-square routines, preserves conditional denominators and combines unbiased replicate variances using within/between sums of squares. [statistics.py](statistics.py) is the compatibility import facade after the shared-library migration; the original campaign manifest retains its original source hashes.
 - [assets.py](assets.py) writes tables, scalar-only plot CSVs and data-driven numerical discussion. Full metadata remains in each `simulation-data/summary.json`.
 - [run.json](run.json) records configuration, versions, graph size, sources and output hashes. It excludes its own hash to avoid circularity.
 - Each analysis's `simulation-data/` contains complete pooled and replicate records, the original historical records, input hashes, generated TeX/CSV assets and the actual build log. These are new outputs; older evidence is not overwritten.

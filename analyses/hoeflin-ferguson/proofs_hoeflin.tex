@@ -1,0 +1,454 @@
+\section{Proofs of the composite and prediction claims}
+\label{hfpr:appendix}
+
+This appendix proves the mathematical implications used in this report.
+The hypotheses are part of each result: a proof under a Gaussian model
+does not prove that model for human scores. The foundations are linearity
+of expectation and conditional expectation, covariance expansion and the
+Gaussian characteristic function \citep[Sections 1.6, 3.3 and 4.1]{durrett2019},
+Gaussian affine closure and regression \citep[Theorems 3.3.1--3.3.2 and
+3.5.1--3.5.2]{gallager2013}, and the spectral theorem for real symmetric
+matrices \citep[Theorem 7.29]{axler2024}. Their relevant forms and proofs
+are stated in the shared mathematical foundations preceding this appendix.
+In particular, Propositions~\ref{pf:moments}, \ref{pf:spectral},
+\ref{pf:gaussian}, \ref{pf:conditioning} and \ref{pf:expectation}
+state the moment, spectral, Gaussian and conditional-expectation tools.
+Write \(\phi(x)=(2\pi)^{-1/2}\exp(-x^2/2)\),
+\(\Phi(x)=\int_{-\infty}^x\phi(t)\,dt\), and
+\(\overline\Phi=1-\Phi\).
+
+\begin{proposition}[Covariance, scales and weighted composites]
+\label{hfpr:standardization}
+For square-integrable scores \(X_i\) with means \(\mu_i\) and positive
+SDs \(\sigma_i\), put \(Z_i=(X_i-\mu_i)/\sigma_i\). Then
+\(\E Z_i=0\), \(\Var(Z_i)=1\), and their covariance matrix is their
+correlation matrix \(R\). For any fixed real vector \(w\),
+\[
+ \E(w^{\mathsf T}Z)=0,\qquad
+ \Var(w^{\mathsf T}Z)=w^{\mathsf T}Rw.
+\]
+When the latter is positive, division by its square root gives a mean-zero,
+unit-variance composite. The transformation \(I=100+sZ_C\), \(s>0\),
+has population mean 100 and SD \(s\).
+\end{proposition}
+\begin{proof}
+Linearity gives \(\E(X_i-\mu_i)=0\). Expanding the square in the
+definition of variance gives \(\Var(aX+b)=a^2\Var(X)\); this proves
+the first two conclusions and, on expanding a product, gives
+\(\Cov(Z_i,Z_j)=\Cov(X_i,X_j)/(\sigma_i\sigma_j)=r_{ij}\).
+For any finite collection, integrability of each product follows from
+Cauchy--Schwarz. Hence finite sums can be taken through expectation:
+\[
+ \Var\!\left(\sum_iw_iZ_i\right)
+ =\E\!\left[\sum_{i,j}w_iw_jZ_iZ_j\right]
+ =\sum_{i,j}w_iw_jr_{ij}=w^{\mathsf T}Rw.
+\]
+For two unstandardized scores the same centered expansion gives
+\(\Var(X+Y)=\Var(X)+\Var(Y)+2\Cov(X,Y)\).
+The assertions about division and reporting scales now follow by the
+same affine-variance identity. No distributional assumption was used.
+For example, \((160-100)/15=4\) and \((160-100)/16=15/4=3.75\).
+\end{proof}
+
+\begin{proposition}[Equal weights, admissibility and information in the matrix]
+\label{hfpr:equal-weights}
+For \(n\geq2\), let \(\bar r=2\sum_{i<j}r_{ij}/[n(n-1)]\). Then
+\[
+ v_n:=\Var(\bar Z)=\frac{1+(n-1)\bar r}{n}
+ =\bar r+\frac{1-\bar r}{n},\qquad
+ -\frac1{n-1}\leq\bar r\leq1.
+\]
+When \(v_n>0\), the composite is \(\bar Z/\sqrt{v_n}\).
+The entire correlation matrix must be positive semidefinite (PSD);
+the displayed bound on its average is necessary, rather than a sufficient
+test for an arbitrary proposed matrix. For an equicorrelation matrix the
+same bound is necessary and sufficient for PSD. The average correlation
+alone need not determine the variance with unequal weights.
+\end{proposition}
+\begin{proof}
+Apply Proposition~\ref{hfpr:standardization} with every weight \(1/n\).
+The diagonal contributes \(n/n^2\); symmetry makes the off-diagonal
+contribution \(2\sum_{i<j}r_{ij}/n^2\). Substitution proves the formula.
+Every quadratic form \(u^{\mathsf T}Ru=\Var(u^{\mathsf T}Z)\) is
+nonnegative, proving PSD and, with \(u\) the all-ones vector, the lower
+bound on \(\bar r\). Cauchy--Schwarz gives \(|r_{ij}|\leq1\), proving
+the upper bound. For \(n=1\), directly \(v_1=1\).
+
+In the equicorrelated case \(R=(1-c)I+c\mathbf1\mathbf1^{\mathsf T}\).
+Its action on \(\mathbf1\) multiplies by \(1+(n-1)c\); its action
+on every vector orthogonal to \(\mathbf1\) multiplies by \(1-c\).
+The spectral theorem therefore gives PSD exactly for
+\(-1/(n-1)\leq c\leq1\). Such a PSD matrix is a realizable Gaussian
+covariance: diagonalize it, take nonnegative square roots of its
+eigenvalues, and apply the resulting square-root matrix to independent
+standard normals. A zero \(v_n\) makes the mean deterministic and the
+division undefined.
+
+To prove the unequal-weight qualification, compare \(R_0=I_3\) with
+\[
+ R_t=\begin{pmatrix}1&t&-t\\t&1&0\\-t&0&1\end{pmatrix},\qquad t=1/4.
+\]
+Both average off-diagonal correlations are zero. The latter matrix has
+eigenvalues \(1,1+\sqrt2t,1-\sqrt2t\), all positive, as is checked
+by its characteristic polynomial
+\((1-\lambda)[(1-\lambda)^2-2t^2]\).
+For \(w=(1,1,0)^{\mathsf T}\), however,
+\(w^{\mathsf T}R_tw=2+2t\ne2=w^{\mathsf T}R_0w\).
+Finally, if \(I_i=100+sZ_i\), then
+\(\bar Z=(\bar I-100)/s\). Substitution into
+\(100+s\bar Z/\sqrt{v_n}\) proves the IQ-style formula.
+\end{proof}
+
+\begin{proposition}[Gaussian percentiles require a joint model]
+\label{hfpr:normality}
+If \(Z\) is jointly Gaussian and \(w^{\mathsf T}Rw>0\), its
+standardized fixed weighted composite is standard normal and its
+model-based percentile is \(100\Phi(z_C)\). Neither two moments nor
+normal marginal distributions imply this conclusion.
+\end{proposition}
+\begin{proof}
+An affine image of a jointly Gaussian vector is Gaussian
+\citep[Theorem 3.3.1]{gallager2013}; Proposition~\ref{hfpr:standardization}
+gives its mean zero and variance one. By definition of its CDF, the fraction
+at or below \(z_C\) is then \(\Phi(z_C)\).
+
+For the failure of the converse, take \(X\sim N(0,1)\) and an independent
+sign \(S\) with \(P(S=1)=(1+c)/2\) and \(P(S=-1)=(1-c)/2\),
+where \(-1<c<1\). Set \(Y=SX\). Symmetry of the normal distribution
+makes \(Y\) standard normal. Independence gives
+\(\Cov(X,Y)=\E(SX^2)=\E S\,\E X^2=c\).
+Nevertheless \(P(X+Y=0)=(1-c)/2>0\): on \(S=-1\) the sum vanishes,
+whereas on \(S=1\) it is \(2X\), which has no atom. A nondegenerate
+normal distribution has a density and hence no atoms. Standardization
+preserves this atom, so these normal marginals and their correlation do
+not imply a normal composite. They also fail to identify joint tail
+probabilities: for positive \(a,b\), this model gives
+\(P(X>a,Y>b)=(1+c)\overline\Phi(\max(a,b))/2\), since opposite signs
+cannot both exceed positive cutoffs. It is not the Gaussian joint law.
+The same counterexample, having the required moments, proves that moments
+alone do not determine the tail.
+\end{proof}
+
+\begin{proposition}[Thresholds, monotonicity and fixed-correlation limits]
+\label{hfpr:thresholds}
+Let \(q=\Phi^{-1}(1-10^{-6})\) be defined by the continuous standard
+normal law. For a Gaussian composite with mean-variance factor \(v_n>0\),
+the one-in-a-million threshold on the component mean is
+\(t_n(c)=q\sqrt{c+(1-c)/n}\). For \(0\leq c\leq1\) it decreases
+with \(n\), increases with \(c\) for \(n>1\), and tends to
+\(q\sqrt c\). For fixed positive observed mean, its standardized
+composite decreases with \(c\). These are properties of the stipulated
+sequence of batteries, rather than a bound on possible score values.
+\end{proposition}
+\begin{proof}
+Since \(\phi>0\), integration shows that \(\Phi\) is continuous and
+strictly increasing from 0 to 1. The quantile is uniquely defined and
+\(P(Z_C>q)=1-\Phi(q)=10^{-6}\). Because \(\sqrt{v_n}>0\),
+\(\bar Z>q\sqrt{v_n}\) is exactly \(Z_C>q\), proving the cutoff.
+The normal law has no atoms, so strict or non-strict inequalities have
+the same model probability.
+
+The ordering \(q>3>2\), used for nested simulated counts, can be shown
+without relying on its printed decimal. On \([3,4]\) the density is
+at least \(\phi(4)\), and
+\[
+ \overline\Phi(3)\geq\int_3^4\phi(x)\,dx\geq\phi(4)
+ =\frac{1}{\sqrt{2\pi}e^8}>
+ \frac{1}{3\cdot3^8}=\frac1{19683}>10^{-6}.
+\]
+Here \(e=\sum_{j=0}^{\infty}1/j!<3\), by comparison of terms
+\(j!\geq2^{j-1}\) for \(j\geq1\) with strict inequality for
+\(j\geq3\), and \(\pi=4\int_0^1(1+x^2)^{-1}\,dx<4\), so
+\(\sqrt{2\pi}<3\). Strict decrease of the normal upper tail proves
+\(q>3\).
+
+For real \(x\geq1\) put \(v(x,c)=c+(1-c)/x\). Elementary
+differentiation gives
+\[
+ \frac{\partial t}{\partial x}
+ =-\frac{q(1-c)}{2x^2\sqrt{v(x,c)}},\qquad
+ \frac{\partial t}{\partial c}
+ =\frac{q(1-1/x)}{2\sqrt{v(x,c)}}.
+\]
+The signs prove the claims, with equality in the evident singleton or
+perfect-correlation cases. For a fixed \(b>0\),
+\(\partial[b/\sqrt{v(x,c)}]/\partial c
+=-b(1-1/x)/(2v(x,c)^{3/2})\leq0\).
+For \(c<1\), the raw-SD derivative has magnitude
+\((1-c)/(2\sqrt{x^3(cx+1-c)})\). The positive denominator increases
+with \(x\geq1\) for \(0\leq c<1\), proving the slowing decline;
+for \(c=1\) it is constant.
+Also \(v_n-c=(1-c)/n\to0\); continuity of square root gives the limit.
+When \(c>0\), rationalizing yields the explicit error bound
+\[
+ 0\leq t_n(c)-q\sqrt c
+ =\frac{q(1-c)}{n(\sqrt{v_n}+\sqrt c)}
+ \leq\frac{q(1-c)}{2n\sqrt c}.
+\]
+For \(c=0\) the exact cutoff is \(q/\sqrt n\to0\). Fixed negative
+\(c\) cannot give valid equicorrelated batteries for arbitrarily large
+\(n\), by Proposition~\ref{hfpr:equal-weights}. Under the Gaussian model
+every nondegenerate \(Z_C\) has unbounded support; thus a limit on the
+component-mean \emph{cutoff} is not a ceiling on attainable composites.
+Changing the correlations as tests are added changes the sequence and
+does not satisfy the fixed-\(c\) hypothesis. Finally \(100+s q\) is
+the composite reporting-scale cutoff for every \(n\), whereas
+\(100+s t_n(c)\) is the component-average cutoff, by the affine identity.
+\end{proof}
+
+\begin{proposition}[Common-factor aggregate, posterior and residual contrasts]
+\label{hfpr:factor}
+Assume \(0<c<1\) and
+\(X_i=\sqrt c\,G+\sqrt{1-c}\,\varepsilon_i\), where all displayed
+basic variables are independent standard normals. For
+\(M_n=n^{-1}\sum_iX_i\), put \(v_n=c+(1-c)/n\) and
+\(R_n=c/v_n=nc/[1+(n-1)c]\). Then
+\[
+ (G,M_n)\ \stackrel d=\
+ \left(G,\sqrt c\,G+\sqrt{(1-c)/n}\,E\right),
+\]
+where \(E\) is standard normal independent of \(G\). Given the entire
+score vector, \(G\) is normal with mean
+\(\widehat G_n=(\sqrt c/v_n)M_n=\sqrt{R_n}\,Z_{C,n}\) and variance
+\(1-R_n=(1-c)/[1+(n-1)c]\). Moreover
+\[
+ \operatorname{Corr}(G,Z_{C,n})^2=R_n,\quad
+ \Var(\widehat G_n)=R_n,\quad
+ \E[(G-\widehat G_n)^2]=1-R_n.
+\]
+The conditional mean minimizes mean-square prediction error among all
+square-integrable functions of the scores.
+\end{proposition}
+\begin{proof}
+Linearity, independence and unit variances give \(\E X_i=0\),
+\(\Var(X_i)=1\), \(\Cov(X_i,X_j)=c\) for \(i\ne j\), and
+\(\Cov(G,M_n)=\sqrt c\). Define
+\(E=n^{-1/2}\sum_i\varepsilon_i\). Its Gaussian affine law has mean
+zero and variance one, and it is independent of \(G\) because it is a
+function of residuals independent of \(G\). Substitution gives the
+stated representation, including its joint law with \(G\).
+
+Let \(W=G-(\sqrt c/v_n)M_n\). Its variance, obtained by expanding
+the square, is \(1+c/v_n-2c/v_n=1-c/v_n\), and
+\(\Cov(W,M_n)=\sqrt c-(\sqrt c/v_n)v_n=0\). For each contrast
+\(D_i=X_i-M_n\), symmetry gives
+\[
+ \Cov(G,D_i)=\sqrt c-\sqrt c=0,\qquad
+ \Cov(M_n,D_i)=\frac{1+(n-1)c}{n}-v_n=0.
+\]
+Thus \(\Cov(W,D_i)=0\) as well. All these variables are jointly
+Gaussian. Their characteristic function is
+\(\exp(it^{\mathsf T}\mu-t^{\mathsf T}\Sigma t/2)\); zero
+cross-covariance makes it factor between \(W\) and \((M_n,D_1,\ldots,D_n)\).
+Uniqueness of characteristic functions proves independence even though
+the contrasts are linearly dependent. This is the Gaussian regression
+principle \citep[Theorems 3.3.2 and 3.5.1--3.5.2]{gallager2013}.
+Since the score vector is recovered by \(X_i=M_n+D_i\), \(W\) is
+independent of all observed scores. Conditional on them,
+\(G=(\sqrt c/v_n)M_n+W\), with the stated normal mean and variance.
+This explicitly proves the claim that the contrasts add no information
+about \(G\) under this symmetric Gaussian model.
+
+The covariance with \(Z_{C,n}=M_n/\sqrt{v_n}\) is
+\(\sqrt{c/v_n}\). Both \(G\) and \(Z_{C,n}\) have variance one,
+proving the squared-correlation formula. Scaling \(M_n\) gives
+\(\Var(\widehat G_n)=c/v_n\). The centered independent residual gives
+the MSE formula. For any square-integrable score function \(h\),
+conditional expectation and pull-out give
+\(\E[W(\widehat G_n-h)]=0\), since \(\E[W\mid X]=0\).
+Expanding \(G-h=W+(\widehat G_n-h)\) proves
+\[
+ \E[(G-h)^2]=1-R_n+\E[(\widehat G_n-h)^2]\geq1-R_n.
+\]
+Finally \(1-R_n=(1-c)/(nc+1-c)\to0\) for fixed \(c>0\), although
+\(\SD(M_n)=\sqrt{v_n}\to\sqrt c>0\). Population spread of scores
+and conditional prediction error are thus different mathematical objects.
+\end{proof}
+
+\begin{proposition}[Observed score laws do not identify a latent interpretation]
+\label{hfpr:nonidentification}
+Even an exactly known observable correlation matrix, or the entire joint
+score law, need not identify a proposed latent ability, its posterior, or
+an individual measurement-error interval.
+\end{proposition}
+\begin{proof}
+Keep precisely the same observable \(X\) from
+Proposition~\ref{hfpr:factor}. In one model call its common factor \(G\)
+the target. In a second model extend the probability space by a standard
+normal \(H\) independent of \((G,X)\), and call \(H\) the target.
+Every observable distribution and its matrix \(R\) are unchanged, yet
+\(\E[H\mid X]=0\), \(\Var(H\mid X)=1\), whereas the first model has
+the different posterior proved in Proposition~\ref{hfpr:factor}.
+Therefore no rule depending only on those observable quantities can
+deduce both latent posteriors correctly. Additional measurement assumptions
+or external validity evidence are logically required. The example does not
+claim that either target is the correct psychometric construct.
+\end{proof}
+
+\begin{proposition}[Selection and repeated-score procedures can alter calibration]
+\label{hfpr:selection}
+Population correlations need not equal selected-sample correlations.
+Likewise the maximum or a stopping rule based on repeated attempts need
+not have the distribution of one prespecified score. The direction and
+size of an adjustment require assumptions about selection and dependence.
+\end{proposition}
+\begin{proof}
+Let independent \(X,E\) be standard normal and let
+\(Y=\rho X+\sqrt{1-\rho^2}\,E\), \(0<\rho<1\).
+Unconditionally \(\operatorname{Corr}(X,Y)=\rho\).
+Select on \(X>0\). Symmetry gives \(\E[X^2\mid X>0]=1\), while
+\[
+ \E[X\mid X>0]=2\int_0^\infty x\phi(x)\,dx
+ =2\phi(0)=\sqrt{2/\pi},
+\]
+using \(\phi'(x)=-x\phi(x)\). Consequently
+\(v=\Var(X\mid X>0)=1-2/\pi\in(0,1)\).
+Independence of \(E\) from the selection event gives conditional
+covariance \(\rho v\) and variance of \(Y\) equal to
+\(\rho^2v+1-\rho^2\). The selected correlation is therefore
+\[
+ \rho\sqrt{\frac{v}{\rho^2v+1-\rho^2}}<\rho,
+\]
+because \(\rho^2v+1-\rho^2-v=(1-\rho^2)(1-v)>0\).
+No selection gives the original value, so there is already no universal
+correction independent of the mechanism. This constructive mathematical
+example supports the possibility of distortion; empirical correction
+methods are attributed to \citet{sackett2000}.
+
+For independent standard-normal attempts \(U_1,\ldots,U_m\),
+independence gives
+\(P(\max_jU_j\leq t)=\Phi(t)^m\), so the chance of any qualification
+above a fixed cutoff is \(1-\Phi(t)^m\), exceeding the one-attempt chance
+for finite \(t\) and \(m>1\). The probability of no success after \(m\)
+attempts tends to zero, proving eventual qualification with probability
+one if attempts can continue independently without limit. In contrast,
+perfectly repeated scores \(U_j=U_1\) give qualification probability
+\(1-\Phi(t)\) for every \(m\). These are explicit counterexamples to
+treating all procedures as interchangeable; no claim that every possible
+dependent procedure differs is needed. Practice effects themselves are
+an empirical finding attributed to \citet{hausknecht2007}.
+
+Finally a finite number \(m\) of observations cannot logically determine
+an unknown rare-event probability: the event of no exceedances has
+probability \((1-p)^m>0\) for every \(0<p<1\) in an independent
+Bernoulli model. At \(m=27\) and \(p=10^{-6}\), the union bound gives
+\(P(\hbox{no event})\geq1-27\cdot10^{-6}=0.999973\).
+Selection further changes the sampling experiment. A small selected
+sample is therefore not a deductive establishment of a one-in-a-million
+population frequency.
+\end{proof}
+
+\begin{proposition}[Coupling, rare-event precision and an exponential bound]
+\label{hfpr:simulation}
+The aggregate simulation preserves each fixed-size \((G,M_n)\) law but
+reusing a residual across sizes does not simulate a nested battery.
+Nested exceedance indicators imply nested counts. Under independent
+ideal draws with event probability \(p>0\), relative Monte Carlo standard
+error is \(\sqrt{(1-p)/(Tp)}\). For \(0<p<1\),
+\[
+ e^{-Tp-Tp^2/[2(1-p)]}\leq(1-p)^T\leq e^{-Tp}.
+\]
+\end{proposition}
+\begin{proof}
+The aggregate representation is proved in Proposition~\ref{hfpr:factor}.
+With one shared \(E\), two sizes \(m<n\) have covariance
+\(c+(1-c)/\sqrt{mn}\). In a genuine nested battery their residual
+averages share only the first \(m\) terms, giving instead
+\(c+(1-c)/n\), by covariance expansion. These differ for \(0<c<1\),
+so the fixed-size shortcut is not a claim about nested paths. As a concrete
+dependence diagnostic, two aggregates formed with the shared \((G,E)\)
+have positive covariance; they cannot be independent centered variables.
+The per-size laws still follow from the separately proved representation.
+
+For \(q>3>2\), every real \(z\) satisfies
+\(\mathbf1_{z>q}\leq\mathbf1_{z>3}\leq\mathbf1_{z>2}\).
+Summing pointwise proves the event-count ordering without any sampling
+assumption. For independent Bernoulli indicators, covariance expansion
+gives \(\Var(K/T)=p(1-p)/T\); divide its SD by \(p\) to obtain the
+relative error. For \(p=10^{-6}\) and \(T=4\cdot10^6\) it is
+\(\sqrt{(1-10^{-6})/4}\), approximately one half. A target relative
+SE at most \(\delta\) requires exactly
+\(T\geq(1-p)/(p\delta^2)\); at \(\delta=0.1\) this is
+\(T\geq99{,}999{,}900\). This is a standard-error calculation, not a
+95\% confidence-width guarantee.
+
+Independence gives \(P(K=0)=(1-p)^T\). The fundamental theorem of
+calculus yields
+\[
+ -\log(1-p)-p=\int_0^p\frac{t}{1-t}\,dt,
+ \qquad0\leq\int_0^p\frac{t}{1-t}\,dt
+ \leq\frac{p^2}{2(1-p)}.
+\]
+Multiply by \(T\), exponentiate and preserve the inequalities to obtain
+the stated bound. For \(p=10^{-6}\) and \(T=10^6\) or \(4\cdot10^6\),
+the exponent correction is at most \(5.000006\cdot10^{-7}\) or
+\(2.000003\cdot10^{-6}\), respectively; hence the quoted
+\(e^{-1}\) and \(e^{-4}\) approximations have explicitly controlled
+relative error. Binomial count moments, Gaussian moment diagnostics,
+pooled variance and coverage of the reported intervals are proved in the
+shared statistical-reference appendix (Propositions~\ref{sm:normal-sample},
+\ref{sm:binomial} and \ref{sm:pooling}, and the interval results
+\ref{sm:sd-interval}, \ref{sm:wilson}, \ref{sm:clopper-pearson}); those laws assume ideal independent
+draws, not merely a seeded finite-state generator.
+For the empirical factor MSE specifically, the independent residuals across
+draws obey \(W_j/\sqrt{1-R_n}\sim N(0,1)\), by
+Proposition~\ref{hfpr:factor}. Therefore
+\(\sum_{j=1}^T W_j^2/(1-R_n)\) is chi-square with \(T\) degrees of
+freedom by its defining sum-of-squares law. This also identifies its
+expectation \(T\) and thus the empirical MSE target \(1-R_n\).
+\end{proof}
+
+\begin{proposition}[Exact arithmetic behind the illustrative numbers]
+\label{hfpr:numerics}
+For three SD-16 scores averaging 160 and \(c=3/5\),
+\[
+ v_3=\frac{11}{15},\qquad
+ Z_C=\sqrt{\frac{3375}{176}},\qquad
+ I_C=100+\sqrt{\frac{54000}{11}}.
+\]
+For the latent example when \(Z_C=q\) at the exact quantile,
+\[
+ R_3=\frac9{11},\qquad
+ \E[G\mid X]=\frac3{\sqrt{11}}q,\qquad
+ \SD(G\mid X)=\sqrt{\frac2{11}}.
+\]
+The threshold table consists exactly of \(q\sqrt{(3n+2)/(5n)}\)
+and its affine SD-16 transform; its infinite row is \(q\sqrt{3/5}\).
+\end{proposition}
+\begin{proof}
+Substitute \(\bar z=15/4\), \(c=3/5\), \(n=3\) into
+Propositions~\ref{hfpr:equal-weights} and \ref{hfpr:factor}. Squaring
+the positive worked composite gives
+\((15/4)^2/(11/15)=3375/176\); squaring its SD-16 excess gives
+\(16^2\cdot3375/176=54000/11\). Exact rational comparisons give
+\[
+ (4.37905)^2<3375/176<(4.37915)^2,\qquad
+ (70.055)^2<54000/11<(70.065)^2.
+\]
+Monotonicity of the positive square root proves rounding to \(4.3791\)
+and \(170.06\). For the posterior,
+\(R_3=(9/5)/(11/5)=9/11\) and \(1-R_3=2/11\), proving the formulas.
+The rational inequalities
+\((0.425)^2<2/11<(0.435)^2\) and
+\((6.815)^2<512/11<(6.825)^2\) prove the displayed conditional-SD
+roundings \(0.43\) and \(6.82\).
+The scale conversion is \(100+16(3/\sqrt{11})q\) for its mean and
+\(16\sqrt{2/11}\) for its SD. The SD-15 singleton threshold is
+\(100+15q\); the three-test threshold at \(c=9/10\) is
+\(100+16q\sqrt{14/15}\). These exact expressions account for every
+worked decimal and threshold-table entry.
+
+The displayed quantile and its resulting decimal values are numerical
+approximations, reproduced by the documented R upper-tail quantile or
+\texttt{scipy.stats.norm.isf} and the repository's calculation script.
+Agreement of these software evaluations is numerical evidence, not by
+itself an exact-real proof of their final rounded digits. Sensitivity to
+quantile error is explicit: replacing \(q\) by \(q+\eta\) changes a
+component threshold by exactly \(\eta\sqrt{v_n}\), its SD-\(s\) version
+by \(s\eta\sqrt{v_n}\), and the latent-scale mean by
+\(16\sqrt{R_n}\eta\). Thus the algebra is proved independently of
+backend accuracy, and any certified quantile enclosure can be propagated
+by these positive factors. Likewise recorded sample means, variances,
+counts and interval endpoints are observations/computed approximations,
+not identities asserted of all realizations.
+\end{proof}

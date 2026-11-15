@@ -1,0 +1,218 @@
+\section{Referenced foundations and full working proofs}
+\label{sec:proof-foundations}
+
+The results below supply the mathematical foundations used in this report.
+The explicitly assumed inputs are finite second moments and, where stated,
+a jointly Gaussian law and independent observations. An assumption is not a
+consequence of a simulation. Definitions, source quotations, historical
+records, rounded numerical evaluations and recommendations have the status
+specified in the claim map; they are not additional mathematical theorems.
+The proofs reduce the deductions to linearity of integration, the spectral
+theorem, the Gaussian characteristic function and conditional expectation.
+Source locators refer to the linked author versions specified in the
+bibliography, rather than silently mixing their pagination with print editions.
+
+\noindent\textbf{Document-revision provenance.}
+The six-report proof revision is recorded separately in
+\path{reporting/proof-revision/revision.json}, with current TeX/Bib sources
+and PDF hashes. The earlier \path{reporting/run.json} retains the original
+simulation campaign, its original document hashes and numerical outputs.
+The revision checks and reuses the unchanged simulation-data files; it does
+not rerun the experiment or claim a new native SPARK/Rocq proof.
+The repository's subsequent shared-library refactor is separate from the
+retained native campaigns. Their source-pinned results do not constitute
+new GNATprove evidence for refactored Ada bodies; those changes require
+their own matching campaign. The written mathematical proofs below do not
+depend on that program-verification status.
+
+\begin{proposition}[Finite moments and affine changes of scale]
+\label{pf:moments}
+Let a real random vector \(X\) have finite second moments, mean \(\mu\)
+and covariance \(\Sigma\). Let \(Y\) be square-integrable, \(w\) a
+deterministic vector of matching dimension, and \(b,s\) real constants. Then
+\[
+ \E(w^{\mathsf T}X)=w^{\mathsf T}\mu,\qquad
+ \Var(w^{\mathsf T}X)=w^{\mathsf T}\Sigma w,\qquad
+ \SD(b+sY)=|s|\SD(Y).
+\]
+A zero variance is equivalent to equality with the mean almost surely.
+\end{proposition}
+\begin{proof}
+H\"older's inequality ensures integrability of all products
+\((X_i-\mu_i)(X_j-\mu_j)\). Finite linearity of the integral then gives
+the expectation formula and
+\[
+ \E\!\left[\Big(\sum_iw_i(X_i-\mu_i)\Big)^2\right]
+ =\sum_{i,j}w_iw_j\E[(X_i-\mu_i)(X_j-\mu_j)]
+ =w^{\mathsf T}\Sigma w.
+\]
+Replacing \(Y\) by \(b+sY\) multiplies its centered value by \(s\), so
+its variance is \(s^2\Var(Y)\); taking the nonnegative square root proves
+the SD formula. If \(\E[(Y-\E Y)^2]=0\), Markov's inequality applied to
+\((Y-\E Y)^2\) makes \(P(|Y-\E Y|>\epsilon)=0\) for every
+\(\epsilon>0\). The countable union over \(\epsilon=1/n\) proves the
+almost-sure assertion. The reverse implication follows by integration.
+These are applications of linearity, H\"older and the variance identities
+in \citet[Section 1.6, especially Theorems 1.6.1, 1.6.3--1.6.4]{durrett2019}.
+\end{proof}
+
+\begin{proposition}[Covariance feasibility and Gaussian construction]
+\label{pf:spectral}
+A real symmetric matrix is a covariance matrix if and only if it is
+positive semidefinite. For the equicorrelation matrix
+\(R_n=(1-c)I_n+c\mathbf1_n\mathbf1_n^{\mathsf T}\), \(n\geq2\), this
+is equivalent to \(-1/(n-1)\leq c\leq1\). Positive definiteness requires
+both inequalities to be strict.
+\end{proposition}
+\begin{proof}
+Proposition~\ref{pf:moments} gives
+\(w^{\mathsf T}\Sigma w=\E[(w^{\mathsf T}(X-\mu))^2]\geq0\).
+Conversely, the real spectral theorem diagonalizes a symmetric positive
+semidefinite matrix as \(QDQ^{\mathsf T}\), with orthogonal \(Q\) and
+nonnegative diagonal entries \(D\). For independent standard normal
+coordinates \(Z\), the vector \(QD^{1/2}Z\) has covariance
+\(QD^{1/2}I D^{1/2}Q^{\mathsf T}=\Sigma\) and is Gaussian, including
+zero eigenvalues. The spectral theorem and positive square roots are
+\citet[Theorems 7.29 and 7.38]{axler2024}; the Gaussian construction is
+also \citet[Theorems 3.4.4--3.4.5]{gallager2013}.
+For \(R_n\), the span of \(\mathbf1_n\) has eigenvalue
+\(1+(n-1)c\), and its orthogonal complement has eigenvalue \(1-c\),
+because \(\mathbf1_n^{\mathsf T}w=0\) there. Every vector decomposes
+into these two orthogonal subspaces. Nonnegativity, or positivity, of
+both eigenvalues gives precisely the stated inequalities. If one fixed
+\(c\) must work for arbitrarily large \(n\), the lower bounds force
+\(c\geq0\); the finite-dimensional bounds alone permit negative \(c\).
+\end{proof}
+
+\begin{proposition}[Gaussian closure and block independence]
+\label{pf:gaussian}
+An affine image of a jointly Gaussian vector is jointly Gaussian. Its law
+is determined by its mean and covariance. Two blocks of a jointly Gaussian
+vector are independent whenever their cross-covariance is zero, including
+singular Gaussian vectors.
+\end{proposition}
+\begin{proof}
+For a Gaussian vector with mean \(\mu\) and covariance \(\Sigma\), its
+characteristic function is
+\(\psi_X(t)=\exp(i t^{\mathsf T}\mu-t^{\mathsf T}\Sigma t/2)\).
+Thus \(\psi_{AX+b}(t)=e^{it^{\mathsf T}b}\psi_X(A^{\mathsf T}t)\)
+has the Gaussian form with mean \(A\mu+b\) and covariance
+\(A\Sigma A^{\mathsf T}\). This also follows from the independent-normal
+affine representation, without invertibility. If a two-block covariance
+has zero off-diagonal blocks, the displayed characteristic function
+factors as \(\psi_U(s)\psi_V(t)\). By Fubini this is the characteristic
+function of the product of the two marginal measures. Uniqueness of
+characteristic functions proves both independence and determination by
+mean and covariance. The Gaussian formula and closure are
+\citet[Theorems 3.3.1--3.3.2, equations (3.14) and (3.18)]{gallager2013};
+uniqueness is \citet[Theorem 3.10.4]{durrett2019}.
+\end{proof}
+
+\begin{proposition}[Gaussian conditional distribution, including exact histories]
+\label{pf:conditioning}
+Suppose \((U,V)\) is jointly Gaussian with mean \((\mu_U,\mu_V)\),
+covariance blocks \(A,B\) and \(C=\Cov(U,V)\), and \(B\) positive
+definite. A version of the conditional law, for every \(v\), is Gaussian
+with mean and covariance
+\[
+ \mu_U+CB^{-1}(v-\mu_V),\qquad A-CB^{-1}C^{\mathsf T}.
+\]
+The conditional-mean formula is the unique continuous version on the
+whole conditioning space. The full joint covariance need not be invertible.
+\end{proposition}
+\begin{proof}
+Set \(L=CB^{-1}\) and
+\(W=U-\mu_U-L(V-\mu_V)\). Its cross-covariance with \(V\) is
+\(C-LB=0\). Expanding its covariance gives
+\(A-LC^{\mathsf T}-CL^{\mathsf T}+LBL^{\mathsf T}
+=A-CB^{-1}C^{\mathsf T}\). Proposition~\ref{pf:gaussian} makes
+\(W\) Gaussian and independent of \(V\). Consequently the kernel
+\(K(v,H)=P(\mu_U+L(v-\mu_V)+W\in H)\) satisfies
+\[
+ P(U\in H,V\in D)=\int_D K(v,H)P_V(dv)
+\]
+by independence and Fubini, which is the defining conditional-law identity.
+Its expectation is the displayed affine function. A positive-definite
+Gaussian \(V\) has a strictly positive density everywhere. If two
+continuous versions differed at any point, continuity would give a
+neighborhood of positive probability on which they differ, contradicting
+almost-sure uniqueness. Conditioning on an exact continuous history uses
+this specified version, not division by the probability-zero event
+\(\{V=v\}\). This residual proof is the Gaussian regression theorem
+\citep[Theorems 3.5.1--3.5.2]{gallager2013}, proved here in the slightly
+more general form allowing singular \((U,V)\); conditional versions are
+defined in \citet[Section 4.1]{durrett2019}.
+\end{proof}
+
+\begin{proposition}[Normal marginal distributions do not imply joint normality]
+\label{pf:normal-marginals}
+Normal marginals and a specified Pearson correlation do not in general
+determine Gaussian composite or joint-tail laws.
+\end{proposition}
+\begin{proof}
+Let \(X\sim N(0,1)\) and independently let \(S\) equal \(1\) with
+probability \((1+\rho)/2\) and \(-1\) otherwise, \(-1<\rho<1\).
+Put \(Y=SX\). Symmetry gives \(Y\sim N(0,1)\), and independence gives
+\(\E[XY]=\E[S]\E[X^2]=\rho\). Nevertheless
+\(P(X+Y=0)=(1-\rho)/2>0\). A nondegenerate normal variable has a
+density and no atoms; \(X+Y\) has variance \(2+2\rho>0\), so this
+pair is not jointly Gaussian. For a concrete tail nonidentification at
+\(\rho=0\), let \(t>0\) and \(p=P(X>t)\in(0,1/2)\). This pair
+has \(P(X>t,Y>t)=p/2\), whereas an independent standard-normal pair,
+with the same marginals and zero correlation, has intersection \(p^2\).
+These differ since \(p<1/2\). The construction uses symmetry,
+independence and the product-integration rule
+\citep[Sections 1.7 and 2.1]{durrett2019}; it is a counterexample,
+not an alternative assumption secretly used for the report's Gaussian tables.
+\end{proof}
+
+\begin{proposition}[Event arithmetic and conditional denominators]
+\label{pf:events}
+For events \(A,B\) with probabilities \(p_A,p_B\) and intersection
+\(J\), their union has probability \(p_A+p_B-J\). If its conditioning
+probability is positive, \(P(B\mid A)=J/p_A\). The correlation of the
+nonconstant indicators is
+\[
+ \frac{J-p_Ap_B}{\sqrt{p_A(1-p_A)p_B(1-p_B)}}.
+\]
+\end{proposition}
+\begin{proof}
+The pointwise identities
+\(1_{A\cup B}=1_A+1_B-1_{A\cap B}\) and
+\(1_A1_B=1_{A\cap B}\) prove the union and covariance formulas by
+linearity. Because \(1_A^2=1_A\),
+\(\Var(1_A)=p_A-p_A^2\), and similarly for \(B\); divide their
+covariance by the product of their positive SDs. The conditional formula
+is precisely the event-conditional probability definition, requiring
+\(p_A>0\). The four disjoint cells have probabilities
+\(J,p_A-J,p_B-J,1-p_A-p_B+J\), obtained by the same identities.
+These are consequences of finite additivity and conditional probability
+\citep[Sections 1.1 and 4.1]{durrett2019}.
+\end{proof}
+
+\begin{proposition}[Tower property and population--conditional variance]
+\label{pf:expectation}
+For square-integrable \(Y\) and a sub-\(\sigma\)-algebra \(\mathcal G\),
+\[
+ \E\E[Y\mid\mathcal G]=\E Y,\qquad
+ \Var(Y)=\E\Var(Y\mid\mathcal G)
+              +\Var(\E[Y\mid\mathcal G]).
+\]
+\end{proposition}
+\begin{proof}
+The defining conditional-integral identity with the whole space gives
+the first formula. Write \(M=\E[Y\mid\mathcal G]\). Conditional
+Jensen \citep[Theorem 4.1.10]{durrett2019} ensures \(M\) is
+square-integrable. In
+\(Y-\E Y=(Y-M)+(M-\E Y)\), the cross term has expectation zero:
+the pull-out and tower properties give
+\(\E[(Y-M)(M-\E Y)]
+=\E[(M-\E Y)\E(Y-M\mid\mathcal G)]=0\).
+Expanding the square and integrating gives the variance identity. The
+pull-out rule extends from bounded multipliers by truncation and
+Cauchy--Schwarz. These conditional-expectation properties follow from
+\citet[Section 4.1, especially Theorems 4.1.13--4.1.14]{durrett2019}.
+In particular, fixing an observed starting score and varying it across
+the population are different probability experiments, even when both
+use the same marginal test SD.
+\end{proof}

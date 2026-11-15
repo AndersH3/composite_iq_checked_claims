@@ -1,0 +1,93 @@
+\section{Claim-to-proof and evidence register}
+\label{sec:towers-claim-map}
+The register covers the mathematical statements, rounded evaluations and
+nonmathematical assertions in the article and its audit appendices. A model
+assumption is an input; an observed execution or a historical attribution is
+an evidence claim. Neither can be turned into a theorem about actual tests.
+The exact expressions, rather than the printed decimal digits, are what the
+proofs establish. The bibliography identifies the well-known results used;
+their relevant deductions are proved in the preceding appendices.
+
+\small
+\begin{longtable}{>{\raggedright\arraybackslash}p{.28\linewidth}>{\raggedright\arraybackslash}p{.65\linewidth}}
+\toprule
+Claim or location & Proof, exact specification, or evidence boundary\\
+\midrule\endhead
+Abstract and source audit; Table~\ref{tab:original-audit}
+& Rounded values evaluate \eqref{eq:joint}, \eqref{eq:union} and
+\eqref{eq:conditionals}; Propositions~\ref{tw:gaussian}--\ref{tw:events}
+prove those formulas. Proposition~\ref{tw:original-bound} rigorously rejects
+the principal first-letter probabilities. The source columns, retraction,
+dates and Cattell recollection are attributed records
+\citep{towersOriginal,towersFollowup}; Cattell's original page was not
+inspected, and no theorem proves an attribution.\\
+Joint model \eqref{eq:model}; cutoffs \eqref{eq:cutoffs}
+& Gaussianity and \(\rho=0.7\) are assumptions. Proposition~\ref{tw:gaussian}
+proves the model's generator, density, unique quantile cutoffs and null
+boundary events. Proposition~\ref{pf:normal-marginals} gives a counterexample
+to inference of joint Gaussianity from normal margins and correlation.\\
+Joint, union, conditionals and phi; \eqref{eq:joint}--\eqref{eq:phi}
+& Propositions~\ref{tw:gaussian}, \ref{tw:events}; all four cell masses,
+positive denominators, complements and indicator moments are derived.\\
+Equal-cutoff results; \eqref{eq:equal-results}--\eqref{eq:union-denominator};
+Table~\ref{tab:equal-cutoffs}
+& Substitute \(p_A=p_B\) in Proposition~\ref{tw:events}; specified-only,
+exactly-one and union-conditioned probabilities have distinct formulas.
+IQ cutoffs use \(100+16\Phi^{-1}(1-p)\). Table entries are approximate
+quadrature/quantile evaluations, not exact decimal equalities.\\
+Mixed results \eqref{eq:mixed-joint}--\eqref{eq:mixed-remainder};
+correlation sensitivity
+& Propositions~\ref{tw:events}, \ref{tw:plackett}, \ref{tw:nesting} prove
+conditional asymmetry, its factor twenty, correlation monotonicity and the
+same-score versus different-test distinction. Displayed percentages are
+rounded evaluations at the stated three correlations.\\
+Rarity \eqref{eq:rarity}; calibrated rule \eqref{eq:calibration}
+& Propositions~\ref{tw:rarity}, \ref{tw:calibration} prove quantile mapping,
+explicit nonidentifiability counterexamples, and unique calibration. The
+numerical root approximates the exact unique solution. No latent-ability
+measurement relation is assumed or inferred.\\
+Population, applicants, membership, retesting; \eqref{eq:bounds}
+& Proposition~\ref{tw:attempts} proves the union bounds and independent
+attempt formula, and supplies a selection counterexample. Actual testing
+and membership claims require external evidence. Psychometric guidance,
+range restriction and practice effects are attributed to
+\citet{standards2014,sackett2000,hausknecht2007}; recommendations are stated
+choices, not mathematical theorems.\\
+BASIC ratio \eqref{eq:grid}; Tables~\ref{tab:grid}, \ref{tab:integer-cutoffs}
+& Proposition~\ref{tw:grid} proves finite normalization, cancellation,
+node count, midpoint boundary, quadrature bound and matching marginal
+denominators. Published/reproduced digits and relative differences are
+recorded approximate evaluations; the precise historical cause of their
+remaining difference is unknown. Relative error means
+\(\lvert x_{\mathrm{reproduced}}-x_{\mathrm{published}}\rvert/\lvert x_{\mathrm{published}}\rvert\).
+The size comparison of numerical errors is numerical evidence.\\
+Independent integral \eqref{eq:rho-integral}; numerical checks
+& Proposition~\ref{tw:plackett} derives the density derivative, justifies
+interchanging derivative and integral, and integrates from independence.
+Symmetry and probability bounds follow in Propositions~\ref{tw:gaussian},
+\ref{tw:events}. Agreement of algorithms is a numerical check, not a
+certified integration-error proof.\\
+Simulation cells, Wilson intervals and rare events in verification discussion
+& Proposition~\ref{tw:simulation} proves exact bookkeeping and random
+conditional denominators. Results~\ref{sm:binomial}, \ref{sm:wilson},
+\ref{sm:clopper-pearson}, \ref{sm:rare} prove the ideal sampling laws and
+interval construction; Wilson coverage is approximate, exact binomial
+coverage conservative. No finite generator independence theorem is claimed.\\
+Quantization and \(3.37\times10^{-11}\) bound
+& Proposition~\ref{tw:quantization} derives the ratio perturbation bound
+and its stated substitution. It does not bound integration or library error.\\
+SPARK, Ghost, Deal, symbolic gate, checksums, source identity and totals
+& Section~\ref{sec:verification} names retained dated campaigns, commands,
+manifests and negative controls. These are finite tool observations under
+encoded contracts and trusted interfaces. Structural counts do not prove
+contract adequacy; runtime tests do not prove all executions. Written
+probability proofs do not prove excluded code, the compiler, I/O success,
+SMT proof-object correctness or statistical-model validity. Historical
+totals remain historical; current-source audits must match source hashes.\\
+AI disclosure, provenance and limits
+& Section~\ref{sec:ai-disclosure} records the project workflow and its
+documented limits; it is not a probabilistic deduction or independent human
+review. No theorem supplies missing empirical validation.\\
+\bottomrule
+\end{longtable}
+\normalsize

@@ -128,7 +128,49 @@ SciPy evaluates the corresponding normal and chi-square quantiles, rather
 than supplying a new mathematical assumption.
 \end{proof}
 
+\begin{corollary}[Inversion and finite-grid diagnostic coverage]
+\label{cor:simulation-diagnostic-coverage}
+Let \(0<\alpha<1\), and let \(q_u\) denote a \(\chi^2_{n-1}\) quantile.
+Under the hypotheses
+of Proposition~\ref{prop:simulation-reference-laws}, the reference band
+\([vq_{\alpha/2}/(n-1),vq_{1-\alpha/2}/(n-1)]\) contains \(S^2\)
+with probability \(1-\alpha\). An exact confidence interval for the
+unknown SD is instead
+\[
+ \left[\sqrt{\frac{(n-1)S^2}{q_{1-\alpha/2}}},
+       \sqrt{\frac{(n-1)S^2}{q_{\alpha/2}}}\right].
+\]
+For a fixed finite collection of diagnostics having individual false-alarm
+probabilities at most \(\alpha_j\), the probability of any false alarm
+is at most \(\sum_j\alpha_j\), even when diagnostics share random draws.
+\end{corollary}
+\begin{proof}
+By the continuous pivot law,
+\(P(q_{\alpha/2}\leq(n-1)S^2/v\leq q_{1-\alpha/2})=1-\alpha\).
+Solving for \(S^2\) gives the reference band; solving for positive \(v\)
+and taking the increasing square root gives the SD interval. This is the
+standard pivotal inversion argument, derived from the proved sampling law.
+For false-alarm events \(F_j\), the pointwise inequality
+\(1_{\cup_jF_j}\leq\sum_j1_{F_j}\), integrated by linearity, gives
+\(P(\cup_jF_j)\leq\sum_jP(F_j)\leq\sum_j\alpha_j\). This is
+subadditivity of probability \citep[Section 1.1]{durrett2019}. Counting
+two tails separately is equivalent to adding their two probabilities.
+The bound justifies conservative choices for a prespecified finite grid;
+it neither proves PRNG independence nor certifies arbitrary future grids.
+Zero-variance cases use constant output and do not divide by \(v\).
+\end{proof}
+
 \subsection{Contracts, native proof and trust boundaries}
+The 15 November document revision records all six rebuilt reports in
+\path{reporting/proof-revision/revision.json}. It checks the retained
+simulation-data hashes against the original \path{reporting/run.json},
+whose source and PDF hashes continue to describe that earlier campaign.
+The proof-text revision does not rerun those simulations or a native prover.
+The native campaign described below applies to its recorded source snapshot.
+The subsequent central-library refactor requires a matching new native
+campaign before the changed Ada bodies can be called proved. Historical
+results are retained without making that current-source claim.
+
 Every new SPARK subprogram specification has at least five explicit behavioral
 or flow contract entries. Exact formula functions have at least ten. The
 floating evaluator, accumulator and sampler have more entries where distinct

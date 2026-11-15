@@ -1,0 +1,310 @@
+\section{Complete proofs for the sequential simulation targets}
+\label{sec:seq-proof-completion}
+
+This section completes the deductions used in the experimental sections.
+The foundational results and their proofs appear in
+Section~\ref{sec:proof-foundations}; the sampling and interval proofs appear
+in Section~\ref{sec:shared-statistical-methods}. A model assumption is an
+input to these deductions. A recorded numerical observation is an output
+of a specified finite computation, rather than a universal theorem.
+
+\begin{proposition}[Finite and unbounded correlation domains]
+\label{seqp:domain}
+For a battery of size \(N\geq2\), the equicorrelation matrix
+\(R_N=(1-c)I_N+c\mathbf1_N\mathbf1_N^{\mathsf T}\) is a covariance
+matrix exactly when \(-1/(N-1)\leq c\leq1\). A fixed correlation is
+admissible at arbitrarily large finite sizes exactly when \(0\leq c\leq1\).
+The common-factor construction in \eqref{eq:seq-sim-factor} realizes every
+finite size in this latter range.
+\end{proposition}
+\begin{proof}
+Every vector is uniquely a multiple of \(\mathbf1_N\) plus an orthogonal
+vector: subtract its coordinate average from each coordinate. On the first
+subspace \(R_N\) multiplies by \(d_N=1+(N-1)c\), and on the second by
+\(1-c\). The spectral covariance criterion in
+Proposition~\ref{pf:spectral} therefore gives exactly the two inequalities
+\(d_N\geq0\) and \(1-c\geq0\), including equality. Conversely, its
+square-root construction supplies a Gaussian vector even at a zero
+eigenvalue. A fixed \(c<0\) violates \(d_N\geq0\) once
+\(N>1-1/c\); each \(0\leq c\leq1\) satisfies both inequalities for
+every finite \(N\). Independent standard normals in
+\eqref{eq:seq-sim-factor} give covariance \(c\) between distinct scores
+and variance one, by Proposition~\ref{pf:moments}. Thus this construction
+also proves existence in the range actually simulated. It makes no claim
+to sample negative correlations, even though some finite negative
+correlations are admissible.
+\end{proof}
+
+\begin{proposition}[The full conditional future law and point histories]
+\label{seqp:conditioning}
+For \(0\leq c<1\), the Gaussian residual construction gives a conditional
+distribution at every specified initial vector \(z\). At
+\(z=a\mathbf1_r\), it is given by the posterior factor formula
+\eqref{eq:seq-sim-posterior-factor} and the entire future-vector
+construction \eqref{eq:seq-sim-future-vector}. That future vector is jointly
+Gaussian with mean
+\(b_r\mathbf1_k\) and covariance
+\begin{equation}
+ K_k=(1-c)I_k+\frac{c(1-c)}{d_r}\mathbf1_k\mathbf1_k^{\mathsf T}.
+ \label{eq:seq-complete-conditional-covariance}
+\end{equation}
+The mean function is the unique continuous conditional-mean version.
+\end{proposition}
+\begin{proof}
+The initial covariance \(R_r\) is positive definite: its eigenvalues
+are \(1-c>0\) and \(d_r>0\). Since
+\((\mathbf1_r\mathbf1_r^{\mathsf T})^2
+=r\mathbf1_r\mathbf1_r^{\mathsf T}\), multiplication gives
+\[
+ R_r^{-1}=\frac1{1-c}
+   \left(I_r-\frac c{d_r}\mathbf1_r\mathbf1_r^{\mathsf T}\right),
+ \qquad R_r^{-1}\mathbf1_r=\frac1{d_r}\mathbf1_r.
+\]
+The coefficient of \(\mathbf1_r\mathbf1_r^{\mathsf T}\) in the product
+is \(-c/d_r+c/(1-c)-c^2r/[(1-c)d_r]=0\), because
+\(d_r=1-c+rc\). This also verifies the formula when \(r=1\).
+
+In this proof \(E_1,\ldots,E_k\) denote fresh future residuals,
+distinct from every initial-block residual. Set
+\[
+ W=G-\frac{\sqrt c}{d_r}\sum_{i<r}X_i.
+\]
+The covariance identities of Proposition~\ref{pf:moments} give
+\(\Cov(W,Z)=\sqrt c\mathbf1_r^{\mathsf T}
+-\sqrt c\mathbf1_r^{\mathsf T}R_r/d_r=0\) and
+\(\Var(W)=1-rc/d_r=(1-c)/d_r=\tau_r^2\).
+The vector \((W,E_1,\ldots,E_k,Z)\) is Gaussian. The future residuals
+are independent of \((G,Z)\), hence their covariances with \(W,Z\)
+vanish; their covariance matrix is the identity. Gaussian block
+independence (Proposition~\ref{pf:gaussian}) shows that
+\((W,E_1,\ldots,E_k)\) is independent of \(Z\), and that its entries
+are independent with variances \(\tau_r^2,1,\ldots,1\).
+Consequently the conditional law of \(G\) at \(Z=z\) is represented by
+\(\sqrt c\sum_i z_i/d_r+\tau_r H\), with a fresh standard normal
+\(H\) independent of all future residuals. Substitution into the original
+factor equation gives the whole future conditional vector, rather than
+only its separate scalar moments. Its conditional covariance is
+\((1-c)\delta_{ij}+c\tau_r^2\), proving the displayed matrix.
+
+To check conditioning explicitly, write the future vector as
+\(m(Z)+V\), with \(V\) independent of \(Z\). For any bounded Borel
+\(h\) and Borel initial-history set \(A\), independence and Fubini give
+\[
+ \E[\mathbf1_{\{Z\in A\}}h(m(Z)+V)]
+ =\int_A\!\int h(m(z)+v)\,P_V(dv)\,P_Z(dz).
+\]
+This is the defining conditional-kernel identity, as proved generally
+in Proposition~\ref{pf:conditioning}. The affine mean is continuous;
+the positive Gaussian density of \(Z\) implies that two continuous
+versions agreeing almost everywhere agree everywhere: a nonzero
+difference would persist on an open ball of positive probability.
+Individual histories nevertheless have probability zero, so division by
+\(P(Z=a\mathbf1_r)\) is not a conditional-probability calculation.
+The displayed kernel specifies the version evaluated there. At \(c=1\),
+all scores equal \(G\) almost surely, and the compatible equal-score
+history gives future scores identically \(a\) directly on that support;
+no singular covariance inverse is used.
+\end{proof}
+
+\begin{proposition}[Recursive predictions and the two aggregate laws]
+\label{seqp:recursion}
+For fixed equal initial values, all subsequent recursively filled
+predictions are \(b_r=rca/d_r\). The fixed inclusive average is
+\eqref{eq:seq-sim-centre} and has SD zero. The actual population and
+conditional averages are Gaussian with the means and variances in
+\eqref{eq:seq-sim-population}--\eqref{eq:seq-sim-conditional}.
+\end{proposition}
+\begin{proof}
+For any prefix length \(s\), the inverse just proved and cross-covariance
+\(c\mathbf1_s^{\mathsf T}\) give next-score mean
+\(c\sum_{i<s}x_i/d_s\) by Proposition~\ref{pf:conditioning}. At the
+initial history this is \(rca/d_r=b_r\). If the next \(j-1\) values
+are all \(b_r\), the next value is
+\[
+ \frac c{d_r+(j-1)c}\bigl(ra+(j-1)b_r\bigr)
+ =\frac c{d_r+(j-1)c}
+   \frac{ra[d_r+(j-1)c]}{d_r}=b_r.
+\]
+Induction proves the assertion. Averaging gives
+\((ra+kb_r)/N=r(d_r+kc)a/(Nd_r)=rd_Na/(Nd_r)\).
+It is a deterministic number, whose centered square is zero, proving
+SD zero. At \(c=1\), the compatible-support argument proves the same
+conclusion with \(b_r=a\).
+
+For the actual population sum, covariance bilinearity gives
+\(N\) variance-one terms and \(N(N-1)\) ordered distinct-pair terms,
+so its variance is \(N+N(N-1)c=Nd_N\). Its mean is zero. Division
+by \(N^2\) proves the population formula. For the conditional sum, the
+initial block is fixed. Summing every entry of the matrix in
+\eqref{eq:seq-complete-conditional-covariance} gives
+\[
+ k(1-c)+k^2\frac{c(1-c)}{d_r}
+ =\frac{k(1-c)(d_r+kc)}{d_r}
+ =\frac{k(1-c)d_N}{d_r}.
+\]
+Dividing by \(N^2\) and summing the means gives the conditional formula.
+Both are affine transformations of the relevant Gaussian vectors, so
+they are Gaussian by Proposition~\ref{pf:gaussian}. Gaussianity is
+essential here: matching two moments alone would not establish a normal
+law. Finally, Proposition~\ref{pf:moments} gives
+\(\E[100+15C]=100+15\E[C]\) and
+\(\Var(100+15C)=225\Var(C)\), proving every reporting-scale conversion.
+\end{proof}
+
+\begin{proposition}[Population spread, conditional spread and random histories]
+\label{seqp:variance-decomposition}
+For \(0\leq c<1\), an unconstrained random initial block gives
+\begin{align*}
+ \E[C_{r,k}\mid Z]&=\frac{d_N}{Nd_r}\sum_{i<r}X_i,\\
+ \Var(\E[C_{r,k}\mid Z])&=\frac{r d_N^2}{N^2d_r},\\
+ \Var(C_{r,k})&=\frac{r d_N^2}{N^2d_r}
+                 +\frac{k(1-c)d_N}{N^2d_r}=\frac{d_N}{N}.
+\end{align*}
+Thus conditional and population SD describe different experiments;
+conditioning does not change the stipulated marginal population SD of
+each original test.
+\end{proposition}
+\begin{proof}
+Each future conditional mean at a general \(z\) is
+\(c\sum_i z_i/d_r\) by Proposition~\ref{seqp:conditioning}. The first
+identity follows by adding the fixed initial sum to those \(k\) means.
+There are \(r\) diagonal variance terms and \(r(r-1)\) ordered
+covariance terms in the initial sum, giving variance \(rd_r\); squaring
+the coefficient proves the second identity. The residual conditional
+variance is constant in \(z\), by the proved covariance matrix.
+Total variance (Proposition~\ref{pf:expectation}) gives the sum. Expanding
+\(r d_N+k(1-c)=Nd_r\) simplifies it as displayed. At the simulated
+\(c=3/5\), all factors in the between-history variance are positive,
+so conditioning strictly reduces variance. The conditional law's centre
+changes because the observed block is fixed high, while the unconditioned
+centre remains zero. For \(r=2,k=10\), multiplication by 225 yields the
+exact IQ-scale decomposition
+\(285/2=1805/16+475/16\). Taking square roots gives the reported SDs;
+the decomposition adds variances, not SDs.
+\end{proof}
+
+\subsection{Exact certificates for the numerical target columns}
+\label{seqp:exact-grid}
+At \(c=3/5\), \(a=10/3\), and \(N=r+k\), the preceding proposition
+gives the following rational IQ-scale targets:
+\[
+ m=100+\frac{50r(3N+2)}{N(3r+2)},\qquad
+ V_P=\frac{45(3N+2)}N,\qquad
+ V_C=\frac{90k(3N+2)}{N^2(3r+2)}.
+\]
+Indeed, \(d_j=(3j+2)/5\); inserting this into the proved centre and
+variance formulas and multiplying variances by 225 gives the three
+expressions. Direct substitution gives all finite exact entries below.
+For \(k=\infty\), the proved limits in Section~\ref{sec:seq-sim-limits}
+give \(m=100+150r/(3r+2)\), \(V_P=135\), and
+\(V_C=270/(3r+2)\).
+
+\begin{center}\small
+\begin{tabular}{rr r r r}
+\toprule
+\(r\)&\(k\)&\(m\)&\(V_P\)&\(V_C\)\\\midrule
+1&1&\(140\)&\(180\)&\(36\)\\
+1&2&\(410/3\)&\(165\)&\(44\)\\
+1&10&\(1450/11\)&\(1575/11\)&\(6300/121\)\\
+2&1&\(875/6\)&\(165\)&\(55/4\)\\
+2&2&\(575/4\)&\(315/2\)&\(315/16\)\\
+2&10&\(1675/12\)&\(285/2\)&\(475/16\)\\
+3&1&\(1625/11\)&\(315/2\)&\(315/44\)\\
+3&2&\(1610/11\)&\(153\)&\(612/55\)\\
+3&10&\(20450/143\)&\(1845/13\)&\(36900/1859\)\\\midrule
+1&\(\infty\)&\(130\)&\(135\)&\(54\)\\
+2&\(\infty\)&\(275/2\)&\(135\)&\(135/4\)\\
+3&\(\infty\)&\(1550/11\)&\(135\)&\(270/11\)\\\bottomrule
+\end{tabular}
+\end{center}
+
+Here is an exact rounding proof, independent of floating-point evaluation.
+For \(m=u/v\), \(v>0\), a displayed \(t/T\) differs from \(m\)
+by less than half a unit precisely when
+\(D=v-2|Tu-tv|>0\). For an SD \(\sqrt{p/q}\), \(p,q>0\), and
+positive displayed integer \(t\), the two certificates
+\[
+ L=4T^2p-(2t-1)^2q>0,\qquad
+ U=(2t+1)^2q-4T^2p>0
+\]
+are equivalent to
+\((t-1/2)/T<\sqrt{p/q}<(t+1/2)/T\): multiply by \(4T^2q\)
+and square the positive endpoints. Thus positivity proves the nearest
+rounding, with no tie convention needed. The following exact integers
+certify all four-decimal target mean and SD entries in the tables, using
+\(T=10^4\), the fractions above, and their displayed integers \(t\).
+The population mean is exactly 100 in every row.
+
+\begin{center}\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rr r rr rr}
+\toprule
+\(r\)&\(k\)&\(D\)&\(L_P\)&\(U_P\)&\(L_C\)&\(U_C\)\\\midrule
+1&1&1&621071&452241&239999&240001\\
+1&2&1&848591&179025&528431&2225\\
+1&10&7&1108621&9421371&24721751&45126225\\
+2&1&2&848591&179025&584316&602276\\
+2&2&4&1011982&996002&558704&5120784\\
+2&10&4&1649950&260018&5138544&1835664\\
+3&1&5&1011982&996002&9206676&211436\\
+3&2&3&661775&327769&982625&13694895\\
+3&10&123&12046427&343197&95794525&566797691\\
+1&\(\infty\)&1&359&929161&113039&474841\\
+2&\(\infty\)&2&359&929161&465116&1393924\\
+3&\(\infty\)&9&359&929161&3790525&569259\\\bottomrule
+\end{tabular}
+\end{center}
+Every listed integer is positive; the established equivalences therefore
+prove the claimed roundings. For the six-decimal worked example in
+Section~\ref{sec:seq-sim-sds}, the corresponding SD pairs \((L,U)\),
+with \(T=10^6\), are \((169283518,21713858)\) for
+\(\sqrt{285/2}\approx11.937336\) to the stated precision and
+\((125135856,572288016)\) for \(\sqrt{475/16}\approx5.448624\).
+For \(1675/12\) displayed as \(139.583333\), the mean certificate is
+\(D=4\). These are strict rounding statements; the decimals do not equal
+the irrational SDs exactly.
+
+The theoretical MC SE columns use \(\sqrt{V/M}\) with
+\(M=4\,000\,000\), so the same certificate applies with denominator
+\(Mq\). In finite-grid row order above, their four-decimal display
+integers \(t\) are
+\((67,64,60,64,63,60,63,62,60)\) for population rows and
+\((30,33,36,19,22,27,13,17,22)\) for conditional rows. Substitution of
+the listed exact variances into the two integer expressions gives
+\(\min L=96\,000\,000\) and \(\min U=356\,000\,000\) across
+these 18 entries. Both minima are positive, which proves every displayed
+MC SE rounding by the same inequalities. Observed estimates, the
+standardized discrepancies calculated from them, and confidence-interval
+endpoints calculated from observed variances remain finite numerical
+records; their reference-law interpretation is proved separately.
+
+\subsection{What a proof of a recorded calculation means}
+\label{seqp:record-scope}
+The target columns and their count/limit comparisons are mathematical
+deductions above. The observed columns, extrema, replicate comparisons,
+CSV coordinates, graph sizes, seeds, software versions and historical
+proof-check counts are finite reproduction records. Their evidential
+claim is that the named source, inputs and reduction formulas produced
+the recorded outputs; it is checked by reproducing that calculation and
+comparing the record. A theorem about ideal Gaussian samples does not
+deduce a particular seeded output. Conversely, agreement of finitely many
+outputs cannot prove an identity for all model inputs. For example, a
+function altered only at an untested input has exactly the same tested
+outputs. This counterexample explains the logical scope of finite tests.
+
+There are \(3\cdot3\cdot2=18\) finite laws and \(3\cdot2=6\)
+limiting laws, hence 24 output cases; four one-million-observation
+replicates give four million per case and 96 million scalar-mean output
+observations. Reusing normal arrays across cases does not alter that
+output count, but does prevent interpreting the cases as independent
+replications. Pooling formulas are proved in
+Proposition~\ref{sm:pooling}; ideal sample laws, interval inversion and
+the scope of multiple comparisons are proved in
+Proposition~\ref{sm:normal-sample}, Corollary~\ref{sm:sd-interval} and
+Proposition~\ref{sm:multiple}. No event-count denominator is used in this sequential
+experiment: every generated scalar mean contributes to its row. The
+probability-zero initial history is handled by the conditional kernel,
+not by accepting or rejecting population observations. Native SPARK
+obligation counts concern the recorded source and its contracts; they
+are neither proofs of this written derivation nor empirical validation of
+the Gaussian model.

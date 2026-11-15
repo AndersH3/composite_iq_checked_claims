@@ -1,0 +1,124 @@
+\section{Claim-to-proof and evidence map}
+\label{hfmap:main}
+
+Every mathematical assertion in the analysis is either a definition, an
+explicit model hypothesis, or a consequence covered below. A calculated
+decimal is an approximation to a proved exact expression; a citation to an
+empirical finding or a recorded software run is evidence of that kind,
+not a mathematical theorem about people or arbitrary programs. This
+distinction is necessary to make the scope of ``all claims'' precise.
+
+\begingroup\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.35\linewidth}>{\raggedright\arraybackslash}p{.59\linewidth}}
+\toprule
+Claim/location & Proof, hypothesis or evidence and limitation\\
+\midrule
+\endfirsthead
+\toprule Claim/location & Proof, hypothesis or evidence and limitation\\\midrule
+\endhead
+\bottomrule\endfoot
+Original article's variance identity, equation~\ref{eq:variance-sum};
+finite variances suffice &
+Proposition~\ref{hfpr:standardization}, by covariance expansion and
+Cauchy--Schwarz; no normality is assumed. Attribution of the identity and
+the selected 27 scorers is to \citet{hoeflin}.\\
+Standardization and the SD-15/SD-16 examples,
+equation~\ref{eq:standardize} &
+Proposition~\ref{hfpr:standardization}. Numerical \(z=4\) and
+\(z=15/4\) are exact rational calculations. Population means, SDs and
+comparability of norms must be supplied as assumptions/evidence.\\
+Weighted variance, composite and its mean/variance,
+equations~\ref{eq:weighted-variance}--\ref{eq:weighted-composite} &
+Proposition~\ref{hfpr:standardization}; weights are fixed and
+\(w^{\mathsf T}Rw>0\). If estimated parameters replace population
+values, the asserted population identity no longer follows automatically;
+the equations themselves identify the unknown inputs.\\
+Average correlation, mean variance, equal-weight formula and singleton,
+equations~\ref{eq:average-correlation}--\ref{eq:equal-composite} &
+Proposition~\ref{hfpr:equal-weights}. This includes the PSD domain,
+the zero-denominator boundary, and a constructive demonstration that the
+full matrix matters to other weights.\\
+Affine reporting units and common-scale IQ formula,
+equations~\ref{eq:reporting-scale}--\ref{eq:iq-composite} &
+Propositions~\ref{hfpr:standardization} and \ref{hfpr:equal-weights}.
+These are scale definitions with proved population moments, rather than
+an empirical validation of an IQ interpretation.\\
+Three-score worked example, equation~\ref{eq:worked-example} &
+Proposition~\ref{hfpr:numerics} gives exact radicals and rational
+squared bounds proving its displayed rounding.\\
+Moments and marginal normality do not establish a Gaussian composite;
+joint Gaussianity suffices &
+Proposition~\ref{hfpr:normality}, including an explicit normal-marginal,
+same-correlation counterexample with an atom in the sum. The general
+Gaussian foundation is Proposition~\ref{pf:gaussian}.\\
+Percentile, normal quantile and required average cutoff,
+equations~\ref{eq:quantile}--\ref{eq:threshold} &
+Proposition~\ref{hfpr:thresholds} proves the quantile definition and
+event equivalence. The decimal quantile is a computed approximation
+documented by \citet{rnormal} and the calculation script; it is not an
+assumption-free empirical frequency.\\
+All rows of Table~\ref{tab:thresholds}, table corrections, fixed composite
+cutoff, SD-15 singleton and correlation-0.90 example &
+Proposition~\ref{hfpr:numerics} supplies each exact expression and its
+quantile-error propagation. \texttt{data/thresholds.csv} and
+\texttt{scripts/verify\_calculations.py} reproduce the decimals.
+Quantile-dependent last-digit rounding is numerical evidence, not a
+certified real-arithmetic enclosure. Operational rounding is a scoring
+policy, not a probability theorem.\\
+Limit, absence of a score ceiling, effects of changing correlation,
+equation~\ref{eq:limit} &
+Proposition~\ref{hfpr:thresholds}, including derivative signs, an error
+bound, admissibility of the fixed-correlation sequence, and unbounded
+Gaussian support. No claim is made for arbitrary changing batteries.\\
+Selection may change correlations and no correction is universal &
+Proposition~\ref{hfpr:selection} gives a fully derived half-normal
+selection example. Actual range-restriction corrections are attributed
+to \citet{sackett2000}; no empirical mechanism is inferred from the
+counterexample.\\
+Selected small samples do not establish a one-in-a-million frequency;
+repeated/best-score/stopping procedures need calibration &
+Proposition~\ref{hfpr:selection} proves finite-sample nonidentification
+and independent-attempt versus perfectly dependent counterexamples.
+``Can differ'' is the precise claim; perfectly dependent procedures
+can coincide. Practice effects are the empirical finding of
+\citet{hausknecht2007}.\\
+Population score variation differs from individual uncertainty;
+\(R\) alone does not identify a latent target &
+Propositions~\ref{hfpr:factor} and \ref{hfpr:nonidentification};
+two models have identical observable scores and different latent
+posteriors. Measurement validity and extreme-score precision require
+additional evidence, not another variance identity.\\
+One-factor assumptions and all latent formulas,
+equations~\ref{eq:factor-model}--\ref{eq:latent-variance} &
+The model is expressly hypothetical. Proposition~\ref{hfpr:factor}
+proves its covariance, reliability-like squared correlation, posterior
+normal law, contrasts' lack of extra information and conditional-mean
+MSE optimality. Proposition~\ref{hfpr:numerics} gives exact expressions
+for all accompanying numerical approximations.\\
+Recommendations about battery design, norms, validity and transparent
+reporting &
+Normative proposals, explicitly attributed to the testing standards
+\citep[Standards 1.1--1.4, 1.14, 5.8--5.9]{standards2014}.
+A normative recommendation is not presented as a theorem derived from
+the common-factor model.\\
+Numerical reproduction and the software-verification appendix &
+Reproducible numerical evidence and source-pinned historical campaign
+records, as linked in Section~\ref{sec:verification}. Those records,
+rather than a mathematical citation, support check totals, source
+coverage, negative controls, replay, tool versions and contract counts.
+The historical counts describe their snapshots, not the current tree.\\
+What software evidence does and does not establish &
+Native SPARK checks concern the encoded program contracts under trusted
+interfaces; Deal runtime/property tests, limited symbolic checks,
+structural counts, numerical comparisons and model validity remain
+separate. For the mathematical sampling claims see
+Proposition~\ref{hfpr:simulation} and
+Section~\ref{sec:simulation-statistical-methods}. No proof of foreign
+libraries, pseudorandom independence, physical I/O or human-score
+Gaussianity is claimed.\\
+AI contribution, provenance and absence of participant data &
+Project process disclosure in Section~\ref{sec:ai-disclosure}, not a
+mathematical proposition or a claim of independent human review.\\
+\end{longtable}
+\endgroup

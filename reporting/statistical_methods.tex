@@ -2,80 +2,238 @@
 \label{sec:shared-statistical-methods}
 \label{sec:simulation-statistical-methods}
 
-These calculations describe ideal independent draws under the specified
-Gaussian model. They provide reference values for a finite pseudorandom
-experiment, rather than a proof that the generator supplies independence or
-that the model describes real test data. The normal transformations and
-independence facts used here follow from Gaussian affine closure and the
-Gaussian characteristic function \citep[Theorems 3.3.1--3.3.2]{gallager2013};
-expectation and variance identities follow from
-\citet[Section 1.6]{durrett2019}.
+These results concern ideal independent observations from the stated model.
+They justify reference laws and interval calculations, rather than proving
+that finite-state pseudorandom output is independent or that the model fits
+real tests. The input theorems are Gaussian affine closure and the Gaussian
+characteristic function \citep[Theorems 3.3.1--3.3.2]{gallager2013},
+orthonormal-basis extension \citep[Theorem 6.36]{axler2024}, and linearity,
+independence and elementary probability inequalities
+\citep[Sections 1.6, 2.1 and 3.4]{durrett2019}. The derivations below do
+not depend on a successful software test.
 
-\begin{proposition}[Normal sample moments]
+\begin{proposition}[Normal sample moments and the chi-square pivot]
+\label{sm:normal-sample}
 For an integer \(m\geq2\), independent \(Y_i\sim N(\mu,v)\), \(v>0\),
-the sample mean has mean \(\mu\), variance \(v/m\), and is normal.
-Writing \(S^2=\sum_i(Y_i-\bar Y)^2/(m-1)\), the variable
-\((m-1)S^2/v\) is chi-square with \(m-1\) degrees of freedom.
+the sample mean is \(N(\mu,v/m)\). With
+\(S^2=\sum_i(Y_i-\bar Y)^2/(m-1)\),
+\((m-1)S^2/v\sim\chi^2_{m-1}\), independently of \(\bar Y\), and
+\(\E S^2=v\).
 \end{proposition}
 \begin{proof}
-Linearity and independence give the mean and variance of \(\bar Y\);
-Gaussian closure gives its law. Set \(Z_i=(Y_i-\mu)/\sqrt v\), and
-choose an orthogonal matrix whose first row is the unit vector
-\(m^{-1/2}(1,\ldots,1)\). An orthonormal list extends to an orthonormal
-basis \citep[Theorem 6.36]{axler2024}. The transformed vector \(T=QZ\)
-has independent standard normal components, because its covariance is
-\(QQ^{\mathsf T}=I\) and it is Gaussian. Its first coordinate is
-\(\sqrt m(\bar Y-\mu)/\sqrt v\). Preservation of squared norm gives
-\(\sum_i(Y_i-\bar Y)^2/v=\sum_{j=2}^m T_j^2\), which is chi-square by
-definition. This proof also establishes the reference standard error
-\(\sqrt{v/m}\), rather than estimating it from an unexplained rule.
+Finite linearity and zero cross-covariances give the mean and variance;
+Gaussian affine closure gives the law. Set \(Z_i=(Y_i-\mu)/\sqrt v\),
+and extend the unit vector \(m^{-1/2}(1,\ldots,1)\) to an orthonormal
+basis. Let \(Q\) have this vector as its first row. The transformed
+Gaussian \(T=QZ\) has covariance \(QQ^{\mathsf T}=I\); its characteristic
+function factors, so all its coordinates are independent standard normals.
+Its first coordinate is \(\sqrt m(\bar Y-\mu)/\sqrt v\). Orthogonality
+preserves squared norm, hence
+\[
+ \frac{1}{v}\sum_i(Y_i-\bar Y)^2
+ =\sum_iZ_i^2-T_1^2=\sum_{j=2}^mT_j^2.
+\]
+The right side is chi-square by definition, independent of \(T_1\).
+Its expectation is \(m-1\), proving unbiasedness of \(S^2\).
+This argument supplies the normal and chi-square laws directly from the
+referenced Gaussian and linear-algebra theorems.
 \end{proof}
 
-Thus the reported mean discrepancy in standard-error units is
-\((\bar Y-\mu)/\sqrt{v/m}\). A 95\% confidence interval for the unknown
-SD, under this normal model, is
+\begin{corollary}[SD intervals and fixed-parameter reference bands]
+\label{sm:sd-interval}
+Let \(q_u\) denote a \(\chi^2_{m-1}\) quantile and \(0<\alpha<1\).
+An exact \(1-\alpha\) confidence interval for the unknown SD under this
+normal model is
 \[
- \left[\sqrt{\frac{(m-1)S^2}{q_{.975}}},
-       \sqrt{\frac{(m-1)S^2}{q_{.025}}}\right],
+ \left[\sqrt{\frac{(m-1)S^2}{q_{1-\alpha/2}}},
+       \sqrt{\frac{(m-1)S^2}{q_{\alpha/2}}}\right].
 \]
-where \(q_u\) is the chi-square quantile with \(m-1\) degrees of freedom.
-This follows by solving
-\(q_{.025}\leq(m-1)S^2/v\leq q_{.975}\) for \(v\), whose probability
-is 0.95 by the continuous reference distribution. A confidence interval
-for an unknown parameter differs from a reference band for a statistic
-under a fixed parameter. Zero-variance cases are deterministic and are
-checked directly. SciPy evaluates the distribution quantiles inside Dask
-analysis tasks \citep{scipystats}.
+For a fixed theoretical \(v\), a reference interval for \(S^2\) is instead
+\([vq_{\alpha/2}/(m-1),vq_{1-\alpha/2}/(m-1)]\). The reference
+mean discrepancy in standard-error units is
+\((\bar Y-\mu)/\sqrt{v/m}\sim N(0,1)\).
+\end{corollary}
+\begin{proof}
+The continuous chi-square law gives
+\(P(q_{\alpha/2}\leq(m-1)S^2/v\leq q_{1-\alpha/2})=1-\alpha\).
+Solving these inequalities for \(v\), then taking the increasing positive
+square root, gives the SD interval. Solving for \(S^2\), keeping \(v\)
+fixed, gives the reference interval. The last assertion is the standardized
+sample-mean law in Proposition~\ref{sm:normal-sample}. If \(v=0\), every
+observation equals \(\mu\) almost surely, so this division-based pivot is
+inapplicable; constant output is checked directly. SciPy evaluates the
+quantiles \citep{scipystats}; the algebra, rather than the library call,
+establishes the probability statement.
+\end{proof}
 
-\begin{proposition}[Bernoulli frequencies and Wilson intervals]
-For independent event indicators of probability \(p\), their count \(K\)
-is binomial, with \(\E K=mp\) and \(\Var(K/m)=p(1-p)/m\).
-For observed \(\hat p=K/m\), the Wilson score endpoints are
+\begin{proposition}[Bernoulli counts and sampling precision]
+\label{sm:binomial}
+For an integer \(m\geq1\) and \(m\) independent event indicators of common
+probability \(p\in[0,1]\), the
+count \(K\) is binomial, \(\E K=mp\), and
+\(\Var(K/m)=p(1-p)/m\).
+\end{proposition}
+\begin{proof}
+Independence makes the probability generating function of their sum
+\((1-p+pt)^m\). The binomial theorem gives
+\(P(K=j)=\binom mjp^j(1-p)^{m-j}\). Each indicator has mean \(p\)
+and variance \(p(1-p)\), because its square equals itself. Summing means
+and independent variances, then dividing by \(m^2\), proves the claims.
+These are finite-product independence and linearity
+\citep[Sections 1.6 and 2.1]{durrett2019}.
+\end{proof}
+
+\begin{proposition}[Wilson score endpoints and their coverage scope]
+\label{sm:wilson}
+For an integer \(m\geq1\), an observed count \(K\in\{0,\ldots,m\}\),
+\(0<\alpha<1\), \(\hat p=K/m\) and
+\(z=\Phi^{-1}(1-\alpha/2)\), inversion
+of the normal score inequality gives endpoints
 \[
  \frac{\hat p+z^2/(2m)\ \mathord\pm\
- z\sqrt{\hat p(1-\hat p)/m+z^2/(4m^2)}}{1+z^2/m},
- \qquad z=\Phi^{-1}(.975).
+ z\sqrt{\hat p(1-\hat p)/m+z^2/(4m^2)}}{1+z^2/m}.
 \]
+The endpoint algebra is exact; nominal \(1-\alpha\) coverage uses a normal
+score approximation and is not an exact finite-sample coverage theorem.
 \end{proposition}
 \begin{proof}
-Independence makes the probability generating function of the sum
-\((1-p+pt)^m\); the binomial theorem gives its mass function. Linearity
-and covariance expansion give the displayed moments. Squaring the score
-inequality \(|\hat p-p|\leq z\sqrt{p(1-p)/m}\), expanding and solving its
-quadratic in \(p\) gives the endpoints. The algebra is exact; calling it a
-95\% interval uses a normal score approximation and does not assert exact
-95\% finite-sample coverage \citep{wilson1927}. SciPy's binomial-result
-interval implementation is reused \citep{scipyBinomtest}. Exact equal-tail
-binomial intervals, also reported for rare counts, are obtained by
-inverting the binomial tail tests; discreteness generally makes coverage
-conservative.
+Squaring \(|\hat p-p|\leq z\sqrt{p(1-p)/m}\) gives
+\[
+ (m+z^2)p^2-(2m\hat p+z^2)p+m\hat p^2\leq0.
+\]
+The positive leading coefficient means precisely the interval between its
+two real roots. Its discriminant is
+\(4mz^2\hat p(1-\hat p)+z^4\). The quadratic formula, dividing
+numerator and denominator by \(2m\), gives the stated endpoints. For
+\(0<p<1\), the classical independent-identically-distributed central
+limit theorem implies
+\(\sqrt m(\hat p-p)/\sqrt{p(1-p)}\Rightarrow N(0,1)\), giving limiting
+coverage at its continuity points, not equality for fixed \(m\).
+This is the score construction of \citet{wilson1927}; the limit theorem is
+\citet[Theorem 3.4.1]{durrett2019}. The implementation reuses
+SciPy's binomial-result interval routine \citep{scipyBinomtest}.
 \end{proof}
 
-A rare event with \(p=10^{-6}\) has only \(mp\) expected observations.
-Under independence, \(P(K=0)=(1-p)^m\); therefore a zero count does not
-establish \(p=0\). Reusing the same random draws for several cases creates
-dependence between the rows. Each row can retain its stated marginal
-reference law, but those rows cannot be added as independent evidence.
-Pooling independent equal-design replicates is legitimate: the aggregate
-count is the sum, and the pooled variance is computed from within-replicate
-and between-replicate sums of squares, rather than averaging SDs.
+\begin{proposition}[Exact equal-tail binomial intervals]
+\label{sm:clopper-pearson}
+For an integer \(m\geq1\), a count \(j\in\{0,\ldots,m\}\), and
+\(0<\alpha<1\), define \(L(0)=0\), \(U(m)=1\); for \(j>0\),
+let \(L(j)\) solve \(P_{L(j)}(K\geq j)=\alpha/2\), and for \(j<m\),
+let \(U(j)\) solve \(P_{U(j)}(K\leq j)=\alpha/2\). Then
+\(P_p(L(K)\leq p\leq U(K))\geq1-\alpha\) for every \(p\in[0,1]\).
+\end{proposition}
+\begin{proof}
+For \(0<j\leq m\), differentiating the finite binomial sum and
+telescoping gives
+\[
+ \frac{d}{dp}P_p(K\geq j)
+ =m\binom{m-1}{j-1}p^{j-1}(1-p)^{m-j}>0\quad(0<p<1).
+\]
+The tail runs continuously from zero to one, so \(L(j)\) exists uniquely;
+the lower tail is strictly decreasing and gives \(U(j)\) similarly.
+For \(0<j<m\), at \(p=L(j)\) the lower tail is at least
+\(1-\alpha/2>\alpha/2\); its decrease implies \(U(j)>L(j)\).
+The endpoint counts are ordered directly, so these really are intervals.
+For a fixed \(p\), \(L(j)>p\) implies \(P_p(K\geq j)<\alpha/2\).
+Such \(j\)'s form an upper terminal set, because upper tails decrease
+with \(j\). If nonempty its probability is the tail at its smallest
+member and is at most \(\alpha/2\). The analogous lower terminal set
+\(U(j)<p\) has probability at most \(\alpha/2\). The union bound makes
+total noncoverage at most \(\alpha\); endpoint parameters follow directly.
+Discreteness explains why the inequality can be strict. This is the
+test-inversion construction of \citet{clopper1934}, with its coverage
+proof supplied here. Equivalently the endpoints are beta quantiles:
+the derivative above is the \(\mathrm{Beta}(j,m-j+1)\) density and its
+tail has value zero at \(p=0\), so integration gives the same cumulative
+distribution; the complementary tail gives the upper endpoint.
+\end{proof}
+
+\begin{proposition}[Conditional frequencies with random denominators]
+\label{sm:conditional-count}
+For independent repetitions of a four-cell event experiment, condition on
+\(N_A=\ell>0\) observations in event \(A\), where \(P(A)>0\).
+The count also in \(B\) is then \(\mathrm{Binomial}(\ell,P(B\mid A))\).
+Thus a binomial interval conditional on its observed denominator has its
+stated exact or approximate coverage scope. A zero denominator gives no
+defined conditional-frequency estimate.
+\end{proposition}
+\begin{proof}
+Let \(q=P(A)\) and \(r=P(B\mid A)\). Grouping cells into
+\(A\cap B,A\setminus B,A^c\), their probabilities are
+\(qr,q(1-r),1-q\). Product independence and the multinomial counting
+coefficient give
+\[
+ P(N_{AB}=j,N_A=\ell)
+ =\binom m\ell\binom\ell j q^\ell(1-q)^{m-\ell}
+           r^j(1-r)^{\ell-j}.
+\]
+Divide by \(P(N_A=\ell)=\binom m\ell q^\ell(1-q)^{m-\ell}\)
+when positive. The remaining factor is the stated binomial mass. Cases
+with \(q=1\) follow directly with \(\ell=m\). Conditional coverage for
+each positive \(\ell\) also gives coverage averaged over positive
+denominators by total probability. No convention assigning a number to
+\(0/0\) supplies data when \(\ell=0\).
+\end{proof}
+
+\begin{proposition}[Pooling counts and moments]
+\label{sm:pooling}
+For a nonempty finite collection of groups of integer sizes \(m_j\geq2\),
+means \(\bar Y_j\) and sample variances
+\(S_j^2\), let \(M=\sum_jm_j\) and
+\(\bar Y=M^{-1}\sum_jm_j\bar Y_j\). The pooled sample variance satisfies
+\[
+ (M-1)S^2=\sum_j(m_j-1)S_j^2+\sum_jm_j(\bar Y_j-\bar Y)^2.
+\]
+Independent equal-design Bernoulli groups pool to a binomial count of size
+\(M\); independence is required for that probability law, not for the
+displayed algebraic identity.
+\end{proposition}
+\begin{proof}
+Within group \(j\), write
+\(Y_{ji}-\bar Y=(Y_{ji}-\bar Y_j)+(\bar Y_j-\bar Y)\).
+Squaring and summing, its cross term vanishes because
+\(\sum_i(Y_{ji}-\bar Y_j)=0\). Summing groups gives the identity.
+For counts, independence multiplies their generating functions to
+\(\prod_j(1-p+pt)^{m_j}=(1-p+pt)^M\), proving the binomial law by
+Proposition~\ref{sm:binomial}. Sharing random numbers across cases does not
+establish this independence premise; in the overlapping-factor designs used
+here the rows cannot be counted as additional independent replications.
+Averaging group SDs generally does
+not satisfy the displayed within-plus-between identity.
+\end{proof}
+
+\begin{proposition}[Simultaneous diagnostics and rare-event precision]
+\label{sm:multiple}
+If \(J\) fixed diagnostics have false-alarm probabilities at most
+\(\alpha_j\), the probability of any false alarm is at most
+\(\sum_{j=1}^J\alpha_j\), regardless of their dependence.
+\end{proposition}
+\begin{proof}
+The pointwise bound \(1_{\cup_j F_j}\leq\sum_j1_{F_j}\), integrated,
+is the union bound. Taking each \(\alpha_j=\alpha/J\) therefore gives
+a family bound \(\alpha\). The same argument applies to two tails per
+row, counting both in \(J\). Finite diagnostics remain observations
+under a reference model and cannot establish an entire distribution.
+The bound is the elementary subadditivity theorem
+\citep[Section 1.1]{durrett2019}.
+\end{proof}
+
+\begin{corollary}[Zero counts, relative precision and sample-size scaling]
+\label{sm:rare}
+For independent Bernoulli trials, \(P(K=0)=(1-p)^m\). For \(p>0\) the
+relative standard error of \(K/m\) is \(\sqrt{(1-p)/(mp)}\); requiring
+it at most \(\epsilon>0\) means \(m\geq(1-p)/(p\epsilon^2)\).
+At fixed \(p\in(0,1)\), multiplying \(m\) by four halves the standard
+error. Zero successes do not prove \(p=0\).
+\end{corollary}
+\begin{proof}
+The first statement is the binomial mass at zero. Divide the SD in
+Proposition~\ref{sm:binomial} by \(p\), square the nonnegative inequality,
+and rearrange to get the sample-size bound. The square-root dependence
+proves the scaling. Every \(0<p<1\) assigns positive probability to
+zero successes for finite \(m\), proving the final statement. A desired
+95\% zero-count upper confidence bound, for example, follows from
+\((1-U)^m=.025\) for the equal-tail construction, not from setting
+\(p\) equal to zero. These conclusions concern sampling uncertainty;
+they do not bound floating-point quadrature error or model error.
+\end{proof}

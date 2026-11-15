@@ -42,7 +42,7 @@
 \title{Sequential Conditional Means of Equicorrelated Scores}
 \subtitle{One, two or three fixed starting scores included in the average}
 \author{}
-\date{14 November 2026}
+\date{15 November 2026}
 
 \begin{document}
 \maketitle
@@ -1166,11 +1166,18 @@ Failure of identification from moments or marginal laws &
 Proposition~\ref{prop:counterexample}, by two explicit probability laws &
 Conditional expectation on a positive-probability atom and independence
 \citep[Section 4.1]{durrett2019} \\
+\hline
 Infinite-count predictions, inclusive means and SDs &
 Proposition~\ref{prop:limit-domain}, Theorem~\ref{thm:prediction-limits}
 and Corollary~\ref{cor:iq150-limits} &
 Proved finite formulas, explicit convergence bounds, the square-root inequality
 in Lemma~\ref{lem:square-root-limit-bound}, and affine moment identities \\
+\hline
+Convergence of the aggregate Gaussian laws, including degenerate limits &
+Proposition~\ref{prop:gaussian-limit-coupling}; its exact mean-square
+error calculation &
+Gaussian affine closure and uniqueness in Theorem~\ref{thm:gaussian};
+moment identities and the proved mean/variance limits \\
 \hline
 Population versus conditional SD and its change with count &
 Section~\ref{sec:sd-interpretation}, including
@@ -1179,17 +1186,23 @@ Propositions~\ref{prop:variance-components-general} and
 Gaussian regression, total variance and the proved finite formulas
 \citep{gallager2013,bertsekas2008} \\
 \hline
+Normal-sample diagnostics and computational evidence &
+Proposition~\ref{prop:simulation-reference-laws} and
+Corollary~\ref{cor:simulation-diagnostic-coverage}; evidence classification in
+Section~\ref{sec:computational-verification} &
+Orthogonal Gaussian transformation, sample-square decomposition and
+probability bounds; observed numerical/prover results are finite source-pinned
+records, rather than universal mathematical assertions \\
+\hline
 \end{longtable}
 
-\noindent\textbf{Scope and provenance.} This derivation and its AI review
-extend the repository's hypothetical Gaussian model. Existing Ada/SPARK and
-Python/Deal evidence concerns the specified software; it does not formally
-verify this text. Section~\ref{sec:computational-verification} records the new
-computational campaign and its trust boundaries. No new empirical psychometric
-study was performed. The accompanying README records build and visual checks. The
-repository's original material follows its existing license, subject to
-third-party rights. Source versions and access limits are also recorded in
-the accompanying \texttt{reference\_notes.md}.
+\noindent\textbf{Scope and provenance.} This AI-prepared report derives
+consequences of a hypothetical Gaussian model; no empirical psychometric
+study was performed. Section~\ref{sec:computational-verification} records
+source-pinned software evidence and its trust boundaries; those checks do
+not formally verify this text. The README records build and visual checks.
+The repository license and third-party rights apply.
+\texttt{reference\_notes.md} records source versions and access limits.
 
 \clearpage
 \bibliographystyle{plainnat}

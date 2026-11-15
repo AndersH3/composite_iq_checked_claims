@@ -1,0 +1,115 @@
+\section{Claim-to-proof and evidence map}
+\label{hfmap:simulation}
+
+The report separates exact deductions under ideal sampling, computed
+approximations, observations in recorded files, software provenance and
+external empirical claims. In particular, ``exact target'' means an exact
+mathematical expression under the model; its printed decimal and SciPy
+evaluation still involve numerical approximation. The following inventory
+covers every model, diagnostic and interpretation used in the report.
+
+\begingroup\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{>{\raggedright\arraybackslash}p{.35\linewidth}>{\raggedright\arraybackslash}p{.59\linewidth}}
+\toprule
+Claim/location & Proof or evidence and precise scope\\
+\midrule
+\endfirsthead
+\toprule Claim/location & Proof or evidence and precise scope\\\midrule
+\endhead
+\bottomrule\endfoot
+Experimental units, \(c=0.6\), battery sizes and independent ideal base
+normals &
+Explicit simulation design/model hypotheses. They are not inferred from
+the historical selected scorers or justified by passing software tests.\\
+Individual score means, SDs and correlations;
+equations~\ref{eq:hf-factor-model}--\ref{eq:hf-average-variance} &
+Propositions~\ref{hfpr:standardization}, \ref{hfpr:equal-weights} and
+\ref{hfpr:factor} prove every covariance and the finite-size variance.\\
+Aggregate shortcut, joint law with the latent factor and its limits as a
+representation; equation~\ref{eq:hf-aggregate} &
+Proposition~\ref{hfpr:factor} proves the joint law by summing independent
+normal residuals. Proposition~\ref{hfpr:simulation} proves the distinction
+between shared-residual coupling and genuinely nested battery averages.\\
+Standardization, normality and tail targets;
+equations~\ref{eq:hf-composite}--\ref{eq:hf-tail-targets} &
+Propositions~\ref{hfpr:standardization}, \ref{hfpr:normality} and
+\ref{hfpr:thresholds}. The strict normal CDF defines the exact quantile;
+SciPy computes approximate reference probabilities/quantiles.\\
+Raw cutoffs, reporting scales, decreasing SD and cutoff, positive SD
+floor and unit composite SD &
+Propositions~\ref{hfpr:thresholds} and \ref{hfpr:standardization}, by
+event equivalence, affine variance and the fixed-\(c\) limit. Unbounded
+support proves that a threshold floor does not cap possible scores.\\
+Predictor, reliability-like coefficient, posterior SD and MSE;
+equations~\ref{eq:hf-predictor}--\ref{eq:hf-mse} &
+Proposition~\ref{hfpr:factor}, including independent Gaussian residuals,
+conditioning on all contrasts, MSE optimality, predictor variance and
+the zero-MSE limit. The model's factor is specified, not discovered.\\
+MSEs at \(n=1,10,1000\), raw and standardized scores coincide at
+\(n=1\), contraction slows &
+Substitution gives \(2/5\), \(1/16\) and \(1/1501\), respectively,
+from Proposition~\ref{hfpr:factor}. Proposition~\ref{hfpr:thresholds}
+proves the decreasing derivative magnitude and positive floor; direct
+\(v_1=1\) proves the singleton identity.\\
+Dask construction, chunks, seeds, versions, actual reductions and figures &
+Recorded software design and source/output hashes in
+\texttt{reporting/run.json}, the shared reporting code and generated
+\texttt{simulation-data} files; Dask's APIs are documented in
+\citet{daskdocs,daskArray,daskDelayed}. Reproducibility is conditional on
+the recorded implementation choices, not a proof of exact normal RNGs.\\
+Pooled sample variance and mean/SD diagnostics &
+Propositions~\ref{sm:pooling} and \ref{sm:normal-sample}, and
+Corollary~\ref{sm:sd-interval}, prove the reductions and reference laws.
+Proposition~\ref{hfpr:simulation} gives the MSE sum-of-squares law.\\
+Observed tables, chart points and discussion of largest discrepancies,
+variance errors, SDs and MSEs &
+Observations/computed summaries in \texttt{simulation-data/moments.csv},
+\texttt{replicate-records.csv} and their generated TeX files. Their exact
+targets are proved above; the realized values are not universal
+theorems. Statistical compatibility is an inference under the ideal
+sampling laws, with no guarantee that every diagnostic passes.\\
+Nested moderate/rare event counts and constant standardized tail targets &
+The pointwise indicator ordering is proved in
+Proposition~\ref{hfpr:simulation}; the Gaussian tail equality is
+Proposition~\ref{hfpr:thresholds}. Ordering requires no independence.\\
+Expected counts, count SDs, rate SEs, relative precision and required trial
+count; zero-event probabilities and exponential approximations &
+Propositions~\ref{sm:binomial} and \ref{hfpr:simulation}, and
+Corollary~\ref{sm:rare}; the simulation proof derives an explicit exponential error
+bound and the exact \(99{,}999{,}900\) trial lower bound for 10\% relative
+SE at \(p=10^{-6}\).\\
+Wilson intervals for moderate events; exact binomial intervals for rare
+events &
+Propositions~\ref{sm:wilson} and \ref{sm:clopper-pearson} prove score
+inversion and conservative exact-test coverage. The Wilson coverage is
+approximate; the exact interval's coverage theorem does not certify
+rounding of its computed endpoints.\\
+Eight coupled sizes are not eight independent validation runs; pooled
+replicates and multiple diagnostics &
+Proposition~\ref{hfpr:simulation} demonstrates dependence of the score
+arrays. Proposition~\ref{sm:pooling} applies across ideal independent
+replicates, and Proposition~\ref{sm:multiple} gives a union-bound
+interpretation of several diagnostics without assuming independent rows.\\
+Historical Ada means, variances and counts; seeds and comparisons &
+Recorded archived CSV observations, identified by input hash and
+\texttt{simulation-data/historical.tex}; retained files are not
+substituted by a new run. Sampling fluctuation is interpreted with
+\ref{sm:normal-sample} and \ref{sm:binomial}. Different generators
+are not required to give identical draws or counts.\\
+SPARK/Deal proof claims, replay and trusted numerical/I/O boundaries &
+Historical source-pinned evidence described in the main analysis and
+verification register. No new native proof campaign, library proof or
+proof of the statistical model follows from these simulations.\\
+Lack of real-model validation, latent-factor identification and
+population-tail evidence &
+Propositions~\ref{hfpr:normality} and \ref{hfpr:nonidentification}
+give counterexamples to identification from moments or score laws;
+\ref{hfpr:selection} proves selection/procedure counterexamples.
+The need for empirical validity evidence is attributed to
+\citet[Standards 1.1--1.4, 1.14, 5.8--5.9]{standards2014}.\\
+AI disclosure and no participant data &
+Process/provenance statements, not mathematical deductions or claims
+of independent human review.\\
+\end{longtable}
+\endgroup

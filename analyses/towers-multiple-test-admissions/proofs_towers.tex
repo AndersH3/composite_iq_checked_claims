@@ -1,0 +1,402 @@
+% Project-specific proofs, included verbatim in each Towers report.
+\section{Proofs for the multiple-test model and its numerical interpretation}
+\label{sec:towers-proofs}
+
+This appendix proves the deductive claims of the Towers study. Its probability
+space is the ideal model, rather than a finite pseudorandom generator or an
+empirical population. The foundational results and their proofs are in
+Appendix~\ref{sec:proof-foundations}; the sampling results and their proofs are
+in Appendix~\ref{sec:shared-statistical-methods}. The underlying standard
+results are change of variables, Tonelli's theorem, dominated convergence,
+the fundamental theorem of calculus and the intermediate value theorem
+\citep{durrett2019,gallager2013}. Numerical tables are approximate evaluations
+of the exact expressions below. Source dates, source quotations, software
+inventories and retained execution counts are records to inspect, rather
+than conclusions of probability theory.
+
+\begin{proposition}[The Gaussian construction, density and joint tail]
+\label{tw:gaussian}
+Let \(G,E\) be independent standard normal variables, let \(|\rho|<1\), and
+put \(X=G\), \(Y=\rho G+\sqrt{1-\rho^2}E\). Then \(X,Y\) have zero means,
+unit variances, correlation \(\rho\), and joint density
+\begin{equation}
+ f_\rho(x,y)=\frac{1}{2\pi\sqrt{1-\rho^2}}
+ \exp\!\left[-\frac{x^2-2\rho xy+y^2}{2(1-\rho^2)}\right].
+ \label{eq:tw-density}
+\end{equation}
+For finite \(a,b\), their joint exceedance probability is
+\begin{equation}
+ J(a,b;\rho)=\int_a^\infty\varphi(x)
+ \overline\Phi\!\left(\frac{b-\rho x}{\sqrt{1-\rho^2}}\right)\,dx.
+ \label{eq:tw-tail-proof}
+\end{equation}
+For \(0<p<1\), the unique cutoff with exceedance probability \(p\) is
+\(\Phi^{-1}(1-p)\). Strict and non-strict versions have equal probability.
+\end{proposition}
+\begin{proof}
+Linearity gives the two means. Independence gives \(E[GE]=E[G]E[E]=0\);
+expansion of the squares gives
+\(\operatorname{Var}(Y)=\rho^2+(1-\rho^2)=1\) and
+\(\operatorname{Cov}(X,Y)=\rho\). Gaussian affine closure is proved in
+Proposition~\ref{pf:gaussian}. Alternatively the invertible transformation has
+inverse \(g=x\), \(e=(y-\rho x)/\sqrt{1-\rho^2}\) and Jacobian determinant
+\((1-\rho^2)^{-1/2}\). Multiplying \(\varphi(g)\varphi(e)\) by that
+determinant and expanding the exponent proves \eqref{eq:tw-density}.
+Dividing it by the positive marginal density \(\varphi(x)\) gives the
+conditional density of \(Y\) at fixed \(X=x\): it is normal with mean
+\(\rho x\) and variance \(1-\rho^2\). This is the continuous conditional
+version explained in Proposition~\ref{pf:conditioning}; an event \(X=x\) itself
+has probability zero. Tonelli's theorem integrates its upper tail against
+\(\varphi(x)\), proving \eqref{eq:tw-tail-proof}. Finally \(\Phi\) is
+continuous, strictly increasing, and has limits zero and one, because
+\(\varphi>0\) and integrates to one. Inverting it proves the cutoff claim.
+Its continuous density assigns each cutoff point probability zero.
+\end{proof}
+
+\begin{proposition}[Every denominator and the binary correlation]
+\label{tw:events}
+Write \(A=\{X>a\}\), \(B=\{Y>b\}\), \(p_A=P(A)\), \(p_B=P(B)\),
+and \(J=P(A\cap B)\). The four disjoint cell probabilities, in the order
+neither, \(A\) only, \(B\) only, both, are
+\begin{equation}
+ 1-p_A-p_B+J,\quad p_A-J,\quad p_B-J,\quad J.
+ \label{eq:tw-cells}
+\end{equation}
+Thus \(u=P(A\cup B)=p_A+p_B-J\), and
+\begin{align}
+ P(B\mid A)&=J/p_A,&P(A\mid B)&=J/p_B,\\
+ P(A^c\mid B)&=1-J/p_B,&
+ P(A\cap B\mid A\cup B)&=J/u.
+ \label{eq:tw-denominators}
+\end{align}
+Here all denominators are positive for finite Gaussian cutoffs.
+The Pearson correlation of the indicators is
+\begin{equation}
+ \operatorname{Corr}(1_A,1_B)=
+ \frac{J-p_Ap_B}{\sqrt{p_A(1-p_A)p_B(1-p_B)}}.
+ \label{eq:tw-phi-proof}
+\end{equation}
+At equal margins \(p\), exactly one pass has probability \(2(p-J)\),
+one specified pass without the other has probability \(p-J\), and the
+both-pass fraction of the eligible union is \(J/(2p-J)\).
+\end{proposition}
+\begin{proof}
+The four cells partition the whole space. Subtracting the both-pass cell
+from each marginal and then subtracting the other three cells from one
+proves \eqref{eq:tw-cells}. Their nonnegativity proves the Fr\'echet bounds
+\(\max(0,p_A+p_B-1)\leq J\leq\min(p_A,p_B)\), and summing the three
+passing cells proves the union formula. In every displayed conditional,
+intersect the numerator event with the conditioning event and divide by
+the probability of that conditioning event, as in Proposition~\ref{pf:events}.
+Since \(1_A^2=1_A\), its mean and variance are \(p_A\) and
+\(p_A(1-p_A)\); likewise for \(B\). Also \(1_A1_B=1_{A\cap B}\), so
+the covariance is \(J-p_Ap_B\). The correlation definition now proves
+\eqref{eq:tw-phi-proof}. Substitution of equal margins proves the last
+three assertions. These calculations do not identify binary correlation
+with \(\rho\); each is a correlation of different random variables.
+\end{proof}
+
+\begin{proposition}[Correlation differentiation and sensitivity]
+\label{tw:plackett}
+For finite cutoffs and \(-1<\rho<1\),
+\begin{equation}
+ \frac{\partial J(a,b;\rho)}{\partial\rho}=f_\rho(a,b)>0,
+ \qquad
+ J(a,b;\rho)=\overline\Phi(a)\overline\Phi(b)
+                 +\int_0^\rho f_t(a,b)\,dt.
+ \label{eq:tw-plackett-proof}
+\end{equation}
+Consequently joint passing and either conditional passing probability
+strictly increase with \(\rho\) at fixed marginal cutoffs, whereas the
+union probability strictly decreases. Equal cutoffs give equal theoretical
+conditionals; mixed cutoffs need not.
+\end{proposition}
+\begin{proof}
+This is the bivariate case of Plackett's identity \citep{plackett1954}; a
+derivation is included. With \(D=1-t^2\), direct differentiation gives
+\[
+ \partial_t f_t(x,y)=
+ \left\{\frac{t}{D}+\frac{(1+t^2)xy-t(x^2+y^2)}{D^2}\right\}f_t(x,y)
+ =\partial_x\partial_y f_t(x,y).
+\]
+On every compact correlation interval \(|t|\leq r<1\), the derivative is
+bounded by a constant times
+\((1+x^2+y^2)\exp[-(x^2+y^2)/(2(1+r))]\), an integrable function.
+Dominated convergence therefore permits differentiation of the double
+tail integral. Integrating \(\partial_x\partial_y f_t\) over
+\([a,\infty)\times[b,\infty)\) gives \(f_t(a,b)\): the Gaussian
+density and its first derivatives vanish at the infinite boundaries.
+At \(t=0\) the density factors, so the joint tail is the product of the
+marginal tails. The fundamental theorem of calculus gives the second
+identity, including negative \(\rho\) with its oriented integral.
+The density is strictly positive. The monotonicity claims follow by
+dividing by the fixed positive margins, or subtracting \(J\) from their
+sum. Swapping \(x,y\) leaves \(f_\rho\) unchanged, which proves the
+equal-cutoff symmetry. At mixed margins the conditional ratio is exactly
+\((J/p_A)/(J/p_B)=p_B/p_A\), explaining the factor of twenty in the
+top-2\% versus top-0.1\% example.
+\end{proof}
+
+\begin{proposition}[A distribution-free contradiction and a Gaussian bound]
+\label{tw:original-bound}
+Marginal pass rates \(0.02\) and \(0.001\) cannot have union probability
+\(0.0211\). Moreover, equal top-2\% Gaussian cutoffs at \(\rho=0.7\)
+satisfy
+\begin{equation}
+ J>\frac{47}{15000}>0.0031,
+ \qquad P(B\mid A)>\frac{47}{300}>0.156,
+ \qquad P(A\cup B)<\frac{553}{15000}<0.0369.
+ \label{eq:tw-rigorous-rejection}
+\end{equation}
+These exact inequalities already reject the first letter's overlap
+\(0.002\), repeat-pass \(0.1027\) and union \(0.0383\) as model values,
+without relying on the last digits of a numerical integrator.
+\end{proposition}
+\begin{proof}
+The union bound gives \(P(A\cup B)\leq0.021<0.0211\).
+For the Gaussian claims write \(T(x)=\overline\Phi(x)\). Integration of
+\(t\varphi(t)=-\varphi'(t)\) gives the strict Mills upper bound
+\(T(x)<\varphi(x)/x\) for \(x>0\), since \(t/x>1\) for \(t>x\).
+For completeness the constant bound \(\pi>25/8\) also has an elementary
+proof. The exact finite geometric identity
+\[
+ \frac1{1+t^2}=1-t^2+t^4-t^6+\frac{t^8}{1+t^2}
+\]
+and integration on \([0,x]\), \(x>0\), give
+\(\arctan x>x-x^3/3+x^5/5-x^7/7\), because the remainder integral is
+positive. The tangent addition formula gives
+\(\arctan(1/2)+\arctan(1/3)=\pi/4\): its tangent is one and the
+sum is in \((0,\pi/2)\), since its cosine has the positive factor
+\(1-(1/2)(1/3)\). Applying the lower bounds at \(1/2\) and \(1/3\)
+therefore gives
+\[
+ \frac\pi4>
+ \sum_{x\in\{1/2,1/3\}}\left(x-\frac{x^3}{3}+\frac{x^5}{5}-\frac{x^7}{7}\right)
+ =\frac{25}{32}+\frac{7765}{1959552}>\frac{25}{32}.
+\]
+Together with
+\(e^{8/3}>\sum_{n=0}^4(8/3)^n/n!=3035/243>11\), this implies
+\[
+ T(7/3)<\frac{\varphi(7/3)}{7/3}
+ <\frac{(2/5)}{11(7/3)}=\frac6{385}<\frac1{50}.
+\]
+Thus the cutoff \(a\) with \(T(a)=1/50\) is below \(7/3\).
+Taylor's theorem with its signed third derivative gives
+\(e^{-v}\leq1-v+v^2/2\) for \(v\geq0\). Hence
+\[
+ T(1)=\frac12-\int_0^1\varphi(t)\,dt
+ >\frac12-\frac25\left(1-\frac16+\frac1{40}\right)
+ =\frac{47}{300}.
+\]
+For every \(x\geq a\), the argument of the conditional tail in
+\eqref{eq:tw-tail-proof} is at most
+\(0.3a/\sqrt{0.51}<0.7/\sqrt{0.51}<1\). Therefore
+\(J>T(a)T(1)>47/15000\). Division by \(1/50\) and the equal-margin
+union identity prove the remaining inequalities.
+\end{proof}
+
+\begin{proposition}[Same-score nesting and different-test non-nesting]
+\label{tw:nesting}
+If \(b>a\) are applied to the same score \(Z\), then
+\(\{Z>b\}\subset\{Z>a\}\). When \(P(Z>b)>0\), the conditional
+probability of passing the lower cutoff given the higher is one.
+With different Gaussian scores
+and \(|\rho|<1\), neither finite-cutoff pass event contains the other
+up to null sets.
+\end{proposition}
+\begin{proof}
+The first inclusion is the elementary implication \(z>b\Rightarrow z>a\).
+Its conditional probability is therefore the numerator probability divided
+by itself. For different scores the open rectangles
+\((a,a+1)\times(b-2,b-1)\) and
+\((a-2,a-1)\times(b,b+1)\) lie respectively in \(A\setminus B\) and
+\(B\setminus A\). The density \eqref{eq:tw-density} is continuous and
+positive on their closures, so each rectangle has positive probability.
+This proves non-nesting, strict union enlargement over either margin, and
+strictly subunit conditional probabilities. The statement uses finite
+cutoffs and a nonsingular Gaussian distribution; it does not assert a
+relationship between actual admission policies or actual tests.
+\end{proof}
+
+\begin{proposition}[Existence and uniqueness of OR calibration]
+\label{tw:calibration}
+For every \(-1<\rho<1\) and \(0<u_0<1\), there is exactly one finite
+\(t\) satisfying
+\(2\overline\Phi(t)-J(t,t;\rho)=u_0\).
+On a reporting scale \(I=100+16X\), its cutoff is \(100+16t\).
+\end{proposition}
+\begin{proof}
+Let \(U(t)=P(X>t\text{ or }Y>t)\). Inclusion-exclusion identifies it with
+the left side. If \(t_1<t_2\), the event at \(t_2\) is contained in the
+event at \(t_1\). A rectangle with \(t_1<X<t_2\) and \(Y<t_1\) has
+positive probability and belongs to the set difference; consequently
+\(U(t_1)>U(t_2)\). For \(t_n\to t\), the event indicators converge
+except on \(X=t\) or \(Y=t\), which have probability zero. Dominated
+convergence proves continuity. As \(t\to\infty\), the union bound gives
+\(U(t)\leq2\overline\Phi(t)\to0\). As \(t\to-\infty\),
+\(U(t)\geq\overline\Phi(t)\to1\). The intermediate value theorem gives
+existence and strict decrease gives uniqueness. A positive affine reporting
+scale transforms the threshold by the same affine formula; its mean and
+standard deviation are 100 and 16 by Proposition~\ref{pf:moments}.
+\end{proof}
+
+\begin{proposition}[A rarity equivalent identifies a size, not a set]
+\label{tw:rarity}
+For \(0<p<1\), \(100+16\Phi^{-1}(1-p)\) is the unique SD-16 normal
+cutoff exceeded with probability \(p\). Equal selected fractions do not
+imply equal selected people or identify any latent ability.
+Normal margins and their correlation do not identify the Gaussian overlap.
+\end{proposition}
+\begin{proof}
+The cutoff claim follows by inversion in Proposition~\ref{tw:gaussian}
+and the positive affine conversion. To disprove set identification, let
+\(U\) be uniform on \([0,1)\). The intervals \([0,p)\) and the same
+interval translated modulo one by \(d=\min(p,1-p)/2>0\) both have
+probability \(p\), but their symmetric difference has positive length.
+Thus equal probability does not identify the event. For latent-variable
+identification, keep the same observed pair \((X,Y)\) and the same observed
+selection event \(A=\{X>a\}\). In one model
+adjoin an independent standard normal variable \(L\), called latent ability.
+In another model set \(L=X\). Both have the identical observed score law
+and a standard normal \(L\), but observed selection is independent of
+\(L\) in the first model and associated with it in the second. No
+measurement relation specifying \(L\) was part of the observed model, so
+the observations cannot choose between them. Finally
+Proposition~\ref{pf:normal-marginals} constructs normal margins with the same
+correlation using \(Y=SX\) with an independent biased sign \(S\).
+For positive cutoffs its joint tail is
+\((1+\rho)\overline\Phi(\max(a,b))/2\), not generally
+\eqref{eq:tw-tail-proof}. This provides the stated explicit failure of
+identification by margins and correlation alone.
+\end{proof}
+
+\begin{proposition}[Repeated routes and selection]
+\label{tw:attempts}
+For any finite pass events \(A_1,\ldots,A_m\),
+\[
+ \max_iP(A_i)\leq P(\cup_iA_i)\leq\min(1,\sum_iP(A_i)).
+\]
+If they are independent with common probability \(p\), the union is
+\(1-(1-p)^m\). A population correlation does not, by itself, determine a
+correlation in a selected subpopulation.
+\end{proposition}
+\begin{proof}
+Each individual event is contained in the union, proving the lower bound.
+Pointwise \(1_{\cup_iA_i}\leq\sum_i1_{A_i}\); expectations and the
+universal bound one prove the upper bound. Independence of the complements
+gives \(P(\cap_iA_i^c)=(1-p)^m\), and taking the complement proves the
+formula. For a concrete selection counterexample take independent standard
+normals \(X,Y\), and condition on \(XY>0\). This event has probability
+one half; symmetry gives zero conditional means. Conditional squares retain
+mean one, but the conditional product has expectation
+\(E[|X|]E[|Y|]=2/\pi>0\). Indeed the signs are independent of the
+absolute values, and \(E|X|=2\int_0^\infty x\varphi(x)\,dx
+=\sqrt{2/\pi}\). The selected correlation is consequently \(2/\pi\),
+despite population correlation zero. This is an existence counterexample,
+not a model of any named society's selection.
+\end{proof}
+
+\begin{proposition}[What the BASIC grid normalizes]
+\label{tw:grid}
+Let \(h=1/2\), let \(F=\{1,1+h,\ldots,199\}^2\), and give node
+\((x,y)\) weight \(g(x,y)>0\) proportional to its Gaussian IQ-scale
+density. The ratio of the sum over passing nodes to the sum over \(F\)
+is exactly a probability for a finite weighted distribution on \(F\).
+It is not exactly a continuous Gaussian tail. There are \(397^2=157609\)
+nodes; constant density-scale factors and \(h^2\) cancel from the ratio.
+Viewed as composite midpoint quadrature, nodes starting at \(Q\) cover
+cells starting at \(Q-h/2=Q-0.25\), not at \(Q\).
+\end{proposition}
+\begin{proof}
+The normalized node masses are
+\(w_{xy}=g(x,y)/\sum_Fg\); they are positive and sum to one. Summing
+them over the passing subset proves the discrete-probability assertion and
+also supplies its own consistent marginal denominator. The node count in
+each coordinate is \((199-1)/(1/2)+1=397\). Multiplying every weight by
+any common positive constant leaves every normalized mass unchanged,
+proving cancellation of the cell area and the density Jacobian factor
+\(16^{-2}\). Centering a cell of width \(h\) on its node gives the
+stated lower boundary and upper boundary \(199+h/2\).
+
+More precisely, let \(N,D\) be the continuous Gaussian masses of the
+passing cell rectangle and the full cell rectangle, and let \(n,d\) be
+their midpoint sums including cell area. On a finite rectangle a twice
+continuously differentiable density satisfies the bound
+\[
+ |n-N|\leq\frac{|R|h^2}{24}(M_{xx}+M_{yy}),
+\]
+where \(M_{xx},M_{yy}\) bound the absolute second derivatives on the
+rectangle. Apply the midpoint remainder first in \(x\), then in \(y\):
+the linear Taylor term integrates to zero and
+\(\int_{-h/2}^{h/2}u^2/2\,du=h^3/24\); summing the cells proves the
+bound. The same argument bounds \(|d-D|\). Since \(d>0\),
+\[
+ \left|\frac nd-\frac ND\right|
+ \leq\frac{|n-N|+(N/D)|d-D|}{d}.
+\]
+The truncated continuous ratio \(N/D\) is itself a conditional probability
+given the full finite cell rectangle. Its excluded mass is bounded by the
+sum of the four marginal tails beyond its edges, by the union bound.
+This separates discretization, shifted boundary and truncation; it does
+not claim that their errors vanish or have the same sign at finite \(h\).
+Comparisons of their sizes in the tables are numerical comparisons, not a
+certified integration-error bound. An integer cutoff \(Q\) has actual
+continuous marginal \(\overline\Phi((Q-100)/16)\); division by a
+different nominal tail answers no conditional probability of this model.
+Rounding the scores first would define yet another event and requires an
+explicit rounding convention.
+\end{proof}
+
+\begin{proposition}[Quantization of a conditional ratio]
+\label{tw:quantization}
+If \(|j'-j|\leq\delta\), \(|p'-p|\leq\delta\), \(p>\delta\),
+and \(j\geq0\), then
+\[
+ \left|\frac{j'}{p'}-\frac jp\right|
+ \leq\frac{\delta(1+j/p)}{p-\delta}.
+\]
+If also \(0\leq j\leq p\), this is at most
+\(2\delta/(p-\delta)\).
+\end{proposition}
+\begin{proof}
+Put \(\Delta j=j'-j\), \(\Delta p=p'-p\). The difference is
+\((p\Delta j-j\Delta p)/(pp')\), and \(p'\geq p-\delta>0\).
+The triangle inequality bounds the numerator by \(p\delta+j\delta\).
+Division gives the first bound, and \(j/p\leq1\) gives the second.
+For \(\delta=0.51\times10^{-15}\) and \(p=1/33000\), substituting
+in the latter expression gives less than \(3.37\times10^{-11}\).
+This accounts for probability quantization only, not integration error.
+\end{proof}
+
+\begin{proposition}[Simulation partition and selected denominators]
+\label{tw:simulation}
+For \(T\) simulated pairs, let \(n_{rs}\) count the four indicator
+values \((1_A,1_B)=(r,s)\). Then
+\[
+ \sum_{r,s}n_{rs}=T,\quad n_A=n_{10}+n_{11},\quad
+ n_B=n_{01}+n_{11},\quad n_U=n_A+n_B-n_{11}.
+\]
+Under ideal independent identical draws, each fixed event count is binomial.
+Given \(n_A=m>0\), \(n_{11}\) is binomial with \(m\) trials and
+success probability \(J/p_A\). Different cutoff rules evaluated on the
+same pairs need not give independent estimates.
+\end{proposition}
+\begin{proof}
+For each pair exactly one of the four Boolean outcomes occurs. Summing that
+pointwise partition proves the integer identities without any distributional
+assumption. Under the additional independent-pair model, a fixed event gives
+independent Bernoulli indicators, whose sum has the binomial law by
+Proposition~\ref{sm:binomial}. Conditional on the identities of the \(m\)
+observations passing \(A\), their \(B\) indicators are independent with
+conditional probability \(J/p_A\). Every choice of these identities gives
+the same binomial sum; mixing over the choices proves the claim given
+\(n_A=m\), as proved generally in Proposition~\ref{sm:conditional-count}.
+When \(m=0\), the conditional frequency is undefined. To see dependence
+between common-pair rules explicitly, if one pass event \(C\) is contained
+in another \(D\) and both have probabilities strictly between zero and
+one, their one-pair indicators have covariance
+\(P(C)(1-P(D))>0\). Their frequency estimates from \(T\) independent
+pairs have this covariance divided by \(T\), by expanding the double
+sum and canceling distinct-pair covariances. Thus independence between rows
+cannot be inferred from independent observations within each row.
+\end{proof}

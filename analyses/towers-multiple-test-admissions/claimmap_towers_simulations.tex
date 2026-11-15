@@ -1,0 +1,98 @@
+\section{Claim-to-proof and simulation-evidence register}
+\label{sec:towers-simulation-claim-map}
+Every numerical display is a rounded evaluation or a retained execution
+record. The probability results concern independent draws from the ideal
+model; the pseudorandom implementation is evaluated separately. This register
+maps all sections and their mathematical assertions to the full proofs in
+this report, and marks the assertions that instead require provenance or
+empirical evidence.
+
+\small
+\begin{longtable}{>{\raggedright\arraybackslash}p{.29\linewidth}>{\raggedright\arraybackslash}p{.64\linewidth}}
+\toprule
+Claim or output & Proof or evidence status\\
+\midrule\endhead
+Experiment, model input and five rules
+& Zero means, unit SDs, \(\rho=0.7\), stable margins and independent ideal
+pairs are model inputs. Proposition~\ref{tw:gaussian} derives the generator
+law, quantile thresholds and equality of strict/non-strict probabilities.
+Seeds, chunking, version pins and trial counts are execution specifications,
+not a proof that deterministic streams are independent random variables.\\
+Union \eqref{eq:towers-union} and conditional ratios
+\eqref{eq:towers-conditionals}
+& Proposition~\ref{tw:events} derives every numerator and denominator by
+the four-cell partition and the definition of conditional probability.\\
+Generator \eqref{eq:towers-generator}; mean, variance, covariance
+& Proposition~\ref{tw:gaussian} and Propositions~\ref{pf:moments},
+\ref{pf:gaussian} prove the affine Gaussian law and moments. These are
+population quantities, not assertions that each finite sample has those
+exact moments.\\
+Four cell counts and event masks
+& Proposition~\ref{tw:simulation} proves the integer identities observation
+by observation. The numerical occurrence of each retained count is an
+execution record; count consistency does not prove the model.\\
+Reference integral \eqref{eq:towers-reference-integral} and correlation integral
+& Propositions~\ref{tw:gaussian}, \ref{tw:plackett} prove both exact
+integral identities, including differentiation justification. SciPy computes
+approximations of these targets. Their cross-check is numerical validation.\\
+Pooled event table and Figure~\ref{fig:towers-events}
+& Events have ideal binomial counts by Proposition~\ref{sm:binomial}.
+Propositions~\ref{sm:pooling}, \ref{sm:wilson}, \ref{sm:clopper-pearson}
+prove pooled estimation and interval construction. Frequencies and plot
+coordinates come from the recorded integer counts, not an analytic theorem.
+The exact E2/E0.1/Rare/Mixed targets are the preceding integrals at the
+listed quantiles; printed decimals approximate them.\\
+Enlarged eligibility and mixed non-nesting
+& Proposition~\ref{tw:nesting} proves positive probability of each
+specified-only outcome, hence strictly enlarged unions. Proposition~\ref{tw:events}
+proves the mixed conditional factor twenty and complement rates.\\
+Conditional table; fluctuating denominators and equal-cutoff symmetry
+& Propositions~\ref{tw:events}, \ref{tw:plackett}, \ref{tw:simulation}
+and Proposition~\ref{sm:conditional-count} prove symmetry of the targets and
+the binomial law conditional on the actual selected denominator. A zero
+denominator leaves the estimate undefined.\\
+Rare case, relative precision, zero counts and replicate variation
+& Proposition~\ref{sm:binomial} and Corollary~\ref{sm:rare} derive \(E[K]=Tj\),
+\(\operatorname{Var}(K)=Tj(1-j)\), relative SE
+\(\sqrt{(1-j)/(Tj)}\), and \(P(K=0)=(1-j)^T\).
+Expected counts are exact substitutions of the integral; recorded rare
+counts, extrema and standardized discrepancies are finite observations.\\
+Pointwise versus simultaneous intervals; common random numbers
+& Proposition~\ref{sm:multiple} proves the union-bound distinction.
+Proposition~\ref{tw:simulation} proves possible nonzero covariance between
+same-pair estimates. No independent-row standard error is inferred. Wilson
+coverage is approximate; Proposition~\ref{sm:clopper-pearson} proves conservative
+binomial coverage, not protection against model misspecification.\\
+OR2 \eqref{eq:towers-calibration}; threshold, scale and achieved rate
+& Proposition~\ref{tw:calibration} proves continuous strict monotonicity,
+endpoint limits and the unique root. The generated calibration table is
+the fixed-root simulation record. A 95\% interval can miss its target;
+Proposition~\ref{sm:multiple} separates pointwise intervals from broad diagnostic
+checks. The observed miss is retained without seed or cutoff tuning.\\
+Retained Ada counts, historical comparison and replay limits
+& The historical CSV and manifest supply the four counts, denominators and
+seed. The rare frequency is \(4/10^6\), the historical conditional is
+\(4/32\). Their uncertainty follows from Propositions~\ref{sm:binomial},
+\ref{sm:conditional-count}; a different generator need not reproduce exact
+counts. Historical records are preserved, not re-proved by the new Dask run.\\
+Binary correlation \eqref{eq:towers-phi} and phi table
+& Proposition~\ref{tw:events} proves the population indicator formula from
+its moments. Replacing probabilities by empirical frequencies gives the
+sample indicator correlation when both sample variances are positive.
+The table's empirical values are recorded arithmetic evaluations.\\
+Historical claims, interpretations, latent ability and real membership
+& \citet{towersOriginal,towersFollowup} supply source attributions.
+Propositions~\ref{tw:original-bound}, \ref{tw:rarity}, \ref{tw:attempts}
+give mathematical contradictions or explicit nonidentifiability
+counterexamples. The model supplies no empirical membership or validity
+study; recommendations remain recommendations.\\
+Dask, libraries, contracts, SPARK, provenance and AI disclosure
+& Source, versioned environment, generated manifest and dated native
+evidence provide operational records. These are distinct from the written
+model proofs, structural contract inventories, runtime/property tests,
+limited symbolic proofs and trusted-completion boundaries. The report adds
+no native SPARK campaign. No theorem here proves finite generator quality,
+library accuracy, file persistence, actual test validity or human review.\\
+\bottomrule
+\end{longtable}
+\normalsize

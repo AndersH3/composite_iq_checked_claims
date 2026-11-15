@@ -5,7 +5,7 @@
 ]{scrartcl}
 \usepackage[margin=16mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
 \usepackage{fontspec}
-\usepackage{mathtools}
+\usepackage{mathtools,amsthm}
 \usepackage{unicode-math}
 \setmainfont{TeX Gyre Pagella}
 \setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
@@ -15,6 +15,7 @@
 \usepackage{tabularray}
 \UseTblrLibrary{booktabs}
 \usepackage{booktabs}
+\usepackage{longtable,array}
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{scrlayer-scrpage}
@@ -31,7 +32,14 @@
 \usepackage{bookmark}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\SD}{SD}
 \DeclareMathOperator{\Corr}{Corr}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
 \newcommand{\sfN}{\overline{\Phi}}
 \setlength{\emergencystretch}{1.5em}
 \setlist[itemize]{leftmargin=*,itemsep=2pt,topsep=3pt}
@@ -46,7 +54,7 @@
 \title{Multiple-Test Admissions}
 \subtitle{A joint analysis and corrected version of two Grady Towers letters}
 \author{}
-\date{5 November 2026}
+\date{15 November 2026}
 
 \begin{document}
 \maketitle
@@ -71,6 +79,14 @@ combined article and reproducible calculations are provided.
 with OpenAI Codex and collaborating AI agents, including its analysis,
 replacement text, code and verification workflow. Provenance details, human
 involvement and limitations are disclosed in \cref{sec:ai-disclosure}.
+
+\noindent\textbf{Proof coverage.} Every mathematical identity, inequality and
+model implication is derived in Appendices~\ref{sec:proof-foundations},
+\ref{sec:shared-statistical-methods} and \ref{sec:towers-proofs}, using
+referenced standard theorems. Appendix~\ref{sec:towers-claim-map} maps all
+claims to those proofs or to their documentary evidence. Decimal values are
+numerical approximations; historical and empirical claims are not presented
+as theorems of the Gaussian model.
 
 
 \section{Joint assessment of the two sources}\label{sec:audit}
@@ -131,6 +147,9 @@ cannot be 2.11\% when its marginal probabilities sum to only 2.10\%.
 In general, \(P(A\cup B)\leq P(A)+P(B)\). The corrected mixed-case failure
 rate on the lower-threshold test among higher-threshold passers is
 34.1411\%, rather than the original's approximately 86\%.
+Proposition~\ref{tw:original-bound} supplies both this distribution-free
+contradiction and rigorous Gaussian inequalities rejecting the original
+equal-cutoff figures without relying solely on quadrature digits.
 
 For the equal top-2\% case, passing \(X\) alone has probability 1.3724\%,
 and passing \(Y\) alone has the same probability. Passing \emph{exactly one}
@@ -194,6 +213,8 @@ not the reliability of either test and is not generally the correlation of
 the binary pass/fail indicators. Normal marginal distributions and a
 correlation alone do not establish \cref{eq:model}; the joint distribution
 is an additional assumption, especially consequential in the tails.
+Propositions~\ref{pf:normal-marginals} and \ref{tw:gaussian} give,
+respectively, an explicit counterexample and the Gaussian derivation.
 
 For desired marginal pass probabilities \(p_A,p_B\), use
 \begin{equation}
@@ -214,6 +235,8 @@ P(A\cup B)&=p_A+p_B-J,\label{eq:union}\\
 P(B\mid A)&=J/p_A, & P(A\mid B)&=J/p_B.\label{eq:conditionals}
 \end{align}
 The denominators determine the question being answered.
+Propositions~\ref{tw:gaussian} and \ref{tw:events} prove these formulas,
+including the conditional density and the positive denominators.
 
 For binary indicators \(1_A,1_B\), the phi coefficient is
 \begin{equation}
@@ -228,19 +251,20 @@ The follow-up attributes its earlier error to a phi/product-moment
 approximation. Without the first algorithm, its exact computational
 mistake cannot be reconstructed; substituting one correlation for the
 other is nevertheless unjustified.
+The indicator-moment derivation is Proposition~\ref{tw:events}.
 
 \subsection{Two tests with the same nominal cutoff}
 
 For two top-2\% cutoffs and \(\rho=0.7\), \cref{eq:joint} gives
 \begin{equation}
-J=0.0062762740205,\qquad
-P(A\cup B)=0.0337237259795.
+J\approx0.0062762740205,\qquad
+P(A\cup B)\approx0.0337237259795.
 \label{eq:equal-results}
 \end{equation}
 Thus 0.627627\% of the population passes both tests, and 3.372373\%
 passes at least one. Among people who pass a specified first test,
 \begin{equation}
-P(B\mid A)=\frac{0.0062762740205}{0.02}
+P(B\mid A)=\frac{J}{0.02}
 \approx31.3814\%.
 \label{eq:repeat-pass}
 \end{equation}
@@ -286,27 +310,31 @@ Marginal tail on each test & \(z\) cutoff & SD-16 cutoff
 Let \(p_A=0.02\) and \(p_B=0.001\), still with \(\rho=0.7\).
 The joint probability is
 \begin{equation}
-J=0.0006585888039.
+J\approx0.0006585888039.
 \label{eq:mixed-joint}
 \end{equation}
 Consequently,
 \begin{align}
-P(B\mid A)&=3.292944\%, &
-P(A\mid B)&=65.858880\%,\label{eq:mixed-conditionals}\\
-P(A^c\mid B)&=34.141120\%, &
-P(A\cup B)&=2.034141\%.\label{eq:mixed-remainder}
+P(B\mid A)&\approx3.292944\%, &
+P(A\mid B)&\approx65.858880\%,\label{eq:mixed-conditionals}\\
+P(A^c\mid B)&\approx34.141120\%, &
+P(A\cup B)&\approx2.034141\%.\label{eq:mixed-remainder}
 \end{align}
 The asymmetry is expected: the higher-threshold passers are a much
 smaller group. These two events concern \emph{different tests}. If both
 cutoffs were applied to the same score, the higher-cutoff event would be
 contained in the lower-cutoff event and the corresponding conditional
 probability would be 100\%.
+Proposition~\ref{tw:nesting} proves both the same-score inclusion and its
+failure for finite cutoffs on nonsingular Gaussian test pairs.
 
 The result is sensitive to the assumed correlation. For these same mixed
 cutoffs, \(P(A\mid B)\) is approximately 33.59\% at \(\rho=0.5\),
 65.86\% at 0.7, and 97.99\% at 0.9. A nominal 0.7 is an illustrative
 parameter, not a universal empirical property of IQ tests. Population,
 norms, age, constructs, administration, and selection all matter.
+Proposition~\ref{tw:plackett} proves the monotonic dependence on correlation;
+the stated percentages are numerical evaluations at the specified inputs.
 
 These conditional model results cannot determine whether someone who
 passed a particular magazine test could join a particular society.
@@ -328,6 +356,8 @@ select the same people as a single test at that cutoff, establish
 ``super-high reliability,'' or identify a particular level of latent
 intelligence. The first letter's corresponding AND rarity equivalent
 of about 146 follows from its erroneous overlap probability.
+Proposition~\ref{tw:rarity} proves the rarity map and gives explicit
+counterexamples to inferring selected identities or latent ability from size.
 
 Multiple tests do not make a 2\% overall eligibility rule impossible.
 Within the stated model, one can choose the common cutoff \(a_*\) to solve
@@ -340,6 +370,8 @@ scale. Each test then has marginal pass rate approximately 1.16021\%,
 while the two-test OR rule has overall rate 2\%. This is an example of
 calibrating a \emph{rule}; using more than one test is not inherently
 incompatible with a specified eligible fraction.
+Proposition~\ref{tw:calibration} proves existence and uniqueness of this
+calibration before any numerical root finding is used.
 
 \subsection{Interpret the population model and the testing process}
 
@@ -370,6 +402,9 @@ dependence and administration history; practice and coaching can also
 change score distributions \citep{hausknecht2007}. An analysis should
 calibrate the procedure actually used, including its attempts, stopping
 rule, and accepted instruments.
+Proposition~\ref{tw:attempts} proves the bounds and independent-attempt
+formula and gives an explicit selection example showing why a population
+correlation need not survive conditioning on selection.
 
 Towers was right to ask how multiple admission routes affect eligibility,
 and right to withdraw a faulty calculation. A defensible replacement
@@ -426,8 +461,10 @@ at the intended cutoff.
 Equal weighting at the boundary includes a full contribution from the
 node at \(Q\). Viewed as midpoint quadrature, its first cell begins at
 \(Q-h/2=Q-0.25\). The effective lower boundary is therefore shifted
-downward. The finite upper boundary and ordinary quadrature error add
-smaller discrepancies in these examples. If IQ scores were explicitly
+downward. Numerical comparisons attribute smaller discrepancies to the finite
+upper boundary and ordinary quadrature error in these examples; this is a
+numerical error comparison, not a certified integration-error bound.
+If IQ scores were explicitly
 rounded to integers before classification, a separate rounding rule
 would be needed; a quarter-point grid shift cannot simply be assumed to
 be that rule.
@@ -462,6 +499,8 @@ For exact nominal percentiles, use \cref{tab:equal-cutoffs}; for actual
 continuous integer cutoffs, use \cref{tab:integer-cutoffs}. Using the
 grid's own marginal denominator gives approximately 31.51\%, 15.74\%,
 and 7.81\%, a third, internally defined approximation.
+Proposition~\ref{tw:grid} proves what the finite grid normalizes, explains
+the shifted midpoint boundary and supplies explicit error decomposition.
 
 \section{Reproducibility and numerical checks}\label{sec:reproduction}
 
@@ -481,7 +520,8 @@ This follows by integrating the Gaussian probability's derivative with
 respect to its correlation, starting at independence. Checks also cover
 symmetry, probability bounds, the original mixed-case union violation,
 the binary phi coefficient, the calibrated OR threshold, and reproduction
-of the follow-up's grid.
+of the follow-up's grid. Proposition~\ref{tw:plackett} gives the full
+differentiation and integration proof, including its domination argument.
 
 The CSV files contain unrounded model calculations to complement the
 rounded display tables. Run \texttt{make check} from this analysis folder;
@@ -492,10 +532,10 @@ the chosen correlation.
 \section{Expanded verification results and limits}\label{sec:verification}
 
 The original proof selected only \texttt{Admission\_Core}. The expanded
-implementation also puts \texttt{Normal\_Model}, \texttt{Towers\_Engine},
-and the \texttt{Towers\_Demo} main procedure in SPARK, apart from small
-explicit numerical completions. Parsing and CSV/file output are isolated
-in \texttt{Towers\_IO}, with external state modeled in its SPARK interface.
+SPARK implementation includes \texttt{Normal\_Model}, \texttt{Towers\_Engine}
+and the main procedure \texttt{Towers\_Demo}, with small numerical completions
+explicitly excluded. The unit \texttt{Towers\_IO} isolates parsing and
+CSV/file output; its SPARK interface models the external state.
 The proof project now enumerates all thirteen source files, including the
 trusted I/O completion. Turning an aspect on is a language-coverage change;
 the recorded native proof results below provide the separate verification evidence.
@@ -584,13 +624,17 @@ marginal \(p=1/33{,}000\), this is at most approximately
 \(3.37\times10^{-11}\); the checked changes are smaller. This accounts
 only for quantization. Raw floating union and conditional values are
 retained alongside the exact-core results.
+Proposition~\ref{tw:quantization} proves the perturbation inequality and
+its displayed worst-case numerical substitution.
 
 \subsection{Five explicit contracts per subprogram}
 
-Every current SPARK function and procedure, including local and Ghost
-helpers and trusted interfaces, has at least five explicit entries.
-This project inventories 53 functions and 46 procedures; the full repository has
-164 subprograms and 923 entries, including both negative controls.
+The retained five-contract campaign inventories at least five explicit entries
+for every SPARK function and procedure it covers, including local and Ghost
+helpers and trusted interfaces. That dated inventory records 53 functions and
+46 procedures in this project, and 164 subprograms and 923 entries across the
+then-current repository, including both negative controls. These are historical
+source-pinned totals, rather than a fresh inventory of the revised report tree.
 The audit counts top-level \texttt{Pre}/\texttt{Post} conjuncts,
 \texttt{Contract\_Cases} alternatives and explicit
 \texttt{Global}/\texttt{Depends} aspects. Mode flags, subtype declarations,
@@ -684,13 +728,15 @@ not random independence. Wilson intervals describe simulation uncertainty
 under the model; rare events at this sample size cannot establish extreme-tail
 psychometric frequencies.
 
-All current Python files import Deal. Each named function, including tests,
-fixtures and evidence tools, carries at least five distinct Deal decorators. The final repository-wide
-inventory has 28 files, 292 named functions, and 1,460 Deal decorators with
-zero gaps. All 27 positive files are lint-clean, and 343 tests pass in each mode.
-Coverage, static lint, the exact expected \texttt{DEL012} negative control,
-runtime/property tests, numerical scripts and historical-source audits pass normally
-and optimized. CLI contracts explicitly remain enabled under optimization.
+The retained 5 November Python inventory records 28 files, 292 named functions
+and 1,460 Deal decorators with zero gaps; its named functions, including tests,
+fixtures and evidence tools, carry at least five distinct decorators. All 27
+positive files were lint-clean, and 343 tests passed in each mode in that
+campaign. Coverage, static lint, the expected \texttt{DEL012} negative control,
+runtime/property tests, numerical scripts and historical-source audits passed
+normally and optimized. CLI contracts remained enabled under optimization.
+These historical counts do not substitute for running the current repository's
+required gates or establish their present totals.
 
 The scoped, version-pinned symbolic gate proves three correct theorems and rejects
 the unchanged negative fixture with an actual counterexample. Of seven postconditions,
@@ -770,9 +816,16 @@ draws under the stated mathematical model. The repository preserves source
 and evidence history, but not a complete prompt/tool transcript, exact
 per-line authorship, or an AI-contribution percentage. Those details cannot
 be reconstructed reliably and have not been invented. The disclosure is
-current through 5 November 2026.
+current through 15 November 2026. The present revision adds written proofs
+and a claim register; it does not claim a new native SPARK campaign.
+
+\clearpage
+\input{../../reporting/proof_foundations}
+\input{../../reporting/statistical_methods}
+\input{proofs_towers}
+\input{claimmap_towers}
 
 \clearpage
 \bibliographystyle{plainnat}
-\bibliography{references}
+\bibliography{references,simulation_references}
 \end{document}

@@ -55,4 +55,4 @@ From the repository root, regenerate all three experiments, tables, PDFs and ren
 .venv/bin/python -m reporting.simulate --pdf
 ```
 
-See the [shared Dask workflow](../../reporting/README.md) for seeds, chunk layout, dependency versions, contracts and verification scope. With the generated data already present, `make simulation-pdf` in this directory rebuilds only this report using XeLaTeX. Historical evidence and the existing main report remain unchanged.
+See the [shared Dask workflow](../../reporting/README.md) for seeds, chunk layout, dependency versions, contracts and verification scope. With the generated data already present, `make simulation-pdf` in this directory rebuilds only this report using XeLaTeX. The main and simulation reports both include referenced working proofs and claim/evidence maps. From the repository root, `make proof-reports PYTHON=.venv/bin/python` rebuilds all six proof-complete reports and records the document revision separately, preserving the original numerical campaign and historical evidence.

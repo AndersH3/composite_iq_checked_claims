@@ -23,3 +23,7 @@ simulations:
 .PHONY: library
 library:
 	bash scripts/check_library_layout.sh
+
+.PHONY: proof-reports
+proof-reports:
+	$(PYTHON) -m reporting.rebuild_proofs

@@ -6,7 +6,7 @@
 
 \usepackage[margin=16mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
 \usepackage{fontspec}
-\usepackage{mathtools}
+\usepackage{mathtools,amsthm}
 \usepackage{unicode-math}
 \setmainfont{TeX Gyre Pagella}
 \setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
@@ -16,6 +16,7 @@
 \usepackage{tabularray}
 \UseTblrLibrary{booktabs}
 \usepackage{booktabs}
+\usepackage{longtable,array}
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{scrlayer-scrpage}
@@ -33,10 +34,16 @@
 \usepackage[nameinlink,noabbrev]{cleveref}
 
 \DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\SD}{SD}
 \DeclareMathOperator{\Corr}{Corr}
 \newcommand{\E}{\operatorname{E}}
 \newcommand{\T}{\mathsf{T}}
 \newcommand{\given}{\,\vert\,}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
 \setlength{\emergencystretch}{1.5em}
 \setlist[itemize]{leftmargin=*,itemsep=2pt,topsep=3pt}
 \setkomafont{disposition}{\normalfont\sffamily\bfseries}
@@ -51,7 +58,7 @@
 \title{Combining IQ Scores}
 \subtitle{Analysis and a corrected statistical treatment}
 \author{}
-\date{5 November 2026}
+\date{15 November 2026}
 
 \begin{document}
 \maketitle
@@ -74,6 +81,13 @@ with OpenAI Codex and collaborating AI agents, including its analysis,
 replacement text, code and verification workflow. Provenance details, human
 involvement and limitations are disclosed in \cref{sec:ai-disclosure}.
 
+\noindent\textbf{Proof and evidence convention.} Mathematical deductions
+are proved in \cref{sec:proof-foundations,hfpr:appendix} and indexed in
+\cref{hfmap:main}. Model assumptions, computed decimal approximations,
+historical software observations and empirical/normative citations are
+identified separately. Quantile-dependent decimals are reproducible
+approximations; no certified final-digit enclosure for the normal quantile
+is claimed.
 
 \section{Analysis of the original article}\label{sec:analysis}
 
@@ -83,7 +97,7 @@ covariances and applies it to combinations of IQ scores. The basic identity
   \Var(X+Y)=\Var(X)+\Var(Y)+2\operatorname{Cov}(X,Y)
   \label{eq:variance-sum}
 \end{equation}
-is correct. It determines the variance of a sum without requiring normality.
+is correct, by \cref{hfpr:standardization}. It determines the variance of a sum without requiring normality.
 The principal weaknesses arise when a standardized sum is assigned an extreme
 population percentile and used as a qualifying score.
 
@@ -92,10 +106,13 @@ population percentile and used as a qualifying score.
   27 selected high scorers do not establish the correlations in the population
   used to standardize the tests. Selection can change the relationships, and
   the appropriate correction depends on how selection occurred
-  \citep{sackett2000}.
+  \citep{sackett2000}; \cref{hfpr:selection} supplies an explicit
+  mathematical counterexample to equality of selected and population
+  correlations.
   \item \textbf{Distributional assumptions.} Mean zero and variance one do
   not establish a normal distribution. A one-in-a-million upper-tail claim
-  requires additional justification for the tail model.
+  requires additional justification for the tail model
+  (\cref{hfpr:normality}).
   \item \textbf{Numerical correction.} The 100-test entry should be about
   3.69, rather than 3.71, standard deviations. The more accurate normal
   quantile also changes some final digits elsewhere; for example, the
@@ -146,6 +163,8 @@ For example, a score of 160 on a scale with mean 100 and standard deviation
 15 corresponds to \(z=4\). The same numerical score on a scale with standard
 deviation 16 corresponds to \(z=3.75\). These scores should be standardized
 before they are combined.
+These affine and arithmetic claims are proved in
+\cref{hfpr:standardization}.
 
 \subsection{Standardize the weighted composite}
 
@@ -164,6 +183,9 @@ With the correct population parameters, this composite has mean zero and
 variance one. This statement requires finite variances, but does not require
 normality. When the parameters are estimated, their uncertainty affects the
 calibration of the composite.
+The exact population statements follow from
+\cref{hfpr:standardization}; replacing their inputs by estimates does
+not automatically preserve those identities.
 
 For an equally weighted battery of \(n\geq2\) tests, write \(\bar z\) for the
 average standardized score and \(\bar r\) for the average correlation across
@@ -195,6 +217,9 @@ Identical pairwise correlations are unnecessary for
 \cref{eq:mean-variance}; their average is sufficient for this particular
 equal-weight composite. The full matrix remains relevant to other weighting
 schemes and to understanding the battery.
+\Cref{hfpr:equal-weights} proves these formulas, the necessary PSD
+admissibility bounds and the unequal-weight qualification. A positive
+variance is required; an arbitrary proposed correlation matrix must be PSD.
 
 An IQ-style reporting scale with mean 100 and standard deviation \(s\) can
 be defined by
@@ -219,6 +244,8 @@ For example, three scores averaging 160, each on an SD-16 scale, produce
 \end{equation}
 This is a score on the specified composite. Interpreting it as a measure of
 general intelligence requires evidence about what the composite measures.
+\Cref{hfpr:numerics} gives exact radical expressions and rational bounds
+for this example's displayed rounding.
 
 \subsection{Separate standardization from percentile estimation}
 
@@ -227,6 +254,9 @@ and variance one do not make a distribution normal. Joint multivariate
 normality of the component scores is a sufficient condition for a fixed
 linear composite to be normal. Normal distributions for the individual
 tests alone are insufficient.
+\Cref{hfpr:normality} proves the sufficient condition and gives a
+counterexample with normal marginals, the same correlation, and a
+nonnormal sum.
 
 If a standard-normal distribution is justified for the composite, its
 percentile is \(100\Phi(Z_C)\), where \(\Phi\) is the standard-normal
@@ -244,6 +274,8 @@ Thus the model-based 99.9999th-percentile threshold is
 The quantile can be reproduced in R with
 \texttt{qnorm(1e-6, lower.tail = FALSE)}; the official documentation defines
 the normal quantile function and its upper-tail option \citep{rnormal}.
+The event-equivalence proof is in \cref{hfpr:thresholds}; exact
+expressions and numerical-error propagation are in \cref{hfpr:numerics}.
 
 For \(\bar r=0.60\), the thresholds are shown in \cref{tab:thresholds}.
 
@@ -297,6 +329,8 @@ approximately 158.91. This is a feature of the assumed sequence of batteries
 and its threshold; it is not a ceiling on possible composite scores. Adding
 tests can also change the average correlation, so the fixed-correlation
 limit should not be treated as a universal rule.
+\Cref{hfpr:thresholds} proves the limit, monotonicity, an explicit
+finite-size error bound and the absence of a score ceiling.
 
 The choice of correlation matters substantially. For three tests, an
 average correlation of 0.90 raises the required average SD-16 component
@@ -316,10 +350,13 @@ selection mechanism and the information available about the unrestricted
 population; there is no universal adjustment. \citet{sackett2000} explain
 why range-restriction corrections depend on those details. A small selected
 sample cannot directly establish a one-in-a-million population frequency.
+\Cref{hfpr:selection} proves these logical limitations by explicit
+selection and finite-sample examples.
 
 The scoring procedure also matters. A fixed battery, the best few results
 from many attempts, and a rule that keeps adding tests until someone
-qualifies have different score distributions. Each procedure requires
+qualifies can have different score distributions. \Cref{hfpr:selection}
+proves this possibility and also shows why dependence matters. Each procedure requires
 calibration for the rule actually used. Repeated administrations can
 introduce practice effects, as documented by \citet{hausknecht2007}.
 Repeated or overlapping tests should not be counted as fresh independent
@@ -332,6 +369,9 @@ reference population. It does not, by itself, provide an individual
 confidence interval, separate general ability from shared methods, or
 establish measurement precision at extreme scores. Those questions require
 an appropriate measurement model and supporting data.
+The nonidentification claim is proved in \cref{hfpr:nonidentification};
+\cref{hfpr:factor} supplies the contrasting population and conditional
+variances within a specified model.
 
 A defensible report should identify the battery, norms, weights, estimated
 correlations, and uncertainty. Direct composite norms should be used when
@@ -376,14 +416,18 @@ These identities follow from Gaussian conditioning. In particular,
 \(\operatorname{Cov}(G,\bar Z)=\sqrt{\rho}\) and
 \(\Var(\bar Z)=\rho+(1-\rho)/n\); the residual contrasts contain no
 additional information about \(G\) under this model.
+\Cref{hfpr:factor} gives the complete Gaussian residual proof, including
+conditioning on all score contrasts, rather than only the mean.
 
-For three tests with \(\rho=0.60\), a composite at \(Z_C=4.7534\) has
+For three tests with \(\rho=0.60\), a composite at \(Z_C=q\approx4.7534\) has
 conditional mean \(G\) of approximately 4.30 and conditional standard
 deviation approximately 0.43. On a hypothetical latent scale with mean 100
 and SD 16, these become a mean of approximately 168.79 and a standard
 deviation of 6.82. The composite's reporting-scale value is approximately
 176.05. The two values answer different questions, even in this unusually
 simple model.
+The exact expressions underlying these approximations are derived in
+\cref{hfpr:numerics}.
 
 The illustration is a mathematical counterexample to treating a
 standardized composite as automatically identical to a latent-ability
@@ -399,9 +443,21 @@ and the numerical entries in this source, and verifies the worked examples.
 It uses the upper-tail probability directly through
 \texttt{scipy.stats.norm.isf(1e-6)}. The mathematical results do not depend
 on the choice of software.
+These checks reproduce numerical approximations; they do not certify a
+real-arithmetic enclosure for \(q\) or independently prove the accuracy
+of SciPy. \Cref{hfpr:numerics} separates exact formulas and rounding
+certificates from these backend-dependent approximations.
 
 \section{Expanded software verification and its limits}
 \label{sec:verification}
+
+\textbf{Historical source context.} This section describes the source-pinned
+4--5 November 2026 campaigns linked below. Counts and ``analyzed'' status
+refer to those recorded snapshots; they are not a claim that this report's
+15 November mathematical additions reran GNATprove or recounted the
+present repository. The immutable evidence supplies the support for these
+software observations. The mathematical proofs added in this revision
+are separate from native SPARK checks.
 
 The original verification selected only the arithmetic core. That boundary
 was broader than necessary: the calculation and simulation drivers and
@@ -422,9 +478,9 @@ adds fresh Python verification and re-audits these unchanged native records;
 it does not claim new prover invocations. Earlier 47-check and 110-test results remain
 immutable historical snapshots, not counts for the expanded implementation.
 
-\subsection{What is now analyzed}
+\subsection{What the expanded campaign analyzed}
 
-SPARK now covers the inverse-survival bisection loop, exact 64-bit random
+In that expanded source snapshot, SPARK covers the inverse-survival bisection loop, exact 64-bit random
 state recurrence, open-unit conversion, Box--Muller composition, common-factor
 simulation, signed and squared accumulations, event-count updates, and both
 main procedures. Random generation uses procedures with explicit state
@@ -463,11 +519,15 @@ launcher exited successfully.
 
 \subsection{Trusted numerical and I/O boundaries}
 
-Only five small numerical completions in \texttt{Normal\_Support} remain
-off: \texttt{Square\_Root}, \texttt{Survival},
-\texttt{Check\_Inverse\_Bracket}, \texttt{Rare\_Quantile}, and
-\texttt{Checked\_Radius}. Their bodies check each promised normal-return
-range or relationship and raise on rejection; they do not clamp values.
+The campaign leaves five numerical completions outside SPARK in
+\texttt{Normal\_Support}:
+\begin{itemize}
+\item \texttt{Square\_Root} and \texttt{Survival};
+\item \texttt{Check\_Inverse\_Bracket} and \texttt{Rare\_Quantile};
+\item \texttt{Checked\_Radius}.
+\end{itemize}
+Their bodies check each promised normal-return range or relationship and
+raise on rejection; they do not clamp values.
 The foreign C \texttt{erfc} import and \texttt{Report\_IO}'s parsing,
 formatting, output, and exceptions remain trusted. The installed Ada
 elementary-function specifications are SPARK-compatible, but their limited
@@ -483,10 +543,11 @@ eliminate trust in off-mode completions or library contracts.
 
 \subsection{Five explicit contracts per subprogram}
 
-Every current SPARK function and procedure, including local and Ghost
-helpers and trusted interfaces, has at least five explicit entries.
-This project inventories 35 functions and 28 procedures; the full repository has
-164 subprograms and 923 entries, including both negative controls.
+Every SPARK function and procedure in the campaign's audited snapshot,
+including local and Ghost helpers and trusted interfaces, has at least
+five explicit entries. That snapshot inventories 35 functions and 28
+procedures in this project; its repository inventory has 164 subprograms
+and 923 entries, including both negative controls.
 The audit counts top-level \texttt{Pre}/\texttt{Post} conjuncts,
 \texttt{Contract\_Cases} alternatives and explicit
 \texttt{Global}/\texttt{Depends} aspects. Mode flags, subtype declarations,
@@ -574,11 +635,13 @@ pass. Numerical equivalence of the core's evaluation orders is checked
 against the report formulas; bit identity is claimed only for the CSV
 comparisons.
 
-All 28 current Python files import Deal. All 292 named functions, including tests
-and evidence tools, carry at least five distinct decorators: 1,460 in total, with
-zero gaps. All 27 positive files are lint-clean; the negative fixture gives exactly
-the expected \texttt{DEL012}. All 343 tests, numerical scripts, contract coverage
-and historical-source audits pass normally and under optimization; CLI contracts remain enabled.
+In the recorded Python snapshot, all 28 Python files import Deal. All 292
+named functions, including tests and evidence tools, carry at least five
+distinct decorators: 1,460 in total, with zero gaps. All 27 positive files
+are lint-clean; the negative fixture gives exactly the expected
+\texttt{DEL012}. All 343 tests, numerical scripts, contract coverage and
+historical-source audits pass in the recorded normal and optimized runs;
+CLI contracts remain enabled.
 The version-pinned symbolic gate proves three correct theorems and rejects the
 unchanged negative fixture with a counterexample. Six postconditions prove and one
 fails as expected, with no skips. Its integer-type model preserves Boolean subtype
@@ -650,10 +713,15 @@ draws under the stated mathematical model. The repository preserves source
 and evidence history, but not a complete prompt/tool transcript, exact
 per-line authorship, or an AI-contribution percentage. Those details cannot
 be reconstructed reliably and have not been invented. The disclosure is
-current through 5 November 2026.
+current through 15 November 2026.
 
 \clearpage
+\input{../../reporting/proof_foundations}
+\input{proofs_hoeflin}
+\input{../../reporting/statistical_methods}
+\input{claimmap_hoeflin}
+\clearpage
 \bibliographystyle{plainnat}
-\bibliography{references}
+\bibliography{simulation_references,references}
 
 \end{document}

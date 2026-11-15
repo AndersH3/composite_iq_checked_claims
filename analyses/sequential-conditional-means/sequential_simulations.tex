@@ -1,7 +1,8 @@
 % !TeX program = xelatex
 % Standalone simulation report.  Mathematical exposition is handwritten;
 % every numerical table and plotted coordinate is produced by the shared
-% Dask pipeline.  The original derivation and its evidence stay unchanged.
+% Dask pipeline.  The original numerical experiment and evidence are retained;
+% the mathematical exposition has a separate proof-revision manifest.
 \input{../../reporting/simulation_style}
 \hypersetup{pdftitle={Sequential Conditional Means: Simulation Methods and Results},
   pdfsubject={Dask experiments with population and conditional actual-score means}}
@@ -39,7 +40,16 @@ The requester specified the questions and required separate simulation
 reports. No new participant data were collected. Independent human peer
 review and empirical psychometric validation are not claimed.
 
+\noindent\textbf{Proof and evidence convention.} The Gaussian assumptions,
+the reporting scale and the experiment design are stated inputs. Every
+deductive target and uncertainty statement has a proof in this report;
+Section~\ref{sec:seq-sim-proof-map} links the claim groups to those proofs
+and the established theorems they use. Observed numerical values and
+software-check counts are finite reproduction records, with their scope
+specified in Section~\ref{seqp:record-scope}.
+
 \section{The questions answered by the experiments}
+\label{sec:seq-sim-questions}
 
 The companion analysis studies an inclusive average: every observed
 starting score contributes to the numerator and denominator. Write
@@ -70,7 +80,16 @@ with the finite formulas. They do not regard a narrow Monte Carlo
 confidence interval for a simulated centre as a narrow prediction
 interval for a person's actual future score mean.
 
+The three means are derived in Proposition~\ref{seqp:recursion}.
+Proposition~\ref{seqp:variance-decomposition} separates their sources of
+variance. The distinction between outcome spread and estimation uncertainty
+follows from Proposition~\ref{sm:normal-sample} and
+Corollary~\ref{sm:sd-interval}.
+
+\input{../../reporting/proof_foundations}
+
 \section{The Gaussian model and its exact target values}
+\label{sec:seq-sim-model}
 
 \subsection{A model with a common factor}
 The experiments assume the jointly Gaussian construction
@@ -87,6 +106,10 @@ cross-covariance are established reference results
 \citep[Chapter 3, especially Theorems 3.3.1--3.3.2]{gallager2013}.
 The companion derivation proves their particular conditional-regression
 consequences, including the choice of continuous conditional version.
+For self-contained proofs here, see the Gaussian foundation in
+Proposition~\ref{pf:gaussian} and the full vector/residual derivation in
+Proposition~\ref{seqp:conditioning}. The finite and infinite-size
+correlation domains are proved in Proposition~\ref{seqp:domain}.
 
 Put
 \[
@@ -107,6 +130,8 @@ has coefficient \(c/[1+(s-1)c]\) on the sum of that prefix. If the first
 \(ra+(j-1)b_r=ra[d_r+(j-1)c]/d_r\). Substituting it in the regression
 formula gives \(b_r\) again. Mathematical induction therefore proves the
 constant-prediction assertion and \eqref{eq:seq-sim-centre}.
+Proposition~\ref{seqp:recursion} supplies the regression coefficient's
+matrix proof as well as the induction and Gaussian aggregate-law proof.
 
 For an actual inclusive mean \(C_{r,k}\), the target variances are
 \begin{align}
@@ -122,6 +147,8 @@ corresponding standardized mean; an IQ standard deviation is 15 times
 the standardized SD. Variances
 therefore multiply by \(15^2\), rather than by 15. The phrase
 ``conditional SD'' in the tables always refers to actual outcomes.
+These transformations follow from the affine moment proof in
+Propositions~\ref{pf:moments} and \ref{seqp:recursion}.
 
 \subsection{Generating the conditional future scores directly}
 The new implementation samples every finite future residual component
@@ -174,6 +201,7 @@ bilinearity, rather than results inferred from a successful simulation
 \citep[Theorem 1.6.1 and Section 2.2]{durrett2019}.
 
 \section{Dask implementation and the experimental design}
+\label{sec:seq-sim-design}
 
 Dask arrays express the normal draws and vector arithmetic in chunks of
 \SimChunk{} observations. Dask reductions calculate counts, means and
@@ -191,6 +219,8 @@ Each case uses \SimReplicates{} recorded seed configurations, with
 \SimPooledTrials{} observations per case. Pooling combines sample counts,
 sums and squared sums before forming the overall variance; simply
 averaging replicate SDs would not generally produce the pooled SD.
+The exact within/between-sample identity establishing this fact is proved
+in Proposition~\ref{sm:pooling}.
 The raw replicate results remain available so the pooled estimate does
 not hide replicate-to-replicate differences.
 
@@ -213,6 +243,7 @@ not of distinct people or independent comparisons between cases, and not
 a count of all underlying normal variates.
 
 \section{Finite-count means: the starting scores remain in the average}
+\label{sec:seq-sim-means}
 
 The following table compares observed IQ centres with
 \eqref{eq:seq-sim-centre} and the population centre of 100. Its Monte Carlo
@@ -220,6 +251,9 @@ standard error quantifies uncertainty of the simulated mean estimate.
 For a theoretical actual-outcome variance \(v\) on the standardized
 scale, that standard error in IQ units is \(15\sqrt{v/M}\), as proved
 in the common statistical-methods appendix.
+In particular, the actual-outcome SD divided by this estimation SE is
+\(\sqrt M\) when \(v>0\); increasing simulation size improves the
+estimate without narrowing the actual-outcome distribution.
 
 \input{simulation-data/means.tex}
 
@@ -230,6 +264,11 @@ because the inclusive average still gives positive weight to the initial
 \(1675/12\), about 139.58. With three it is \(20450/143\), about 143.01.
 These values differ because the observed evidence differs, not because
 the population mean of the standardized tests has changed.
+For the strict comparison with the subsequent prediction, subtracting
+\(b_r\) from \(B_{r,k}\) gives
+\(ra(1-c)/(Nd_r)>0\) at the selected positive \(a\) and \(c<1\).
+Section~\ref{seqp:exact-grid} proves the displayed fractions and target
+roundings.
 
 The largest absolute discrepancy of a pooled empirical centre from its
 theoretical value is \SimMaxMeanSE{} theoretical standard errors. This
@@ -241,6 +280,7 @@ also does not make extra displayed decimals meaningful measures of
 psychometric precision.
 
 \section{Finite-count standard deviations and what they measure}
+\label{sec:seq-sim-sds}
 
 \input{simulation-data/sds.tex}
 
@@ -254,6 +294,8 @@ same spread. The largest relative discrepancy of a pooled empirical SD
 from its analytic target in the recorded grid is
 \SimMaxSDRelativeError{}; the generated tables retain the individual
 values, so this maximum is not a substitute for inspecting the rows.
+Proposition~\ref{seqp:variance-decomposition} proves the experiment
+distinction, including the variance that varying the initial block adds.
 
 % Only Dask-generated coordinates enter these charts.  The lines join the
 % three analytic finite-count values; they are not an additional numerical
@@ -319,6 +361,8 @@ millions of simulated batteries can be very precise while an individual
 future battery remains spread around it with SD about 5.45. The fixed
 list \(150,150,137.5,\ldots,137.5\) has exactly that conditional centre
 as its arithmetic mean, with no Monte Carlo randomness of its own.
+Section~\ref{seqp:exact-grid} gives exact certificates for these decimal
+roundings and every analytic target in the generated tables.
 
 The generated SD intervals are 95\% chi-square confidence intervals for
 the unknown SD of an actual-outcome distribution, based on the observed
@@ -328,8 +372,11 @@ The exact interval formula and its Gaussian sampling assumptions are
 proved in the statistical-methods appendix. Comparing many intervals
 also creates a multiple-comparison issue: nominal 95\% rowwise coverage
 does not imply 95\% simultaneous coverage of every row.
+Corollary~\ref{sm:sd-interval} and Proposition~\ref{sm:multiple} prove precisely
+the rowwise interval and multiple-row coverage statements.
 
 \subsection{Why one SD decreases while the other increases}
+\label{sec:seq-sim-monotonicity}
 The population variance can be written
 \(c+(1-c)/(r+k)\), so it strictly decreases in \(k\) at \(c=0.6\).
 The conditional variance increases for the selected correlation. To see
@@ -355,6 +402,11 @@ particular inclusive average even while averaging a random whole battery
 reduces its population spread.
 
 \section{The infinite-count cases}
+\label{sec:seq-sim-limits}
+
+Keeping \(c\) fixed while \(k\) grows requires \(0\leq c\leq1\),
+as proved in Proposition~\ref{seqp:domain}. The chosen \(c=3/5\)
+satisfies this condition at every finite size.
 
 The predicted value of each subsequent score is already constant; it
 does not drift with the prediction index. Increasing \(k\) instead
@@ -405,8 +457,13 @@ More distinct observed initial scores reduce remaining common-factor
 uncertainty through \(\tau_r^2=(1-c)/d_r\). Equal observed values do
 not mean that a single observation was simply duplicated: the model
 assumes distinct tests with distinct residual terms.
+Explicitly,
+\(\tau_{r+1}^2-\tau_r^2=-c(1-c)/(d_rd_{r+1})<0\) for \(0<c<1\),
+since \(d_{r+1}=d_r+c\). This proves the decrease in remaining factor
+uncertainty at the selected correlation.
 
 \section{Replication and comparison with the retained Ada run}
+\label{sec:seq-sim-replication}
 
 \input{simulation-data/replicates.tex}
 
@@ -449,6 +506,7 @@ checks cannot turn Monte Carlo agreement into universal formal proof.
 Historical proof and simulation records remain immutable.
 
 \section{What the results establish and what remains assumed}
+\label{sec:seq-sim-interpretation}
 
 The recorded calculations make the meaning of the three averages
 concrete. Whole batteries centre at the population mean. Conditioning on
@@ -469,7 +527,13 @@ convention and the common-factor interpretation are stated model choices.
 Their appropriateness for an actual testing situation requires evidence
 outside this simulation study.
 
+Section~\ref{seqp:record-scope} separates the mathematical deductions
+from the recorded outputs and explains why finite computational agreement
+cannot establish the model's validity for real test data.
+
 \input{../../reporting/statistical_methods}
+\input{proof_completion_sequential}
+\input{claimmap_sequential_simulations}
 
 \bibliographystyle{plainnat}
 \bibliography{simulation_references}
