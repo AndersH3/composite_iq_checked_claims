@@ -418,10 +418,15 @@ Proof.
  destruct (Req_EM_T y 0) as [Hy|Hy].
  - subst y.
    assert (Hx:x<>0) by (destruct Hneq; intuition).
-   assert (Hpos:0<(a*x+c*0)*(a*x+c*0)) by nra.
-   assert (Hresult:0<(a*x+c*0)*(a*x+c*0)* /a).
+   set (z:=a*x+c*0).
+   assert (Hz:z<>0).
+   { unfold z; nra. }
+   assert (Hpos:0<z*z) by nra.
+   assert (Hresult:0<z*z* /a).
    { apply Rmult_lt_0_compat; assumption. }
-   nra.
+   subst z.
+   replace (cov2_det a b c * /a * 0 * 0) with 0 by ring.
+   lra.
  - assert (Hsqy:0<y*y) by nra.
    assert (Hp:0<cov2_det a b c* /a).
    { apply Rmult_lt_0_compat; assumption. }
