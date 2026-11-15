@@ -834,3 +834,968 @@ Proof.
  lra.
 Qed.
 
+
+(* D031x — general finite covariance Cauchy–Schwarz and finite-score
+   linear-regression infrastructure; no new integration recursion. *)
+
+(**
+ [finite_cross_scale_first] (theorem) — Weighted cross-moments are homogeneous in their first centered score.
+ Mathematical meaning: Weighted cross-moments are homogeneous in their first centered score.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b k:R), finite_weighted_cross xs w (fun x=>k*f x) g (k*a) b=k*finite_weighted_cross xs w f g a b.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_scale_first :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b k:R), finite_weighted_cross xs w (fun x=>k*f x) g (k*a) b=k*finite_weighted_cross xs w f g a b.
+Proof.
+ intros A xs w f g a b k; unfold finite_weighted_cross,finite_weighted_score; rewrite <- finite_sum_scale; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(**
+ [finite_cross_scale_second] (theorem) — Weighted cross-moments are homogeneous in their second centered score.
+ Mathematical meaning: Weighted cross-moments are homogeneous in their second centered score.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b k:R), finite_weighted_cross xs w f (fun x=>k*g x) a (k*b)=k*finite_weighted_cross xs w f g a b.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_scale_second :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b k:R), finite_weighted_cross xs w f (fun x=>k*g x) a (k*b)=k*finite_weighted_cross xs w f g a b.
+Proof.
+ intros A xs w f g a b k; rewrite finite_weighted_cross_symmetry; rewrite (finite_cross_scale_first A xs w g f b a k); rewrite finite_weighted_cross_symmetry; reflexivity.
+Qed.
+
+(**
+ [finite_cross_shift_first] (theorem) — Matched translation of a first score and its reference leaves cross-moments unchanged.
+ Mathematical meaning: Matched translation of a first score and its reference leaves cross-moments unchanged.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b d:R), finite_weighted_cross xs w (fun x=>f x+d) g (a+d) b=finite_weighted_cross xs w f g a b.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_shift_first :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b d:R), finite_weighted_cross xs w (fun x=>f x+d) g (a+d) b=finite_weighted_cross xs w f g a b.
+Proof.
+ intros A xs w f g a b d; unfold finite_weighted_cross,finite_weighted_score; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(**
+ [finite_cross_shift_second] (theorem) — Matched translation of a second score and its reference leaves cross-moments unchanged.
+ Mathematical meaning: Matched translation of a second score and its reference leaves cross-moments unchanged.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b d:R), finite_weighted_cross xs w f (fun x=>g x+d) a (b+d)=finite_weighted_cross xs w f g a b.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_shift_second :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b d:R), finite_weighted_cross xs w f (fun x=>g x+d) a (b+d)=finite_weighted_cross xs w f g a b.
+Proof.
+ intros A xs w f g a b d; rewrite finite_weighted_cross_symmetry; rewrite finite_cross_shift_first; rewrite finite_weighted_cross_symmetry; reflexivity.
+Qed.
+
+(**
+ [finite_cross_add_first] (theorem) — First-coordinate cross-moment additivity permits decomposition of composite test scores.
+ Mathematical meaning: First-coordinate cross-moment additivity permits decomposition of composite test scores.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w (fun x=>f x+g x) h (a+b) c=finite_weighted_cross xs w f h a c+finite_weighted_cross xs w g h b c.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_add_first :
+ forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w (fun x=>f x+g x) h (a+b) c=finite_weighted_cross xs w f h a c+finite_weighted_cross xs w g h b c.
+Proof.
+ intros A xs w f g h a b c; unfold finite_weighted_cross; rewrite <- finite_weighted_score_add; unfold finite_weighted_score; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(**
+ [finite_cross_add_second] (theorem) — Second-coordinate cross-moment additivity permits decomposition of composite test scores.
+ Mathematical meaning: Second-coordinate cross-moment additivity permits decomposition of composite test scores.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w f (fun x=>g x+h x) a (b+c)=finite_weighted_cross xs w f g a b+finite_weighted_cross xs w f h a c.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_add_second :
+ forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w f (fun x=>g x+h x) a (b+c)=finite_weighted_cross xs w f g a b+finite_weighted_cross xs w f h a c.
+Proof.
+ intros A xs w f g h a b c; rewrite finite_weighted_cross_symmetry; rewrite (finite_cross_add_first A xs w g h f b c a); rewrite (finite_weighted_cross_symmetry A xs w g f b a); rewrite (finite_weighted_cross_symmetry A xs w h f c a); reflexivity.
+Qed.
+
+(**
+ [finite_cross_sub_first] (theorem) — Weighted cross-moments split over first-score differences, preserving reference differences.
+ Mathematical meaning: Weighted cross-moments split over first-score differences, preserving reference differences.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w (fun x=>f x-g x) h (a-b) c=finite_weighted_cross xs w f h a c-finite_weighted_cross xs w g h b c.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_sub_first :
+ forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w (fun x=>f x-g x) h (a-b) c=finite_weighted_cross xs w f h a c-finite_weighted_cross xs w g h b c.
+Proof.
+ intros A xs w f g h a b c; unfold finite_weighted_cross; rewrite <- finite_weighted_score_sub; unfold finite_weighted_score; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(**
+ [finite_cross_sub_second] (theorem) — Weighted cross-moments split over second-score differences, preserving reference differences.
+ Mathematical meaning: Weighted cross-moments split over second-score differences, preserving reference differences.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w f (fun x=>g x-h x) a (b-c)=finite_weighted_cross xs w f g a b-finite_weighted_cross xs w f h a c.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_sub_second :
+ forall (A:Type) (xs:list A) (w f g h:A->R) (a b c:R), finite_weighted_cross xs w f (fun x=>g x-h x) a (b-c)=finite_weighted_cross xs w f g a b-finite_weighted_cross xs w f h a c.
+Proof.
+ intros A xs w f g h a b c; rewrite finite_weighted_cross_symmetry; rewrite (finite_cross_sub_first A xs w g h f b c a); rewrite (finite_weighted_cross_symmetry A xs w g f b a); rewrite (finite_weighted_cross_symmetry A xs w h f c a); reflexivity.
+Qed.
+
+(**
+ [finite_loss_scale] (theorem) — Quadratic weighted prediction loss has degree-two homogeneity in score and reference.
+ Mathematical meaning: Quadratic weighted prediction loss has degree-two homogeneity in score and reference.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f:A->R) (a k:R), finite_weighted_loss xs w (fun x=>k*f x) (k*a)=k*k*finite_weighted_loss xs w f a.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_loss_scale :
+ forall (A:Type) (xs:list A) (w f:A->R) (a k:R), finite_weighted_loss xs w (fun x=>k*f x) (k*a)=k*k*finite_weighted_loss xs w f a.
+Proof.
+ intros A xs w f a k; unfold finite_weighted_loss; rewrite <- finite_sum_scale; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(**
+ [finite_loss_cross_scaled_polarization] (theorem) — The exact quadratic expansion of scaled composite-score loss separates individual losses and covariance.
+ Mathematical meaning: The exact quadratic expansion of scaled composite-score loss separates individual losses and covariance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b t:R), finite_weighted_loss xs w (fun x=>f x+t*g x) (a+t*b)=finite_weighted_loss xs w f a+2*t*finite_weighted_cross xs w f g a b+t*t*finite_weighted_loss xs w g b.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_loss_cross_scaled_polarization :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b t:R), finite_weighted_loss xs w (fun x=>f x+t*g x) (a+t*b)=finite_weighted_loss xs w f a+2*t*finite_weighted_cross xs w f g a b+t*t*finite_weighted_loss xs w g b.
+Proof.
+ intros A xs w f g a b t; rewrite finite_weighted_loss_polarization; rewrite (finite_cross_scale_second A xs w f g a b t); rewrite (finite_loss_scale A xs w g b t); ring.
+Qed.
+
+(**
+ [finite_cross_quadratic_psd] (theorem) — Nonnegative sample weights make every centered linear-combination loss nonnegative.
+ Mathematical meaning: Nonnegative sample weights make every centered linear-combination loss nonnegative.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b t:R), (forall x, In x xs -> 0<=w x) -> 0<=finite_weighted_loss xs w f a+2*t*finite_weighted_cross xs w f g a b+t*t*finite_weighted_loss xs w g b.
+ Premises and side conditions: Every outcome weight is nonnegative, with no normalization assumption.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_quadratic_psd :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b t:R), (forall x, In x xs -> 0<=w x) -> 0<=finite_weighted_loss xs w f a+2*t*finite_weighted_cross xs w f g a b+t*t*finite_weighted_loss xs w g b.
+Proof.
+ intros A xs w f g a b t Hw; rewrite <- finite_loss_cross_scaled_polarization; apply finite_weighted_loss_nonnegative; exact Hw.
+Qed.
+
+(**
+ [real_quadratic_psd_discriminant] (theorem) — A globally nonnegative quadratic must have nonpositive discriminant, yielding the real Gram determinant inequality.
+ Mathematical meaning: A globally nonnegative quadratic must have nonpositive discriminant, yielding the real Gram determinant inequality.
+ Exact checked proposition: forall a b c:R, 0<=b -> (forall t:R, 0<=a+2*t*c+t*t*b) -> c*c<=a*b.
+ Premises and side conditions: Requires nonnegative quadratic leading coefficient and nonnegativity for every scalar.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem real_quadratic_psd_discriminant :
+ forall a b c:R, 0<=b -> (forall t:R, 0<=a+2*t*c+t*t*b) -> c*c<=a*b.
+Proof.
+ intros a b c Hb Hq; destruct (Req_EM_T b 0) as [Hz|Hz].
+ - subst b; destruct (Req_EM_T c 0) as [Hc|Hc].
+   + subst c; nra.
+   + specialize (Hq (-(a+1)/(2*c))).
+     assert (Heq:a+2*(-(a+1)/(2*c))*c+(-(a+1)/(2*c))*(-(a+1)/(2*c))*0=-1) by (field; nra).
+     rewrite Heq in Hq; lra.
+ - assert (Hbpos:0<b) by lra.
+   specialize (Hq (-c/b)).
+   assert (Heq:a+2*(-c/b)*c+(-c/b)*(-c/b)*b=(a*b-c*c)/b) by (field; lra).
+   rewrite Heq in Hq; unfold Rdiv in Hq.
+   assert (Hi:0< /b) by (apply Rinv_0_lt_compat; exact Hbpos).
+   nra.
+Qed.
+
+(**
+ [finite_cross_cauchy_schwarz] (theorem) — The finite weighted Cauchy–Schwarz inequality holds for arbitrarily centered scores with nonnegative weights.
+ Mathematical meaning: The finite weighted Cauchy–Schwarz inequality holds for arbitrarily centered scores with nonnegative weights.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), (forall x, In x xs -> 0<=w x) -> finite_weighted_cross xs w f g a b*finite_weighted_cross xs w f g a b<=finite_weighted_loss xs w f a*finite_weighted_loss xs w g b.
+ Premises and side conditions: Requires nonnegative weight at each enumerated sample.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_cross_cauchy_schwarz :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), (forall x, In x xs -> 0<=w x) -> finite_weighted_cross xs w f g a b*finite_weighted_cross xs w f g a b<=finite_weighted_loss xs w f a*finite_weighted_loss xs w g b.
+Proof.
+ intros A xs w f g a b Hw; apply real_quadratic_psd_discriminant.
+ - apply finite_weighted_loss_nonnegative; exact Hw.
+ - intro t; apply finite_cross_quadratic_psd; exact Hw.
+Qed.
+
+(**
+ [finite_centered_variance_nonnegative] (theorem) — Every centered finite variance is nonnegative under nonnegative sample weights.
+ Mathematical meaning: Every centered finite variance is nonnegative under nonnegative sample weights.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f:A->R), (forall x, In x xs -> 0<=w x) -> 0<=finite_centered_cross xs w f f.
+ Premises and side conditions: Nonnegative finite weights.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_variance_nonnegative :
+ forall (A:Type) (xs:list A) (w f:A->R), (forall x, In x xs -> 0<=w x) -> 0<=finite_centered_cross xs w f f.
+Proof.
+ intros A xs w f Hw; rewrite finite_centered_cross_variance; apply finite_weighted_loss_nonnegative; exact Hw.
+Qed.
+
+(**
+ [finite_centered_variance_zero_iff_supported_constant] (theorem) — Zero centered variance occurs exactly when the score is constant at its weighted mean on positive-weight outcomes.
+ Mathematical meaning: Zero centered variance occurs exactly when the score is constant at its weighted mean on positive-weight outcomes.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f:A->R), (forall x, In x xs -> 0<=w x) -> (finite_centered_cross xs w f f=0 <-> forall x, In x xs -> 0<w x -> f x=finite_weighted_mean xs w f).
+ Premises and side conditions: Nonnegative weight throughout the enumerated sample.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_variance_zero_iff_supported_constant :
+ forall (A:Type) (xs:list A) (w f:A->R), (forall x, In x xs -> 0<=w x) -> (finite_centered_cross xs w f f=0 <-> forall x, In x xs -> 0<w x -> f x=finite_weighted_mean xs w f).
+Proof.
+ intros A xs w f Hw; rewrite finite_centered_cross_variance; apply finite_weighted_loss_zero_iff_supported_constant; exact Hw.
+Qed.
+
+(**
+ [finite_centered_cauchy_schwarz] (theorem) — Centered finite sample covariance obeys Cauchy–Schwarz, establishing positive semidefiniteness of its Gram matrix.
+ Mathematical meaning: Centered finite sample covariance obeys Cauchy–Schwarz, establishing positive semidefiniteness of its Gram matrix.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> finite_centered_cross xs w f g*finite_centered_cross xs w f g<=finite_centered_cross xs w f f*finite_centered_cross xs w g g.
+ Premises and side conditions: Nonnegative sample weights, without Gaussian assumptions.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_cauchy_schwarz :
+ forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> finite_centered_cross xs w f g*finite_centered_cross xs w f g<=finite_centered_cross xs w f f*finite_centered_cross xs w g g.
+Proof.
+ intros A xs w f g Hw.
+ unfold finite_centered_cross.
+ rewrite (finite_weighted_cross_same_is_loss A xs w f
+   (finite_weighted_mean xs w f)).
+ rewrite (finite_weighted_cross_same_is_loss A xs w g
+   (finite_weighted_mean xs w g)).
+ apply finite_cross_cauchy_schwarz; exact Hw.
+Qed.
+
+(**
+ [finite_centered_cov_zero_if_first_supported_constant] (theorem) — Any supportwise constant score has zero covariance with every finite score.
+ Mathematical meaning: Any supportwise constant score has zero covariance with every finite score.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<w x -> f x=finite_weighted_mean xs w f) -> finite_centered_cross xs w f g=0.
+ Premises and side conditions: Nonnegative sample weights and constancy on their positive support.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_cov_zero_if_first_supported_constant :
+ forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<w x -> f x=finite_weighted_mean xs w f) -> finite_centered_cross xs w f g=0.
+Proof.
+ intros A xs w f g Hw Hconst; pose proof ((proj2 (finite_centered_variance_zero_iff_supported_constant A xs w f Hw)) Hconst) as Hz; pose proof (finite_centered_cauchy_schwarz A xs w f g Hw) as Hcs; rewrite Hz in Hcs; nra.
+Qed.
+
+(**
+ [finite_centered_cov_zero_if_second_supported_constant] (theorem) — Supportwise constancy of the second score forces zero covariance with every first score.
+ Mathematical meaning: Supportwise constancy of the second score forces zero covariance with every first score.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<w x -> g x=finite_weighted_mean xs w g) -> finite_centered_cross xs w f g=0.
+ Premises and side conditions: Nonnegative sample weights and constancy on their positive support.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_cov_zero_if_second_supported_constant :
+ forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<w x -> g x=finite_weighted_mean xs w g) -> finite_centered_cross xs w f g=0.
+Proof.
+ intros A xs w f g Hw Hg; rewrite finite_centered_cross_symmetric; apply finite_centered_cov_zero_if_first_supported_constant; assumption.
+Qed.
+
+(**
+ [finite_centered_shift_first] (theorem) — Finite centered covariance is invariant under translating the first score.
+ Mathematical meaning: Finite centered covariance is invariant under translating the first score.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+d) g=finite_centered_cross xs w f g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_shift_first :
+ forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+d) g=finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g d Hm; unfold finite_centered_cross; replace (finite_weighted_mean xs w (fun x=>f x+d)) with (finite_weighted_mean xs w f+d).
+ - apply finite_cross_shift_first.
+ - rewrite (finite_weighted_mean_add A xs w f (fun _=>d) Hm).
+   rewrite (finite_weighted_mean_constant A xs w d Hm).
+   reflexivity.
+Qed.
+
+(**
+ [finite_centered_shift_second] (theorem) — Finite centered covariance is invariant under translating the second score.
+ Mathematical meaning: Finite centered covariance is invariant under translating the second score.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w f (fun x=>g x+d)=finite_centered_cross xs w f g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_shift_second :
+ forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w f (fun x=>g x+d)=finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g d Hm; rewrite finite_centered_cross_symmetric; rewrite (finite_centered_shift_first A xs w g f d Hm); apply finite_centered_cross_symmetric.
+Qed.
+
+(**
+ [finite_centered_affine_first] (theorem) — Affine calibration of a first score multiplies covariance by its slope but not its intercept.
+ Mathematical meaning: Affine calibration of a first score multiplies covariance by its slope but not its intercept.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>a*f x+b) g=a*finite_centered_cross xs w f g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_affine_first :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>a*f x+b) g=a*finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g a b Hm; rewrite (finite_centered_shift_first A xs w (fun x=>a*f x) g b Hm); apply finite_centered_cross_scale_first; exact Hm.
+Qed.
+
+(**
+ [finite_centered_affine_second] (theorem) — Affine calibration of a second score multiplies covariance by its slope but not its intercept.
+ Mathematical meaning: Affine calibration of a second score multiplies covariance by its slope but not its intercept.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w f (fun x=>a*g x+b)=a*finite_centered_cross xs w f g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_affine_second :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w f (fun x=>a*g x+b)=a*finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g a b Hm; rewrite (finite_centered_shift_second A xs w f (fun x=>a*g x) b Hm); apply finite_centered_cross_scale_second; exact Hm.
+Qed.
+
+(**
+ [finite_centered_affine_both] (theorem) — Two independently calibrated scores have covariance multiplied by the product of calibration slopes.
+ Mathematical meaning: Two independently calibrated scores have covariance multiplied by the product of calibration slopes.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b c d:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>a*f x+b) (fun x=>c*g x+d)=a*c*finite_centered_cross xs w f g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_affine_both :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b c d:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>a*f x+b) (fun x=>c*g x+d)=a*c*finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g a b c d Hm; rewrite (finite_centered_affine_first A xs w f (fun x=>c*g x+d) a b Hm); rewrite (finite_centered_affine_second A xs w f g c d Hm); ring.
+Qed.
+
+(**
+ [finite_centered_sub_first] (theorem) — Centered covariance is subtractive in its first argument.
+ Mathematical meaning: Centered covariance is subtractive in its first argument.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g h:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x-g x) h=finite_centered_cross xs w f h-finite_centered_cross xs w g h.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_sub_first :
+ forall (A:Type) (xs:list A) (w f g h:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x-g x) h=finite_centered_cross xs w f h-finite_centered_cross xs w g h.
+Proof.
+ intros A xs w f g h Hm; unfold finite_centered_cross; rewrite (finite_weighted_mean_sub A xs w f g Hm); apply finite_cross_sub_first.
+Qed.
+
+(**
+ [finite_centered_sub_second] (theorem) — Centered covariance is subtractive in its second argument.
+ Mathematical meaning: Centered covariance is subtractive in its second argument.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g h:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w f (fun x=>g x-h x)=finite_centered_cross xs w f g-finite_centered_cross xs w f h.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_sub_second :
+ forall (A:Type) (xs:list A) (w f g h:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w f (fun x=>g x-h x)=finite_centered_cross xs w f g-finite_centered_cross xs w f h.
+Proof.
+ intros A xs w f g h Hm; rewrite finite_centered_cross_symmetric; rewrite (finite_centered_sub_first A xs w g h f Hm); rewrite (finite_centered_cross_symmetric A xs w g f); rewrite (finite_centered_cross_symmetric A xs w h f); reflexivity.
+Qed.
+
+(**
+ [finite_centered_four_term_expansion] (theorem) — Covariance of two sum scores expands into four pairwise covariances.
+ Mathematical meaning: Covariance of two sum scores expands into four pairwise covariances.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g h k:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+g x) (fun x=>h x+k x)=finite_centered_cross xs w f h+finite_centered_cross xs w f k+finite_centered_cross xs w g h+finite_centered_cross xs w g k.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_four_term_expansion :
+ forall (A:Type) (xs:list A) (w f g h k:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+g x) (fun x=>h x+k x)=finite_centered_cross xs w f h+finite_centered_cross xs w f k+finite_centered_cross xs w g h+finite_centered_cross xs w g k.
+Proof.
+ intros A xs w f g h k Hm; rewrite (finite_centered_cross_add_first A xs w f g (fun x=>h x+k x) Hm); rewrite (finite_centered_cross_add_second A xs w f h k Hm); rewrite (finite_centered_cross_add_second A xs w g h k Hm); ring.
+Qed.
+
+(**
+ [finite_centered_difference_variance] (theorem) — Variance of a score difference equals the sum of variances minus twice their covariance.
+ Mathematical meaning: Variance of a score difference equals the sum of variances minus twice their covariance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x-g x) (fun x=>f x-g x)=finite_centered_cross xs w f f-2*finite_centered_cross xs w f g+finite_centered_cross xs w g g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_difference_variance :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x-g x) (fun x=>f x-g x)=finite_centered_cross xs w f f-2*finite_centered_cross xs w f g+finite_centered_cross xs w g g.
+Proof.
+ intros A xs w f g Hm; rewrite (finite_centered_sub_first A xs w f g (fun x=>f x-g x) Hm); rewrite (finite_centered_sub_second A xs w f f g Hm); rewrite (finite_centered_sub_second A xs w g f g Hm); rewrite (finite_centered_cross_symmetric A xs w g f); ring.
+Qed.
+
+(**
+ [finite_centered_sum_variance] (theorem) — Variance of a sum of test scores equals individual variances plus twice their covariance.
+ Mathematical meaning: Variance of a sum of test scores equals individual variances plus twice their covariance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+g x) (fun x=>f x+g x)=finite_centered_cross xs w f f+2*finite_centered_cross xs w f g+finite_centered_cross xs w g g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_sum_variance :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+g x) (fun x=>f x+g x)=finite_centered_cross xs w f f+2*finite_centered_cross xs w f g+finite_centered_cross xs w g g.
+Proof.
+ intros A xs w f g Hm; rewrite (finite_centered_four_term_expansion A xs w f g f g Hm); rewrite (finite_centered_cross_symmetric A xs w g f); ring.
+Qed.
+
+(**
+ [finite_centered_variance_parallelogram] (theorem) — The covariance-induced variance obeys the parallelogram identity, certifying a quadratic inner-product structure.
+ Mathematical meaning: The covariance-induced variance obeys the parallelogram identity, certifying a quadratic inner-product structure.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+g x) (fun x=>f x+g x)+finite_centered_cross xs w (fun x=>f x-g x) (fun x=>f x-g x)=2*finite_centered_cross xs w f f+2*finite_centered_cross xs w g g.
+ Premises and side conditions: Nonzero total mass is required only when a weighted mean is transformed.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Theorem finite_centered_variance_parallelogram :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w (fun x=>f x+g x) (fun x=>f x+g x)+finite_centered_cross xs w (fun x=>f x-g x) (fun x=>f x-g x)=2*finite_centered_cross xs w f f+2*finite_centered_cross xs w g g.
+Proof.
+ intros A xs w f g Hm; rewrite finite_centered_sum_variance by exact Hm; rewrite finite_centered_difference_variance by exact Hm; ring.
+Qed.
+
+(**
+ [finite_cov_slope] (definition) — Covariance-ratio coefficient of the best finite one-feature linear predictor.
+ Mathematical meaning: Covariance-ratio coefficient of the best finite one-feature linear predictor.
+ Exact definition: Definition finite_cov_slope {A:Type} (xs:list A) (w f g:A->R) : R := finite_centered_cross xs w f g / finite_centered_cross xs w g g.
+ Premises and side conditions: Feature variance nonzero is assumed when division is statistically interpreted; division is total in Rocq's real numbers.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Definition finite_cov_slope {A:Type} (xs:list A) (w f g:A->R) : R := finite_centered_cross xs w f g / finite_centered_cross xs w g g.
+
+(**
+ [finite_cov_residual_variance] (definition) — Centered finite squared prediction residual for a specified feature slope.
+ Mathematical meaning: Centered finite squared prediction residual for a specified feature slope.
+ Exact definition: Definition finite_cov_residual_variance {A:Type} (xs:list A) (w f g:A->R) (b:R) : R := finite_centered_cross xs w (fun x=>f x-b*g x) (fun x=>f x-b*g x).
+ Premises and side conditions: Feature variance nonzero is assumed when division is statistically interpreted; division is total in Rocq's real numbers.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Definition finite_cov_residual_variance {A:Type} (xs:list A) (w f g:A->R) (b:R) : R := finite_centered_cross xs w (fun x=>f x-b*g x) (fun x=>f x-b*g x).
+
+(**
+ [finite_cov_optimal_variance] (definition) — Schur residual variance from projecting a target onto one finite weighted feature.
+ Mathematical meaning: Schur residual variance from projecting a target onto one finite weighted feature.
+ Exact definition: Definition finite_cov_optimal_variance {A:Type} (xs:list A) (w f g:A->R) : R := finite_centered_cross xs w f f - finite_centered_cross xs w f g * finite_centered_cross xs w f g / finite_centered_cross xs w g g.
+ Premises and side conditions: Feature variance nonzero is assumed when division is statistically interpreted; division is total in Rocq's real numbers.
+ Proof/definition method: Reuse existing FiniteSum and FiniteTwoCellProjection weighted summation, zero-support, mean, variance and polarization lemmas; isolate the real quadratic discriminant argument and avoid further list recursions. Proofs are written in Rocq Stdlib real arithmetic without admitted steps.
+ Library reuse: Stdlib.Reals, Lra, Psatz, List, Bool; existing finite_sum_ext, finite_sum_nonnegative, finite_weighted_loss_nonnegative, centered covariance linearity, and real ring/field simplification.
+ Boundary: Exact finite real-weighted sample and best-linear-prediction algebra only. No Gaussian conditional distribution, continuous normal-tail theorem, empirical IQ psychometric parameter, or normality premise has been established.
+ *)
+Definition finite_cov_optimal_variance {A:Type} (xs:list A) (w f g:A->R) : R := finite_centered_cross xs w f f - finite_centered_cross xs w f g * finite_centered_cross xs w f g / finite_centered_cross xs w g g.
+
+
+(* D031x: one-feature finite covariance regression, normal equations,
+    explained variance, strict uniqueness and calibration invariants. *)
+
+(**
+ [finite_cov_slope_variance_identity] (theorem) — Finite regression slope solves covariance equals coefficient times feature variance.
+ Mathematical meaning: Finite regression slope solves covariance equals coefficient times feature variance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w g g<>0 -> finite_cov_slope xs w f g*finite_centered_cross xs w g g=finite_centered_cross xs w f g.
+ Premises and side conditions: Feature centered variance nonzero.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_variance_identity :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w g g<>0 -> finite_cov_slope xs w f g*finite_centered_cross xs w g g=finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g Hv; unfold finite_cov_slope; field; exact Hv.
+Qed.
+
+(**
+ [finite_cov_slope_zero_iff] (theorem) — Regression slope vanishes exactly when target-feature centered covariance vanishes.
+ Mathematical meaning: Regression slope vanishes exactly when target-feature centered covariance vanishes.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (finite_cov_slope xs w f g=0 <-> finite_centered_cross xs w f g=0).
+ Premises and side conditions: Strictly positive feature variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_zero_iff :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (finite_cov_slope xs w f g=0 <-> finite_centered_cross xs w f g=0).
+Proof.
+ intros A xs w f g Hv; unfold finite_cov_slope,Rdiv.
+ assert (Hi:0< /finite_centered_cross xs w g g)
+   by (apply Rinv_0_lt_compat; exact Hv).
+ split; intro H; nra.
+Qed.
+
+(**
+ [finite_cov_slope_positive_iff] (theorem) — Positive optimal finite slope is equivalent to positive target-feature covariance.
+ Mathematical meaning: Positive optimal finite slope is equivalent to positive target-feature covariance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (0<finite_cov_slope xs w f g <-> 0<finite_centered_cross xs w f g).
+ Premises and side conditions: Strictly positive feature variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_positive_iff :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (0<finite_cov_slope xs w f g <-> 0<finite_centered_cross xs w f g).
+Proof.
+ intros A xs w f g Hv; unfold finite_cov_slope,Rdiv.
+ assert (Hi:0< /finite_centered_cross xs w g g)
+   by (apply Rinv_0_lt_compat; exact Hv).
+ split; intro H; nra.
+Qed.
+
+(**
+ [finite_cov_slope_negative_iff] (theorem) — Negative optimal finite slope is equivalent to negative target-feature covariance.
+ Mathematical meaning: Negative optimal finite slope is equivalent to negative target-feature covariance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (finite_cov_slope xs w f g<0 <-> finite_centered_cross xs w f g<0).
+ Premises and side conditions: Strictly positive feature variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_negative_iff :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (finite_cov_slope xs w f g<0 <-> finite_centered_cross xs w f g<0).
+Proof.
+ intros A xs w f g Hv; unfold finite_cov_slope,Rdiv.
+ assert (Hi:0< /finite_centered_cross xs w g g)
+   by (apply Rinv_0_lt_compat; exact Hv).
+ split; intro H; nra.
+Qed.
+
+(**
+ [finite_cov_slope_target_scale] (theorem) — Scaling a target measurement rescales its optimal simple-regression coefficient.
+ Mathematical meaning: Scaling a target measurement rescales its optimal simple-regression coefficient.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (k:R), finite_weight_mass xs w<>0 -> finite_cov_slope xs w (fun x=>k*f x) g=k*finite_cov_slope xs w f g.
+ Premises and side conditions: Nonzero total weight mass is required for finite mean and covariance linearity.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_target_scale :
+ forall (A:Type) (xs:list A) (w f g:A->R) (k:R), finite_weight_mass xs w<>0 -> finite_cov_slope xs w (fun x=>k*f x) g=k*finite_cov_slope xs w f g.
+Proof.
+ intros A xs w f g k Hm; unfold finite_cov_slope.
+ rewrite (finite_centered_cross_scale_first A xs w f g k Hm).
+ unfold Rdiv; ring.
+Qed.
+
+(**
+ [finite_cov_slope_target_translation] (theorem) — Target-score additive calibration does not change the optimal feature regression slope.
+ Mathematical meaning: Target-score additive calibration does not change the optimal feature regression slope.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_slope xs w (fun x=>f x+d) g=finite_cov_slope xs w f g.
+ Premises and side conditions: Nonzero total weight mass is required for finite mean and covariance linearity.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_target_translation :
+ forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_slope xs w (fun x=>f x+d) g=finite_cov_slope xs w f g.
+Proof.
+ intros A xs w f g d Hm; unfold finite_cov_slope.
+ rewrite (finite_centered_shift_first A xs w f g d Hm); reflexivity.
+Qed.
+
+(**
+ [finite_cov_slope_feature_translation] (theorem) — Feature-score additive calibration does not change the optimal regression slope.
+ Mathematical meaning: Feature-score additive calibration does not change the optimal regression slope.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_slope xs w f (fun x=>g x+d)=finite_cov_slope xs w f g.
+ Premises and side conditions: Nonzero total weight mass is required for finite mean and covariance linearity.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_feature_translation :
+ forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_slope xs w f (fun x=>g x+d)=finite_cov_slope xs w f g.
+Proof.
+ intros A xs w f g d Hm; unfold finite_cov_slope.
+ rewrite (finite_centered_shift_second A xs w f g d Hm).
+ rewrite (finite_centered_shift_first A xs w g (fun x=>g x+d) d Hm).
+ rewrite (finite_centered_shift_second A xs w g g d Hm).
+ reflexivity.
+Qed.
+
+(**
+ [finite_cov_slope_target_add_feature] (theorem) — Adding a known multiple of the feature to the target shifts the optimal slope by that multiple.
+ Mathematical meaning: Adding a known multiple of the feature to the target shifts the optimal slope by that multiple.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (k:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_slope xs w (fun x=>f x+k*g x) g=finite_cov_slope xs w f g+k.
+ Premises and side conditions: Nonzero total mass and invertible feature variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_target_add_feature :
+ forall (A:Type) (xs:list A) (w f g:A->R) (k:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_slope xs w (fun x=>f x+k*g x) g=finite_cov_slope xs w f g+k.
+Proof.
+ intros A xs w f g k Hm Hv; unfold finite_cov_slope.
+ rewrite (finite_centered_cross_add_first A xs w f (fun x=>k*g x) g Hm).
+ rewrite (finite_centered_cross_scale_first A xs w g g k Hm).
+ unfold Rdiv; field; exact Hv.
+Qed.
+
+(**
+ [finite_cov_residual_variance_expansion] (theorem) — Centered residual variance is exactly a quadratic polynomial in the candidate linear-regression slope.
+ Mathematical meaning: Centered residual variance is exactly a quadratic polynomial in the candidate linear-regression slope.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> finite_cov_residual_variance xs w f g b=finite_centered_cross xs w f f-2*b*finite_centered_cross xs w f g+b*b*finite_centered_cross xs w g g.
+ Premises and side conditions: Nonzero total weight mass is required for finite mean and covariance linearity.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_residual_variance_expansion :
+ forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> finite_cov_residual_variance xs w f g b=finite_centered_cross xs w f f-2*b*finite_centered_cross xs w f g+b*b*finite_centered_cross xs w g g.
+Proof.
+ intros A xs w f g b Hm; unfold finite_cov_residual_variance.
+ rewrite (finite_centered_difference_variance A xs w f (fun x=>b*g x) Hm).
+ rewrite (finite_centered_cross_scale_second A xs w f g b Hm).
+ rewrite (finite_centered_cross_scale_first A xs w g (fun x=>b*g x) b Hm).
+ rewrite (finite_centered_cross_scale_second A xs w g g b Hm).
+ ring.
+Qed.
+
+(**
+ [finite_cov_residual_variance_nonnegative] (theorem) — Centered finite regression residual variance cannot be negative under nonnegative sample weights.
+ Mathematical meaning: Centered finite regression residual variance cannot be negative under nonnegative sample weights.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (b:R), (forall x, In x xs -> 0<=w x) -> 0<=finite_cov_residual_variance xs w f g b.
+ Premises and side conditions: Nonnegative weights on all enumerated outcomes.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_residual_variance_nonnegative :
+ forall (A:Type) (xs:list A) (w f g:A->R) (b:R), (forall x, In x xs -> 0<=w x) -> 0<=finite_cov_residual_variance xs w f g b.
+Proof.
+ intros A xs w f g b Hw; unfold finite_cov_residual_variance.
+ apply finite_centered_variance_nonnegative; exact Hw.
+Qed.
+
+(**
+ [finite_cov_residual_normal_equation] (theorem) — The optimally fitted residual is orthogonal to the feature, giving the finite normal equation.
+ Mathematical meaning: The optimally fitted residual is orthogonal to the feature, giving the finite normal equation.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_centered_cross xs w (fun x=>f x-finite_cov_slope xs w f g*g x) g=0.
+ Premises and side conditions: Nonzero total mass and invertible feature variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_residual_normal_equation :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_centered_cross xs w (fun x=>f x-finite_cov_slope xs w f g*g x) g=0.
+Proof.
+ intros A xs w f g Hm Hv.
+ rewrite (finite_centered_sub_first A xs w f
+   (fun x=>finite_cov_slope xs w f g*g x) g Hm).
+ rewrite (finite_centered_cross_scale_first A xs w g g
+   (finite_cov_slope xs w f g) Hm).
+ pose proof (finite_cov_slope_variance_identity A xs w f g Hv) as He.
+ lra.
+Qed.
+
+(**
+ [finite_cov_residual_variance_at_slope] (theorem) — At the optimal slope, the finite residual variance is the Schur covariance ratio formula.
+ Mathematical meaning: At the optimal slope, the finite residual variance is the Schur covariance ratio formula.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)=finite_cov_optimal_variance xs w f g.
+ Premises and side conditions: Nonzero sample mass and invertible feature centered variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_residual_variance_at_slope :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)=finite_cov_optimal_variance xs w f g.
+Proof.
+ intros A xs w f g Hm Hv.
+ rewrite (finite_cov_residual_variance_expansion A xs w f g
+   (finite_cov_slope xs w f g) Hm).
+ unfold finite_cov_optimal_variance,finite_cov_slope.
+ field; exact Hv.
+Qed.
+
+(**
+ [finite_cov_excess_risk_identity] (theorem) — The exact loss from any slope misspecification equals feature variance times squared distance to the optimal slope.
+ Mathematical meaning: The exact loss from any slope misspecification equals feature variance times squared distance to the optimal slope.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_residual_variance xs w f g b=finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)+finite_centered_cross xs w g g*(b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g).
+ Premises and side conditions: Nonzero mass and invertible feature variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_excess_risk_identity :
+ forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_residual_variance xs w f g b=finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)+finite_centered_cross xs w g g*(b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g).
+Proof.
+ intros A xs w f g b Hm Hv.
+ rewrite (finite_cov_residual_variance_expansion A xs w f g b Hm).
+ rewrite (finite_cov_residual_variance_expansion A xs w f g
+   (finite_cov_slope xs w f g) Hm).
+ pose proof (finite_cov_slope_variance_identity A xs w f g Hv) as He.
+ rewrite <- He; ring.
+Qed.
+
+(**
+ [finite_cov_slope_global_optimality] (theorem) — The covariance-ratio slope globally minimizes finite centered squared error among all linear slopes.
+ Mathematical meaning: The covariance-ratio slope globally minimizes finite centered squared error among all linear slopes.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<=finite_cov_residual_variance xs w f g b.
+ Premises and side conditions: Strictly positive feature centered variance and nonzero mass.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_global_optimality :
+ forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<=finite_cov_residual_variance xs w f g b.
+Proof.
+ intros A xs w f g b Hm Hv.
+ rewrite (finite_cov_excess_risk_identity A xs w f g b Hm ltac:(lra)).
+ assert (Hs:0<=(b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g)).
+ { change (0<=Rsqr(b-finite_cov_slope xs w f g)); apply Rle_0_sqr. }
+ assert (Hp:0<=finite_centered_cross xs w g g*
+  ((b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g))).
+ { apply Rmult_le_pos; [lra|exact Hs]. }
+ replace (finite_centered_cross xs w g g*(b-finite_cov_slope xs w f g)*
+  (b-finite_cov_slope xs w f g))
+ with (finite_centered_cross xs w g g*
+  ((b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g))) by ring.
+ lra.
+Qed.
+
+(**
+ [finite_cov_slope_optimal_iff] (theorem) — When feature variance is positive, equality with optimal centered loss holds only for the unique covariance-ratio slope.
+ Mathematical meaning: When feature variance is positive, equality with optimal centered loss holds only for the unique covariance-ratio slope.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (finite_cov_residual_variance xs w f g b=finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g) <-> b=finite_cov_slope xs w f g).
+ Premises and side conditions: Positive feature centered variance guarantees strict convexity and uniqueness.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_optimal_iff :
+ forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (finite_cov_residual_variance xs w f g b=finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g) <-> b=finite_cov_slope xs w f g).
+Proof.
+ intros A xs w f g b Hm Hv.
+ rewrite (finite_cov_excess_risk_identity A xs w f g b Hm ltac:(lra)).
+ split; intro H.
+ - assert (Hprod:finite_centered_cross xs w g g*
+    ((b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g))=0) by nra.
+   apply Rmult_integral in Hprod.
+   destruct Hprod as [Hbad|Hsq]; [lra|nra].
+ - rewrite H; ring.
+Qed.
+
+(**
+ [finite_cov_slope_strict_optimality] (theorem) — Any slope differing from the covariance-ratio coefficient has strictly larger finite prediction error.
+ Mathematical meaning: Any slope differing from the covariance-ratio coefficient has strictly larger finite prediction error.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> b<>finite_cov_slope xs w f g -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<finite_cov_residual_variance xs w f g b.
+ Premises and side conditions: Positive feature variance and a nonoptimal candidate slope.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_slope_strict_optimality :
+ forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> b<>finite_cov_slope xs w f g -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<finite_cov_residual_variance xs w f g b.
+Proof.
+ intros A xs w f g b Hm Hv Hneq.
+ rewrite (finite_cov_excess_risk_identity A xs w f g b Hm ltac:(lra)).
+ assert (Hs:0<(b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g)) by nra.
+ assert (Hp:0<finite_centered_cross xs w g g*
+  ((b-finite_cov_slope xs w f g)*(b-finite_cov_slope xs w f g))).
+ { apply Rmult_lt_0_compat; [exact Hv|exact Hs]. }
+ nra.
+Qed.
+
+(**
+ [finite_cov_explained_variance_exact] (theorem) — Explained variance from one-feature least-squares projection equals target-feature covariance squared divided by feature variance.
+ Mathematical meaning: Explained variance from one-feature least-squares projection equals target-feature covariance squared divided by feature variance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_centered_cross xs w f f-finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)=finite_centered_cross xs w f g*finite_centered_cross xs w f g/finite_centered_cross xs w g g.
+ Premises and side conditions: Feature variance nonzero and total weight mass nonzero.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_explained_variance_exact :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> finite_centered_cross xs w f f-finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)=finite_centered_cross xs w f g*finite_centered_cross xs w f g/finite_centered_cross xs w g g.
+Proof.
+ intros A xs w f g Hm Hv.
+ rewrite (finite_cov_residual_variance_at_slope A xs w f g Hm Hv).
+ unfold finite_cov_optimal_variance; ring.
+Qed.
+
+(**
+ [finite_cov_explained_variance_nonnegative] (theorem) — The optimum finite one-feature regression cannot increase centered residual variance over the intercept-only baseline.
+ Mathematical meaning: The optimum finite one-feature regression cannot increase centered residual variance over the intercept-only baseline.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<=finite_centered_cross xs w f f.
+ Premises and side conditions: Nonzero mass and strictly positive feature variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_explained_variance_nonnegative :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<=finite_centered_cross xs w f f.
+Proof.
+ intros A xs w f g Hm Hv.
+ pose proof (finite_cov_slope_global_optimality A xs w f g 0 Hm Hv) as Hmin.
+ assert (H0:finite_cov_residual_variance xs w f g 0=finite_centered_cross xs w f f).
+ { rewrite (finite_cov_residual_variance_expansion A xs w f g 0 Hm); ring. }
+ rewrite H0 in Hmin; exact Hmin.
+Qed.
+
+(**
+ [finite_cov_explained_variance_zero_iff] (theorem) — The fitted feature explains zero centered variance exactly when its covariance with the target is zero.
+ Mathematical meaning: The fitted feature explains zero centered variance exactly when its covariance with the target is zero.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)=finite_centered_cross xs w f f <-> finite_centered_cross xs w f g=0).
+ Premises and side conditions: Strictly positive feature variance and nonzero mass.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_explained_variance_zero_iff :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)=finite_centered_cross xs w f f <-> finite_centered_cross xs w f g=0).
+Proof.
+ intros A xs w f g Hm Hv.
+ rewrite (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)).
+ unfold finite_cov_optimal_variance,Rdiv.
+ assert (Hi:0< /finite_centered_cross xs w g g)
+   by (apply Rinv_0_lt_compat; exact Hv).
+ split; intro H.
+ - assert (Hprod:finite_centered_cross xs w f g*finite_centered_cross xs w f g*
+    /finite_centered_cross xs w g g=0) by lra.
+   apply Rmult_integral in Hprod.
+   destruct Hprod as [Hs|Hinv].
+   + apply Rmult_integral in Hs; tauto.
+   + lra.
+ - rewrite H; ring.
+Qed.
+
+(**
+ [finite_cov_explained_variance_strict_iff] (theorem) — Optimized finite linear prediction strictly improves over the intercept-only baseline exactly when covariance is nonzero.
+ Mathematical meaning: Optimized finite linear prediction strictly improves over the intercept-only baseline exactly when covariance is nonzero.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<finite_centered_cross xs w f f <-> finite_centered_cross xs w f g<>0).
+ Premises and side conditions: Strictly positive feature variance and nonzero mass.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_explained_variance_strict_iff :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (finite_cov_residual_variance xs w f g (finite_cov_slope xs w f g)<finite_centered_cross xs w f f <-> finite_centered_cross xs w f g<>0).
+Proof.
+ intros A xs w f g Hm Hv.
+ rewrite (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)).
+ unfold finite_cov_optimal_variance,Rdiv.
+ assert (Hi:0< /finite_centered_cross xs w g g)
+   by (apply Rinv_0_lt_compat; exact Hv).
+ split; intro H.
+ - intro Hz; rewrite Hz in H; nra.
+ - assert (Hs:0<finite_centered_cross xs w f g*finite_centered_cross xs w f g) by nra.
+   assert (Hp:0<(finite_centered_cross xs w f g*finite_centered_cross xs w f g)*
+                   /finite_centered_cross xs w g g).
+   { apply Rmult_lt_0_compat; assumption. }
+   lra.
+Qed.
+
+(**
+ [finite_cov_optimal_variance_nonnegative] (theorem) — The closed-form finite Schur residual variance is nonnegative under nonnegative sample weights.
+ Mathematical meaning: The closed-form finite Schur residual variance is nonnegative under nonnegative sample weights.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> (forall x, In x xs -> 0<=w x) -> 0<=finite_cov_optimal_variance xs w f g.
+ Premises and side conditions: Nonnegative sample weights and nonzero total mass and feature centered variance.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_optimal_variance_nonnegative :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> finite_centered_cross xs w g g<>0 -> (forall x, In x xs -> 0<=w x) -> 0<=finite_cov_optimal_variance xs w f g.
+Proof.
+ intros A xs w f g Hm Hv Hw.
+ rewrite <- (finite_cov_residual_variance_at_slope A xs w f g Hm Hv).
+ apply finite_cov_residual_variance_nonnegative; exact Hw.
+Qed.
+
+(**
+ [finite_cov_optimal_variance_interval] (theorem) — Finite optimized residual variance lies between zero and the original target variance.
+ Mathematical meaning: Finite optimized residual variance lies between zero and the original target variance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (forall x, In x xs -> 0<=w x) -> 0<=finite_cov_optimal_variance xs w f g /\ finite_cov_optimal_variance xs w f g<=finite_centered_cross xs w f f.
+ Premises and side conditions: Nonnegative weights, positive feature variance and nonzero total mass.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_optimal_variance_interval :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (forall x, In x xs -> 0<=w x) -> 0<=finite_cov_optimal_variance xs w f g /\ finite_cov_optimal_variance xs w f g<=finite_centered_cross xs w f f.
+Proof.
+ intros A xs w f g Hm Hv Hw; split.
+ - apply finite_cov_optimal_variance_nonnegative; try assumption; lra.
+ - rewrite <- (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)).
+   apply finite_cov_explained_variance_nonnegative; assumption.
+Qed.
+
+(**
+ [finite_cov_optimal_target_translation] (theorem) — The best attainable finite linear-regression variance is invariant under an additive target-score shift.
+ Mathematical meaning: The best attainable finite linear-regression variance is invariant under an additive target-score shift.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_optimal_variance xs w (fun x=>f x+d) g=finite_cov_optimal_variance xs w f g.
+ Premises and side conditions: Nonzero total weight mass is required for finite mean and covariance linearity.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_optimal_target_translation :
+ forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_optimal_variance xs w (fun x=>f x+d) g=finite_cov_optimal_variance xs w f g.
+Proof.
+ intros A xs w f g d Hm; unfold finite_cov_optimal_variance.
+ rewrite (finite_centered_shift_first A xs w f (fun x=>f x+d) d Hm).
+ rewrite (finite_centered_shift_second A xs w f f d Hm).
+ rewrite (finite_centered_shift_first A xs w f g d Hm).
+ reflexivity.
+Qed.
+
+(**
+ [finite_cov_optimal_feature_translation] (theorem) — The best attainable finite linear-regression variance is invariant under an additive feature-score shift.
+ Mathematical meaning: The best attainable finite linear-regression variance is invariant under an additive feature-score shift.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_optimal_variance xs w f (fun x=>g x+d)=finite_cov_optimal_variance xs w f g.
+ Premises and side conditions: Nonzero total weight mass is required for finite mean and covariance linearity.
+ Proof/definition method: Reuse previously established exact finite centered covariance, weighted Cauchy–Schwarz, covariance bilinearity and the scalar normal equations. Reduce regression objective to its completed square and explicitly discharge positive denominators and risk bounds.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, real field/ring, finite-sum and covariance library lemmas, and no custom matrix inversion or new sample enumeration recursion.
+ Boundary: Exact finite weighted covariance and best linear predictor identities only; no Gaussian conditional laws, numerical integration correctness, psychometric population evidence or normality of test scores is established.
+ *)
+Theorem finite_cov_optimal_feature_translation :
+ forall (A:Type) (xs:list A) (w f g:A->R) (d:R), finite_weight_mass xs w<>0 -> finite_cov_optimal_variance xs w f (fun x=>g x+d)=finite_cov_optimal_variance xs w f g.
+Proof.
+ intros A xs w f g d Hm; unfold finite_cov_optimal_variance.
+ rewrite (finite_centered_shift_second A xs w f g d Hm).
+ rewrite (finite_centered_shift_first A xs w g (fun x=>g x+d) d Hm).
+ rewrite (finite_centered_shift_second A xs w g g d Hm).
+ reflexivity.
+Qed.
+
