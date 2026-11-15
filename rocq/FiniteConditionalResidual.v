@@ -1325,7 +1325,13 @@ Proof.
  pose proof (finite_two_cell_fitted_variance_le_total A xs w g event Ht Hf Hw) as Hgl.
  pose proof (finite_two_cell_fitted_variance_nonnegative A xs w f event Hw) as Hfn.
  pose proof (finite_two_cell_fitted_variance_nonnegative A xs w g event Hw) as Hgn.
- nra.
+ rewrite <- (finite_two_cell_fitted_covariance_is_between A xs w f f event Ht Hf) in Hcs.
+ rewrite <- (finite_two_cell_fitted_covariance_is_between A xs w g g event Ht Hf) in Hcs.
+ assert (Hproduct:
+   finite_fitted_cross xs w f f event*finite_fitted_cross xs w g g event <=
+   finite_centered_cross xs w f f*finite_centered_cross xs w g g).
+ { apply Rmult_le_compat; assumption. }
+ lra.
 Qed.
 
 (**
@@ -1349,7 +1355,13 @@ Proof.
  pose proof (finite_two_cell_residual_variance_le_total A xs w g event Ht Hf Hw) as Hgl.
  pose proof (finite_two_cell_residual_variance_nonnegative A xs w f event Hw) as Hfn.
  pose proof (finite_two_cell_residual_variance_nonnegative A xs w g event Hw) as Hgn.
- nra.
+ rewrite <- (finite_two_cell_residual_covariance_is_within A xs w f f event Ht Hf) in Hcs.
+ rewrite <- (finite_two_cell_residual_covariance_is_within A xs w g g event Ht Hf) in Hcs.
+ assert (Hproduct:
+   finite_residual_cross xs w f f event*finite_residual_cross xs w g g event <=
+   finite_centered_cross xs w f f*finite_centered_cross xs w g g).
+ { apply Rmult_le_compat; assumption. }
+ lra.
 Qed.
 
 (**
