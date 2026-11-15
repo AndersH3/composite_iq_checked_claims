@@ -497,7 +497,12 @@ Proof.
   pose proof (sensitivity_beta_count_gap r k c
     (Rgt_not_eq _ _ H1) (Rgt_not_eq _ _ H2)) as Hgap.
   assert (Hge : 0 <= k*c*(1-c)/(sequential_d r c*sequential_d (r+k) c)).
-  { unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]. }
+  { unfold Rdiv.
+    apply Rmult_le_pos.
+    - apply Rmult_le_pos.
+      + apply Rmult_le_pos; lra.
+      + lra.
+    - apply Rlt_le, Rinv_0_lt_compat; nra. }
   lra.
 Qed.
 
@@ -889,7 +894,11 @@ Proof.
   assert (Ht : 0 < sequential_d (r+k) c)
     by (apply sequential_denominator_positive_nonnegative_correlation; lra).
   unfold sequential_conditional_variance.
-  apply Rdiv_lt_0_compat; nra.
+  apply Rdiv_lt_0_compat.
+  - apply Rmult_lt_0_compat.
+    + apply Rmult_lt_0_compat; lra.
+    + exact Ht.
+  - apply Rmult_lt_0_compat; [nra | exact Hd].
 Qed.
 
 (**
@@ -916,7 +925,11 @@ Proof.
     by (apply sequential_denominator_positive_nonnegative_correlation; lra).
   rewrite sensitivity_conditional_explained_gap
     by (apply Rgt_not_eq; assumption).
-  apply Rdiv_lt_0_compat; nra.
+  apply Rdiv_lt_0_compat.
+  - apply Rmult_lt_0_compat.
+    + apply Rmult_lt_0_compat; [exact Hr | exact Hdt].
+    + exact Hdt.
+  - apply Rmult_lt_0_compat; [nra | exact Hdr].
 Qed.
 
 (**
@@ -1118,8 +1131,12 @@ Proof.
     by (apply sequential_denominator_positive_nonnegative_correlation; lra).
   pose proof (sensitivity_mean_observed_gap r k c a
     (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hd)) as Hgap.
-  assert (Hge : 0 <= k*(1-c)*a/((r+k)*sequential_d r c))
-    by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
+  assert (Hge : 0 <= k*(1-c)*a/((r+k)*sequential_d r c)).
+  { unfold Rdiv; apply Rmult_le_pos.
+    - apply Rmult_le_pos.
+      + apply Rmult_le_pos; lra.
+      + exact Ha.
+    - apply Rlt_le, Rinv_0_lt_compat; nra. }
   lra.
 Qed.
 
@@ -1145,8 +1162,12 @@ Proof.
     by (apply sequential_denominator_positive_nonnegative_correlation; lra).
   pose proof (sensitivity_mean_prediction_gap r k c a
     (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hd)) as Hgap.
-  assert (Hge : 0 <= r*(1-c)*a/((r+k)*sequential_d r c))
-    by (unfold Rdiv; apply Rmult_le_pos; [nra | apply Rlt_le, Rinv_0_lt_compat; nra]).
+  assert (Hge : 0 <= r*(1-c)*a/((r+k)*sequential_d r c)).
+  { unfold Rdiv; apply Rmult_le_pos.
+    - apply Rmult_le_pos.
+      + apply Rmult_le_pos; lra.
+      + exact Ha.
+    - apply Rlt_le, Rinv_0_lt_compat; nra. }
   lra.
 Qed.
 
