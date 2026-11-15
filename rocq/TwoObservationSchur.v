@@ -2753,7 +2753,7 @@ Proof.
        lra.
  - intros [H0|Hpartial].
    + subst t; replace (b+0) with b by ring; reflexivity.
-   + symmetry; apply cov2_schur_noise_second_zero_partial; assumption.
+   + apply cov2_schur_noise_second_zero_partial; assumption.
 Qed.
 
 (**
