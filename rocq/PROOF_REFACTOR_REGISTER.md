@@ -8,9 +8,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **1610 public theorem/lemma/example claims**, plus
+The current branch has **1634 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**1613 proof scripts** across eighteen Rocq modules. The claims and scripts
+**1637 proof scripts** across eighteen Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -2490,7 +2490,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `nested_full_law_total_variance` (theorem) | Compose the previous two-cell law of total variance with the exact nested variance identity, preserving each observed-cell mass premise. | Stdlib.List.filter/filter_In, Stdlib Reals/Lra/Psatz/Ring and shared FiniteSum plus FiniteTwoCellProjection results. | Finite explicitly weighted Boolean partitions with stated mass/positivity assumptions; no general L¹ or Gaussian conditional law. |
 
 
-## FiniteConditionalCovariance.v — 60 proof scripts
+## FiniteConditionalCovariance.v — 84 proof scripts
 
 | Declaration (proof script) | Substantive checked task and refactor | Library reuse | Scope |
 |---|---|---|---|
@@ -2556,6 +2556,31 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `finite_centered_difference_variance` (theorem) | Variance of a score difference equals the sum of variances minus twice their covariance. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
 | `finite_centered_sum_variance` (theorem) | Variance of a sum of test scores equals individual variances plus twice their covariance. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
 | `finite_centered_variance_parallelogram` (theorem) | The covariance-induced variance obeys the parallelogram identity, certifying a quadratic inner-product structure. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+
+| `finite_cov_slope_variance_identity` (theorem) | Finite regression slope solves covariance equals coefficient times feature variance. | Standard finite covariance and Rocq real field/ring/positivity | Feature centered variance nonzero. |
+| `finite_cov_slope_zero_iff` (theorem) | Regression slope vanishes exactly when target-feature centered covariance vanishes. | Standard finite covariance and Rocq real field/ring/positivity | Strictly positive feature variance. |
+| `finite_cov_slope_positive_iff` (theorem) | Positive optimal finite slope is equivalent to positive target-feature covariance. | Standard finite covariance and Rocq real field/ring/positivity | Strictly positive feature variance. |
+| `finite_cov_slope_negative_iff` (theorem) | Negative optimal finite slope is equivalent to negative target-feature covariance. | Standard finite covariance and Rocq real field/ring/positivity | Strictly positive feature variance. |
+| `finite_cov_slope_target_scale` (theorem) | Scaling a target measurement rescales its optimal simple-regression coefficient. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
+| `finite_cov_slope_target_translation` (theorem) | Target-score additive calibration does not change the optimal feature regression slope. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
+| `finite_cov_slope_feature_translation` (theorem) | Feature-score additive calibration does not change the optimal regression slope. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
+| `finite_cov_slope_target_add_feature` (theorem) | Adding a known multiple of the feature to the target shifts the optimal slope by that multiple. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total mass and invertible feature variance. |
+| `finite_cov_residual_variance_expansion` (theorem) | Centered residual variance is exactly a quadratic polynomial in the candidate linear-regression slope. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
+| `finite_cov_residual_variance_nonnegative` (theorem) | Centered finite regression residual variance cannot be negative under nonnegative sample weights. | Standard finite covariance and Rocq real field/ring/positivity | Nonnegative weights on all enumerated outcomes. |
+| `finite_cov_residual_normal_equation` (theorem) | The optimally fitted residual is orthogonal to the feature, giving the finite normal equation. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total mass and invertible feature variance. |
+| `finite_cov_residual_variance_at_slope` (theorem) | At the optimal slope, the finite residual variance is the Schur covariance ratio formula. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero sample mass and invertible feature centered variance. |
+| `finite_cov_excess_risk_identity` (theorem) | The exact loss from any slope misspecification equals feature variance times squared distance to the optimal slope. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero mass and invertible feature variance. |
+| `finite_cov_slope_global_optimality` (theorem) | The covariance-ratio slope globally minimizes finite centered squared error among all linear slopes. | Standard finite covariance and Rocq real field/ring/positivity | Strictly positive feature centered variance and nonzero mass. |
+| `finite_cov_slope_optimal_iff` (theorem) | When feature variance is positive, equality with optimal centered loss holds only for the unique covariance-ratio slope. | Standard finite covariance and Rocq real field/ring/positivity | Positive feature centered variance guarantees strict convexity and uniqueness. |
+| `finite_cov_slope_strict_optimality` (theorem) | Any slope differing from the covariance-ratio coefficient has strictly larger finite prediction error. | Standard finite covariance and Rocq real field/ring/positivity | Positive feature variance and a nonoptimal candidate slope. |
+| `finite_cov_explained_variance_exact` (theorem) | Explained variance from one-feature least-squares projection equals target-feature covariance squared divided by feature variance. | Standard finite covariance and Rocq real field/ring/positivity | Feature variance nonzero and total weight mass nonzero. |
+| `finite_cov_explained_variance_nonnegative` (theorem) | The optimum finite one-feature regression cannot increase centered residual variance over the intercept-only baseline. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero mass and strictly positive feature variance. |
+| `finite_cov_explained_variance_zero_iff` (theorem) | The fitted feature explains zero centered variance exactly when its covariance with the target is zero. | Standard finite covariance and Rocq real field/ring/positivity | Strictly positive feature variance and nonzero mass. |
+| `finite_cov_explained_variance_strict_iff` (theorem) | Optimized finite linear prediction strictly improves over the intercept-only baseline exactly when covariance is nonzero. | Standard finite covariance and Rocq real field/ring/positivity | Strictly positive feature variance and nonzero mass. |
+| `finite_cov_optimal_variance_nonnegative` (theorem) | The closed-form finite Schur residual variance is nonnegative under nonnegative sample weights. | Standard finite covariance and Rocq real field/ring/positivity | Nonnegative sample weights and nonzero total mass and feature centered variance. |
+| `finite_cov_optimal_variance_interval` (theorem) | Finite optimized residual variance lies between zero and the original target variance. | Standard finite covariance and Rocq real field/ring/positivity | Nonnegative weights, positive feature variance and nonzero total mass. |
+| `finite_cov_optimal_target_translation` (theorem) | The best attainable finite linear-regression variance is invariant under an additive target-score shift. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
+| `finite_cov_optimal_feature_translation` (theorem) | The best attainable finite linear-regression variance is invariant under an additive feature-score shift. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
 
 ## FiniteConditionalResidual.v — 30 proof scripts
 

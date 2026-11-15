@@ -171,6 +171,11 @@ This continuation adds **53 substantive Rocq theorem statements** directly relev
 
 Proposed **29 substantive source-proved finite covariance theorems**, including a general real quadratic positivity/discriminant lemma, finite weighted Cauchy–Schwarz, zero-variance support characterization, affine covariance calibration, and variance-of-sums identities. Three transparent finite-regression definitions connect these proofs to exact least-squares predictions used by the sequential conditional-means and composite-IQ reports. This phase remains provisional until pinned Rocq 9.2 kernel checks and final integration CI succeed. No Gaussian-model existence, continuous tails or empirical IQ calibration is asserted.
 
+
+### Continuation D031x (phase 2) — finite one-feature least-squares and Schur explained variance
+
+An additional **24 new Rocq theorem scripts** extend D031x to **53 proposed report-linked theorems**. The exact covariance normal equation, unique optimal linear slope, error-as-completed-square, positive and zero explained-variance criteria, and nonnegative/bounded Schur residual are tied to finite score prediction in the sequential conditional-means and composite-IQ reports. The proof layer reuses the finite weighted Cauchy–Schwarz and previously established covariance bilinearity rather than reproducing a list-recursive optimizer. All claims require pinned Rocq 9.2 verification and do not prove Gaussian distributional assumptions or empirical IQ measurements.
+
 ## Appendix — Complete AI disclosure
 
 D031x finite covariance and least-squares proof scripts, theorem mappings, comments and refactoring choices were generated with AI assistance. Only the exact Rocq kernel-checked propositions under their stated premises count as established. The finite weighted sample algebra does not verify Gaussian conditional laws, empirical IQ distributions, or numerical tail integrals.
