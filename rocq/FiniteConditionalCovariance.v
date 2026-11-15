@@ -1799,3 +1799,474 @@ Proof.
  reflexivity.
 Qed.
 
+
+(* D032x: exact equality and strictness cases for finite two-score
+   covariance determinants and supported affine regression. *)
+
+(**
+ [finite_regression_residual_zero_iff_affine_support] (theorem) — Zero finite least-squares residual variance for a fixed slope is equivalent to an affine target-feature relation on every outcome with strictly positive weight.
+ Mathematical meaning: Zero finite least-squares residual variance for a fixed slope is equivalent to an affine target-feature relation on every outcome with strictly positive weight.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> (forall x, In x xs -> 0<=w x) -> (finite_cov_residual_variance xs w f g b=0 <-> forall x, In x xs -> 0<w x -> f x=b*g x+(finite_weighted_mean xs w f-b*finite_weighted_mean xs w g)).
+ Premises and side conditions: Nonzero total sample weight; every listed weight nonnegative; support means strictly positive weight.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_residual_zero_iff_affine_support :
+ forall (A:Type) (xs:list A) (w f g:A->R) (b:R), finite_weight_mass xs w<>0 -> (forall x, In x xs -> 0<=w x) ->
+ (finite_cov_residual_variance xs w f g b=0 <->
+  forall x, In x xs -> 0<w x -> f x=b*g x+(finite_weighted_mean xs w f-b*finite_weighted_mean xs w g)).
+Proof.
+ intros A xs w f g b Hm Hw.
+ unfold finite_cov_residual_variance.
+ rewrite (finite_centered_variance_zero_iff_supported_constant
+   A xs w (fun x=>f x-b*g x) Hw).
+ rewrite (finite_weighted_mean_sub A xs w f (fun x=>b*g x) Hm).
+ rewrite (finite_weighted_mean_scale A xs w g b Hm).
+ split; intros H x Hin Hpos; specialize (H x Hin Hpos); lra.
+Qed.
+
+(**
+ [finite_regression_optimal_zero_iff_affine_support] (theorem) — The optimal one-feature Schur residual vanishes exactly when target scores are affine in the feature on all positive-weight outcomes.
+ Mathematical meaning: The optimal one-feature Schur residual vanishes exactly when target scores are affine in the feature on all positive-weight outcomes.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (forall x, In x xs -> 0<=w x) -> (finite_cov_optimal_variance xs w f g=0 <-> forall x, In x xs -> 0<w x -> f x=finite_cov_slope xs w f g*g x+ (finite_weighted_mean xs w f- finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+ Premises and side conditions: Nonzero mass, nonnegative outcome weights and positive finite feature variance.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_optimal_zero_iff_affine_support :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g ->
+ (forall x, In x xs -> 0<=w x) ->
+ (finite_cov_optimal_variance xs w f g=0 <->
+  forall x, In x xs -> 0<w x ->
+    f x=finite_cov_slope xs w f g*g x+
+      (finite_weighted_mean xs w f-
+       finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+Proof.
+ intros A xs w f g Hm Hv Hw.
+ rewrite <- (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)).
+ apply finite_regression_residual_zero_iff_affine_support; assumption.
+Qed.
+
+(**
+ [finite_regression_optimal_positive_iff_nonaffine] (theorem) — Best finite linear prediction has strictly positive residual exactly when some supported outcome violates its optimal affine prediction.
+ Mathematical meaning: Best finite linear prediction has strictly positive residual exactly when some supported outcome violates its optimal affine prediction.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (forall x, In x xs -> 0<=w x) -> (0<finite_cov_optimal_variance xs w f g <-> exists x, In x xs /\ 0<w x /\ f x<>finite_cov_slope xs w f g*g x+ (finite_weighted_mean xs w f- finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+ Premises and side conditions: Positive feature variance, nonnegative weights, and a supported non-affine observation.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_optimal_positive_iff_nonaffine :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g ->
+ (forall x, In x xs -> 0<=w x) ->
+ (0<finite_cov_optimal_variance xs w f g <->
+   exists x, In x xs /\ 0<w x /\
+   f x<>finite_cov_slope xs w f g*g x+
+    (finite_weighted_mean xs w f-
+       finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+Proof.
+ intros A xs w f g Hm Hv Hw.
+ pose proof (finite_cov_optimal_variance_nonnegative A xs w f g Hm ltac:(lra) Hw) as Hnon.
+ pose proof (finite_regression_optimal_zero_iff_affine_support
+   A xs w f g Hm Hv Hw) as Hzero.
+ split.
+ - intro Hpos.
+   apply NNPP; intro Hnone.
+   assert (Hall: forall x, In x xs -> 0<w x ->
+     f x=finite_cov_slope xs w f g*g x+
+    (finite_weighted_mean xs w f-
+       finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+   { intros x Hin Hwx.
+     destruct (Req_EM_T (f x) (finite_cov_slope xs w f g*g x+
+       (finite_weighted_mean xs w f-
+        finite_cov_slope xs w f g*finite_weighted_mean xs w g))) as [Heq|Hneq].
+     - exact Heq.
+     - exfalso; apply Hnone; exists x; repeat split; assumption. }
+   apply (proj2 Hzero) in Hall; lra.
+ - intros [x [Hin [Hwx Hneq]]].
+   destruct (Req_EM_T (finite_cov_optimal_variance xs w f g) 0) as [Hz|Hz].
+   + apply (proj1 Hzero) in Hz; exfalso; apply Hneq; apply Hz; assumption.
+   + lra.
+Qed.
+
+(**
+ [finite_regression_det_residual_identity] (theorem) — The finite covariance Gram determinant equals feature variance multiplied by optimal regression residual variance.
+ Mathematical meaning: The finite covariance Gram determinant equals feature variance multiplied by optimal regression residual variance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w g g<>0 -> finite_centered_cross xs w g g*finite_cov_optimal_variance xs w f g= finite_centered_cross xs w f f*finite_centered_cross xs w g g- finite_centered_cross xs w f g*finite_centered_cross xs w f g.
+ Premises and side conditions: Feature variance is nonzero; the identity is otherwise unnormalized real finite covariance algebra.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_det_residual_identity :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w g g<>0 ->
+ finite_centered_cross xs w g g*finite_cov_optimal_variance xs w f g=
+ finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+ finite_centered_cross xs w f g*finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g Hv.
+ unfold finite_cov_optimal_variance; field; exact Hv.
+Qed.
+
+(**
+ [finite_regression_det_zero_iff_exact] (theorem) — A vanishing two-score Gram determinant is equivalent to zero optimal one-feature Schur residual when the feature variance is positive.
+ Mathematical meaning: A vanishing two-score Gram determinant is equivalent to zero optimal one-feature Schur residual when the feature variance is positive.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (finite_centered_cross xs w f f*finite_centered_cross xs w g g- finite_centered_cross xs w f g*finite_centered_cross xs w f g=0 <-> finite_cov_optimal_variance xs w f g=0).
+ Premises and side conditions: Strictly positive feature centered variance.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_det_zero_iff_exact :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g ->
+ (finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+ finite_centered_cross xs w f g*finite_centered_cross xs w f g=0
+  <-> finite_cov_optimal_variance xs w f g=0).
+Proof.
+ intros A xs w f g Hv.
+ pose proof (finite_regression_det_residual_identity A xs w f g ltac:(lra)) as He.
+ split; intro H; nra.
+Qed.
+
+(**
+ [finite_regression_det_positive_iff_residual_positive] (theorem) — The finite covariance Gram determinant is strictly positive exactly when the best one-feature residual variance is strictly positive.
+ Mathematical meaning: The finite covariance Gram determinant is strictly positive exactly when the best one-feature residual variance is strictly positive.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g -> (0<finite_centered_cross xs w f f*finite_centered_cross xs w g g- finite_centered_cross xs w f g*finite_centered_cross xs w f g <-> 0<finite_cov_optimal_variance xs w f g).
+ Premises and side conditions: Strictly positive feature variance.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_det_positive_iff_residual_positive :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w g g ->
+ (0<finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+ finite_centered_cross xs w f g*finite_centered_cross xs w f g
+  <-> 0<finite_cov_optimal_variance xs w f g).
+Proof.
+ intros A xs w f g Hv.
+ pose proof (finite_regression_det_residual_identity A xs w f g ltac:(lra)) as He.
+ split; intro H; nra.
+Qed.
+
+(**
+ [finite_regression_det_zero_iff_affine_support] (theorem) — A singular finite two-score covariance matrix means the target is exactly affine in the feature on every positive-weight outcome.
+ Mathematical meaning: A singular finite two-score covariance matrix means the target is exactly affine in the feature on every positive-weight outcome.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (forall x, In x xs -> 0<=w x) -> (finite_centered_cross xs w f f*finite_centered_cross xs w g g- finite_centered_cross xs w f g*finite_centered_cross xs w f g=0 <-> forall x, In x xs -> 0<w x -> f x=finite_cov_slope xs w f g*g x+ (finite_weighted_mean xs w f- finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+ Premises and side conditions: Nonnegative weights, nonzero total mass and positive feature variance.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_det_zero_iff_affine_support :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g ->
+ (forall x, In x xs -> 0<=w x) ->
+ (finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+  finite_centered_cross xs w f g*finite_centered_cross xs w f g=0
+  <-> forall x, In x xs -> 0<w x ->
+   f x=finite_cov_slope xs w f g*g x+
+     (finite_weighted_mean xs w f-
+      finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+Proof.
+ intros A xs w f g Hm Hv Hw.
+ rewrite (finite_regression_det_zero_iff_exact A xs w f g Hv).
+ apply finite_regression_optimal_zero_iff_affine_support; assumption.
+Qed.
+
+(**
+ [finite_regression_det_positive_iff_nonaffine] (theorem) — The determinant is strictly positive exactly when some supported data point violates the optimal affine feature predictor.
+ Mathematical meaning: The determinant is strictly positive exactly when some supported data point violates the optimal affine feature predictor.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (forall x, In x xs -> 0<=w x) -> (0<finite_centered_cross xs w f f*finite_centered_cross xs w g g- finite_centered_cross xs w f g*finite_centered_cross xs w f g <-> exists x, In x xs /\ 0<w x /\ f x<>finite_cov_slope xs w f g*g x+ (finite_weighted_mean xs w f- finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+ Premises and side conditions: Nonnegative sample weights, nonzero mass, and strictly positive feature variance.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_det_positive_iff_nonaffine :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g ->
+ (forall x, In x xs -> 0<=w x) ->
+ (0<finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+  finite_centered_cross xs w f g*finite_centered_cross xs w f g
+  <-> exists x, In x xs /\ 0<w x /\
+  f x<>finite_cov_slope xs w f g*g x+
+     (finite_weighted_mean xs w f-
+      finite_cov_slope xs w f g*finite_weighted_mean xs w g)).
+Proof.
+ intros A xs w f g Hm Hv Hw.
+ rewrite (finite_regression_det_positive_iff_residual_positive A xs w f g Hv).
+ apply finite_regression_optimal_positive_iff_nonaffine; assumption.
+Qed.
+
+(**
+ [finite_regression_det_nonnegative] (theorem) — Nonnegative finite weights force the two-score covariance Gram determinant to be nonnegative.
+ Mathematical meaning: Nonnegative finite weights force the two-score covariance Gram determinant to be nonnegative.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> 0<=finite_centered_cross xs w f f*finite_centered_cross xs w g g- finite_centered_cross xs w f g*finite_centered_cross xs w f g.
+ Premises and side conditions: Nonnegative weights on every enumerated outcome, with no mass normalization.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_det_nonnegative :
+ forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) ->
+ 0<=finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+ finite_centered_cross xs w f g*finite_centered_cross xs w f g.
+Proof.
+ intros A xs w f g Hw.
+ pose proof (finite_centered_cauchy_schwarz A xs w f g Hw) as Hcs.
+ lra.
+Qed.
+
+(**
+ [finite_regression_target_variance_positive_if_cross] (theorem) — If finite target-feature covariance is nonzero, then target variance is strictly positive.
+ Mathematical meaning: If finite target-feature covariance is nonzero, then target variance is strictly positive.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> finite_centered_cross xs w f g<>0 -> 0<finite_centered_cross xs w f f.
+ Premises and side conditions: All enumerated weights nonnegative and covariance nonzero.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_target_variance_positive_if_cross :
+ forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) ->
+ finite_centered_cross xs w f g<>0 ->
+ 0<finite_centered_cross xs w f f.
+Proof.
+ intros A xs w f g Hw Hnz.
+ pose proof (finite_centered_cauchy_schwarz A xs w f g Hw) as Hcs.
+ pose proof (finite_centered_variance_nonnegative A xs w f Hw) as Hf.
+ pose proof (finite_centered_variance_nonnegative A xs w g Hw) as Hg.
+ nra.
+Qed.
+
+(**
+ [finite_regression_feature_variance_positive_if_cross] (theorem) — If covariance with the target is nonzero, the feature has strictly positive finite variance.
+ Mathematical meaning: If covariance with the target is nonzero, the feature has strictly positive finite variance.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> finite_centered_cross xs w f g<>0 -> 0<finite_centered_cross xs w g g.
+ Premises and side conditions: All enumerated weights nonnegative and target-feature covariance nonzero.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_feature_variance_positive_if_cross :
+ forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) ->
+ finite_centered_cross xs w f g<>0 ->
+ 0<finite_centered_cross xs w g g.
+Proof.
+ intros A xs w f g Hw Hnz.
+ pose proof (finite_centered_cauchy_schwarz A xs w f g Hw) as Hcs.
+ pose proof (finite_centered_variance_nonnegative A xs w f Hw) as Hf.
+ pose proof (finite_centered_variance_nonnegative A xs w g Hw) as Hg.
+ nra.
+Qed.
+
+(**
+ [finite_regression_exact_zero_if_affine_witness] (theorem) — Any explicit affine relation between a finite target and feature on positive-weight outcomes forces zero optimal regression risk.
+ Mathematical meaning: Any explicit affine relation between a finite target and feature on positive-weight outcomes forces zero optimal regression risk.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), finite_weight_mass xs w<>0 -> 0<finite_centered_cross xs w g g -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<w x -> f x=a+b*g x) -> finite_cov_optimal_variance xs w f g=0.
+ Premises and side conditions: Finite nonnegative sample weights, positive feature variance, and supportwise affine equality.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_exact_zero_if_affine_witness :
+ forall (A:Type) (xs:list A) (w f g:A->R) (a b:R), finite_weight_mass xs w<>0 ->
+ 0<finite_centered_cross xs w g g ->
+ (forall x, In x xs -> 0<=w x) ->
+ (forall x, In x xs -> 0<w x -> f x=a+b*g x) ->
+ finite_cov_optimal_variance xs w f g=0.
+Proof.
+ intros A xs w f g a b Hm Hv Hw Haff.
+ assert (Hvar:0<=finite_cov_residual_variance xs w f g b).
+ { apply finite_cov_residual_variance_nonnegative; exact Hw. }
+ assert (Hmean:finite_weighted_mean xs w f=a+b*finite_weighted_mean xs w g).
+ { assert (Hscore:finite_weighted_score xs w f =
+       finite_weighted_score xs w (fun x=>a+b*g x)).
+   { unfold finite_weighted_score.
+     apply finite_sum_ext_in; intros x Hin.
+     destruct (Rlt_dec 0 (w x)) as [Hpos|Hnot].
+     - rewrite (Haff x Hin Hpos); reflexivity.
+     - assert (Hz:w x=0) by (pose proof (Hw x Hin); lra).
+       rewrite Hz; ring. }
+   unfold finite_weighted_mean.
+   rewrite Hscore.
+   rewrite (finite_weighted_score_affine A xs w g b a).
+   pose proof (finite_weighted_mean_mass_identity A xs w g Hm) as He.
+   unfold finite_weighted_mean in He.
+   field_simplify; try assumption.
+   nra. }
+ assert (Hres:finite_cov_residual_variance xs w f g b=0).
+ { apply (proj2 (finite_regression_residual_zero_iff_affine_support
+       A xs w f g b Hm Hw)).
+   intros x Hin Hpos; rewrite (Haff x Hin Hpos), Hmean; ring. }
+ pose proof (finite_cov_slope_global_optimality A xs w f g b Hm Hv) as Hopt.
+ assert (Hnon:0<=finite_cov_optimal_variance xs w f g)
+   by (apply finite_cov_optimal_variance_nonnegative; try assumption; lra).
+ rewrite <- (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)) in Hnon.
+ rewrite <- (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)).
+ lra.
+Qed.
+
+(**
+ [finite_regression_det_swap] (theorem) — The finite two-score covariance Gram determinant is invariant under exchanging target and feature.
+ Mathematical meaning: The finite two-score covariance Gram determinant is invariant under exchanging target and feature.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w f f*finite_centered_cross xs w g g- finite_centered_cross xs w f g*finite_centered_cross xs w f g= finite_centered_cross xs w g g*finite_centered_cross xs w f f- finite_centered_cross xs w g f*finite_centered_cross xs w g f.
+ Premises and side conditions: No positivity or normalization condition is required for determinant symmetry.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_det_swap :
+ forall (A:Type) (xs:list A) (w f g:A->R),
+ finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+ finite_centered_cross xs w f g*finite_centered_cross xs w f g=
+ finite_centered_cross xs w g g*finite_centered_cross xs w f f-
+ finite_centered_cross xs w g f*finite_centered_cross xs w g f.
+Proof.
+ intros A xs w f g.
+ rewrite (finite_centered_cross_symmetric A xs w g f); ring.
+Qed.
+
+(**
+ [finite_regression_slope_reciprocal_covariance] (theorem) — The cross-covariance normal equations for the two regression orientations identify their shared numerator.
+ Mathematical meaning: The cross-covariance normal equations for the two regression orientations identify their shared numerator.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w f f<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_slope xs w f g*finite_centered_cross xs w g g= finite_cov_slope xs w g f*finite_centered_cross xs w f f.
+ Premises and side conditions: Both target and feature variances nonzero.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_slope_reciprocal_covariance :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w f f<>0 ->
+ finite_centered_cross xs w g g<>0 ->
+ finite_cov_slope xs w f g*finite_centered_cross xs w g g=
+ finite_cov_slope xs w g f*finite_centered_cross xs w f f.
+Proof.
+ intros A xs w f g Hf Hg.
+ rewrite (finite_cov_slope_variance_identity A xs w f g Hg).
+ rewrite (finite_cov_slope_variance_identity A xs w g f Hf).
+ apply finite_centered_cross_symmetric.
+Qed.
+
+(**
+ [finite_regression_slope_zero_both_orientations] (theorem) — For nondegenerate finite target and feature, either directional regression coefficient vanishes exactly when the other does.
+ Mathematical meaning: For nondegenerate finite target and feature, either directional regression coefficient vanishes exactly when the other does.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w f f -> 0<finite_centered_cross xs w g g -> (finite_cov_slope xs w f g=0 <-> finite_cov_slope xs w g f=0).
+ Premises and side conditions: Both covariance diagonal variances strictly positive.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_slope_zero_both_orientations :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w f f ->
+ 0<finite_centered_cross xs w g g ->
+ (finite_cov_slope xs w f g=0 <-> finite_cov_slope xs w g f=0).
+Proof.
+ intros A xs w f g Hf Hg.
+ rewrite (finite_cov_slope_zero_iff A xs w f g Hg).
+ rewrite (finite_cov_slope_zero_iff A xs w g f Hf).
+ rewrite (finite_centered_cross_symmetric A xs w g f).
+ tauto.
+Qed.
+
+(**
+ [finite_regression_slope_positive_both_orientations] (theorem) — For nondegenerate finite target and feature, the two directional regression coefficients share a positive sign.
+ Mathematical meaning: For nondegenerate finite target and feature, the two directional regression coefficients share a positive sign.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w f f -> 0<finite_centered_cross xs w g g -> (0<finite_cov_slope xs w f g <-> 0<finite_cov_slope xs w g f).
+ Premises and side conditions: Both covariance diagonal variances strictly positive.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_slope_positive_both_orientations :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w f f ->
+ 0<finite_centered_cross xs w g g ->
+ (0<finite_cov_slope xs w f g <-> 0<finite_cov_slope xs w g f).
+Proof.
+ intros A xs w f g Hf Hg.
+ rewrite (finite_cov_slope_positive_iff A xs w f g Hg).
+ rewrite (finite_cov_slope_positive_iff A xs w g f Hf).
+ rewrite (finite_centered_cross_symmetric A xs w g f).
+ tauto.
+Qed.
+
+(**
+ [finite_regression_slope_negative_both_orientations] (theorem) — For nondegenerate finite target and feature, the two directional regression coefficients share a negative sign.
+ Mathematical meaning: For nondegenerate finite target and feature, the two directional regression coefficients share a negative sign.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w f f -> 0<finite_centered_cross xs w g g -> (finite_cov_slope xs w f g<0 <-> finite_cov_slope xs w g f<0).
+ Premises and side conditions: Both covariance diagonal variances strictly positive.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_slope_negative_both_orientations :
+ forall (A:Type) (xs:list A) (w f g:A->R), 0<finite_centered_cross xs w f f ->
+ 0<finite_centered_cross xs w g g ->
+ (finite_cov_slope xs w f g<0 <-> finite_cov_slope xs w g f<0).
+Proof.
+ intros A xs w f g Hf Hg.
+ rewrite (finite_cov_slope_negative_iff A xs w f g Hg).
+ rewrite (finite_cov_slope_negative_iff A xs w g f Hf).
+ rewrite (finite_centered_cross_symmetric A xs w g f).
+ tauto.
+Qed.
+
+(**
+ [finite_regression_slope_product_identity] (theorem) — The product of the two directional finite regression slopes equals squared covariance normalized by the product of the two variances.
+ Mathematical meaning: The product of the two directional finite regression slopes equals squared covariance normalized by the product of the two variances.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w f f<>0 -> finite_centered_cross xs w g g<>0 -> finite_cov_slope xs w f g*finite_cov_slope xs w g f= (finite_centered_cross xs w f g*finite_centered_cross xs w f g)/ (finite_centered_cross xs w f f*finite_centered_cross xs w g g).
+ Premises and side conditions: Both variances nonzero, permitting correlation-squared-like normalization.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_slope_product_identity :
+ forall (A:Type) (xs:list A) (w f g:A->R), finite_centered_cross xs w f f<>0 ->
+ finite_centered_cross xs w g g<>0 ->
+ finite_cov_slope xs w f g*finite_cov_slope xs w g f=
+ (finite_centered_cross xs w f g*finite_centered_cross xs w f g)/
+ (finite_centered_cross xs w f f*finite_centered_cross xs w g g).
+Proof.
+ intros A xs w f g Hf Hg.
+ unfold finite_cov_slope.
+ rewrite (finite_centered_cross_symmetric A xs w g f).
+ unfold Rdiv; field; split; assumption.
+Qed.
+
+(**
+ [finite_regression_slope_product_unit_interval] (theorem) — Directional regression slopes yield a normalized nonnegative covariance product bounded above by one.
+ Mathematical meaning: Directional regression slopes yield a normalized nonnegative covariance product bounded above by one.
+ Exact checked proposition: forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) -> 0<finite_centered_cross xs w f f -> 0<finite_centered_cross xs w g g -> 0<=finite_cov_slope xs w f g*finite_cov_slope xs w g f /\ finite_cov_slope xs w f g*finite_cov_slope xs w g f<=1.
+ Premises and side conditions: Nonnegative sample weights and strictly positive variances in both orientations.
+ Proof/definition method: Combine existing finite weighted Cauchy–Schwarz, zero-variance iff supported constancy, finite covariance-ratio least-squares optimality, algebraic determinant normal equations, and positivity of squared residuals. Reuse the Rocq library instead of defining an alternate finite enumerator or covariance structure.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, List, classical real equality, field/ring tactics, FiniteSum and FiniteConditionalCovariance previous kernel lemmas.
+ Boundary: Exact finite weighted sample and best-linear projection algebra only; no continuous Gaussian conditional distributions, normal-tail integrals, empirical IQ score calibration, or test-population correlations are verified.
+ *)
+Theorem finite_regression_slope_product_unit_interval :
+ forall (A:Type) (xs:list A) (w f g:A->R), (forall x, In x xs -> 0<=w x) ->
+ 0<finite_centered_cross xs w f f ->
+ 0<finite_centered_cross xs w g g ->
+ 0<=finite_cov_slope xs w f g*finite_cov_slope xs w g f /\
+ finite_cov_slope xs w f g*finite_cov_slope xs w g f<=1.
+Proof.
+ intros A xs w f g Hw Hf Hg.
+ pose proof (finite_centered_cauchy_schwarz A xs w f g Hw) as Hcs.
+ rewrite (finite_regression_slope_product_identity A xs w f g ltac:(lra) ltac:(lra)).
+ unfold Rdiv.
+ assert (Hd:0<finite_centered_cross xs w f f*finite_centered_cross xs w g g)
+   by (apply Rmult_lt_0_compat; assumption).
+ assert (Hi:0< /(finite_centered_cross xs w f f*finite_centered_cross xs w g g))
+   by (apply Rinv_0_lt_compat; exact Hd).
+ split.
+ - assert (Hs:0<=finite_centered_cross xs w f g*finite_centered_cross xs w f g)
+     by (change (0<=Rsqr (finite_centered_cross xs w f g)); apply Rle_0_sqr).
+   apply Rmult_le_pos; [exact Hs|lra].
+ - assert (Hineq:0<=(finite_centered_cross xs w f f*finite_centered_cross xs w g g-
+          finite_centered_cross xs w f g*finite_centered_cross xs w f g)*
+          /(finite_centered_cross xs w f f*finite_centered_cross xs w g g)).
+   { apply Rmult_le_pos; [lra|lra]. }
+   assert (Hone: (finite_centered_cross xs w f f*finite_centered_cross xs w g g)*
+        /(finite_centered_cross xs w f f*finite_centered_cross xs w g g)=1).
+   { field; lra. }
+   nra.
+Qed.
+

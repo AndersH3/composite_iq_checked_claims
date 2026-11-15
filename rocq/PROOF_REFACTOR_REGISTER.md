@@ -8,9 +8,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **1634 public theorem/lemma/example claims**, plus
+The current branch has **1653 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**1637 proof scripts** across eighteen Rocq modules. The claims and scripts
+**1656 proof scripts** across eighteen Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -2490,7 +2490,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `nested_full_law_total_variance` (theorem) | Compose the previous two-cell law of total variance with the exact nested variance identity, preserving each observed-cell mass premise. | Stdlib.List.filter/filter_In, Stdlib Reals/Lra/Psatz/Ring and shared FiniteSum plus FiniteTwoCellProjection results. | Finite explicitly weighted Boolean partitions with stated mass/positivity assumptions; no general L¹ or Gaussian conditional law. |
 
 
-## FiniteConditionalCovariance.v — 84 proof scripts
+## FiniteConditionalCovariance.v — 103 proof scripts
 
 | Declaration (proof script) | Substantive checked task and refactor | Library reuse | Scope |
 |---|---|---|---|
@@ -2581,6 +2581,26 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `finite_cov_optimal_variance_interval` (theorem) | Finite optimized residual variance lies between zero and the original target variance. | Standard finite covariance and Rocq real field/ring/positivity | Nonnegative weights, positive feature variance and nonzero total mass. |
 | `finite_cov_optimal_target_translation` (theorem) | The best attainable finite linear-regression variance is invariant under an additive target-score shift. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
 | `finite_cov_optimal_feature_translation` (theorem) | The best attainable finite linear-regression variance is invariant under an additive feature-score shift. | Standard finite covariance and Rocq real field/ring/positivity | Nonzero total weight mass is required for finite mean and covariance linearity. |
+
+| `finite_regression_residual_zero_iff_affine_support` (theorem) | Zero finite least-squares residual variance for a fixed slope is equivalent to an affine target-feature relation on every outcome with strictly positive weight. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Nonzero total sample weight; every listed weight nonnegative; support means strictly positive weight. |
+| `finite_regression_optimal_zero_iff_affine_support` (theorem) | The optimal one-feature Schur residual vanishes exactly when target scores are affine in the feature on all positive-weight outcomes. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Nonzero mass, nonnegative outcome weights and positive finite feature variance. |
+| `finite_regression_optimal_positive_iff_nonaffine` (theorem) | Best finite linear prediction has strictly positive residual exactly when some supported outcome violates its optimal affine prediction. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Positive feature variance, nonnegative weights, and a supported non-affine observation. |
+| `finite_regression_det_residual_identity` (theorem) | The finite covariance Gram determinant equals feature variance multiplied by optimal regression residual variance. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Feature variance is nonzero; the identity is otherwise unnormalized real finite covariance algebra. |
+| `finite_regression_det_zero_iff_exact` (theorem) | A vanishing two-score Gram determinant is equivalent to zero optimal one-feature Schur residual when the feature variance is positive. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Strictly positive feature centered variance. |
+| `finite_regression_det_positive_iff_residual_positive` (theorem) | The finite covariance Gram determinant is strictly positive exactly when the best one-feature residual variance is strictly positive. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Strictly positive feature variance. |
+| `finite_regression_det_zero_iff_affine_support` (theorem) | A singular finite two-score covariance matrix means the target is exactly affine in the feature on every positive-weight outcome. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Nonnegative weights, nonzero total mass and positive feature variance. |
+| `finite_regression_det_positive_iff_nonaffine` (theorem) | The determinant is strictly positive exactly when some supported data point violates the optimal affine feature predictor. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Nonnegative sample weights, nonzero mass, and strictly positive feature variance. |
+| `finite_regression_det_nonnegative` (theorem) | Nonnegative finite weights force the two-score covariance Gram determinant to be nonnegative. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Nonnegative weights on every enumerated outcome, with no mass normalization. |
+| `finite_regression_target_variance_positive_if_cross` (theorem) | If finite target-feature covariance is nonzero, then target variance is strictly positive. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | All enumerated weights nonnegative and covariance nonzero. |
+| `finite_regression_feature_variance_positive_if_cross` (theorem) | If covariance with the target is nonzero, the feature has strictly positive finite variance. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | All enumerated weights nonnegative and target-feature covariance nonzero. |
+| `finite_regression_exact_zero_if_affine_witness` (theorem) | Any explicit affine relation between a finite target and feature on positive-weight outcomes forces zero optimal regression risk. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Finite nonnegative sample weights, positive feature variance, and supportwise affine equality. |
+| `finite_regression_det_swap` (theorem) | The finite two-score covariance Gram determinant is invariant under exchanging target and feature. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | No positivity or normalization condition is required for determinant symmetry. |
+| `finite_regression_slope_reciprocal_covariance` (theorem) | The cross-covariance normal equations for the two regression orientations identify their shared numerator. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Both target and feature variances nonzero. |
+| `finite_regression_slope_zero_both_orientations` (theorem) | For nondegenerate finite target and feature, either directional regression coefficient vanishes exactly when the other does. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Both covariance diagonal variances strictly positive. |
+| `finite_regression_slope_positive_both_orientations` (theorem) | For nondegenerate finite target and feature, the two directional regression coefficients share a positive sign. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Both covariance diagonal variances strictly positive. |
+| `finite_regression_slope_negative_both_orientations` (theorem) | For nondegenerate finite target and feature, the two directional regression coefficients share a negative sign. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Both covariance diagonal variances strictly positive. |
+| `finite_regression_slope_product_identity` (theorem) | The product of the two directional finite regression slopes equals squared covariance normalized by the product of the two variances. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Both variances nonzero, permitting correlation-squared-like normalization. |
+| `finite_regression_slope_product_unit_interval` (theorem) | Directional regression slopes yield a normalized nonnegative covariance product bounded above by one. | Reuses finite covariance Cauchy–Schwarz, regression normal equations, Stdlib field/positivity | Nonnegative sample weights and strictly positive variances in both orientations. |
 
 ## FiniteConditionalResidual.v — 30 proof scripts
 
