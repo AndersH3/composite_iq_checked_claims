@@ -8,9 +8,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **1581 public theorem/lemma/example claims**, plus
+The current branch has **1610 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**1584 proof scripts** across eighteen Rocq modules. The claims and scripts
+**1613 proof scripts** across eighteen Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -2490,7 +2490,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `nested_full_law_total_variance` (theorem) | Compose the previous two-cell law of total variance with the exact nested variance identity, preserving each observed-cell mass premise. | Stdlib.List.filter/filter_In, Stdlib Reals/Lra/Psatz/Ring and shared FiniteSum plus FiniteTwoCellProjection results. | Finite explicitly weighted Boolean partitions with stated mass/positivity assumptions; no general L¹ or Gaussian conditional law. |
 
 
-## FiniteConditionalCovariance.v — 31 proof scripts
+## FiniteConditionalCovariance.v — 60 proof scripts
 
 | Declaration (proof script) | Substantive checked task and refactor | Library reuse | Scope |
 |---|---|---|---|
@@ -2526,6 +2526,36 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `finite_conditional_pullout_two_cell` (theorem) | Finite pull-out: multiplying by an arbitrary observed two-cell function does not distinguish a score from its conditional predictor. The proof reuses general linearity, sum-filter and finite conditional-mean results rather than a second list-fold implementation. | Stdlib.List / Reals / Lra / Psatz / Field / Ring, FiniteSum, FiniteTwoCellProjection, FiniteNestedProjection. | Real weighted finite-list covariance algebra; no unproved Gaussian or general measure-theoretic premise. |
 | `finite_two_cell_between_cross_variance_nonnegative` (theorem) | The between-cell covariance term for equal scores is nonnegative whenever the two sample-cell masses are nonnegative. The proof reuses general linearity, sum-filter and finite conditional-mean results rather than a second list-fold implementation. | Stdlib.List / Reals / Lra / Psatz / Field / Ring, FiniteSum, FiniteTwoCellProjection, FiniteNestedProjection. | Real weighted finite-list covariance algebra; no unproved Gaussian or general measure-theoretic premise. |
 
+
+| `finite_cross_scale_first` (theorem) | Weighted cross-moments are homogeneous in their first centered score. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_scale_second` (theorem) | Weighted cross-moments are homogeneous in their second centered score. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_shift_first` (theorem) | Matched translation of a first score and its reference leaves cross-moments unchanged. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_shift_second` (theorem) | Matched translation of a second score and its reference leaves cross-moments unchanged. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_add_first` (theorem) | First-coordinate cross-moment additivity permits decomposition of composite test scores. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_add_second` (theorem) | Second-coordinate cross-moment additivity permits decomposition of composite test scores. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_sub_first` (theorem) | Weighted cross-moments split over first-score differences, preserving reference differences. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_sub_second` (theorem) | Weighted cross-moments split over second-score differences, preserving reference differences. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_loss_scale` (theorem) | Quadratic weighted prediction loss has degree-two homogeneity in score and reference. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_loss_cross_scaled_polarization` (theorem) | The exact quadratic expansion of scaled composite-score loss separates individual losses and covariance. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_cross_quadratic_psd` (theorem) | Nonnegative sample weights make every centered linear-combination loss nonnegative. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Every outcome weight is nonnegative, with no normalization assumption. |
+| `real_quadratic_psd_discriminant` (theorem) | A globally nonnegative quadratic must have nonpositive discriminant, yielding the real Gram determinant inequality. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Requires nonnegative quadratic leading coefficient and nonnegativity for every scalar. |
+| `finite_cross_cauchy_schwarz` (theorem) | The finite weighted Cauchy–Schwarz inequality holds for arbitrarily centered scores with nonnegative weights. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Requires nonnegative weight at each enumerated sample. |
+| `finite_centered_variance_nonnegative` (theorem) | Every centered finite variance is nonnegative under nonnegative sample weights. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonnegative finite weights. |
+| `finite_centered_variance_zero_iff_supported_constant` (theorem) | Zero centered variance occurs exactly when the score is constant at its weighted mean on positive-weight outcomes. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonnegative weight throughout the enumerated sample. |
+| `finite_centered_cauchy_schwarz` (theorem) | Centered finite sample covariance obeys Cauchy–Schwarz, establishing positive semidefiniteness of its Gram matrix. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonnegative sample weights, without Gaussian assumptions. |
+| `finite_centered_cov_zero_if_first_supported_constant` (theorem) | Any supportwise constant score has zero covariance with every finite score. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonnegative sample weights and constancy on their positive support. |
+| `finite_centered_cov_zero_if_second_supported_constant` (theorem) | Supportwise constancy of the second score forces zero covariance with every first score. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonnegative sample weights and constancy on their positive support. |
+| `finite_centered_shift_first` (theorem) | Finite centered covariance is invariant under translating the first score. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_shift_second` (theorem) | Finite centered covariance is invariant under translating the second score. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_affine_first` (theorem) | Affine calibration of a first score multiplies covariance by its slope but not its intercept. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_affine_second` (theorem) | Affine calibration of a second score multiplies covariance by its slope but not its intercept. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_affine_both` (theorem) | Two independently calibrated scores have covariance multiplied by the product of calibration slopes. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_sub_first` (theorem) | Centered covariance is subtractive in its first argument. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_sub_second` (theorem) | Centered covariance is subtractive in its second argument. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_four_term_expansion` (theorem) | Covariance of two sum scores expands into four pairwise covariances. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_difference_variance` (theorem) | Variance of a score difference equals the sum of variances minus twice their covariance. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_sum_variance` (theorem) | Variance of a sum of test scores equals individual variances plus twice their covariance. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
+| `finite_centered_variance_parallelogram` (theorem) | The covariance-induced variance obeys the parallelogram identity, certifying a quadratic inner-product structure. | Reuses existing finite sum/weighted loss and Rocq Stdlib real algebra | Nonzero total mass is required only when a weighted mean is transformed. |
 
 ## FiniteConditionalResidual.v — 30 proof scripts
 
