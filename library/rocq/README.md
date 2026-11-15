@@ -6,14 +6,14 @@ Only genuinely report-neutral mathematical modules are owned **once** under this
 
 Report-specific lemmas and models remain with their reports: [Hoeflin/Ferguson](../../analyses/hoeflin-ferguson/rocq/), [Towers admissions](../../analyses/towers-multiple-test-admissions/rocq/), and [Sequential conditional means](../../analyses/sequential-conditional-means/rocq/).
 
-The canonical 20-module dependency order is encoded in [`scripts/compile_rocq.sh`](../../scripts/compile_rocq.sh). It copies each uniquely named source into a clean temporary workspace and runs `rocq compile` in that order. From the repository root:
+The canonical 21-module dependency order is encoded in [`scripts/compile_rocq.sh`](../../scripts/compile_rocq.sh). It copies each uniquely named source into a clean temporary workspace and runs `rocq compile` in that order. From the repository root:
 
 ```sh
 bash scripts/check_rocq_documentation.sh
 sh scripts/compile_rocq.sh
 ```
 
-CI pins `rocq/rocq-prover:9.2.0`; an explanatory header and full declaration-specific documentation are enforced. The existing 1,682 proof scripts were relocated **without altering their propositions**; the 55 new report-specific sensitivity proofs are separately owned in SequentialSensitivity.v; 55 specialized three-test admissions proofs reside in ThreeTestAdmissions.v and import FiniteUnion/FiniteSum. Finite weighted algebra and best linear prediction do not themselves establish Gaussian conditional probabilities, normal-tail integrals, or any empirical psychometric parameter.
+CI pins `rocq/rocq-prover:9.2.0`; an explanatory header and full declaration-specific documentation are enforced. The existing 1,682 proof scripts were relocated **without altering their propositions**; the 55 new report-specific sensitivity proofs are separately owned in SequentialSensitivity.v; 55 specialized three-test admissions proofs reside in ThreeTestAdmissions.v and import FiniteUnion/FiniteSum; ThreeTestPairBridge.v contributes 84 cross-model pairwise proofs and three certified two-event constructors. Finite weighted algebra and best linear prediction do not themselves establish Gaussian conditional probabilities, normal-tail integrals, or any empirical psychometric parameter.
 
 ## Complete AI disclosure
 
