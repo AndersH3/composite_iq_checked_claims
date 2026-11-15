@@ -1,8 +1,9 @@
+with Shared_Event_Arithmetic;
 package Admission_Core with SPARK_Mode is
    --  Counts remain exact; no distributional assumption is used here.
    Max_Trials : constant := 100_000_000;
    subtype Count is Long_Long_Integer range 0 .. Max_Trials;
-   Scale : constant := 1_000_000_000_000_000;
+   Scale : constant := Shared_Event_Arithmetic.Scale_Units;
    subtype Probability_Units is Long_Long_Integer range 0 .. Scale;
    type Rational_Probability is record
       Numerator, Denominator : Probability_Units;

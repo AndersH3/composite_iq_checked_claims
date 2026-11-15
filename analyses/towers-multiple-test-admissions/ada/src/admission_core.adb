@@ -1,3 +1,4 @@
+with Shared_Event_Arithmetic;
 package body Admission_Core with SPARK_Mode is
    function Classify (Pass_A, Pass_B : Boolean) return Event is
    begin
@@ -27,9 +28,14 @@ package body Admission_Core with SPARK_Mode is
    function Fraction (Numerator, Denominator : Count) return Rational_Probability is
      ((Numerator => Numerator, Denominator => Denominator));
    function Union_Probability (P_A, P_B, Joint : Probability_Units)
-     return Probability_Units is (P_A + P_B - Joint);
+     return Probability_Units is
+       (Probability_Units (Shared_Event_Arithmetic.Union_Units
+          (Shared_Event_Arithmetic.Units (P_A),
+           Shared_Event_Arithmetic.Units (P_B),
+           Shared_Event_Arithmetic.Units (Joint))));
    function Complement (P : Probability_Units) return Probability_Units is
-     (Scale - P);
+       (Probability_Units (Shared_Event_Arithmetic.Complement_Units
+          (Shared_Event_Arithmetic.Units (P))));
    function Conditional (Joint, Marginal : Probability_Units)
      return Rational_Probability is
      ((Numerator => Joint, Denominator => Marginal));

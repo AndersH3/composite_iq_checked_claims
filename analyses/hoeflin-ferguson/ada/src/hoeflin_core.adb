@@ -1,13 +1,13 @@
+with Shared_Equicorrelation;
 package body Hoeflin_Core with SPARK_Mode is
    function Variance_Numerator
      (N : Test_Count; R : Correlation_Permille) return Numerator_Value
    is
-      Loss : constant Long_Long_Integer :=
-        Long_Long_Integer (1_000 - R) * Long_Long_Integer (N - 1);
-      Result : constant Long_Long_Integer :=
-        1_000 * Long_Long_Integer (N) - Loss;
    begin
-      return Result;
+      --  One canonical checked equicorrelation numerator; keep the
+      --  original strictly nonnegative Hoeflin result subtype.
+      return Numerator_Value
+        (Shared_Equicorrelation.Numerator (N, Integer (R)));
    end Variance_Numerator;
 
    function Variance_Factor

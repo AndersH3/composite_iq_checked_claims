@@ -1,11 +1,12 @@
+with Shared_Equicorrelation;
 package body Sequential_Core with SPARK_Mode is
    function D_Numerator
      (N : Count; C : Correlation_Permille) return Long_Long_Integer
    is
    begin
-      --  Integer units retain negative finite-battery eigenvalues during
-      --  validation instead of rounding a nearly singular covariance.
-      return Scale + Long_Long_Integer (C) * Long_Long_Integer (N - 1);
+      --  Negative eigenvalues remain exact for invalid-domain detection.
+      --  Reuse the same canonical numerator as Hoeflin/Ferguson.
+      return Shared_Equicorrelation.Numerator (N, C);
    end D_Numerator;
 
    function Calculate
