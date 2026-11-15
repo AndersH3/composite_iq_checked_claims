@@ -3507,3 +3507,288 @@ Proof.
     apply Admissions.frechet_lower_bound.
 Qed.
 
+(**
+ [simpson_reversal_weight] (definition) — An exact, strictly positive eight-atom probability table whose two C-strata each have negative AB association while the pooled AB pair has positive association.
+ Mathematical meaning: An exact, strictly positive eight-atom probability table whose two C-strata each have negative AB association while the pooled AB pair has positive association.
+ Exact declaration: Definition simpson_reversal_weight (t:triple_outcome):R; eight explicitly rational cell values.
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Use the canonical three-Boolean event projections and an exhaustive match; no custom sum recursion.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Definition simpson_reversal_weight (t:triple_outcome) : R :=
+  match (testA3 t,testB3 t,testC3 t) with
+  | (true,true,true) => 63/200
+  | (true,true,false) => 3/200
+  | (true,false,true) => 17/200
+  | (true,false,false) => 17/200
+  | (false,true,true) => 17/200
+  | (false,true,false) => 17/200
+  | (false,false,true) => 3/200
+  | (false,false,false) => 63/200
+  end.
+
+(**
+ [simpson_reversal_model] (definition) — The exhaustive eight-atom Simpson example is a certified nonnegative, unit-normalized ThreeTestModel.
+ Mathematical meaning: The exhaustive eight-atom Simpson example is a certified nonnegative, unit-normalized ThreeTestModel.
+ Exact declaration: Definition simpson_reversal_model : ThreeTestModel.
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Prove all eight raw weights are nonnegative by boolean case analysis, and prove exact total mass one by canonical FiniteSum and rational field arithmetic.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Definition simpson_reversal_model : ThreeTestModel.
+Proof.
+  refine {| mass3 := simpson_reversal_weight |}.
+  - intros t.
+    destruct t as [u v].
+    destruct u; destruct v;
+      repeat match goal with b:bool |- _ => destruct b end;
+      cbv [simpson_reversal_weight testA3 testB3 testC3];
+      unfold Rdiv;
+      apply Rmult_le_pos; [lra | apply Rlt_le, Rinv_0_lt_compat; lra].
+  - cbv [FiniteSum.finite_sum triple_cases simpson_reversal_weight
+         testA3 testB3 testC3 List.map List.fold_right].
+    field; lra.
+Defined.
+
+(* The same centralized finite-event unfolding is used to certify the
+   example's exact marginal and overlap values; this tactic introduces
+   no axioms or independent probability accumulation method. *)
+Ltac simpson_exact :=
+  cbv [pA3 pB3 pC3 pAB3 triple_prob simpson_reversal_model
+       simpson_reversal_weight
+       FiniteUnion.finite_prob FiniteUnion.indicator
+       FiniteUnion.finite_sum FiniteSum.finite_sum triple_cases
+       testA3 testB3 testC3 List.map List.fold_right];
+  field; lra.
+
+(**
+ [simpson_A_half] (theorem) — The pooled first-route admission marginal of the certified example equals one-half.
+ Mathematical meaning: The pooled first-route admission marginal of the certified example equals one-half.
+ Exact checked proposition: pA3 simpson_reversal_model = 1/2
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_A_half :
+  pA3 simpson_reversal_model = 1/2.
+Proof.
+  simpson_exact.
+Qed.
+
+(**
+ [simpson_B_half] (theorem) — The pooled second-route admission marginal of the certified example equals one-half.
+ Mathematical meaning: The pooled second-route admission marginal of the certified example equals one-half.
+ Exact checked proposition: pB3 simpson_reversal_model = 1/2
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_B_half :
+  pB3 simpson_reversal_model = 1/2.
+Proof.
+  simpson_exact.
+Qed.
+
+(**
+ [simpson_C_half] (theorem) — The selection-stratum probability is one-half for each C value.
+ Mathematical meaning: The selection-stratum probability is one-half for each C value.
+ Exact checked proposition: pC3 simpson_reversal_model = 1/2
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_C_half :
+  pC3 simpson_reversal_model = 1/2.
+Proof.
+  simpson_exact.
+Qed.
+
+(**
+ [simpson_joint_thirty_three_percent] (theorem) — The pooled AB joint success mass is exactly 33%, exceeding the 25% independence product of the marginals.
+ Mathematical meaning: The pooled AB joint success mass is exactly 33%, exceeding the 25% independence product of the marginals.
+ Exact checked proposition: pAB3 simpson_reversal_model = 33/100
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_joint_thirty_three_percent :
+  pAB3 simpson_reversal_model = 33/100.
+Proof.
+  simpson_exact.
+Qed.
+
+(**
+ [simpson_pooled_positive_association] (theorem) — The pooled AB binary indicator covariance is strictly positive despite negative conditional dependence inside each C stratum.
+ Mathematical meaning: The pooled AB binary indicator covariance is strictly positive despite negative conditional dependence inside each C stratum.
+ Exact checked proposition: pA3 simpson_reversal_model*pB3 simpson_reversal_model < pAB3 simpson_reversal_model
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_pooled_positive_association :
+  pA3 simpson_reversal_model*pB3 simpson_reversal_model < pAB3 simpson_reversal_model.
+Proof.
+  rewrite simpson_A_half, simpson_B_half, simpson_joint_thirty_three_percent; nra.
+Qed.
+
+(**
+ [simpson_C_pass_positive_probability] (theorem) — The C-pass stratum has strictly positive probability, ensuring its conditional two-event model is well-defined.
+ Mathematical meaning: The C-pass stratum has strictly positive probability, ensuring its conditional two-event model is well-defined.
+ Exact checked proposition: 0 < pC3 simpson_reversal_model
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_C_pass_positive_probability :
+  0 < pC3 simpson_reversal_model.
+Proof.
+  rewrite simpson_C_half; lra.
+Qed.
+
+(**
+ [simpson_C_fail_positive_probability] (theorem) — The C-fail stratum has strictly positive probability, ensuring its conditional two-event model is well-defined.
+ Mathematical meaning: The C-fail stratum has strictly positive probability, ensuring its conditional two-event model is well-defined.
+ Exact checked proposition: 0 < 1-pC3 simpson_reversal_model
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_C_fail_positive_probability :
+  0 < 1-pC3 simpson_reversal_model.
+Proof.
+  rewrite simpson_C_half; lra.
+Qed.
+
+(**
+ [simpson_AB_negative_given_C_pass] (theorem) — Within C passers, A and B have negative conditional binary-indicator association.
+ Mathematical meaning: Within C passers, A and B have negative conditional binary-indicator association.
+ Exact checked proposition: forall (H:0<pC3 simpson_reversal_model), Admissions.admission_association (stratum_ab_c_yes simpson_reversal_model H) < 0
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_AB_negative_given_C_pass :
+  forall (H:0<pC3 simpson_reversal_model), Admissions.admission_association (stratum_ab_c_yes simpson_reversal_model H) < 0.
+Proof.
+  intro H.
+  apply (proj2 (stratum_ab_c_yes_association_negative_iff_raw simpson_reversal_model H)).
+  change ((63/200)*(3/200)<(17/200)*(17/200)).
+  nra.
+Qed.
+
+(**
+ [simpson_AB_negative_given_C_fail] (theorem) — Within C nonpassers, A and B also have negative conditional binary-indicator association.
+ Mathematical meaning: Within C nonpassers, A and B also have negative conditional binary-indicator association.
+ Exact checked proposition: forall (H:0<1-pC3 simpson_reversal_model), Admissions.admission_association (stratum_ab_c_no simpson_reversal_model H) < 0
+ Premises and side conditions: All eight Boolean admission-pattern masses
+ are explicitly enumerated. The concrete example has equal-mass conditioning
+ strata and nonnegative weights summing exactly to one. Its conditional
+ association statements only use positive-mass strata and the separately
+ verified normalized four-cell projections; no independence is assumed.
+ Proof/definition method: Simplify the finite Boolean enumeration to exact rational real arithmetic and reuse the already checked conditional-independence/association bridge.
+ Library reuse: ThreeTestAdmissions finite probability and eight-outcome
+ model, the canonical FiniteUnion/FiniteSum engine, Admissions association
+ criteria, normalized_four_stratum, and Stdlib.Lra/Psatz/Field.
+ Boundary: This example demonstrates selection-induced sign reversal in
+ finite probability alone. It is not evidence about observed IQ, institutions,
+ normal tails or a Gaussian conditional distribution.
+*)
+Theorem simpson_AB_negative_given_C_fail :
+  forall (H:0<1-pC3 simpson_reversal_model), Admissions.admission_association (stratum_ab_c_no simpson_reversal_model H) < 0.
+Proof.
+  intro H.
+  apply (proj2 (stratum_ab_c_no_association_negative_iff_raw simpson_reversal_model H)).
+  change ((3/200)*(63/200)<(17/200)*(17/200)).
+  nra.
+Qed.
+
