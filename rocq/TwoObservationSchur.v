@@ -502,10 +502,14 @@ Theorem cov2_beta_explained_quadratic :
  u*cov2_beta_first a b c u v+v*cov2_beta_second a b c u v.
 Proof.
  intros a b c u v Hd.
- pose proof (cov2_beta_first_normal_equation a b c u v Hd) as H1.
- pose proof (cov2_beta_second_normal_equation a b c u v Hd) as H2.
+ set (p := cov2_beta_first a b c u v).
+ set (q := cov2_beta_second a b c u v).
+ assert (H1:a*p+c*q=u).
+ { unfold p,q; apply cov2_beta_first_normal_equation; exact Hd. }
+ assert (H2:c*p+b*q=v).
+ { unfold p,q; apply cov2_beta_second_normal_equation; exact Hd. }
+ change (a*p*p+2*c*p*q+b*q*q=u*p+v*q).
  rewrite <- H1, <- H2.
- unfold cov2_quad.
  ring.
 Qed.
 
