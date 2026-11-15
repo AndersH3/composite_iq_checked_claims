@@ -2,6 +2,9 @@
 # Offline, non-mutating regression tests for the Ada/SPARK and Why3 installer.
 # The tests do not use sudo, apt, network, Alire, or a Standard ML compiler.
 set -euo pipefail
+# Make unexpected regressions visible instead of exiting silently under
+# 'set -e'. This diagnostic does not alter expected-failure test cases.
+trap 'status=$?; printf "ERROR: offline regression line %s exited %s: %s\n" "$LINENO" "$status" "$BASH_COMMAND" >&2' ERR
 cd "$(dirname "$0")/.."
 installer=scripts/install_ada_spark_why3.sh
 
@@ -138,7 +141,7 @@ case "${1:-}" in
         "${WHY3_FAKE_NEGATIVE:-Unknown (sat)}"
       # Reproduce nonzero Why3 exit code for an unproved goal as observed
       # on computer10; a well-formed result must still be parsed.
-      exit "${WHY3_FAKE_NEGATIVE_RC:-1}"
+      exit "${WHY3_FAKE_NEGATIVE_RC:-2}"
     else
       exit 80
     fi
@@ -158,7 +161,8 @@ grep -F 'Z3,4.13.3,' "$fixture/proof-smoke.out" >/dev/null
 grep -F 'CVC5,1.1.2,' "$fixture/proof-smoke.out" >/dev/null
 # Negative controls against incorrectly claiming that a false goal is Valid,
 # accepting an arbitrary Unknown, a timeout, or a result for the wrong goal.
-# A code 1 is accepted only with an exact Invalid or Unknown (sat) answer.
+# Why3 1.8 exit status 2 (unproved goal) is required with exact
+# Invalid or Unknown (sat) answer. Exit 1 is not accepted as proof evidence.
 HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Invalid \
   bash "$smoke" >"$fixture/invalid-negative.out"
 grep -F 'Why3 classified FalseGoal Invalid' "$fixture/invalid-negative.out" >/dev/null
@@ -167,7 +171,7 @@ if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Valid \
   printf '%s\n' 'ERROR: Why3 proof audit accepted a false goal as Valid' >&2
   exit 1
 fi
-grep -F 'incorrectly proved a false goal' "$fixture/unsound.out" >/dev/null
+grep -F 'incorrectly proved FalseGoal as Valid' "$fixture/unsound.out" >/dev/null
 
 if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Unknown \
     bash "$smoke" >"$fixture/unknown-negative.out" 2>&1; then
@@ -188,7 +192,19 @@ if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE_RC=124 \
   printf '%s\n' 'ERROR: Why3 proof audit accepted an interrupted solver call' >&2
   exit 1
 fi
-grep -F 'negative control exited unexpectedly' "$fixture/timeout-negative.out" >/dev/null
+grep -F 'negative control exited with 124' "$fixture/timeout-negative.out" >/dev/null
+
+# Ensure a CLI failure (exit 1) and a silent "success" (exit 0)
+# cannot masquerade as Why3's unproved-goal result (exit 2).
+for invalid_rc in 0 1; do
+  if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE_RC="$invalid_rc" \
+      bash "$smoke" >"$fixture/bad-exit-$invalid_rc.out" 2>&1; then
+    printf 'ERROR: Why3 audit accepted negative-control exit %s\n' "$invalid_rc" >&2
+    exit 1
+  fi
+  grep -F "negative control exited with $invalid_rc" \
+    "$fixture/bad-exit-$invalid_rc.out" >/dev/null
+done
 
 if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_GOAL=UnrelatedGoal \
     bash "$smoke" >"$fixture/wrong-goal.out" 2>&1; then
