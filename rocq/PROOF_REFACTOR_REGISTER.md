@@ -10,9 +10,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **1990 public theorem/lemma/example claims**, plus
+The current branch has **1999 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**2003 proof scripts** across twenty-two Rocq modules. The claims and scripts
+**2013 proof scripts** across twenty-two Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -2383,7 +2383,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `triple_bc_phi_unit_interval` (theorem) | With strictly positive Bernoulli variances, projected B/C phi correlation lies in [-1,1]. Reuses a checked two-event theorem or a canonical eight-cell equality. | Admissions, ThreeTestAdmissions, FiniteUnion/FiniteSum, Stdlib.Lra/Psatz. | Exactly finite Boolean outcomes; conditional interpretation requires positive denominators; no Gaussian-tail inference. |
 | `triple_bc_union_unit_interval` (theorem) | The projection of B/C admissions has a normalized nonnegative union probability at most one. Reuses a checked two-event theorem or a canonical eight-cell equality. | Admissions, ThreeTestAdmissions, FiniteUnion/FiniteSum, Stdlib.Lra/Psatz. | Exactly finite Boolean outcomes; conditional interpretation requires positive denominators; no Gaussian-tail inference. |
 
-## ThreeTestConditionalStrata.v — 124 proof scripts
+## ThreeTestConditionalStrata.v — 134 proof scripts
 
 | Declaration (proof script) | Refactoring / proof method | Existing libraries or lemmas reused | Scope and boundary |
 |---|---|---|---|
@@ -2513,6 +2513,17 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `stratum_bc_a_no_first_given_second` (theorem) | The first-route success probability conditional on second-route success within the A-failure stratum is the selected joint/second-column ratio. | Reduces to normalized_four_stratum or inherits existing Admissions Fréchet/conditional/odds properties. | Conditional on positive-mass test stratum; ratio denominators explicit; no Gaussian assumptions. |
 | `stratum_bc_a_no_odds_ratio` (theorem) | The normalized BC odds ratio within this selection stratum agrees exactly with the raw selected concordant/discordant cross-product ratio. | Reduces to normalized_four_stratum or inherits existing Admissions Fréchet/conditional/odds properties. | Conditional on positive-mass test stratum; ratio denominators explicit; no Gaussian assumptions. |
 | `stratum_bc_a_no_frechet_lower` (theorem) | Conditional overlap in the A-failure stratum satisfies the Fréchet lower bound for the projected BC pair. | Reduces to normalized_four_stratum or inherits existing Admissions Fréchet/conditional/odds properties. | Conditional on positive-mass test stratum; ratio denominators explicit; no Gaussian assumptions. |
+
+| `simpson_reversal_model` (definition) | The exhaustive eight-atom Simpson example is a certified nonnegative, unit-normalized ThreeTestModel. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_A_half` (theorem) | The pooled first-route admission marginal of the certified example equals one-half. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_B_half` (theorem) | The pooled second-route admission marginal of the certified example equals one-half. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_C_half` (theorem) | The selection-stratum probability is one-half for each C value. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_joint_thirty_three_percent` (theorem) | The pooled AB joint success mass is exactly 33%, exceeding the 25% independence product of the marginals. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_pooled_positive_association` (theorem) | The pooled AB binary indicator covariance is strictly positive despite negative conditional dependence inside each C stratum. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_C_pass_positive_probability` (theorem) | The C-pass stratum has strictly positive probability, ensuring its conditional two-event model is well-defined. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_C_fail_positive_probability` (theorem) | The C-fail stratum has strictly positive probability, ensuring its conditional two-event model is well-defined. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_AB_negative_given_C_pass` (theorem) | Within C passers, A and B have negative conditional binary-indicator association. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
+| `simpson_AB_negative_given_C_fail` (theorem) | Within C nonpassers, A and B also have negative conditional binary-indicator association. | Concrete exact eight-atom mass enumeration; use canonical FiniteSum, normalized third-test strata and Admissions covariance-sign criteria. | Constructive finite Simpson reversal; does not claim any empirical or Gaussian property. |
 
 ## SequentialReport.v — 37 proof scripts
 
