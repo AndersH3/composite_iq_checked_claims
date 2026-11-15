@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `6e89d7ee8756c35594eb276cd5466c7f31040654` (PR #20). **Working branch:** `rocq-innovation-noise-20261115`.
+**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `097c4ccc0215b2ba1a3b754342c6e3746fa08c91` (PR #21). **Working branch:** `rocq-strict-noise-gains-20261115`.
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
@@ -161,7 +161,14 @@ The new `Admissions.v` extension adds **36 mathematically distinct named Rocq th
 
 The D029x extension of `TwoObservationSchur.v` contains **60 proposed new named Rocq theorems and 3 transparent residualization definitions**. It derives partial covariance/innovation variance directly from the existing two-by-two Schur determinant and normal equations; proves strict improvement criteria, scale and projection invariance, exact gain polarization, covariance quadratic diagonalization, and the uncorrelated-observation simplification. It also proves noise-regularized covariance determinant formulas, fixed-predictor risk penalties, and, critically, **optimal Schur residual risk cannot improve when either or both observations acquire additional nonnegative independent diagonal noise**. This supplies source-to-report mathematical justification for sequential conditional-means information monotonicity and robust composite-score estimation, with explicit positive-minor assumptions and a sharp old-coefficient upper bound. These are exact **best-linear-predictor covariance identities**, not Gaussian conditional-law integrals, normal-tail accuracy claims or empirical psychometric validation. Proposals become kernel-checked only after passing pinned Rocq 9.2 CI.
 
+
+### Continuation D030x — sharp strictness, attenuation and equality cases for independent-score noise
+
+This continuation adds **53 substantive Rocq theorem statements** directly relevant to the sequential conditional-means and composite-IQ reports. New results characterize *exactly when* adding either score's measurement variance strictly increases the optimal best-linear-prediction residual, when the optimum is unchanged, and when the same information loss is reflected in incremental explained variance. The formal extension includes noise-order comparisons, strict monotonicity, exact partial-covariance signal criteria, preservation of regression-coefficient signs, a closed-form attenuation factor, and sharp upper/lower bounds under independent noise added to one or both scores. Proofs reuse existing Schur variance and innovation definitions and Stdlib real arithmetic rather than inventing another Gaussian model, field theory, or least-squares optimizer. **These statements are proposed until passing pinned Rocq 9.2 CI on the final commit**; they are not Gaussian conditional-law or empirical test-quality claims.
+
 ## Appendix — Complete AI disclosure
+
+D030x theorem statements, proof scripts, source-to-report mapping, documentation and refactoring choices were AI assisted. CI success is necessary to count any script as Rocq-kernel proved. No bivariate normal existence theorem, Gaussian conditional probability, continuous normal-tail integral, empirical test correlation or experimental IQ-population claim follows from these finite covariance identities.
 
 D029x proof source, new covariance residualization definitions, theorem statements, proof refactoring decisions and inventory mapping were generated with AI assistance. Only kernel-checked statements under their exact premises can count as formally verified. These finite algebraic results do not establish Gaussian conditional distributions, continuous normal tails, numerical tail certificates or real IQ test population parameters.
 
