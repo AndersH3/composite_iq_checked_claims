@@ -3,9 +3,30 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **2242 proof scripts** across twenty-six
+for the three principal reports. **2350 proof scripts** across twenty-eight
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
+
+## D041x — trivariate Schur covariance identities and three pairwise conditioning orders
+
+The shared [`TrivariateSchur.v`](../library/rocq/TrivariateSchur.v)
+provides **27 mathematical theorems** on the 3×3 covariance determinant,
+Schur-residual covariance product, exact singularity criteria, positive and
+negative determinant sign thresholds, strict/weak Cauchy–Schwarz bounds and
+zero-residual consequences. The algebraic identity
+`(u*w-q²)*(v*w-r²) - (p*w-q*r)² = w*det(C)`
+is the central invariant. Strict sign equivalences require `w>0`.
+
+The Towers-specific [`ThreeTestSchur.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestSchur.v)
+instantiates these 27 distinct conditions for each of **AB given C, AC given B,
+and BC given A** (**81 further proof scripts**). It reuses the generic module
+without an independent matrix, distribution or probability-integration engine.
+The mathematical scope is symbolic covariance algebra, not a proof that a
+particular test-score population is trivariate Gaussian, or that Gaussian
+conditional distributions and tail integrals hold. Rocq 9.2 CI at the source
+SHA is required to count the **108 additional proposed theorem scripts** as
+kernel-proved. The anticipated total is **2,350 proof scripts, 2,336 public
+claims, 28 modules** once the pinned kernel and documentation checks pass.
 
 ## D040x — sharp necessary-and-sufficient reversal thresholds
 
