@@ -2,7 +2,7 @@
 
 > **AI disclosure:** This module-ownership documentation was AI-assisted.
 
-[`Admissions.v`](Admissions.v), [`FourCellBridge.v`](FourCellBridge.v), [`ThreeTestAdmissions.v`](ThreeTestAdmissions.v), [`ThreeTestPairBridge.v`](ThreeTestPairBridge.v), and [`ThreeTestConditionalStrata.v`](ThreeTestConditionalStrata.v) own the report's four-cell event model, union, conditional-admissions, dependence and three-test multiplicity theorems. Shared finite-event summation, moment and covariance operations reside in [the central Rocq library](../../../library/rocq/README.md). Specialized SPARK and Python source remains in the adjacent `ada/src/` and `scripts/` directories, using central exact event arithmetic where applicable.
+[`Admissions.v`](Admissions.v), [`FourCellBridge.v`](FourCellBridge.v), [`ThreeTestAdmissions.v`](ThreeTestAdmissions.v), [`ThreeTestPairBridge.v`](ThreeTestPairBridge.v), and [`ThreeTestConditionalStrata.v`](ThreeTestConditionalStrata.v), and [`ThreeTestSelectionDecomposition.v`](ThreeTestSelectionDecomposition.v) own the report's four-cell event model, union, conditional-admissions, dependence and three-test multiplicity theorems. Shared finite-event summation, moment and covariance operations reside in [the central Rocq library](../../../library/rocq/README.md). Specialized SPARK and Python source remains in the adjacent `ada/src/` and `scripts/` directories, using central exact event arithmetic where applicable.
 
 Build using `sh scripts/compile_rocq.sh`; see the [report theorem inventory](../../../rocq/REPORT_THEOREM_INVENTORY.md). The new 55-theorem module covers eight atomic Boolean admission patterns,
 finite three-way inclusion-exclusion, count distribution (zero through three),
@@ -35,6 +35,19 @@ In a concrete exact eight-outcome model, the pooled AB association is
 positive but AB association is negative among both C-passers and
 C-nonpassers. This is a finite Simpson paradox witness, not a
 Gaussian-tail theorem or real-world IQ/admissions estimate.
+
+## D039x pooled versus conditional association
+
+`ThreeTestSelectionDecomposition.v` proves 60 exact, route-specific
+AB/AC/BC results by reusing the 44 common algebraic theorems from
+[`TwoStratumAssociation.v`](../../../library/rocq/TwoStratumAssociation.v).
+The central identity decomposes the pooled 2×2 association determinant into
+an opposite-stratum-weighted within-group contribution and a product
+of signed differences in conditional marginal admission rates.
+Consequently, test selection can create or reverse pairwise dependence.
+All claims rely only on explicitly normalized eight-outcome masses, with
+strictly positive selected and nonselected stratum probabilities when
+division or sign equivalence is involved.
 
 ## Complete AI disclosure
 
