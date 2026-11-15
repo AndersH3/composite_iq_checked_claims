@@ -237,7 +237,11 @@ grep -F 'Depends => ' "$spark_spec" >/dev/null
 grep -F 'Pre =>' "$spark_spec" >/dev/null
 grep -F 'Post =>' "$spark_spec" >/dev/null
 grep -F -- '--mode=all' "$spark_smoke" >/dev/null
-grep -F -- '--checks-as-errors' "$spark_smoke" >/dev/null
+# GNATprove 16.1.0 requires the boolean value in the same argument.
+# A bare --checks-as-errors consumes the next switch as its value and
+# fails before the proof starts, even though the old offline test passed.
+grep -F -- '--checks-as-errors=on' "$spark_smoke" >/dev/null
+grep -F -- '--warnings=error' "$spark_smoke" >/dev/null
 grep -F 'Summary of SPARK analysis' "$spark_smoke" >/dev/null
 
 # Two adversarial offline mock executions:
@@ -252,17 +256,29 @@ if [[ "${1:-}" == "--version" ]]; then
   printf '%s\n' 'FSF GNATprove fake version; not a proof'
   exit 0
 fi
+# Record each complete argv exactly once per line, preserving argument
+# boundaries so the regression detects a value swallowed by a bare option.
+printf '%s\n' "$@" > "${GNATPROVE_FAKE_ARGS_LOG:?}"
 exit "${GNATPROVE_FAKE_EXIT:-0}"
 MOCK_GNATPROVE
 chmod 755 "$fixture/bin/fake-gnatprove"
 if GNATPROVE="$fixture/bin/fake-gnatprove" \
+    GNATPROVE_FAKE_ARGS_LOG="$fixture/fake-invocation.argv" \
     bash "$spark_smoke" >"$fixture/fake-no-report.out" 2>&1; then
   printf '%s\n' 'ERROR: Native SPARK smoke accepted an empty fake proof' >&2
   exit 1
 fi
 grep -F 'no native gnatprove.out report' "$fixture/fake-no-report.out" >/dev/null
+grep -Fx -- '--checks-as-errors=on' "$fixture/fake-invocation.argv" >/dev/null
+grep -Fx -- '--warnings=error' "$fixture/fake-invocation.argv" >/dev/null
+grep -Fx -- '--mode=all' "$fixture/fake-invocation.argv" >/dev/null
+if grep -Fx -- '--checks-as-errors' "$fixture/fake-invocation.argv" >/dev/null; then
+  printf '%s\n' 'ERROR: GNATprove 16 received a bare --checks-as-errors' >&2
+  exit 1
+fi
 
 if GNATPROVE="$fixture/bin/fake-gnatprove" GNATPROVE_FAKE_EXIT=13 \
+    GNATPROVE_FAKE_ARGS_LOG="$fixture/fake-error.argv" \
     bash "$spark_smoke" >"$fixture/fake-error.out" 2>&1; then
   printf '%s\n' 'ERROR: Native SPARK smoke accepted a failing fake prover' >&2
   exit 1
