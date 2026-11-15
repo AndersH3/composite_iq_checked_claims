@@ -3,9 +3,27 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **2013 proof scripts** across twenty-two
+for the three principal reports. **2117 proof scripts** across twenty-four
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
+
+## D039x — exact within/between selection association decomposition
+
+The shared [`TwoStratumAssociation.v`](../library/rocq/TwoStratumAssociation.v)
+adds **44 new real-algebra theorems** about pooled 2×2 association,
+selected and nonselected four-cell determinants, relative marginal pass-rate
+gaps, exact factorization, positivity and negation conditions.
+
+The Towers-owned [`ThreeTestSelectionDecomposition.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestSelectionDecomposition.v)
+adds **60 report-specific theorems**: for AB conditioned on C, AC conditioned
+on B, and BC conditioned on A. They connect the original eight-atom model,
+the already checked pairwise admissions associations and an exact
+within-plus-between selection-effect formula. Each pair inherits positive,
+negative, zero and weak association criteria, conditional marginal rate
+contrasts, and sufficient conditions for Simpson-style association reversal.
+The 104 theorem proofs use the existing central finite-event and
+FourCellModel libraries; no Gaussian conditioning or tail integration is
+claimed by these finite-algebra identities.
 
 ## D038x — third-test conditioning, selection and Simpson reversal
 
