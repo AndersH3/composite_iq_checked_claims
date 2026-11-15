@@ -1,6 +1,6 @@
 # Python contract policy
 
-All current repository Python files, including tests, fixtures, helpers, and nested functions, must use Deal contracts. Every named function must carry at least five real Deal contract decorators; there is no upper limit. Use distinct, meaningful value/domain, output, exception, side-effect and frame properties appropriate to the function. Splitting orthogonal conditions is acceptable; tautologies, duplicate padding, imports or comments do not meet the policy. The structural checker counts declarations but does not establish their adequacy or universal validity.
+All current repository Python files, including tests, fixtures, helpers, and nested functions, must use Deal contracts. Every named function must carry at least five real Deal contract decorators; import-only compatibility modules and package initializers with no functions have no such obligations; there is no upper limit. Use distinct, meaningful value/domain, output, exception, side-effect and frame properties appropriate to the function. Splitting orthogonal conditions is acceptable; tautologies, duplicate padding, imports or comments do not meet the policy. The structural checker counts declarations but does not establish their adequacy or universal validity.
 
 Do not disable contracts or replace them with permissive placeholders to satisfy the coverage check. CLI entry points must explicitly enable Deal with `deal.enable(warn=False)` so optimized Python also checks contracts.
 
