@@ -1937,8 +1937,10 @@ Theorem cov2_quad_innovation_semidefinite :
 Proof.
  intros a b c x y Ha Hv.
  rewrite (cov2_quad_innovation_diagonal a b c x y ltac:(lra)).
- assert (Hsq:0<=(x+c*y/a)*(x+c*y/a)) by nra.
- assert (Hsqy:0<=y*y) by nra.
+ assert (Hsq:0<=(x+c*y/a)*(x+c*y/a)).
+ { change (0<=Rsqr (x+c*y/a)); apply Rle_0_sqr. }
+ assert (Hsqy:0<=y*y).
+ { change (0<=Rsqr y); apply Rle_0_sqr. }
  assert (Hp:0<=a*((x+c*y/a)*(x+c*y/a))).
  { apply Rmult_le_pos; [lra|exact Hsq]. }
  assert (Hq:0<=cov2_innovation_variance a b c*(y*y)).
