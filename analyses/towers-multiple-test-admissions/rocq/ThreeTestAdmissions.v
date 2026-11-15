@@ -268,7 +268,7 @@ Ltac triple_lra :=
   cbv [pA3 pB3 pC3 pAB3 pAC3 pBC3 pABC3 pUnion3 pNone3
        pOne3 pTwo3 pAtLeastTwo3 triple_prob
        FiniteUnion.finite_prob FiniteUnion.indicator
-       FiniteSum.finite_sum triple_cases
+       FiniteUnion.finite_sum FiniteSum.finite_sum triple_cases
        testA3 testB3 testC3 List.map List.fold_right
        andb orb negb] in *;
   lra.
