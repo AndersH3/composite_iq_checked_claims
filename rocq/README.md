@@ -9,7 +9,7 @@ verification, Python/Deal contracts, and numerical integration checks.
 
 ## Canonical library migration (D033x)
 
-**There are no longer duplicate theorem source files under `rocq/`.** Shared mathematical proofs are maintained only under [`library/rocq/`](../library/rocq/README.md); the Hoeflin/Ferguson, Towers admissions and Sequential conditional-means theorem modules are owned by their respective [report folders](../library/README.md). The compile manifest [`scripts/compile_rocq.sh`](../scripts/compile_rocq.sh) assembles the unique sources in the *original dependency order*, so the eighteen Rocq module names, theorem names, exact propositions and 1,682 registered proof scripts remain unchanged. The full [documentation and source-path audit](../scripts/check_rocq_documentation.sh) checks canonical ownership.
+**There are no longer duplicate theorem source files under `rocq/`.** Report-independent mathematical proofs are maintained only under [`library/rocq/`](../library/rocq/README.md); the Hoeflin/Ferguson, Towers admissions and Sequential conditional-means theorem modules are owned by their respective [report folders](../library/README.md). The compile manifest [`scripts/compile_rocq.sh`](../scripts/compile_rocq.sh) assembles the unique sources in the *original dependency order*, so the eighteen Rocq module names, theorem names, exact propositions and 1,682 registered proof scripts remain unchanged. The full [documentation and source-path audit](../scripts/check_rocq_documentation.sh) checks canonical ownership.
 
 ## Reproduction
 
