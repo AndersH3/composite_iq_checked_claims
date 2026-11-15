@@ -14,3 +14,22 @@ The packages do not import report-specific code and never claim normality or pop
 ## Complete AI disclosure
 
 OpenAI ChatGPT wrote and refactored this shared SPARK code and its documentation. Explicit contracts must still be discharged or enforced; compiler success alone cannot certify floating-point accuracy, Gaussian assumptions, empirical IQ data or a fresh GNATprove proof campaign.
+
+## Shared normal sampling (refactor D034x)
+
+`library/spark/src/shared_normal_sampling.ads` and `.adb` now own the
+exact modular 64-bit LCG, open-unit midpoint mapping, two-uniform
+Box--Muller normal pair, and a bounded checked square-root adapter. The
+Hoeflin/Ferguson `Normal_Support` package retains specialized erfc,
+inverse-survival, rare-quantile and ghost-boundary interfaces, but its
+generator/pair functions delegate to the central library. Sequential
+imports the central library directly, without any Hoeflin Ada source path.
+
+The SPARK specifications express recurrence, range, state-flow, endpoint
+and numerical-residual contracts; the transcendental bodies explicitly
+check normal returns at runtime and are excluded from automatic proofs.
+The CI seed/adapter-parity smoke test and complete application builds
+check executable reuse. Historical GNATprove evidence remains
+source-pinned: a *new* full GNATprove campaign is required for updated
+caller proofs, and no contract asserts that the finite PRNG is i.i.d.
+Gaussian.

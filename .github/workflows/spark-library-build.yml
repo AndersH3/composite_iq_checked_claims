@@ -5,6 +5,8 @@ on:
     paths:
       - 'library/spark/**'
       - 'analyses/**/ada/**'
+      - 'tests/ada/**'
+      - 'scripts/check_library_layout.sh'
       - '.github/workflows/spark-library-build.yml'
   pull_request:
     paths:
@@ -49,3 +51,14 @@ jobs:
       # GNATprove is a separate source-specific proof campaign. This job
       # checks syntax, type compatibility, linking and actual shared reuse;
       # do not label successful compilation as a discharged SPARK VC.
+
+      - name: Regression test canonical sampler and report adapters
+        shell: bash
+        run: |
+          gnatmake -gnat2022 -gnata -gnato \
+            -Ianalyses/hoeflin-ferguson/ada/src \
+            -Ianalyses/sequential-conditional-means/ada/src \
+            -Ilibrary/spark/src \
+            tests/ada/shared_normal_smoke.adb \
+            -o shared_normal_smoke -largs -lm
+          ./shared_normal_smoke

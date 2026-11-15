@@ -9,7 +9,7 @@
 with Ada.Command_Line;
 with Ada.Text_IO;
 with Interfaces;
-with Normal_Support;
+with Shared_Normal_Sampling;
 with Sequential_Core;
 with Sequential_Experiments;
 with Sequential_Sampling;
@@ -39,7 +39,7 @@ procedure Sequential_Run with SPARK_Mode => Off is
       (1, 2, -500, 2.0), (3, 2, -250, 2.0));
    Trials : Positive range 2 .. 1_000_000 := 200_000;
    Seed : constant Interfaces.Unsigned_64 := 20_261_114;
-   G : Normal_Support.Generator;
+   G : Shared_Normal_Sampling.Generator;
    Calculation_File, Simulation_File, Check_File : IO.File_Type;
    F : Formula_Values;
    Moments : E.Moment_Values;
@@ -133,7 +133,7 @@ begin
                Location := Mean; Sigma := S.Checked_Sqrt (Conditional_Var);
             end if;
             Row_Seed := Row_Seed + 1;
-            Normal_Support.Reset (G, Row_Seed);
+            Shared_Normal_Sampling.Reset (G, Row_Seed);
             E.Reset (Acc);
             --  Sampling the proved scalar Gaussian mean law is constant-cost
             --  in k, and handles negative-c and singular finite batteries.
@@ -170,7 +170,7 @@ begin
             Sigma := S.Checked_Sqrt (E.Value (L.Conditional_Variance));
          end if;
          Row_Seed := Row_Seed + 1;
-         Normal_Support.Reset (G, Row_Seed);
+         Shared_Normal_Sampling.Reset (G, Row_Seed);
          E.Reset (Acc);
          for Trial in 1 .. Trials loop
             S.Draw (G, Location, Sigma, Sample);

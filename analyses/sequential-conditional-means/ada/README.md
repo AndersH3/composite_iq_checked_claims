@@ -6,10 +6,10 @@ The source is separated by responsibility:
 
 - `Sequential_Core`: exact integer numerator/denominator construction and domain checks. These pairs are formula coefficients, rather than a new general-purpose rational library.
 - `Sequential_Experiments`: named conversion to machine floating point, standardized/IQ moments, bounded count/sum/squared-sum accumulation and the sample variance with denominator `n-1`.
-- `Sequential_Sampling`: scalar Gaussian-law sampling using the repository's existing `Normal_Support.Normal_Pair`. A zero SD returns the location without consuming random state. The square-root adapter delegates to Ada's elementary-functions library and checks its normal-return guarantees explicitly.
+- `Sequential_Sampling`: scalar Gaussian-law sampling using the central `Shared_Normal_Sampling.Normal_Pair`. A zero SD returns the location without consuming random state. The square-root adapter delegates to the central checked numerical routine, which validates its normal-return guarantees.
 - `sequential_run.adb`: one disclosed `SPARK_Mode => Off` command-line/CSV boundary. It drives the fixed experiment grid, writes results and computes independent recursion, matrix-identity and finite-PMF diagnostics. Its physical I/O, parsing and loop orchestration are runtime checked; they are not proved SPARK bodies.
 
-The heavily commented packages reuse Ada's standard integer/elementary libraries and the existing contracted generator in `analyses/hoeflin-ferguson/ada/src`. They introduce no second PRNG, Box–Muller algorithm or matrix solver. The supplementary Python validator uses `Fraction`, `csv`, NumPy and SciPy for independent arithmetic, full covariance conditioning and sampling diagnostics.
+The heavily commented packages reuse Ada's standard integer/elementary libraries and the canonical contracted generator in `library/spark/src`. They introduce no second PRNG, Box–Muller algorithm or matrix solver. The supplementary Python validator uses `Fraction`, `csv`, NumPy and SciPy for independent arithmetic, full covariance conditioning and sampling diagnostics.
 
 ## Contracts
 
@@ -67,3 +67,13 @@ The normal generator has bounded outputs and finite deterministic state. Neither
 ```
 
 The audit rejects every current Ada/project hash mismatch and any changed retained artifact. Original Python source bytes remain verified against their archive; later Python-only differences are disclosed and numerical validation uses the current code. No new prover invocation is implied by the audit.
+
+## Independent SPARK sampling dependency
+
+The `sequential.gpr` source directories are the report-specific `src/` and
+`library/spark/src/` only. Its normal pairs, RNG recurrence and checked
+bounded square root come from `Shared_Normal_Sampling`. The Hoeflin/Ferguson
+adapter calls the same canonical generator but retains its own survival and
+quantile numerical boundaries. A fixed-seed parity test checks both adapters.
+No Gaussian distribution theorem or backend sqrt accuracy proof follows from
+this source migration; GNATprove must be rerun for source-specific proof status.

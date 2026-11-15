@@ -1,6 +1,7 @@
 with Hoeflin_Core;
 with Hoeflin_Boundary_Models;
 with Interfaces;
+with Shared_Normal_Sampling;
 package Normal_Support with SPARK_Mode is
    use type Interfaces.Unsigned_64;
    subtype Real is Hoeflin_Core.Real;
@@ -8,8 +9,8 @@ package Normal_Support with SPARK_Mode is
    subtype Bracket_Value is Real range -12.0 .. 12.0;
    subtype Unit_Root is Real range 0.0 .. 1.0;
    subtype Rare_Value is Real range 3.0 .. 10.0;
-   subtype Normal_Value is Real range -9.0 .. 9.0;
-   subtype Open_Unit is Real range 2.0 ** (-53) .. 1.0 - 2.0 ** (-53);
+   subtype Normal_Value is Shared_Normal_Sampling.Normal_Value;
+   subtype Open_Unit is Shared_Normal_Sampling.Open_Unit;
 
    --  The tiny C erfc, square-root, radius and quantile validation bodies
    --  are checked numerical boundaries. Their normal-return ranges are
@@ -39,10 +40,9 @@ package Normal_Support with SPARK_Mode is
        (Hoeflin_Boundary_Models.Rare_Quantile_Acceptable (Rare_Quantile'Result)),
      Depends => (Rare_Quantile'Result => null);
 
-   --  Explicit state permits complete checked reset/recurrence contracts.
-   type Generator is record
-      State : Interfaces.Unsigned_64 := 20_261_030;
-   end record;
+   --  The generator type and recurrence have one central owner.  This
+   --  subtype preserves Hoeflin's public API without duplicating state.
+   subtype Generator is Shared_Normal_Sampling.Generator;
    function State_Value (G : Generator) return Interfaces.Unsigned_64 with
      Global => null,
      Contract_Cases => (G.State = 0 => State_Value'Result = 0,
@@ -56,7 +56,7 @@ package Normal_Support with SPARK_Mode is
      Contract_Cases => (Seed = 0 => G.State = 0, Seed = Interfaces.Unsigned_64'Last => G.State = Interfaces.Unsigned_64'Last, others => G.State = Seed);
    procedure Uniform (G : in out Generator; U : out Open_Unit) with
      Global => null,
-     Post => (State_Value (G) = State_Value (G)'Old * 6_364_136_223_846_793_005 + 1_442_695_040_888_963_407) and then
+     Post => (State_Value (G) = State_Value (G)'Old * Shared_Normal_Sampling.Multiplier + Shared_Normal_Sampling.Increment) and then
        (U >= 2.0 ** (-53)) and then
        (U <= 1.0 - 2.0 ** (-53)),
      Depends => ((G, U) => G);

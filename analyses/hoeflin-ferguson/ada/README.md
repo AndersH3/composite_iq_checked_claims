@@ -20,7 +20,7 @@ The validator needs the parent analysis's Python/SciPy dependencies. It compares
 
 ## Expanded SPARK architecture
 
-`hoeflin_proof.gpr` now includes the core, `Normal_Support`, `Report_IO`, and both main procedures. `Hoeflin_Calculations` and `Hoeflin_Simulation` are SPARK-on rather than whole-program exclusions. Calculation orchestration, sample generation, common-factor combination, accumulation, frequencies, and nested count updates are available for analysis. The current [computer10 campaign](../../../verification/evidence/five-contracts-computer10-20261104/REPORT.md) records the actual coverage and proof totals; the earlier 47-check result belongs to the historical core-only project.
+`hoeflin_proof.gpr` now includes the specialized core, `Normal_Support`, `Report_IO`, the canonical shared sampler and both main procedures. `Hoeflin_Calculations` and `Hoeflin_Simulation` are SPARK-on rather than whole-program exclusions. Calculation orchestration, sample generation, common-factor combination, accumulation, frequencies, and nested count updates are available for analysis. The current [computer10 campaign](../../../verification/evidence/five-contracts-computer10-20261104/REPORT.md) records the actual coverage and proof totals; the earlier 47-check result belongs to the historical core-only project.
 
 The original `Hoeflin_Core` contracts still specify:
 
@@ -29,9 +29,9 @@ The original `Hoeflin_Core` contracts still specify:
 - bounded threshold, composite, and IQ-scale calculations, including threshold contraction and composite expansion for positive input scores;
 - nested simulation event counts and the exact counter increments for thresholds 2, 3, and the selected rare cutoff.
 
-`Normal_Support` now keeps the generator state, exact modular recurrence, midpoint-uniform mapping, inverse-tail bisection, and Box-Muller composition in SPARK. The simulation loop has explicit count and bounded-accumulator invariants. This adds proofs of specified ranges, flow, arithmetic, and bookkeeping; it does not establish a probability distribution for the generator or a numerical approximation theorem.
+The canonical `Shared_Normal_Sampling` package now owns the generator state, exact modular recurrence, midpoint-uniform mapping and Box--Muller pair. `Normal_Support` is a specialized compatibility adapter that keeps survival/quantile functions and inverse-tail bisection. The simulation loop has explicit count and bounded-accumulator invariants. This adds proofs of specified ranges, flow, arithmetic, and bookkeeping; it does not establish a probability distribution for the generator or a numerical approximation theorem.
 
-The remaining checked numerical completions are `Square_Root`, `Survival`/foreign C `erfc`, `Check_Inverse_Bracket`, `Rare_Quantile`, and `Checked_Radius`. Their bodies validate bounds or the supported bracket and raise an exception on an unexpected result. They are trusted normal-return interfaces: proof does not show that backend failures or those exceptions are impossible. `Report_IO` has a SPARK specification with separate command-input and report-output states; its body handles only argument parsing, formatting, and output. The driver computes the frequency and survival values before calling it.
+The remaining checked numerical completions are `Square_Root`, `Survival`/foreign C `erfc`, `Check_Inverse_Bracket`, and `Rare_Quantile`; the shared sampler independently checks its `Checked_Radius` and bounded sqrt. Their bodies validate bounds or the supported bracket and raise an exception on an unexpected result. They are trusted normal-return interfaces: proof does not show that backend failures or those exceptions are impossible. `Report_IO` has a SPARK specification with separate command-input and report-output states; its body handles only argument parsing, formatting, and output. The driver computes the frequency and survival values before calling it.
 
 Run the centrally configured portfolio from the repository root:
 
@@ -49,7 +49,7 @@ The threshold and composite use the mathematically equivalent forms `q - q*(1-s)
 
 The installed Ada elementary-function specifications support SPARK, but their contracts supply only limited domain/range facts. Their implementation accuracy, the platform `erfc`, and the checked numerical completions are not proved here. Inverse-tail bisection can be analyzed for bounded iteration and arithmetic without proving its returned approximation error. I/O success, backend totality, Gaussian assumptions, and psychometric validity remain outside the result. Executables retain assertion and overflow checks (`-gnata -gnato`), with SSE floating-point options on this x86-64 platform.
 
-The generator uses a 64-bit modular linear-congruential state transition and a Box-Muller transform. Uniforms are generated from the top 52 state bits as exactly representable binary64 midpoints strictly between zero and one. This avoids `log(0)` without clamping. This is a reproducible Monte Carlo implementation, not a cryptographic generator or a proof of independence.
+The central generator uses a 64-bit modular linear-congruential state transition and a Box-Muller transform. Uniforms are generated from the top 52 state bits as exactly representable binary64 midpoints strictly between zero and one. This avoids `log(0)` without clamping. This is a reproducible Monte Carlo implementation, not a cryptographic generator or a proof of independence.
 
 For each test count `n`, the simulation samples
 
@@ -76,8 +76,7 @@ The repository's [LICENSE](../../../LICENSE) applies to its original material, s
 | `Survival`, including the C `erfc` import | `Observe_Erfc`, `Observe_Probability` | Actual cached C result, its binary64 half-scaling, and the checked probability range |
 | `Check_Inverse_Bracket` | `Observe_Inverse_Bracket` | Cached endpoint survival values enclose the requested probability |
 | `Rare_Quantile` | `Observe_Rare_Quantile` | The checked range `[3,10]` |
-| `Checked_Radius`, including logarithm and square-root use | `Observe_Log_Radius` | The checked log range `[-38,0]`, open-unit input, and radius range `[0,9]` |
-| Installed `Sin`/`Cos` backend bodies used by `Normal_Pair` | `Observe_Trig` on each cached actual result | The range `[-1,1]` provided by the installed SPARK-compatible elementary-function specifications |
+| Shared `Checked_Radius` and `Normal_Pair` | Shared executable range checks; no report-specific Ghost observer | The radius and normal-value bounds are checked; no libm accuracy theorem is claimed |
 | All eight public `Report_IO` operations | `Note` / `Transition` | Operation tag, copied typed payload, nominal logical column count, section state, and whether the call follows the model's input/protocol conditions |
 | Private `Number` helper and its `Float_IO.Put` call | `Project_Number`, `Observe_Number` | The numeric value and the two requested precisions used by the program (12 or 14); this does not certify rounding or emitted characters |
 | Private `Trimmed` helper and its `'Image`/slice operations | `Observe_Decimal_Image`, `Decimal_Image` | Canonical natural-number decimal text and value reconstruction |
@@ -91,7 +90,7 @@ With GNAT13, an ordinary checked contract cannot reference a ghost entity that i
 
 These models do not establish square-root/log/erfc accuracy, inverse convergence, Gaussian distributional correctness, random independence, or empirical psychometric validity. They make the remaining specifications and observational boundaries explicit; successful proof of a model is not proof that an excluded implementation realizes it.
 
-The trigonometric observations execute in the analyzed `Normal_Pair` body. Each result is cached immediately before its original multiplication, in the original cosine/X then sine/Y order, and the observer makes no library call. The client proof establishes that the installed specifications imply the observer's range precondition; it does not verify the backend's accuracy, periodicity, or implementation.
+Historical source-pinned campaigns recorded `Observe_Trig` calls from the former report-local `Normal_Pair` body. In the refactored source the canonical shared implementation performs the cosine/X then sine/Y computations and retains its range-checked result types; those specialized Ghost observations are not invoked. A fresh GNATprove campaign is needed before transferring proof status to the new source. No trigonometric backend accuracy or Gaussian distribution law is certified.
 
 
 Every SPARK function/procedure has at least five explicit behavioral clauses or Global/Depends aspects; see the [contract counting rules](../../../verification/README.md#five-explicit-contracts-per-subprogram). The inventory is structural and does not establish five independent guarantees or prove trusted completions. Earlier evidence remains immutable.
@@ -108,3 +107,10 @@ correlation. These are exact integer arithmetic claims and do not
 certify floating-point normal-tail accuracy or a Gaussian model.
 The changed Ada source still needs a fresh GNATprove campaign;
 historical native proof records remain tied to their original hashes.
+
+## AI disclosure for the shared-sampler migration
+
+This architecture update and its documentation were prepared with AI assistance.
+Compiler and deterministic-runtime checks cover source linkage and reproducibility;
+only a fresh, source-pinned GNATprove campaign can establish the changed SPARK
+proof obligations. Independently validate numerical and statistical assumptions.
