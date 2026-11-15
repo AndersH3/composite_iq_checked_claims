@@ -717,7 +717,8 @@ Proof.
  assert (Hden:0<a*cov2_det a b c) by nra.
  assert (Hi:0< /(a*cov2_det a b c))
    by (apply Rinv_0_lt_compat; exact Hden).
- assert (Hsq:0<=(a*v-c*u)*(a*v-c*u)) by nra.
+ assert (Hsq:0<=(a*v-c*u)*(a*v-c*u)).
+ { change (0<=Rsqr (a*v-c*u)); apply Rle_0_sqr. }
  assert (Hgain:0<=(a*v-c*u)*(a*v-c*u)/(a*cov2_det a b c)).
  { unfold Rdiv; apply Rmult_le_pos; lra. }
  lra.
@@ -744,13 +745,14 @@ Proof.
  assert (Hi:0< /(a*cov2_det a b c))
    by (apply Rinv_0_lt_compat; exact Hden).
  unfold Rdiv in Hg.
+ set (z:=a*v-c*u) in Hg.
  split; intro H.
- - assert (Hsq:(a*v-c*u)*(a*v-c*u)* /(a*cov2_det a b c)=0)
-     by lra.
-   nra.
- - assert (Hz:a*v-c*u=0) by lra.
+ - assert (Hsq:z*z* /(a*cov2_det a b c)=0) by lra.
+   assert (Hz:z=0) by nra.
+   unfold z in Hz; lra.
+ - assert (Hz:z=0) by (unfold z; lra).
    rewrite Hz in Hg.
-   nra.
+   lra.
 Qed.
 
 (**
@@ -773,9 +775,12 @@ Proof.
  assert (Hden:0<a*cov2_det a b c) by nra.
  assert (Hi:0< /(a*cov2_det a b c))
    by (apply Rinv_0_lt_compat; exact Hden).
- assert (Hsq:0<(a*v-c*u)*(a*v-c*u)) by nra.
+ pose (z:=a*v-c*u).
+ assert (Hz:z<>0) by (unfold z; lra).
+ assert (Hsq:0<z*z) by nra.
  assert (Hgain:0<(a*v-c*u)*(a*v-c*u)/(a*cov2_det a b c)).
- { unfold Rdiv; apply Rmult_lt_0_compat; assumption. }
+ { change (0<z*z/(a*cov2_det a b c)).
+   unfold Rdiv; apply Rmult_lt_0_compat; assumption. }
  lra.
 Qed.
 
