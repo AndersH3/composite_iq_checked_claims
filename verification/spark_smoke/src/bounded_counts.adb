@@ -16,9 +16,11 @@ package body Bounded_Counts with SPARK_Mode => On is
       Capacity  : in Natural;
       Total     : out Natural)
    is
-      pragma Unreferenced (Capacity);
    begin
       Total := Previous + Increment;
+      --  The exact capacity check is an additional native assertion VC.
+      --  It cannot be omitted or treated as an external assumption.
+      pragma Assert (Total <= Capacity);
    end Accumulate;
 
 end Bounded_Counts;
