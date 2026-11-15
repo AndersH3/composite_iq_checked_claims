@@ -30,7 +30,7 @@ Open Scope R_scope.
 (**
  [selection_AB_selected_mass] (definition) — Positive-selection stratum mass of the AB admissions pair conditioned on third test C
  Mathematical meaning: Positive-selection stratum mass of the AB admissions pair conditioned on third test C
- Exact declaration: Definition selection_AB_selected_mass (m:ThreeTestModel):R := mix_total_yes mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AB_selected_mass (m:ThreeTestModel):R := mix_total_yes (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -44,12 +44,12 @@ Open Scope R_scope.
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AB_selected_mass (m:ThreeTestModel):R := mix_total_yes mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+Definition selection_AB_selected_mass (m:ThreeTestModel):R := mix_total_yes (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 
 (**
  [selection_AB_other_mass] (definition) — Negative-selection stratum mass of the AB admissions pair conditioned on third test C
  Mathematical meaning: Negative-selection stratum mass of the AB admissions pair conditioned on third test C
- Exact declaration: Definition selection_AB_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AB_other_mass (m:ThreeTestModel):R := mix_total_no (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -63,12 +63,12 @@ Definition selection_AB_selected_mass (m:ThreeTestModel):R := mix_total_yes mass
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AB_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+Definition selection_AB_other_mass (m:ThreeTestModel):R := mix_total_no (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 
 (**
  [selection_AB_pooled_association] (definition) — Pooled binary-indicator association for admission routes AB
  Mathematical meaning: Pooled binary-indicator association for admission routes AB
- Exact declaration: Definition selection_AB_pooled_association (m:ThreeTestModel):R := mix_pooled_association mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AB_pooled_association (m:ThreeTestModel):R := mix_pooled_association (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -82,12 +82,12 @@ Definition selection_AB_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AB_pooled_association (m:ThreeTestModel):R := mix_pooled_association mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+Definition selection_AB_pooled_association (m:ThreeTestModel):R := mix_pooled_association (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 
 (**
  [selection_AB_within_association] (definition) — Within-stratum raw association weighted by complementary selection mass for AB
  Mathematical meaning: Within-stratum raw association weighted by complementary selection mass for AB
- Exact declaration: Definition selection_AB_within_association (m:ThreeTestModel):R := mix_within mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AB_within_association (m:ThreeTestModel):R := mix_within (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -101,12 +101,12 @@ Definition selection_AB_pooled_association (m:ThreeTestModel):R := mix_pooled_as
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AB_within_association (m:ThreeTestModel):R := mix_within mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+Definition selection_AB_within_association (m:ThreeTestModel):R := mix_within (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 
 (**
  [selection_AB_between_association] (definition) — Between-stratum association induced by conditional-marginal shifts of both AB tests
  Mathematical meaning: Between-stratum association induced by conditional-marginal shifts of both AB tests
- Exact declaration: Definition selection_AB_between_association (m:ThreeTestModel):R := mix_between mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AB_between_association (m:ThreeTestModel):R := mix_between (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -120,12 +120,12 @@ Definition selection_AB_within_association (m:ThreeTestModel):R := mix_within ma
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AB_between_association (m:ThreeTestModel):R := mix_between mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+Definition selection_AB_between_association (m:ThreeTestModel):R := mix_between (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 
 (**
  [selection_AB_first_gap] (definition) — Selected-versus-other first-route marginal pass-rate contrast for AB
  Mathematical meaning: Selected-versus-other first-route marginal pass-rate contrast for AB
- Exact declaration: Definition selection_AB_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AB_first_gap (m:ThreeTestModel):R := mix_gap_first (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -139,12 +139,12 @@ Definition selection_AB_between_association (m:ThreeTestModel):R := mix_between 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AB_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+Definition selection_AB_first_gap (m:ThreeTestModel):R := mix_gap_first (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 
 (**
  [selection_AB_second_gap] (definition) — Selected-versus-other second-route marginal pass-rate contrast for AB
  Mathematical meaning: Selected-versus-other second-route marginal pass-rate contrast for AB
- Exact declaration: Definition selection_AB_second_gap (m:ThreeTestModel):R := mix_gap_second mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AB_second_gap (m:ThreeTestModel):R := mix_gap_second (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -158,7 +158,7 @@ Definition selection_AB_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AB_second_gap (m:ThreeTestModel):R := mix_gap_second mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+Definition selection_AB_second_gap (m:ThreeTestModel):R := mix_gap_second (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 
 (**
  [selection_AB_selected_mass_correct] (theorem) — The C-pass stratum mass for the AB pair is exactly the third-test pass probability.
@@ -278,7 +278,7 @@ Qed.
 (**
  [selection_AB_within_two_stratum_formula] (theorem) — The AB adjusted within association is the selected/other local determinant weighted by the opposite stratum's mass.
  Mathematical meaning: The AB adjusted within association is the selected/other local determinant weighted by the opposite stratum's mass.
- Exact checked proposition: forall m:ThreeTestModel, selection_AB_within_association m=selection_AB_other_mass m*mix_local_assoc_yes mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)+selection_AB_selected_mass m*mix_local_assoc_no mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+ Exact checked proposition: forall m:ThreeTestModel, selection_AB_within_association m=selection_AB_other_mass m*mix_local_assoc_yes (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))+selection_AB_selected_mass m*mix_local_assoc_no (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -293,7 +293,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AB_within_two_stratum_formula :
-  forall m:ThreeTestModel, selection_AB_within_association m=selection_AB_other_mass m*mix_local_assoc_yes mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false)+selection_AB_selected_mass m*mix_local_assoc_no mass3 m (true,true,true) mass3 m (true,false,true) mass3 m (false,true,true) mass3 m (false,false,true) mass3 m (true,true,false) mass3 m (true,false,false) mass3 m (false,true,false) mass3 m (false,false,false).
+  forall m:ThreeTestModel, selection_AB_within_association m=selection_AB_other_mass m*mix_local_assoc_yes (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false))+selection_AB_selected_mass m*mix_local_assoc_no (mass3 m (true,true,true)) (mass3 m (true,false,true)) (mass3 m (false,true,true)) (mass3 m (false,false,true)) (mass3 m (true,true,false)) (mass3 m (true,false,false)) (mass3 m (false,true,false)) (mass3 m (false,false,false)).
 Proof.
   intro m; unfold selection_AB_within_association, selection_AB_selected_mass, selection_AB_other_mass; apply mix_within_explicit.
 Qed.
@@ -502,7 +502,7 @@ Qed.
 (**
  [selection_AB_first_conditional_rate_gap] (theorem) — The first-route pass rate among C-passers minus its rate among C-failers equals the first selection-gap numerator divided by both selection probabilities.
  Mathematical meaning: The first-route pass rate among C-passers minus its rate among C-failers equals the first selection-gap numerator divided by both selection probabilities.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,false,true))/selection_AB_selected_mass m-(mass3 m (true,true,false)+mass3 m (true,false,false))/selection_AB_other_mass m=selection_AB_first_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,false,true)))/selection_AB_selected_mass m-((mass3 m (true,true,false))+(mass3 m (true,false,false)))/selection_AB_other_mass m=selection_AB_first_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -517,7 +517,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AB_first_conditional_rate_gap :
-  forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,false,true))/selection_AB_selected_mass m-(mass3 m (true,true,false)+mass3 m (true,false,false))/selection_AB_other_mass m=selection_AB_first_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
+  forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,false,true)))/selection_AB_selected_mass m-((mass3 m (true,true,false))+(mass3 m (true,false,false)))/selection_AB_other_mass m=selection_AB_first_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
 Proof.
   intros m Hy Hn.
   unfold selection_AB_selected_mass, selection_AB_other_mass, selection_AB_first_gap in *.
@@ -527,7 +527,7 @@ Qed.
 (**
  [selection_AB_second_conditional_rate_gap] (theorem) — The second-route pass rate among C-passers minus its rate among C-failers equals the second selection-gap numerator divided by both positive selection probabilities.
  Mathematical meaning: The second-route pass rate among C-passers minus its rate among C-failers equals the second selection-gap numerator divided by both positive selection probabilities.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> (mass3 m (true,true,true)+mass3 m (false,true,true))/selection_AB_selected_mass m-(mass3 m (true,true,false)+mass3 m (false,true,false))/selection_AB_other_mass m=selection_AB_second_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (false,true,true)))/selection_AB_selected_mass m-((mass3 m (true,true,false))+(mass3 m (false,true,false)))/selection_AB_other_mass m=selection_AB_second_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -542,7 +542,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AB_second_conditional_rate_gap :
-  forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> (mass3 m (true,true,true)+mass3 m (false,true,true))/selection_AB_selected_mass m-(mass3 m (true,true,false)+mass3 m (false,true,false))/selection_AB_other_mass m=selection_AB_second_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
+  forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (false,true,true)))/selection_AB_selected_mass m-((mass3 m (true,true,false))+(mass3 m (false,true,false)))/selection_AB_other_mass m=selection_AB_second_gap m/(selection_AB_selected_mass m*selection_AB_other_mass m).
 Proof.
   intros m Hy Hn.
   unfold selection_AB_selected_mass, selection_AB_other_mass, selection_AB_second_gap in *.
@@ -652,7 +652,7 @@ Qed.
 (**
  [selection_AC_selected_mass] (definition) — Positive-selection stratum mass of the AC admissions pair conditioned on third test B
  Mathematical meaning: Positive-selection stratum mass of the AC admissions pair conditioned on third test B
- Exact declaration: Definition selection_AC_selected_mass (m:ThreeTestModel):R := mix_total_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AC_selected_mass (m:ThreeTestModel):R := mix_total_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -666,12 +666,12 @@ Qed.
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AC_selected_mass (m:ThreeTestModel):R := mix_total_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_AC_selected_mass (m:ThreeTestModel):R := mix_total_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_AC_other_mass] (definition) — Negative-selection stratum mass of the AC admissions pair conditioned on third test B
  Mathematical meaning: Negative-selection stratum mass of the AC admissions pair conditioned on third test B
- Exact declaration: Definition selection_AC_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AC_other_mass (m:ThreeTestModel):R := mix_total_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -685,12 +685,12 @@ Definition selection_AC_selected_mass (m:ThreeTestModel):R := mix_total_yes mass
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AC_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_AC_other_mass (m:ThreeTestModel):R := mix_total_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_AC_pooled_association] (definition) — Pooled binary-indicator association for admission routes AC
  Mathematical meaning: Pooled binary-indicator association for admission routes AC
- Exact declaration: Definition selection_AC_pooled_association (m:ThreeTestModel):R := mix_pooled_association mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AC_pooled_association (m:ThreeTestModel):R := mix_pooled_association (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -704,12 +704,12 @@ Definition selection_AC_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AC_pooled_association (m:ThreeTestModel):R := mix_pooled_association mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_AC_pooled_association (m:ThreeTestModel):R := mix_pooled_association (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_AC_within_association] (definition) — Within-stratum raw association weighted by complementary selection mass for AC
  Mathematical meaning: Within-stratum raw association weighted by complementary selection mass for AC
- Exact declaration: Definition selection_AC_within_association (m:ThreeTestModel):R := mix_within mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AC_within_association (m:ThreeTestModel):R := mix_within (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -723,12 +723,12 @@ Definition selection_AC_pooled_association (m:ThreeTestModel):R := mix_pooled_as
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AC_within_association (m:ThreeTestModel):R := mix_within mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_AC_within_association (m:ThreeTestModel):R := mix_within (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_AC_between_association] (definition) — Between-stratum association induced by conditional-marginal shifts of both AC tests
  Mathematical meaning: Between-stratum association induced by conditional-marginal shifts of both AC tests
- Exact declaration: Definition selection_AC_between_association (m:ThreeTestModel):R := mix_between mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AC_between_association (m:ThreeTestModel):R := mix_between (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -742,12 +742,12 @@ Definition selection_AC_within_association (m:ThreeTestModel):R := mix_within ma
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AC_between_association (m:ThreeTestModel):R := mix_between mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_AC_between_association (m:ThreeTestModel):R := mix_between (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_AC_first_gap] (definition) — Selected-versus-other first-route marginal pass-rate contrast for AC
  Mathematical meaning: Selected-versus-other first-route marginal pass-rate contrast for AC
- Exact declaration: Definition selection_AC_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AC_first_gap (m:ThreeTestModel):R := mix_gap_first (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -761,12 +761,12 @@ Definition selection_AC_between_association (m:ThreeTestModel):R := mix_between 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AC_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_AC_first_gap (m:ThreeTestModel):R := mix_gap_first (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_AC_second_gap] (definition) — Selected-versus-other second-route marginal pass-rate contrast for AC
  Mathematical meaning: Selected-versus-other second-route marginal pass-rate contrast for AC
- Exact declaration: Definition selection_AC_second_gap (m:ThreeTestModel):R := mix_gap_second mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_AC_second_gap (m:ThreeTestModel):R := mix_gap_second (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -780,7 +780,7 @@ Definition selection_AC_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_AC_second_gap (m:ThreeTestModel):R := mix_gap_second mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_AC_second_gap (m:ThreeTestModel):R := mix_gap_second (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_AC_selected_mass_correct] (theorem) — The B-pass stratum mass for the AC pair is exactly the third-test pass probability.
@@ -900,7 +900,7 @@ Qed.
 (**
  [selection_AC_within_two_stratum_formula] (theorem) — The AC adjusted within association is the selected/other local determinant weighted by the opposite stratum's mass.
  Mathematical meaning: The AC adjusted within association is the selected/other local determinant weighted by the opposite stratum's mass.
- Exact checked proposition: forall m:ThreeTestModel, selection_AC_within_association m=selection_AC_other_mass m*mix_local_assoc_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)+selection_AC_selected_mass m*mix_local_assoc_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+ Exact checked proposition: forall m:ThreeTestModel, selection_AC_within_association m=selection_AC_other_mass m*mix_local_assoc_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))+selection_AC_selected_mass m*mix_local_assoc_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -915,7 +915,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AC_within_two_stratum_formula :
-  forall m:ThreeTestModel, selection_AC_within_association m=selection_AC_other_mass m*mix_local_assoc_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false)+selection_AC_selected_mass m*mix_local_assoc_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,false,true) mass3 m (false,false,false).
+  forall m:ThreeTestModel, selection_AC_within_association m=selection_AC_other_mass m*mix_local_assoc_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))+selection_AC_selected_mass m*mix_local_assoc_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 Proof.
   intro m; unfold selection_AC_within_association, selection_AC_selected_mass, selection_AC_other_mass; apply mix_within_explicit.
 Qed.
@@ -1124,7 +1124,7 @@ Qed.
 (**
  [selection_AC_first_conditional_rate_gap] (theorem) — The first-route pass rate among B-passers minus its rate among B-failers equals the first selection-gap numerator divided by both selection probabilities.
  Mathematical meaning: The first-route pass rate among B-passers minus its rate among B-failers equals the first selection-gap numerator divided by both selection probabilities.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,true,false))/selection_AC_selected_mass m-(mass3 m (true,false,true)+mass3 m (true,false,false))/selection_AC_other_mass m=selection_AC_first_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,true,false)))/selection_AC_selected_mass m-((mass3 m (true,false,true))+(mass3 m (true,false,false)))/selection_AC_other_mass m=selection_AC_first_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1139,7 +1139,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AC_first_conditional_rate_gap :
-  forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,true,false))/selection_AC_selected_mass m-(mass3 m (true,false,true)+mass3 m (true,false,false))/selection_AC_other_mass m=selection_AC_first_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
+  forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,true,false)))/selection_AC_selected_mass m-((mass3 m (true,false,true))+(mass3 m (true,false,false)))/selection_AC_other_mass m=selection_AC_first_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
 Proof.
   intros m Hy Hn.
   unfold selection_AC_selected_mass, selection_AC_other_mass, selection_AC_first_gap in *.
@@ -1149,7 +1149,7 @@ Qed.
 (**
  [selection_AC_second_conditional_rate_gap] (theorem) — The second-route pass rate among B-passers minus its rate among B-failers equals the second selection-gap numerator divided by both positive selection probabilities.
  Mathematical meaning: The second-route pass rate among B-passers minus its rate among B-failers equals the second selection-gap numerator divided by both positive selection probabilities.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> (mass3 m (true,true,true)+mass3 m (false,true,true))/selection_AC_selected_mass m-(mass3 m (true,false,true)+mass3 m (false,false,true))/selection_AC_other_mass m=selection_AC_second_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (false,true,true)))/selection_AC_selected_mass m-((mass3 m (true,false,true))+(mass3 m (false,false,true)))/selection_AC_other_mass m=selection_AC_second_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1164,7 +1164,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AC_second_conditional_rate_gap :
-  forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> (mass3 m (true,true,true)+mass3 m (false,true,true))/selection_AC_selected_mass m-(mass3 m (true,false,true)+mass3 m (false,false,true))/selection_AC_other_mass m=selection_AC_second_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
+  forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (false,true,true)))/selection_AC_selected_mass m-((mass3 m (true,false,true))+(mass3 m (false,false,true)))/selection_AC_other_mass m=selection_AC_second_gap m/(selection_AC_selected_mass m*selection_AC_other_mass m).
 Proof.
   intros m Hy Hn.
   unfold selection_AC_selected_mass, selection_AC_other_mass, selection_AC_second_gap in *.
@@ -1274,7 +1274,7 @@ Qed.
 (**
  [selection_BC_selected_mass] (definition) — Positive-selection stratum mass of the BC admissions pair conditioned on third test A
  Mathematical meaning: Positive-selection stratum mass of the BC admissions pair conditioned on third test A
- Exact declaration: Definition selection_BC_selected_mass (m:ThreeTestModel):R := mix_total_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_BC_selected_mass (m:ThreeTestModel):R := mix_total_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1288,12 +1288,12 @@ Qed.
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_BC_selected_mass (m:ThreeTestModel):R := mix_total_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_BC_selected_mass (m:ThreeTestModel):R := mix_total_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_BC_other_mass] (definition) — Negative-selection stratum mass of the BC admissions pair conditioned on third test A
  Mathematical meaning: Negative-selection stratum mass of the BC admissions pair conditioned on third test A
- Exact declaration: Definition selection_BC_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_BC_other_mass (m:ThreeTestModel):R := mix_total_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1307,12 +1307,12 @@ Definition selection_BC_selected_mass (m:ThreeTestModel):R := mix_total_yes mass
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_BC_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_BC_other_mass (m:ThreeTestModel):R := mix_total_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_BC_pooled_association] (definition) — Pooled binary-indicator association for admission routes BC
  Mathematical meaning: Pooled binary-indicator association for admission routes BC
- Exact declaration: Definition selection_BC_pooled_association (m:ThreeTestModel):R := mix_pooled_association mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_BC_pooled_association (m:ThreeTestModel):R := mix_pooled_association (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1326,12 +1326,12 @@ Definition selection_BC_other_mass (m:ThreeTestModel):R := mix_total_no mass3 m 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_BC_pooled_association (m:ThreeTestModel):R := mix_pooled_association mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_BC_pooled_association (m:ThreeTestModel):R := mix_pooled_association (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_BC_within_association] (definition) — Within-stratum raw association weighted by complementary selection mass for BC
  Mathematical meaning: Within-stratum raw association weighted by complementary selection mass for BC
- Exact declaration: Definition selection_BC_within_association (m:ThreeTestModel):R := mix_within mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_BC_within_association (m:ThreeTestModel):R := mix_within (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1345,12 +1345,12 @@ Definition selection_BC_pooled_association (m:ThreeTestModel):R := mix_pooled_as
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_BC_within_association (m:ThreeTestModel):R := mix_within mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_BC_within_association (m:ThreeTestModel):R := mix_within (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_BC_between_association] (definition) — Between-stratum association induced by conditional-marginal shifts of both BC tests
  Mathematical meaning: Between-stratum association induced by conditional-marginal shifts of both BC tests
- Exact declaration: Definition selection_BC_between_association (m:ThreeTestModel):R := mix_between mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_BC_between_association (m:ThreeTestModel):R := mix_between (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1364,12 +1364,12 @@ Definition selection_BC_within_association (m:ThreeTestModel):R := mix_within ma
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_BC_between_association (m:ThreeTestModel):R := mix_between mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_BC_between_association (m:ThreeTestModel):R := mix_between (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_BC_first_gap] (definition) — Selected-versus-other first-route marginal pass-rate contrast for BC
  Mathematical meaning: Selected-versus-other first-route marginal pass-rate contrast for BC
- Exact declaration: Definition selection_BC_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_BC_first_gap (m:ThreeTestModel):R := mix_gap_first (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1383,12 +1383,12 @@ Definition selection_BC_between_association (m:ThreeTestModel):R := mix_between 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_BC_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_BC_first_gap (m:ThreeTestModel):R := mix_gap_first (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_BC_second_gap] (definition) — Selected-versus-other second-route marginal pass-rate contrast for BC
  Mathematical meaning: Selected-versus-other second-route marginal pass-rate contrast for BC
- Exact declaration: Definition selection_BC_second_gap (m:ThreeTestModel):R := mix_gap_second mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)..
+ Exact declaration: Definition selection_BC_second_gap (m:ThreeTestModel):R := mix_gap_second (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))..
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1402,7 +1402,7 @@ Definition selection_BC_first_gap (m:ThreeTestModel):R := mix_gap_first mass3 m 
  algebra only, not Gaussian conditional distributions, empirical
  psychometrics, or continuous multivariate normal tails.
 *)
-Definition selection_BC_second_gap (m:ThreeTestModel):R := mix_gap_second mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+Definition selection_BC_second_gap (m:ThreeTestModel):R := mix_gap_second (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 
 (**
  [selection_BC_selected_mass_correct] (theorem) — The A-pass stratum mass for the BC pair is exactly the third-test pass probability.
@@ -1522,7 +1522,7 @@ Qed.
 (**
  [selection_BC_within_two_stratum_formula] (theorem) — The BC adjusted within association is the selected/other local determinant weighted by the opposite stratum's mass.
  Mathematical meaning: The BC adjusted within association is the selected/other local determinant weighted by the opposite stratum's mass.
- Exact checked proposition: forall m:ThreeTestModel, selection_BC_within_association m=selection_BC_other_mass m*mix_local_assoc_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)+selection_BC_selected_mass m*mix_local_assoc_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+ Exact checked proposition: forall m:ThreeTestModel, selection_BC_within_association m=selection_BC_other_mass m*mix_local_assoc_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))+selection_BC_selected_mass m*mix_local_assoc_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1537,7 +1537,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_BC_within_two_stratum_formula :
-  forall m:ThreeTestModel, selection_BC_within_association m=selection_BC_other_mass m*mix_local_assoc_yes mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false)+selection_BC_selected_mass m*mix_local_assoc_no mass3 m (true,true,true) mass3 m (true,true,false) mass3 m (true,false,true) mass3 m (true,false,false) mass3 m (false,true,true) mass3 m (false,true,false) mass3 m (false,false,true) mass3 m (false,false,false).
+  forall m:ThreeTestModel, selection_BC_within_association m=selection_BC_other_mass m*mix_local_assoc_yes (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false))+selection_BC_selected_mass m*mix_local_assoc_no (mass3 m (true,true,true)) (mass3 m (true,true,false)) (mass3 m (true,false,true)) (mass3 m (true,false,false)) (mass3 m (false,true,true)) (mass3 m (false,true,false)) (mass3 m (false,false,true)) (mass3 m (false,false,false)).
 Proof.
   intro m; unfold selection_BC_within_association, selection_BC_selected_mass, selection_BC_other_mass; apply mix_within_explicit.
 Qed.
@@ -1746,7 +1746,7 @@ Qed.
 (**
  [selection_BC_first_conditional_rate_gap] (theorem) — The first-route pass rate among A-passers minus its rate among A-failers equals the first selection-gap numerator divided by both selection probabilities.
  Mathematical meaning: The first-route pass rate among A-passers minus its rate among A-failers equals the first selection-gap numerator divided by both selection probabilities.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,true,false))/selection_BC_selected_mass m-(mass3 m (false,true,true)+mass3 m (false,true,false))/selection_BC_other_mass m=selection_BC_first_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,true,false)))/selection_BC_selected_mass m-((mass3 m (false,true,true))+(mass3 m (false,true,false)))/selection_BC_other_mass m=selection_BC_first_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1761,7 +1761,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_BC_first_conditional_rate_gap :
-  forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,true,false))/selection_BC_selected_mass m-(mass3 m (false,true,true)+mass3 m (false,true,false))/selection_BC_other_mass m=selection_BC_first_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
+  forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,true,false)))/selection_BC_selected_mass m-((mass3 m (false,true,true))+(mass3 m (false,true,false)))/selection_BC_other_mass m=selection_BC_first_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
 Proof.
   intros m Hy Hn.
   unfold selection_BC_selected_mass, selection_BC_other_mass, selection_BC_first_gap in *.
@@ -1771,7 +1771,7 @@ Qed.
 (**
  [selection_BC_second_conditional_rate_gap] (theorem) — The second-route pass rate among A-passers minus its rate among A-failers equals the second selection-gap numerator divided by both positive selection probabilities.
  Mathematical meaning: The second-route pass rate among A-passers minus its rate among A-failers equals the second selection-gap numerator divided by both positive selection probabilities.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,false,true))/selection_BC_selected_mass m-(mass3 m (false,true,true)+mass3 m (false,false,true))/selection_BC_other_mass m=selection_BC_second_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,false,true)))/selection_BC_selected_mass m-((mass3 m (false,true,true))+(mass3 m (false,false,true)))/selection_BC_other_mass m=selection_BC_second_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1786,7 +1786,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_BC_second_conditional_rate_gap :
-  forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> (mass3 m (true,true,true)+mass3 m (true,false,true))/selection_BC_selected_mass m-(mass3 m (false,true,true)+mass3 m (false,false,true))/selection_BC_other_mass m=selection_BC_second_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
+  forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> ((mass3 m (true,true,true))+(mass3 m (true,false,true)))/selection_BC_selected_mass m-((mass3 m (false,true,true))+(mass3 m (false,false,true)))/selection_BC_other_mass m=selection_BC_second_gap m/(selection_BC_selected_mass m*selection_BC_other_mass m).
 Proof.
   intros m Hy Hn.
   unfold selection_BC_selected_mass, selection_BC_other_mass, selection_BC_second_gap in *.
