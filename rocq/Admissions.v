@@ -2884,7 +2884,7 @@ Qed.
 Theorem admission_odds_ratio_numerator :
  forall m, 0<only_A m*only_B m -> only_A m*only_B m*(admission_odds_ratio m-1)=admission_association m.
 Proof.
- intros m Hd; unfold admission_odds_ratio,admission_association; field; lra.
+ intros m Hd; unfold admission_odds_ratio,admission_association; field; nra.
 Qed.
 
 (**
