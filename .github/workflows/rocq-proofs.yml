@@ -4,11 +4,17 @@ on:
   push:
     paths:
       - 'rocq/**'
+      - 'library/rocq/**'
+      - 'analyses/**/rocq/**'
+      - 'scripts/compile_rocq.sh'
       - '.github/workflows/rocq-proofs.yml'
       - 'scripts/check_rocq_documentation.sh'
   pull_request:
     paths:
       - 'rocq/**'
+      - 'library/rocq/**'
+      - 'analyses/**/rocq/**'
+      - 'scripts/compile_rocq.sh'
       - '.github/workflows/rocq-proofs.yml'
       - 'scripts/check_rocq_documentation.sh'
   workflow_dispatch:
@@ -27,7 +33,8 @@ jobs:
       - name: Reject unfinished proof placeholders and new axioms
         shell: bash
         run: |
-          if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' rocq/*.v; then
+          if grep -nE '^[[:space:]]*(Admitted|Axiom|Axioms|Parameter|Parameters|Conjecture|Abort)[[:space:].:]' \
+             library/rocq/*.v analyses/*/rocq/*.v; then
             echo 'Proof placeholders or extra axioms are forbidden.' >&2
             exit 1
           fi
@@ -35,7 +42,7 @@ jobs:
       - name: Kernel-check all proofs with Rocq 9.2
         shell: bash
         run: |
-          docker run --rm \
-            -v "$PWD/rocq:/src:ro" \
-            rocq/rocq-prover:9.2.0 \
-            sh -ec 'mkdir -p /tmp/checked && cp /src/*.v /tmp/checked/ && cd /tmp/checked && rocq --version && rocq compile FiniteSum.v && rocq compile Hoeflin.v && rocq compile Admissions.v && rocq compile FiniteUnion.v && rocq compile FiniteMoments.v && rocq compile FiniteBridge.v && rocq compile FourCellBridge.v && rocq compile SequentialReport.v && rocq compile ReportRounding.v && rocq compile ReportCounterexample.v && rocq compile EquicorrelationSpectral.v && rocq compile EquicorrelationVectors.v && rocq compile EquicorrelationInverseVectors.v && rocq compile FiniteTwoCellProjection.v && rocq compile FiniteNestedProjection.v && rocq compile FiniteConditionalCovariance.v && rocq compile FiniteConditionalResidual.v && rocq compile TwoObservationSchur.v'
+          docker run --rm \\
+            -v "$PWD:/workspace:ro" \\
+            rocq/rocq-prover:9.2.0 \\
+            sh /workspace/scripts/compile_rocq.sh
