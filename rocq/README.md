@@ -3,7 +3,7 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1792 proof scripts** across twenty
+for the three principal reports. **1879 proof scripts** across twenty-one
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -32,6 +32,16 @@ maintained `FiniteSum.finite_sum` and `FiniteUnion.finite_prob`, not a
 new probability integration or matrix implementation. The model supplies
 nonnegative atomic masses and unit normalization as proven record premises.
 These are discrete event formulas and do not verify Gaussian tails.
+
+## D037x — three-test / two-event certified projections
+
+The Towers-specific `ThreeTestPairBridge.v` provides **three certified
+marginal two-event models** (AB, AC and BC) and **84 report-relevant
+pairwise cross-model theorems**. These inherit conditional probability,
+association, odds-ratio, phi-correlation and Fréchet results from the existing
+`Admissions.v`; the original eight-outcome `ThreeTestAdmissions.v`
+remains the single specialized source of three-route marginals. No new
+finite-sum, Gaussian model or matrix inversion engine is created.
 
 ## Reproduction
 
