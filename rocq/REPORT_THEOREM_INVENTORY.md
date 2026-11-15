@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `03583282299add902c8cecd497686df2379d70ca` (PR #18). **Working branch:** `rocq-admissions-association-20261115`.
+**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `d1634d535d6027e97c4090671916dea08d955c8c` (PR #19). **Working branch:** `rocq-admissions-sharp-phi-20261115`.
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
@@ -151,7 +151,14 @@ The extension to `TwoObservationSchur.v` contributes **31 report-relevant real-a
 
 This continuation extends `Admissions.v` by **33 new named theorems and 5 transparent definitions** mapping the Towers report's union, conditional-admission, overlap and indicator-phi discussion to exact Bernoulli four-cell algebra. Besides complementary mass and law-of-total-probability decompositions, the main substantive contributions are the **common covariance numerator of conditional pass-rate uplift, failure-stratum downlift, and cross-stratum contrasts**; exact independence and positive-association criteria for both test orientations; and the sharp four Fréchet inequalities bounding possible binary indicator covariance. Rather than defining a second event algebra or a new Gaussian model, every proof reuses `Admissions.binary_indicator_covariance_numerator`, its existing conditional numerators, and Stdlib real arithmetic. **These do not prove bivariate Gaussian integrals, infer continuous-score Pearson correlation from phi, or verify population IQ rates.** All formal status claims require passing Rocq 9.2 CI.
 
+
+### Continuation D028x — sharp Fréchet realization, odds ratios and rigorous binary phi
+
+The new `Admissions.v` extension adds **36 mathematically distinct named Rocq theorem scripts and four transparent real definitions** relevant to the Towers multiple-test admissions report. Unlike inequalities alone, the constructive Fréchet realization theorem gives an explicit normalized four-cell model for **every feasible pair of marginal acceptance rates and overlap**, with necessity/sufficiency and extremal-disjoint, nested and full-coverage witnesses. A second group relates the actual union admissions rate to the matched-marginal independence reference and proves precise conditional/odds-ratio characterizations of binary independence and positive or negative association. Finally, an exact quartic covariance-square gap factorization into four nonnegative triple-cell products gives **a direct finite Cauchy–Schwarz proof** for the binary indicator covariance, from which the normalized phi interval `[-1,1]` and its zero/sign criteria follow under strictly positive Bernoulli variances. Existing four-cell and Stdlib real operations are reused; no Gaussian-copula integration, continuous-score Pearson rho inference or empirical IQ calibration is asserted. These results are kernel-checked **only if** the pinned Rocq 9.2 workflow succeeds for the specific commit.
+
 ## Appendix — Complete AI disclosure
+
+D028x source proof scripts, 36 new theorem statements and four definitions, and the associated report mapping were drafted with AI assistance. The underlying Rocq kernel and separately pinned test workflows—not this text—determine whether a claim is proved; finite binary-event identities cannot validate Gaussian assumptions or observed IQ rates.
 
 The D027x admissions dependence extension, its 33 new theorem proof drafts, and its source-to-report mapping were prepared with AI assistance. Rocq kernel compilation is required before interpreting any draft theorem as verified. No continuous Gaussian model, normal tail integral or empirical psychometric property has been established.
 
