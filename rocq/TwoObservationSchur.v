@@ -1996,7 +1996,7 @@ Proof.
  unfold cov2_schur.
  rewrite (cov2_beta_first_uncorrelated a b u v Ha Hb).
  rewrite (cov2_beta_second_uncorrelated a b u v Ha Hb).
- ring.
+ unfold Rdiv; ring.
 Qed.
 
 (**
