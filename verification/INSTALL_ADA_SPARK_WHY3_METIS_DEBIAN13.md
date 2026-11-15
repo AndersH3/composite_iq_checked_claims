@@ -227,6 +227,28 @@ message. The correction changes the fake to exit 2, explicitly checks
 failure modes 0/1/124, updates the message assertion, and makes any
 future assertion failure report a source line number.
 
+### Confirmed computer10 Z3/CVC5 backend smoke results
+
+The user subsequently ran the corrected test on Debian 13 with
+Why3 1.8.0 and reported exit status **0**. Both registered SMT backends
+were invoked using explicit default-alternative selectors:
+
+| Backend | TrueGoal (`forall x:int. x + 0 = x`) | FalseGoal (`0 = 1`) | Smoke script |
+|---|---|---|---|
+| Z3 4.13.3 | `Valid`, 18 steps | `Unknown (sat)`, 11 steps | PASS |
+| CVC5 1.1.2 | `Valid`, 25 steps | `Unknown (sat)`, 37 steps | PASS |
+
+These are small operational smoke tests, **not** validation of a substantive
+project theorem or a claim that Why3 established the false goals as
+`Invalid`. The deliberate false goals were not proved `Valid`.
+Both mock-based offline tests and the real backend script completed with
+exit status 0; the user also reported clean ShellCheck for
+`verification/why3/check_backends.sh`. A separate
+ShellCheck **SC2154** warning was found in the offline test harness's
+ERR trap; the trap was refactored into a named reporting function
+on the same branch. A clean rerun of ShellCheck on that corrected
+offline test still requires local confirmation.
+
 ### Functional proof tests for recognized backends
 
 After updating this branch, run:
@@ -292,6 +314,8 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+On November 15, 2026, the user supplied an additional real computer10 run confirming that both Z3 and CVC5 completed the Why3 smoke test with an overall exit status of 0. Both positive goals were Valid; both false goals were Unknown (sat), not Invalid. User-provided ShellCheck output also exposed SC2154 in the AI-generated error trap. The assistant refactored that diagnostic and recorded these results. No new live proof execution was performed by the assistant.
 
 The initial test incorrectly demanded `Invalid` on a deliberately false goal and treated Why3's nonzero exit for `Unknown (sat)` as an invocation failure. User-provided logs showed a correctly completed Z3 invocation with Why3 category `Unknown (sat)` and a nonzero process result. The AI revised the test to accept and distinctly report this exact qualified nonproof status, without equating it with a formally established `Invalid` response, and extended the offline mock regression cases. No real CVC5 run has yet been validated by the AI.
 
