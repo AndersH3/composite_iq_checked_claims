@@ -152,7 +152,7 @@ conditional union/marginal/exclusive rates, association sign,
 raw cross-product independence, conditional odds ratios, and
 Fréchet bounds to the original eight-event model. The other nine
 theorems verify an exact **Simpson's paradox** witness with
-pooled (P(A)=P(B)=1/2), (P(A\cap B)=33/100), and
+pooled `P(A) = P(B) = 1/2` and `P(A ∩ B) = 33/100`, and
 negative AB association separately in C-positive and C-negative
 strata. Thus naïvely transporting pairwise dependence across
 selection strata is mathematically invalid even for fully specified
