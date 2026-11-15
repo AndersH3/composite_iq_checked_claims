@@ -1,5 +1,7 @@
 # Combining IQ Scores: Checked Claims
 
+**Author, researcher and requester:** Anders Hellström.
+
 A statistical analysis and independently written replacement for Ronald K. Hoeflin's [article on combining IQ scores](https://megasociety.org/noesis/141/ferguson.html). The report preserves the valid covariance algebra, corrects the numerical table, and distinguishes standardized composites from latent-ability estimates and empirically established extreme percentiles.
 
 - [Compiled PDF](output/pdf/composite_iq_analysis.pdf)

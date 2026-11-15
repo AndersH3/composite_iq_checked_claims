@@ -1,5 +1,7 @@
 # Shared Rocq mathematical source
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **AI disclosure:** This source-location refactor and accompanying documentation were AI-assisted; only the separately pinned Rocq kernel checks theorems.
 
 The new `TrivariateSchur.v` is the canonical generic 3×3 covariance

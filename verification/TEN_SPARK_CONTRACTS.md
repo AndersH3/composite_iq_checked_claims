@@ -1,5 +1,7 @@
 # Staged ten-clause SPARK contracts — 9 November 2026
 
+**Author, researcher and requester:** Anders Hellström.
+
 ## Scope and policy
 
 The project requires **at least five explicit behavioral/flow contract

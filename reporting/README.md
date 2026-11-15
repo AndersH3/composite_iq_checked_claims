@@ -1,5 +1,7 @@
 # Dask simulations and KOMA-Script report books
 
+**Author, researcher and requester:** Anders Hellström.
+
 Each sub-project has its own detailed XeLaTeX report:
 
 | Sub-project | Report | Pages |
@@ -20,13 +22,13 @@ With the retained simulation data already present, run from the repository root:
 make report-books PYTHON=.venv/bin/python
 ```
 
-[`rebuild_proofs.py`](rebuild_proofs.py) executes one Dask graph that verifies the retained campaign inputs, builds all six PDFs with XeLaTeX/BibTeX, rejects unresolved references or layout diagnostics, renders every page with Poppler and writes [`book-format/revision.json`](book-format/revision.json). Its four named functions each have at least five distinct Deal decorators. No simulation draws or native prover runs are performed by this document revision. Rendered pages are temporary visual-QA artifacts; current source/PDF hashes and new build transcripts are retained separately from the original experiment. `make proof-reports` remains an alias for the same workflow.
+[`rebuild_proofs.py`](rebuild_proofs.py) executes one Dask graph that verifies the retained campaign inputs, builds all six PDFs with XeLaTeX/BibTeX, rejects unresolved references or layout diagnostics, renders every page with Poppler and writes the current [`attribution/revision.json`](attribution/revision.json). The named author, researcher and requester is **Anders Hellström**; the builder verifies his visible title-page credits and exact PDF author metadata, including the diacritic. Its four named functions each have at least five distinct Deal decorators. No simulation draws or native prover runs are performed by this document revision. Rendered pages are temporary visual-QA artifacts; current source/PDF hashes and new build transcripts are retained separately from the original experiment. `make proof-reports` remains an alias for the same workflow.
 
 All six volumes use the canonical [`book_style.tex`](book_style.tex): **KOMA-Script `scrbook`, A4, one-sided, 16 mm outer margins**, TeX Gyre Pagella text/math, TeX Gyre Heros headings and Latin Modern Mono. Native front matter contains an overview and table of contents; numbered chapters and mathematical appendices follow. The **full AI disclosure is the final appendix after the bibliography**. A brief opening notice links to it.
 
 The style loads every required package: `fontspec`, `unicode-math`, `tcolorbox`, `tabularray`, `hyperref`, `bookmark`, `mathtools`, `microtype`, `scrlayer-scrpage`, `cleveref`, `amsthm`, `booktabs`, `graphicx`, `float`, `enumitem`, `scrhack`, `listings`, `natbib`, and `xurl`. The build checks actual compiler input files, all four margins in the geometry log, contents entries and the final appendix anchor. The common style uses native text, math and table layout. The simulation wrapper loads PGFPlots only for its scientific charts; Xy-pic is unnecessary for these volumes.
 
-[`run.json`](run.json), the original `simulation-data/` files and the earlier [`proof-revision`](proof-revision/REPORT.md) records remain unchanged. Their document/source hashes describe their original snapshots; the new book-format manifest describes the current PDFs. Re-running the original simulation command below is a new experiment campaign and overwrites its generated outputs, so it is unnecessary for rebuilding this presentation revision.
+[`run.json`](run.json), the original `simulation-data/` files and the earlier [`proof-revision`](proof-revision/REPORT.md) and [`book-format`](book-format/README.md) records remain unchanged. Their document/source hashes describe their original snapshots; the attribution manifest describes the current PDFs. Re-running the original simulation command below is a new experiment campaign and overwrites its generated outputs, so it is unnecessary for rebuilding this credit revision.
 
 ## Reproduce
 

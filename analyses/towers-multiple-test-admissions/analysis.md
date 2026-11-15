@@ -1,5 +1,7 @@
 # Multiple-Test Admissions
 
+**Author, researcher and requester:** Anders Hellström.
+
 Joint analysis and corrected version of two Grady Towers letters. Prepared 30 October 2026. The [XeLaTeX source](towers_admissions_analysis.tex) and [PDF](output/pdf/towers_admissions_analysis.pdf) are the authoritative typeset version.
 
 # Joint assessment of the two sources

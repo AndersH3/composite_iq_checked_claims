@@ -1,5 +1,7 @@
 # Hoeflin/Ferguson specialized Rocq proofs
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **AI disclosure:** This module-ownership documentation was AI-assisted.
 
 [`Hoeflin.v`](Hoeflin.v) belongs to the Hoeflin/Ferguson report. It formalizes its composite-score, equicorrelation and threshold-scaling claims, while importing [shared mathematical source](../../../library/rocq/README.md) when a generic operation is needed. Its specialized SPARK code remains in `../ada/src/` and its independent Python checks in `../scripts/`, both consuming centrally owned reusable helpers.

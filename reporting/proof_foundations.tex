@@ -13,13 +13,14 @@ Source locators refer to the linked author versions specified in the
 bibliography, rather than silently mixing their pagination with print editions.
 
 \noindent\textbf{Document-revision provenance.}
-The current book-format revision is recorded in
-\path{reporting/book-format/revision.json}, with current TeX/Bib sources
-and PDF hashes. The earlier proof-text revision remains recorded in
+The current attribution revision is recorded in
+\path{reporting/attribution/revision.json}, with current TeX/Bib sources
+and PDF hashes. The earlier book-format revision remains in
+\path{reporting/book-format/revision.json}, and the proof-text revision in
 \path{reporting/proof-revision/revision.json}.
 The original \path{reporting/run.json} retains the numerical
 simulation campaign, its original document hashes and numerical outputs.
-The book revision checks and reuses the unchanged simulation-data files; it does
+The attribution revision checks and reuses the unchanged simulation-data files; it does
 not rerun the experiment or claim a new native SPARK/Rocq proof.
 The repository's subsequent shared-library refactor is separate from the
 retained native campaigns. Their source-pinned results do not constitute

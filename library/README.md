@@ -1,5 +1,7 @@
 # Canonical shared libraries
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **AI disclosure:** This source architecture and documentation were drafted with AI assistance. Rocq compilation, Python contracts and static SPARK checks have separate verification scopes; model validity is not inferred from source reuse.
 
 The three analyzed reports have separate specialized sources and proofs, but **one canonical ownership location** for every shared component:

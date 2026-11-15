@@ -1,5 +1,7 @@
 # Ada/SPARK verification on computer10
 
+**Author, researcher and requester:** Anders Hellström.
+
 The analysis folders contain standalone Ada implementations:
 
 - [Hoeflin/Ferguson](../analyses/hoeflin-ferguson/ada/): corrected thresholds, composite and latent-factor examples, and a Gaussian common-factor simulation.

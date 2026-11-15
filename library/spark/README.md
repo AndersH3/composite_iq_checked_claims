@@ -1,5 +1,7 @@
 # Central SPARK 2022 shared library
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **AI disclosure:** This source and design are AI-assisted. Source contracts are obligations; they are not claims of a completed GNATprove campaign on this revision.
 
 Two independently reusable packages now centralize previously duplicated integer arithmetic:

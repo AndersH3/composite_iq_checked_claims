@@ -1,5 +1,7 @@
 # Rocq formalization of checked claims
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**

@@ -1,5 +1,7 @@
 # Reference notes and theorem-to-claim map
 
+**Author, researcher and requester:** Anders Hellström.
+
 Sources were accessed on **14 November 2026**. This register identifies the editions, author versions, and selected passages consulted for the mathematical claims in this analysis. It does not claim that every page of every cited book was read. The report supplies its own proofs and algebraic substitutions; references identify the established theorems on which those proofs rest.
 
 Definitions, selected model parameters, and the assumption of a joint Gaussian test model are stated assumptions. A mathematical theorem does not establish that a real test battery follows that model. The IQ reporting scale `Q = 100 + 15 X`, the starting IQ 150, the correlation `3/5`, and the requested counts are the inputs to the worked examples.

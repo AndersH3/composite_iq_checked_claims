@@ -1,5 +1,7 @@
 # Sequential scores: Ada/SPARK calculations and simulations
 
+**Author, researcher and requester:** Anders Hellström.
+
 This implementation evaluates the paper's formulas for one, two or three equal starting scores and also supports other bounded starting-block counts. It calculates the inclusive mean, actual-mean population and conditional variances, Gaussian regression/residual coefficients, covariance eigenvalues, initial-block inverse and analytic infinite-count limits. The exact formula core accepts signed correlations in thousandths, `r,k >= 1`, and `r+k <= 1000`, subject to covariance admissibility. Fixed negative correlations have finite cases but no infinite-count result. At `c=1`, equal-score support is handled without pretending a singular starting block has an ordinary inverse.
 
 The source is separated by responsibility:

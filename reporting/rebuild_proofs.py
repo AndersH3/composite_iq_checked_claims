@@ -30,7 +30,7 @@ DOCUMENTS = (
     ("sequential-conditional-means", "sequential_conditional_means"),
     ("sequential-conditional-means", "sequential_simulations"),
 )
-RECORD = ROOT.joinpath("reporting", "book-format", "revision.json")
+RECORD = ROOT.joinpath("reporting", "attribution", "revision.json")
 CAMPAIGN = ROOT.joinpath("reporting", "run.json")
 REQUIRED_PACKAGES = (
     "fontspec", "unicode-math", "tcolorbox", "tabularray", "hyperref",
@@ -76,6 +76,7 @@ def retained_data():
 @deal.post(lambda result: len(result["sha256"]) == 64)
 @deal.post(lambda result: result["layout_diagnostics"] == [])
 @deal.post(lambda result: result["document_class"] == "scrbook" and result["toc"] and result["final_ai_appendix"])
+@deal.post(lambda result: result["author"] == "Anders Hellström" and result["visible_project_roles"] is True)
 @deal.ensure(lambda document, retained, result: result["project"] == document[0] and result["stem"] == document[1])
 @deal.raises(OSError, ValueError, TypeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
 @deal.has("read", "write", "syscall")
@@ -127,6 +128,12 @@ def build_document(document, retained):
         raise ValueError("Unresolved typesetting diagnostics for " + stem + ": " + repr(diagnostics))
     pdf = directory.joinpath("output", "pdf", stem + ".pdf")
     info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, check=True, timeout=30).stdout
+    author = next((line.split(":", 1)[1].strip() for line in info.splitlines() if line.startswith("Author:")), "")
+    if author != "Anders Hellström":
+        raise ValueError("Incorrect PDF author metadata: " + stem)
+    title = subprocess.run(["pdftotext", "-f", "1", "-l", "1", str(pdf), "-"], capture_output=True, text=True, check=True, timeout=30).stdout
+    if "Anders Hellström" not in title or "Author, researcher and requester" not in title:
+        raise ValueError("Missing visible author/researcher/requester credit: " + stem)
     pages = int(next(line.split(":", 1)[1] for line in info.splitlines() if line.startswith("Pages:")))
     render = directory.joinpath("tmp", "pdfs", "book-format", stem)
     render.mkdir(parents=True, exist_ok=True)
@@ -139,13 +146,14 @@ def build_document(document, retained):
             "sha256": digest(pdf), "pages": pages, "xelatex": True, "layout_diagnostics": [],
             "document_class": "scrbook", "required_packages": list(REQUIRED_PACKAGES),
             "toc": True, "final_ai_appendix": True, "margin_mm": 16,
-            "actual_margins_pt": margins}
+            "actual_margins_pt": margins, "author": author,
+            "visible_project_roles": True}
 
 
 @deal.pre(lambda results, retained, graph_tasks: isinstance(results, list) and len(results) == len(DOCUMENTS))
 @deal.pre(lambda results, retained, graph_tasks: {(row["project"], row["stem"]) for row in results} == set(DOCUMENTS))
 @deal.pre(lambda results, retained, graph_tasks: type(graph_tasks) is int and graph_tasks >= 8)
-@deal.post(lambda result: result["schema"] == "dask-six-report-book-format-v1")
+@deal.post(lambda result: result["schema"] == "dask-six-report-attribution-v1")
 @deal.post(lambda result: len(result["reports"]) == 6 and result["simulation_rerun"] is False)
 @deal.post(lambda result: result["new_native_proof_run"] is False)
 @deal.ensure(lambda results, retained, graph_tasks, result: result["retained_campaign"] == retained)
@@ -168,7 +176,7 @@ def record_revision(results, retained, graph_tasks):
     for project in sorted({document[0] for document in DOCUMENTS}):
         directory = ROOT.joinpath("analyses", project)
         sources += list(directory.glob("*.tex")) + list(directory.glob("*.bib"))
-    record = {"schema": "dask-six-report-book-format-v1", "date": "2026-11-15",
+    record = {"schema": "dask-six-report-attribution-v1", "date": "2026-11-15",
               "scheduler": "processes", "dask_version": dask.__version__,
               "graph_tasks": graph_tasks, "reports": results,
               "simulation_rerun": False, "new_native_proof_run": False, "matplotlib_used": False,
@@ -195,7 +203,7 @@ def main(argv=None):
     try:
         record = dask.compute(terminal, scheduler="processes", num_workers=args.workers)[0]
     except RemoteException as error:
-        raise RuntimeError("Dask book-format build failed; inspect reporting/book-format build logs") from error
+        raise RuntimeError("Dask attribution build failed; inspect reporting/attribution build logs") from error
     print(json.dumps(record, indent=2))
     return 0
 

@@ -2,6 +2,8 @@
 
 # Theorems and mathematical claims actually used in the reports
 
+**Author, researcher and requester:** Anders Hellström.
+
 **Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `694bf832697d59ccb07f2645e711e28120bdd688` (PR #24). **Working branch:** `architecture-central-libraries-20261115` (PR #25).
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:

@@ -1,5 +1,7 @@
 # Rocq proof-library audit and refactoring plan
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **D033x canonical ownership:** Generic finite sums, moments, event bridges and covariance/projection modules are now stored in [`library/rocq/`](../library/rocq/README.md). The Hoeflin, Admissions/FourCellBridge and SequentialReport/EquicorrelationSpectral/EquicorrelationVectors/EquicorrelationInverseVectors/Rounding/Counterexample proof modules live in their corresponding `analyses/*/rocq/` folders, rather than in the previous flat `rocq/` directory. The [canonical compile script](../scripts/compile_rocq.sh) preserves module names and proof order; older flat paths mentioned in historical audit entries refer to the formerly colocated modules.
 
 

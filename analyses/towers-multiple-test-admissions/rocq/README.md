@@ -1,5 +1,7 @@
 # Towers admissions specialized Rocq proofs
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **AI disclosure:** This module-ownership documentation was AI-assisted.
 
 [`Admissions.v`](Admissions.v), [`FourCellBridge.v`](FourCellBridge.v), [`ThreeTestAdmissions.v`](ThreeTestAdmissions.v), [`ThreeTestPairBridge.v`](ThreeTestPairBridge.v), and [`ThreeTestConditionalStrata.v`](ThreeTestConditionalStrata.v), and [`ThreeTestSelectionDecomposition.v`](ThreeTestSelectionDecomposition.v), and [`ThreeTestReversalCriteria.v`](ThreeTestReversalCriteria.v) own the report's four-cell event model, union, conditional-admissions, dependence and three-test multiplicity theorems. Shared finite-event summation, moment and covariance operations reside in [the central Rocq library](../../../library/rocq/README.md). Specialized SPARK and Python source remains in the adjacent `ada/src/` and `scripts/` directories, using central exact event arithmetic where applicable.

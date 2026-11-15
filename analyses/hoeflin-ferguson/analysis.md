@@ -1,5 +1,7 @@
 # Combining IQ Scores: Analysis and a Corrected Version
 
+**Author, researcher and requester:** Anders Hellström.
+
 Prepared 30 October 2026. This is an independently written statistical treatment, not a transcription of the source.
 
 The [original article](https://megasociety.org/noesis/141/ferguson.html) is attributed to Ronald K. Hoeflin and reproduces George A. Ferguson’s treatment of variances and covariances. Its covariance algebra is correct. The problem is that an algebraically standardized composite does not, by itself, establish the population percentile or psychological interpretation assigned to it.

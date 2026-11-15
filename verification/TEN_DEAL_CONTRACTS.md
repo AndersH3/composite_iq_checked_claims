@@ -1,5 +1,7 @@
 # Meaningful Python Deal-contract expansion
 
+**Author, researcher and requester:** Anders Hellström.
+
 ## Contract-policy interpretation
 
 Every named Python function in this repository is checked by

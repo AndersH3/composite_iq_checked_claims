@@ -23,3 +23,8 @@ All maintained report PDFs and future report PDFs use XeLaTeX and the KOMA-Scrip
 Load `fontspec`, `unicode-math`, `tcolorbox`, `tabularray`, `hyperref`, `bookmark`, `mathtools`, `microtype`, `scrlayer-scrpage`, `cleveref`, `amsthm`, `booktabs`, `graphicx`, `float`, `enumitem`, `scrhack`, `listings`, `natbib`, and `xurl`. Load/use Xy-pic and TikZ/PGF only when necessary for diagrams or graphics. Text and formulas use native text/math typesetting. The simulation wrapper loads PGFPlots for its scientific charts; the common book style does not use a graphics canvas to typeset text or formulas.
 
 Build and render through the Dask report workflow, check all final references/citations and layout diagnostics, and visually review the resulting pages. Record a new presentation revision separately from earlier simulation and proof-evidence records.
+
+
+# Project attribution
+
+Credit **Anders Hellström** as the author, researcher and requester in maintained reports, title pages, PDF author metadata, READMEs and other current project documentation. The canonical book style supplies `\ProjectAuthor` and `\ProjectRoles` for consistent typeset credits. Keep the substantive AI-contribution disclosures, source-author citations and verification limits accurate. Preserve recorded historical evidence in its original form; record attribution updates separately.

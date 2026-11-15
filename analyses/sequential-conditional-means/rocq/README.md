@@ -1,5 +1,7 @@
 # Sequential conditional-means specialized Rocq proofs
 
+**Author, researcher and requester:** Anders Hellström.
+
 > **AI disclosure:** This source-ownership documentation was AI-assisted.
 
 [`SequentialReport.v`](SequentialReport.v), [`SequentialSensitivity.v`](SequentialSensitivity.v), [`EquicorrelationSpectral.v`](EquicorrelationSpectral.v), [`EquicorrelationVectors.v`](EquicorrelationVectors.v), [`EquicorrelationInverseVectors.v`](EquicorrelationInverseVectors.v), [`ReportRounding.v`](ReportRounding.v) and [`ReportCounterexample.v`](ReportCounterexample.v) formalize the report's sequential regression algebra, exact parameter and sample-size sensitivity, exact rounding certificates and finite counterexamples. The three equicorrelation spectral/vector modules remain here because they import the specialized `SequentialReport` proof; only report-neutral finite sums, moments, conditional covariance/projection and Schur algebra are imported from [the central Rocq library](../../../library/rocq/README.md). Domain-specific SPARK implementations and independent Python validation stay alongside the report.

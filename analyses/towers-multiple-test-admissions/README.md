@@ -1,5 +1,7 @@
 # Multiple-Test Admissions: Towers's Letter and Follow-up
 
+**Author, researcher and requester:** Anders Hellström.
+
 A joint statistical analysis and independently written corrected treatment of Grady Towers's two letters about multiple tests for high-IQ society admissions. The report distinguishes nominal population eligibility under OR and AND rules, conditional pass probabilities, and claims about underlying ability or actual society membership.
 
 - [Compiled PDF](output/pdf/towers_admissions_analysis.pdf)

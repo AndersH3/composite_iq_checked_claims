@@ -1,5 +1,7 @@
 # Sequential Conditional Means of Equicorrelated Scores
 
+**Author, researcher and requester:** Anders Hellström.
+
 A full derivation for the average of `a, e_1, ..., e_k`, including the fixed starting score `a` as the first value. Every test has population mean **0** and standard deviation **1**. Under joint Gaussianity and equal pairwise correlation `c`, every subsequent recursive prediction equals `c a`, so the requested average is **`a (1 + k c) / (k + 1)`**. Here `k` counts subsequent predictions and `k + 1` counts all values in the average.
 
 - [Compiled PDF](output/pdf/sequential_conditional_means.pdf)
@@ -108,7 +110,7 @@ The new sections are [asymptotic limits](asymptotic_limits.tex), [SD interpretat
 
 ## AI disclosure and license
 
-The mathematical exposition, documentation, typesetting, Ada/SPARK and Python/Deal software were prepared with OpenAI Codex and collaborating AI agents in response to the requester's problem and verification requirements. The report contains its own disclosure dated 14 November 2026. Independent human peer review and empirical psychometric validation are not claimed. The repository's existing [LICENSE](../../LICENSE) governs its original material, subject to third-party rights.
+The mathematical exposition, documentation, typesetting, Ada/SPARK and Python/Deal software were prepared with OpenAI Codex and collaborating AI agents in response to Anders Hellström's problem and verification requirements. The report contains its own disclosure dated 15 November 2026. Independent human peer review and empirical psychometric validation are not claimed. The repository's existing [LICENSE](../../LICENSE) governs its original material, subject to third-party rights.
 
 ## Dedicated simulation report
 
