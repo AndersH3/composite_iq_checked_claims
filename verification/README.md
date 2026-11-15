@@ -31,16 +31,57 @@ the per-prover and per-campaign limits used for the **successful
 November 4 source-pinned proof campaign**, rather than the runner's
 currently shorter defaults (`--timeout 15 --wall-seconds 900`).
 This difference matters: the old Hoeflin report records an Alt-Ergo
-proof of the driver postcondition using **20.1 seconds**, while a
-November 15 run with the 15-second default left the specific
+proof of the driver postcondition using **20.1 seconds**, while an
+earlier November 15 run with the 15-second default left the specific
 `Report_IO.Trace.Rows = 8` postcondition unproved (403/404).
 The first two deliberately incorrect control implementations were
-correctly rejected. The resource-limit difference is a compelling
-diagnostic, **not proof that a 30-second rerun must succeed**.
-Do not weaken the eight-row specification to silence the checker.
-Check all native results and retained source hashes before accepting
-a new campaign. Complete the ongoing Towers run before initiating
-another CPU-intensive portfolio.
+correctly rejected. **Two subsequent native campaigns run by the user
+with the longer limits both completed successfully**, without changing
+or weakening the eight-row specification.
+
+### Confirmed November 15 proof results and wall-clock timings
+
+The user provided terminal transcripts for two consecutive invocations of
+`/usr/bin/time -v .venv/bin/python verification/run_computer10.py
+--portfolio-only --timeout 30 --wall-seconds 1800` on computer10,
+using branch revision `b5eddd4` (which changed only documentation
+relative to the previously proven Ada sources). Both runs reported:
+
+- `negative_control REJECTED AS EXPECTED`;
+- `ghost_negative_control REJECTED AS EXPECTED`;
+- `hoeflin portfolio COMPLETE`: 404 native checks (129 flow,
+  275 prover; zero justified and zero unproved);
+- `towers portfolio COMPLETE`: 696 native checks (230 flow,
+  466 prover; zero justified and zero unproved);
+- process exit status `0`.
+
+| User-observed resource metric | First successful run | Second successful run |
+|---|---:|---:|
+| Elapsed wall time | 30:27.25 | 30:21.38 |
+| User CPU time (seconds) | 3756.41 | 3742.91 |
+| System CPU time (seconds) | 92.27 | 95.25 |
+| CPU utilization reported by time | 210% | 210% |
+| Maximum resident set size (kbytes) | 989016 | 993456 |
+| Exit status | 0 | 0 |
+
+`/usr/bin/time` measures a separate executed program.
+The user's additional experimental `/usr/bin/time -p -v cd ...`
+returned exit status 127 because `cd` is a shell built-in, not an
+external executable; it is unrelated to either successful proof.
+Nested `/usr/bin/time` commands are also unnecessary: place a
+single `/usr/bin/time -v` before the Python invocation.
+
+The 30-second prover limit and 1800-second campaign limit are **resource
+ceilings**, not the measured elapsed duration. The successful invocations
+were source-pinned by the runner and saved native evidence **locally**
+under `verification/evidence/computer10-<timestamp>/`. The terminal
+transcripts, by themselves, do not establish that these new evidence
+directories have been committed or archived to GitHub. Preserve and audit
+those raw native reports and manifests before making claims about
+independently reproducible or permanently retained verification evidence.
+The result verifies the SPARK check set against its specified contracts,
+not the empirical/modeling assumptions or every theorem in the three
+research reports.
 
 If the import check fails inside that virtual environment, install the
 repository's pinned dependencies into **that environment only**, then
