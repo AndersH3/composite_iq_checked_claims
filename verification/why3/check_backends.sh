@@ -23,6 +23,22 @@ if [[ ! -f "$fixture" ]]; then
   exit 2
 fi
 
+# Why3 1.8's CLI reports one selected goal and its answer on SEPARATE
+# lines, e.g. "Goal TrueGoal." followed by
+# "Prover result is: Valid (0.00s, 18 steps).".
+# Enforce exactly one goal header and exactly one result header, then verify
+# the requested status. This prevents matching unrelated diagnostics or a
+# status for a different goal. Only Why3's reported result counts, never the
+# process exit status by itself.
+why3_result_is() {
+  local output="$1" goal="$2" expected="$3"
+  local goal_headers result_headers
+  goal_headers="$(grep -Fxc "Goal $goal." <<<"$output" || true)"
+  result_headers="$(grep -Ec '^Prover result is:[[:space:]]*' <<<"$output" || true)"
+  [[ "$goal_headers" == "1" && "$result_headers" == "1" ]] &&
+    grep -Eq "^Prover result is:[[:space:]]*${expected}([[:space:]]|$)" <<<"$output"
+}
+
 printf '%s\n' 'Why3 external backend smoke test (positive and negative controls)'
 why3 --version
 # Why3 1.8 treats a short name as ambiguous when it detects multiple
@@ -45,7 +61,7 @@ for selector in "Z3,4.13.3," "CVC5,1.1.2,"; do
   fi
   # This check deliberately examines the prover's ANSWER, not merely
   # process exit code: Why3 can exit normally after Unknown or Timeout.
-  if ! grep -Eq 'TrueGoal[[:space:]]*:[[:space:]]*Valid([[:space:]]|$)' <<<"$positive"; then
+  if ! why3_result_is "$positive" TrueGoal Valid; then
     printf 'ERROR: %s did not prove TrueGoal as Valid.\n' "$prover" >&2
     exit 4
   fi
@@ -59,11 +75,11 @@ for selector in "Z3,4.13.3," "CVC5,1.1.2,"; do
     printf 'ERROR: %s negative-control invocation failed.\n' "$prover" >&2
     exit 5
   fi
-  if grep -Eq 'FalseGoal[[:space:]]*:[[:space:]]*Valid([[:space:]]|$)' <<<"$negative"; then
+  if why3_result_is "$negative" FalseGoal Valid; then
     printf 'ERROR: %s incorrectly proved a false goal!\n' "$prover" >&2
     exit 6
   fi
-  if ! grep -Eq 'FalseGoal[[:space:]]*:[[:space:]]*Invalid([[:space:]]|$)' <<<"$negative"; then
+  if ! why3_result_is "$negative" FalseGoal Invalid; then
     printf 'ERROR: %s did not reject FalseGoal as Invalid.\n' "$prover" >&2
     exit 7
   fi
