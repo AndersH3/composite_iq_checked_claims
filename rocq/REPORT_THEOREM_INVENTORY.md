@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `500ebd204603b537e3d9403ecc929ff2c3734395` (PR #17). **Working branch:** `rocq-covariance-sensitivity-20261115`.
+**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `03583282299add902c8cecd497686df2379d70ca` (PR #18). **Working branch:** `rocq-admissions-association-20261115`.
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
@@ -146,6 +146,13 @@ This inventory was researched, extracted, organized, and drafted by OpenAI's AI 
 
 The extension to `TwoObservationSchur.v` contributes **31 report-relevant real-algebra theorems** about the symmetry of reordering observations, variance-energy polarization and parallelogram identities, strict convexity and unique equality cases for least-squares risk, simultaneous comparison with both one-test predictors, and the necessary-and-sufficient target-signal criterion for improvement over unconditional prediction. It additionally proves invariance of optimal Schur residual variance and affine predictions under separate nonzero measurement-unit changes of the two observed tests. These are exact scalar covariance-block results with explicit determinant and positivity assumptions. They strengthen the algebraic evidence for `thm:regression` and the standardized-score formulas; they **do not** prove Gaussian conditioning, any normal tail, or empirical IQ calibration. Verification status is determined by pinned Rocq 9.2 CI, not by this register.
 
+
+### Continuation D027x — finite admissions-event dependence and conditional selection
+
+This continuation extends `Admissions.v` by **33 new named theorems and 5 transparent definitions** mapping the Towers report's union, conditional-admission, overlap and indicator-phi discussion to exact Bernoulli four-cell algebra. Besides complementary mass and law-of-total-probability decompositions, the main substantive contributions are the **common covariance numerator of conditional pass-rate uplift, failure-stratum downlift, and cross-stratum contrasts**; exact independence and positive-association criteria for both test orientations; and the sharp four Fréchet inequalities bounding possible binary indicator covariance. Rather than defining a second event algebra or a new Gaussian model, every proof reuses `Admissions.binary_indicator_covariance_numerator`, its existing conditional numerators, and Stdlib real arithmetic. **These do not prove bivariate Gaussian integrals, infer continuous-score Pearson correlation from phi, or verify population IQ rates.** All formal status claims require passing Rocq 9.2 CI.
+
 ## Appendix — Complete AI disclosure
+
+The D027x admissions dependence extension, its 34 new theorem proof drafts, and its source-to-report mapping were prepared with AI assistance. Rocq kernel compilation is required before interpreting any draft theorem as verified. No continuous Gaussian model, normal tail integral or empirical psychometric property has been established.
 
 This source-based theorem inventory, its continuation entries, and associated formal proof work were drafted and reviewed with assistance from OpenAI's ChatGPT. Mathematical results are valid only to the extent that their exact propositions are accepted by the Rocq kernel under their stated hypotheses. CI, finite arithmetic, and test checks do not verify the continuous Gaussian-model assumptions, numerical tail-integral accuracy, or any empirical test-population parameter. Repository maintainers remain responsible for independent source review and application of these model-limited claims.
