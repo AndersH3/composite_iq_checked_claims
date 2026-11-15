@@ -1,6 +1,6 @@
 #!/bin/sh
 # Canonical Rocq source compiler for the shared math library and the three
-# specialized report libraries. Uses the extended 24-module dependency order,
+# specialized report libraries. Uses the extended 26-module dependency order,
 # never copies sources back into Git, and rejects duplicate module basenames.
 # This is a build utility, not a substitute for the Rocq kernel checker.
 set -eu
@@ -30,7 +30,9 @@ rocq compile ThreeTestAdmissions.v
 rocq compile ThreeTestPairBridge.v
 rocq compile ThreeTestConditionalStrata.v
 rocq compile TwoStratumAssociation.v
+rocq compile TwoStratumReversal.v
 rocq compile ThreeTestSelectionDecomposition.v
+rocq compile ThreeTestReversalCriteria.v
 rocq compile SequentialReport.v
 rocq compile SequentialSensitivity.v
 rocq compile ReportRounding.v

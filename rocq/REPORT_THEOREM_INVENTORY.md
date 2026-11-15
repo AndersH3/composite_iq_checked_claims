@@ -34,6 +34,31 @@ tail certificates, actual test correlations, or population admissions rates
 are established by these theorems. Treat the new statements as kernel
 proved only after Rocq 9.2 accepts the exact final source head.
 
+### D040x — formal sharp reversal thresholds and conditional independence
+
+The 50 generic [`TwoStratumReversal.v`](../library/rocq/TwoStratumReversal.v)
+theorems give necessary-and-sufficient criteria for the sign of pooled
+two-test association, expressed as a comparison between between-group
+selection association and the negative weighted within-stratum term.
+They also characterize when conditional independence in both groups
+implies pooled independence, and when at least one route's selected and
+nonselected admission rates must agree.
+
+The 75 [`ThreeTestReversalCriteria.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestReversalCriteria.v)
+theorems specialize these statements to AB given C, AC given B, and
+BC given A. They formally connect the tests' exact eight-atom
+cross-product determinants to the population-level association and
+give necessary selection-gap signs for positive and negative
+Simpson-style reversal. Premises explicitly require positive selected
+and other-group masses and, where relevant, strict local
+association signs; the conclusions do not presume Gaussianity.
+
+These are 125 additional *finite-model* theorem statements. Rocq 9.2
+kernel acceptance at the exact final source revision is required before
+they may be called proved. This work neither validates the
+reports' population-IQ distribution assumptions nor certifies
+continuous Gaussian tail probabilities.
+
 ## Verification levels (do not conflate)
 
 **K — Kernel-checked at stated mathematical scope:** a named Rocq theorem proves the displayed finite/algebraic proposition, with its explicit hypotheses. **A — Algebraic consequence formalized:** the report's rational formula is checked, but the stochastic Gaussian premise from which the report derives it is **not** proved. **P — Report proof / cited established theorem only:** the typeset report gives a mathematical proof or reference, but no corresponding general Rocq kernel theorem has been supplied. **E — Empirical or numerical/modeling claim:** its correctness requires numerical/error-certified evaluation or assumptions about a real test population. A claim labelled P or E is not converted to K merely by a successful Rocq build.

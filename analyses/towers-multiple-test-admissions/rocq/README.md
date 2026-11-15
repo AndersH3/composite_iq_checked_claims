@@ -2,7 +2,7 @@
 
 > **AI disclosure:** This module-ownership documentation was AI-assisted.
 
-[`Admissions.v`](Admissions.v), [`FourCellBridge.v`](FourCellBridge.v), [`ThreeTestAdmissions.v`](ThreeTestAdmissions.v), [`ThreeTestPairBridge.v`](ThreeTestPairBridge.v), and [`ThreeTestConditionalStrata.v`](ThreeTestConditionalStrata.v), and [`ThreeTestSelectionDecomposition.v`](ThreeTestSelectionDecomposition.v) own the report's four-cell event model, union, conditional-admissions, dependence and three-test multiplicity theorems. Shared finite-event summation, moment and covariance operations reside in [the central Rocq library](../../../library/rocq/README.md). Specialized SPARK and Python source remains in the adjacent `ada/src/` and `scripts/` directories, using central exact event arithmetic where applicable.
+[`Admissions.v`](Admissions.v), [`FourCellBridge.v`](FourCellBridge.v), [`ThreeTestAdmissions.v`](ThreeTestAdmissions.v), [`ThreeTestPairBridge.v`](ThreeTestPairBridge.v), and [`ThreeTestConditionalStrata.v`](ThreeTestConditionalStrata.v), and [`ThreeTestSelectionDecomposition.v`](ThreeTestSelectionDecomposition.v), and [`ThreeTestReversalCriteria.v`](ThreeTestReversalCriteria.v) own the report's four-cell event model, union, conditional-admissions, dependence and three-test multiplicity theorems. Shared finite-event summation, moment and covariance operations reside in [the central Rocq library](../../../library/rocq/README.md). Specialized SPARK and Python source remains in the adjacent `ada/src/` and `scripts/` directories, using central exact event arithmetic where applicable.
 
 Build using `sh scripts/compile_rocq.sh`; see the [report theorem inventory](../../../rocq/REPORT_THEOREM_INVENTORY.md). The new 55-theorem module covers eight atomic Boolean admission patterns,
 finite three-way inclusion-exclusion, count distribution (zero through three),
@@ -48,6 +48,19 @@ Consequently, test selection can create or reverse pairwise dependence.
 All claims rely only on explicitly normalized eight-outcome masses, with
 strictly positive selected and nonselected stratum probabilities when
 division or sign equivalence is involved.
+
+## D040x exact selection-reversal conditions
+
+`ThreeTestReversalCriteria.v` connects the central 50-theorem
+[`TwoStratumReversal.v`](../../../library/rocq/TwoStratumReversal.v)
+library to the eight-outcome AB/AC/BC admissions model. Its 75
+route-specific theorems specify necessary-and-sufficient pooled sign
+thresholds and conditional-independence criteria, together with
+necessary signs of selected-versus-unselected admission-rate gaps for
+positive or negative Simpson reversal. Selected and other-stratum
+probabilities must both be strictly positive where division or
+sign-equivalence conditions are used. Every raw determinant corresponds
+to a concrete pair of disjoint Boolean event cells.
 
 ## Complete AI disclosure
 
