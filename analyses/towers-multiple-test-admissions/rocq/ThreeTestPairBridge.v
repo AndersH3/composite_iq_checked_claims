@@ -70,7 +70,7 @@ Defined.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_joint_mass :
-  forall m : ThreeTestModel, Admissions.p_both (pair_AB3 m) = pAB3 m..
+  forall m : ThreeTestModel, Admissions.p_both (pair_AB3 m) = pAB3 m.
 Proof.
   intros m;
   unfold Admissions.p_both, pair_AB3; simpl; triple_lra.
@@ -94,7 +94,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_first_only_mass :
-  forall m : ThreeTestModel, Admissions.only_A (pair_AB3 m) = pA3 m-pAB3 m..
+  forall m : ThreeTestModel, Admissions.only_A (pair_AB3 m) = pA3 m-pAB3 m.
 Proof.
   intros m;
   unfold pair_AB3; simpl; triple_lra.
@@ -118,7 +118,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_second_only_mass :
-  forall m : ThreeTestModel, Admissions.only_B (pair_AB3 m) = pB3 m-pAB3 m..
+  forall m : ThreeTestModel, Admissions.only_B (pair_AB3 m) = pB3 m-pAB3 m.
 Proof.
   intros m;
   unfold pair_AB3; simpl; triple_lra.
@@ -142,7 +142,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_neither_mass :
-  forall m : ThreeTestModel, Admissions.neither (pair_AB3 m) = 1-(pA3 m+pB3 m-pAB3 m)..
+  forall m : ThreeTestModel, Admissions.neither (pair_AB3 m) = 1-(pA3 m+pB3 m-pAB3 m).
 Proof.
   intros m;
   unfold pair_AB3; simpl; triple_lra.
@@ -166,7 +166,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_first_marginal :
-  forall m : ThreeTestModel, Admissions.p_A (pair_AB3 m) = pA3 m..
+  forall m : ThreeTestModel, Admissions.p_A (pair_AB3 m) = pA3 m.
 Proof.
   intros m;
   unfold Admissions.p_A.
@@ -193,7 +193,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_second_marginal :
-  forall m : ThreeTestModel, Admissions.p_B (pair_AB3 m) = pB3 m..
+  forall m : ThreeTestModel, Admissions.p_B (pair_AB3 m) = pB3 m.
 Proof.
   intros m;
   unfold Admissions.p_B.
@@ -220,7 +220,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_union_mass :
-  forall m : ThreeTestModel, Admissions.p_either (pair_AB3 m) = pA3 m+pB3 m-pAB3 m..
+  forall m : ThreeTestModel, Admissions.p_either (pair_AB3 m) = pA3 m+pB3 m-pAB3 m.
 Proof.
   intros m;
   unfold Admissions.p_either.
@@ -248,7 +248,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_exclusive_mass :
-  forall m : ThreeTestModel, Admissions.p_exactly_one (pair_AB3 m) = pA3 m+pB3 m-2*pAB3 m..
+  forall m : ThreeTestModel, Admissions.p_exactly_one (pair_AB3 m) = pA3 m+pB3 m-2*pAB3 m.
 Proof.
   intros m;
   unfold Admissions.p_exactly_one.
@@ -275,7 +275,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_conditional_second_given_first :
-  forall m : ThreeTestModel, 0<pA3 m -> Admissions.conditional_B_given_A (pair_AB3 m) = pAB3 m/pA3 m..
+  forall m : ThreeTestModel, 0<pA3 m -> Admissions.conditional_B_given_A (pair_AB3 m) = pAB3 m/pA3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_B_given_A.
@@ -302,7 +302,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_conditional_first_given_second :
-  forall m : ThreeTestModel, 0<pB3 m -> Admissions.conditional_A_given_B (pair_AB3 m) = pAB3 m/pB3 m..
+  forall m : ThreeTestModel, 0<pB3 m -> Admissions.conditional_A_given_B (pair_AB3 m) = pAB3 m/pB3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_A_given_B.
@@ -329,7 +329,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_conditional_overlap_given_union :
-  forall m : ThreeTestModel, 0<pA3 m+pB3 m-pAB3 m -> Admissions.conditional_both_given_either (pair_AB3 m) = pAB3 m/(pA3 m+pB3 m-pAB3 m)..
+  forall m : ThreeTestModel, 0<pA3 m+pB3 m-pAB3 m -> Admissions.conditional_both_given_either (pair_AB3 m) = pAB3 m/(pA3 m+pB3 m-pAB3 m).
 Proof.
   intros m _.
   unfold Admissions.conditional_both_given_either.
@@ -356,7 +356,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_conditional_notfirst_given_second :
-  forall m : ThreeTestModel, 0<pB3 m -> Admissions.conditional_not_A_given_B (pair_AB3 m) = (pB3 m-pAB3 m)/pB3 m..
+  forall m : ThreeTestModel, 0<pB3 m -> Admissions.conditional_not_A_given_B (pair_AB3 m) = (pB3 m-pAB3 m)/pB3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_not_A_given_B.
@@ -383,7 +383,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_conditional_second_given_notfirst :
-  forall m : ThreeTestModel, 0<1-pA3 m -> Admissions.admission_B_given_not_A (pair_AB3 m) = (pB3 m-pAB3 m)/(1-pA3 m)..
+  forall m : ThreeTestModel, 0<1-pA3 m -> Admissions.admission_B_given_not_A (pair_AB3 m) = (pB3 m-pAB3 m)/(1-pA3 m).
 Proof.
   intros m _.
   unfold Admissions.admission_B_given_not_A, Admissions.admission_not_A_mass.
@@ -411,7 +411,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_conditional_first_given_notsecond :
-  forall m : ThreeTestModel, 0<1-pB3 m -> Admissions.admission_A_given_not_B (pair_AB3 m) = (pA3 m-pAB3 m)/(1-pB3 m)..
+  forall m : ThreeTestModel, 0<1-pB3 m -> Admissions.admission_A_given_not_B (pair_AB3 m) = (pA3 m-pAB3 m)/(1-pB3 m).
 Proof.
   intros m _.
   unfold Admissions.admission_A_given_not_B, Admissions.admission_not_B_mass.
@@ -439,7 +439,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_association_covariance :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_AB3 m) = pAB3 m-pA3 m*pB3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_AB3 m) = pAB3 m-pA3 m*pB3 m.
 Proof.
   intro m.
   rewrite Admissions.admission_association_covariance.
@@ -467,7 +467,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_independence_criterion :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_AB3 m)=0 <-> pAB3 m=pA3 m*pB3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_AB3 m)=0 <-> pAB3 m=pA3 m*pB3 m.
 Proof.
   intros m.
   rewrite (Admissions.admission_association_zero_iff_independence (pair_AB3 m)).
@@ -495,7 +495,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_union_independent_reference :
-  forall m : ThreeTestModel, pA3 m+pB3 m-pAB3 m = pA3 m+pB3 m-pA3 m*pB3 m-Admissions.admission_association (pair_AB3 m)..
+  forall m : ThreeTestModel, pA3 m+pB3 m-pAB3 m = pA3 m+pB3 m-pA3 m*pB3 m-Admissions.admission_association (pair_AB3 m).
 Proof.
   intro m.
   rewrite triple_ab_association_covariance.
@@ -520,7 +520,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_first_indicator_variance :
-  forall m : ThreeTestModel, Admissions.admission_indicator_variance_A (pair_AB3 m) = pA3 m*(1-pA3 m)..
+  forall m : ThreeTestModel, Admissions.admission_indicator_variance_A (pair_AB3 m) = pA3 m*(1-pA3 m).
 Proof.
   intro m.
   unfold Admissions.admission_indicator_variance_A.
@@ -546,7 +546,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_second_indicator_variance :
-  forall m : ThreeTestModel, Admissions.admission_indicator_variance_B (pair_AB3 m) = pB3 m*(1-pB3 m)..
+  forall m : ThreeTestModel, Admissions.admission_indicator_variance_B (pair_AB3 m) = pB3 m*(1-pB3 m).
 Proof.
   intro m.
   unfold Admissions.admission_indicator_variance_B.
@@ -572,7 +572,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_odds_ratio :
-  forall m : ThreeTestModel, Admissions.admission_odds_ratio (pair_AB3 m) = pAB3 m*(1-(pA3 m+pB3 m-pAB3 m))/(((pA3 m-pAB3 m)*(pB3 m-pAB3 m)))..
+  forall m : ThreeTestModel, Admissions.admission_odds_ratio (pair_AB3 m) = pAB3 m*(1-(pA3 m+pB3 m-pAB3 m))/(((pA3 m-pAB3 m)*(pB3 m-pAB3 m))).
 Proof.
   intro m.
   unfold Admissions.admission_odds_ratio.
@@ -601,7 +601,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_phi_coefficient :
-  forall m : ThreeTestModel, Admissions.admission_phi (pair_AB3 m) = (pAB3 m-pA3 m*pB3 m)/sqrt ((pA3 m*(1-pA3 m))*(pB3 m*(1-pB3 m)))..
+  forall m : ThreeTestModel, Admissions.admission_phi (pair_AB3 m) = (pAB3 m-pA3 m*pB3 m)/sqrt ((pA3 m*(1-pA3 m))*(pB3 m*(1-pB3 m))).
 Proof.
   intro m.
   unfold Admissions.admission_phi.
@@ -629,7 +629,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_frechet_lower_bound :
-  forall m : ThreeTestModel, pA3 m+pB3 m-1<=pAB3 m..
+  forall m : ThreeTestModel, pA3 m+pB3 m-1<=pAB3 m.
 Proof.
   intro m.
   pose proof (Admissions.frechet_lower_bound (pair_AB3 m)) as H.
@@ -656,7 +656,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_conditional_second_interval :
-  forall m : ThreeTestModel, 0<pA3 m -> 0<=Admissions.conditional_B_given_A (pair_AB3 m) /\ Admissions.conditional_B_given_A (pair_AB3 m)<=1..
+  forall m : ThreeTestModel, 0<pA3 m -> 0<=Admissions.conditional_B_given_A (pair_AB3 m) /\ Admissions.conditional_B_given_A (pair_AB3 m)<=1.
 Proof.
   intros m Hx.
   apply Admissions.conditional_B_given_A_unit_interval.
@@ -681,7 +681,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_association_positive_iff :
-  forall m : ThreeTestModel, 0<Admissions.admission_association (pair_AB3 m) <-> pA3 m*pB3 m<pAB3 m..
+  forall m : ThreeTestModel, 0<Admissions.admission_association (pair_AB3 m) <-> pA3 m*pB3 m<pAB3 m.
 Proof.
   intro m.
   rewrite (Admissions.admission_association_positive_iff_overlap (pair_AB3 m)).
@@ -709,7 +709,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_association_negative_iff :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_AB3 m)<0 <-> pAB3 m<pA3 m*pB3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_AB3 m)<0 <-> pAB3 m<pA3 m*pB3 m.
 Proof.
   intro m.
   rewrite (Admissions.admission_association_negative_iff_overlap (pair_AB3 m)).
@@ -737,7 +737,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_odds_one_iff_independent :
-  forall m : ThreeTestModel, 0<Admissions.only_A (pair_AB3 m)*Admissions.only_B (pair_AB3 m) -> (Admissions.admission_odds_ratio (pair_AB3 m)=1 <-> pAB3 m=pA3 m*pB3 m)..
+  forall m : ThreeTestModel, 0<Admissions.only_A (pair_AB3 m)*Admissions.only_B (pair_AB3 m) -> (Admissions.admission_odds_ratio (pair_AB3 m)=1 <-> pAB3 m=pA3 m*pB3 m).
 Proof.
   intros m Hpos.
   pose proof (Admissions.admission_odds_ratio_one_iff_independent (pair_AB3 m) Hpos) as H.
@@ -764,7 +764,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_phi_unit_interval :
-  forall m : ThreeTestModel, 0<pA3 m -> pA3 m<1 -> 0<pB3 m -> pB3 m<1 -> -1<=Admissions.admission_phi (pair_AB3 m) /\ Admissions.admission_phi (pair_AB3 m)<=1..
+  forall m : ThreeTestModel, 0<pA3 m -> pA3 m<1 -> 0<pB3 m -> pB3 m<1 -> -1<=Admissions.admission_phi (pair_AB3 m) /\ Admissions.admission_phi (pair_AB3 m)<=1.
 Proof.
   intros m Hx0 Hx1 Hy0 Hy1.
   apply Admissions.admission_phi_unit_interval;
@@ -789,7 +789,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ab_union_unit_interval :
-  forall m : ThreeTestModel, 0<=Admissions.p_either (pair_AB3 m) /\ Admissions.p_either (pair_AB3 m)<=1..
+  forall m : ThreeTestModel, 0<=Admissions.p_either (pair_AB3 m) /\ Admissions.p_either (pair_AB3 m)<=1.
 Proof.
   intro m; split.
   - apply Admissions.union_nonnegative.
@@ -840,7 +840,7 @@ Defined.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_joint_mass :
-  forall m : ThreeTestModel, Admissions.p_both (pair_AC3 m) = pAC3 m..
+  forall m : ThreeTestModel, Admissions.p_both (pair_AC3 m) = pAC3 m.
 Proof.
   intros m;
   unfold Admissions.p_both, pair_AC3; simpl; triple_lra.
@@ -864,7 +864,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_first_only_mass :
-  forall m : ThreeTestModel, Admissions.only_A (pair_AC3 m) = pA3 m-pAC3 m..
+  forall m : ThreeTestModel, Admissions.only_A (pair_AC3 m) = pA3 m-pAC3 m.
 Proof.
   intros m;
   unfold pair_AC3; simpl; triple_lra.
@@ -888,7 +888,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_second_only_mass :
-  forall m : ThreeTestModel, Admissions.only_B (pair_AC3 m) = pC3 m-pAC3 m..
+  forall m : ThreeTestModel, Admissions.only_B (pair_AC3 m) = pC3 m-pAC3 m.
 Proof.
   intros m;
   unfold pair_AC3; simpl; triple_lra.
@@ -912,7 +912,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_neither_mass :
-  forall m : ThreeTestModel, Admissions.neither (pair_AC3 m) = 1-(pA3 m+pC3 m-pAC3 m)..
+  forall m : ThreeTestModel, Admissions.neither (pair_AC3 m) = 1-(pA3 m+pC3 m-pAC3 m).
 Proof.
   intros m;
   unfold pair_AC3; simpl; triple_lra.
@@ -936,7 +936,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_first_marginal :
-  forall m : ThreeTestModel, Admissions.p_A (pair_AC3 m) = pA3 m..
+  forall m : ThreeTestModel, Admissions.p_A (pair_AC3 m) = pA3 m.
 Proof.
   intros m;
   unfold Admissions.p_A.
@@ -963,7 +963,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_second_marginal :
-  forall m : ThreeTestModel, Admissions.p_B (pair_AC3 m) = pC3 m..
+  forall m : ThreeTestModel, Admissions.p_B (pair_AC3 m) = pC3 m.
 Proof.
   intros m;
   unfold Admissions.p_B.
@@ -990,7 +990,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_union_mass :
-  forall m : ThreeTestModel, Admissions.p_either (pair_AC3 m) = pA3 m+pC3 m-pAC3 m..
+  forall m : ThreeTestModel, Admissions.p_either (pair_AC3 m) = pA3 m+pC3 m-pAC3 m.
 Proof.
   intros m;
   unfold Admissions.p_either.
@@ -1018,7 +1018,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_exclusive_mass :
-  forall m : ThreeTestModel, Admissions.p_exactly_one (pair_AC3 m) = pA3 m+pC3 m-2*pAC3 m..
+  forall m : ThreeTestModel, Admissions.p_exactly_one (pair_AC3 m) = pA3 m+pC3 m-2*pAC3 m.
 Proof.
   intros m;
   unfold Admissions.p_exactly_one.
@@ -1045,7 +1045,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_conditional_second_given_first :
-  forall m : ThreeTestModel, 0<pA3 m -> Admissions.conditional_B_given_A (pair_AC3 m) = pAC3 m/pA3 m..
+  forall m : ThreeTestModel, 0<pA3 m -> Admissions.conditional_B_given_A (pair_AC3 m) = pAC3 m/pA3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_B_given_A.
@@ -1072,7 +1072,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_conditional_first_given_second :
-  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_A_given_B (pair_AC3 m) = pAC3 m/pC3 m..
+  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_A_given_B (pair_AC3 m) = pAC3 m/pC3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_A_given_B.
@@ -1099,7 +1099,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_conditional_overlap_given_union :
-  forall m : ThreeTestModel, 0<pA3 m+pC3 m-pAC3 m -> Admissions.conditional_both_given_either (pair_AC3 m) = pAC3 m/(pA3 m+pC3 m-pAC3 m)..
+  forall m : ThreeTestModel, 0<pA3 m+pC3 m-pAC3 m -> Admissions.conditional_both_given_either (pair_AC3 m) = pAC3 m/(pA3 m+pC3 m-pAC3 m).
 Proof.
   intros m _.
   unfold Admissions.conditional_both_given_either.
@@ -1126,7 +1126,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_conditional_notfirst_given_second :
-  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_not_A_given_B (pair_AC3 m) = (pC3 m-pAC3 m)/pC3 m..
+  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_not_A_given_B (pair_AC3 m) = (pC3 m-pAC3 m)/pC3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_not_A_given_B.
@@ -1153,7 +1153,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_conditional_second_given_notfirst :
-  forall m : ThreeTestModel, 0<1-pA3 m -> Admissions.admission_B_given_not_A (pair_AC3 m) = (pC3 m-pAC3 m)/(1-pA3 m)..
+  forall m : ThreeTestModel, 0<1-pA3 m -> Admissions.admission_B_given_not_A (pair_AC3 m) = (pC3 m-pAC3 m)/(1-pA3 m).
 Proof.
   intros m _.
   unfold Admissions.admission_B_given_not_A, Admissions.admission_not_A_mass.
@@ -1181,7 +1181,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_conditional_first_given_notsecond :
-  forall m : ThreeTestModel, 0<1-pC3 m -> Admissions.admission_A_given_not_B (pair_AC3 m) = (pA3 m-pAC3 m)/(1-pC3 m)..
+  forall m : ThreeTestModel, 0<1-pC3 m -> Admissions.admission_A_given_not_B (pair_AC3 m) = (pA3 m-pAC3 m)/(1-pC3 m).
 Proof.
   intros m _.
   unfold Admissions.admission_A_given_not_B, Admissions.admission_not_B_mass.
@@ -1209,7 +1209,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_association_covariance :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_AC3 m) = pAC3 m-pA3 m*pC3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_AC3 m) = pAC3 m-pA3 m*pC3 m.
 Proof.
   intro m.
   rewrite Admissions.admission_association_covariance.
@@ -1237,7 +1237,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_independence_criterion :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_AC3 m)=0 <-> pAC3 m=pA3 m*pC3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_AC3 m)=0 <-> pAC3 m=pA3 m*pC3 m.
 Proof.
   intros m.
   rewrite (Admissions.admission_association_zero_iff_independence (pair_AC3 m)).
@@ -1265,7 +1265,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_union_independent_reference :
-  forall m : ThreeTestModel, pA3 m+pC3 m-pAC3 m = pA3 m+pC3 m-pA3 m*pC3 m-Admissions.admission_association (pair_AC3 m)..
+  forall m : ThreeTestModel, pA3 m+pC3 m-pAC3 m = pA3 m+pC3 m-pA3 m*pC3 m-Admissions.admission_association (pair_AC3 m).
 Proof.
   intro m.
   rewrite triple_ac_association_covariance.
@@ -1290,7 +1290,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_first_indicator_variance :
-  forall m : ThreeTestModel, Admissions.admission_indicator_variance_A (pair_AC3 m) = pA3 m*(1-pA3 m)..
+  forall m : ThreeTestModel, Admissions.admission_indicator_variance_A (pair_AC3 m) = pA3 m*(1-pA3 m).
 Proof.
   intro m.
   unfold Admissions.admission_indicator_variance_A.
@@ -1316,7 +1316,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_second_indicator_variance :
-  forall m : ThreeTestModel, Admissions.admission_indicator_variance_B (pair_AC3 m) = pC3 m*(1-pC3 m)..
+  forall m : ThreeTestModel, Admissions.admission_indicator_variance_B (pair_AC3 m) = pC3 m*(1-pC3 m).
 Proof.
   intro m.
   unfold Admissions.admission_indicator_variance_B.
@@ -1342,7 +1342,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_odds_ratio :
-  forall m : ThreeTestModel, Admissions.admission_odds_ratio (pair_AC3 m) = pAC3 m*(1-(pA3 m+pC3 m-pAC3 m))/(((pA3 m-pAC3 m)*(pC3 m-pAC3 m)))..
+  forall m : ThreeTestModel, Admissions.admission_odds_ratio (pair_AC3 m) = pAC3 m*(1-(pA3 m+pC3 m-pAC3 m))/(((pA3 m-pAC3 m)*(pC3 m-pAC3 m))).
 Proof.
   intro m.
   unfold Admissions.admission_odds_ratio.
@@ -1371,7 +1371,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_phi_coefficient :
-  forall m : ThreeTestModel, Admissions.admission_phi (pair_AC3 m) = (pAC3 m-pA3 m*pC3 m)/sqrt ((pA3 m*(1-pA3 m))*(pC3 m*(1-pC3 m)))..
+  forall m : ThreeTestModel, Admissions.admission_phi (pair_AC3 m) = (pAC3 m-pA3 m*pC3 m)/sqrt ((pA3 m*(1-pA3 m))*(pC3 m*(1-pC3 m))).
 Proof.
   intro m.
   unfold Admissions.admission_phi.
@@ -1399,7 +1399,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_frechet_lower_bound :
-  forall m : ThreeTestModel, pA3 m+pC3 m-1<=pAC3 m..
+  forall m : ThreeTestModel, pA3 m+pC3 m-1<=pAC3 m.
 Proof.
   intro m.
   pose proof (Admissions.frechet_lower_bound (pair_AC3 m)) as H.
@@ -1426,7 +1426,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_conditional_second_interval :
-  forall m : ThreeTestModel, 0<pA3 m -> 0<=Admissions.conditional_B_given_A (pair_AC3 m) /\ Admissions.conditional_B_given_A (pair_AC3 m)<=1..
+  forall m : ThreeTestModel, 0<pA3 m -> 0<=Admissions.conditional_B_given_A (pair_AC3 m) /\ Admissions.conditional_B_given_A (pair_AC3 m)<=1.
 Proof.
   intros m Hx.
   apply Admissions.conditional_B_given_A_unit_interval.
@@ -1451,7 +1451,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_association_positive_iff :
-  forall m : ThreeTestModel, 0<Admissions.admission_association (pair_AC3 m) <-> pA3 m*pC3 m<pAC3 m..
+  forall m : ThreeTestModel, 0<Admissions.admission_association (pair_AC3 m) <-> pA3 m*pC3 m<pAC3 m.
 Proof.
   intro m.
   rewrite (Admissions.admission_association_positive_iff_overlap (pair_AC3 m)).
@@ -1479,7 +1479,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_association_negative_iff :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_AC3 m)<0 <-> pAC3 m<pA3 m*pC3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_AC3 m)<0 <-> pAC3 m<pA3 m*pC3 m.
 Proof.
   intro m.
   rewrite (Admissions.admission_association_negative_iff_overlap (pair_AC3 m)).
@@ -1507,7 +1507,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_odds_one_iff_independent :
-  forall m : ThreeTestModel, 0<Admissions.only_A (pair_AC3 m)*Admissions.only_B (pair_AC3 m) -> (Admissions.admission_odds_ratio (pair_AC3 m)=1 <-> pAC3 m=pA3 m*pC3 m)..
+  forall m : ThreeTestModel, 0<Admissions.only_A (pair_AC3 m)*Admissions.only_B (pair_AC3 m) -> (Admissions.admission_odds_ratio (pair_AC3 m)=1 <-> pAC3 m=pA3 m*pC3 m).
 Proof.
   intros m Hpos.
   pose proof (Admissions.admission_odds_ratio_one_iff_independent (pair_AC3 m) Hpos) as H.
@@ -1534,7 +1534,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_phi_unit_interval :
-  forall m : ThreeTestModel, 0<pA3 m -> pA3 m<1 -> 0<pC3 m -> pC3 m<1 -> -1<=Admissions.admission_phi (pair_AC3 m) /\ Admissions.admission_phi (pair_AC3 m)<=1..
+  forall m : ThreeTestModel, 0<pA3 m -> pA3 m<1 -> 0<pC3 m -> pC3 m<1 -> -1<=Admissions.admission_phi (pair_AC3 m) /\ Admissions.admission_phi (pair_AC3 m)<=1.
 Proof.
   intros m Hx0 Hx1 Hy0 Hy1.
   apply Admissions.admission_phi_unit_interval;
@@ -1559,7 +1559,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_ac_union_unit_interval :
-  forall m : ThreeTestModel, 0<=Admissions.p_either (pair_AC3 m) /\ Admissions.p_either (pair_AC3 m)<=1..
+  forall m : ThreeTestModel, 0<=Admissions.p_either (pair_AC3 m) /\ Admissions.p_either (pair_AC3 m)<=1.
 Proof.
   intro m; split.
   - apply Admissions.union_nonnegative.
@@ -1610,7 +1610,7 @@ Defined.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_joint_mass :
-  forall m : ThreeTestModel, Admissions.p_both (pair_BC3 m) = pBC3 m..
+  forall m : ThreeTestModel, Admissions.p_both (pair_BC3 m) = pBC3 m.
 Proof.
   intros m;
   unfold Admissions.p_both, pair_BC3; simpl; triple_lra.
@@ -1634,7 +1634,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_first_only_mass :
-  forall m : ThreeTestModel, Admissions.only_A (pair_BC3 m) = pB3 m-pBC3 m..
+  forall m : ThreeTestModel, Admissions.only_A (pair_BC3 m) = pB3 m-pBC3 m.
 Proof.
   intros m;
   unfold pair_BC3; simpl; triple_lra.
@@ -1658,7 +1658,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_second_only_mass :
-  forall m : ThreeTestModel, Admissions.only_B (pair_BC3 m) = pC3 m-pBC3 m..
+  forall m : ThreeTestModel, Admissions.only_B (pair_BC3 m) = pC3 m-pBC3 m.
 Proof.
   intros m;
   unfold pair_BC3; simpl; triple_lra.
@@ -1682,7 +1682,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_neither_mass :
-  forall m : ThreeTestModel, Admissions.neither (pair_BC3 m) = 1-(pB3 m+pC3 m-pBC3 m)..
+  forall m : ThreeTestModel, Admissions.neither (pair_BC3 m) = 1-(pB3 m+pC3 m-pBC3 m).
 Proof.
   intros m;
   unfold pair_BC3; simpl; triple_lra.
@@ -1706,7 +1706,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_first_marginal :
-  forall m : ThreeTestModel, Admissions.p_A (pair_BC3 m) = pB3 m..
+  forall m : ThreeTestModel, Admissions.p_A (pair_BC3 m) = pB3 m.
 Proof.
   intros m;
   unfold Admissions.p_A.
@@ -1733,7 +1733,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_second_marginal :
-  forall m : ThreeTestModel, Admissions.p_B (pair_BC3 m) = pC3 m..
+  forall m : ThreeTestModel, Admissions.p_B (pair_BC3 m) = pC3 m.
 Proof.
   intros m;
   unfold Admissions.p_B.
@@ -1760,7 +1760,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_union_mass :
-  forall m : ThreeTestModel, Admissions.p_either (pair_BC3 m) = pB3 m+pC3 m-pBC3 m..
+  forall m : ThreeTestModel, Admissions.p_either (pair_BC3 m) = pB3 m+pC3 m-pBC3 m.
 Proof.
   intros m;
   unfold Admissions.p_either.
@@ -1788,7 +1788,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_exclusive_mass :
-  forall m : ThreeTestModel, Admissions.p_exactly_one (pair_BC3 m) = pB3 m+pC3 m-2*pBC3 m..
+  forall m : ThreeTestModel, Admissions.p_exactly_one (pair_BC3 m) = pB3 m+pC3 m-2*pBC3 m.
 Proof.
   intros m;
   unfold Admissions.p_exactly_one.
@@ -1815,7 +1815,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_conditional_second_given_first :
-  forall m : ThreeTestModel, 0<pB3 m -> Admissions.conditional_B_given_A (pair_BC3 m) = pBC3 m/pB3 m..
+  forall m : ThreeTestModel, 0<pB3 m -> Admissions.conditional_B_given_A (pair_BC3 m) = pBC3 m/pB3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_B_given_A.
@@ -1842,7 +1842,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_conditional_first_given_second :
-  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_A_given_B (pair_BC3 m) = pBC3 m/pC3 m..
+  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_A_given_B (pair_BC3 m) = pBC3 m/pC3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_A_given_B.
@@ -1869,7 +1869,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_conditional_overlap_given_union :
-  forall m : ThreeTestModel, 0<pB3 m+pC3 m-pBC3 m -> Admissions.conditional_both_given_either (pair_BC3 m) = pBC3 m/(pB3 m+pC3 m-pBC3 m)..
+  forall m : ThreeTestModel, 0<pB3 m+pC3 m-pBC3 m -> Admissions.conditional_both_given_either (pair_BC3 m) = pBC3 m/(pB3 m+pC3 m-pBC3 m).
 Proof.
   intros m _.
   unfold Admissions.conditional_both_given_either.
@@ -1896,7 +1896,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_conditional_notfirst_given_second :
-  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_not_A_given_B (pair_BC3 m) = (pC3 m-pBC3 m)/pC3 m..
+  forall m : ThreeTestModel, 0<pC3 m -> Admissions.conditional_not_A_given_B (pair_BC3 m) = (pC3 m-pBC3 m)/pC3 m.
 Proof.
   intros m _.
   unfold Admissions.conditional_not_A_given_B.
@@ -1923,7 +1923,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_conditional_second_given_notfirst :
-  forall m : ThreeTestModel, 0<1-pB3 m -> Admissions.admission_B_given_not_A (pair_BC3 m) = (pC3 m-pBC3 m)/(1-pB3 m)..
+  forall m : ThreeTestModel, 0<1-pB3 m -> Admissions.admission_B_given_not_A (pair_BC3 m) = (pC3 m-pBC3 m)/(1-pB3 m).
 Proof.
   intros m _.
   unfold Admissions.admission_B_given_not_A, Admissions.admission_not_A_mass.
@@ -1951,7 +1951,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_conditional_first_given_notsecond :
-  forall m : ThreeTestModel, 0<1-pC3 m -> Admissions.admission_A_given_not_B (pair_BC3 m) = (pB3 m-pBC3 m)/(1-pC3 m)..
+  forall m : ThreeTestModel, 0<1-pC3 m -> Admissions.admission_A_given_not_B (pair_BC3 m) = (pB3 m-pBC3 m)/(1-pC3 m).
 Proof.
   intros m _.
   unfold Admissions.admission_A_given_not_B, Admissions.admission_not_B_mass.
@@ -1979,7 +1979,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_association_covariance :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_BC3 m) = pBC3 m-pB3 m*pC3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_BC3 m) = pBC3 m-pB3 m*pC3 m.
 Proof.
   intro m.
   rewrite Admissions.admission_association_covariance.
@@ -2007,7 +2007,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_independence_criterion :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_BC3 m)=0 <-> pBC3 m=pB3 m*pC3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_BC3 m)=0 <-> pBC3 m=pB3 m*pC3 m.
 Proof.
   intros m.
   rewrite (Admissions.admission_association_zero_iff_independence (pair_BC3 m)).
@@ -2035,7 +2035,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_union_independent_reference :
-  forall m : ThreeTestModel, pB3 m+pC3 m-pBC3 m = pB3 m+pC3 m-pB3 m*pC3 m-Admissions.admission_association (pair_BC3 m)..
+  forall m : ThreeTestModel, pB3 m+pC3 m-pBC3 m = pB3 m+pC3 m-pB3 m*pC3 m-Admissions.admission_association (pair_BC3 m).
 Proof.
   intro m.
   rewrite triple_bc_association_covariance.
@@ -2060,7 +2060,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_first_indicator_variance :
-  forall m : ThreeTestModel, Admissions.admission_indicator_variance_A (pair_BC3 m) = pB3 m*(1-pB3 m)..
+  forall m : ThreeTestModel, Admissions.admission_indicator_variance_A (pair_BC3 m) = pB3 m*(1-pB3 m).
 Proof.
   intro m.
   unfold Admissions.admission_indicator_variance_A.
@@ -2086,7 +2086,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_second_indicator_variance :
-  forall m : ThreeTestModel, Admissions.admission_indicator_variance_B (pair_BC3 m) = pC3 m*(1-pC3 m)..
+  forall m : ThreeTestModel, Admissions.admission_indicator_variance_B (pair_BC3 m) = pC3 m*(1-pC3 m).
 Proof.
   intro m.
   unfold Admissions.admission_indicator_variance_B.
@@ -2112,7 +2112,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_odds_ratio :
-  forall m : ThreeTestModel, Admissions.admission_odds_ratio (pair_BC3 m) = pBC3 m*(1-(pB3 m+pC3 m-pBC3 m))/(((pB3 m-pBC3 m)*(pC3 m-pBC3 m)))..
+  forall m : ThreeTestModel, Admissions.admission_odds_ratio (pair_BC3 m) = pBC3 m*(1-(pB3 m+pC3 m-pBC3 m))/(((pB3 m-pBC3 m)*(pC3 m-pBC3 m))).
 Proof.
   intro m.
   unfold Admissions.admission_odds_ratio.
@@ -2141,7 +2141,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_phi_coefficient :
-  forall m : ThreeTestModel, Admissions.admission_phi (pair_BC3 m) = (pBC3 m-pB3 m*pC3 m)/sqrt ((pB3 m*(1-pB3 m))*(pC3 m*(1-pC3 m)))..
+  forall m : ThreeTestModel, Admissions.admission_phi (pair_BC3 m) = (pBC3 m-pB3 m*pC3 m)/sqrt ((pB3 m*(1-pB3 m))*(pC3 m*(1-pC3 m))).
 Proof.
   intro m.
   unfold Admissions.admission_phi.
@@ -2169,7 +2169,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_frechet_lower_bound :
-  forall m : ThreeTestModel, pB3 m+pC3 m-1<=pBC3 m..
+  forall m : ThreeTestModel, pB3 m+pC3 m-1<=pBC3 m.
 Proof.
   intro m.
   pose proof (Admissions.frechet_lower_bound (pair_BC3 m)) as H.
@@ -2196,7 +2196,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_conditional_second_interval :
-  forall m : ThreeTestModel, 0<pB3 m -> 0<=Admissions.conditional_B_given_A (pair_BC3 m) /\ Admissions.conditional_B_given_A (pair_BC3 m)<=1..
+  forall m : ThreeTestModel, 0<pB3 m -> 0<=Admissions.conditional_B_given_A (pair_BC3 m) /\ Admissions.conditional_B_given_A (pair_BC3 m)<=1.
 Proof.
   intros m Hx.
   apply Admissions.conditional_B_given_A_unit_interval.
@@ -2221,7 +2221,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_association_positive_iff :
-  forall m : ThreeTestModel, 0<Admissions.admission_association (pair_BC3 m) <-> pB3 m*pC3 m<pBC3 m..
+  forall m : ThreeTestModel, 0<Admissions.admission_association (pair_BC3 m) <-> pB3 m*pC3 m<pBC3 m.
 Proof.
   intro m.
   rewrite (Admissions.admission_association_positive_iff_overlap (pair_BC3 m)).
@@ -2249,7 +2249,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_association_negative_iff :
-  forall m : ThreeTestModel, Admissions.admission_association (pair_BC3 m)<0 <-> pBC3 m<pB3 m*pC3 m..
+  forall m : ThreeTestModel, Admissions.admission_association (pair_BC3 m)<0 <-> pBC3 m<pB3 m*pC3 m.
 Proof.
   intro m.
   rewrite (Admissions.admission_association_negative_iff_overlap (pair_BC3 m)).
@@ -2277,7 +2277,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_odds_one_iff_independent :
-  forall m : ThreeTestModel, 0<Admissions.only_A (pair_BC3 m)*Admissions.only_B (pair_BC3 m) -> (Admissions.admission_odds_ratio (pair_BC3 m)=1 <-> pBC3 m=pB3 m*pC3 m)..
+  forall m : ThreeTestModel, 0<Admissions.only_A (pair_BC3 m)*Admissions.only_B (pair_BC3 m) -> (Admissions.admission_odds_ratio (pair_BC3 m)=1 <-> pBC3 m=pB3 m*pC3 m).
 Proof.
   intros m Hpos.
   pose proof (Admissions.admission_odds_ratio_one_iff_independent (pair_BC3 m) Hpos) as H.
@@ -2304,7 +2304,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_phi_unit_interval :
-  forall m : ThreeTestModel, 0<pB3 m -> pB3 m<1 -> 0<pC3 m -> pC3 m<1 -> -1<=Admissions.admission_phi (pair_BC3 m) /\ Admissions.admission_phi (pair_BC3 m)<=1..
+  forall m : ThreeTestModel, 0<pB3 m -> pB3 m<1 -> 0<pC3 m -> pC3 m<1 -> -1<=Admissions.admission_phi (pair_BC3 m) /\ Admissions.admission_phi (pair_BC3 m)<=1.
 Proof.
   intros m Hx0 Hx1 Hy0 Hy1.
   apply Admissions.admission_phi_unit_interval;
@@ -2329,7 +2329,7 @@ Qed.
  IQ-population admissions rates.
  *)
 Theorem triple_bc_union_unit_interval :
-  forall m : ThreeTestModel, 0<=Admissions.p_either (pair_BC3 m) /\ Admissions.p_either (pair_BC3 m)<=1..
+  forall m : ThreeTestModel, 0<=Admissions.p_either (pair_BC3 m) /\ Admissions.p_either (pair_BC3 m)<=1.
 Proof.
   intro m; split.
   - apply Admissions.union_nonnegative.
