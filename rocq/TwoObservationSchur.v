@@ -669,12 +669,10 @@ Theorem cov2_schur_le_unconditional :
  cov2_schur a b c u v s<=s.
 Proof.
  intros a b c u v s Ha Hd.
- pose proof (cov2_quad_positive_semidefinite a b c
-   (cov2_beta_first a b c u v)
-   (cov2_beta_second a b c u v) Ha Hd) as Hq.
- pose proof (cov2_beta_explained_quadratic a b c u v ltac:(lra)) as He.
- unfold cov2_schur.
- lra.
+ (* Reuse the global risk minimum at the unconditional zero predictor. *)
+ pose proof (cov2_risk_minimizer a b c u v s 0 0 Ha Hd) as Hminimum.
+ unfold cov2_risk, cov2_quad in Hminimum.
+ nra.
 Qed.
 
 (**
@@ -776,16 +774,14 @@ Theorem cov2_strict_information_gain :
  cov2_schur a b c u v s<cov2_one_risk a u s.
 Proof.
  intros a b c u v s Ha Hd Hpartial.
- pose proof (cov2_one_to_two_gain a b c u v s ltac:(lra) ltac:(lra)) as Hg.
- assert (Hden:0<a*cov2_det a b c) by nra.
- assert (Hi:0< /(a*cov2_det a b c))
-   by (apply Rinv_0_lt_compat; exact Hden).
- pose (z:=a*v-c*u).
- assert (Hz:z<>0) by (unfold z; lra).
- assert (Hsq:0<z*z) by nra.
- assert (Hgain:0<(a*v-c*u)*(a*v-c*u)/(a*cov2_det a b c)).
- { change (0<z*z/(a*cov2_det a b c)).
-   unfold Rdiv; apply Rmult_lt_0_compat; assumption. }
+ (* Strictness follows from weak improvement and the exact no-gain criterion. *)
+ pose proof (cov2_two_obs_improves_one a b c u v s Ha Hd) as Hweak.
+ assert (Hdifferent :
+   cov2_schur a b c u v s <> cov2_one_risk a u s).
+ { intro Heq.
+   pose proof ((proj1 (cov2_no_additional_gain_iff
+      a b c u v s Ha Hd)) Heq) as Hzero.
+   contradiction. }
  lra.
 Qed.
 
@@ -998,7 +994,7 @@ Qed.
 Theorem cov2_schur_swap :
  forall a b c u v s, cov2_schur a b c u v s = cov2_schur b a c v u s.
 Proof.
- intros; unfold cov2_schur; rewrite cov2_beta_swap_first; rewrite cov2_beta_swap_second; ring.
+ intros a b c u v s; unfold cov2_schur; rewrite <- (cov2_beta_swap_first a b c u v); rewrite <- (cov2_beta_swap_second a b c u v); ring.
 Qed.
 
 (**
@@ -1013,7 +1009,7 @@ Qed.
 Theorem cov2_predict_swap :
  forall mu mu1 mu2 a b c u v x y, cov2_predict mu mu1 mu2 a b c u v x y = cov2_predict mu mu2 mu1 b a c v u y x.
 Proof.
- intros; unfold cov2_predict; rewrite cov2_beta_swap_first; rewrite cov2_beta_swap_second; ring.
+ intros mu mu1 mu2 a b c u v x y; unfold cov2_predict; rewrite <- (cov2_beta_swap_first a b c u v); rewrite <- (cov2_beta_swap_second a b c u v); ring.
 Qed.
 
 (**
