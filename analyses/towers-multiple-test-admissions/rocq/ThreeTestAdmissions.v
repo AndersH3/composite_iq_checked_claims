@@ -103,7 +103,7 @@ Definition testC3 (x : triple_outcome) : bool :=
  Library reuse: FiniteUnion.finite_prob, FiniteSum.finite_sum.
  Boundary: Finite weighted probability only, never a Gaussian integral. *)
 Definition triple_prob (m:ThreeTestModel) (e:triple_outcome->bool) : R :=
-  FiniteUnion.finite_prob (mass3 m) triple_cases e.
+  @FiniteUnion.finite_prob triple_outcome (mass3 m) triple_cases e.
 
 (** [pA3] represents first test admission marginal as an exact mass of a Boolean event.
  Mathematical meaning: first test admission marginal, with no double-counting of an outcome.
