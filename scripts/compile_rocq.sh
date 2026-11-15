@@ -45,3 +45,5 @@ rocq compile FiniteNestedProjection.v
 rocq compile FiniteConditionalCovariance.v
 rocq compile FiniteConditionalResidual.v
 rocq compile TwoObservationSchur.v
+rocq compile TrivariateSchur.v
+rocq compile ThreeTestSchur.v
