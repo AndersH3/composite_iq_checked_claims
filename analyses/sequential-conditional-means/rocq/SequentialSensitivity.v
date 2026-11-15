@@ -814,7 +814,7 @@ Qed.
 Theorem sensitivity_conditional_no_future :
   forall r c, sequential_conditional_variance r 0 c = 0.
 Proof.
-  intros r c; unfold sequential_conditional_variance; ring.
+  intros r c; unfold sequential_conditional_variance, Rdiv; ring.
 Qed.
 
 (**
@@ -991,7 +991,7 @@ Qed.
 Theorem sensitivity_mean_zero_score :
   forall r k c, sequential_inclusive_mean r k c 0 = 0.
 Proof.
-  intros r k c; unfold sequential_inclusive_mean, sequential_prediction; ring.
+  intros r k c; unfold sequential_inclusive_mean, sequential_prediction, Rdiv; ring.
 Qed.
 
 (**
