@@ -1939,9 +1939,11 @@ Proof.
  rewrite (cov2_quad_innovation_diagonal a b c x y ltac:(lra)).
  assert (Hsq:0<=(x+c*y/a)*(x+c*y/a)) by nra.
  assert (Hsqy:0<=y*y) by nra.
- assert (Hp:0<=a*((x+c*y/a)*(x+c*y/a))) by nra.
- assert (Hq:0<=cov2_innovation_variance a b c*(y*y)) by nra.
- nra.
+ assert (Hp:0<=a*((x+c*y/a)*(x+c*y/a))).
+ { apply Rmult_le_pos; [lra|exact Hsq]. }
+ assert (Hq:0<=cov2_innovation_variance a b c*(y*y)).
+ { apply Rmult_le_pos; [exact Hv|exact Hsqy]. }
+ lra.
 Qed.
 
 (**
