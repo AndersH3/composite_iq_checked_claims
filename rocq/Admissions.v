@@ -2563,3 +2563,747 @@ Proof.
  intro m; repeat split; [apply admission_association_frechet_lower_joint|apply admission_association_frechet_lower_complement|apply admission_association_frechet_upper_A|apply admission_association_frechet_upper_B].
 Qed.
 
+
+(* D028x: sharp joint-event realizability, odds ratios and fully normalized
+   binary-indicator phi covariance. All probabilities are finite four-cell masses. *)
+
+(**
+ [admission_indicator_variance_A] (definition) — The Bernoulli variance of the first pass indicator as a function of its marginal probability.
+ Mathematical meaning: The Bernoulli variance of the first pass indicator as a function of its marginal probability.
+ Exact declaration: Definition admission_indicator_variance_A (m : TwoEventModel) : R := p_A m * (1 - p_A m).
+ Premises and side conditions: The definition uses a normalized TwoEventModel. Odds and phi ratios require strictly positive denominators in propositions where they are interpreted as statistical quantities.
+ Proof/definition method: Transparent real algebra, sqrt and totalized standard real division; no extra axioms.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Definition admission_indicator_variance_A (m : TwoEventModel) : R := p_A m * (1 - p_A m).
+
+(**
+ [admission_indicator_variance_B] (definition) — The Bernoulli variance of the second pass indicator as a function of its marginal probability.
+ Mathematical meaning: The Bernoulli variance of the second pass indicator as a function of its marginal probability.
+ Exact declaration: Definition admission_indicator_variance_B (m : TwoEventModel) : R := p_B m * (1 - p_B m).
+ Premises and side conditions: The definition uses a normalized TwoEventModel. Odds and phi ratios require strictly positive denominators in propositions where they are interpreted as statistical quantities.
+ Proof/definition method: Transparent real algebra, sqrt and totalized standard real division; no extra axioms.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Definition admission_indicator_variance_B (m : TwoEventModel) : R := p_B m * (1 - p_B m).
+
+(**
+ [admission_odds_ratio] (definition) — The contingency-table odds ratio of concordant to discordant cell products, interpreted with positive denominator.
+ Mathematical meaning: The contingency-table odds ratio of concordant to discordant cell products, interpreted with positive denominator.
+ Exact declaration: Definition admission_odds_ratio (m : TwoEventModel) : R := joint m * neither m / (only_A m * only_B m).
+ Premises and side conditions: The definition uses a normalized TwoEventModel. Odds and phi ratios require strictly positive denominators in propositions where they are interpreted as statistical quantities.
+ Proof/definition method: Transparent real algebra, sqrt and totalized standard real division; no extra axioms.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Definition admission_odds_ratio (m : TwoEventModel) : R := joint m * neither m / (only_A m * only_B m).
+
+(**
+ [admission_phi] (definition) — The normalized correlation of binary admission indicators, interpreted when both Bernoulli variances are positive.
+ Mathematical meaning: The normalized correlation of binary admission indicators, interpreted when both Bernoulli variances are positive.
+ Exact declaration: Definition admission_phi (m : TwoEventModel) : R := admission_association m / sqrt (admission_indicator_variance_A m * admission_indicator_variance_B m).
+ Premises and side conditions: The definition uses a normalized TwoEventModel. Odds and phi ratios require strictly positive denominators in propositions where they are interpreted as statistical quantities.
+ Proof/definition method: Transparent real algebra, sqrt and totalized standard real division; no extra axioms.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Definition admission_phi (m : TwoEventModel) : R := admission_association m / sqrt (admission_indicator_variance_A m * admission_indicator_variance_B m).
+
+(**
+ [admission_frechet_realization] (theorem) — Every overlap within the sharp Fréchet bounds is realized by an explicit normalized four-cell probability model.
+ Mathematical meaning: Every overlap within the sharp Fréchet bounds is realized by an explicit normalized four-cell probability model.
+ Exact checked proposition: forall a b j, 0 <= j -> j <= a -> j <= b -> a+b-1 <= j -> exists m : TwoEventModel, p_A m = a /\ p_B m = b /\ p_both m = j.
+ Premises and side conditions: Assumes exactly the four necessary linear feasibility inequalities; no Gaussian distribution or density is constructed.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_frechet_realization :
+ forall a b j, 0 <= j -> j <= a -> j <= b -> a+b-1 <= j -> exists m : TwoEventModel, p_A m = a /\ p_B m = b /\ p_both m = j.
+Proof.
+ intros a b j Hj Hja Hjb Hmin.
+ assert (HonlyA:0<=a-j) by lra.
+ assert (HonlyB:0<=b-j) by lra.
+ assert (Hneither:0<=1-a-b+j) by lra.
+ assert (Hsum:j+(a-j)+(b-j)+(1-a-b+j)=1) by ring.
+ exists {| joint := j; only_A := a-j; only_B := b-j;
+           neither := 1-a-b+j;
+           joint_nonnegative := Hj;
+           only_A_nonnegative := HonlyA;
+           only_B_nonnegative := HonlyB;
+           neither_nonnegative := Hneither;
+           cells_sum_to_one := Hsum |}.
+ simpl; unfold p_A,p_B,p_both; simpl; repeat split; lra.
+Qed.
+
+(**
+ [admission_frechet_realization_iff] (theorem) — The Fréchet overlap inequalities are both necessary and sufficient for the existence of a joint Bernoulli admissions law.
+ Mathematical meaning: The Fréchet overlap inequalities are both necessary and sufficient for the existence of a joint Bernoulli admissions law.
+ Exact checked proposition: forall a b j, (exists m : TwoEventModel, p_A m = a /\ p_B m = b /\ p_both m = j) <-> 0<=j /\ j<=a /\ j<=b /\ a+b-1<=j.
+ Premises and side conditions: No marginal-range axioms are silently assumed; existence itself supplies them.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_frechet_realization_iff :
+ forall a b j, (exists m : TwoEventModel, p_A m = a /\ p_B m = b /\ p_both m = j) <-> 0<=j /\ j<=a /\ j<=b /\ a+b-1<=j.
+Proof.
+ intros a b j; split.
+ - intros [m [Ha [Hb Hj]]].
+   pose proof (overlap_nonnegative m) as H0.
+   pose proof (both_at_most_first m) as H1.
+   pose proof (both_at_most_second m) as H2.
+   pose proof (frechet_lower_bound m) as H3.
+   rewrite Ha,Hb,Hj in *.
+   repeat split; lra.
+ - intros [H0 [H1 [H2 H3]]].
+   apply admission_frechet_realization; assumption.
+Qed.
+
+(**
+ [admission_frechet_conditions_force_marginals] (theorem) — The four Fréchet feasibility inequalities imply both target marginal admission probabilities lie in the unit interval.
+ Mathematical meaning: The four Fréchet feasibility inequalities imply both target marginal admission probabilities lie in the unit interval.
+ Exact checked proposition: forall a b j, 0<=j -> j<=a -> j<=b -> a+b-1<=j -> 0<=a /\ a<=1 /\ 0<=b /\ b<=1.
+ Premises and side conditions: Only the necessary-and-sufficient Fréchet bounds are assumed.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_frechet_conditions_force_marginals :
+ forall a b j, 0<=j -> j<=a -> j<=b -> a+b-1<=j -> 0<=a /\ a<=1 /\ 0<=b /\ b<=1.
+Proof.
+ intros a b j Hj Hja Hjb Hmin; repeat split; lra.
+Qed.
+
+(**
+ [admission_disjoint_overlap_witness] (theorem) — Any two nonnegative admission rates whose sum is at most one can be realized by disjoint pass events.
+ Mathematical meaning: Any two nonnegative admission rates whose sum is at most one can be realized by disjoint pass events.
+ Exact checked proposition: forall a b, 0<=a -> 0<=b -> a+b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=0.
+ Premises and side conditions: Rates are nonnegative and have total at most one.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_disjoint_overlap_witness :
+ forall a b, 0<=a -> 0<=b -> a+b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=0.
+Proof.
+ intros a b Ha Hb Hsum; apply admission_frechet_realization; lra.
+Qed.
+
+(**
+ [admission_nested_A_overlap_witness] (theorem) — If A's admission rate is at most B's, the maximal overlap occurs in a valid law with every A-passer also passing B.
+ Mathematical meaning: If A's admission rate is at most B's, the maximal overlap occurs in a valid law with every A-passer also passing B.
+ Exact checked proposition: forall a b, 0<=a -> a<=b -> b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=a.
+ Premises and side conditions: Requires 0<=a<=b<=1.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_nested_A_overlap_witness :
+ forall a b, 0<=a -> a<=b -> b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=a.
+Proof.
+ intros a b Ha Hab Hb; apply admission_frechet_realization; lra.
+Qed.
+
+(**
+ [admission_nested_B_overlap_witness] (theorem) — If B's admission rate is at most A's, the maximal overlap occurs in a valid law with every B-passer also passing A.
+ Mathematical meaning: If B's admission rate is at most A's, the maximal overlap occurs in a valid law with every B-passer also passing A.
+ Exact checked proposition: forall a b, 0<=b -> b<=a -> a<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=b.
+ Premises and side conditions: Requires 0<=b<=a<=1.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_nested_B_overlap_witness :
+ forall a b, 0<=b -> b<=a -> a<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=b.
+Proof.
+ intros a b Hb Hba Ha; apply admission_frechet_realization; lra.
+Qed.
+
+(**
+ [admission_full_coverage_overlap_witness] (theorem) — If marginal pass rates sum to at least one, the minimum feasible overlap yields a law where everyone passes at least one test.
+ Mathematical meaning: If marginal pass rates sum to at least one, the minimum feasible overlap yields a law where everyone passes at least one test.
+ Exact checked proposition: forall a b, 0<=a -> a<=1 -> 0<=b -> b<=1 -> 1<=a+b -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=a+b-1.
+ Premises and side conditions: Marginal rates are in the unit interval and sum to at least one.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_full_coverage_overlap_witness :
+ forall a b, 0<=a -> a<=1 -> 0<=b -> b<=1 -> 1<=a+b -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_both m=a+b-1.
+Proof.
+ intros a b Ha Ha1 Hb Hb1 Hsum; apply admission_frechet_realization; lra.
+Qed.
+
+(**
+ [admission_disjoint_union_witness] (theorem) — When the two admission rates sum to at most one, their union can attain the upper Fréchet union bound a+b.
+ Mathematical meaning: When the two admission rates sum to at most one, their union can attain the upper Fréchet union bound a+b.
+ Exact checked proposition: forall a b, 0<=a -> 0<=b -> a+b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=a+b.
+ Premises and side conditions: Assumes a+b<=1 and nonnegative marginal rates.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_disjoint_union_witness :
+ forall a b, 0<=a -> 0<=b -> a+b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=a+b.
+Proof.
+ intros a b Ha Hb Hsum.
+ destruct (admission_disjoint_overlap_witness a b Ha Hb Hsum) as [m [Hma [Hmb Hj]]].
+ exists m; repeat split; try assumption.
+ rewrite inclusion_exclusion, Hma,Hmb,Hj; ring.
+Qed.
+
+(**
+ [admission_nested_A_union_witness] (theorem) — Under nested A-to-B admissions, the union can attain the lower Fréchet union bound b.
+ Mathematical meaning: Under nested A-to-B admissions, the union can attain the lower Fréchet union bound b.
+ Exact checked proposition: forall a b, 0<=a -> a<=b -> b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=b.
+ Premises and side conditions: Requires the smaller acceptance rate a not to exceed b.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_nested_A_union_witness :
+ forall a b, 0<=a -> a<=b -> b<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=b.
+Proof.
+ intros a b Ha Hab Hb.
+ destruct (admission_nested_A_overlap_witness a b Ha Hab Hb) as [m [Hma [Hmb Hj]]].
+ exists m; repeat split; try assumption.
+ rewrite inclusion_exclusion, Hma,Hmb,Hj; ring.
+Qed.
+
+(**
+ [admission_nested_B_union_witness] (theorem) — Under nested B-to-A admissions, the union can attain the lower Fréchet union bound a.
+ Mathematical meaning: Under nested B-to-A admissions, the union can attain the lower Fréchet union bound a.
+ Exact checked proposition: forall a b, 0<=b -> b<=a -> a<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=a.
+ Premises and side conditions: Requires the smaller acceptance rate b not to exceed a.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_nested_B_union_witness :
+ forall a b, 0<=b -> b<=a -> a<=1 -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=a.
+Proof.
+ intros a b Hb Hba Ha.
+ destruct (admission_nested_B_overlap_witness a b Hb Hba Ha) as [m [Hma [Hmb Hj]]].
+ exists m; repeat split; try assumption.
+ rewrite inclusion_exclusion, Hma,Hmb,Hj; ring.
+Qed.
+
+(**
+ [admission_full_coverage_union_witness] (theorem) — When marginal rates sum to at least one, the upper union bound one is achievable without violating the marginals.
+ Mathematical meaning: When marginal rates sum to at least one, the upper union bound one is achievable without violating the marginals.
+ Exact checked proposition: forall a b, 0<=a -> a<=1 -> 0<=b -> b<=1 -> 1<=a+b -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=1.
+ Premises and side conditions: Requires individually feasible marginal rates and a+b>=1.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_full_coverage_union_witness :
+ forall a b, 0<=a -> a<=1 -> 0<=b -> b<=1 -> 1<=a+b -> exists m : TwoEventModel, p_A m=a /\ p_B m=b /\ p_either m=1.
+Proof.
+ intros a b Ha Ha1 Hb Hb1 Hsum.
+ destruct (admission_full_coverage_overlap_witness a b Ha Ha1 Hb Hb1 Hsum) as [m [Hma [Hmb Hj]]].
+ exists m; repeat split; try assumption.
+ rewrite inclusion_exclusion, Hma,Hmb,Hj; ring.
+Qed.
+
+(**
+ [admission_union_independent_reference] (theorem) — The actual acceptance probability under either test is its independent-test reference minus the exact binary dependence covariance.
+ Mathematical meaning: The actual acceptance probability under either test is its independent-test reference minus the exact binary dependence covariance.
+ Exact checked proposition: forall m, p_either m = p_A m+p_B m-p_A m*p_B m-admission_association m.
+ Premises and side conditions: Requires only the normalized four-cell probability model; the independent reference is a counterfactual algebraic expression.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_union_independent_reference :
+ forall m, p_either m = p_A m+p_B m-p_A m*p_B m-admission_association m.
+Proof.
+ intro m; rewrite inclusion_exclusion, admission_association_covariance; ring.
+Qed.
+
+(**
+ [admission_union_below_independent_iff_positive] (theorem) — Positive indicator association is equivalent to a lower union-admission rate than the hypothetical independence formula with the same marginals.
+ Mathematical meaning: Positive indicator association is equivalent to a lower union-admission rate than the hypothetical independence formula with the same marginals.
+ Exact checked proposition: forall m, (p_either m < p_A m+p_B m-p_A m*p_B m <-> 0<admission_association m).
+ Premises and side conditions: Comparison holds at fixed marginals and is not an inference about continuous-score correlation.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_union_below_independent_iff_positive :
+ forall m, (p_either m < p_A m+p_B m-p_A m*p_B m <-> 0<admission_association m).
+Proof.
+ intro m; rewrite admission_union_independent_reference; lra.
+Qed.
+
+(**
+ [admission_union_above_independent_iff_negative] (theorem) — Negative indicator association is equivalent to a higher union-admission rate than the independence reference.
+ Mathematical meaning: Negative indicator association is equivalent to a higher union-admission rate than the independence reference.
+ Exact checked proposition: forall m, (p_A m+p_B m-p_A m*p_B m < p_either m <-> admission_association m<0).
+ Premises and side conditions: The independence reference uses the same actual marginal rates.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_union_above_independent_iff_negative :
+ forall m, (p_A m+p_B m-p_A m*p_B m < p_either m <-> admission_association m<0).
+Proof.
+ intro m; rewrite admission_union_independent_reference; lra.
+Qed.
+
+(**
+ [admission_union_equal_independent_iff_independent] (theorem) — Equality of observed and independence-predicted union rates is equivalent to independence of the two binary pass indicators.
+ Mathematical meaning: Equality of observed and independence-predicted union rates is equivalent to independence of the two binary pass indicators.
+ Exact checked proposition: forall m, (p_either m = p_A m+p_B m-p_A m*p_B m <-> p_both m=p_A m*p_B m).
+ Premises and side conditions: Applies to the event indicators; no independence of continuous test scores is implied.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_union_equal_independent_iff_independent :
+ forall m, (p_either m = p_A m+p_B m-p_A m*p_B m <-> p_both m=p_A m*p_B m).
+Proof.
+ intro m.
+ rewrite admission_union_independent_reference.
+ rewrite <- admission_association_zero_iff_independence.
+ lra.
+Qed.
+
+(**
+ [admission_odds_ratio_numerator] (theorem) — The odds-ratio deviation from one, weighted by discordant cell product, is exactly the binary association determinant.
+ Mathematical meaning: The odds-ratio deviation from one, weighted by discordant cell product, is exactly the binary association determinant.
+ Exact checked proposition: forall m, 0<only_A m*only_B m -> only_A m*only_B m*(admission_odds_ratio m-1)=admission_association m.
+ Premises and side conditions: Requires a strictly positive product of the A-only and B-only cells.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_odds_ratio_numerator :
+ forall m, 0<only_A m*only_B m -> only_A m*only_B m*(admission_odds_ratio m-1)=admission_association m.
+Proof.
+ intros m Hd; unfold admission_odds_ratio,admission_association; field; lra.
+Qed.
+
+(**
+ [admission_odds_ratio_nonnegative] (theorem) — Every well-defined odds ratio in a nonnegative four-cell model is nonnegative.
+ Mathematical meaning: Every well-defined odds ratio in a nonnegative four-cell model is nonnegative.
+ Exact checked proposition: forall m, 0<only_A m*only_B m -> 0<=admission_odds_ratio m.
+ Premises and side conditions: Requires strictly positive discordant cell-product denominator.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_odds_ratio_nonnegative :
+ forall m, 0<only_A m*only_B m -> 0<=admission_odds_ratio m.
+Proof.
+ intros m Hd; unfold admission_odds_ratio,Rdiv.
+ assert (Hi:0<= /(only_A m*only_B m))
+   by (apply Rlt_le,Rinv_0_lt_compat; exact Hd).
+ pose proof (joint_nonnegative m) as Hj.
+ pose proof (neither_nonnegative m) as Hn.
+ apply Rmult_le_pos; [apply Rmult_le_pos|]; assumption.
+Qed.
+
+(**
+ [admission_odds_ratio_one_iff_independent] (theorem) — A finite two-by-two contingency table has odds ratio one exactly when the two binary admission events are independent.
+ Mathematical meaning: A finite two-by-two contingency table has odds ratio one exactly when the two binary admission events are independent.
+ Exact checked proposition: forall m, 0<only_A m*only_B m -> (admission_odds_ratio m=1 <-> p_both m=p_A m*p_B m).
+ Premises and side conditions: Both off-diagonal event cells must have positive product.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_odds_ratio_one_iff_independent :
+ forall m, 0<only_A m*only_B m -> (admission_odds_ratio m=1 <-> p_both m=p_A m*p_B m).
+Proof.
+ intros m Hd.
+ pose proof (admission_odds_ratio_numerator m Hd) as Hnum.
+ split; intro H.
+ - apply (proj1 (admission_association_zero_iff_independence m)); nra.
+ - apply (proj2 (admission_association_zero_iff_independence m)) in H.
+   nra.
+Qed.
+
+(**
+ [admission_odds_ratio_greater_one_iff_positive] (theorem) — An odds ratio strictly greater than one is equivalent to positive Bernoulli association.
+ Mathematical meaning: An odds ratio strictly greater than one is equivalent to positive Bernoulli association.
+ Exact checked proposition: forall m, 0<only_A m*only_B m -> (1<admission_odds_ratio m <-> 0<admission_association m).
+ Premises and side conditions: Strict positivity of discordant cell product ensures order preservation.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_odds_ratio_greater_one_iff_positive :
+ forall m, 0<only_A m*only_B m -> (1<admission_odds_ratio m <-> 0<admission_association m).
+Proof.
+ intros m Hd.
+ pose proof (admission_odds_ratio_numerator m Hd) as Hnum.
+ set (d:=only_A m*only_B m) in *.
+ split; intro H; nra.
+Qed.
+
+(**
+ [admission_odds_ratio_less_one_iff_negative] (theorem) — An odds ratio strictly below one is equivalent to negative Bernoulli association.
+ Mathematical meaning: An odds ratio strictly below one is equivalent to negative Bernoulli association.
+ Exact checked proposition: forall m, 0<only_A m*only_B m -> (admission_odds_ratio m<1 <-> admission_association m<0).
+ Premises and side conditions: Strict positivity of the denominator excludes undefined odds ratios.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_odds_ratio_less_one_iff_negative :
+ forall m, 0<only_A m*only_B m -> (admission_odds_ratio m<1 <-> admission_association m<0).
+Proof.
+ intros m Hd.
+ pose proof (admission_odds_ratio_numerator m Hd) as Hnum.
+ set (d:=only_A m*only_B m) in *.
+ split; intro H; nra.
+Qed.
+
+(**
+ [admission_odds_ratio_one_iff_equal_conditionals] (theorem) — With all relevant stratum denominators positive, odds ratio one is equivalent to equality of B acceptance rates among A-passers and A-failures.
+ Mathematical meaning: With all relevant stratum denominators positive, odds ratio one is equivalent to equality of B acceptance rates among A-passers and A-failures.
+ Exact checked proposition: forall m, 0<only_A m*only_B m -> 0<p_A m -> 0<admission_not_A_mass m -> (admission_odds_ratio m=1 <-> conditional_B_given_A m=admission_B_given_not_A m).
+ Premises and side conditions: Requires a positive odds-ratio denominator and positive A-pass and A-fail strata.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_odds_ratio_one_iff_equal_conditionals :
+ forall m, 0<only_A m*only_B m -> 0<p_A m -> 0<admission_not_A_mass m -> (admission_odds_ratio m=1 <-> conditional_B_given_A m=admission_B_given_not_A m).
+Proof.
+ intros m Hd Ha Hna.
+ rewrite admission_odds_ratio_one_iff_independent by exact Hd.
+ symmetry.
+ apply admission_B_equal_strata_iff_independence; assumption.
+Qed.
+
+(**
+ [admission_odds_ratio_one_iff_reverse_conditionals] (theorem) — Odds ratio one is equally characterized by equality of A acceptance rates between B-pass and B-fail strata.
+ Mathematical meaning: Odds ratio one is equally characterized by equality of A acceptance rates between B-pass and B-fail strata.
+ Exact checked proposition: forall m, 0<only_A m*only_B m -> 0<p_B m -> 0<admission_not_B_mass m -> (admission_odds_ratio m=1 <-> conditional_A_given_B m=admission_A_given_not_B m).
+ Premises and side conditions: Requires a positive discordant-cell product and nonempty B-pass and B-fail strata.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_odds_ratio_one_iff_reverse_conditionals :
+ forall m, 0<only_A m*only_B m -> 0<p_B m -> 0<admission_not_B_mass m -> (admission_odds_ratio m=1 <-> conditional_A_given_B m=admission_A_given_not_B m).
+Proof.
+ intros m Hd Hb Hnb.
+ rewrite admission_odds_ratio_one_iff_independent by exact Hd.
+ symmetry.
+ apply admission_A_equal_strata_iff_independence; assumption.
+Qed.
+
+(**
+ [admission_indicator_variance_A_cells] (theorem) — The first pass-indicator variance is the product of the A-pass and A-failure masses.
+ Mathematical meaning: The first pass-indicator variance is the product of the A-pass and A-failure masses.
+ Exact checked proposition: forall m, admission_indicator_variance_A m = p_A m*admission_not_A_mass m.
+ Premises and side conditions: Uses the normalized first-event complement identity.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_variance_A_cells :
+ forall m, admission_indicator_variance_A m = p_A m*admission_not_A_mass m.
+Proof.
+ intro m; unfold admission_indicator_variance_A.
+ replace (1-p_A m) with (admission_not_A_mass m)
+   by (pose proof (admission_not_A_complement m); lra).
+ reflexivity.
+Qed.
+
+(**
+ [admission_indicator_variance_B_cells] (theorem) — The second pass-indicator variance is the product of the B-pass and B-failure masses.
+ Mathematical meaning: The second pass-indicator variance is the product of the B-pass and B-failure masses.
+ Exact checked proposition: forall m, admission_indicator_variance_B m = p_B m*admission_not_B_mass m.
+ Premises and side conditions: Uses the normalized second-event complement identity.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_variance_B_cells :
+ forall m, admission_indicator_variance_B m = p_B m*admission_not_B_mass m.
+Proof.
+ intro m; unfold admission_indicator_variance_B.
+ replace (1-p_B m) with (admission_not_B_mass m)
+   by (pose proof (admission_not_B_complement m); lra).
+ reflexivity.
+Qed.
+
+(**
+ [admission_indicator_variance_A_nonnegative] (theorem) — Every binary pass indicator has nonnegative variance, with no normal-distribution assumption.
+ Mathematical meaning: Every binary pass indicator has nonnegative variance, with no normal-distribution assumption.
+ Exact checked proposition: forall m, 0<=admission_indicator_variance_A m.
+ Premises and side conditions: The proof uses positivity of the two complementary event masses.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_variance_A_nonnegative :
+ forall m, 0<=admission_indicator_variance_A m.
+Proof.
+ intro m; rewrite admission_indicator_variance_A_cells.
+ apply Rmult_le_pos.
+ - apply first_marginal_nonnegative.
+ - apply admission_not_A_nonnegative.
+Qed.
+
+(**
+ [admission_indicator_variance_B_nonnegative] (theorem) — Every second-test binary pass indicator has nonnegative variance.
+ Mathematical meaning: Every second-test binary pass indicator has nonnegative variance.
+ Exact checked proposition: forall m, 0<=admission_indicator_variance_B m.
+ Premises and side conditions: The proof uses positivity of the complementary B event masses.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_variance_B_nonnegative :
+ forall m, 0<=admission_indicator_variance_B m.
+Proof.
+ intro m; rewrite admission_indicator_variance_B_cells.
+ apply Rmult_le_pos.
+ - apply second_marginal_nonnegative.
+ - apply admission_not_B_nonnegative.
+Qed.
+
+(**
+ [admission_indicator_variance_A_positive_iff] (theorem) — The first pass-indicator variance is strictly positive precisely for a nontrivial acceptance probability between zero and one.
+ Mathematical meaning: The first pass-indicator variance is strictly positive precisely for a nontrivial acceptance probability between zero and one.
+ Exact checked proposition: forall m, (0<admission_indicator_variance_A m <-> 0<p_A m /\ p_A m<1).
+ Premises and side conditions: The four-cell model ensures both probability and complement are nonnegative.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_variance_A_positive_iff :
+ forall m, (0<admission_indicator_variance_A m <-> 0<p_A m /\ p_A m<1).
+Proof.
+ intro m; rewrite admission_indicator_variance_A_cells.
+ pose proof (first_marginal_nonnegative m) as Hpos.
+ pose proof (admission_not_A_nonnegative m) as Hnon.
+ pose proof (admission_not_A_complement m) as Hsum.
+ split; [intro H|intros [Ha Hb]]; nra.
+Qed.
+
+(**
+ [admission_indicator_variance_B_positive_iff] (theorem) — The second pass-indicator variance is strictly positive precisely for a nontrivial acceptance probability between zero and one.
+ Mathematical meaning: The second pass-indicator variance is strictly positive precisely for a nontrivial acceptance probability between zero and one.
+ Exact checked proposition: forall m, (0<admission_indicator_variance_B m <-> 0<p_B m /\ p_B m<1).
+ Premises and side conditions: The four-cell model ensures both probability and complement are nonnegative.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_variance_B_positive_iff :
+ forall m, (0<admission_indicator_variance_B m <-> 0<p_B m /\ p_B m<1).
+Proof.
+ intro m; rewrite admission_indicator_variance_B_cells.
+ pose proof (second_marginal_nonnegative m) as Hpos.
+ pose proof (admission_not_B_nonnegative m) as Hnon.
+ pose proof (admission_not_B_complement m) as Hsum.
+ split; [intro H|intros [Ha Hb]]; nra.
+Qed.
+
+(**
+ [admission_indicator_covariance_square_gap] (theorem) — The Bernoulli Cauchy–Schwarz gap is exactly the sum of four nonnegative triple-cell products, exposing the finite contingency-table equality structure.
+ Mathematical meaning: The Bernoulli Cauchy–Schwarz gap is exactly the sum of four nonnegative triple-cell products, exposing the finite contingency-table equality structure.
+ Exact checked proposition: forall m, admission_indicator_variance_A m * admission_indicator_variance_B m - admission_association m * admission_association m = joint m*only_A m*only_B m + joint m*only_A m*neither m + joint m*only_B m*neither m + only_A m*only_B m*neither m.
+ Premises and side conditions: The model must have four nonnegative cell masses summing exactly to one.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_covariance_square_gap :
+ forall m, admission_indicator_variance_A m * admission_indicator_variance_B m - admission_association m * admission_association m = joint m*only_A m*only_B m +
+ joint m*only_A m*neither m +
+ joint m*only_B m*neither m +
+ only_A m*only_B m*neither m.
+Proof.
+ intro m.
+ rewrite admission_indicator_variance_A_cells,
+         admission_indicator_variance_B_cells.
+ assert (Hfactor:
+   (p_A m * admission_not_A_mass m) *
+   (p_B m * admission_not_B_mass m) -
+   admission_association m * admission_association m =
+   (joint m + only_A m + only_B m + neither m) *
+   (joint m*only_A m*only_B m +
+ joint m*only_A m*neither m +
+ joint m*only_B m*neither m +
+ only_A m*only_B m*neither m)).
+ { unfold p_A,p_B,admission_not_A_mass,
+          admission_not_B_mass,admission_association; ring. }
+ rewrite Hfactor.
+ rewrite (cells_sum_to_one m).
+ ring.
+Qed.
+
+(**
+ [admission_indicator_covariance_cauchy] (theorem) — The squared binary pass-indicator covariance is bounded by the product of their Bernoulli variances (finite Cauchy–Schwarz).
+ Mathematical meaning: The squared binary pass-indicator covariance is bounded by the product of their Bernoulli variances (finite Cauchy–Schwarz).
+ Exact checked proposition: forall m, admission_association m*admission_association m <= admission_indicator_variance_A m * admission_indicator_variance_B m.
+ Premises and side conditions: Uses nonnegative four-cell weights and the checked exact quartic gap identity; no probability axiom is added.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_covariance_cauchy :
+ forall m, admission_association m*admission_association m <= admission_indicator_variance_A m * admission_indicator_variance_B m.
+Proof.
+ intro m.
+ pose proof (joint_nonnegative m) as Hj.
+ pose proof (only_A_nonnegative m) as Ha.
+ pose proof (only_B_nonnegative m) as Hb.
+ pose proof (neither_nonnegative m) as Hn.
+ assert (Hja:0<=joint m*only_A m) by nra.
+ assert (Hjb:0<=joint m*only_B m) by nra.
+ assert (Hab:0<=only_A m*only_B m) by nra.
+ assert (Ht1:0<=joint m*only_A m*only_B m) by nra.
+ assert (Ht2:0<=joint m*only_A m*neither m) by nra.
+ assert (Ht3:0<=joint m*only_B m*neither m) by nra.
+ assert (Ht4:0<=only_A m*only_B m*neither m) by nra.
+ pose proof (admission_indicator_covariance_square_gap m) as Hgap.
+ lra.
+Qed.
+
+(**
+ [admission_indicator_variance_product_nonnegative] (theorem) — The normalization variance product for the binary phi coefficient is nonnegative for every four-cell model.
+ Mathematical meaning: The normalization variance product for the binary phi coefficient is nonnegative for every four-cell model.
+ Exact checked proposition: forall m, 0<=admission_indicator_variance_A m * admission_indicator_variance_B m.
+ Premises and side conditions: Uses existing nonnegative Bernoulli variance theorems.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_indicator_variance_product_nonnegative :
+ forall m, 0<=admission_indicator_variance_A m * admission_indicator_variance_B m.
+Proof.
+ intro m.
+ apply Rmult_le_pos;
+ [apply admission_indicator_variance_A_nonnegative |
+  apply admission_indicator_variance_B_nonnegative].
+Qed.
+
+(**
+ [admission_phi_denominator_positive] (theorem) — Both nontrivial marginal event probabilities ensure the phi denominator is strictly positive.
+ Mathematical meaning: Both nontrivial marginal event probabilities ensure the phi denominator is strictly positive.
+ Exact checked proposition: forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> 0<sqrt (admission_indicator_variance_A m*admission_indicator_variance_B m).
+ Premises and side conditions: Both acceptance probabilities must lie strictly between zero and one.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_phi_denominator_positive :
+ forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> 0<sqrt (admission_indicator_variance_A m*admission_indicator_variance_B m).
+Proof.
+ intros m Ha Ha1 Hb Hb1.
+ assert (HvarA:0<admission_indicator_variance_A m).
+ { apply (proj2 (admission_indicator_variance_A_positive_iff m)).
+   split; assumption. }
+ assert (HvarB:0<admission_indicator_variance_B m).
+ { apply (proj2 (admission_indicator_variance_B_positive_iff m)).
+   split; assumption. }
+ apply sqrt_lt_R0; nra.
+Qed.
+
+(**
+ [admission_phi_unit_interval] (theorem) — The normalized phi correlation of two binary admission indicators always lies between minus one and one.
+ Mathematical meaning: The normalized phi correlation of two binary admission indicators always lies between minus one and one.
+ Exact checked proposition: forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> -1<=admission_phi m /\ admission_phi m<=1.
+ Premises and side conditions: Only nondegenerate marginal acceptance rates and four-cell normalization are used.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_phi_unit_interval :
+ forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> -1<=admission_phi m /\ admission_phi m<=1.
+Proof.
+ intros m Ha Ha1 Hb Hb1.
+ pose proof (admission_phi_denominator_positive m Ha Ha1 Hb Hb1) as Hden.
+ pose proof (admission_indicator_covariance_cauchy m) as Hcs.
+ assert (Hprod:0<=admission_indicator_variance_A m*
+                     admission_indicator_variance_B m).
+ { apply admission_indicator_variance_product_nonnegative. }
+ pose proof (sqrt_sqrt _ Hprod) as Hsq.
+ unfold admission_phi,Rdiv.
+ set (d:=sqrt (admission_indicator_variance_A m*
+               admission_indicator_variance_B m)) in *.
+ assert (Hcov_bound:-d<=admission_association m /\
+                     admission_association m<=d) by nra.
+ destruct Hcov_bound as [Hlower Hupper].
+ assert (Hi:0< /d) by (apply Rinv_0_lt_compat; exact Hden).
+ assert (Hid:d*/d=1) by (field; lra).
+ split; nra.
+Qed.
+
+(**
+ [admission_phi_zero_iff_independent] (theorem) — With nondegenerate marginal event probabilities, phi vanishes exactly when the two pass/fail events are independent.
+ Mathematical meaning: With nondegenerate marginal event probabilities, phi vanishes exactly when the two pass/fail events are independent.
+ Exact checked proposition: forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> (admission_phi m=0 <-> p_both m=p_A m*p_B m).
+ Premises and side conditions: All denominators must be strictly positive; the independence is binary-indicator independence.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_phi_zero_iff_independent :
+ forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> (admission_phi m=0 <-> p_both m=p_A m*p_B m).
+Proof.
+ intros m Ha Ha1 Hb Hb1.
+ pose proof (admission_phi_denominator_positive m Ha Ha1 Hb Hb1) as Hd.
+ unfold admission_phi,Rdiv.
+ set (d:=sqrt (admission_indicator_variance_A m*
+               admission_indicator_variance_B m)) in *.
+ assert (Hi:0< /d) by (apply Rinv_0_lt_compat; exact Hd).
+ pose proof (admission_association_zero_iff_independence m) as Hiff.
+ split; intro H.
+ - apply (proj1 Hiff); nra.
+ - apply (proj2 Hiff) in H; nra.
+Qed.
+
+(**
+ [admission_phi_positive_iff_positive_association] (theorem) — The sign of the normalized phi coefficient agrees exactly with the sign of the unnormalized binary association determinant.
+ Mathematical meaning: The sign of the normalized phi coefficient agrees exactly with the sign of the unnormalized binary association determinant.
+ Exact checked proposition: forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> (0<admission_phi m <-> 0<admission_association m).
+ Premises and side conditions: Strictly positive phi normalization is required.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_phi_positive_iff_positive_association :
+ forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> (0<admission_phi m <-> 0<admission_association m).
+Proof.
+ intros m Ha Ha1 Hb Hb1.
+ pose proof (admission_phi_denominator_positive m Ha Ha1 Hb Hb1) as Hd.
+ unfold admission_phi,Rdiv.
+ set (d:=sqrt (admission_indicator_variance_A m*
+               admission_indicator_variance_B m)) in *.
+ assert (Hi:0< /d) by (apply Rinv_0_lt_compat; exact Hd).
+ split; intro H; nra.
+Qed.
+
+(**
+ [admission_phi_negative_iff_negative_association] (theorem) — A negative normalized phi coefficient is equivalent to negatively associated binary pass/fail outcomes.
+ Mathematical meaning: A negative normalized phi coefficient is equivalent to negatively associated binary pass/fail outcomes.
+ Exact checked proposition: forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> (admission_phi m<0 <-> admission_association m<0).
+ Premises and side conditions: Strictly positive phi normalization is required.
+ Proof/definition method: Derive the stated finite event assertion from the existing Fréchet, covariance, conditional-uplift and normalization lemmas with standard Rocq real arithmetic.
+ Library reuse: Existing Admissions.v four-cell algebra, Rocq Stdlib.Reals, Lra, Psatz, sqrt and real ring/field tactics. We reuse named prior lemmas instead of introducing a second event model, matrix recursion, or unchecked Gaussian results.
+ Boundary: Exact finite Bernoulli event algebra and conditional-rate or odds-ratio implications only. No bivariate Gaussian integration, normal-quantile certification, inference about continuous-score Pearson rho, or empirical psychometric assumptions.
+ *)
+Theorem admission_phi_negative_iff_negative_association :
+ forall m, 0<p_A m -> p_A m<1 -> 0<p_B m -> p_B m<1 -> (admission_phi m<0 <-> admission_association m<0).
+Proof.
+ intros m Ha Ha1 Hb Hb1.
+ pose proof (admission_phi_denominator_positive m Ha Ha1 Hb Hb1) as Hd.
+ unfold admission_phi,Rdiv.
+ set (d:=sqrt (admission_indicator_variance_A m*
+               admission_indicator_variance_B m)) in *.
+ assert (Hi:0< /d) by (apply Rinv_0_lt_compat; exact Hd).
+ split; intro H; nra.
+Qed.
+
