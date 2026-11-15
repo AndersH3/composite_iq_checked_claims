@@ -89,8 +89,16 @@ package body Shared_Normal_Sampling with SPARK_Mode is
       Radius := Checked_Radius (U);
       Angle := 6.283185307179586476925286766559 * V;
       Cosine := Math.Cos (Angle);
+      --  Runtime acceptance, including rejection of NaN and out-of-range
+      --  transcendental backend returns even with Ghost => Ignore.
+      if not (Cosine >= -1.0 and then Cosine <= 1.0) then
+         raise Constraint_Error with "cosine range acceptance failed";
+      end if;
       X := Radius * Cosine;
       Sine := Math.Sin (Angle);
+      if not (Sine >= -1.0 and then Sine <= 1.0) then
+         raise Constraint_Error with "sine range acceptance failed";
+      end if;
       Y := Radius * Sine;
    end Normal_Pair;
 end Shared_Normal_Sampling;
