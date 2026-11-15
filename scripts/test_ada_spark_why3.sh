@@ -224,4 +224,52 @@ if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_GOAL=UnrelatedGoal \
 fi
 grep -F 'did not prove TrueGoal as Valid' "$fixture/wrong-goal.out" >/dev/null
 
+# Native SPARK smoke fixture: structurally verify that the test uses a
+# substantive contracted subprogram and proof-only native flags. This is
+# NOT a substitute for executing GNATprove on computer10.
+spark_smoke=scripts/smoke_gnatprove.sh
+spark_spec=verification/spark_smoke/src/bounded_counts.ads
+test -f verification/spark_smoke/src/bounded_counts.adb
+test -f verification/spark_smoke/spark_smoke.gpr
+bash -n "$spark_smoke"
+grep -F 'Global => null' "$spark_spec" >/dev/null
+grep -F 'Depends => ' "$spark_spec" >/dev/null
+grep -F 'Pre =>' "$spark_spec" >/dev/null
+grep -F 'Post =>' "$spark_spec" >/dev/null
+grep -F -- '--mode=all' "$spark_smoke" >/dev/null
+grep -F -- '--checks-as-errors' "$spark_smoke" >/dev/null
+grep -F 'Summary of SPARK analysis' "$spark_smoke" >/dev/null
+
+# Two adversarial offline mock executions:
+# 1. A fake prover returning 0 without any native proof report MUST fail.
+# 2. A fake prover returning nonzero MUST also fail, even with version data.
+# Both tests prove that this shell wrapper cannot be fooled by an exit
+# status alone; only an actual GNATprove run can validate the fixture.
+cat > "$fixture/bin/fake-gnatprove" <<'MOCK_GNATPROVE'
+#!/usr/bin/env bash
+set -euo pipefail
+if [[ "${1:-}" == "--version" ]]; then
+  printf '%s\n' 'FSF GNATprove fake version; not a proof'
+  exit 0
+fi
+exit "${GNATPROVE_FAKE_EXIT:-0}"
+MOCK_GNATPROVE
+chmod 755 "$fixture/bin/fake-gnatprove"
+if GNATPROVE="$fixture/bin/fake-gnatprove" \
+    bash "$spark_smoke" >"$fixture/fake-no-report.out" 2>&1; then
+  printf '%s\n' 'ERROR: Native SPARK smoke accepted an empty fake proof' >&2
+  exit 1
+fi
+grep -F 'no native gnatprove.out report' "$fixture/fake-no-report.out" >/dev/null
+
+if GNATPROVE="$fixture/bin/fake-gnatprove" GNATPROVE_FAKE_EXIT=13 \
+    bash "$spark_smoke" >"$fixture/fake-error.out" 2>&1; then
+  printf '%s\n' 'ERROR: Native SPARK smoke accepted a failing fake prover' >&2
+  exit 1
+fi
+if grep -F 'PASS: GNATprove completed' "$fixture/fake-error.out" >/dev/null; then
+  printf '%s\n' 'ERROR: Native SPARK smoke printed PASS on fake failure' >&2
+  exit 1
+fi
+
 printf '%s\n' 'Ada/SPARK/Why3 offline checksum-plan, safe-platform, and Why3 regression tests passed'
