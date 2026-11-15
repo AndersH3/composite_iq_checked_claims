@@ -3559,10 +3559,11 @@ Proof.
   - intros t.
     destruct t as [u v].
     destruct u; destruct v;
-      repeat match goal with b:bool |- _ => destruct b end;
-      cbv [simpson_reversal_weight testA3 testB3 testC3];
-      unfold Rdiv;
-      apply Rmult_le_pos; [lra | apply Rlt_le, Rinv_0_lt_compat; lra].
+      repeat match goal with b:bool |- _ => destruct b end.
+    all: (cbv [simpson_reversal_weight testA3 testB3 testC3];
+          unfold Rdiv;
+          apply Rmult_le_pos;
+          [lra | apply Rlt_le, Rinv_0_lt_compat; lra]).
   - cbv [FiniteSum.finite_sum triple_cases simpson_reversal_weight
          testA3 testB3 testC3 List.map List.fold_right].
     field; lra.
