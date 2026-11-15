@@ -3,13 +3,24 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1682 proof scripts** across eighteen
+for the three principal reports. **1737 proof scripts** across nineteen
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
 ## Canonical library migration (D033x)
 
-**There are no longer duplicate theorem source files under `rocq/`.** Report-independent mathematical proofs are maintained only under [`library/rocq/`](../library/rocq/README.md); the Hoeflin/Ferguson, Towers admissions and Sequential conditional-means theorem modules are owned by their respective [report folders](../library/README.md). The compile manifest [`scripts/compile_rocq.sh`](../scripts/compile_rocq.sh) assembles the unique sources in the *original dependency order*, so the eighteen Rocq module names, theorem names, exact propositions and 1,682 registered proof scripts remain unchanged. The full [documentation and source-path audit](../scripts/check_rocq_documentation.sh) checks canonical ownership.
+**There are no longer duplicate theorem source files under `rocq/`.** Report-independent mathematical proofs are maintained only under [`library/rocq/`](../library/rocq/README.md); the Hoeflin/Ferguson, Towers admissions and Sequential conditional-means theorem modules are owned by their respective [report folders](../library/README.md). The compile manifest [`scripts/compile_rocq.sh`](../scripts/compile_rocq.sh) assembles the unique sources in the *original dependency order*, so the original eighteen module names, theorem names, exact propositions and 1,682 baseline proof scripts remain unchanged; a nineteenth Sequential sensitivity module adds 55 new scripts. The full [documentation and source-path audit](../scripts/check_rocq_documentation.sh) checks canonical ownership.
+
+## Sequential conditional-means sensitivity (D035x)
+
+The report-specific `SequentialSensitivity.v` imports the existing
+`SequentialReport` rather than duplicating finite sums, covariance matrices,
+or regression coefficients. It adds 55 theorems addressing exact denominator,
+regression-loading, population-variance, conditional-risk and inclusive-mean
+sensitivity, including strictness and finite-difference identities. Its
+proofs use Stdlib `ring`, `field`, `lra` and `nra`. Count these as
+verified only if the pinned Rocq 9.2 CI job passes at the precise source head.
+These algebraic results do not establish Gaussian conditional laws.
 
 ## Reproduction
 

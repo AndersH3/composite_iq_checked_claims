@@ -16,7 +16,8 @@ import re
 import sys
 from pathlib import Path
 
-# Canonical source ownership manifest. All 18 module names stay unchanged.
+# Canonical source ownership manifest. The initial 18 modules remain unchanged;
+# the new SequentialSensitivity module is owned by its report subproject.
 # Generic mathematical files live only in library/rocq; specialized proofs
 # are owned by their corresponding report project.
 paths_by_module = {
@@ -36,6 +37,7 @@ paths_by_module = {
     "Admissions": Path("analyses/towers-multiple-test-admissions/rocq/Admissions.v"),
     "FourCellBridge": Path("analyses/towers-multiple-test-admissions/rocq/FourCellBridge.v"),
     "SequentialReport": Path("analyses/sequential-conditional-means/rocq/SequentialReport.v"),
+    "SequentialSensitivity": Path("analyses/sequential-conditional-means/rocq/SequentialSensitivity.v"),
     "ReportRounding": Path("analyses/sequential-conditional-means/rocq/ReportRounding.v"),
     "ReportCounterexample": Path("analyses/sequential-conditional-means/rocq/ReportCounterexample.v"),
 }
