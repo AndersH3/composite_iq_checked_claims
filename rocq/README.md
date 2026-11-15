@@ -3,7 +3,7 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1737 proof scripts** across nineteen
+for the three principal reports. **1792 proof scripts** across twenty
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
@@ -21,6 +21,17 @@ sensitivity, including strictness and finite-difference identities. Its
 proofs use Stdlib `ring`, `field`, `lra` and `nra`. Count these as
 verified only if the pinned Rocq 9.2 CI job passes at the precise source head.
 These algebraic results do not establish Gaussian conditional laws.
+
+## D036x — three-test admissions, multiplicity and Bonferroni
+
+The Towers-specialized `ThreeTestAdmissions.v` adds 55 fully documented
+proof scripts for exact counts of zero, one, two and three successes;
+three-way inclusion-exclusion, triple Fréchet bounds, Bonferroni bounds,
+and pair/union consistency. Its eight pattern weights reuse the centrally
+maintained `FiniteSum.finite_sum` and `FiniteUnion.finite_prob`, not a
+new probability integration or matrix implementation. The model supplies
+nonnegative atomic masses and unit normalization as proven record premises.
+These are discrete event formulas and do not verify Gaussian tails.
 
 ## Reproduction
 
