@@ -12,7 +12,7 @@ Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
 The current branch has **2228 public theorem/lemma/example claims**, plus
 **one local helper** and **thirteen constructed model/record values**:
-**2242 proof scripts** across twenty-six Rocq modules. The difference between the 1,999 claims and 2,013 proof scripts is
+**2242 proof scripts** across twenty-six Rocq modules. The difference between the 2,228 claims and 2,242 proof scripts is
 exactly fourteen additional blocks: one local helper, two original
 four-cell Admissions model witnesses, three unconditioned two-test
 projections of the three-test model, and eight conditional/example
