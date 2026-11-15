@@ -8,9 +8,9 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **1399 public theorem/lemma/example claims**, plus
+The current branch has **1432 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**1402 proof scripts** across eighteen Rocq modules. The claims and scripts
+**1435 proof scripts** across eighteen Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -541,7 +541,7 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `positive_cutoff_nondecreasing_in_correlation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `positive_cutoff_strictly_increases_in_correlation` (theorem) | Lemma application | Prior named lemmas | Reviewed: keep established tactic/library proof |
 
-## Admissions.v — 69 proof scripts
+## Admissions.v — 102 proof scripts
 
 | Named declaration | Proof strategy | Library reuse | Refactor disposition |
 |---|---|---|---|
@@ -614,6 +614,40 @@ full dependencies and the theorem-specific doc comment for hypotheses.
 | `conditional_not_A_given_B_unit_interval` (theorem) | Lemma application, Lra/Psatz | Stdlib.Lra/Psatz | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_B_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
 | `independence_iff_conditional_A_equals_marginal` (theorem) | Lemma application, Rewriting | Prior named lemmas | Reviewed: keep established tactic/library proof |
+
+| `admission_not_A_complement` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; The four cells must be nonnegative and sum to one, as enforced by TwoEventModel. |
+| `admission_not_B_complement` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Uses the normalized four-cell model and no independence hypothesis. |
+| `admission_not_A_nonnegative` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Uses nonnegative B-only and neither cell masses. |
+| `admission_not_B_nonnegative` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Uses nonnegative A-only and neither cell masses. |
+| `admission_not_A_positive_iff` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; A positive complement is required for non-A conditional rates. |
+| `admission_not_B_positive_iff` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; A positive complement is required for non-B conditional rates. |
+| `admission_B_given_not_A_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Requires strictly positive mass among those rejected by A. |
+| `admission_A_given_not_B_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Requires strictly positive mass among those rejected by B. |
+| `admission_law_total_B` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both A and not-A conditioning events must have positive mass. |
+| `admission_law_total_A` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both B and not-B conditioning events must have positive mass. |
+| `admission_association_covariance` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Uses the existing verified binary indicator covariance identity; no Gaussian premise. |
+| `admission_association_zero_iff_independence` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Algebraic Bernoulli independence only, not independence of underlying continuous scores. |
+| `admission_association_positive_iff_overlap` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; The four-event partition is normalized; no Gaussian correlation parameter is assumed. |
+| `admission_association_negative_iff_overlap` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; The comparison concerns observable binary event covariance. |
+| `admission_B_uplift_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; The A-pass conditioning marginal must be positive. |
+| `admission_A_uplift_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; The B-pass conditioning marginal must be positive. |
+| `admission_B_downlift_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; The A-failure subpopulation must have positive probability. |
+| `admission_A_downlift_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; The B-failure subpopulation must have positive probability. |
+| `admission_B_strata_gap_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both strata must have positive mass, and equality is unconditional on Gaussianity. |
+| `admission_A_strata_gap_numerator` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both strata must have positive mass, without assuming a normal copula. |
+| `admission_B_uplift_iff_positive_association` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Conditional B given A is interpreted only for A-positive mass. |
+| `admission_A_uplift_iff_positive_association` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Conditional A given B is interpreted only for B-positive mass. |
+| `admission_B_downlift_iff_positive_association` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; A-failure mass must be positive. |
+| `admission_A_downlift_iff_positive_association` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; B-failure mass must be positive. |
+| `admission_B_strata_order_iff_positive_association` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both A strata have positive mass. |
+| `admission_A_strata_order_iff_positive_association` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both B strata have positive mass. |
+| `admission_B_equal_strata_iff_independence` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both complementary conditioning masses are strictly positive. |
+| `admission_A_equal_strata_iff_independence` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Both complementary conditioning masses are strictly positive. |
+| `admission_association_frechet_upper_A` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Applies the existing upper Fréchet bound on overlap. |
+| `admission_association_frechet_upper_B` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Applies the existing upper Fréchet bound on overlap. |
+| `admission_association_frechet_lower_joint` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Uses nonnegativity of the joint event. |
+| `admission_association_frechet_lower_complement` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Uses the sharp lower Fréchet bound for joint acceptance. |
+| `admission_association_all_frechet_bounds` (theorem) | Exact four-cell conditional/covariance algebra and existing numerator lemmas | Stdlib.Reals, Lra, Psatz, Field/Ring, and earlier Admissions results | Report-facing binary admission association; Sharp bounds are for all normalized nonnegative four-cell distributions. |
 
 ## FiniteUnion.v — 189 proof scripts
 

@@ -1972,3 +1972,594 @@ Proof.
     rewrite Rmult_comm in Hnumerator.
     symmetry; exact Hnumerator.
 Qed.
+
+
+(* Continuation D027x: binary association, strata contrast and admissible overlap. *)
+
+(**
+ [admission_not_A_mass] (definition) — The mass of outcomes not admitted by test A, obtained by adding the B-only and neither cells.
+ Mathematical meaning: The mass of outcomes not admitted by test A, obtained by adding the B-only and neither cells.
+ Exact declaration: Definition admission_not_A_mass (m : TwoEventModel) : R := only_B m + neither m.
+ Premises and side conditions: The argument is an existing normalized TwoEventModel; conditional definitions require positive denominators when used as probabilities.
+ Proof/definition method: A transparent real expression built from the existing four-cell record and standard real division.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Definition admission_not_A_mass (m : TwoEventModel) : R := only_B m + neither m.
+
+(**
+ [admission_not_B_mass] (definition) — The mass of outcomes not admitted by test B, obtained by adding the A-only and neither cells.
+ Mathematical meaning: The mass of outcomes not admitted by test B, obtained by adding the A-only and neither cells.
+ Exact declaration: Definition admission_not_B_mass (m : TwoEventModel) : R := only_A m + neither m.
+ Premises and side conditions: The argument is an existing normalized TwoEventModel; conditional definitions require positive denominators when used as probabilities.
+ Proof/definition method: A transparent real expression built from the existing four-cell record and standard real division.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Definition admission_not_B_mass (m : TwoEventModel) : R := only_A m + neither m.
+
+(**
+ [admission_B_given_not_A] (definition) — The conditional pass rate on B among those who failed A; the denominator is explicit and interpreted probabilistically only when positive.
+ Mathematical meaning: The conditional pass rate on B among those who failed A; the denominator is explicit and interpreted probabilistically only when positive.
+ Exact declaration: Definition admission_B_given_not_A (m : TwoEventModel) : R := only_B m / admission_not_A_mass m.
+ Premises and side conditions: The argument is an existing normalized TwoEventModel; conditional definitions require positive denominators when used as probabilities.
+ Proof/definition method: A transparent real expression built from the existing four-cell record and standard real division.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Definition admission_B_given_not_A (m : TwoEventModel) : R := only_B m / admission_not_A_mass m.
+
+(**
+ [admission_A_given_not_B] (definition) — The conditional pass rate on A among those who failed B; the denominator is explicit and interpreted probabilistically only when positive.
+ Mathematical meaning: The conditional pass rate on A among those who failed B; the denominator is explicit and interpreted probabilistically only when positive.
+ Exact declaration: Definition admission_A_given_not_B (m : TwoEventModel) : R := only_A m / admission_not_B_mass m.
+ Premises and side conditions: The argument is an existing normalized TwoEventModel; conditional definitions require positive denominators when used as probabilities.
+ Proof/definition method: A transparent real expression built from the existing four-cell record and standard real division.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Definition admission_A_given_not_B (m : TwoEventModel) : R := only_A m / admission_not_B_mass m.
+
+(**
+ [admission_association] (definition) — The unnormalized binary-indicator covariance, equally the two-by-two cell cross-product determinant.
+ Mathematical meaning: The unnormalized binary-indicator covariance, equally the two-by-two cell cross-product determinant.
+ Exact declaration: Definition admission_association (m : TwoEventModel) : R := joint m * neither m - only_A m * only_B m.
+ Premises and side conditions: The argument is an existing normalized TwoEventModel; conditional definitions require positive denominators when used as probabilities.
+ Proof/definition method: A transparent real expression built from the existing four-cell record and standard real division.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Definition admission_association (m : TwoEventModel) : R := joint m * neither m - only_A m * only_B m.
+
+(**
+ [admission_not_A_complement] (theorem) — The A-acceptance and A-rejection masses partition the entire four-cell probability space.
+ Mathematical meaning: The A-acceptance and A-rejection masses partition the entire four-cell probability space.
+ Exact checked proposition: forall m, p_A m + admission_not_A_mass m = 1.
+ Premises and side conditions: The four cells must be nonnegative and sum to one, as enforced by TwoEventModel.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_not_A_complement :
+ forall m, p_A m + admission_not_A_mass m = 1.
+Proof.
+ intro m; unfold p_A,admission_not_A_mass; pose proof (cells_sum_to_one m); lra.
+Qed.
+
+(**
+ [admission_not_B_complement] (theorem) — The B-acceptance and B-rejection masses partition the same complete four-cell space.
+ Mathematical meaning: The B-acceptance and B-rejection masses partition the same complete four-cell space.
+ Exact checked proposition: forall m, p_B m + admission_not_B_mass m = 1.
+ Premises and side conditions: Uses the normalized four-cell model and no independence hypothesis.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_not_B_complement :
+ forall m, p_B m + admission_not_B_mass m = 1.
+Proof.
+ intro m; unfold p_B,admission_not_B_mass; pose proof (cells_sum_to_one m); lra.
+Qed.
+
+(**
+ [admission_not_A_nonnegative] (theorem) — The complement of the first admission event has nonnegative probability.
+ Mathematical meaning: The complement of the first admission event has nonnegative probability.
+ Exact checked proposition: forall m, 0 <= admission_not_A_mass m.
+ Premises and side conditions: Uses nonnegative B-only and neither cell masses.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_not_A_nonnegative :
+ forall m, 0 <= admission_not_A_mass m.
+Proof.
+ intro m; unfold admission_not_A_mass; pose proof (only_B_nonnegative m); pose proof (neither_nonnegative m); lra.
+Qed.
+
+(**
+ [admission_not_B_nonnegative] (theorem) — The complement of the second admission event has nonnegative probability.
+ Mathematical meaning: The complement of the second admission event has nonnegative probability.
+ Exact checked proposition: forall m, 0 <= admission_not_B_mass m.
+ Premises and side conditions: Uses nonnegative A-only and neither cell masses.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_not_B_nonnegative :
+ forall m, 0 <= admission_not_B_mass m.
+Proof.
+ intro m; unfold admission_not_B_mass; pose proof (only_A_nonnegative m); pose proof (neither_nonnegative m); lra.
+Qed.
+
+(**
+ [admission_not_A_positive_iff] (theorem) — The complement of A is a valid positive conditioning event exactly when A is not certain.
+ Mathematical meaning: The complement of A is a valid positive conditioning event exactly when A is not certain.
+ Exact checked proposition: forall m, 0 < admission_not_A_mass m <-> p_A m < 1.
+ Premises and side conditions: A positive complement is required for non-A conditional rates.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_not_A_positive_iff :
+ forall m, 0 < admission_not_A_mass m <-> p_A m < 1.
+Proof.
+ intro m; pose proof (admission_not_A_complement m); lra.
+Qed.
+
+(**
+ [admission_not_B_positive_iff] (theorem) — The complement of B is a valid positive conditioning event exactly when B is not certain.
+ Mathematical meaning: The complement of B is a valid positive conditioning event exactly when B is not certain.
+ Exact checked proposition: forall m, 0 < admission_not_B_mass m <-> p_B m < 1.
+ Premises and side conditions: A positive complement is required for non-B conditional rates.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_not_B_positive_iff :
+ forall m, 0 < admission_not_B_mass m <-> p_B m < 1.
+Proof.
+ intro m; pose proof (admission_not_B_complement m); lra.
+Qed.
+
+(**
+ [admission_B_given_not_A_numerator] (theorem) — The numerator of the complementary conditional B acceptance rate is the B-only cell mass.
+ Mathematical meaning: The numerator of the complementary conditional B acceptance rate is the B-only cell mass.
+ Exact checked proposition: forall m, 0 < admission_not_A_mass m -> admission_not_A_mass m * admission_B_given_not_A m = only_B m.
+ Premises and side conditions: Requires strictly positive mass among those rejected by A.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_given_not_A_numerator :
+ forall m, 0 < admission_not_A_mass m -> admission_not_A_mass m * admission_B_given_not_A m = only_B m.
+Proof.
+ intros m H; unfold admission_B_given_not_A; field; lra.
+Qed.
+
+(**
+ [admission_A_given_not_B_numerator] (theorem) — The numerator of the complementary conditional A acceptance rate is the A-only cell mass.
+ Mathematical meaning: The numerator of the complementary conditional A acceptance rate is the A-only cell mass.
+ Exact checked proposition: forall m, 0 < admission_not_B_mass m -> admission_not_B_mass m * admission_A_given_not_B m = only_A m.
+ Premises and side conditions: Requires strictly positive mass among those rejected by B.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_given_not_B_numerator :
+ forall m, 0 < admission_not_B_mass m -> admission_not_B_mass m * admission_A_given_not_B m = only_A m.
+Proof.
+ intros m H; unfold admission_A_given_not_B; field; lra.
+Qed.
+
+(**
+ [admission_law_total_B] (theorem) — B's marginal pass rate is the weighted average of its conditional pass rates in the A-pass and A-fail subpopulations.
+ Mathematical meaning: B's marginal pass rate is the weighted average of its conditional pass rates in the A-pass and A-fail subpopulations.
+ Exact checked proposition: forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> p_A m * conditional_B_given_A m + admission_not_A_mass m * admission_B_given_not_A m = p_B m.
+ Premises and side conditions: Both A and not-A conditioning events must have positive mass.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_law_total_B :
+ forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> p_A m * conditional_B_given_A m + admission_not_A_mass m * admission_B_given_not_A m = p_B m.
+Proof.
+ intros m Ha Hna; pose proof (conditional_B_numerator m Ha) as Hyes; pose proof (admission_B_given_not_A_numerator m Hna) as Hno; unfold p_both,p_B in *; lra.
+Qed.
+
+(**
+ [admission_law_total_A] (theorem) — A's marginal pass rate is the weighted average of its conditional pass rates in B-pass and B-fail subpopulations.
+ Mathematical meaning: A's marginal pass rate is the weighted average of its conditional pass rates in B-pass and B-fail subpopulations.
+ Exact checked proposition: forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> p_B m * conditional_A_given_B m + admission_not_B_mass m * admission_A_given_not_B m = p_A m.
+ Premises and side conditions: Both B and not-B conditioning events must have positive mass.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_law_total_A :
+ forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> p_B m * conditional_A_given_B m + admission_not_B_mass m * admission_A_given_not_B m = p_A m.
+Proof.
+ intros m Hb Hnb; pose proof (conditional_A_numerator m Hb) as Hyes; pose proof (admission_A_given_not_B_numerator m Hnb) as Hno; unfold p_both,p_A in *; lra.
+Qed.
+
+(**
+ [admission_association_covariance] (theorem) — The cross-product determinant of the four cells is exactly the covariance of binary pass indicators.
+ Mathematical meaning: The cross-product determinant of the four cells is exactly the covariance of binary pass indicators.
+ Exact checked proposition: forall m, admission_association m = p_both m - p_A m * p_B m.
+ Premises and side conditions: Uses the existing verified binary indicator covariance identity; no Gaussian premise.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_covariance :
+ forall m, admission_association m = p_both m - p_A m * p_B m.
+Proof.
+ intro m; unfold admission_association; symmetry; apply binary_indicator_covariance_numerator.
+Qed.
+
+(**
+ [admission_association_zero_iff_independence] (theorem) — Four-cell independence holds exactly when the binary-indicator covariance determinant vanishes.
+ Mathematical meaning: Four-cell independence holds exactly when the binary-indicator covariance determinant vanishes.
+ Exact checked proposition: forall m, admission_association m = 0 <-> p_both m = p_A m * p_B m.
+ Premises and side conditions: Algebraic Bernoulli independence only, not independence of underlying continuous scores.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_zero_iff_independence :
+ forall m, admission_association m = 0 <-> p_both m = p_A m * p_B m.
+Proof.
+ intro m; rewrite admission_association_covariance; split; intro H; lra.
+Qed.
+
+(**
+ [admission_association_positive_iff_overlap] (theorem) — Positive binary association means the joint event is more likely than under indicator independence.
+ Mathematical meaning: Positive binary association means the joint event is more likely than under indicator independence.
+ Exact checked proposition: forall m, 0 < admission_association m <-> p_A m * p_B m < p_both m.
+ Premises and side conditions: The four-event partition is normalized; no Gaussian correlation parameter is assumed.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_positive_iff_overlap :
+ forall m, 0 < admission_association m <-> p_A m * p_B m < p_both m.
+Proof.
+ intro m; rewrite admission_association_covariance; lra.
+Qed.
+
+(**
+ [admission_association_negative_iff_overlap] (theorem) — Negative binary association means the joint event is less likely than under indicator independence.
+ Mathematical meaning: Negative binary association means the joint event is less likely than under indicator independence.
+ Exact checked proposition: forall m, admission_association m < 0 <-> p_both m < p_A m * p_B m.
+ Premises and side conditions: The comparison concerns observable binary event covariance.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_negative_iff_overlap :
+ forall m, admission_association m < 0 <-> p_both m < p_A m * p_B m.
+Proof.
+ intro m; rewrite admission_association_covariance; lra.
+Qed.
+
+(**
+ [admission_B_uplift_numerator] (theorem) — Conditional uplift of B among A-passers, multiplied by the A-pass mass, equals the binary-indicator covariance.
+ Mathematical meaning: Conditional uplift of B among A-passers, multiplied by the A-pass mass, equals the binary-indicator covariance.
+ Exact checked proposition: forall m, 0 < p_A m -> p_A m * (conditional_B_given_A m - p_B m) = admission_association m.
+ Premises and side conditions: The A-pass conditioning marginal must be positive.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_uplift_numerator :
+ forall m, 0 < p_A m -> p_A m * (conditional_B_given_A m - p_B m) = admission_association m.
+Proof.
+ intros m Ha; pose proof (conditional_B_numerator m Ha) as Hyes; rewrite admission_association_covariance; nra.
+Qed.
+
+(**
+ [admission_A_uplift_numerator] (theorem) — Conditional uplift of A among B-passers, weighted by B's mass, equals the same indicator covariance.
+ Mathematical meaning: Conditional uplift of A among B-passers, weighted by B's mass, equals the same indicator covariance.
+ Exact checked proposition: forall m, 0 < p_B m -> p_B m * (conditional_A_given_B m - p_A m) = admission_association m.
+ Premises and side conditions: The B-pass conditioning marginal must be positive.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_uplift_numerator :
+ forall m, 0 < p_B m -> p_B m * (conditional_A_given_B m - p_A m) = admission_association m.
+Proof.
+ intros m Hb; pose proof (conditional_A_numerator m Hb) as Hyes; rewrite admission_association_covariance; nra.
+Qed.
+
+(**
+ [admission_B_downlift_numerator] (theorem) — The reduction of B's conditional rate among A-failures, weighted by the failure mass, equals the indicator covariance.
+ Mathematical meaning: The reduction of B's conditional rate among A-failures, weighted by the failure mass, equals the indicator covariance.
+ Exact checked proposition: forall m, 0 < admission_not_A_mass m -> admission_not_A_mass m * (p_B m - admission_B_given_not_A m) = admission_association m.
+ Premises and side conditions: The A-failure subpopulation must have positive probability.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_downlift_numerator :
+ forall m, 0 < admission_not_A_mass m -> admission_not_A_mass m * (p_B m - admission_B_given_not_A m) = admission_association m.
+Proof.
+ intros m Hna; pose proof (admission_B_given_not_A_numerator m Hna) as Hno; pose proof (admission_not_A_complement m) as Hmass; rewrite admission_association_covariance; unfold p_B,p_both in *; nra.
+Qed.
+
+(**
+ [admission_A_downlift_numerator] (theorem) — The reduction of A's conditional rate among B-failures, weighted by the failure mass, equals the indicator covariance.
+ Mathematical meaning: The reduction of A's conditional rate among B-failures, weighted by the failure mass, equals the indicator covariance.
+ Exact checked proposition: forall m, 0 < admission_not_B_mass m -> admission_not_B_mass m * (p_A m - admission_A_given_not_B m) = admission_association m.
+ Premises and side conditions: The B-failure subpopulation must have positive probability.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_downlift_numerator :
+ forall m, 0 < admission_not_B_mass m -> admission_not_B_mass m * (p_A m - admission_A_given_not_B m) = admission_association m.
+Proof.
+ intros m Hnb; pose proof (admission_A_given_not_B_numerator m Hnb) as Hno; pose proof (admission_not_B_complement m) as Hmass; rewrite admission_association_covariance; unfold p_A,p_both in *; nra.
+Qed.
+
+(**
+ [admission_B_strata_gap_numerator] (theorem) — The difference in B pass rates between A-passers and A-failures, scaled by both stratum masses, equals the covariance determinant.
+ Mathematical meaning: The difference in B pass rates between A-passers and A-failures, scaled by both stratum masses, equals the covariance determinant.
+ Exact checked proposition: forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> p_A m * admission_not_A_mass m * (conditional_B_given_A m - admission_B_given_not_A m) = admission_association m.
+ Premises and side conditions: Both strata must have positive mass, and equality is unconditional on Gaussianity.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_strata_gap_numerator :
+ forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> p_A m * admission_not_A_mass m * (conditional_B_given_A m - admission_B_given_not_A m) = admission_association m.
+Proof.
+ intros m Ha Hna.
+ (* Multiply the two separately checked conditional-numerator identities
+    by the opposite stratum mass; their intermediate marginal cancels. *)
+ pose proof (admission_B_uplift_numerator m Ha) as Hu.
+ pose proof (admission_B_downlift_numerator m Hna) as Hd.
+ replace (p_A m * admission_not_A_mass m *
+   (conditional_B_given_A m - admission_B_given_not_A m))
+   with (admission_not_A_mass m *
+          (p_A m * (conditional_B_given_A m - p_B m)) +
+         p_A m *
+          (admission_not_A_mass m * (p_B m - admission_B_given_not_A m)))
+   by ring.
+ rewrite Hu, Hd.
+ replace (admission_not_A_mass m * admission_association m +
+          p_A m * admission_association m)
+   with ((admission_not_A_mass m + p_A m) * admission_association m)
+   by ring.
+ replace (admission_not_A_mass m + p_A m) with 1
+   by (pose proof (admission_not_A_complement m); lra).
+ ring.
+Qed.
+
+(**
+ [admission_A_strata_gap_numerator] (theorem) — The difference in A pass rates between B-passers and B-failures, scaled by both stratum masses, equals the covariance determinant.
+ Mathematical meaning: The difference in A pass rates between B-passers and B-failures, scaled by both stratum masses, equals the covariance determinant.
+ Exact checked proposition: forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> p_B m * admission_not_B_mass m * (conditional_A_given_B m - admission_A_given_not_B m) = admission_association m.
+ Premises and side conditions: Both strata must have positive mass, without assuming a normal copula.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_strata_gap_numerator :
+ forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> p_B m * admission_not_B_mass m * (conditional_A_given_B m - admission_A_given_not_B m) = admission_association m.
+Proof.
+ intros m Hb Hnb.
+ (* The two conditional numerator formulas combine by total mass one. *)
+ pose proof (admission_A_uplift_numerator m Hb) as Hu.
+ pose proof (admission_A_downlift_numerator m Hnb) as Hd.
+ replace (p_B m * admission_not_B_mass m *
+   (conditional_A_given_B m - admission_A_given_not_B m))
+   with (admission_not_B_mass m *
+          (p_B m * (conditional_A_given_B m - p_A m)) +
+         p_B m *
+          (admission_not_B_mass m * (p_A m - admission_A_given_not_B m)))
+   by ring.
+ rewrite Hu, Hd.
+ replace (admission_not_B_mass m * admission_association m +
+          p_B m * admission_association m)
+   with ((admission_not_B_mass m + p_B m) * admission_association m)
+   by ring.
+ replace (admission_not_B_mass m + p_B m) with 1
+   by (pose proof (admission_not_B_complement m); lra).
+ ring.
+Qed.
+
+(**
+ [admission_B_uplift_iff_positive_association] (theorem) — The conditional B pass rate rises above its marginal exactly when binary association is strictly positive.
+ Mathematical meaning: The conditional B pass rate rises above its marginal exactly when binary association is strictly positive.
+ Exact checked proposition: forall m, 0 < p_A m -> (p_B m < conditional_B_given_A m <-> 0 < admission_association m).
+ Premises and side conditions: Conditional B given A is interpreted only for A-positive mass.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_uplift_iff_positive_association :
+ forall m, 0 < p_A m -> (p_B m < conditional_B_given_A m <-> 0 < admission_association m).
+Proof.
+ intros m Ha; pose proof (admission_B_uplift_numerator m Ha) as Hnum; split; intro H; nra.
+Qed.
+
+(**
+ [admission_A_uplift_iff_positive_association] (theorem) — The conditional A pass rate rises above its marginal exactly when binary association is strictly positive.
+ Mathematical meaning: The conditional A pass rate rises above its marginal exactly when binary association is strictly positive.
+ Exact checked proposition: forall m, 0 < p_B m -> (p_A m < conditional_A_given_B m <-> 0 < admission_association m).
+ Premises and side conditions: Conditional A given B is interpreted only for B-positive mass.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_uplift_iff_positive_association :
+ forall m, 0 < p_B m -> (p_A m < conditional_A_given_B m <-> 0 < admission_association m).
+Proof.
+ intros m Hb; pose proof (admission_A_uplift_numerator m Hb) as Hnum; split; intro H; nra.
+Qed.
+
+(**
+ [admission_B_downlift_iff_positive_association] (theorem) — Conditional B acceptance among A-failures is below its marginal exactly under positive indicator association.
+ Mathematical meaning: Conditional B acceptance among A-failures is below its marginal exactly under positive indicator association.
+ Exact checked proposition: forall m, 0 < admission_not_A_mass m -> (admission_B_given_not_A m < p_B m <-> 0 < admission_association m).
+ Premises and side conditions: A-failure mass must be positive.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_downlift_iff_positive_association :
+ forall m, 0 < admission_not_A_mass m -> (admission_B_given_not_A m < p_B m <-> 0 < admission_association m).
+Proof.
+ intros m Hna; pose proof (admission_B_downlift_numerator m Hna) as Hnum; split; intro H; nra.
+Qed.
+
+(**
+ [admission_A_downlift_iff_positive_association] (theorem) — Conditional A acceptance among B-failures is below its marginal exactly under positive indicator association.
+ Mathematical meaning: Conditional A acceptance among B-failures is below its marginal exactly under positive indicator association.
+ Exact checked proposition: forall m, 0 < admission_not_B_mass m -> (admission_A_given_not_B m < p_A m <-> 0 < admission_association m).
+ Premises and side conditions: B-failure mass must be positive.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_downlift_iff_positive_association :
+ forall m, 0 < admission_not_B_mass m -> (admission_A_given_not_B m < p_A m <-> 0 < admission_association m).
+Proof.
+ intros m Hnb; pose proof (admission_A_downlift_numerator m Hnb) as Hnum; split; intro H; nra.
+Qed.
+
+(**
+ [admission_B_strata_order_iff_positive_association] (theorem) — The A-pass subgroup has a higher B admission rate than the A-fail subgroup exactly under positive indicator association.
+ Mathematical meaning: The A-pass subgroup has a higher B admission rate than the A-fail subgroup exactly under positive indicator association.
+ Exact checked proposition: forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> (admission_B_given_not_A m < conditional_B_given_A m <-> 0 < admission_association m).
+ Premises and side conditions: Both A strata have positive mass.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_strata_order_iff_positive_association :
+ forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> (admission_B_given_not_A m < conditional_B_given_A m <-> 0 < admission_association m).
+Proof.
+ intros m Ha Hna; pose proof (admission_B_strata_gap_numerator m Ha Hna) as Hnum; assert (Hprod:0 < p_A m * admission_not_A_mass m) by nra; split; intro H; nra.
+Qed.
+
+(**
+ [admission_A_strata_order_iff_positive_association] (theorem) — The B-pass subgroup has a higher A admission rate than the B-fail subgroup exactly under positive indicator association.
+ Mathematical meaning: The B-pass subgroup has a higher A admission rate than the B-fail subgroup exactly under positive indicator association.
+ Exact checked proposition: forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> (admission_A_given_not_B m < conditional_A_given_B m <-> 0 < admission_association m).
+ Premises and side conditions: Both B strata have positive mass.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_strata_order_iff_positive_association :
+ forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> (admission_A_given_not_B m < conditional_A_given_B m <-> 0 < admission_association m).
+Proof.
+ intros m Hb Hnb; pose proof (admission_A_strata_gap_numerator m Hb Hnb) as Hnum; assert (Hprod:0 < p_B m * admission_not_B_mass m) by nra; split; intro H; nra.
+Qed.
+
+(**
+ [admission_B_equal_strata_iff_independence] (theorem) — Under nonempty A strata, equality of the two conditional B admission rates is equivalent to independence of binary pass events.
+ Mathematical meaning: Under nonempty A strata, equality of the two conditional B admission rates is equivalent to independence of binary pass events.
+ Exact checked proposition: forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> (conditional_B_given_A m = admission_B_given_not_A m <-> p_both m = p_A m * p_B m).
+ Premises and side conditions: Both complementary conditioning masses are strictly positive.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_B_equal_strata_iff_independence :
+ forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> (conditional_B_given_A m = admission_B_given_not_A m <-> p_both m = p_A m * p_B m).
+Proof.
+ intros m Ha Hna; pose proof (admission_B_strata_gap_numerator m Ha Hna) as Hgap; pose proof (admission_association_zero_iff_independence m) as Hind; assert (Hprod:0 < p_A m * admission_not_A_mass m) by nra; split; intro H; [apply Hind; nra|apply Hind in H; nra].
+Qed.
+
+(**
+ [admission_A_equal_strata_iff_independence] (theorem) — Under nonempty B strata, equality of the two conditional A admission rates is equivalent to independence of binary pass events.
+ Mathematical meaning: Under nonempty B strata, equality of the two conditional A admission rates is equivalent to independence of binary pass events.
+ Exact checked proposition: forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> (conditional_A_given_B m = admission_A_given_not_B m <-> p_both m = p_A m * p_B m).
+ Premises and side conditions: Both complementary conditioning masses are strictly positive.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_A_equal_strata_iff_independence :
+ forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> (conditional_A_given_B m = admission_A_given_not_B m <-> p_both m = p_A m * p_B m).
+Proof.
+ intros m Hb Hnb; pose proof (admission_A_strata_gap_numerator m Hb Hnb) as Hgap; pose proof (admission_association_zero_iff_independence m) as Hind; assert (Hprod:0 < p_B m * admission_not_B_mass m) by nra; split; intro H; [apply Hind; nra|apply Hind in H; nra].
+Qed.
+
+(**
+ [admission_association_frechet_upper_A] (theorem) — The binary covariance cannot exceed the product of A's acceptance mass and B's failure mass.
+ Mathematical meaning: The binary covariance cannot exceed the product of A's acceptance mass and B's failure mass.
+ Exact checked proposition: forall m, admission_association m <= p_A m * (1 - p_B m).
+ Premises and side conditions: Applies the existing upper Fréchet bound on overlap.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_frechet_upper_A :
+ forall m, admission_association m <= p_A m * (1 - p_B m).
+Proof.
+ intro m; rewrite admission_association_covariance; pose proof (both_at_most_first m) as H; nra.
+Qed.
+
+(**
+ [admission_association_frechet_upper_B] (theorem) — The binary covariance cannot exceed the product of B's acceptance mass and A's failure mass.
+ Mathematical meaning: The binary covariance cannot exceed the product of B's acceptance mass and A's failure mass.
+ Exact checked proposition: forall m, admission_association m <= p_B m * (1 - p_A m).
+ Premises and side conditions: Applies the existing upper Fréchet bound on overlap.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_frechet_upper_B :
+ forall m, admission_association m <= p_B m * (1 - p_A m).
+Proof.
+ intro m; rewrite admission_association_covariance; pose proof (both_at_most_second m) as H; nra.
+Qed.
+
+(**
+ [admission_association_frechet_lower_joint] (theorem) — The binary covariance is bounded below by minus the product of the two acceptance marginals.
+ Mathematical meaning: The binary covariance is bounded below by minus the product of the two acceptance marginals.
+ Exact checked proposition: forall m, - (p_A m * p_B m) <= admission_association m.
+ Premises and side conditions: Uses nonnegativity of the joint event.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_frechet_lower_joint :
+ forall m, - (p_A m * p_B m) <= admission_association m.
+Proof.
+ intro m; rewrite admission_association_covariance; pose proof (overlap_nonnegative m) as H; lra.
+Qed.
+
+(**
+ [admission_association_frechet_lower_complement] (theorem) — The binary covariance is bounded below by minus the product of the two failure marginals.
+ Mathematical meaning: The binary covariance is bounded below by minus the product of the two failure marginals.
+ Exact checked proposition: forall m, - ((1 - p_A m) * (1 - p_B m)) <= admission_association m.
+ Premises and side conditions: Uses the sharp lower Fréchet bound for joint acceptance.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_frechet_lower_complement :
+ forall m, - ((1 - p_A m) * (1 - p_B m)) <= admission_association m.
+Proof.
+ intro m; rewrite admission_association_covariance; pose proof (frechet_lower_bound m) as H; nra.
+Qed.
+
+(**
+ [admission_association_all_frechet_bounds] (theorem) — The indicator covariance obeys the full sharp pair of upper and lower Bernoulli covariance constraints.
+ Mathematical meaning: The indicator covariance obeys the full sharp pair of upper and lower Bernoulli covariance constraints.
+ Exact checked proposition: forall m, - (p_A m * p_B m) <= admission_association m /\ - ((1 - p_A m) * (1 - p_B m)) <= admission_association m /\ admission_association m <= p_A m * (1 - p_B m) /\ admission_association m <= p_B m * (1 - p_A m).
+ Premises and side conditions: Sharp bounds are for all normalized nonnegative four-cell distributions.
+ Proof/definition method: Reuse prior four-cell marginals, conditional numerator identities, the checked binary covariance lemma, and real arithmetic without postulated stochastic facts.
+ Library reuse: Existing Admissions.v four-cell lemmas, Stdlib.Reals, Lra, Psatz and trusted ring/field tactics; no new probability axioms or custom list recursion.
+ Boundary: Normalized four-cell Bernoulli event algebra only. No Gaussian copula, continuous Pearson correlation inference, tail quadrature, or empirical IQ calibration is established.
+ *)
+Theorem admission_association_all_frechet_bounds :
+ forall m, - (p_A m * p_B m) <= admission_association m /\ - ((1 - p_A m) * (1 - p_B m)) <= admission_association m /\ admission_association m <= p_A m * (1 - p_B m) /\ admission_association m <= p_B m * (1 - p_A m).
+Proof.
+ intro m; repeat split; [apply admission_association_frechet_lower_joint|apply admission_association_frechet_lower_complement|apply admission_association_frechet_upper_A|apply admission_association_frechet_upper_B].
+Qed.
+
