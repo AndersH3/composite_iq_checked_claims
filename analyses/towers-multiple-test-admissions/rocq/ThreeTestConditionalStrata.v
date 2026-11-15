@@ -211,3 +211,407 @@ Proof.
   triple_lra.
 Defined.
 
+(**
+ [normalized_four_joint_scaled] (theorem) — Scaling the joint conditional-admission probability by the positive stratum total recovers the original joint mass.
+ Mathematical meaning: Scaling the joint conditional-admission probability by the positive stratum total recovers the original joint mass.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.p_both (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_joint_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.p_both (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  unfold Admissions.p_both; simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_only_first_scaled] (theorem) — The conditional first-only cell rescales to the corresponding unnormalized exclusive mass.
+ Mathematical meaning: The conditional first-only cell rescales to the corresponding unnormalized exclusive mass.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.only_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=x.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_only_first_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.only_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=x.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_only_second_scaled] (theorem) — The conditional second-only cell rescales to the corresponding unnormalized exclusive mass.
+ Mathematical meaning: The conditional second-only cell rescales to the corresponding unnormalized exclusive mass.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.only_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=y.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_only_second_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.only_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=y.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_neither_scaled] (theorem) — The conditional neither-cell rescales to the corresponding raw neither mass.
+ Mathematical meaning: The conditional neither-cell rescales to the corresponding raw neither mass.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.neither (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=n.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_neither_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.neither (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=n.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_first_scaled] (theorem) — Multiplying the first conditional admission marginal by the selection mass yields its joint plus exclusive raw masses.
+ Mathematical meaning: Multiplying the first conditional admission marginal by the selection mass yields its joint plus exclusive raw masses.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.p_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j+x.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_first_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.p_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j+x.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  unfold Admissions.p_A; simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_second_scaled] (theorem) — Multiplying the second conditional admission marginal by the selection mass yields its joint plus exclusive raw masses.
+ Mathematical meaning: Multiplying the second conditional admission marginal by the selection mass yields its joint plus exclusive raw masses.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.p_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j+y.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_second_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.p_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j+y.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  unfold Admissions.p_B; simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_union_scaled] (theorem) — Conditional union mass equals the joint-plus-two-exclusive raw masses divided by the stratum total.
+ Mathematical meaning: Conditional union mass equals the joint-plus-two-exclusive raw masses divided by the stratum total.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.p_either (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j+x+y.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_union_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.p_either (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j+x+y.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  unfold Admissions.p_either; simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_exclusive_scaled] (theorem) — The two-route exactly-one conditional admission probability rescales to the sum of two exclusive masses.
+ Mathematical meaning: The two-route exactly-one conditional admission probability rescales to the sum of two exclusive masses.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*Admissions.p_exactly_one (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=x+y.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_exclusive_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*Admissions.p_exactly_one (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=x+y.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  unfold Admissions.p_exactly_one; simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_association_scaled] (theorem) — Selection probability squared times conditional association equals the unnormalized two-by-two determinant of raw strata cells.
+ Mathematical meaning: Selection probability squared times conditional association equals the unnormalized two-by-two determinant of raw strata cells.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (j+x+y+n)*(j+x+y+n)*Admissions.admission_association (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j*n-x*y.
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_association_scaled :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (j+x+y+n)*(j+x+y+n)*Admissions.admission_association (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j*n-x*y.
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  unfold Admissions.admission_association; simpl; field; lra.
+Qed.
+
+(**
+ [normalized_four_independent_iff] (theorem) — Conditional independence in a normalized stratum is equivalent to the exact zero determinant of its four raw cells.
+ Mathematical meaning: Conditional independence in a normalized stratum is equivalent to the exact zero determinant of its four raw cells.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (Admissions.p_both (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=Admissions.p_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)*Admissions.p_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht) <-> j*n=x*y).
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_independent_iff :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (Admissions.p_both (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=Admissions.p_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)*Admissions.p_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht) <-> j*n=x*y).
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  rewrite <- (Admissions.admission_association_zero_iff_independence (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)).
+  pose proof (normalized_four_association_scaled j x y n Hj Hx Hy Hn Ht) as Hscaled.
+  assert (Hpositive:0<(j+x+y+n)*(j+x+y+n)) by nra.
+  split; intro H.
+  - rewrite H in Hscaled; lra.
+  - assert (Hzero:(j+x+y+n)*(j+x+y+n)*Admissions.admission_association (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=0) by lra.
+    apply Rmult_integral in Hzero.
+    destruct Hzero as [Htzero | Hassoc]; [exfalso; nra|exact Hassoc].
+Qed.
+
+(**
+ [normalized_four_positive_association_iff] (theorem) — Positive conditional association is equivalent to concordant raw cell product exceeding discordant product.
+ Mathematical meaning: Positive conditional association is equivalent to concordant raw cell product exceeding discordant product.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (0<Admissions.admission_association (normalized_four_stratum j x y n Hj Hx Hy Hn Ht) <-> x*y<j*n).
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_positive_association_iff :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (0<Admissions.admission_association (normalized_four_stratum j x y n Hj Hx Hy Hn Ht) <-> x*y<j*n).
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  pose proof (normalized_four_association_scaled j x y n Hj Hx Hy Hn Ht) as Hscaled.
+  assert (Hpositive:0<(j+x+y+n)*(j+x+y+n)) by nra.
+  split; intro H; nra.
+Qed.
+
+(**
+ [normalized_four_negative_association_iff] (theorem) — Negative conditional association is equivalent to the concordant raw cell product lying below discordant product.
+ Mathematical meaning: Negative conditional association is equivalent to the concordant raw cell product lying below discordant product.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), (Admissions.admission_association (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)<0 <-> j*n<x*y).
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_negative_association_iff :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  (Admissions.admission_association (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)<0 <-> j*n<x*y).
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  pose proof (normalized_four_association_scaled j x y n Hj Hx Hy Hn Ht) as Hscaled.
+  assert (Hpositive:0<(j+x+y+n)*(j+x+y+n)) by nra.
+  split; intro H; nra.
+Qed.
+
+(**
+ [normalized_four_odds_ratio_raw] (theorem) — Conditioning on a nonempty stratum preserves the odds ratio of its four unnormalized cells, provided both discordant masses are positive.
+ Mathematical meaning: Conditioning on a nonempty stratum preserves the odds ratio of its four unnormalized cells, provided both discordant masses are positive.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), 0<x*y -> Admissions.admission_odds_ratio (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j*n/(x*y).
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_odds_ratio_raw :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  0<x*y -> Admissions.admission_odds_ratio (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j*n/(x*y).
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  intro Hxy.
+  unfold Admissions.admission_odds_ratio; simpl; field; nra.
+Qed.
+
+(**
+ [normalized_four_second_given_first] (theorem) — Among successful first-route admissions within a stratum, the conditional second-route admission rate is joint over first-row mass.
+ Mathematical meaning: Among successful first-route admissions within a stratum, the conditional second-route admission rate is joint over first-row mass.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), 0<j+x -> Admissions.conditional_B_given_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j/(j+x).
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_second_given_first :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  0<j+x -> Admissions.conditional_B_given_A (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j/(j+x).
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  intro Hrow.
+  unfold Admissions.conditional_B_given_A, Admissions.p_A; simpl; field; nra.
+Qed.
+
+(**
+ [normalized_four_first_given_second] (theorem) — Among successful second-route admissions within a stratum, the conditional first-route admission rate is joint over second-column mass.
+ Mathematical meaning: Among successful second-route admissions within a stratum, the conditional first-route admission rate is joint over second-column mass.
+ Exact checked proposition: forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n), 0<j+y -> Admissions.conditional_A_given_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j/(j+y).
+ Premises and side conditions: Four unnormalized contingency masses are
+ nonnegative and their total is strictly positive; additional positive
+ denominators are explicitly supplied wherever conditional probability or
+ an odds ratio would otherwise be undefined in the probabilistic sense.
+ Proof/definition method: Reduce through the single positive-total
+ normalized_four_stratum and use the existing Admissions identities,
+ Stdlib field/ring/real arithmetic and the explicitly proved stratum
+ denominator positivity. No unproved stochastic principles are assumed.
+ Library reuse: Admissions conditional/independence/covariance algebra;
+ FiniteSum/FiniteUnion through ThreeTestAdmissions, and Stdlib.Reals,
+ Lra, Psatz and Field; no extra four-cell summation implementation.
+ Boundary: Exact finite conditioning, not Gaussian multivariate
+ conditioning, normal tail estimates or psychometric empirical claims.
+*)
+Theorem normalized_four_first_given_second :
+  forall (j x y n:R) (Hj:0<=j) (Hx:0<=x) (Hy:0<=y) (Hn:0<=n) (Ht:0<j+x+y+n),
+  0<j+y -> Admissions.conditional_A_given_B (normalized_four_stratum j x y n Hj Hx Hy Hn Ht)=j/(j+y).
+Proof.
+  intros j x y n Hj Hx Hy Hn Ht.
+  intro Hcolumn.
+  unfold Admissions.conditional_A_given_B, Admissions.p_B; simpl; field; nra.
+Qed.
+
