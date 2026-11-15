@@ -390,6 +390,38 @@ The regression mock records shell argument boundaries and rejects a
 bare `--checks-as-errors`. This fix addresses the CLI parsing error;
 the actual native proof still requires rerunning on computer10.
 
+### GNATprove 16.1 flow-dependency error (computer10)
+
+The second real proof-smoke invocation, after correction of
+`--checks-as-errors=on`, reached **Phase 2: generation of Global
+contracts**. GNATprove rejected an incomplete explicit
+`Depends` specification at `bounded_counts.ads:44`:
+
+```text
+error: parameter "Capacity" is missing from input dependence list
++ add "null => Capacity" dependency to ignore this input
+gnatprove: error during generation of Global contracts
+```
+
+The output `Total` is calculated solely from `Previous` and
+`Increment`; `Capacity` is a precondition and assertion bound, not
+an input to the output calculation. The corrected declaration accounts
+for all inputs explicitly:
+
+```ada
+Depends => (Total => (Previous, Increment),
+            null => Capacity),
+```
+
+This follows GNATprove's actual diagnostic; it is **not** an added
+assumption or an excuse to ignore an output dependency. A regression
+assertion now guards against restoring the incomplete contract.
+The user also reported an earlier Phase 1 data-representation generation
+warning: `generation of data representation information failed`;
+its reason is not yet known, and its operational effect should be
+assessed from the next complete GNATprove run. The corrected flow
+contract has not yet been validated by an actual native proof execution.
+
 ### Next: actual native SPARK verification, not merely version detection
 
 Run the dedicated isolated proof fixture from the current repository
@@ -447,6 +479,16 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The next native run reached GNATprove Phase 2 and failed because the
+AI-authored Bounded_Counts Depends aspect omitted Capacity from its input
+list. The user provided the complete GNATprove diagnostic including its
+suggested null => Capacity specification. The AI then updated the
+specification and added a structural regression test. The revised flow
+contract has not been checked by the user's GNATprove installation yet;
+a passing mocked test alone is not proof closure. The Phase 1 partial
+data-representation warning remains an open diagnostic.
+
 
 The user's first execution of the AI-generated native GNATprove smoke script failed before analysis because the CLI flag `--checks-as-errors` was missing its required `=on` value and consumed `--warnings=error` instead. The assistant checked the official AdaCore command-line documentation, corrected the flag, and extended the mocked offline regression to check exact argument boundaries. The result is not yet evidence of a successful SPARK proof until rerun against the actual GNATprove executable.
 
