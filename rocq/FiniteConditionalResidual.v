@@ -841,8 +841,9 @@ Proof.
  intros A xs weight score event.
  symmetry.
  rewrite finite_two_cell_risk_global_representation.
- unfold finite_weighted_score, finite_two_cell_residual, finite_two_cell_prediction.
- reflexivity.
+ unfold finite_weighted_score, finite_two_cell_residual,
+   finite_two_cell_prediction.
+ apply finite_sum_ext; intro x; ring.
 Qed.
 
 (**
