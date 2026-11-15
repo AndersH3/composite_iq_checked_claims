@@ -19,6 +19,14 @@ METIS_SHA="7a23e4ea68bc92927716777ebc98bea09e91fe24"
 METIS_DIR="$HOME/.local/src/metis-pinned"
 SPARK_PREFIX="$HOME/.local/opt/ada-spark"
 SPARK_VERSION="16.1.0"
+# Official upstream GNAT-FSF-builds release and Alire stable-1.4.0 index.
+# Debian 13's Alire 1.2.1 (stable-1.2.1 index) does NOT list 16.1.0.
+# Official release asset size was independently checked against GitHub.
+SPARK_URL="https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnatprove-16.1.0-1/gnatprove-x86_64-linux-16.1.0-1.tar.gz"
+SPARK_SHA="82528bef29857e239373fcc36732837d743f5a00805d502c70455422ffc97191"
+SPARK_SIZE=472919963
+SPARK_ARCHIVE_NAME="gnatprove-x86_64-linux-16.1.0-1.tar.gz"
+SPARK_INSTALL_DIR="$SPARK_PREFIX/gnatprove-$SPARK_VERSION"
 
 mode="${1:---plan}"
 case "$mode" in
@@ -26,7 +34,7 @@ case "$mode" in
     printf '%s\n' 'Usage: bash scripts/install_ada_spark_why3.sh [action]'
     printf '%s\n' '  --plan           print actions without changing the computer'
     printf '%s\n' '  --install-apt    explicitly install Debian GNAT/Why3/SMT packages'
-    printf '%s\n' '  --install-spark  explicitly install GNATprove using Alire'
+    printf '%s\n' '  --install-spark  install checksum-pinned official GNATprove 16.1.0 (Linux x86-64)'
     printf '%s\n' '  --metis-source   fetch a pinned official Metis theorem prover Git commit'
     printf '%s\n' '  --metis-build    build pinned Metis using an EXISTING Standard ML compiler'
     printf '%s\n' '  --detect         detect Why3 backends and inspect command availability'
@@ -45,7 +53,10 @@ if [[ "$mode" == "--plan" ]]; then
   printf 'Debian 13 Ada/SPARK/Why3 stack; no changes made.\n'
   printf 'Debian apt packages:'
   printf ' %s' "${ADA_PACKAGES[@]}"
-  printf '\nGNATprove: alr -n get gnatprove=%s into %s\n' "$SPARK_VERSION" "$SPARK_PREFIX"
+  printf '\nGNATprove %s: official signed-release host %s\n' "$SPARK_VERSION" "$SPARK_URL"
+  printf 'GNATprove archive SHA256: %s; size %s bytes\n' "$SPARK_SHA" "$SPARK_SIZE"
+  printf 'GNATprove prefix: %s\n' "$SPARK_INSTALL_DIR"
+  printf '%s\n' 'NOTE: Alire 1.2.1 catalog lists only older GNATprove releases; do not try alr get gnatprove=16.1.0.'
   printf 'Metis prover: official development snapshot %s\n' "$METIS_SHA"
   printf '%s\n' 'NOTE: apt install metis is WRONG (graph partitioning).'
   printf '%s\n' 'NOTE: Metis build needs a separate MLton, Poly/ML or Moscow ML compiler.'
@@ -102,52 +113,95 @@ if [[ "$mode" == "--install-apt" ]]; then
 fi
 
 if [[ "$mode" == "--install-spark" ]]; then
-  if ! command -v alr >/dev/null; then
-    printf 'Alire is missing. First use --install-apt.\n' >&2
+  # The 16.1.0 crate exists in Alire stable-1.4.0, but Debian 13 has Alire
+  # 1.2.1 whose stable-1.2.1 index only exposes older releases. Bypass
+  # only that index-version mismatch by using the *same official artifact*
+  # whose SHA256 is pinned in the newer upstream Alire manifest.
+  # No opam switch, apt package, Alire index, or PATH entry is changed.
+  if [[ "$(uname -s)" != "Linux" || "$(uname -m)" != "x86_64" ]]; then
+    printf 'ERROR: This GNATprove asset is only for Linux x86_64.\n' >&2
     exit 3
   fi
-  # Debian 13 packages Alire 1.2.1. Its CLI has "get" and "with", but
-  # NO "install" subcommand. Retrieve a versioned binary crate without
-  # installing a different Alire release or modifying the system PATH.
-  mkdir -p "$SPARK_PREFIX"
+  for program in curl sha256sum tar stat find; do
+    if ! command -v "$program" >/dev/null; then
+      printf 'ERROR: Missing download tool %s.\n' "$program" >&2
+      exit 3
+    fi
+  done
+
   wrapper_dir="$SPARK_PREFIX/bin"
   wrapper="$wrapper_dir/gnatprove"
   if [[ -x "$wrapper" ]]; then
-    printf 'Existing GNATprove wrapper: %s\n' "$wrapper"
+    printf 'Existing user-local GNATprove wrapper: %s\n' "$wrapper"
     "$wrapper" --version
     exit 0
   fi
-
-  printf 'Retrieving GNATprove %s using Alire 1.2-compatible get.\n' "$SPARK_VERSION"
-  (
-    cd "$SPARK_PREFIX"
-    alr -n get "gnatprove=$SPARK_VERSION"
-  )
-  # Alire get produces a versioned directory gnatprove_VERSION_HASH.
-  # Restrict discovery to the requested version, not arbitrary binaries
-  # from other releases or other crates in the prefix.
-  mapfile -d '' -t candidates < <(
-    find "$SPARK_PREFIX" -type f -perm /111 \
-      -path "*/gnatprove_${SPARK_VERSION}_*/bin/gnatprove" -print0
-  )
-  if (( ${#candidates[@]} != 1 )); then
-    printf 'ERROR: Expected exactly one GNATprove %s executable; found %s.\n' \
-      "$SPARK_VERSION" "${#candidates[@]}" >&2
-    printf 'Check release layout under %s before continuing.\n' "$SPARK_PREFIX" >&2
+  if [[ -e "$SPARK_INSTALL_DIR" ]]; then
+    printf 'ERROR: Existing GNATprove directory lacks a verified launcher: %s\n' \
+      "$SPARK_INSTALL_DIR" >&2
     exit 4
   fi
-  binary="${candidates[0]}"
-  binary_dir="$(dirname "$binary")"
+  archive_dir="$SPARK_PREFIX/downloads"
+  archive="$archive_dir/$SPARK_ARCHIVE_NAME"
+  mkdir -p "$archive_dir"
+  if [[ -L "$archive" ]]; then
+    printf 'ERROR: Refusing to use symlinked archive: %s\n' "$archive" >&2
+    exit 4
+  fi
+  archive_ok=0
+  if [[ -f "$archive" && "$(stat -c '%s' "$archive")" == "$SPARK_SIZE" ]] &&
+     printf '%s  %s\n' "$SPARK_SHA" "$archive" | sha256sum --check --status; then
+    archive_ok=1
+    printf 'Reusing SHA256-verified GNATprove archive: %s\n' "$archive"
+  fi
 
-  # A wrapper supplies the vendor bundle's own executables and solvers,
-  # without changing PATH or system packages outside this process.
+  if (( archive_ok == 0 )); then
+    # Always download into an exclusive temporary file in the same
+    # directory. A failed download does not replace a previous archive.
+    download_tmp="$(mktemp "$archive_dir/.gnatprove-download.XXXXXXXX")"
+    trap 'rm -f -- "$download_tmp"' EXIT
+    printf 'Downloading verified GNATprove %s archive (%s bytes).\n' \
+      "$SPARK_VERSION" "$SPARK_SIZE"
+    curl --fail --location --retry 3 --connect-timeout 30 \
+      --proto '=https' --proto-redir '=https' \
+      --output "$download_tmp" "$SPARK_URL"
+    if [[ "$(stat -c '%s' "$download_tmp")" != "$SPARK_SIZE" ]] ||
+       ! printf '%s  %s\n' "$SPARK_SHA" "$download_tmp" | sha256sum --check --status; then
+      printf 'ERROR: GNATprove archive length or SHA256 mismatch.\n' >&2
+      exit 4
+    fi
+    # A stale or corrupted regular archive is replaceable only AFTER
+    # the newly downloaded candidate has passed both integrity checks.
+    mv -f -- "$download_tmp" "$archive"
+    trap - EXIT
+  fi
+
+  # Never make a partial extracted directory appear as an installed
+  # release. Keep all extraction in a temporary sibling until complete.
+  tmpdir="$(mktemp -d "$SPARK_PREFIX/.gnatprove-extract.XXXXXXXX")"
+  trap 'rm -rf -- "$tmpdir"' EXIT
+  tar --extract --gzip --file "$archive" --directory "$tmpdir" \
+      --no-same-owner --no-same-permissions
+  mapfile -d '' -t candidates < <(
+    find "$tmpdir" -type f -perm /111 -path '*/bin/gnatprove' -print0
+  )
+  if (( ${#candidates[@]} != 1 )); then
+    printf 'ERROR: Expected one upstream GNATprove executable; found %s.\n' \
+      "${#candidates[@]}" >&2
+    exit 4
+  fi
+  binary_rel="${candidates[0]#"$tmpdir"/}"
+  mv -- "$tmpdir" "$SPARK_INSTALL_DIR"
+  trap - EXIT
+  binary="$SPARK_INSTALL_DIR/$binary_rel"
+  binary_dir="$(dirname "$binary")"
   mkdir -p "$wrapper_dir"
   printf -v quoted_binary '%q' "$binary"
   printf -v quoted_directory '%q' "$binary_dir"
   cat > "$wrapper" <<EOF
 #!/usr/bin/env bash
-# User-local GNATprove $SPARK_VERSION launcher for the Alire binary crate.
-# Keep the crate's bundled prover executables available to GNATprove.
+# Pinned upstream FSF GNATprove $SPARK_VERSION user-local launcher.
+# The bundle's local bin directory is available to its subprocesses only.
 set -euo pipefail
 export PATH=$quoted_directory:"\$PATH"
 exec $quoted_binary "\$@"
@@ -155,11 +209,11 @@ EOF
   chmod 755 "$wrapper"
   if ! "$wrapper" --version; then
     rm -f -- "$wrapper"
-    printf 'ERROR: GNATprove binary did not pass its version probe.\n' >&2
+    printf 'ERROR: GNATprove launcher failed its runtime version probe.\n' >&2
     exit 5
   fi
-  printf 'GNATprove %s launcher: %s\n' "$SPARK_VERSION" "$wrapper"
-  printf 'In an Alire project, use: alr with gnatprove; alr gnatprove\n'
+  printf 'GNATprove %s verified and installed at %s\n' "$SPARK_VERSION" "$wrapper"
+  printf '%s\n' 'No changes were made to Alire, GNAT or opam switches.'
   exit 0
 fi
 
