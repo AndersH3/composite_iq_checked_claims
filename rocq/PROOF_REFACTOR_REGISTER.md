@@ -2456,7 +2456,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `finite_two_cell_between_cross_variance_nonnegative` (theorem) | The between-cell covariance term for equal scores is nonnegative whenever the two sample-cell masses are nonnegative. The proof reuses general linearity, sum-filter and finite conditional-mean results rather than a second list-fold implementation. | Stdlib.List / Reals / Lra / Psatz / Field / Ring, FiniteSum, FiniteTwoCellProjection, FiniteNestedProjection. | Real weighted finite-list covariance algebra; no unproved Gaussian or general measure-theoretic premise. |
 
 
-## FiniteConditionalResidual.v — 30 report-relevant proofs
+## FiniteConditionalResidual.v — 30 proof scripts
 
 | Proof | Formalized mathematical meaning | Refactoring and proof method | Existing library reuse | Proven scope |
 |---|---|---|---|---|
