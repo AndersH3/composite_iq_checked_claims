@@ -219,6 +219,14 @@ formal result category is `Unknown`, so it must not be renamed
 outcome from other `Unknown` messages, and from an erroneously reported
 `Valid`. CVC5 has not yet been tested by the user in this sequence.
 
+The user's later run showed `Unknown (sat)` and **exit code 2**, which
+the intermediate script still rejected. The offline tests also failed on
+CI because the fake Why3 had exit code 1 and a stale error-message
+assertion; the user observed the offline test exit silently with no pass
+message. The correction changes the fake to exit 2, explicitly checks
+failure modes 0/1/124, updates the message assertion, and makes any
+future assertion failure report a source line number.
+
 ### Functional proof tests for recognized backends
 
 After updating this branch, run:
@@ -245,8 +253,10 @@ errors as successful negative controls.
 Every prover invocation has a 30-second limit. Unlike a positive proof
 check, an unproved negative goal may cause `why3 prove` to return
 nonzero, so the script inspects both the exit code and the *exact*
-structured goal/result output. It accepts exit code 0 or 1 with the
-expected answer but rejects timeout and abnormal statuses. It never
+structured goal/result output. The computer10 run established that
+Why3 1.8 returns **exit code 2** for this unproved goal: the corrected
+script requires code 2 and one exact goal/result pair for the negative
+control, rejecting codes 0, 1, 124 (timeout), and other abnormal statuses. It never
 touches the user's Why3 configuration and does not establish the
 solver's general soundness. A functional test must execute on computer10
 before any backend is marked verified.
