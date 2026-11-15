@@ -2438,3 +2438,1035 @@ Proof.
  lra.
 Qed.
 
+
+(* D030x — strict noise sensitivity and exact innovation/equality cases for
+   sequential best-linear prediction, formalized with existing Schur lemmas. *)
+
+(**
+ [cov2_pd_second_variance_positive] (theorem) — Positive definiteness of the two-test covariance block forces positive variance for its second score.
+ Mathematical meaning: Positive definiteness of the two-test covariance block forces positive variance for its second score.
+ Exact checked proposition: forall a b c, 0<a -> 0<cov2_det a b c -> 0<b.
+ Premises and side conditions: Assumes a positive first diagonal and strictly positive covariance determinant.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_pd_second_variance_positive :
+ forall a b c, 0<a -> 0<cov2_det a b c -> 0<b.
+Proof.
+ intros a b c Ha Hd.
+ unfold cov2_det in Hd.
+ assert (Hsq:0<=c*c) by nra.
+ nra.
+Qed.
+
+(**
+ [cov2_pd_strict_cross_covariance_bound] (theorem) — Positive determinant yields the strict two-score Cauchy covariance inequality.
+ Mathematical meaning: Positive determinant yields the strict two-score Cauchy covariance inequality.
+ Exact checked proposition: forall a b c, 0<cov2_det a b c -> c*c<a*b.
+ Premises and side conditions: Uses strictly positive covariance determinant.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_pd_strict_cross_covariance_bound :
+ forall a b c, 0<cov2_det a b c -> c*c<a*b.
+Proof.
+ intros a b c Hd; unfold cov2_det in Hd; lra.
+Qed.
+
+(**
+ [cov2_innovation_variance_upper_second] (theorem) — Residualizing the second score against the first never increases its variance.
+ Mathematical meaning: Residualizing the second score against the first never increases its variance.
+ Exact checked proposition: forall a b c, 0<a -> cov2_innovation_variance a b c<=b.
+ Premises and side conditions: Positive first-test variance is essential for the inequality.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_variance_upper_second :
+ forall a b c, 0<a -> cov2_innovation_variance a b c<=b.
+Proof.
+ intros a b c Ha.
+ unfold cov2_innovation_variance,Rdiv.
+ assert (Hi:0<=/a) by (apply Rlt_le,Rinv_0_lt_compat; exact Ha).
+ assert (Hs:0<=c*c) by nra.
+ assert (Hp:0<=c*c* /a) by (apply Rmult_le_pos; assumption).
+ lra.
+Qed.
+
+(**
+ [cov2_innovation_variance_strict_under_covariance] (theorem) — Residual variance is strictly smaller exactly when the two observed test scores have nonzero covariance.
+ Mathematical meaning: Residual variance is strictly smaller exactly when the two observed test scores have nonzero covariance.
+ Exact checked proposition: forall a b c, 0<a -> (cov2_innovation_variance a b c<b <-> c<>0).
+ Premises and side conditions: Assumes positive first-score variance and does not infer statistical independence.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_variance_strict_under_covariance :
+ forall a b c, 0<a -> (cov2_innovation_variance a b c<b <-> c<>0).
+Proof.
+ intros a b c Ha.
+ unfold cov2_innovation_variance,Rdiv.
+ assert (Hi:0< /a) by (apply Rinv_0_lt_compat; exact Ha).
+ split.
+ - intro H; intro Hz; subst c; lra.
+ - intro Hc.
+   assert (Hs:0<c*c) by nra.
+   assert (Hp:0<c*c* /a) by (apply Rmult_lt_0_compat; assumption).
+   lra.
+Qed.
+
+(**
+ [cov2_innovation_variance_uncorrelated] (theorem) — An uncorrelated second test retains all its original variance after residualization.
+ Mathematical meaning: An uncorrelated second test retains all its original variance after residualization.
+ Exact checked proposition: forall a b, cov2_innovation_variance a b 0=b.
+ Premises and side conditions: An identity under totalized real division; statistical conditioning presumes positive variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_variance_uncorrelated :
+ forall a b, cov2_innovation_variance a b 0=b.
+Proof.
+ intros a b; unfold cov2_innovation_variance,Rdiv; ring.
+Qed.
+
+(**
+ [cov2_innovation_covariance_uncorrelated] (theorem) — Zero inter-test covariance leaves the second target/test covariance unchanged under residualization.
+ Mathematical meaning: Zero inter-test covariance leaves the second target/test covariance unchanged under residualization.
+ Exact checked proposition: forall a u v, cov2_innovation_covariance a 0 u v=v.
+ Premises and side conditions: Algebraic identity for the two-score partial-covariance formula.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_covariance_uncorrelated :
+ forall a u v, cov2_innovation_covariance a 0 u v=v.
+Proof.
+ intros a u v; unfold cov2_innovation_covariance,Rdiv; ring.
+Qed.
+
+(**
+ [cov2_innovation_pd_equivalence] (theorem) — At positive first variance, positive second innovation variance is equivalent to positive definiteness of the observed block.
+ Mathematical meaning: At positive first variance, positive second innovation variance is equivalent to positive definiteness of the observed block.
+ Exact checked proposition: forall a b c, 0<a -> (0<cov2_innovation_variance a b c <-> 0<cov2_det a b c).
+ Premises and side conditions: Strictly positive first principal minor.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_pd_equivalence :
+ forall a b c, 0<a -> (0<cov2_innovation_variance a b c <-> 0<cov2_det a b c).
+Proof.
+ intros a b c Ha.
+ pose proof (cov2_innovation_variance_times_first a b c ltac:(lra)) as He.
+ split; intro H; nra.
+Qed.
+
+(**
+ [cov2_innovation_psd_quadratic_equivalence] (theorem) — The nonnegative residual innovation variance characterizes positive semidefiniteness of the two-score quadratic form.
+ Mathematical meaning: The nonnegative residual innovation variance characterizes positive semidefiniteness of the two-score quadratic form.
+ Exact checked proposition: forall a b c, 0<a -> ((forall x y, 0<=cov2_quad a b c x y) <-> 0<=cov2_innovation_variance a b c).
+ Premises and side conditions: First score variance strictly positive; semidefinite quadratic form quantified over every weight pair.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_psd_quadratic_equivalence :
+ forall a b c, 0<a -> ((forall x y, 0<=cov2_quad a b c x y) <-> 0<=cov2_innovation_variance a b c).
+Proof.
+ intros a b c Ha; split.
+ - intro Hq; apply cov2_innovation_variance_nonnegative; [exact Ha|].
+   apply (cov2_psd_forces_cauchy a b c Ha Hq).
+ - intro Hv; intros x y.
+   apply cov2_quad_innovation_semidefinite; assumption.
+Qed.
+
+(**
+ [cov2_det_noise_second_order] (theorem) — The covariance determinant is nondecreasing in the second score's diagonal noise variance.
+ Mathematical meaning: The covariance determinant is nondecreasing in the second score's diagonal noise variance.
+ Exact checked proposition: forall a b c t w, 0<=a -> t<=w -> cov2_det a (b+t) c<=cov2_det a (b+w) c.
+ Premises and side conditions: First score variance nonnegative; noise levels ordered.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_det_noise_second_order :
+ forall a b c t w, 0<=a -> t<=w -> cov2_det a (b+t) c<=cov2_det a (b+w) c.
+Proof.
+ intros a b c t w Ha Htw.
+ rewrite !cov2_det_noise_second; nra.
+Qed.
+
+(**
+ [cov2_det_noise_second_strict_order] (theorem) — The observed covariance determinant grows strictly when second-test noise grows with positive first variance.
+ Mathematical meaning: The observed covariance determinant grows strictly when second-test noise grows with positive first variance.
+ Exact checked proposition: forall a b c t w, 0<a -> t<w -> cov2_det a (b+t) c<cov2_det a (b+w) c.
+ Premises and side conditions: Positive first score variance and strictly ordered noise levels.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_det_noise_second_strict_order :
+ forall a b c t w, 0<a -> t<w -> cov2_det a (b+t) c<cov2_det a (b+w) c.
+Proof.
+ intros a b c t w Ha Htw.
+ rewrite !cov2_det_noise_second; nra.
+Qed.
+
+(**
+ [cov2_det_noise_first_order] (theorem) — The covariance determinant is nondecreasing in the first score's added diagonal variance.
+ Mathematical meaning: The covariance determinant is nondecreasing in the first score's added diagonal variance.
+ Exact checked proposition: forall a b c t w, 0<=b -> t<=w -> cov2_det (a+t) b c<=cov2_det (a+w) b c.
+ Premises and side conditions: Second score variance nonnegative.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_det_noise_first_order :
+ forall a b c t w, 0<=b -> t<=w -> cov2_det (a+t) b c<=cov2_det (a+w) b c.
+Proof.
+ intros a b c t w Hb Htw.
+ rewrite !cov2_det_noise_first; nra.
+Qed.
+
+(**
+ [cov2_det_noise_first_strict_order] (theorem) — The determinant grows strictly as noise is increased on the first score.
+ Mathematical meaning: The determinant grows strictly as noise is increased on the first score.
+ Exact checked proposition: forall a b c t w, 0<b -> t<w -> cov2_det (a+t) b c<cov2_det (a+w) b c.
+ Premises and side conditions: Strict positivity of the second score variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_det_noise_first_strict_order :
+ forall a b c t w, 0<b -> t<w -> cov2_det (a+t) b c<cov2_det (a+w) b c.
+Proof.
+ intros a b c t w Hb Htw.
+ rewrite !cov2_det_noise_first; nra.
+Qed.
+
+(**
+ [cov2_innovation_variance_noise_order] (theorem) — Innovation variance increases monotonically between arbitrary ordered second-test noise levels.
+ Mathematical meaning: Innovation variance increases monotonically between arbitrary ordered second-test noise levels.
+ Exact checked proposition: forall a b c t w, t<=w -> cov2_innovation_variance a (b+t) c<=cov2_innovation_variance a (b+w) c.
+ Premises and side conditions: An exact variance-shift identity; no separate covariance distribution assumed.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_variance_noise_order :
+ forall a b c t w, t<=w -> cov2_innovation_variance a (b+t) c<=cov2_innovation_variance a (b+w) c.
+Proof.
+ intros a b c t w Htw.
+ rewrite !cov2_innovation_variance_noise_shift; lra.
+Qed.
+
+(**
+ [cov2_innovation_variance_noise_strict_order] (theorem) — Innovation variance grows strictly when the noise variance on the second score increases.
+ Mathematical meaning: Innovation variance grows strictly when the noise variance on the second score increases.
+ Exact checked proposition: forall a b c t w, t<w -> cov2_innovation_variance a (b+t) c<cov2_innovation_variance a (b+w) c.
+ Premises and side conditions: Strict inequality between second-score noise variances.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_variance_noise_strict_order :
+ forall a b c t w, t<w -> cov2_innovation_variance a (b+t) c<cov2_innovation_variance a (b+w) c.
+Proof.
+ intros a b c t w Htw.
+ rewrite !cov2_innovation_variance_noise_shift; lra.
+Qed.
+
+(**
+ [cov2_schur_noise_second_strict_if_partial] (theorem) — Adding positive second-test measurement noise strictly worsens optimal prediction exactly when that test supplies residual target signal.
+ Mathematical meaning: Adding positive second-test measurement noise strictly worsens optimal prediction exactly when that test supplies residual target signal.
+ Exact checked proposition: forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<t -> a*v<>c*u -> cov2_schur a b c u v s<cov2_schur a (b+t) c u v s.
+ Premises and side conditions: Requires positive original covariance minors, positive noise, and nonzero second partial-covariance numerator.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_second_strict_if_partial :
+ forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<t -> a*v<>c*u -> cov2_schur a b c u v s<cov2_schur a (b+t) c u v s.
+Proof.
+ intros a b c u v s t Ha Hd Ht Hpartial.
+ assert (Hdnew:0<cov2_det a (b+t) c).
+ { apply cov2_det_noise_second_positive; try assumption; lra. }
+ assert (Hinnov:cov2_innovation_covariance a c u v<>0).
+ { intro H; apply (proj1 (cov2_innovation_covariance_zero_iff a c u v ltac:(lra))) in H; contradiction. }
+ assert (Hnewweight:cov2_beta_second a (b+t) c u v<>0).
+ { intro H; apply (proj1 (cov2_beta_second_zero_iff_innovation
+       a (b+t) c u v Ha Hdnew)) in H; contradiction. }
+ set (p:=cov2_beta_first a (b+t) c u v).
+ set (q:=cov2_beta_second a (b+t) c u v).
+ pose proof (cov2_risk_minimizer a b c u v s p q Ha Hd) as Hminimum.
+ pose proof (cov2_risk_noise_second_strict a b c u v s p q t Ht Hnewweight) as Hnoise.
+ pose proof (cov2_risk_at_optimum a (b+t) c u v s ltac:(lra)) as Hnew.
+ change (cov2_risk a (b+t) c u v s p q=cov2_schur a (b+t) c u v s) in Hnew.
+ lra.
+Qed.
+
+(**
+ [cov2_schur_noise_first_strict_if_partial] (theorem) — The first score's optimal prediction information is strictly degraded by positive additional first-test noise when its partial target covariance is nonzero.
+ Mathematical meaning: The first score's optimal prediction information is strictly degraded by positive additional first-test noise when its partial target covariance is nonzero.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<t -> b*u<>c*v -> cov2_schur a b c u v s<cov2_schur (a+t) b c u v s.
+ Premises and side conditions: Positive second observed variance, positive determinant, positive first noise and nonzero reverse partial signal.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_strict_if_partial :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<t -> b*u<>c*v -> cov2_schur a b c u v s<cov2_schur (a+t) b c u v s.
+Proof.
+ intros a b c u v s t Hb Hd Ht Hpartial.
+ rewrite (cov2_schur_swap a b c u v s).
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ apply cov2_schur_noise_second_strict_if_partial; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_schur_noise_second_eq_iff] (theorem) — Optimal risk is unchanged under second-score noise exactly for zero added variance or a zero partial covariance.
+ Mathematical meaning: Optimal risk is unchanged under second-score noise exactly for zero added variance or a zero partial covariance.
+ Exact checked proposition: forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_schur a (b+t) c u v s=cov2_schur a b c u v s <-> t=0 \/ a*v=c*u).
+ Premises and side conditions: Nonnegative noise and positive-definite original score covariance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_second_eq_iff :
+ forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_schur a (b+t) c u v s=cov2_schur a b c u v s <-> t=0 \/ a*v=c*u).
+Proof.
+ intros a b c u v s t Ha Hd Ht; split.
+ - intro H.
+   destruct (Req_EM_T t 0) as [H0|H0].
+   + left; exact H0.
+   + right.
+     destruct (Req_EM_T (a*v) (c*u)) as [Hpartial|Hnon].
+     * exact Hpartial.
+     * exfalso.
+       pose proof (cov2_schur_noise_second_strict_if_partial
+                     a b c u v s t Ha Hd ltac:(lra) Hnon) as Hstrict.
+       lra.
+ - intros [H0|Hpartial].
+   + subst t; replace (b+0) with b by ring; reflexivity.
+   + apply cov2_schur_noise_second_zero_partial; assumption.
+Qed.
+
+(**
+ [cov2_schur_noise_first_eq_iff] (theorem) — Exact equality cases for first-score measurement-noise sensitivity.
+ Mathematical meaning: Exact equality cases for first-score measurement-noise sensitivity.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> (cov2_schur (a+t) b c u v s=cov2_schur a b c u v s <-> t=0 \/ b*u=c*v).
+ Premises and side conditions: Original positive-definite covariance and nonnegative added variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_eq_iff :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> (cov2_schur (a+t) b c u v s=cov2_schur a b c u v s <-> t=0 \/ b*u=c*v).
+Proof.
+ intros a b c u v s t Hb Hd Ht.
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ rewrite (cov2_schur_swap a b c u v s).
+ apply cov2_schur_noise_second_eq_iff; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_schur_noise_second_strict_iff] (theorem) — A necessary-and-sufficient criterion for strictly increased optimal error under second-test noise.
+ Mathematical meaning: A necessary-and-sufficient criterion for strictly increased optimal error under second-test noise.
+ Exact checked proposition: forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_schur a b c u v s<cov2_schur a (b+t) c u v s <-> 0<t /\ a*v<>c*u).
+ Premises and side conditions: Nonnegative second noise; positive covariance minors; strictness requires both positive noise and residual target signal.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_second_strict_iff :
+ forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_schur a b c u v s<cov2_schur a (b+t) c u v s <-> 0<t /\ a*v<>c*u).
+Proof.
+ intros a b c u v s t Ha Hd Ht; split.
+ - intro Hstrict; split.
+   + destruct (Req_EM_T t 0) as [H0|Hnon].
+     * subst t; replace (b+0) with b in Hstrict by ring; lra.
+     * lra.
+   + intro Hpartial.
+     pose proof (cov2_schur_noise_second_zero_partial
+                    a b c u v s t Ha Hd Ht Hpartial) as He.
+     lra.
+ - intros [Htpos Hpartial].
+   apply cov2_schur_noise_second_strict_if_partial; assumption.
+Qed.
+
+(**
+ [cov2_schur_noise_first_strict_iff] (theorem) — Strictness of noise-induced prediction loss on the first test is characterized by its nonzero partial signal.
+ Mathematical meaning: Strictness of noise-induced prediction loss on the first test is characterized by its nonzero partial signal.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> (cov2_schur a b c u v s<cov2_schur (a+t) b c u v s <-> 0<t /\ b*u<>c*v).
+ Premises and side conditions: Positive second principal minor, positive determinant and nonnegative first-score noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_strict_iff :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> (cov2_schur a b c u v s<cov2_schur (a+t) b c u v s <-> 0<t /\ b*u<>c*v).
+Proof.
+ intros a b c u v s t Hb Hd Ht.
+ rewrite (cov2_schur_swap a b c u v s).
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ apply cov2_schur_noise_second_strict_iff; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_innovation_gain_second_noise_monotone] (theorem) — Incremental explained variance provided by the second score cannot increase when its measurement noise grows.
+ Mathematical meaning: Incremental explained variance provided by the second score cannot increase when its measurement noise grows.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_innovation_gain a (b+t) c u v<=cov2_innovation_gain a b c u v.
+ Premises and side conditions: Positive-definite score covariance and nonnegative second diagonal noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_gain_second_noise_monotone :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_innovation_gain a (b+t) c u v<=cov2_innovation_gain a b c u v.
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ pose proof (cov2_schur_noise_second_monotone a b c u v 0 t Ha Hd Ht) as Hmono.
+ pose proof (cov2_schur_incremental_innovation a b c u v 0 ltac:(lra) ltac:(lra)) as Hold.
+ pose proof (cov2_schur_incremental_innovation a (b+t) c u v 0 ltac:(lra) ltac:(lra)) as Hnew.
+ lra.
+Qed.
+
+(**
+ [cov2_innovation_gain_second_noise_strict] (theorem) — Positive added variance strictly decreases second-score incremental explained variance whenever the score contains nonredundant target information.
+ Mathematical meaning: Positive added variance strictly decreases second-score incremental explained variance whenever the score contains nonredundant target information.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<t -> a*v<>c*u -> cov2_innovation_gain a (b+t) c u v<cov2_innovation_gain a b c u v.
+ Premises and side conditions: Positive noise and nonzero partial covariance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_gain_second_noise_strict :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<t -> a*v<>c*u -> cov2_innovation_gain a (b+t) c u v<cov2_innovation_gain a b c u v.
+Proof.
+ intros a b c u v t Ha Hd Ht Hpartial.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; try assumption; lra).
+ pose proof (cov2_schur_noise_second_strict_if_partial a b c u v 0 t Ha Hd Ht Hpartial) as Hstrict.
+ pose proof (cov2_schur_incremental_innovation a b c u v 0 ltac:(lra) ltac:(lra)) as Hold.
+ pose proof (cov2_schur_incremental_innovation a (b+t) c u v 0 ltac:(lra) ltac:(lra)) as Hnew.
+ lra.
+Qed.
+
+(**
+ [cov2_innovation_gain_second_noise_eq_iff] (theorem) — Sharp equality characterization for loss of the second test's incremental explained variance.
+ Mathematical meaning: Sharp equality characterization for loss of the second test's incremental explained variance.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_innovation_gain a (b+t) c u v=cov2_innovation_gain a b c u v <-> t=0 \/ a*v=c*u).
+ Premises and side conditions: Positive covariance minors and nonnegative noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_gain_second_noise_eq_iff :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_innovation_gain a (b+t) c u v=cov2_innovation_gain a b c u v <-> t=0 \/ a*v=c*u).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ pose proof (cov2_schur_incremental_innovation a b c u v 0 ltac:(lra) ltac:(lra)) as Hold.
+ pose proof (cov2_schur_incremental_innovation a (b+t) c u v 0 ltac:(lra) ltac:(lra)) as Hnew.
+ pose proof (cov2_schur_noise_second_eq_iff a b c u v 0 t Ha Hd Ht) as Hiff.
+ split; intro H.
+ - apply (proj1 Hiff); lra.
+ - apply (proj2 Hiff) in H; lra.
+Qed.
+
+(**
+ [cov2_innovation_gain_second_noise_strict_iff] (theorem) — Strict loss of incremental information is equivalent to positive measurement noise and a nonzero partial signal.
+ Mathematical meaning: Strict loss of incremental information is equivalent to positive measurement noise and a nonzero partial signal.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_innovation_gain a (b+t) c u v<cov2_innovation_gain a b c u v <-> 0<t /\ a*v<>c*u).
+ Premises and side conditions: Requires the same nondegenerate score-covariance assumptions as the regression noise model.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_gain_second_noise_strict_iff :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_innovation_gain a (b+t) c u v<cov2_innovation_gain a b c u v <-> 0<t /\ a*v<>c*u).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ pose proof (cov2_schur_incremental_innovation a b c u v 0 ltac:(lra) ltac:(lra)) as Hold.
+ pose proof (cov2_schur_incremental_innovation a (b+t) c u v 0 ltac:(lra) ltac:(lra)) as Hnew.
+ pose proof (cov2_schur_noise_second_strict_iff a b c u v 0 t Ha Hd Ht) as Hiff.
+ split; intro H.
+ - apply (proj1 Hiff); lra.
+ - apply (proj2 Hiff) in H; lra.
+Qed.
+
+(**
+ [cov2_innovation_gain_noise_interval] (theorem) — Both the nonnegative value and upper limit of incremental prediction information are robust under second-score noise.
+ Mathematical meaning: Both the nonnegative value and upper limit of incremental prediction information are robust under second-score noise.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> 0<=cov2_innovation_gain a (b+t) c u v /\ cov2_innovation_gain a (b+t) c u v<=cov2_innovation_gain a b c u v.
+ Premises and side conditions: Positive definite original covariance and nonnegative added second variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_gain_noise_interval :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> 0<=cov2_innovation_gain a (b+t) c u v /\ cov2_innovation_gain a (b+t) c u v<=cov2_innovation_gain a b c u v.
+Proof.
+ intros a b c u v t Ha Hd Ht; split.
+ - apply cov2_innovation_gain_nonnegative; [exact Ha|].
+   apply cov2_det_noise_second_positive; assumption.
+ - apply cov2_innovation_gain_second_noise_monotone; assumption.
+Qed.
+
+(**
+ [cov2_innovation_gain_noise_zero_iff] (theorem) — The second test remains completely redundant under any finite nonnegative independent diagonal noise exactly when its partial target signal was already zero.
+ Mathematical meaning: The second test remains completely redundant under any finite nonnegative independent diagonal noise exactly when its partial target signal was already zero.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_innovation_gain a (b+t) c u v=0 <-> a*v=c*u).
+ Premises and side conditions: Positive-definite covariance and nonnegative noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_gain_noise_zero_iff :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_innovation_gain a (b+t) c u v=0 <-> a*v=c*u).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ rewrite (cov2_innovation_gain_zero_iff a (b+t) c u v Ha Hdnew).
+ apply cov2_innovation_covariance_zero_iff; lra.
+Qed.
+
+(**
+ [cov2_innovation_gain_noise_positive_iff] (theorem) — Finite independent variance inflation cannot completely destroy a nonzero partial target signal.
+ Mathematical meaning: Finite independent variance inflation cannot completely destroy a nonzero partial target signal.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (0<cov2_innovation_gain a (b+t) c u v <-> a*v<>c*u).
+ Premises and side conditions: Nondegenerate covariance block and finite nonnegative noise variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_innovation_gain_noise_positive_iff :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (0<cov2_innovation_gain a (b+t) c u v <-> a*v<>c*u).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ rewrite (cov2_innovation_gain_positive_iff a (b+t) c u v Ha Hdnew).
+ split.
+ - intro H; intro He.
+   apply H.
+   apply (proj2 (cov2_innovation_covariance_zero_iff a c u v ltac:(lra))); exact He.
+ - intro H; intro He.
+   apply H.
+   apply (proj1 (cov2_innovation_covariance_zero_iff a c u v ltac:(lra))); exact He.
+Qed.
+
+(**
+ [cov2_beta_second_times_innovation_variance] (theorem) — The second optimal regression weight multiplied by its innovation variance equals the partial target covariance.
+ Mathematical meaning: The second optimal regression weight multiplied by its innovation variance equals the partial target covariance.
+ Exact checked proposition: forall a b c u v, 0<a -> 0<cov2_det a b c -> cov2_beta_second a b c u v * cov2_innovation_variance a b c = cov2_innovation_covariance a c u v.
+ Premises and side conditions: Positive-definite observed covariance ensures the residual variance is invertible.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_second_times_innovation_variance :
+ forall a b c u v, 0<a -> 0<cov2_det a b c -> cov2_beta_second a b c u v * cov2_innovation_variance a b c = cov2_innovation_covariance a c u v.
+Proof.
+ intros a b c u v Ha Hd.
+ rewrite (cov2_beta_second_from_innovation a b c u v ltac:(lra) ltac:(lra)).
+ assert (Hvar:cov2_innovation_variance a b c<>0)
+   by (pose proof (cov2_innovation_variance_positive a b c Ha Hd); lra).
+ unfold Rdiv; field; exact Hvar.
+Qed.
+
+(**
+ [cov2_beta_second_noise_conserved_numerator] (theorem) — Noise changes the innovation variance and slope reciprocally while preserving their target partial-covariance product.
+ Mathematical meaning: Noise changes the innovation variance and slope reciprocally while preserving their target partial-covariance product.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_beta_second a (b+t) c u v * cov2_innovation_variance a (b+t) c = cov2_beta_second a b c u v * cov2_innovation_variance a b c.
+ Premises and side conditions: Positive-definite score block and nonnegative added second variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_second_noise_conserved_numerator :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_beta_second a (b+t) c u v * cov2_innovation_variance a (b+t) c = cov2_beta_second a b c u v * cov2_innovation_variance a b c.
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ rewrite (cov2_beta_second_times_innovation_variance a (b+t) c u v Ha).
+ - symmetry; apply cov2_beta_second_times_innovation_variance; assumption.
+ - apply cov2_det_noise_second_positive; assumption.
+Qed.
+
+(**
+ [cov2_beta_second_noise_zero_iff] (theorem) — Under any nonnegative second noise, the second regression weight is exactly zero if and only if the underlying partial target signal vanishes.
+ Mathematical meaning: Under any nonnegative second noise, the second regression weight is exactly zero if and only if the underlying partial target signal vanishes.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_beta_second a (b+t) c u v=0 <-> a*v=c*u).
+ Premises and side conditions: Positive definite observed covariance and added diagonal variance nonnegative.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_second_noise_zero_iff :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_beta_second a (b+t) c u v=0 <-> a*v=c*u).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ rewrite (cov2_beta_second_zero_iff_innovation a (b+t) c u v Ha Hdnew).
+ apply cov2_innovation_covariance_zero_iff; lra.
+Qed.
+
+(**
+ [cov2_beta_second_noise_zero_preserved] (theorem) — Diagonal noise cannot change whether the second regression coefficient vanishes.
+ Mathematical meaning: Diagonal noise cannot change whether the second regression coefficient vanishes.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_beta_second a (b+t) c u v=0 <-> cov2_beta_second a b c u v=0).
+ Premises and side conditions: Strictly positive original covariance minors and nonnegative noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_second_noise_zero_preserved :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_beta_second a (b+t) c u v=0 <-> cov2_beta_second a b c u v=0).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ rewrite (cov2_beta_second_noise_zero_iff a b c u v t Ha Hd Ht).
+ rewrite (cov2_beta_second_zero_iff_innovation a b c u v Ha Hd).
+ symmetry; apply cov2_innovation_covariance_zero_iff; lra.
+Qed.
+
+(**
+ [cov2_beta_second_noise_positive_preserved] (theorem) — Adding second-score measurement variance does not reverse the sign of a positive second-score regression slope.
+ Mathematical meaning: Adding second-score measurement variance does not reverse the sign of a positive second-score regression slope.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (0<cov2_beta_second a (b+t) c u v <-> 0<cov2_beta_second a b c u v).
+ Premises and side conditions: Original observed covariance positive definite and new diagonal variance nonnegative.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_second_noise_positive_preserved :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (0<cov2_beta_second a (b+t) c u v <-> 0<cov2_beta_second a b c u v).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ rewrite (cov2_beta_second_positive_iff_innovation a (b+t) c u v Ha Hdnew).
+ rewrite (cov2_beta_second_positive_iff_innovation a b c u v Ha Hd).
+ tauto.
+Qed.
+
+(**
+ [cov2_beta_second_noise_negative_preserved] (theorem) — Adding second-test noise does not reverse the sign of a negative second regression coefficient.
+ Mathematical meaning: Adding second-test noise does not reverse the sign of a negative second regression coefficient.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_beta_second a (b+t) c u v<0 <-> cov2_beta_second a b c u v<0).
+ Premises and side conditions: Original positive-definite covariance and nonnegative measurement-noise variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_second_noise_negative_preserved :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> (cov2_beta_second a (b+t) c u v<0 <-> cov2_beta_second a b c u v<0).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ rewrite (cov2_beta_second_negative_iff_innovation a (b+t) c u v Ha Hdnew).
+ rewrite (cov2_beta_second_negative_iff_innovation a b c u v Ha Hd).
+ tauto.
+Qed.
+
+(**
+ [cov2_beta_second_noise_exact_shrinkage] (theorem) — An explicit attenuation fraction relates the noisy second-test coefficient to its original least-squares coefficient.
+ Mathematical meaning: An explicit attenuation fraction relates the noisy second-test coefficient to its original least-squares coefficient.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_beta_second a (b+t) c u v = cov2_beta_second a b c u v * (cov2_innovation_variance a b c / cov2_innovation_variance a (b+t) c).
+ Premises and side conditions: Positive-definite covariance block and nonnegative diagonal noise ensure both innovation variances are nonzero.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_second_noise_exact_shrinkage :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_beta_second a (b+t) c u v = cov2_beta_second a b c u v * (cov2_innovation_variance a b c / cov2_innovation_variance a (b+t) c).
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ assert (Hvar:cov2_innovation_variance a b c<>0)
+   by (pose proof (cov2_innovation_variance_positive a b c Ha Hd); lra).
+ assert (Hnew:cov2_innovation_variance a (b+t) c<>0)
+   by (pose proof (cov2_innovation_variance_positive a (b+t) c Ha Hdnew); lra).
+ rewrite (cov2_beta_second_from_innovation a (b+t) c u v ltac:(lra) ltac:(lra)).
+ rewrite (cov2_beta_second_from_innovation a b c u v ltac:(lra) ltac:(lra)).
+ unfold Rdiv; field; split; assumption.
+Qed.
+
+(**
+ [cov2_beta_first_noise_change_from_second] (theorem) — The first regression coefficient adjusts exactly to offset the change in the second coefficient under independent second-score noise.
+ Mathematical meaning: The first regression coefficient adjusts exactly to offset the change in the second coefficient under independent second-score noise.
+ Exact checked proposition: forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_beta_first a (b+t) c u v = cov2_beta_first a b c u v + c*(cov2_beta_second a b c u v-cov2_beta_second a (b+t) c u v)/a.
+ Premises and side conditions: Positive first variance and positive original and inflated determinants.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_beta_first_noise_change_from_second :
+ forall a b c u v t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_beta_first a (b+t) c u v = cov2_beta_first a b c u v + c*(cov2_beta_second a b c u v-cov2_beta_second a (b+t) c u v)/a.
+Proof.
+ intros a b c u v t Ha Hd Ht.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ rewrite (cov2_beta_first_after_partialing a (b+t) c u v ltac:(lra) ltac:(lra)).
+ rewrite (cov2_beta_first_after_partialing a b c u v ltac:(lra) ltac:(lra)).
+ unfold Rdiv; ring.
+Qed.
+
+(**
+ [cov2_schur_noise_first_upper_one_test] (theorem) — The optimal two-score predictor with first-test noise is never worse than discarding test one.
+ Mathematical meaning: The optimal two-score predictor with first-test noise is never worse than discarding test one.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur (a+t) b c u v s<=cov2_one_risk b v s.
+ Premises and side conditions: Second test variance positive; observed block determinant positive; first noise nonnegative.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_upper_one_test :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur (a+t) b c u v s<=cov2_one_risk b v s.
+Proof.
+ intros a b c u v s t Hb Hd Ht.
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ apply cov2_schur_noise_second_upper_one_test; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_schur_noise_first_sandwich] (theorem) — With first-test noise, the best two-test risk lies between the original optimum and the second-test-only optimum.
+ Mathematical meaning: With first-test noise, the best two-test risk lies between the original optimum and the second-test-only optimum.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur a b c u v s<=cov2_schur (a+t) b c u v s /\ cov2_schur (a+t) b c u v s<=cov2_one_risk b v s.
+ Premises and side conditions: Positive second test variance, positive covariance determinant and nonnegative first noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_sandwich :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur a b c u v s<=cov2_schur (a+t) b c u v s /\ cov2_schur (a+t) b c u v s<=cov2_one_risk b v s.
+Proof.
+ intros a b c u v s t Hb Hd Ht; split.
+ - apply cov2_schur_noise_first_monotone; assumption.
+ - apply cov2_schur_noise_first_upper_one_test; assumption.
+Qed.
+
+(**
+ [cov2_schur_noise_first_bound_old_slope] (theorem) — Original first regression weight supplies a quantitative upper bound on risk inflation caused by first-test noise.
+ Mathematical meaning: Original first regression weight supplies a quantitative upper bound on risk inflation caused by first-test noise.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur (a+t) b c u v s<=cov2_schur a b c u v s+t*cov2_beta_first a b c u v*cov2_beta_first a b c u v.
+ Premises and side conditions: Positive second variance and positive original determinant; noise nonnegative.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_bound_old_slope :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur (a+t) b c u v s<=cov2_schur a b c u v s+t*cov2_beta_first a b c u v*cov2_beta_first a b c u v.
+Proof.
+ intros a b c u v s t Hb Hd Ht.
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ rewrite (cov2_schur_swap a b c u v s).
+ rewrite (cov2_beta_swap_first a b c u v).
+ apply cov2_schur_noise_second_bound_by_old_slope; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_schur_noise_first_zero_partial] (theorem) — First-score noise has no effect when its partial target-signal numerator is exactly zero.
+ Mathematical meaning: First-score noise has no effect when its partial target-signal numerator is exactly zero.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> b*u=c*v -> cov2_schur (a+t) b c u v s=cov2_schur a b c u v s.
+ Premises and side conditions: Positive covariance determinant and positive second variance.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_zero_partial :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> b*u=c*v -> cov2_schur (a+t) b c u v s=cov2_schur a b c u v s.
+Proof.
+ intros a b c u v s t Hb Hd Ht Hpartial.
+ apply (proj2 (cov2_schur_noise_first_eq_iff a b c u v s t Hb Hd Ht)).
+ right; exact Hpartial.
+Qed.
+
+(**
+ [cov2_schur_noise_first_nonnegative] (theorem) — Nonnegative optimal residual variance is preserved by independent noise on the first score.
+ Mathematical meaning: Nonnegative optimal residual variance is preserved by independent noise on the first score.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=cov2_schur a b c u v s -> 0<=cov2_schur (a+t) b c u v s.
+ Premises and side conditions: Positive-definite observed covariance, initial nonnegative residual, and nonnegative noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_nonnegative :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=cov2_schur a b c u v s -> 0<=cov2_schur (a+t) b c u v s.
+Proof.
+ intros a b c u v s t Hb Hd Ht Hnon.
+ pose proof (cov2_schur_noise_first_monotone a b c u v s t Hb Hd Ht) as Hmono.
+ lra.
+Qed.
+
+(**
+ [cov2_schur_noise_second_below_unconditional] (theorem) — Even after second-score noise, optimized linear prediction is no worse than ignoring both scores.
+ Mathematical meaning: Even after second-score noise, optimized linear prediction is no worse than ignoring both scores.
+ Exact checked proposition: forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_schur a (b+t) c u v s<=s.
+ Premises and side conditions: Positive-definite observed covariance and nonnegative second-score noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_second_below_unconditional :
+ forall a b c u v s t, 0<a -> 0<cov2_det a b c -> 0<=t -> cov2_schur a (b+t) c u v s<=s.
+Proof.
+ intros a b c u v s t Ha Hd Ht.
+ apply cov2_schur_le_unconditional; [exact Ha|].
+ apply cov2_det_noise_second_positive; assumption.
+Qed.
+
+(**
+ [cov2_schur_noise_first_below_unconditional] (theorem) — Even after noise on the first test, best linear residual risk does not exceed unconditional target variance.
+ Mathematical meaning: Even after noise on the first test, best linear residual risk does not exceed unconditional target variance.
+ Exact checked proposition: forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur (a+t) b c u v s<=s.
+ Premises and side conditions: Positive original second variance and covariance determinant; nonnegative first noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_below_unconditional :
+ forall a b c u v s t, 0<b -> 0<cov2_det a b c -> 0<=t -> cov2_schur (a+t) b c u v s<=s.
+Proof.
+ intros a b c u v s t Hb Hd Ht.
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ apply cov2_schur_noise_second_below_unconditional; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_schur_noise_both_below_unconditional] (theorem) — Arbitrarily large finite independent diagonal noise still permits the zero predictor and hence cannot make the optimal linear residual exceed unconditional variance.
+ Mathematical meaning: Arbitrarily large finite independent diagonal noise still permits the zero predictor and hence cannot make the optimal linear residual exceed unconditional variance.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> cov2_schur (a+t) (b+w) c u v s<=s.
+ Premises and side conditions: Both original diagonal variances and determinant strictly positive; both noise variances nonnegative.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_both_below_unconditional :
+ forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> cov2_schur (a+t) (b+w) c u v s<=s.
+Proof.
+ intros a b c u v s t w Ha Hb Hd Ht Hw.
+ assert (Hdnew:0<cov2_det (a+t) (b+w) c)
+   by (apply cov2_det_noise_both_positive; assumption).
+ apply cov2_schur_le_unconditional; [lra|exact Hdnew].
+Qed.
+
+(**
+ [cov2_schur_noise_both_sandwich] (theorem) — Two-sided information bound for simultaneous independent diagonal noise inflation.
+ Mathematical meaning: Two-sided information bound for simultaneous independent diagonal noise inflation.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> cov2_schur a b c u v s<=cov2_schur (a+t) (b+w) c u v s /\ cov2_schur (a+t) (b+w) c u v s<=s.
+ Premises and side conditions: Original positive-definite two-score covariance; nonnegative noise in both scores.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_both_sandwich :
+ forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> cov2_schur a b c u v s<=cov2_schur (a+t) (b+w) c u v s /\ cov2_schur (a+t) (b+w) c u v s<=s.
+Proof.
+ intros a b c u v s t w Ha Hb Hd Ht Hw; split.
+ - apply cov2_schur_noise_both_monotone; assumption.
+ - apply cov2_schur_noise_both_below_unconditional; assumption.
+Qed.
+
+(**
+ [cov2_schur_noise_both_old_slope_upper] (theorem) — Noise-induced inflation of optimal residual risk is bounded by the sum of independent noise variances weighted by squared original regression coefficients.
+ Mathematical meaning: Noise-induced inflation of optimal residual risk is bounded by the sum of independent noise variances weighted by squared original regression coefficients.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> cov2_schur (a+t) (b+w) c u v s <= cov2_schur a b c u v s + t*cov2_beta_first a b c u v*cov2_beta_first a b c u v + w*cov2_beta_second a b c u v*cov2_beta_second a b c u v.
+ Premises and side conditions: Positive-definite original covariance and nonnegative independent noise variances.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_both_old_slope_upper :
+ forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> cov2_schur (a+t) (b+w) c u v s <= cov2_schur a b c u v s + t*cov2_beta_first a b c u v*cov2_beta_first a b c u v + w*cov2_beta_second a b c u v*cov2_beta_second a b c u v.
+Proof.
+ intros a b c u v s t w Ha Hb Hd Ht Hw.
+ assert (Hdnew:0<cov2_det (a+t) (b+w) c)
+   by (apply cov2_det_noise_both_positive; assumption).
+ set (p:=cov2_beta_first a b c u v).
+ set (q:=cov2_beta_second a b c u v).
+ pose proof (cov2_risk_minimizer (a+t) (b+w) c u v s p q ltac:(lra) Hdnew) as Hminimum.
+ pose proof (cov2_risk_noise_both a b c u v s p q t w) as Hshift.
+ pose proof (cov2_risk_at_optimum a b c u v s ltac:(lra)) as Hopt.
+ change (cov2_risk a b c u v s p q=cov2_schur a b c u v s) in Hopt.
+ lra.
+Qed.
+
+(**
+ [cov2_schur_noise_both_strict_if_first_partial] (theorem) — Positive first-score measurement noise strictly raises overall optimal risk if its original residual signal is nonzero, regardless of further nonnegative second-score noise.
+ Mathematical meaning: Positive first-score measurement noise strictly raises overall optimal risk if its original residual signal is nonzero, regardless of further nonnegative second-score noise.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<t -> 0<=w -> b*u<>c*v -> cov2_schur a b c u v s<cov2_schur (a+t) (b+w) c u v s.
+ Premises and side conditions: Both original diagonal variances and determinant positive; first noise strictly positive and second noise nonnegative.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_both_strict_if_first_partial :
+ forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<t -> 0<=w -> b*u<>c*v -> cov2_schur a b c u v s<cov2_schur (a+t) (b+w) c u v s.
+Proof.
+ intros a b c u v s t w Ha Hb Hd Ht Hw Hpartial.
+ assert (Hd1:0<cov2_det (a+t) b c).
+ { apply cov2_det_noise_first_positive; try assumption; lra. }
+ pose proof (cov2_schur_noise_first_strict_if_partial a b c u v s t Hb Hd Ht Hpartial) as Hstrict.
+ pose proof (cov2_schur_noise_second_monotone (a+t) b c u v s w ltac:(lra) Hd1 Hw) as Hweak.
+ lra.
+Qed.
+
+(**
+ [cov2_schur_noise_both_strict_if_second_partial] (theorem) — Positive noise on the second score strictly worsens globally optimized prediction if the score carried partial information, even with additional first-score noise.
+ Mathematical meaning: Positive noise on the second score strictly worsens globally optimized prediction if the score carried partial information, even with additional first-score noise.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<w -> a*v<>c*u -> cov2_schur a b c u v s<cov2_schur (a+t) (b+w) c u v s.
+ Premises and side conditions: Positive original covariance minors, strictly positive second noise and nonnegative first noise.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_both_strict_if_second_partial :
+ forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<w -> a*v<>c*u -> cov2_schur a b c u v s<cov2_schur (a+t) (b+w) c u v s.
+Proof.
+ intros a b c u v s t w Ha Hb Hd Ht Hw Hpartial.
+ assert (Hd1:0<cov2_det a (b+w) c).
+ { apply cov2_det_noise_second_positive; try assumption; lra. }
+ pose proof (cov2_schur_noise_second_strict_if_partial a b c u v s w Ha Hd Hw Hpartial) as Hstrict.
+ pose proof (cov2_schur_noise_first_monotone a (b+w) c u v s t ltac:(lra) Hd1 Ht) as Hweak.
+ lra.
+Qed.
+
+(**
+ [cov2_schur_noise_both_nonnegative] (theorem) — Nonnegative optimal residual variance remains nonnegative under simultaneous independent noise on both observed tests.
+ Mathematical meaning: Nonnegative optimal residual variance remains nonnegative under simultaneous independent noise on both observed tests.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> 0<=cov2_schur a b c u v s -> 0<=cov2_schur (a+t) (b+w) c u v s.
+ Premises and side conditions: Positive original covariance determinant and both nonnegative noise variances.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_both_nonnegative :
+ forall a b c u v s t w, 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> 0<=cov2_schur a b c u v s -> 0<=cov2_schur (a+t) (b+w) c u v s.
+Proof.
+ intros a b c u v s t w Ha Hb Hd Ht Hw Hnon.
+ pose proof (cov2_schur_noise_both_monotone a b c u v s t w Ha Hb Hd Ht Hw).
+ lra.
+Qed.
+
+(**
+ [cov2_schur_noise_second_level_order] (theorem) — Optimal linear residual risk is ordered by second-test measurement-noise level, not only by its comparison with zero noise.
+ Mathematical meaning: Optimal linear residual risk is ordered by second-test measurement-noise level, not only by its comparison with zero noise.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<cov2_det a b c -> 0<=t -> t<=w -> cov2_schur a (b+t) c u v s<=cov2_schur a (b+w) c u v s.
+ Premises and side conditions: Noise levels nonnegative and ordered; original covariance positive definite.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_second_level_order :
+ forall a b c u v s t w, 0<a -> 0<cov2_det a b c -> 0<=t -> t<=w -> cov2_schur a (b+t) c u v s<=cov2_schur a (b+w) c u v s.
+Proof.
+ intros a b c u v s t w Ha Hd Ht Htw.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ pose proof (cov2_schur_noise_second_monotone
+   a (b+t) c u v s (w-t) Ha Hdnew ltac:(lra)) as Hmono.
+ replace (b+t+(w-t)) with (b+w) in Hmono by ring.
+ exact Hmono.
+Qed.
+
+(**
+ [cov2_schur_noise_first_level_order] (theorem) — Optimal linear prediction risk is ordered by the noise level of the first test.
+ Mathematical meaning: Optimal linear prediction risk is ordered by the noise level of the first test.
+ Exact checked proposition: forall a b c u v s t w, 0<b -> 0<cov2_det a b c -> 0<=t -> t<=w -> cov2_schur (a+t) b c u v s<=cov2_schur (a+w) b c u v s.
+ Premises and side conditions: Positive second variance, determinant positive and nonnegative ordered noise levels.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_level_order :
+ forall a b c u v s t w, 0<b -> 0<cov2_det a b c -> 0<=t -> t<=w -> cov2_schur (a+t) b c u v s<=cov2_schur (a+w) b c u v s.
+Proof.
+ intros a b c u v s t w Hb Hd Ht Htw.
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ rewrite (cov2_schur_swap (a+w) b c u v s).
+ apply cov2_schur_noise_second_level_order; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_schur_noise_second_level_strict] (theorem) — Strict degradation of optimized prediction between two second-test noise levels holds whenever the extra noise is positive and the test carries residual target information.
+ Mathematical meaning: Strict degradation of optimized prediction between two second-test noise levels holds whenever the extra noise is positive and the test carries residual target information.
+ Exact checked proposition: forall a b c u v s t w, 0<a -> 0<cov2_det a b c -> 0<=t -> t<w -> a*v<>c*u -> cov2_schur a (b+t) c u v s<cov2_schur a (b+w) c u v s.
+ Premises and side conditions: Original positive covariance determinant, ordered nonnegative noise levels and nonzero partial signal.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_second_level_strict :
+ forall a b c u v s t w, 0<a -> 0<cov2_det a b c -> 0<=t -> t<w -> a*v<>c*u -> cov2_schur a (b+t) c u v s<cov2_schur a (b+w) c u v s.
+Proof.
+ intros a b c u v s t w Ha Hd Ht Htw Hpartial.
+ assert (Hdnew:0<cov2_det a (b+t) c)
+   by (apply cov2_det_noise_second_positive; assumption).
+ pose proof (cov2_schur_noise_second_strict_if_partial
+   a (b+t) c u v s (w-t) Ha Hdnew ltac:(lra) Hpartial) as Hstrict.
+ replace (b+t+(w-t)) with (b+w) in Hstrict by ring.
+ exact Hstrict.
+Qed.
+
+(**
+ [cov2_schur_noise_first_level_strict] (theorem) — Strict degradation of optimal prediction between two first-score noise levels under nonzero first partial information.
+ Mathematical meaning: Strict degradation of optimal prediction between two first-score noise levels under nonzero first partial information.
+ Exact checked proposition: forall a b c u v s t w, 0<b -> 0<cov2_det a b c -> 0<=t -> t<w -> b*u<>c*v -> cov2_schur (a+t) b c u v s<cov2_schur (a+w) b c u v s.
+ Premises and side conditions: Positive original second variance and determinant, strictly ordered positive noise increment.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_first_level_strict :
+ forall a b c u v s t w, 0<b -> 0<cov2_det a b c -> 0<=t -> t<w -> b*u<>c*v -> cov2_schur (a+t) b c u v s<cov2_schur (a+w) b c u v s.
+Proof.
+ intros a b c u v s t w Hb Hd Ht Htw Hpartial.
+ rewrite (cov2_schur_swap (a+t) b c u v s).
+ rewrite (cov2_schur_swap (a+w) b c u v s).
+ apply cov2_schur_noise_second_level_strict; try assumption.
+ rewrite <- cov2_det_symmetric; exact Hd.
+Qed.
+
+(**
+ [cov2_schur_noise_both_level_order] (theorem) — Monotonicity of best linear prediction risk in the two-dimensional partial order of independent measurement-noise levels.
+ Mathematical meaning: Monotonicity of best linear prediction risk in the two-dimensional partial order of independent measurement-noise levels.
+ Exact checked proposition: forall a b c u v s t w t' w', 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> t<=t' -> w<=w' -> cov2_schur (a+t) (b+w) c u v s<=cov2_schur (a+t') (b+w') c u v s.
+ Premises and side conditions: Positive-definite original covariance; nonnegative initial noise and componentwise ordered noise increments.
+ Proof/definition method: Combine the existing covariance Schur identities, normalized two-score innovations, positive-definite regression minimizer, determinant noise perturbations, and exact finite real algebra. Crucial comparisons explicitly reuse checked prior lemmas and discharge all nonzero/positive denominators.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring/Field, Rle_0_sqr, and existing TwoObservationSchur results. No custom matrix inverse, normal integral, or additional axioms.
+ Boundary: Exact covariance and best-linear-prediction sensitivity only; stochastic independence of noise, Gaussian conditional distributions, normal tails, or empirical IQ test calibration are not proved.
+ *)
+Theorem cov2_schur_noise_both_level_order :
+ forall a b c u v s t w t' w', 0<a -> 0<b -> 0<cov2_det a b c -> 0<=t -> 0<=w -> t<=t' -> w<=w' -> cov2_schur (a+t) (b+w) c u v s<=cov2_schur (a+t') (b+w') c u v s.
+Proof.
+ intros a b c u v s t w t' w' Ha Hb Hd Ht Hw Htt Hww.
+ assert (Hdnew:0<cov2_det (a+t) (b+w) c)
+   by (apply cov2_det_noise_both_positive; assumption).
+ pose proof (cov2_schur_noise_both_monotone
+   (a+t) (b+w) c u v s (t'-t) (w'-w)
+   ltac:(lra) ltac:(lra) Hdnew ltac:(lra) ltac:(lra)) as Hmono.
+ replace (a+t+(t'-t)) with (a+t') in Hmono by ring.
+ replace (b+w+(w'-w)) with (b+w') in Hmono by ring.
+ exact Hmono.
+Qed.
+

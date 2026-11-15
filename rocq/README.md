@@ -3,7 +3,7 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **1531 proof scripts** across eighteen
+for the three principal reports. **1584 proof scripts** across eighteen
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
