@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `532a92d945616e479a25fc69190e5c4a4e97b0ae` (PR #23). **Working branch:** `rocq-finite-projection-equality-20261115`.
+**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `694bf832697d59ccb07f2645e711e28120bdd688` (PR #24). **Working branch:** `architecture-central-libraries-20261115` (PR #25).
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
@@ -188,7 +188,7 @@ This phase proposes **26 further Rocq theorems**, bringing D032x to **45 named t
 
 ### D033x — central reusable libraries and report-specific proof ownership
 
-The eighteen Rocq proof modules have been moved, *without copying their source bodies*, into one central report-independent [mathematical library](../library/rocq/README.md) and three specialized theorem directories: `analyses/hoeflin-ferguson/rocq/` (Hoeflin); `analyses/towers-multiple-test-admissions/rocq/` (Admissions and FourCellBridge); and `analyses/sequential-conditional-means/rocq/` (SequentialReport, the three equicorrelation spectral/vector modules, ReportRounding and ReportCounterexample). The exact module and theorem names are preserved and 1,682 scripts remain in the proof register. The new [clean compile script](../scripts/compile_rocq.sh) assembles precisely one copy of each module before the pinned Rocq 9.2 kernel check. Shared finite covariance and equicorrelation theorems have one canonical owner. Source relocation does not create additional mathematical theorems and does not establish Gaussian conditioning or empirical IQ validity.
+The eighteen Rocq proof modules have been moved, *without copying their source bodies*, into one central report-independent [mathematical library](../library/rocq/README.md) and three specialized theorem directories: `analyses/hoeflin-ferguson/rocq/` (Hoeflin); `analyses/towers-multiple-test-admissions/rocq/` (Admissions and FourCellBridge); and `analyses/sequential-conditional-means/rocq/` (SequentialReport, the three equicorrelation spectral/vector modules, ReportRounding and ReportCounterexample). The exact module and theorem names are preserved and 1,682 scripts remain in the proof register. The new [clean compile script](../scripts/compile_rocq.sh) assembles precisely one copy of each module before the pinned Rocq 9.2 kernel check. Report-independent finite covariance theorems have one canonical owner in `library/rocq/`, while the report-dependent equicorrelation spectral/vector proofs have one canonical owner in the Sequential proof folder. Source relocation does not create additional mathematical theorems and does not establish Gaussian conditioning or empirical IQ validity.
 
 ## Appendix — Complete AI disclosure
 
