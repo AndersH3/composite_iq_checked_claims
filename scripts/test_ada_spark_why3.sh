@@ -115,7 +115,13 @@ case "${1:-}" in
     ;;
   prove)
     [[ "$*" == *" -T BackendSmoke -G "* ]] || exit 78
-    [[ "$*" == *" -P Z3 "* || "$*" == *" -P CVC5 "* ]] || exit 79
+    # Explicit version AND empty alternative are mandatory: a short name
+    # would be ambiguous on computer10 due to multiple prover variants.
+    [[ "$*" == *" -P Z3,4.13.3, "* ||
+       "$*" == *" -P CVC5,1.1.2, "* ]] || {
+      printf 'More than one prover corresponds to the abbreviated name\n' >&2
+      exit 79
+    }
     if [[ "$*" == *" -G TrueGoal" ]]; then
       printf '%s\n' 'backend_smoke.why BackendSmoke TrueGoal: Valid (0.01s)'
     elif [[ "$*" == *" -G FalseGoal" ]]; then
@@ -135,6 +141,8 @@ chmod 755 "$fixture/bin/why3"
 HOME="$fixture/home" PATH="$fixture/bin:$PATH" \
   bash "$smoke" >"$fixture/proof-smoke.out"
 grep -F 'Both Why3 backends passed' "$fixture/proof-smoke.out" >/dev/null
+grep -F 'Z3,4.13.3,' "$fixture/proof-smoke.out" >/dev/null
+grep -F 'CVC5,1.1.2,' "$fixture/proof-smoke.out" >/dev/null
 # Detect regression if a falsely claimed Valid on 0=1 were ever accepted.
 if HOME="$fixture/home" PATH="$fixture/bin:$PATH" WHY3_FAKE_NEGATIVE=Valid \
     bash "$smoke" >"$fixture/unsound.out" 2>&1; then
