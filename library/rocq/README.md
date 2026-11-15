@@ -2,6 +2,12 @@
 
 > **AI disclosure:** This source-location refactor and accompanying documentation were AI-assisted; only the separately pinned Rocq kernel checks theorems.
 
+The new `TrivariateSchur.v` is the canonical generic 3×3 covariance
+Schur-factorization and inequality source (27 statements, with strictly positive
+conditioning variance explicit in sign-equivalence theorems). The three-test
+AB|C, AC|B, and BC|A applications reside in the Towers project and simply
+instantiate the shared results. Gaussian probability laws remain unproved.
+
 Only genuinely report-neutral mathematical modules are owned **once** under this directory: `FiniteSum`, `FiniteUnion`, `FiniteMoments`, `FiniteBridge`, finite two-cell and nested projection, finite conditional covariance/residual, `TwoObservationSchur`, and `TwoStratumAssociation` (44 exact report-neutral Simpson-effect identities and inequalities), and `TwoStratumReversal` (50 necessary-and-sufficient pooled association, conditional-rate and selection-ignorability threshold criteria). They reuse Rocq's maintained Stdlib List, Reals, Lra, Psatz, and ring/field tactics. No new axioms, alternative summation recursion or Gaussian oracle are introduced.
 
 Report-specific lemmas and models remain with their reports: [Hoeflin/Ferguson](../../analyses/hoeflin-ferguson/rocq/), [Towers admissions](../../analyses/towers-multiple-test-admissions/rocq/), and [Sequential conditional means](../../analyses/sequential-conditional-means/rocq/).

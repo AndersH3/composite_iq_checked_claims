@@ -10,6 +10,26 @@ The inventory is organized **by the claims in the actual report sources**, not b
 - [Towers multiple-test admissions report](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex).
 - [Sequential conditional-means report](../analyses/sequential-conditional-means/sequential_conditional_means.tex), its [foundational theorems](../analyses/sequential-conditional-means/theorem_foundations.tex), and [numerical proof certificates](../analyses/sequential-conditional-means/exact_numeric_certificates.tex).
 
+### D041x — algebraic trivariate Schur conditions for Towers and Sequential covariance models
+
+The shared `TrivariateSchur.v` proves 27 reusable 3×3 real covariance-determinant,
+residual-product, singularity and conditional-covariance inequality propositions,
+using Stdlib real algebra. The report-owned `ThreeTestSchur.v` instantiates
+27 propositions for each of AB|C, AC|B and BC|A in the Towers multiple-test
+analysis (81 specialized claims). The central equation is
+`(u w-q²)(v w-r²)-(p w-qr)²=w det(Sigma)`; whenever `w>0` it
+characterizes strict and weak Schur residual bounds by the determinant sign.
+
+**Theorem mapping:** Sequential foundational `thm:moments` (covariance
+matrix algebra and the scalar residual formula), `thm:spectral` (necessary
+positive-semidefinite inequalities), `thm:gaussian` (covariance identities
+used in the cited Gaussian argument but not its distributional assertion);
+Towers pairwise-dependence and third-test conditioning discussion. These
+claims remain **algebraic implications under explicit real hypotheses**; no
+Gaussian characteristic-function uniqueness, conditional probability law,
+trivariate tail quadrature or empirical model validation is established.
+Only the final pinned Rocq kernel check can label these statements K.
+
 ### D039x — exact two-stratum association decomposition for Towers
 
 The Towers report's dependence and union claims motivate the general finite
