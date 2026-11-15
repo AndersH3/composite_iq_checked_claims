@@ -42,6 +42,22 @@ The `SequentialReport.v` module now has **seven definitions and 37 Rocq 9.2 kern
 | `cor:exact-iq-values` | Exact fractions `100+50r(3N+2)/(N(3r+2))`, `45(3N+2)/N`, `90k(3N+2)/(N²(3r+2))` | `sequential_iq_mean_exact`, `sequential_iq_population_variance_exact`, `sequential_iq_conditional_variance_exact` | **A** for the exact fraction formulas; the probabilistic interpretation has the above prerequisites |
 | `lem:rounding` | Rigorous strict integer-grid nearest-decimal tests for a rational mean and square-root SD, including tie exclusion | `ReportRounding.v`: `report_strict_rounding_interval_unique`, `report_rational_certificate_sound`, `report_sqrt_variance_certificate_sound`; nine `report_iq150_certificate_r*_k*` equalities check all 45 source integer gaps | **K for real interval/inequality lemmas and integer table certificates**; the general integer-to-real cast pipeline is not packaged as a single Rocq theorem, and Gaussian-law interpretation remains **P** |
 
+### D035x — sequential parameter sensitivity and explained variance
+
+The specialized [`SequentialSensitivity.v`](../analyses/sequential-conditional-means/rocq/SequentialSensitivity.v)
+adds **55 explicitly documented mathematical statements** tied to the report's
+`prop:domain`, `thm:equicorrelated-conditioning`, `thm:multiple-mean`,
+`thm:multiple-sd`, and population/conditional-SD formulas. These are
+source-level proof claims until the final pinned kernel check succeeds.
+
+| Report dependency | Exact additional mathematical results | Trust boundary |
+|---|---|---|
+| `prop:domain`, denominator `d_n` | 10 shared-denominator affine, count/correlation-gap, positive/upper-bound and monotonicity identities | Finite battery algebra; not covariance realizability of a Gaussian random vector |
+| `thm:equicorrelated-conditioning` and prediction weight | 14 proofs of regression coefficient scaling, perfect/independent boundaries, sharp loss fraction, strict range, exact count/correlation sensitivity and monotonicity | Deterministic assumed regression coefficients; not Gaussian conditional expectation |
+| `prop:population-sd`, `thm:multiple-sd` | 12 proofs of population common/idiosyncratic variance, strict size/correlation ordering and exact finite-count sensitivity | Algebraic covariance and quadratic variance; not a certified Gaussian SD distribution |
+| `thm:multiple-sd` and explained variance | 8 identities/strict inequalities for residual risk, uncorrelated boundary, exact explained fraction and total/residual decomposition | Algebraic Schur residual expression; no Gaussian conditioning or empirical calibration |
+| `thm:multiple-mean` | 11 exact inclusive-mean affine, shrinkage, bounds, and finite correlation/future-count difference claims | Assuming the model's prediction formula, not establishing that formula probabilistically |
+
 ### Additional consequential labelled sequential formulas
 
 | Report equation(s) | Mathematical role | Checked algebra / remaining gap |
