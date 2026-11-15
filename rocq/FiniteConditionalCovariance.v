@@ -1887,7 +1887,7 @@ Proof.
    apply (proj2 Hzero) in Hall; lra.
  - intros [x [Hin [Hwx Hneq]]].
    destruct (Req_EM_T (finite_cov_optimal_variance xs w f g) 0) as [Hz|Hz].
-   + apply (proj1 Hzero) in Hz; exfalso; apply Hneq; apply Hz; assumption.
+   + apply (proj1 Hzero) in Hz; exfalso; apply Hneq; exact (Hz x Hin Hwx).
    + lra.
 Qed.
 
