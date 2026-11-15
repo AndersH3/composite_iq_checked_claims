@@ -233,7 +233,17 @@ test -f verification/spark_smoke/src/bounded_counts.adb
 test -f verification/spark_smoke/spark_smoke.gpr
 bash -n "$spark_smoke"
 grep -F 'Global => null' "$spark_spec" >/dev/null
-grep -F 'Depends => ' "$spark_spec" >/dev/null
+# Every input must be accounted for in the explicit SPARK flow contract.
+# Previous and Increment determine the result; Capacity is only a
+# precondition / checked-assertion bound, not an input to the computation.
+# The actual GNATprove 16 run rejected the older Depends aspect because
+# Capacity was absent. Guard against reverting to that defective spec.
+grep -Fx '     Depends => (Total => (Previous, Increment),' "$spark_spec" >/dev/null
+grep -Fx '                 null => Capacity),' "$spark_spec" >/dev/null
+if grep -Fx '     Depends => (Total => (Previous, Increment)),' "$spark_spec" >/dev/null; then
+  printf '%s\n' 'ERROR: SPARK flow contract omits Capacity input' >&2
+  exit 1
+fi
 grep -F 'Pre =>' "$spark_spec" >/dev/null
 grep -F 'Post =>' "$spark_spec" >/dev/null
 grep -F -- '--mode=all' "$spark_smoke" >/dev/null
