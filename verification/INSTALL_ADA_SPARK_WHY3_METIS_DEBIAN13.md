@@ -339,6 +339,72 @@ version patterns and drivers. Installing another Why3 version alone
 does not guarantee Yices 2, Gappa 1.6, or newer Eprover compatibility:
 those drivers and their version patterns must be checked separately.
 
+## Verified GNATprove 16.1.0 and Isabelle2026 on computer10
+
+The user performed a full local run on November 15, 2026 with no errors
+from ShellCheck or the offline installer regressions. Unlike the earlier
+Alire 1.2.1 failure, the direct official GNAT-FSF 16.1.0 download
+completed. The installer verified its pinned 472,919,963-byte archive
+and SHA-256, extracted it under the user prefix, and created
+`$HOME/.local/opt/ada-spark/bin/gnatprove`. Its real `--version`
+output and the user's subsequent direct version check both reported:
+
+| Installed component | Observed local version |
+|---|---|
+| GNATprove FSF | 16.1.0 |
+| Bundled Why3 for GNATprove | 1.8.2+git |
+| Bundled Alt-Ergo | 2.6.1 |
+| Bundled CVC5 | 1.3.2, git `86cecd8` |
+| Bundled Z3 | 4.15.4, 64-bit |
+| Isabelle launcher | `Isabelle2026` |
+
+Isabelle's published archive SHA-256 had also been verified independently
+during installation. The separate launcher command
+`"$HOME/.local/opt/formal-provers/isabelle-2026/Isabelle2026/bin/isabelle" version`
+returned `Isabelle2026`. This confirms the Isabelle executable starts
+and identifies its release; it does not yet prove that particular
+Isabelle theory files compile.
+
+The GNATprove bundle reports newer versions of Z3 and CVC5 than
+Debian's system Why3 1.8.0 uses. Keep the **system Why3** smoke tests
+and the **bundled GNATprove** solver inventory distinct. A successful
+version command establishes installed executable availability, but
+**does not establish that GNATprove successfully discharges SPARK
+verification conditions with Debian GNAT 14**.
+
+### Next: actual native SPARK verification, not merely version detection
+
+Run the dedicated isolated proof fixture from the current repository
+checkout (no global configuration changes):
+
+```sh
+cd ~/src/composite_iq_formal_tools
+git pull --ff-only
+bash -n scripts/smoke_gnatprove.sh
+bash scripts/smoke_gnatprove.sh
+```
+
+The fixture is `verification/spark_smoke/src/bounded_counts.ads` and
+`bounded_counts.adb`, with an explicit checked capacity assertion and
+ten substantive count-accounting postconditions, as well as domain and
+data-flow contracts. The script runs the real GNATprove 16.1.0 through
+its user-local wrapper in a disposable copy, with `--mode=all` and
+`--checks-as-errors`, requesting bundled CVC5, Z3 and Alt-Ergo.
+It reports PASS **only after GNATprove exits successfully**. This smoke
+suite is not itself a proof of the IQ model calculations or all SPARK
+projects.
+
+For the existing substantive Hoeflin/Ferguson and Towers proof
+campaigns, use the source-pinned proof runner described in
+[`verification/README.md`](README.md); it derives a separate
+Alire toolchain environment and retains evidence for both the native
+proof reports and negative controls. Do not replace historical
+campaign results with this minimal smoke fixture. The runner's default
+workspace is `~/.local/share/icar16-gnatprove-tools` and is separate
+from this newly downloaded user-local GNATprove binary. A successful
+smoke test does not establish that the older workspace and the new
+bundle use identical compilers or prover configurations.
+
 ## Further Ada/SPARK facilities
 
 For a broader development workflow, consider the Ada Language Server (AdaCore's VS Code Ada extension), GNAT Studio, GNATformat, GNATtest, GNATcov, GNATdoc, gnatcheck and Libadalang. Some are in the [Alire package index](https://alire.ada.dev/crates.html) and some have separate AdaCore community releases. They are **optional** and are not silently downloaded or installed by the base script. Record each available version and license before using it in reproducible project checks.
@@ -363,6 +429,8 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The user later supplied terminal results confirming GNATprove FSF 16.1.0 downloaded, passed the installer integrity checks, and executed with its bundled Why3, Alt-Ergo, CVC5, and Z3. Isabelle2026 also executed its version command. The assistant added a standalone SPARK counter-increment proof fixture and isolated native proof-runner script; these were authored with AI assistance. Until the user runs the new script, neither the current GNATprove 16 bundle's native proof closure nor its compatibility with the host GNAT compiler is established.
 
 The November 15 computer10 logs further showed that Ada compilation
 succeeded and Isabelle2026 passed its official archive SHA-256 check
