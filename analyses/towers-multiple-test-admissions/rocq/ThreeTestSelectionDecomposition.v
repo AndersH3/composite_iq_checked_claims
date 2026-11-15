@@ -627,7 +627,7 @@ Qed.
 (**
  [selection_AB_simpson_negative_reversal_criterion] (theorem) — If both-selection mixture has positive within association, a sufficiently negative between effect can reverse pooled AB association to negative.
  Mathematical meaning: If both-selection mixture has positive within association, a sufficiently negative between effect can reverse pooled AB association to negative.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> 0<selection_AB_within_association m->selection_AB_between_association m<-selection_AB_within_association m->selection_AB_pooled_association m<0.
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> 0<selection_AB_within_association m->selection_AB_between_association m < - selection_AB_within_association m->selection_AB_pooled_association m<0.
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -642,7 +642,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AB_simpson_negative_reversal_criterion :
-  forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> 0<selection_AB_within_association m->selection_AB_between_association m<-selection_AB_within_association m->selection_AB_pooled_association m<0.
+  forall m:ThreeTestModel, 0<selection_AB_selected_mass m -> 0<selection_AB_other_mass m -> 0<selection_AB_within_association m->selection_AB_between_association m < - selection_AB_within_association m->selection_AB_pooled_association m<0.
 Proof.
   intros m Hy Hn Hw Hb.
   apply (proj2 (selection_AB_negative_iff m Hy Hn)).
@@ -1249,7 +1249,7 @@ Qed.
 (**
  [selection_AC_simpson_negative_reversal_criterion] (theorem) — If both-selection mixture has positive within association, a sufficiently negative between effect can reverse pooled AC association to negative.
  Mathematical meaning: If both-selection mixture has positive within association, a sufficiently negative between effect can reverse pooled AC association to negative.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> 0<selection_AC_within_association m->selection_AC_between_association m<-selection_AC_within_association m->selection_AC_pooled_association m<0.
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> 0<selection_AC_within_association m->selection_AC_between_association m < - selection_AC_within_association m->selection_AC_pooled_association m<0.
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1264,7 +1264,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_AC_simpson_negative_reversal_criterion :
-  forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> 0<selection_AC_within_association m->selection_AC_between_association m<-selection_AC_within_association m->selection_AC_pooled_association m<0.
+  forall m:ThreeTestModel, 0<selection_AC_selected_mass m -> 0<selection_AC_other_mass m -> 0<selection_AC_within_association m->selection_AC_between_association m < - selection_AC_within_association m->selection_AC_pooled_association m<0.
 Proof.
   intros m Hy Hn Hw Hb.
   apply (proj2 (selection_AC_negative_iff m Hy Hn)).
@@ -1871,7 +1871,7 @@ Qed.
 (**
  [selection_BC_simpson_negative_reversal_criterion] (theorem) — If both-selection mixture has positive within association, a sufficiently negative between effect can reverse pooled BC association to negative.
  Mathematical meaning: If both-selection mixture has positive within association, a sufficiently negative between effect can reverse pooled BC association to negative.
- Exact checked proposition: forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> 0<selection_BC_within_association m->selection_BC_between_association m<-selection_BC_within_association m->selection_BC_pooled_association m<0.
+ Exact checked proposition: forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> 0<selection_BC_within_association m->selection_BC_between_association m < - selection_BC_within_association m->selection_BC_pooled_association m<0.
  Premises and side conditions: The source is the eight-atom nonnegative
  unit-normalized ThreeTestModel. Polynomial event identities require no
  extra premise; rates and positivity comparisons between selected and
@@ -1886,7 +1886,7 @@ Qed.
  psychometrics, or continuous multivariate normal tails.
 *)
 Theorem selection_BC_simpson_negative_reversal_criterion :
-  forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> 0<selection_BC_within_association m->selection_BC_between_association m<-selection_BC_within_association m->selection_BC_pooled_association m<0.
+  forall m:ThreeTestModel, 0<selection_BC_selected_mass m -> 0<selection_BC_other_mass m -> 0<selection_BC_within_association m->selection_BC_between_association m < - selection_BC_within_association m->selection_BC_pooled_association m<0.
 Proof.
   intros m Hy Hn Hw Hb.
   apply (proj2 (selection_BC_negative_iff m Hy Hn)).
