@@ -1606,8 +1606,9 @@ Proof.
  intros a b c u v Ha Hd.
  assert (Hvar:cov2_innovation_variance a b c<>0).
  { pose proof (cov2_innovation_variance_times_first a b c Ha) as He; nra. }
- unfold cov2_beta_second,cov2_innovation_covariance,cov2_innovation_variance.
- field; unfold cov2_det in *; nra.
+ unfold cov2_beta_second,cov2_innovation_covariance,
+   cov2_innovation_variance,cov2_det in *.
+ field; nra.
 Qed.
 
 (**
@@ -1701,8 +1702,9 @@ Proof.
  intros a b c u v Ha Hd.
  assert (Hvar:cov2_innovation_variance a b c<>0).
  { pose proof (cov2_innovation_variance_times_first a b c Ha) as He; nra. }
- unfold cov2_innovation_gain,cov2_innovation_covariance,cov2_innovation_variance.
- field; unfold cov2_det in *; nra.
+ unfold cov2_innovation_gain,cov2_innovation_covariance,
+   cov2_innovation_variance,cov2_det in *.
+ field; nra.
 Qed.
 
 (**
