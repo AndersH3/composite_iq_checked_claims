@@ -5,7 +5,7 @@
 # No network, sudo, package changes, opam switches, Alire index changes,
 # repository writes, or global PATH updates are performed. All proof artifacts
 # are placed in a disposable copy. The run must use actual GNATprove rather
-# than a mock and --checks-as-errors to reject unproved obligations.
+# than a mock and --checks-as-errors=on to reject unproved obligations.
 # A successful smoke test is NOT proof of the three statistical reports.
 set -euo pipefail
 
@@ -38,16 +38,17 @@ printf '%s\n' 'Positive proof: checked addition with exact count and headroom gu
 (
   cd "$workdir"
   # These switches are already used by the project's native proof runner.
-  # --mode=all checks both flow and proof; --checks-as-errors makes each
-  # unproved verification condition fatal; -f requests fresh analysis.
+  # --mode=all checks both flow and proof; GNATprove 16 requires
+  # --checks-as-errors=on (not a bare flag), making unproved VCs fatal.
+  # --warnings=error independently rejects warnings; -f reruns analysis.
   "$gnatprove" -P spark_smoke.gpr --mode=all \
-    --checks-as-errors --warnings=error --report=statistics \
+    --checks-as-errors=on --warnings=error --report=statistics \
     --prover=cvc5,z3,altergo --timeout=15 --steps=0 \
     -j2 -f -U
 )
 # A zero exit code alone could mask an empty/unconfigured analysis.
 # Demand a native nonempty SPARK summary from this disposable source tree.
-# --checks-as-errors above additionally requires every generated check to
+# --checks-as-errors=on above additionally requires every generated check to
 # pass; this does not establish solver soundness or model adequacy.
 mapfile -d '' -t reports < <(
   find "$workdir" -type f -name 'gnatprove.out' -print0
@@ -65,4 +66,4 @@ for report in "${reports[@]}"; do
   printf 'Native proof summary from %s:\n' "$(basename "$report")"
   grep -E '^Total[[:space:]]+[1-9][0-9]*[[:space:]]+' "$report"
 done
-printf '\n%s\n' 'PASS: GNATprove completed nonempty SPARK analysis with --checks-as-errors.'
+printf '\n%s\n' 'PASS: GNATprove completed nonempty SPARK analysis with --checks-as-errors=on.'
