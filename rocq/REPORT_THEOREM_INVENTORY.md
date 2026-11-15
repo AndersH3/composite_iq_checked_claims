@@ -10,6 +10,30 @@ The inventory is organized **by the claims in the actual report sources**, not b
 - [Towers multiple-test admissions report](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex).
 - [Sequential conditional-means report](../analyses/sequential-conditional-means/sequential_conditional_means.tex), its [foundational theorems](../analyses/sequential-conditional-means/theorem_foundations.tex), and [numerical proof certificates](../analyses/sequential-conditional-means/exact_numeric_certificates.tex).
 
+### D039x — exact two-stratum association decomposition for Towers
+
+The Towers report's dependence and union claims motivate the general finite
+2×2 selection identity
+`t_selected * t_other * pooled_association =
+(t_selected+t_other) * within_component + between_component`.
+The 44 new report-independent theorems under
+[`TwoStratumAssociation.v`](../library/rocq/TwoStratumAssociation.v)
+prove this polynomial identity, two conditional marginal-rate gap formulas,
+sign equivalences and criteria for positive or negative association reversal.
+
+A further 60 new [Towers-specific bridge theorems](../analyses/towers-multiple-test-admissions/rocq/ThreeTestSelectionDecomposition.v)
+specialize the decomposition to AB given C, AC given B and BC given A,
+using the actual eight Boolean admission cells. They identify the pooled
+association with existing `Admissions` / `ThreeTestPairBridge` proofs,
+prove the complementary selection groups have total probability one, and
+derive exact adjusted sign and Simpson-reversal criteria.
+
+The mathematical boundary remains finite weighted Boolean admissions
+and algebra. Neither trivariate Gaussian regression nor numerical normal
+tail certificates, actual test correlations, or population admissions rates
+are established by these theorems. Treat the new statements as kernel
+proved only after Rocq 9.2 accepts the exact final source head.
+
 ## Verification levels (do not conflate)
 
 **K — Kernel-checked at stated mathematical scope:** a named Rocq theorem proves the displayed finite/algebraic proposition, with its explicit hypotheses. **A — Algebraic consequence formalized:** the report's rational formula is checked, but the stochastic Gaussian premise from which the report derives it is **not** proved. **P — Report proof / cited established theorem only:** the typeset report gives a mathematical proof or reference, but no corresponding general Rocq kernel theorem has been supplied. **E — Empirical or numerical/modeling claim:** its correctness requires numerical/error-certified evaluation or assumptions about a real test population. A claim labelled P or E is not converted to K merely by a successful Rocq build.
