@@ -54,3 +54,8 @@ Calculations, tests and prover invocations were actually executed on **computer1
 No new participant data were collected and no empirical psychometric validation study was performed for this project. Simulations use synthetic draws under the stated mathematical model. The repository preserves source and evidence history, but not a complete prompt/tool transcript, exact per-line authorship or an AI-contribution percentage. Those details cannot be reconstructed reliably and have not been invented. This disclosure is current through **14 November 2026**. Each PDF contains an upfront notice and the full disclosure so it remains visible when distributed separately.
 
 The repository's original material is governed by [LICENSE](LICENSE), subject to third-party rights.
+
+
+## Centralized source libraries and specialized report implementations
+
+Canonical shared Rocq, SPARK and Python source lives under [`library/`](library/README.md). Hoeflin/Ferguson, Towers admissions and Sequential conditional means each retain their own specialized SPARK units, Python validators and [Rocq theorem modules](library/rocq/README.md) in `analyses/<project>/`. CI checks module ownership, shared-library consumers and the original proof/contract suites. This migration preserves proof names and historical evidence; it does not constitute a new SPARK GNATprove campaign or verification of IQ model assumptions.
