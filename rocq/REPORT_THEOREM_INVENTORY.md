@@ -101,6 +101,21 @@ The report gives labelled equations rather than a separate list of theorem envir
 | `eq:grid` | Legacy finite-grid Gaussian density ratio | Generic finite sums are checked in `FiniteSum.v`; the particular quadrature truncation/error is **E** |
 | `eq:rho-integral` | Bivariate normal overlap as integral of density with respect to correlation | **P**, requires differentiability/integration of Gaussian law and is not currently kernel-checked |
 
+### D036x — three-route admissions (Towers multiple-test extension)
+
+The Towers-specific [`ThreeTestAdmissions.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestAdmissions.v)
+uses **eight exhaustive Boolean outcomes** and the canonical `FiniteSum` /
+`FiniteUnion` probability engines. Its 55 named proof scripts establish
+three-event exact-overlap and count formulas for the logical generalization
+of `eq:union`, `eq:conditionals` and `eq:bounds`. The essential outcomes
+include exact probability of exactly one/two/three admitted routes,
+three-way inclusion-exclusion, the triple Fréchet bound
+`P(A∩B∩C) ≥ P(A)+P(B)+P(C)−2`, and first/second-order Bonferroni
+inequalities. All results refer to a **finite, normalized, nonnegative
+sample of the eight Boolean patterns**. They need the final pinned Rocq
+9.2 kernel CI before being labelled checked and do not verify a trivariate
+normal integral or empirical psychometric parameters.
+
 ## IV. Proof-development priorities based on report dependence
 
 1. **Highest impact, genuinely missing:** Gaussian regression, conditional expectation (with regular conditional laws and continuous versions), and equicorrelation positive-semidefinite/spectral construction. The current Schur covariance theorems do **not** establish these stochastic claims.
