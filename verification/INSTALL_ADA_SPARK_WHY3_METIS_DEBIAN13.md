@@ -125,7 +125,9 @@ Its independently pinned manifest SHA-256 is
 82528bef29857e239373fcc36732837d743f5a00805d502c70455422ffc97191
 ```
 
-The installer checks both the size and SHA-256 **before extraction**,
+The installer downloads to a persistent `.partial` file and can
+resume after an interrupted transfer on the next explicit invocation;
+it checks both the size and SHA-256 **before extraction**,
 uses a temporary extraction directory and installs under
 `~/.local/opt/ada-spark/gnatprove-16.1.0`. It creates the user-local
 wrapper `~/.local/opt/ada-spark/bin/gnatprove` after finding a unique
