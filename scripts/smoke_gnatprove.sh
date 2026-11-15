@@ -45,6 +45,24 @@ printf '%s\n' 'Positive proof: checked addition with exact count and headroom gu
     --prover=cvc5,z3,altergo --timeout=15 --steps=0 \
     -j2 -f -U
 )
-# GNATprove's command return code under --checks-as-errors is the
-# acceptance gate; a version banner or flow-only run is insufficient.
-printf '\n%s\n' 'PASS: GNATprove completed the SPARK proof smoke with --checks-as-errors.'
+# A zero exit code alone could mask an empty/unconfigured analysis.
+# Demand a native nonempty SPARK summary from this disposable source tree.
+# --checks-as-errors above additionally requires every generated check to
+# pass; this does not establish solver soundness or model adequacy.
+mapfile -d '' -t reports < <(
+  find "$workdir" -type f -name 'gnatprove.out' -print0
+)
+if (( ${#reports[@]} == 0 )); then
+  printf '%s\n' 'ERROR: GNATprove emitted no native gnatprove.out report.' >&2
+  exit 4
+fi
+for report in "${reports[@]}"; do
+  if ! grep -Fq 'Summary of SPARK analysis' "$report" ||
+     ! grep -Eq '^Total[[:space:]]+[1-9][0-9]*[[:space:]]+' "$report"; then
+    printf 'ERROR: Missing or empty native proof summary: %s\n' "$report" >&2
+    exit 5
+  fi
+  printf 'Native proof summary from %s:\n' "$(basename "$report")"
+  grep -E '^Total[[:space:]]+[1-9][0-9]*[[:space:]]+' "$report"
+done
+printf '\n%s\n' 'PASS: GNATprove completed nonempty SPARK analysis with --checks-as-errors.'
