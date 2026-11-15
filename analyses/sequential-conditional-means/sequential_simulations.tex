@@ -12,6 +12,7 @@
 \date{15 November 2026}
 
 \begin{document}
+\frontmatter
 \input{simulation-data/macros.tex}
 \maketitle
 \thispagestyle{plain.scrheadings}
@@ -34,21 +35,22 @@ predictions. Agreement is evidence about this implementation of the
 assumed model, not empirical validation of that model for IQ data.
 \end{abstract}
 
-\noindent\textbf{AI disclosure.} This report, its Dask implementation and
-its review were prepared with OpenAI Codex and collaborating AI agents.
-The requester specified the questions and required separate simulation
-reports. No new participant data were collected. Independent human peer
-review and empirical psychometric validation are not claimed.
+\noindent\textbf{AI disclosure.} OpenAI Codex and collaborating AI agents
+prepared this report. The full disclosure appears in the final appendix,
+\Cref{sec:ai-disclosure}.
 
 \noindent\textbf{Proof and evidence convention.} The Gaussian assumptions,
 the reporting scale and the experiment design are stated inputs. Every
 deductive target and uncertainty statement has a proof in this report;
-Section~\ref{sec:seq-sim-proof-map} links the claim groups to those proofs
+\Cref{sec:seq-sim-proof-map} links the claim groups to those proofs
 and the established theorems they use. Observed numerical values and
 software-check counts are finite reproduction records, with their scope
-specified in Section~\ref{seqp:record-scope}.
+specified in \Cref{seqp:record-scope}.
 
-\section{The questions answered by the experiments}
+\tableofcontents
+\mainmatter
+
+\chapter{The questions answered by the experiments}
 \label{sec:seq-sim-questions}
 
 The companion analysis studies an inclusive average: every observed
@@ -88,10 +90,10 @@ Corollary~\ref{sm:sd-interval}.
 
 \input{../../reporting/proof_foundations}
 
-\section{The Gaussian model and its exact target values}
+\chapter{The Gaussian model and its exact target values}
 \label{sec:seq-sim-model}
 
-\subsection{A model with a common factor}
+\section{A model with a common factor}
 The experiments assume the jointly Gaussian construction
 \begin{equation}
  X_i=\sqrt c\,G+\sqrt{1-c}\,E_i,
@@ -150,7 +152,7 @@ therefore multiply by \(15^2\), rather than by 15. The phrase
 These transformations follow from the affine moment proof in
 Propositions~\ref{pf:moments} and \ref{seqp:recursion}.
 
-\subsection{Generating the conditional future scores directly}
+\section{Generating the conditional future scores directly}
 The new implementation samples every finite future residual component
 rather than sampling only a scalar mean with the already calculated
 variance. It combines their sum with the common factor, using the
@@ -200,7 +202,7 @@ covariance terms in the population sum proves
 bilinearity, rather than results inferred from a successful simulation
 \citep[Theorem 1.6.1 and Section 2.2]{durrett2019}.
 
-\section{Dask implementation and the experimental design}
+\chapter{Dask implementation and the experimental design}
 \label{sec:seq-sim-design}
 
 Dask arrays express the normal draws and vector arithmetic in chunks of
@@ -242,7 +244,7 @@ The total number of scalar-mean observations across that grid is
 not of distinct people or independent comparisons between cases, and not
 a count of all underlying normal variates.
 
-\section{Finite-count means: the starting scores remain in the average}
+\chapter{Finite-count means: the starting scores remain in the average}
 \label{sec:seq-sim-means}
 
 The following table compares observed IQ centres with
@@ -267,7 +269,7 @@ the population mean of the standardized tests has changed.
 For the strict comparison with the subsequent prediction, subtracting
 \(b_r\) from \(B_{r,k}\) gives
 \(ra(1-c)/(Nd_r)>0\) at the selected positive \(a\) and \(c<1\).
-Section~\ref{seqp:exact-grid} proves the displayed fractions and target
+\Cref{seqp:exact-grid} proves the displayed fractions and target
 roundings.
 
 The largest absolute discrepancy of a pooled empirical centre from its
@@ -279,7 +281,7 @@ conditioning on the high initial scores. Reported numerical agreement
 also does not make extra displayed decimals meaningful measures of
 psychometric precision.
 
-\section{Finite-count standard deviations and what they measure}
+\chapter{Finite-count standard deviations and what they measure}
 \label{sec:seq-sim-sds}
 
 \input{simulation-data/sds.tex}
@@ -361,7 +363,7 @@ millions of simulated batteries can be very precise while an individual
 future battery remains spread around it with SD about 5.45. The fixed
 list \(150,150,137.5,\ldots,137.5\) has exactly that conditional centre
 as its arithmetic mean, with no Monte Carlo randomness of its own.
-Section~\ref{seqp:exact-grid} gives exact certificates for these decimal
+\Cref{seqp:exact-grid} gives exact certificates for these decimal
 roundings and every analytic target in the generated tables.
 
 The generated SD intervals are 95\% chi-square confidence intervals for
@@ -375,7 +377,7 @@ does not imply 95\% simultaneous coverage of every row.
 Corollary~\ref{sm:sd-interval} and Proposition~\ref{sm:multiple} prove precisely
 the rowwise interval and multiple-row coverage statements.
 
-\subsection{Why one SD decreases while the other increases}
+\section{Why one SD decreases while the other increases}
 \label{sec:seq-sim-monotonicity}
 The population variance can be written
 \(c+(1-c)/(r+k)\), so it strictly decreases in \(k\) at \(c=0.6\).
@@ -401,7 +403,7 @@ additional future outcomes can increase the conditional spread of this
 particular inclusive average even while averaging a random whole battery
 reduces its population spread.
 
-\section{The infinite-count cases}
+\chapter{The infinite-count cases}
 \label{sec:seq-sim-limits}
 
 Keeping \(c\) fixed while \(k\) grows requires \(0\leq c\leq1\),
@@ -447,7 +449,11 @@ This proves convergence in mean square for that coupling of aggregate
 laws, without asserting a particular pathwise construction for all tests.
 
 \input{simulation-data/limits.tex}
+% Promote the retained generated article heading without changing its data.
+\begingroup
+\let\subsection\section
 \input{simulation-data/results-discussion.tex}
+\endgroup
 
 The limiting IQ centres for \(r=1,2,3\) are 130, 137.5 and
 \(1550/11\), respectively. The population SD limit is
@@ -462,7 +468,7 @@ Explicitly,
 since \(d_{r+1}=d_r+c\). This proves the decrease in remaining factor
 uncertainty at the selected correlation.
 
-\section{Replication and comparison with the retained Ada run}
+\chapter{Replication and comparison with the retained Ada run}
 \label{sec:seq-sim-replication}
 
 \input{simulation-data/replicates.tex}
@@ -505,7 +511,7 @@ inventory, static lint and runtime tests are reported separately. Their
 checks cannot turn Monte Carlo agreement into universal formal proof.
 Historical proof and simulation records remain immutable.
 
-\section{What the results establish and what remains assumed}
+\chapter{What the results establish and what remains assumed}
 \label{sec:seq-sim-interpretation}
 
 The recorded calculations make the meaning of the three averages
@@ -527,7 +533,7 @@ convention and the common-factor interpretation are stated model choices.
 Their appropriateness for an actual testing situation requires evidence
 outside this simulation study.
 
-Section~\ref{seqp:record-scope} separates the mathematical deductions
+\Cref{seqp:record-scope} separates the mathematical deductions
 from the recorded outputs and explains why finite computational agreement
 cannot establish the model's validity for real test data.
 
@@ -537,4 +543,15 @@ cannot establish the model's validity for real test data.
 
 \bibliographystyle{plainnat}
 \bibliography{simulation_references}
+
+\appendix
+\chapter{AI disclosure}
+\label{sec:ai-disclosure}
+This report, its Dask implementation and its review were prepared with
+OpenAI Codex and collaborating AI agents. The requester specified the
+questions and required separate simulation reports. No new participant
+data were collected. Independent human peer review and empirical
+psychometric validation are not claimed.
+
+\input{../../reporting/ai_disclosure}
 \end{document}

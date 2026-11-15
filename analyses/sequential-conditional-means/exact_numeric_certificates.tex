@@ -1,4 +1,4 @@
-\section{Exact arithmetic certificates for numerical examples}
+\chapter{Exact arithmetic certificates for numerical examples}
 \label{sec:certificates}
 
 The numerical examples are substitutions into the proved mean and variance
@@ -6,7 +6,7 @@ formulas. The exact fractions below, together with the rounding lemma,
 provide arithmetic proofs of the displayed decimals. They do not depend on
 floating-point output, simulation, or the software-verification results.
 
-\subsection{Exact values behind the IQ-150 examples}
+\section{Exact values behind the IQ-150 examples}
 
 \begin{corollary}[Exact IQ means and variances]
 \label{cor:exact-iq-values}
@@ -49,7 +49,7 @@ identities in Theorem~\ref{thm:moments} justify the factor \(15^2=225\)
 for variances and the additive \(100\) for means.
 \end{proof}
 
-For the nine parameter pairs in Section~\ref{sec:iq150-examples}, the
+For the nine parameter pairs in \Cref{sec:iq150-examples}, the
 resulting exact quantities are as follows. The SDs are the nonnegative
 square roots of the two variance columns.
 
@@ -86,7 +86,7 @@ integer substitution yields
 The other rows follow by the same substitutions; all quantities in this
 table are exact rational numbers, rather than decimal approximations.
 
-\subsection{A proof of the decimal rounding rule}
+\section{A proof of the decimal rounding rule}
 
 \begin{lemma}[Exact rounding test]
 \label{lem:rounding}
@@ -139,7 +139,7 @@ the first part proves the result. This uses only the order properties of
 the real numbers and the definition of nearest-decimal rounding.
 \end{proof}
 
-\subsection{Positive integer certificates for every IQ table row}
+\section{Positive integer certificates for every IQ table row}
 
 For each row of the displayed IQ table, take \(T=100\). Use the reduced
 fraction \(P/Q\) in the exact-value table above. For the mean, \(t\) is
@@ -188,7 +188,7 @@ The exact differences are
 Thus the true SD is strictly between \(4.455\) and \(4.465\), proving
 that its nearest two-decimal representation is \(4.46\).
 
-\subsection{Certificates for the other numerical examples}
+\section{Certificates for the other numerical examples}
 
 For the earlier standardized examples, substitute \(a=2\), \(c=3/5\),
 and \(k=3\) into

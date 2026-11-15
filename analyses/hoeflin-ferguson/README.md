@@ -11,7 +11,7 @@ A statistical analysis and independently written replacement for Ronald K. Hoefl
 - [Ada/SPARK calculations and simulations](ada/README.md)
 - [Computer10 prover evidence](../../verification/README.md)
 
-The PDF uses XeLaTeX, KOMA-Script `scrartcl`, A4 paper, 16 mm margins, TeX Gyre Pagella text and mathematics, TeX Gyre Heros sans-serif text, and Latin Modern Mono. The source is the authoritative typeset version; the Markdown file preserves the earlier analysis.
+Both PDFs use XeLaTeX, KOMA-Script `scrbook`, A4 paper, 16 mm margins, TeX Gyre Pagella text and mathematics, TeX Gyre Heros sans-serif text, and Latin Modern Mono. Each volume has a table of contents and full AI disclosure as its final appendix after the bibliography. The [shared preamble](../../reporting/book_style.tex) loads the required package set. The source is the authoritative typeset version; the Markdown file preserves the earlier analysis.
 
 ## Reproduce the report
 

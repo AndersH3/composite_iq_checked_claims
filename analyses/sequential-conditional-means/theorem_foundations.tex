@@ -1,4 +1,4 @@
-\section{Reference theorems and proof conventions}
+\chapter{Reference theorems and proof conventions}
 \label{sec:foundations}
 
 The probability model, its numerical parameters and the reporting scale are
@@ -31,16 +31,19 @@ Moreover, \(\Var(X)=0\) if and only if \(X=\E[X]\) almost surely.
 \end{theorem}
 
 \begin{proof}
-Linearity is the integral-linearity theorem
-\cite[Theorem~1.6.1]{durrett2019}. Products of centered square-integrable
-variables are integrable by H\"older's inequality
-\cite[Theorem~1.6.3]{durrett2019}. Expanding
-\(\E[(X-\E[X])(Y-\E[Y])]\), distributing finite sums and applying
-linearity gives covariance bilinearity and the displayed scalar and matrix
-identities. The SD identity follows by taking the nonnegative square root of
-\(\Var(u+vX)=v^2\Var(X)\); see also the covariance summary in
-\cite[Section~4.2]{bertsekas2008}. If the variance is zero, Chebyshev's
-inequality gives
+Linearity follows from linearity of integration
+\cite[Theorem~1.6.1]{durrett2019}. H\"older's inequality makes products
+of centered square-integrable variables integrable
+\cite[Theorem~1.6.3]{durrett2019}. Their covariance is
+\[
+  \Cov(X,Y)=\E[(X-\E[X])(Y-\E[Y])].
+\]
+Expanding this expression for finite linear combinations and distributing
+the sums proves covariance bilinearity and the stated scalar and matrix
+identities. The variance identity gives
+\(\Var(u+vX)=v^2\Var(X)\). Taking its nonnegative square root proves
+the SD identity; see also \cite[Section~4.2]{bertsekas2008}.
+If the variance is zero, Chebyshev's inequality gives
 \[
   P\{|X-\E[X]|\geq\varepsilon\}
   \leq\frac{\Var(X)}{\varepsilon^2}=0

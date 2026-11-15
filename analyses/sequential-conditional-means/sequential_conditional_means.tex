@@ -1,40 +1,9 @@
 % !TeX program = xelatex
-\documentclass[a4paper,fontsize=11pt,parskip=half,headings=small]{scrartcl}
-\usepackage[margin=18mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
-\usepackage{fontspec}
-\usepackage{mathtools}
-\usepackage{amsthm}
-\usepackage{unicode-math}
-\setmainfont{TeX Gyre Pagella}
-\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
-\setmonofont{Latin Modern Mono}
-\setmathfont{TeX Gyre Pagella Math}
-\usepackage[protrusion=true,expansion=false]{microtype}
-\usepackage{xcolor}
-\usepackage{xurl}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage{longtable}
-\usepackage{array}
-\usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black,
+\input{../../reporting/book_style}
+\hypersetup{
   pdftitle={Sequential Conditional Means of Equicorrelated Scores},
   pdfauthor={Prepared with OpenAI Codex},
-  pdfsubject={One, two or three fixed starting scores included in the mean and its standard deviation}]{hyperref}
-\usepackage{bookmark}
-\usepackage{scrlayer-scrpage}
-\DeclareMathOperator{\E}{E}
-\DeclareMathOperator{\Var}{Var}
-\DeclareMathOperator{\Cov}{Cov}
-\newcommand{\T}{\mathsf{T}}
-\newcommand{\given}{\,\vert\,}
-\newcommand{\one}{\mathbf{1}}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\setlength{\emergencystretch}{1.5em}
-\setkomafont{disposition}{\normalfont\sffamily\bfseries}
-\setkomafont{pageheadfoot}{\normalfont\sffamily\small}
-\clearpairofpagestyles
+  pdfsubject={One, two or three fixed starting scores included in the mean and its standard deviation}}
 \ihead{Sequential conditional means}
 \ohead{Derivation and assumptions}
 \cfoot*{\pagemark}
@@ -45,9 +14,9 @@
 \date{15 November 2026}
 
 \begin{document}
+\frontmatter
 \maketitle
 \thispagestyle{plain.scrheadings}
-\vspace{-1em}
 \begin{abstract}
 Each test has population mean \(0\) and standard deviation \(1\). Fix the
 first observed score at \(a\). For jointly Gaussian tests with equal
@@ -74,23 +43,23 @@ SDs as different sampling experiments, and supply contracted Ada/SPARK
 calculations and simulations with an independent Python/Deal validator.
 \end{abstract}
 
-\noindent\textbf{AI disclosure.} This analysis, its mathematical exposition,
-supporting repository documentation and typesetting were prepared with OpenAI
-Codex and collaborating AI agents. The requester specified the problem,
-clarified the indexing and requested this analysis. Mathematical review and
-build checks were performed within the same AI-assisted workflow; no independent
-human peer review or new empirical psychometric validation is claimed.
+\noindent\textbf{AI disclosure.} OpenAI Codex and collaborating AI agents
+prepared this report. The full disclosure appears in the final appendix,
+\Cref{sec:ai-disclosure}.
 
 \noindent\textbf{Proof standard.} Model assumptions and reporting-scale
 definitions are stated explicitly. The mathematical conclusions are proved
-from the established results collected in Section~\ref{sec:foundations}.
-Section~\ref{sec:proof-map} maps the claims to their proofs, and
-Section~\ref{sec:certificates} supplies exact numerical certificates.
+from the established results collected in \Cref{sec:foundations}.
+\Cref{sec:proof-map} maps the claims to their proofs, and
+\Cref{sec:certificates} supplies exact numerical certificates.
 The references identify the versions and theorem locators actually checked;
 mathematical deductions do not establish the empirical adequacy of the chosen
 test model.
 
-\section{Problem and notation}
+\tableofcontents
+\mainmatter
+
+\chapter{Problem and notation}
 
 Let \(k\geq1\) be an integer and write
 \[
@@ -126,7 +95,7 @@ The quantity of interest is
 It contains \(k+1\) values: the starting score \(a\) is the first value,
 followed by the \(k\) predictions \(e_1,\ldots,e_k\). Thus \(k\) counts
 subsequent predictions, while \(k+1\) counts all values in the average.
-Section~\ref{sec:multiple-starts} extends this setup to \(r\) initial scores
+\Cref{sec:multiple-starts} extends this setup to \(r\) initial scores
 all fixed at \(a\), followed by \(k\) predictions, for \(r+k\) total values.
 
 For continuous distributions, conditioning on a particular score is not a
@@ -141,7 +110,7 @@ is justified by Lemma~\ref{lem:continuous-version}.
 
 \input{theorem_foundations}
 
-\section{The joint model and its correlation domain}
+\chapter{The joint model and its correlation domain}
 
 \begin{proposition}[Admissible correlations and Gaussian realization]
 \label{prop:domain}
@@ -194,7 +163,7 @@ Theorem~\ref{thm:gaussian}, so this verifies the stated construction.
 Joint Gaussianity and the choice of population parameters remain model
 assumptions for real test batteries.
 
-\section{Derivation of the conditional mean}
+\chapter{Derivation of the conditional mean}
 
 \begin{theorem}[Equicorrelated Gaussian conditioning]
 \label{thm:equicorrelated-conditioning}
@@ -295,7 +264,7 @@ Independence of \(W_n\) and \(Y_n\), established above, then gives
 This nonnegative conditional variance describes actual test outcomes,
 not randomness in the recursively specified numbers \(e_n\).
 
-\section{Solving the recursion and taking the average}
+\chapter{Solving the recursion and taking the average}
 
 \begin{theorem}[One fixed starting score]
 \label{thm:single-start}
@@ -376,12 +345,12 @@ the average after three predictions is instead
       =\frac{1+3(0.6)}4\,2=1.4.
 \]
 These substitutions and all displayed decimal rounding are certified in
-Section~\ref{sec:certificates}.
+\Cref{sec:certificates}.
 
 \begin{samepage}
-\section{Standard deviation of the mean}
+\chapter{Standard deviation of the mean}
 
-\subsection{The specified recursive average with fixed starting score}
+\section{The specified recursive average with fixed starting score}
 The numbers \(a,e_1,\ldots,e_k\) and their average \(B_k\) are fixed once
 \(a,c,k\) are specified. The constant-variable case of
 Theorem~\ref{thm:moments}, or the variance definition itself, proves
@@ -394,7 +363,7 @@ Theorem~\ref{thm:moments}, or the variance definition itself, proves
 The actual test-score mean also includes the first test. Its population and
 conditional standard deviations are derived next.
 
-\subsection{Population standard deviation of the actual test-score mean}
+\section{Population standard deviation of the actual test-score mean}
 \begin{proposition}[Population spread of the arithmetic mean]
 \label{prop:population-sd}
 For centered, unit-variance scores with common covariance \(c\),
@@ -438,7 +407,7 @@ finite variances and covariances; joint Gaussianity is not needed for
 \eqref{eq:population-variance}--\eqref{eq:population-sd-total}.
 \end{proof}
 
-\subsection{Conditional standard deviation after observing the first score}
+\section{Conditional standard deviation after observing the first score}
 \begin{proposition}[Spread after one observed score]
 \label{prop:conditional-sd}
 Under the Gaussian model, the actual mean conditional on \(X_0=a\) has
@@ -502,9 +471,9 @@ For the example \(a=2,c=0.6,k=3\), the four-score mean satisfies
 The population spread, the uncertainty remaining after the first score is
 observed, and the variation of the fixed recursive mean are different quantities.
 The exact values underlying these decimals are in
-Section~\ref{sec:certificates}.
+\Cref{sec:certificates}.
 
-\subsection{Predictors based on actual earlier outcomes}
+\section{Predictors based on actual earlier outcomes}
 The random predictors
 \[
   P_n=\E[X_n\given X_0,\ldots,X_{n-1}]
@@ -517,7 +486,7 @@ unconditional implication \(\E[P_n]=0\) holds without Gaussianity whenever
 the scores are integrable and have mean zero. Applying a conditional mean
 function at a fixed, recursively chosen history is a different operation.
 
-\subsection{The subsequent predictions considered separately}
+\section{The subsequent predictions considered separately}
 For comparison, Theorem~\ref{thm:single-start} proves that averaging just
 the \(k\) subsequent predictions gives
 \begin{equation}
@@ -527,7 +496,7 @@ the \(k\) subsequent predictions gives
 The requested average \(B_k\) includes \(a\) as well and therefore has
 denominator \(k+1\), as in \eqref{eq:answer}.
 
-\subsection{Population mean zero and the fixed starting score}
+\section{Population mean zero and the fixed starting score}
 If one randomizes the starting observation according to its standardized
 test distribution, the recursively filled average becomes \(\lambda_k X_0\).
 The affine-moment identities in Theorem~\ref{thm:moments} prove
@@ -555,10 +524,10 @@ For the fixed starting score in this problem, the answer is
 mean \(0\) and standard deviation \(1\); the arithmetic average has its own
 distribution and is not rescaled to unit standard deviation.
 
-\section{Two or three initial scores equal to the starting value}
+\chapter{Two or three initial scores equal to the starting value}
 \label{sec:multiple-starts}
 
-\subsection{General setup with several fixed starting scores}
+\section{General setup with several fixed starting scores}
 Let \(r\geq1\) be the number of starting scores and keep \(k\geq1\) for
 the number of subsequent predictions. There are now \(N=r+k\) jointly
 Gaussian scores \(X_0,\ldots,X_{N-1}\), each with population mean \(0\),
@@ -587,7 +556,7 @@ As before, evaluation at an exact history means the continuous Gaussian
 conditional-mean version. This specifies the equal-score histories even
 though their point probabilities are zero.
 
-\subsection{Every subsequent prediction and the inclusive average}
+\section{Every subsequent prediction and the inclusive average}
 \begin{theorem}[Several equal fixed starting scores]
 \label{thm:multiple-mean}
 Let \(r\geq1\), \(k\geq1\), \(N=r+k\), and
@@ -637,7 +606,7 @@ Putting \(r=1\) recovers \eqref{eq:answer}. Holding all starting scores,
 \(c\), and the counts fixed makes \(B_{r,k}\) deterministic, with
 \(\operatorname{SD}(B_{r,k})=0\).
 
-\subsection{Population and conditional standard deviations}
+\section{Population and conditional standard deviations}
 \begin{theorem}[Spread with several observed starting scores]
 \label{thm:multiple-sd}
 Under the preceding assumptions, the actual mean \(C_{r,k}\) has
@@ -716,7 +685,7 @@ with random initial scores uses a random starting \emph{block}. The single
 random-start interpretation in \eqref{eq:random-start} does not specify a
 distribution for several starting scores constrained to share one random value.
 
-\subsection{Special case: two starting scores equal to \texorpdfstring{\(a\)}{a}}
+\section{Special case: two starting scores equal to \texorpdfstring{\(a\)}{a}}
 \begin{corollary}[Two starting scores]
 \label{cor:two-starts}
 Set \(r=2\). The initial values are \(a,a\), followed by \(k\)
@@ -747,7 +716,7 @@ Proposition~\ref{prop:domain} gives the stated correlation domain.
 The endpoint \(c=1\) follows from Proposition~\ref{prop:multiple-boundaries}.
 \end{proof}
 
-\subsection{Special case: three starting scores equal to \texorpdfstring{\(a\)}{a}}
+\section{Special case: three starting scores equal to \texorpdfstring{\(a\)}{a}}
 \begin{corollary}[Three starting scores]
 \label{cor:three-starts}
 Set \(r=3\). The initial values are \(a,a,a\), followed by \(k\)
@@ -780,7 +749,7 @@ Proposition~\ref{prop:multiple-boundaries} supplies \(c=1\).
 For both special cases, the standard deviation of the fixed recursive
 average \(B_{r,k}\) is \(0\), by Theorem~\ref{thm:moments}.
 
-\subsection{Checks, endpoints and an example}
+\section{Checks, endpoints and an example}
 \begin{proposition}[Boundary values and compatible histories]
 \label{prop:multiple-boundaries}
 The preceding formulas extend to \(c=1\) on compatible equal-score
@@ -843,12 +812,12 @@ SD of the fixed recursive mean & \(0\) & \(0\) \\
 \begin{proof}[Proof of the numerical table]
 Substitute \(a=2\), \(c=3/5\), and \(k=3\) into
 Corollaries~\ref{cor:two-starts} and \ref{cor:three-starts}.
-Section~\ref{sec:certificates} records the exact fractions, variances and
+\Cref{sec:certificates} records the exact fractions, variances and
 rounding bounds, so no floating-point accuracy assumption is needed for
 the printed six-decimal entries.
 \end{proof}
 
-\section{Worked examples starting at IQ 150}
+\chapter{Worked examples starting at IQ 150}
 \label{sec:iq150-examples}
 
 \begin{corollary}[Affine reporting of the proved results]
@@ -861,7 +830,7 @@ inclusive means and actual-mean SDs. The fixed recursive mean still has
 SD zero.
 \end{corollary}
 
-\subsection{Convert the reporting scale to the standardized model}
+\section{Convert the reporting scale to the standardized model}
 \begin{proof}
 The model scores \(X_i\) continue to have population mean \(0\) and
 standard deviation \(1\). To report them on an IQ scale with mean \(100\)
@@ -883,9 +852,9 @@ standardized model are unchanged; \(Q_i\) is its reporting scale. In the
 examples below, \(r\in\{1,2,3\}\) is the number of initial IQ-150 scores,
 \(k\in\{1,2,10\}\) is the number of subsequent predictions, and every
 initial score is included in the \(N=r+k\) values being averaged.
-Use the selected correlation \(c=0.6=3/5\) throughout this section.
+Use the selected correlation \(c=0.6=3/5\) throughout this chapter.
 
-\subsection{Predictions, means and standard deviations in IQ points}
+\section{Predictions, means and standard deviations in IQ points}
 Put \(d_r=1+(r-1)c\) and \(d_N=1+(N-1)c\), as above. Conditional linearity
 from Theorem~\ref{thm:conditional}, together with
 Theorem~\ref{thm:multiple-mean}, gives the IQ prediction for every subsequent
@@ -936,7 +905,7 @@ The conditional SD is calculated after all \(r\) initial IQ-150 scores have
 been observed. The fixed recursively filled average itself has SD \(0\).
 \end{proof}
 
-\subsection{The nine requested examples}
+\section{The nine requested examples}
 The following table reports the inclusive mean and both actual-mean SDs in
 IQ points, rounded to two decimal places. Here \(N=r+k\) includes every
 starting score and every subsequent prediction. The mean is
@@ -982,7 +951,7 @@ The fixed recursive mean in the same row remains a deterministic number.
 \begin{proof}[Proof of the numerical IQ examples]
 All nine rows follow by substituting \(a=10/3\), \(c=3/5\),
 \(r\in\{1,2,3\}\), and \(k\in\{1,2,10\}\) into
-Corollary~\ref{cor:iq-reporting}. Section~\ref{sec:certificates} provides
+Corollary~\ref{cor:iq-reporting}. \Cref{sec:certificates} provides
 their exact rational means and variances and strict integer inequalities
 certifying every displayed two-decimal rounding. The worked row uses
 the same exact fractions, with its six-decimal bounds certified there as well.
@@ -991,7 +960,7 @@ the same exact fractions, with its six-decimal bounds certified there as well.
 \input{asymptotic_limits}
 \input{sd_interpretation}
 
-\section{Boundary cases with one starting score}
+\chapter{Boundary cases with one starting score}
 \begin{proof}[Proof of the one-start boundary statements]
 These are the \(r=1\) cases of Proposition~\ref{prop:multiple-boundaries}.
 For clarity, the individual consequences are spelled out below.
@@ -1028,7 +997,7 @@ Theorem~\ref{thm:moments}; the single-value statements follow directly
 from \(C_0=X_0\) and the constant-variable variance definition.
 \end{proof}
 
-\section{Why correlation alone is insufficient}
+\chapter{Why correlation alone is insufficient}
 
 \begin{proposition}[Conditional means are not determined by the marginals]
 \label{prop:counterexample}
@@ -1089,11 +1058,11 @@ and \(-1/2\). This proves the proposition.
 \input{exact_numeric_certificates}
 \input{computational_verification}
 
-\section{Map from claims to proofs and references}
+\chapter{Map from claims to proofs and references}
 \label{sec:proof-map}
 The following map covers the mathematical claims in this analysis. The
 reference theorems are stated with verified locators in
-Section~\ref{sec:foundations}; each project-specific deduction is proved
+\Cref{sec:foundations}; each project-specific deduction is proved
 in the location listed below. Model assumptions and definitions are inputs
 to those deductions, rather than empirical conclusions of a theorem.
 
@@ -1157,7 +1126,7 @@ Zero variance implies an almost-sure constant
 \citep[Theorem 1.6.4]{durrett2019}; Gaussian support and residual proof \\
 \hline
 IQ conversion, numerical means and SDs, and every printed rounding &
-Corollary~\ref{cor:iq-reporting}; Section~\ref{sec:certificates}, including
+Corollary~\ref{cor:iq-reporting}; \Cref{sec:certificates}, including
 Lemma~\ref{lem:rounding} and exact integer certificates &
 Affine expectation/variance identities \citep{durrett2019}; proved
 mean/SD formulas and exact rational arithmetic \\
@@ -1180,7 +1149,7 @@ Gaussian affine closure and uniqueness in Theorem~\ref{thm:gaussian};
 moment identities and the proved mean/variance limits \\
 \hline
 Population versus conditional SD and its change with count &
-Section~\ref{sec:sd-interpretation}, including
+\Cref{sec:sd-interpretation}, including
 Propositions~\ref{prop:variance-components-general} and
 \ref{prop:conditional-sd-growth-examples} &
 Gaussian regression, total variance and the proved finite formulas
@@ -1189,7 +1158,7 @@ Gaussian regression, total variance and the proved finite formulas
 Normal-sample diagnostics and computational evidence &
 Proposition~\ref{prop:simulation-reference-laws} and
 Corollary~\ref{cor:simulation-diagnostic-coverage}; evidence classification in
-Section~\ref{sec:computational-verification} &
+\Cref{sec:computational-verification} &
 Orthogonal Gaussian transformation, sample-square decomposition and
 probability bounds; observed numerical/prover results are finite source-pinned
 records, rather than universal mathematical assertions \\
@@ -1198,7 +1167,7 @@ records, rather than universal mathematical assertions \\
 
 \noindent\textbf{Scope and provenance.} This AI-prepared report derives
 consequences of a hypothetical Gaussian model; no empirical psychometric
-study was performed. Section~\ref{sec:computational-verification} records
+study was performed. \Cref{sec:computational-verification} records
 source-pinned software evidence and its trust boundaries; those checks do
 not formally verify this text. The README records build and visual checks.
 The repository license and third-party rights apply.
@@ -1207,5 +1176,17 @@ The repository license and third-party rights apply.
 \clearpage
 \bibliographystyle{plainnat}
 \bibliography{references}
+
+\appendix
+\chapter{AI disclosure}
+\label{sec:ai-disclosure}
+This analysis, its mathematical exposition, supporting repository
+documentation and typesetting were prepared with OpenAI Codex and
+collaborating AI agents. The requester specified the problem, clarified
+the indexing and requested this analysis. Mathematical review and build
+checks were performed within the same AI-assisted workflow; no independent
+human peer review or new empirical psychometric validation is claimed.
+
+\input{../../reporting/ai_disclosure}
 
 \end{document}

@@ -1,59 +1,14 @@
 % !TeX program = xelatex
-\documentclass[
-  a4paper,fontsize=11pt,parskip=half,headings=small,
-  numbers=noenddot,bibliography=totoc
-]{scrartcl}
-
-\usepackage[margin=16mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
-\usepackage{fontspec}
-\usepackage{mathtools,amsthm}
-\usepackage{unicode-math}
-\setmainfont{TeX Gyre Pagella}
-\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
-\setmonofont{Latin Modern Mono}[Scale=MatchLowercase]
-\setmathfont{TeX Gyre Pagella Math}
-\usepackage[protrusion=true,expansion=false]{microtype}
-\usepackage{tabularray}
-\UseTblrLibrary{booktabs}
-\usepackage{booktabs}
-\usepackage{longtable,array}
-\usepackage{enumitem}
-\usepackage{xcolor}
-\usepackage{scrlayer-scrpage}
-\usepackage[authoryear,round]{natbib}
-\usepackage{xurl}
-\usepackage[
-  unicode,colorlinks=true,linkcolor=blue!50!black,
-  citecolor=blue!50!black,urlcolor=blue!50!black,
+% Canonical XeLaTeX/KOMA-Script book layout and required package set.
+\input{../../reporting/book_style}
+\hypersetup{
   pdftitle={Combining IQ Scores: Analysis and a Corrected Statistical Treatment},
   pdfsubject={Composite-score standardization, population calibration, and extreme percentiles},
   pdfauthor={Prepared with OpenAI Codex},
   pdfkeywords={IQ, composite scores, covariance, normal distribution, range restriction}
-]{hyperref}
-\usepackage{bookmark}
-\usepackage[nameinlink,noabbrev]{cleveref}
-
-\DeclareMathOperator{\Var}{Var}
-\DeclareMathOperator{\Cov}{Cov}
-\DeclareMathOperator{\SD}{SD}
-\DeclareMathOperator{\Corr}{Corr}
-\newcommand{\E}{\operatorname{E}}
-\newcommand{\T}{\mathsf{T}}
-\newcommand{\given}{\,\vert\,}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\setlength{\emergencystretch}{1.5em}
-\setlist[itemize]{leftmargin=*,itemsep=2pt,topsep=3pt}
-\setkomafont{disposition}{\normalfont\sffamily\bfseries}
-\setkomafont{pageheadfoot}{\normalfont\sffamily\small}
-\clearpairofpagestyles
+}
 \ihead{Combining IQ scores}
 \ohead{Analysis and corrected article}
-\cfoot*{\pagemark}
-\pagestyle{scrheadings}
-\setlength{\bibsep}{5pt}
 
 \title{Combining IQ Scores}
 \subtitle{Analysis and a corrected statistical treatment}
@@ -61,9 +16,9 @@
 \date{15 November 2026}
 
 \begin{document}
+\frontmatter
 \maketitle
 \thispagestyle{plain.scrheadings}
-\vspace{-1.1em}
 
 \begin{abstract}
 The covariance identities reproduced in Ronald K. Hoeflin's article are
@@ -89,7 +44,10 @@ identified separately. Quantile-dependent decimals are reproducible
 approximations; no certified final-digit enclosure for the normal quantile
 is claimed.
 
-\section{Analysis of the original article}\label{sec:analysis}
+\tableofcontents
+\mainmatter
+
+\chapter{Analysis of the original article}\label{sec:analysis}
 
 \citet{hoeflin} reproduces George A. Ferguson's treatment of variances and
 covariances and applies it to combinations of IQ scores. The basic identity
@@ -130,7 +88,7 @@ The replacement below preserves the valid calculation while making its
 assumptions explicit. The article is newly written; it is not a transcription
 or a reproduction of the original scans.
 
-\section{Corrected article: a statistical method and its limits}
+\chapter{Corrected article: a statistical method and its limits}
 \label{sec:replacement}
 
 Several cognitive test scores can be combined into a single score. The
@@ -147,7 +105,7 @@ justification; evidence supporting the individual tests does not
 automatically establish the meaning of their combination
 \citep[Standard~1.14]{standards2014}.
 
-\subsection{Put the component scores on comparable scales}
+\section{Put the component scores on comparable scales}
 
 For test \(i\), convert the observed score \(x_i\) to a standardized score:
 \begin{equation}
@@ -166,7 +124,7 @@ before they are combined.
 These affine and arithmetic claims are proved in
 \cref{hfpr:standardization}.
 
-\subsection{Standardize the weighted composite}
+\section{Standardize the weighted composite}
 
 Let \(R\) be the population correlation matrix of the standardized test
 scores, and let \(w\) contain fixed weights. The weighted sum has variance
@@ -247,7 +205,7 @@ general intelligence requires evidence about what the composite measures.
 \Cref{hfpr:numerics} gives exact radical expressions and rational bounds
 for this example's displayed rounding.
 
-\subsection{Separate standardization from percentile estimation}
+\section{Separate standardization from percentile estimation}
 
 To assign a percentile, we also need the composite's distribution. Mean zero
 and variance one do not make a distribution normal. Joint multivariate
@@ -316,7 +274,7 @@ For an SD-15 reporting scale, use \(100+15\bar z_{\min}\) instead. In
 particular, the single-test threshold would be approximately 171.30. An IQ
 number without its scale convention is ambiguous.
 
-\subsection{Interpret the limiting threshold and correlation sensitivity}
+\section{Interpret the limiting threshold and correlation sensitivity}
 
 The limiting average threshold follows from
 \begin{equation}
@@ -341,7 +299,7 @@ the relevant population and administration procedure. A lower correlation
 does not, by itself, establish better measurement; it can also reflect
 different constructs or greater measurement noise.
 
-\subsection{Calibrate the population and the scoring procedure}
+\section{Calibrate the population and the scoring procedure}
 
 Correlations in a selected high-scoring sample need not equal correlations
 in the population used to standardize the tests. Selection can change score
@@ -384,7 +342,7 @@ and justification for score interpretations in Standards~1.1--1.4
 \citep{standards2014}.
 
 \appendix
-\section{Composite scores and latent ability: a mathematical illustration}
+\chapter{Composite scores and latent ability: a mathematical illustration}
 \label{sec:latent}
 
 To see why these quantities differ, suppose, expressly as a hypothetical
@@ -435,7 +393,7 @@ estimate. It is not a proposed correction factor for actual IQ scores,
 and inter-test correlation should not generally be equated with reliability
 or common-factor variance.
 
-\section{Numerical reproduction}
+\chapter{Numerical reproduction}
 
 The accompanying script \texttt{scripts/verify\_calculations.py} recalculates
 the normal quantile, checks the table against \texttt{data/thresholds.csv}
@@ -448,10 +406,10 @@ real-arithmetic enclosure for \(q\) or independently prove the accuracy
 of SciPy. \Cref{hfpr:numerics} separates exact formulas and rounding
 certificates from these backend-dependent approximations.
 
-\section{Expanded software verification and its limits}
+\chapter{Expanded software verification and its limits}
 \label{sec:verification}
 
-\textbf{Historical source context.} This section describes the source-pinned
+\textbf{Historical source context.} This chapter describes the source-pinned
 4--5 November 2026 campaigns linked below. Counts and ``analyzed'' status
 refer to those recorded snapshots; they are not a claim that this report's
 15 November mathematical additions reran GNATprove or recounted the
@@ -478,7 +436,7 @@ adds fresh Python verification and re-audits these unchanged native records;
 it does not claim new prover invocations. Earlier 47-check and 110-test results remain
 immutable historical snapshots, not counts for the expanded implementation.
 
-\subsection{What the expanded campaign analyzed}
+\section{What the expanded campaign analyzed}
 
 In that expanded source snapshot, SPARK covers the inverse-survival bisection loop, exact 64-bit random
 state recurrence, open-unit conversion, Box--Muller composition, common-factor
@@ -517,7 +475,7 @@ recorded. The final manifest combines actual successful invocations and
 fresh source-pinned structural audits; it is not a claim that the initial
 launcher exited successfully.
 
-\subsection{Trusted numerical and I/O boundaries}
+\section{Trusted numerical and I/O boundaries}
 
 The campaign leaves five numerical completions outside SPARK in
 \texttt{Normal\_Support}:
@@ -541,7 +499,7 @@ inverse convergence, or an approximation-error bound. No project
 Zero explicit assumptions or suppressions in native metadata does not
 eliminate trust in off-mode completions or library contracts.
 
-\subsection{Five explicit contracts per subprogram}
+\section{Five explicit contracts per subprogram}
 
 Every SPARK function and procedure in the campaign's audited snapshot,
 including local and Ghost helpers and trusted interfaces, has at least
@@ -566,7 +524,7 @@ or preservation properties. There is no upper limit: regression cases
 accept five, six, seven and eight distinct decorators and reject zero
 through four. Repeated normalized syntax cannot pad the count.
 
-\subsection{Ghost models for the remaining interfaces}
+\section{Ghost models for the remaining interfaces}
 
 \texttt{Hoeflin\_Boundary\_Models} is an implemented SPARK model package.
 Its pure predicates, projection types and receipt transitions are ordinary
@@ -626,7 +584,7 @@ unchanged. The failed attempt and compatibility probes are retained.
 Compiler correctness remains part of the trusted infrastructure; finite
 compatibility tests are not a compiler proof.
 
-\subsection{Numerical regression, Deal, and audit results}
+\section{Numerical regression, Deal, and audit results}
 
 The simulation uses 1,000,000 trials per case, resetting seed
 \texttt{20261030} across the eight cases. Replay matches all tail counts
@@ -663,7 +621,16 @@ interpretation. The distinction between a standardized composite and
 latent ability remains essential.
 
 \clearpage
-\section{AI disclosure and provenance}\label{sec:ai-disclosure}
+\input{../../reporting/proof_foundations}
+\input{proofs_hoeflin}
+\input{../../reporting/statistical_methods}
+\input{claimmap_hoeflin}
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{simulation_references,references}
+
+\clearpage
+\chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
 
 This report was substantially generated and revised using OpenAI Codex
 and collaborating AI sub-agents. The session identifies Codex as based on
@@ -714,14 +681,5 @@ and evidence history, but not a complete prompt/tool transcript, exact
 per-line authorship, or an AI-contribution percentage. Those details cannot
 be reconstructed reliably and have not been invented. The disclosure is
 current through 15 November 2026.
-
-\clearpage
-\input{../../reporting/proof_foundations}
-\input{proofs_hoeflin}
-\input{../../reporting/statistical_methods}
-\input{claimmap_hoeflin}
-\clearpage
-\bibliographystyle{plainnat}
-\bibliography{simulation_references,references}
 
 \end{document}

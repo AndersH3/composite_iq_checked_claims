@@ -27,3 +27,6 @@ library:
 .PHONY: proof-reports
 proof-reports:
 	$(PYTHON) -m reporting.rebuild_proofs
+
+.PHONY: report-books
+report-books: proof-reports

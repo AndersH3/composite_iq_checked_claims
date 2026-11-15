@@ -14,3 +14,12 @@ Distinguish runtime and property tests, limited symbolic proofs, static-lint dia
 # SPARK contract policy
 
 Each current SPARK function and procedure, including local and ghost helpers and interfaces with trusted completions, must have at least five explicit meaningful contract entries. Run `python verification/spark_contracts.py`. Count top-level Pre/Post/Refined_Post conjuncts, Contract_Cases alternatives, and explicit Global/Depends aspects. Do not count Ghost/SPARK_Mode/Inline, subtype declarations, body assertions, unsupported aspects, repeated syntax, or literal Boolean padding. The structural floor does not imply logical independence or contract adequacy. Work toward ten nonredundant clauses per SPARK subprogram where mathematically justified; report both the mandatory five-clause floor and staged ten-clause inventory without declaring unrun GNATprove verification successful. Preserve existing properties and runtime behavior; keep trusted completions and model/refinement limits explicit. Retain Ghost observations for excluded implementations. Ordinary request receipts may support normal-return contracts under Ghost Ignore without claiming operating-system success.
+
+
+# PDF report format policy
+
+All maintained report PDFs and future report PDFs use XeLaTeX and the KOMA-Script `scrbook` class with narrow margins (the shared style uses 16 mm). Use the canonical `reporting/book_style.tex` preamble, a table of contents, and a full AI-disclosure appendix at the end, after the bibliography and all other substantive material. Preserve the mathematical proofs and keep historical evidence immutable when revising presentation.
+
+Load `fontspec`, `unicode-math`, `tcolorbox`, `tabularray`, `hyperref`, `bookmark`, `mathtools`, `microtype`, `scrlayer-scrpage`, `cleveref`, `amsthm`, `booktabs`, `graphicx`, `float`, `enumitem`, `scrhack`, `listings`, `natbib`, and `xurl`. Load/use Xy-pic and TikZ/PGF only when necessary for diagrams or graphics. Text and formulas use native text/math typesetting. The simulation wrapper loads PGFPlots for its scientific charts; the common book style does not use a graphics canvas to typeset text or formulas.
+
+Build and render through the Dask report workflow, check all final references/citations and layout diagnostics, and visually review the resulting pages. Record a new presentation revision separately from earlier simulation and proof-evidence records.

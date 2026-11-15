@@ -1,0 +1,76 @@
+% Canonical preamble for every maintained report PDF.
+% XeLaTeX is required; chart-specific PGFPlots is loaded by simulation_style.
+\documentclass[
+  a4paper,fontsize=11pt,oneside,open=any,parskip=half,headings=small,
+  numbers=noenddot,bibliography=totoc,listof=totoc
+]{scrbook}
+\usepackage{iftex}
+\RequireXeTeX
+\usepackage[verbose,margin=16mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
+\usepackage{fontspec}
+\usepackage{mathtools,amsthm}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
+\setmonofont{Latin Modern Mono}[Scale=MatchLowercase]
+\setmathfont{TeX Gyre Pagella Math}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+\usepackage{booktabs,longtable,array}
+\usepackage{graphicx,float,enumitem}
+\usepackage{scrhack,listings}
+\usepackage{needspace,placeins}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xurl}
+\usepackage{scrlayer-scrpage}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\usepackage{bookmark}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+% All mathematical typography uses native TeX math, never a graphics canvas.
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\SD}{SD}
+\DeclareMathOperator{\Corr}{Corr}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\given}{\,\vert\,}
+\newcommand{\one}{\mathbf{1}}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\crefname{chapter}{chapter}{chapters}
+\Crefname{chapter}{Chapter}{Chapters}
+\crefname{proposition}{proposition}{propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{corollary}{corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+
+% Keep the original equation identifiers globally sequential; labels survive
+% the article-to-book hierarchy change without introducing chapter zero.
+\counterwithout{equation}{chapter}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\setlength{\emergencystretch}{1.5em}
+\setlength{\bibsep}{3pt}
+% Slightly smaller native bibliography text keeps long entries together and
+% leaves the full disclosure as a clean final chapter, without changing margins.
+\renewcommand{\bibfont}{\small}
+\setlist[itemize]{leftmargin=*,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=*,itemsep=2pt,topsep=3pt}
+\setkomafont{disposition}{\normalfont\sffamily\bfseries}
+\setkomafont{pageheadfoot}{\normalfont\sffamily\small}
+\RedeclareSectionCommand[beforeskip=0pt,afterskip=1.0\baselineskip]{chapter}
+\clearpairofpagestyles
+\automark[section]{chapter}
+\ihead{\headmark}
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+
+% scrbook intentionally has no article-style abstract. Supply front matter
+% with a native KOMA heading so the overview is navigable in both ToC and PDF.
+\newenvironment{abstract}{\addchap{Overview}}{}

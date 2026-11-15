@@ -102,7 +102,7 @@ The native record is immutable. A later Python-only import/path normalization fo
 
 ## Build the report
 
-From this analysis directory, run `make pdf`. The build uses XeLaTeX, BibTeX, `latexmk`, KOMA-Script, the packages loaded by the source, TeX Gyre Pagella text/mathematics, TeX Gyre Heros and Latin Modern Mono. The output is `output/pdf/sequential_conditional_means.pdf`. `make clean` removes auxiliary files while retaining the PDF.
+From this analysis directory, run `make pdf`. Both report volumes use XeLaTeX, BibTeX, `latexmk`, KOMA-Script `scrbook`, A4 paper with 16 mm margins, TeX Gyre Pagella text/mathematics, TeX Gyre Heros and Latin Modern Mono. The [shared preamble](../../reporting/book_style.tex) loads the required package set. Every volume has a table of contents and full AI disclosure as the final appendix after the bibliography. The output is `output/pdf/sequential_conditional_means.pdf`. `make clean` removes auxiliary files while retaining the PDF.
 
 The new sections are [asymptotic limits](asymptotic_limits.tex), [SD interpretation](sd_interpretation.tex) and [computational scope and proofs](computational_verification.tex). The final PDF is rendered and visually inspected after changes. Written mathematical proofs, native SPARK results, runtime Deal tests, static lint, scoped symbolic verification, numerical accuracy and model validity are reported separately.
 
@@ -120,4 +120,4 @@ From the repository root, regenerate all three experiments, tables, PDFs and ren
 .venv/bin/python -m reporting.simulate --pdf
 ```
 
-See the [shared Dask workflow](../../reporting/README.md) for seeds, chunk layout, dependency versions, contracts and verification scope. With the generated data already present, `make simulation-pdf` in this directory rebuilds only this report using XeLaTeX. Historical evidence and the existing main report remain unchanged.
+See the [shared Dask workflow](../../reporting/README.md) for seeds, chunk layout, dependency versions, contracts and verification scope. With the generated data already present, `make simulation-pdf` in this directory rebuilds only this volume using XeLaTeX. From the repository root, `make report-books PYTHON=.venv/bin/python` rebuilds all six books and records the presentation revision separately while retaining the original numerical campaign and historical proof evidence.

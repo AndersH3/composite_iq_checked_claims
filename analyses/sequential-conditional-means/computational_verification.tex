@@ -1,7 +1,7 @@
-\section{Contracted calculations, simulations and independent checks}
+\chapter{Contracted calculations, simulations and independent checks}
 \label{sec:computational-verification}
 
-\subsection{Implementation and mathematical coverage}
+\section{Implementation and mathematical coverage}
 The accompanying \texttt{ada/} implementation separates exact formula
 construction, floating-point evaluation, sampling and reporting. It uses
 Ada's integer and elementary-function libraries and the repository's existing
@@ -65,11 +65,11 @@ including its covariance, conditional value \(-1\), inclusive mean \(-1/2\)
 and comparison with an independent score having the same marginal law. \\
 \hline
 Foundational probability and linear-algebra theorems &
-Written proofs and primary references in Section~\ref{sec:foundations}; finite
+Written proofs and primary references in \Cref{sec:foundations}; finite
 program tests and simulations do not establish these universal theorems. \\
 \end{longtable}
 
-\subsection{What the simulations sample}
+\section{What the simulations sample}
 For each finite example, the population batch samples a Gaussian random
 variable with location \(0\) and variance \(d_N/N\). The conditional batch
 samples one with location \(B_{r,k}\) and variance
@@ -160,57 +160,53 @@ it neither proves PRNG independence nor certifies arbitrary future grids.
 Zero-variance cases use constant output and do not divide by \(v\).
 \end{proof}
 
-\subsection{Contracts, native proof and trust boundaries}
-The 15 November document revision records all six rebuilt reports in
-\path{reporting/proof-revision/revision.json}. It checks the retained
-simulation-data hashes against the original \path{reporting/run.json},
-whose source and PDF hashes continue to describe that earlier campaign.
-The proof-text revision does not rerun those simulations or a native prover.
+\section{Contracts, native proof and trust boundaries}
+The current book-format revision records all six rebuilt reports in
+\path{reporting/book-format/revision.json}. The earlier proof-text revision
+remains in \path{reporting/proof-revision/revision.json}; the original
+simulation campaign remains in \path{reporting/run.json}. Each manifest
+describes its own source and PDF snapshots. The book-format revision checks
+the retained simulation-data hashes against the original campaign. It does
+not rerun those simulations or a native prover.
 The native campaign described below applies to its recorded source snapshot.
 The subsequent central-library refactor requires a matching new native
 campaign before the changed Ada bodies can be called proved. Historical
 results are retained without making that current-source claim.
 
-Every new SPARK subprogram specification has at least five explicit behavioral
-or flow contract entries. Exact formula functions have at least ten. The
-floating evaluator, accumulator and sampler have more entries where distinct
-properties are useful; reset needs only its three state-reset properties and
-two flow properties. Every named supplementary Python function, including
-tests and helpers, has at least five Deal decorators. Higher counts specify
-independent domain, output, exception, side-effect and frame requirements;
-the structural audit counts declarations and cannot establish their adequacy.
+Each new SPARK specification has at least five explicit behavioral or flow
+entries; exact formula functions have at least ten. The floating evaluator,
+accumulator and sampler add distinct properties; reset has three state-reset
+and two flow properties. Every named Python function, including tests and
+helpers, has at least five Deal decorators covering domain, output, exception,
+side-effect and frame requirements. These declaration counts do not establish
+contract adequacy.
 
-\texttt{Sequential\_Core} uses proved bounded integer operations.
-\texttt{Sequential\_Experiments} specifies the floating operations actually
-executed, not exact real division or a universal rounding-error bound.
-\texttt{Sequential\_Sampling.Draw} specifies state flow, bounded displacement
-and zero-SD behavior. Its normal generator is reused from the existing
-analysis. The square-root adapter calls Ada's standard library and explicitly
-checks its advertised endpoint, range and squared-residual properties on
-normal return. That adapter's body remains outside SPARK, as do the reused
-transcendental numerical completions and the command-line/CSV driver. The
-latter is one disclosed trusted procedure: physical I/O, parsing, diagnostic
-loops and orchestration are runtime checked, rather than represented by
-contracts that would claim operating-system success. These boundaries are
-visible in native body/spec coverage.
+\texttt{Sequential\_Core} uses proved bounded integer operations;
+\texttt{Sequential\_Experiments} contracts executed floating arithmetic,
+without exact real-division or universal rounding-error guarantees.
+\texttt{Sequential\_Sampling.Draw} contracts state flow, bounded displacement
+and zero-SD behavior using the existing normal generator. The adapter calls
+Ada's square-root library and checks endpoint, range and squared-residual
+properties on normal return. Its body, reused transcendental completions
+and command-line/CSV driver remain outside SPARK. The driver is one trusted
+procedure with runtime checks for physical I/O, parsing, diagnostic loops
+and orchestration; no contract guarantees operating-system success.
+Native body/spec coverage identifies these boundaries.
 
-The standard recorded numerical run evaluates 20 finite cases and compares
-each with an independent full-matrix calculation. Forty finite simulation
-batches and six limiting-parameter batches each contain 200,000 observations,
-for 9.2 million scalar aggregate values. Eighteen identity/counterexample
-checks have maximum absolute discrepancy less than \(1.8\times10^{-15}\).
-All sampling diagnostics pass; the largest empirical-mean discrepancy is
-less than \(1.53\) theoretical standard errors. These are reproducible
-finite-run observations, rather than universal numerical or statistical
-proofs. The independent exact checks also verify all 74 printed integer
-rounding-certificate entries.
+The recorded run checks 20 finite cases against independent full-matrix
+calculations. Forty finite and six limiting batches of 200,000 observations
+produce 9.2 million scalar aggregates. The 18 identity/counterexample checks
+have maximum absolute discrepancy below \(1.8\times10^{-15}\). All sampling
+diagnostics pass; the largest empirical-mean discrepancy is below \(1.53\)
+theoretical standard errors. Independent exact checks verify all 74 printed
+integer rounding-certificate entries. These are reproducible finite
+observations, not universal numerical or statistical proofs.
 
-The retained campaign contains native prover logs and entity metadata,
-source and result hashes, contract inventories and the independent validation
-report. Its precise results are summarized in the accompanying README.
-GNATprove proof concerns the stated bounded program contracts, under the
-contracts of trusted boundaries. Runtime Deal checks, static lint, property
-tests, symbolic checks on their supported scope and simulations are reported
-separately. None machine-checks this entire mathematical exposition, the
-external math library's implementation, PRNG normality or the psychometric
-assumptions. Historical proof records for other analyses are preserved.
+The campaign retains native prover logs, entity metadata, source/result
+hashes, contract inventories and independent validation; precise results
+are in the README. GNATprove addresses bounded contracts under trusted
+boundary contracts. Runtime Deal checks, static lint, property tests,
+limited symbolic checks and simulations provide separate evidence; none
+verifies this exposition, external math-library implementation, PRNG
+normality or psychometric assumptions. Other analyses' historical proof
+records are preserved.

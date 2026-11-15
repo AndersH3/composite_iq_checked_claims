@@ -13,7 +13,7 @@ A joint statistical analysis and independently written corrected treatment of Gr
 - [Computer10 prover evidence](../../verification/README.md)
 - [Archived-source provenance and hashes](source_manifest.json)
 
-The PDF uses XeLaTeX, KOMA-Script `scrartcl`, A4 paper, 16 mm margins, and TeX Gyre Pagella text and mathematics, with TeX Gyre Heros and Latin Modern Mono. The report's probability calculations are conditional on the stated bivariate-normal model; their numerical verification does not validate that model for actual tests or membership populations.
+Both PDFs use XeLaTeX, KOMA-Script `scrbook`, A4 paper, 16 mm margins, and TeX Gyre Pagella text and mathematics, with TeX Gyre Heros and Latin Modern Mono. Each volume has a table of contents and full AI disclosure as its final appendix after the bibliography. The [shared preamble](../../reporting/book_style.tex) loads the required package set. Probability calculations are conditional on the stated bivariate-normal model; numerical verification does not validate that model for actual tests or membership populations.
 
 The Markdown companion contains the same analysis and corrected article; the XeLaTeX source and PDF are the authoritative typeset version.
 

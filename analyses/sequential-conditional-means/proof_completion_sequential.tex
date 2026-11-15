@@ -1,10 +1,10 @@
-\section{Complete proofs for the sequential simulation targets}
+\chapter{Complete proofs for the sequential simulation targets}
 \label{sec:seq-proof-completion}
 
-This section completes the deductions used in the experimental sections.
+This chapter completes the deductions used in the experimental chapters.
 The foundational results and their proofs appear in
-Section~\ref{sec:proof-foundations}; the sampling and interval proofs appear
-in Section~\ref{sec:shared-statistical-methods}. A model assumption is an
+\Cref{sec:proof-foundations}; the sampling and interval proofs appear
+in \Cref{sec:shared-statistical-methods}. A model assumption is an
 input to these deductions. A recorded numerical observation is an output
 of a specified finite computation, rather than a universal theorem.
 
@@ -183,7 +183,7 @@ exact IQ-scale decomposition
 the decomposition adds variances, not SDs.
 \end{proof}
 
-\subsection{Exact certificates for the numerical target columns}
+\section{Exact certificates for the numerical target columns}
 \label{seqp:exact-grid}
 At \(c=3/5\), \(a=10/3\), and \(N=r+k\), the preceding proposition
 gives the following rational IQ-scale targets:
@@ -195,7 +195,7 @@ gives the following rational IQ-scale targets:
 Indeed, \(d_j=(3j+2)/5\); inserting this into the proved centre and
 variance formulas and multiplying variances by 225 gives the three
 expressions. Direct substitution gives all finite exact entries below.
-For \(k=\infty\), the proved limits in Section~\ref{sec:seq-sim-limits}
+For \(k=\infty\), the proved limits in \Cref{sec:seq-sim-limits}
 give \(m=100+150r/(3r+2)\), \(V_P=135\), and
 \(V_C=270/(3r+2)\).
 
@@ -256,7 +256,7 @@ The population mean is exactly 100 in every row.
 \end{center}
 Every listed integer is positive; the established equivalences therefore
 prove the claimed roundings. For the six-decimal worked example in
-Section~\ref{sec:seq-sim-sds}, the corresponding SD pairs \((L,U)\),
+\Cref{sec:seq-sim-sds}, the corresponding SD pairs \((L,U)\),
 with \(T=10^6\), are \((169283518,21713858)\) for
 \(\sqrt{285/2}\approx11.937336\) to the stated precision and
 \((125135856,572288016)\) for \(\sqrt{475/16}\approx5.448624\).
@@ -268,9 +268,13 @@ The theoretical MC SE columns use \(\sqrt{V/M}\) with
 \(M=4\,000\,000\), so the same certificate applies with denominator
 \(Mq\). In finite-grid row order above, their four-decimal display
 integers \(t\) are
-\((67,64,60,64,63,60,63,62,60)\) for population rows and
-\((30,33,36,19,22,27,13,17,22)\) for conditional rows. Substitution of
-the listed exact variances into the two integer expressions gives
+\[
+ \begin{aligned}
+  \text{Population:}\quad &(67,64,60,64,63,60,63,62,60),\\
+  \text{Conditional:}\quad &(30,33,36,19,22,27,13,17,22).
+ \end{aligned}
+\]
+Substitution of the listed exact variances into the two integer expressions gives
 \(\min L=96\,000\,000\) and \(\min U=356\,000\,000\) across
 these 18 entries. Both minima are positive, which proves every displayed
 MC SE rounding by the same inequalities. Observed estimates, the
@@ -278,7 +282,7 @@ standardized discrepancies calculated from them, and confidence-interval
 endpoints calculated from observed variances remain finite numerical
 records; their reference-law interpretation is proved separately.
 
-\subsection{What a proof of a recorded calculation means}
+\section{What a proof of a recorded calculation means}
 \label{seqp:record-scope}
 The target columns and their count/limit comparisons are mathematical
 deductions above. The observed columns, extrema, replicate comparisons,

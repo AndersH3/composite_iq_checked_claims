@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild all six proof-complete reports in one source-pinned Dask graph.
+"""Rebuild all six proof-complete KOMA-Script books in one Dask graph.
 
 The November simulation campaign is immutable input. This document revision
 neither reruns its random experiment nor relabels its old source hashes as
@@ -30,8 +30,14 @@ DOCUMENTS = (
     ("sequential-conditional-means", "sequential_conditional_means"),
     ("sequential-conditional-means", "sequential_simulations"),
 )
-RECORD = ROOT.joinpath("reporting", "proof-revision", "revision.json")
+RECORD = ROOT.joinpath("reporting", "book-format", "revision.json")
 CAMPAIGN = ROOT.joinpath("reporting", "run.json")
+REQUIRED_PACKAGES = (
+    "fontspec", "unicode-math", "tcolorbox", "tabularray", "hyperref",
+    "bookmark", "mathtools", "microtype", "scrlayer-scrpage", "cleveref",
+    "amsthm", "booktabs", "graphicx", "float", "enumitem", "scrhack",
+    "listings", "natbib", "xurl",
+)
 
 
 @deal.pre(lambda: CAMPAIGN.is_file())
@@ -69,6 +75,7 @@ def retained_data():
 @deal.post(lambda result: type(result["pages"]) is int and 0 < result["pages"] < 200)
 @deal.post(lambda result: len(result["sha256"]) == 64)
 @deal.post(lambda result: result["layout_diagnostics"] == [])
+@deal.post(lambda result: result["document_class"] == "scrbook" and result["toc"] and result["final_ai_appendix"])
 @deal.ensure(lambda document, retained, result: result["project"] == document[0] and result["stem"] == document[1])
 @deal.raises(OSError, ValueError, TypeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
 @deal.has("read", "write", "syscall")
@@ -92,6 +99,27 @@ def build_document(document, retained):
             stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=240,
         )
     log = directory.joinpath("output", "pdf", stem + ".log").read_text(encoding="utf-8")
+    # Validate actual compiler inputs rather than trusting a comment or README.
+    inputs = directory.joinpath("output", "pdf", stem + ".fls").read_text(encoding="utf-8")
+    loaded = {Path(line[6:]).name for line in inputs.splitlines() if line.startswith("INPUT ")}
+    if "scrbook.cls" not in loaded or "This is XeTeX" not in log:
+        raise ValueError("Report did not use XeLaTeX and KOMA-Script scrbook: " + stem)
+    missing = [name for name in REQUIRED_PACKAGES if name + ".sty" not in loaded]
+    if missing:
+        raise ValueError("Missing required report packages: " + repr(missing))
+    # Geometry reports the actual four outer margins in TeX points. Sixteen
+    # millimetres is 45.5244 pt to the log's precision; check both dimensions.
+    horizontal = re.search(r"\* h-part:\(L,W,R\)=\(([\d.]+)pt, [\d.]+pt, ([\d.]+)pt\)", log)
+    vertical = re.search(r"\* v-part:\(T,H,B\)=\(([\d.]+)pt, [\d.]+pt, ([\d.]+)pt\)", log)
+    if horizontal is None or vertical is None:
+        raise ValueError("Missing actual geometry margin record: " + stem)
+    margins = [float(value) for value in horizontal.groups() + vertical.groups()]
+    if not all(abs(value - 45.5244) < 0.001 for value in margins):
+        raise ValueError("Report does not have four 16 mm margins: " + stem)
+    toc = directory.joinpath("output", "pdf", stem + ".toc").read_text(encoding="utf-8")
+    chapters = [line for line in toc.splitlines() if "\\contentsline {chapter}" in line]
+    if not chapters or "AI disclosure" not in chapters[-1] or "appendix." not in chapters[-1]:
+        raise ValueError("Full AI disclosure is not the final appendix chapter: " + stem)
     # Only the final XeLaTeX log is checked: intermediate passes legitimately
     # have unresolved references before BibTeX/latexmk resolve dependencies.
     diagnostics = re.findall(r"(?:Overfull|Underfull) \\[hv]box[^\n]*|Missing character:[^\n]*|[^\n]*(?:undefined references|undefined citations|multiply defined|Citation[^\n]*undefined|Reference[^\n]*undefined)[^\n]*", log)
@@ -100,7 +128,7 @@ def build_document(document, retained):
     pdf = directory.joinpath("output", "pdf", stem + ".pdf")
     info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, check=True, timeout=30).stdout
     pages = int(next(line.split(":", 1)[1] for line in info.splitlines() if line.startswith("Pages:")))
-    render = directory.joinpath("tmp", "pdfs", "proof-revision", stem)
+    render = directory.joinpath("tmp", "pdfs", "book-format", stem)
     render.mkdir(parents=True, exist_ok=True)
     # A shorter revised PDF must not leave a stale final page in visual QA.
     # Only this report's temporary, reproducible page images are removed.
@@ -108,13 +136,16 @@ def build_document(document, retained):
         stale.unlink()
     subprocess.run(["pdftoppm", "-scale-to", "1200", "-png", str(pdf), str(render.joinpath("page"))], capture_output=True, check=True, timeout=180)
     return {"project": project, "stem": stem, "pdf": pdf.relative_to(ROOT).as_posix(),
-            "sha256": digest(pdf), "pages": pages, "xelatex": True, "layout_diagnostics": []}
+            "sha256": digest(pdf), "pages": pages, "xelatex": True, "layout_diagnostics": [],
+            "document_class": "scrbook", "required_packages": list(REQUIRED_PACKAGES),
+            "toc": True, "final_ai_appendix": True, "margin_mm": 16,
+            "actual_margins_pt": margins}
 
 
 @deal.pre(lambda results, retained, graph_tasks: isinstance(results, list) and len(results) == len(DOCUMENTS))
 @deal.pre(lambda results, retained, graph_tasks: {(row["project"], row["stem"]) for row in results} == set(DOCUMENTS))
 @deal.pre(lambda results, retained, graph_tasks: type(graph_tasks) is int and graph_tasks >= 8)
-@deal.post(lambda result: result["schema"] == "dask-six-report-proof-revision-v1")
+@deal.post(lambda result: result["schema"] == "dask-six-report-book-format-v1")
 @deal.post(lambda result: len(result["reports"]) == 6 and result["simulation_rerun"] is False)
 @deal.post(lambda result: result["new_native_proof_run"] is False)
 @deal.ensure(lambda results, retained, graph_tasks, result: result["retained_campaign"] == retained)
@@ -137,7 +168,7 @@ def record_revision(results, retained, graph_tasks):
     for project in sorted({document[0] for document in DOCUMENTS}):
         directory = ROOT.joinpath("analyses", project)
         sources += list(directory.glob("*.tex")) + list(directory.glob("*.bib"))
-    record = {"schema": "dask-six-report-proof-revision-v1", "date": "2026-11-15",
+    record = {"schema": "dask-six-report-book-format-v1", "date": "2026-11-15",
               "scheduler": "processes", "dask_version": dask.__version__,
               "graph_tasks": graph_tasks, "reports": results,
               "simulation_rerun": False, "new_native_proof_run": False, "matplotlib_used": False,
@@ -164,7 +195,7 @@ def main(argv=None):
     try:
         record = dask.compute(terminal, scheduler="processes", num_workers=args.workers)[0]
     except RemoteException as error:
-        raise RuntimeError("Dask proof-report revision failed; inspect reporting/proof-revision build logs") from error
+        raise RuntimeError("Dask book-format build failed; inspect reporting/book-format build logs") from error
     print(json.dumps(record, indent=2))
     return 0
 

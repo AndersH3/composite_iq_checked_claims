@@ -8,6 +8,7 @@
 \date{15 November 2026}
 
 \begin{document}
+\frontmatter
 \maketitle
 \thispagestyle{plain.scrheadings}
 \input{simulation-data/macros.tex}
@@ -32,16 +33,20 @@ psychometric model.
 review were prepared with OpenAI Codex and collaborating AI agents. The
 requester specified the report and verification requirements. The work does
 not claim independent human peer review or empirical validation of IQ tests.
+The full disclosure appears in \cref{sec:ai-disclosure}.
 
 \noindent\textbf{Proof and evidence convention.} The model deductions in
-this report are proved in Sections~\ref{sec:proof-foundations} and
-\ref{hfpr:appendix}; Section~\ref{hfmap:simulation} maps every claim to
+this report are proved in \cref{sec:proof-foundations,hfpr:appendix};
+\Cref{hfmap:simulation} maps every claim to
 its proof, model hypothesis or recorded evidence. Numerical reference
 values and observed estimates are computed approximations. Neither a
 matching decimal nor a passing program contract proves human-score
 Gaussianity or a certified last-digit numerical bound.
 
-\section{Questions, experimental units and evidence}
+\tableofcontents
+\mainmatter
+
+\chapter{Questions, experimental units and evidence}
 The main analysis revisits \citet{hoeflin}'s use of covariance identities to
 combine test scores. Its simulation asks what happens \emph{inside a chosen
 probability model}; it does not estimate a population correlation from the
@@ -77,8 +82,8 @@ size. Its original bytes are preserved. Different generators and execution
 plans give different individual draws, so comparison concerns distributions
 and sampling errors, rather than equality of counts.
 
-\section{Model and exact targets}
-\subsection{From individual tests to the simulated aggregate}
+\chapter{Model and exact targets}
+\section{From individual tests to the simulated aggregate}
 Suppose
 \begin{equation}
  X_i=\sqrt c\,G+\sqrt{1-c}\,\varepsilon_i,
@@ -129,7 +134,7 @@ between the plotted points or adding evidence across sizes.
 Proposition~\ref{hfpr:simulation} derives the different cross-size
 covariances in the coupled shortcut and a nested battery explicitly.
 
-\subsection{Standardized composites and qualifying thresholds}
+\section{Standardized composites and qualifying thresholds}
 Define
 \begin{equation}
  Z_{C,n}=\frac{M_n}{\sqrt{v_n}}.
@@ -166,7 +171,7 @@ the common uncertain component, rather than a cap on possible scores.
 Propositions~\ref{hfpr:thresholds} and \ref{hfpr:numerics} prove the
 event equivalence, monotonicity, limiting error bound and scale conversions.
 
-\subsection{Prediction of the simulated common factor}
+\section{Prediction of the simulated common factor}
 In this model, \(\operatorname{Cov}(G,M_n)=\sqrt c\). Put
 \begin{equation}
  \widehat G_n=\frac{\sqrt c}{v_n}M_n,
@@ -206,7 +211,7 @@ argument, predictor variance and MSE optimality from Gaussian independence.
 Proposition~\ref{hfpr:nonidentification} proves why these conclusions
 cannot identify an actual latent target from the score law alone.
 
-\section{Dask execution, reductions and recorded diagnostics}
+\chapter{Dask execution, reductions and recorded diagnostics}
 Dask creates lazy random arrays in chunks of \SimChunk\ observations and
 constructs shared tasks for \(G\) and \(E\). Arithmetic, sums, squared
 sums, exceedance counts, replicate comparisons and pooled results belong
@@ -229,12 +234,12 @@ The reported sample variance uses denominator \(T-1\); combining replicate
 means without their within-replicate sums of squares would lose information.
 The mean diagnostic divides the observed standardized mean by its exact
 standard error \(1/\sqrt T\). Variance diagnostics use the Gaussian
-chi-square reference law. Section~\ref{sec:simulation-statistical-methods}
+chi-square reference law. \Cref{sec:simulation-statistical-methods}
 derives the mean, variance and count reference calculations and explains
 their scope. These checks concern the implementation under ideal sampling;
 they cannot validate the chosen psychometric assumptions.
 
-\section{Observed moments and the variance floor}
+\chapter{Observed moments and the variance floor}
 \begingroup\small
 \input{simulation-data/moments.tex}
 \endgroup
@@ -308,11 +313,15 @@ though the raw score mean has a positive limiting population SD.}
 \label{fig:hf-mse}
 \end{figure}
 
-\section{Tail counts, rare events and replicate variation}
+\chapter{Tail counts, rare events and replicate variation}
 \begingroup\small
 \input{simulation-data/tails.tex}
 \endgroup
+% Promote the retained article heading while preserving the recorded data.
+\begingroup
+\let\subsection\section
 \input{simulation-data/results-discussion.tex}
+\endgroup
 The three exceedance columns are nested for each draw:
 \(\mathbf1_{Z>q}\leq\mathbf1_{Z>3}\leq\mathbf1_{Z>2}\), since
 \(q>3>2\). Their counts must obey the same ordering. The probabilities
@@ -370,7 +379,7 @@ Proposition~\ref{hfpr:simulation} and
 Proposition~\ref{sm:binomial}; interval coverage is addressed in
 Results~\ref{sm:wilson} and \ref{sm:clopper-pearson}.
 
-\section{Comparison with the retained Ada simulation}
+\chapter{Comparison with the retained Ada simulation}
 \begingroup\small
 \input{simulation-data/historical.tex}
 \endgroup
@@ -400,7 +409,7 @@ statistical model. Deal contracts and runtime/property tests have their
 own separately recorded scope. No fresh native proof campaign is implied
 by re-reading or comparing the retained CSV.
 
-\section{Interpretation and practical limits}
+\chapter{Interpretation and practical limits}
 The computations illustrate a specific mathematical distinction.
 Standardization keeps composite population variance at one. Correlated
 component averages retain a common source of variation. A conditional
@@ -425,6 +434,12 @@ has, and has not, been demonstrated.
 \input{proofs_hoeflin}
 \input{../../reporting/statistical_methods}
 \input{claimmap_hoeflin_simulations}
+\begingroup
+\setlength{\bibsep}{3pt}
 \bibliographystyle{plainnat}
 \bibliography{simulation_references,references}
+\endgroup
+\clearpage
+\chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
+\input{../../reporting/ai_disclosure}
 \end{document}

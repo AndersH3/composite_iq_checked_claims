@@ -1,65 +1,23 @@
 % !TeX program = xelatex
-\documentclass[
-  a4paper,fontsize=11pt,parskip=half,headings=small,
-  numbers=noenddot,bibliography=totoc
-]{scrartcl}
-\usepackage[margin=16mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
-\usepackage{fontspec}
-\usepackage{mathtools,amsthm}
-\usepackage{unicode-math}
-\setmainfont{TeX Gyre Pagella}
-\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
-\setmonofont{Latin Modern Mono}[Scale=MatchLowercase]
-\setmathfont{TeX Gyre Pagella Math}
-\usepackage[protrusion=true,expansion=false]{microtype}
-\usepackage{tabularray}
-\UseTblrLibrary{booktabs}
-\usepackage{booktabs}
-\usepackage{longtable,array}
-\usepackage{enumitem}
-\usepackage{xcolor}
-\usepackage{scrlayer-scrpage}
-\usepackage[authoryear,round]{natbib}
-\usepackage{xurl}
-\usepackage[
-  unicode,colorlinks=true,linkcolor=blue!50!black,
-  citecolor=blue!50!black,urlcolor=blue!50!black,
+\input{../../reporting/book_style}
+\setcitestyle{authoryear,round}
+\hypersetup{
   pdftitle={Multiple-Test Admissions: A Joint Analysis of Two Grady Towers Letters},
   pdfsubject={Bivariate normal overlap, eligibility rules, and corrected conditional probabilities},
   pdfauthor={Prepared with OpenAI Codex},
   pdfkeywords={IQ, admissions, Grady Towers, bivariate normal, phi correlation, selection}
-]{hyperref}
-\usepackage{bookmark}
-\usepackage[nameinlink,noabbrev]{cleveref}
-\DeclareMathOperator{\Var}{Var}
-\DeclareMathOperator{\E}{E}
-\DeclareMathOperator{\Cov}{Cov}
-\DeclareMathOperator{\SD}{SD}
-\DeclareMathOperator{\Corr}{Corr}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
+}
 \newcommand{\sfN}{\overline{\Phi}}
-\setlength{\emergencystretch}{1.5em}
-\setlist[itemize]{leftmargin=*,itemsep=2pt,topsep=3pt}
-\setkomafont{disposition}{\normalfont\sffamily\bfseries}
-\setkomafont{pageheadfoot}{\normalfont\sffamily\small}
-\clearpairofpagestyles
 \ihead{Multiple-test admissions}
 \ohead{Joint analysis and corrected article}
-\cfoot*{\pagemark}
-\pagestyle{scrheadings}
-\setlength{\bibsep}{5pt}
 \title{Multiple-Test Admissions}
 \subtitle{A joint analysis and corrected version of two Grady Towers letters}
 \author{}
 \date{15 November 2026}
 
 \begin{document}
+\frontmatter
 \maketitle
-\thispagestyle{plain.scrheadings}
-\vspace{-1.1em}
 \begin{abstract}
 Grady Towers's first letter gives incorrect overlap probabilities for
 correlated IQ tests; his follow-up explicitly retracts that calculation and
@@ -89,9 +47,11 @@ numerical approximations; historical and empirical claims are not presented
 as theorems of the Gaussian model.
 
 
-\section{Joint assessment of the two sources}\label{sec:audit}
+\tableofcontents
+\mainmatter
+\chapter{Joint assessment of the two sources}\label{sec:audit}
 
-\subsection{Read the second letter as a retraction}
+\section{Read the second letter as a retraction}
 
 The sources are \emph{On using multiple tests for high IQ society admissions}
 \citep{towersOriginal} and its \emph{Followup} \citep{towersFollowup}, both
@@ -114,7 +74,7 @@ or membership composition of any named society, either historically or
 today. The incomplete 1960 reference in the first letter can be identified
 as \citet{zelen1960}; the calculations here were performed independently.
 
-\subsection{The first letter's principal numerical claims fail}
+\section{The first letter's principal numerical claims fail}
 
 \Cref{tab:original-audit} compares the first letter's principal figures with
 recalculations under its intended Gaussian scenario. In the mixed case,
@@ -156,7 +116,7 @@ and passing \(Y\) alone has the same probability. Passing \emph{exactly one}
 therefore has probability 2.7447\%. These are different quantities; wording
 such as ``one test but not the other'' should specify which is intended.
 
-\subsection{What the follow-up fixes, and what remains}
+\section{What the follow-up fixes, and what remains}
 
 The follow-up replaces an approximation involving the phi coefficient with
 numerical summation of a bivariate-normal density. That is a substantial
@@ -186,7 +146,7 @@ two such tests at \(\rho=0.7\) have joint probability 1.95993\%, rather than
 was not independently inspected, so no error is attributed to Cattell
 himself.
 
-\section{Corrected combined article: admissions through correlated tests}
+\chapter{Corrected combined article: admissions through correlated tests}
 \label{sec:corrected}
 
 An admission rule and a test percentile answer different questions. A test
@@ -196,7 +156,7 @@ size depends on their overlap. Requiring both cutoffs concerns their
 intersection. Neither rule, by itself, identifies the people with the
 highest values of a perfectly measured underlying ability.
 
-\subsection{Specify a joint model and distinguish the correlations}
+\section{Specify a joint model and distinguish the correlations}
 
 Let \(X,Y\) denote standardized scores in the same reference population,
 with a bivariate-normal distribution:
@@ -253,7 +213,7 @@ mistake cannot be reconstructed; substituting one correlation for the
 other is nevertheless unjustified.
 The indicator-moment derivation is Proposition~\ref{tw:events}.
 
-\subsection{Two tests with the same nominal cutoff}
+\section{Two tests with the same nominal cutoff}
 
 For two top-2\% cutoffs and \(\rho=0.7\), \cref{eq:joint} gives
 \begin{equation}
@@ -305,7 +265,7 @@ Marginal tail on each test & \(z\) cutoff & SD-16 cutoff
 \end{tblr}
 \end{table}
 
-\subsection{A lower cutoff on one test and a higher cutoff on another}
+\section{A lower cutoff on one test and a higher cutoff on another}
 
 Let \(p_A=0.02\) and \(p_B=0.001\), still with \(\rho=0.7\).
 The joint probability is
@@ -342,7 +302,7 @@ That requires evidence about the actual instruments and the society's
 accepted routes. Nor does the model establish the earlier claim about the
 prior memberships of most high-scoring society members.
 
-\subsection{Eligibility size, rarity equivalents, and calibrated rules}
+\section{Eligibility size, rarity equivalents, and calibrated rules}
 
 The population fraction admitted by a rule can be expressed as a normal
 rarity equivalent. Under the equal top-2\% example, the OR and AND fractions
@@ -373,7 +333,7 @@ incompatible with a specified eligible fraction.
 Proposition~\ref{tw:calibration} proves existence and uniqueness of this
 calibration before any numerical root finding is used.
 
-\subsection{Interpret the population model and the testing process}
+\section{Interpret the population model and the testing process}
 
 A useful report separates three questions: who exceeds a cutoff on one
 instrument; who is eligible under a specified admission procedure; and
@@ -413,12 +373,11 @@ the thresholds, and each conditional denominator. Its conclusions remain
 conditional on those specifications.
 
 \appendix
-\section{Numerical audit of the follow-up}\label{sec:grid}
+\chapter{Numerical audit of the follow-up}\label{sec:grid}
 
-The BASIC listing uses \(\rho=0.7\), means 100, standard deviations 16,
-and grid nodes from \(Q\) through 199 in steps of \(h=0.5\), with the
-full-field denominator starting at 1. In mathematical notation its
-probability estimate is
+With \(\rho=0.7\), means 100 and SDs 16, the BASIC grid runs from
+\(Q\) through 199 by \(h=0.5\); its full-field denominator starts at 1.
+Its probability estimate is
 \begin{equation}
 \widehat J_Q=
 \frac{\displaystyle\sum_{x\in\{Q,Q+h,\ldots,199\}}
@@ -427,11 +386,10 @@ probability estimate is
 \sum_{y\in\{1,1+h,\ldots,199\}}g(x,y)},
 \label{eq:grid}
 \end{equation}
-where \(g\) is proportional to the Gaussian density on the IQ-point
-coordinates. The full grid has \(397^2=157{,}609\) nodes. A constant
-factor \(1/(16\cdot16)\) and a cell area \(h^2\) would cancel between the
-two sums. The corresponding absent scale factor also cancels in the
-displayed double-integral ratio in the follow-up.
+where \(g\) is proportional to the IQ-scale Gaussian density. The full
+grid has \(397^2=157{,}609\) nodes. The common scale factor
+\(1/(16\cdot16)\) and cell area \(h^2\) cancel, as does the absent scale
+factor in the follow-up's double-integral ratio.
 
 \begin{table}[htbp]
 \centering
@@ -452,27 +410,20 @@ row{1}={font=\bfseries},rowsep=4pt}
 \end{tblr}
 \end{table}
 
-The reproduced and published grid values agree to relative differences of
-about \(2\times10^{-7}\), but not to every printed digit. The exact cause
-of those small differences is not established. They are far smaller than
-the difference between the grid estimate and the continuous probability
-at the intended cutoff.
+Published and reproduced ratios differ by about \(2\times10^{-7}\) relatively;
+the exact cause is unknown. This is far smaller than the grid-to-continuous
+difference at the intended cutoff.
 
-Equal weighting at the boundary includes a full contribution from the
-node at \(Q\). Viewed as midpoint quadrature, its first cell begins at
-\(Q-h/2=Q-0.25\). The effective lower boundary is therefore shifted
-downward. Numerical comparisons attribute smaller discrepancies to the finite
-upper boundary and ordinary quadrature error in these examples; this is a
-numerical error comparison, not a certified integration-error bound.
-If IQ scores were explicitly
-rounded to integers before classification, a separate rounding rule
-would be needed; a quarter-point grid shift cannot simply be assumed to
-be that rule.
+Full weighting of the boundary node makes the first midpoint cell start at
+\(Q-h/2=Q-0.25\), shifting the lower boundary downward. Numerical comparisons
+attribute smaller discrepancies to the finite upper boundary and ordinary
+quadrature error here; these are not certified integration-error bounds.
+Classifying integer-rounded scores would require a separate rounding rule;
+the quarter-point grid shift alone is not that rule.
 
-For continuous scores, the actual marginal exceedance probabilities at
-the stated integer cutoffs are those in \cref{tab:integer-cutoffs}.
-Dividing the continuous joint tail by its matching marginal gives a
-consistent conditional probability.
+\Cref{tab:integer-cutoffs} gives actual continuous marginal tails at the
+integer cutoffs. Dividing each continuous joint tail by its matching marginal
+gives a consistent conditional probability.
 
 \begin{table}[htbp]
 \centering
@@ -491,18 +442,16 @@ Cutoff & Marginal pass rate & Both: population & Second pass given first \\
 \end{tblr}
 \end{table}
 
-The follow-up divides its grid values by 0.02, 0.001, and 0.000030303.
-Those are approximations to desired nominal tails, not matching marginal
-tails of the specific grid or continuous integer cutoffs. Its
-approximately 32\%, 15\%, and 9\% summaries consequently mix conventions.
-For exact nominal percentiles, use \cref{tab:equal-cutoffs}; for actual
-continuous integer cutoffs, use \cref{tab:integer-cutoffs}. Using the
-grid's own marginal denominator gives approximately 31.51\%, 15.74\%,
-and 7.81\%, a third, internally defined approximation.
-Proposition~\ref{tw:grid} proves what the finite grid normalizes, explains
-the shifted midpoint boundary and supplies explicit error decomposition.
+The follow-up's divisors 0.02, 0.001 and 0.000030303 approximate nominal
+tails, not matching grid or continuous integer-cutoff margins. Its roughly
+32\%, 15\% and 9\% summaries therefore mix conventions. Exact nominal
+percentiles use \cref{tab:equal-cutoffs}; continuous integer cutoffs use
+\cref{tab:integer-cutoffs}. The grid's own margins give approximately
+31.51\%, 15.74\% and 7.81\%, an internally defined approximation.
+Proposition~\ref{tw:grid} derives the normalization, shifted boundary and
+error decomposition.
 
-\section{Reproducibility and numerical checks}\label{sec:reproduction}
+\chapter{Reproducibility and numerical checks}\label{sec:reproduction}
 
 The accompanying script evaluates \cref{eq:joint} with adaptive
 one-dimensional quadrature and directly uses inverse survival functions
@@ -529,7 +478,7 @@ rounded display tables. Run \texttt{make check} from this analysis folder;
 does not establish the empirical truth of the Gaussian assumptions or
 the chosen correlation.
 
-\section{Expanded verification results and limits}\label{sec:verification}
+\chapter{Expanded verification results and limits}\label{sec:verification}
 
 The original proof selected only \texttt{Admission\_Core}. The expanded
 SPARK implementation includes \texttt{Normal\_Model}, \texttt{Towers\_Engine}
@@ -548,7 +497,7 @@ adds fresh Python verification and re-audits the unchanged native evidence;
 it does not claim new prover invocations. Earlier 31-check and 110-test results remain immutable
 historical snapshots; they are not totals for this expanded implementation.
 
-\subsection{SPARK scope and results}
+\section{SPARK scope and results}
 
 The 4 November five-prover portfolio discharged \textbf{696 checks:
 230 flow checks and 466 prover checks}, with zero unproved
@@ -591,7 +540,7 @@ was re-audited against the identical native proof and pinned Ada source.
 The initial record and checker source remain available. The final
 manifest distinguishes proof execution from the subsequent release audit.
 
-\subsection{Checked interfaces and numerical limitations}
+\section{Checked interfaces and numerical limitations}
 
 Small \texttt{Normal\_Model} completions remain off for square root,
 normal survival via foreign \texttt{erfc}, logarithm and exponential ranges,
@@ -627,7 +576,7 @@ retained alongside the exact-core results.
 Proposition~\ref{tw:quantization} proves the perturbation inequality and
 its displayed worst-case numerical substitution.
 
-\subsection{Five explicit contracts per subprogram}
+\section{Five explicit contracts per subprogram}
 
 The retained five-contract campaign inventories at least five explicit entries
 for every SPARK function and procedure it covers, including local and Ghost
@@ -653,7 +602,7 @@ or preservation properties. There is no upper limit: regression cases
 accept five, six, seven and eight distinct decorators and reject zero
 through four. Repeated normalized syntax cannot pad the count.
 
-\subsection{Ghost models and excluded implementation refinement}
+\section{Ghost models and excluded implementation refinement}
 
 The implemented SPARK package \texttt{Towers\_Boundary\_Models} uses ordinary
 pure predicates/types and explicitly Ghost observers and projection lemmas
@@ -716,7 +665,7 @@ unchanged. The failed attempt and compatibility probes are retained.
 Compiler correctness remains part of the trusted infrastructure; finite
 compatibility tests are not a compiler proof.
 
-\subsection{Numerical regression, Deal, and evidence audits}
+\section{Numerical regression, Deal, and evidence audits}
 
 The 4 November Ada build reproduced all four retained CSVs byte for byte.
 Independent SciPy validation and Python replay pass normally and under
@@ -766,7 +715,16 @@ ability. Those empirical and modeling questions remain as identified in
 the main analysis.
 
 \clearpage
-\section{AI disclosure and provenance}\label{sec:ai-disclosure}
+\input{../../reporting/proof_foundations}
+\input{../../reporting/statistical_methods}
+\input{proofs_towers}
+\input{claimmap_towers}
+
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{references,simulation_references}
+
+\chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
 
 This report was substantially generated and revised using OpenAI Codex
 and collaborating AI sub-agents. The session identifies Codex as based on
@@ -818,14 +776,4 @@ per-line authorship, or an AI-contribution percentage. Those details cannot
 be reconstructed reliably and have not been invented. The disclosure is
 current through 15 November 2026. The present revision adds written proofs
 and a claim register; it does not claim a new native SPARK campaign.
-
-\clearpage
-\input{../../reporting/proof_foundations}
-\input{../../reporting/statistical_methods}
-\input{proofs_towers}
-\input{claimmap_towers}
-
-\clearpage
-\bibliographystyle{plainnat}
-\bibliography{references,simulation_references}
 \end{document}
