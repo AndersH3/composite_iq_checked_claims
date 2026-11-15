@@ -1129,7 +1129,9 @@ Qed.
 Theorem cov2_risk_optimal_iff :
  forall a b c u v s x y, 0<a -> 0<cov2_det a b c -> (cov2_risk a b c u v s x y = cov2_schur a b c u v s <-> x=cov2_beta_first a b c u v /\ y=cov2_beta_second a b c u v).
 Proof.
- intros a b c u v s x y Ha Hd; split; [intro Hr; apply cov2_risk_unique_minimizer; assumption|intros [Hx Hy]; subst x y; apply cov2_risk_at_optimum; lra].
+ intros a b c u v s x y Ha Hd; split.
+ - intro Hr; exact (cov2_risk_unique_minimizer a b c u v s x y Ha Hd Hr).
+ - intros [Hx Hy]; subst x y; apply cov2_risk_at_optimum; lra.
 Qed.
 
 (**
