@@ -929,7 +929,7 @@ Proof.
     by (apply Rgt_not_eq; assumption).
   apply Rdiv_lt_0_compat.
   - apply Rmult_lt_0_compat.
-    + apply Rmult_lt_0_compat; [exact Hr | exact Hdt].
+    + apply Rmult_lt_0_compat; [lra | exact Hdt].
     + exact Hdt.
   - apply Rmult_lt_0_compat; [nra | exact Hdr].
 Qed.
