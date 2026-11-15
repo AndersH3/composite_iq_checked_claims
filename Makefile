@@ -15,3 +15,7 @@ test:
 
 symbolic:
 	$(PYTHON) verification/check_symbolic.py
+
+.PHONY: simulations
+simulations:
+	$(PYTHON) -m reporting.simulate --pdf

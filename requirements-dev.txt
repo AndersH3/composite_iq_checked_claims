@@ -11,3 +11,6 @@ pytest==8.4.2
 hypothesis==6.170.14
 scipy==1.18.1
 numpy==2.5.4
+
+# Dask owns the simulation and report task graphs; no plotting runtime.
+dask[array]==2026.8.0

@@ -45,3 +45,15 @@ The modern floating-point grid reproduction agrees closely with the follow-up's 
 The sources are the archived [initial letter](https://web.archive.org/web/20260309223409/http://miyaguchi.4sigma.org/gradytowers/societies.html) and [follow-up dated 12 January 2000](https://web.archive.org/web/20220505012535/http://miyaguchi.4sigma.org/gradytowers/followup.html). Archive capture dates are not publication dates. The bibliography records the supporting mathematical and testing references used in the report.
 
 The historical letters are cited and analysed, not reproduced or relicensed here. The repository's [LICENSE](../../LICENSE) governs its original material, subject to third-party rights.
+
+## Dedicated simulation report
+
+The [simulation report](output/pdf/towers_simulations.pdf) describes the simulated probability model, experiment design, Dask execution, pooled and replicate results, uncertainty, historical Ada comparison and interpretation limits in detail. Its [XeLaTeX source](towers_simulations.tex) consumes the generated tables in [simulation-data](simulation-data/). Charts are drawn by XeLaTeX/PGFPlots from Dask-produced CSVs.
+
+From the repository root, regenerate all three experiments, tables, PDFs and rendered review pages with:
+
+```sh
+.venv/bin/python -m reporting.simulate --pdf
+```
+
+See the [shared Dask workflow](../../reporting/README.md) for seeds, chunk layout, dependency versions, contracts and verification scope. With the generated data already present, `make simulation-pdf` in this directory rebuilds only this report using XeLaTeX. Historical evidence and the existing main report remain unchanged.

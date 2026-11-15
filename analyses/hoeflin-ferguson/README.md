@@ -44,3 +44,15 @@ The verification script uses the upper-tail normal quantile `scipy.stats.norm.is
 The report cites the original article, the [AERA/APA/NCME testing standards](https://www.testingstandards.net/uploads/7/6/6/4/76643089/9780935302356.pdf), [Sackett and Yang on range restriction](https://pubmed.ncbi.nlm.nih.gov/10740961/), [Hausknecht and colleagues on retesting](https://doi.org/10.1037/0021-9010.92.2.373), and the [official R normal-distribution documentation](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html). Full references are included in the PDF and bibliography.
 
 The historical article and other cited works are not reproduced or relicensed here. The repository's existing [LICENSE](../../LICENSE) governs the repository's original material, subject to third-party rights.
+
+## Dedicated simulation report
+
+The [simulation report](output/pdf/hoeflin_simulations.pdf) describes the simulated probability model, experiment design, Dask execution, pooled and replicate results, uncertainty, historical Ada comparison and interpretation limits in detail. Its [XeLaTeX source](hoeflin_simulations.tex) consumes the generated tables in [simulation-data](simulation-data/). Charts are drawn by XeLaTeX/PGFPlots from Dask-produced CSVs.
+
+From the repository root, regenerate all three experiments, tables, PDFs and rendered review pages with:
+
+```sh
+.venv/bin/python -m reporting.simulate --pdf
+```
+
+See the [shared Dask workflow](../../reporting/README.md) for seeds, chunk layout, dependency versions, contracts and verification scope. With the generated data already present, `make simulation-pdf` in this directory rebuilds only this report using XeLaTeX. Historical evidence and the existing main report remain unchanged.

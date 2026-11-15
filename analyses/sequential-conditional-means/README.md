@@ -109,3 +109,15 @@ The new sections are [asymptotic limits](asymptotic_limits.tex), [SD interpretat
 ## AI disclosure and license
 
 The mathematical exposition, documentation, typesetting, Ada/SPARK and Python/Deal software were prepared with OpenAI Codex and collaborating AI agents in response to the requester's problem and verification requirements. The report contains its own disclosure dated 14 November 2026. Independent human peer review and empirical psychometric validation are not claimed. The repository's existing [LICENSE](../../LICENSE) governs its original material, subject to third-party rights.
+
+## Dedicated simulation report
+
+The [simulation report](output/pdf/sequential_simulations.pdf) describes the simulated probability model, experiment design, Dask execution, pooled and replicate results, uncertainty, historical Ada comparison and interpretation limits in detail. Its [XeLaTeX source](sequential_simulations.tex) consumes the generated tables in [simulation-data](simulation-data/). Charts are drawn by XeLaTeX/PGFPlots from Dask-produced CSVs.
+
+From the repository root, regenerate all three experiments, tables, PDFs and rendered review pages with:
+
+```sh
+.venv/bin/python -m reporting.simulate --pdf
+```
+
+See the [shared Dask workflow](../../reporting/README.md) for seeds, chunk layout, dependency versions, contracts and verification scope. With the generated data already present, `make simulation-pdf` in this directory rebuilds only this report using XeLaTeX. Historical evidence and the existing main report remain unchanged.

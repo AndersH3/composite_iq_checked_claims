@@ -22,3 +22,6 @@ __pycache__/
 .venv/
 tmp/
 .DS_Store
+
+# Retain Dask-driven XeLaTeX build logs alongside their report data.
+!simulation-data/*.log

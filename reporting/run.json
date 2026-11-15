@@ -1,0 +1,304 @@
+{
+  "schema": "dask-simulation-reports-v1",
+  "config": {
+    "trials": 1000000,
+    "chunk": 50000,
+    "replicates": 4,
+    "seeds": [
+      20261114,
+      20261115,
+      20261116,
+      20261117
+    ],
+    "scheduler": "processes",
+    "workers": 2,
+    "versions": {
+      "dask": "2026.8.0",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "deal": "4.24.6"
+    }
+  },
+  "graph_tasks": 31254,
+  "results": [
+    {
+      "project": "hoeflin-ferguson",
+      "xelatex": true,
+      "pdf_pages": 9,
+      "pdf_sha256": "1473f556dcec3ae1ae8be03c3989318ce23e0a4396e7f4229cdf6eb132ea48ae",
+      "pdf": "analyses/hoeflin-ferguson/output/pdf/hoeflin_simulations.pdf"
+    },
+    {
+      "project": "towers-multiple-test-admissions",
+      "xelatex": true,
+      "pdf_pages": 12,
+      "pdf_sha256": "27dc9da212e8ae82103840485c5974caef96554faef1d2042bfee664bce7969f",
+      "pdf": "analyses/towers-multiple-test-admissions/output/pdf/towers_simulations.pdf"
+    },
+    {
+      "project": "sequential-conditional-means",
+      "xelatex": true,
+      "pdf_pages": 11,
+      "pdf_sha256": "ec2e8a9048a0178d24213063e565adf4539c13c78ed3a4e4a6374d2e443b300b",
+      "pdf": "analyses/sequential-conditional-means/output/pdf/sequential_simulations.pdf"
+    }
+  ],
+  "new_spark_proof_run": false,
+  "matplotlib_used": false,
+  "sources": [
+    {
+      "path": "analyses/hoeflin-ferguson/hoeflin_simulations.tex",
+      "sha256": "3c9ee5fe295485b711236535c0ed9e75cd9827ab57bc9d3510b4fb4ddcf8481f"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/sequential_simulations.tex",
+      "sha256": "1603e3a5434e7589f3d3c592a21540a65f4e49055955cabc0f7623f7d9e9ba46"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/towers_simulations.tex",
+      "sha256": "95e0f95af891122fa65230c2d90a69dacec84582edc377dc3f5ba878b363d3a9"
+    },
+    {
+      "path": "reporting/assets.py",
+      "sha256": "18920852808b9b78aa879bb5409303deb97bfddeb5a6e073083545daa72d0744"
+    },
+    {
+      "path": "reporting/simulate.py",
+      "sha256": "2e762d25faf0df581298aa2e3febb0e0056ec4024f1de7978f2f8fbbe7a9bec8"
+    },
+    {
+      "path": "reporting/simulation_references.bib",
+      "sha256": "c1b71e094dafc3b5977de89df0bbbdd4af60a89600bfa649ad37e9ea92a09383"
+    },
+    {
+      "path": "reporting/simulation_style.tex",
+      "sha256": "dcb1f506808a666a1dec628cbd2e1abf6b5b51f3cc368ab0fc5c67fdc2f8bebd"
+    },
+    {
+      "path": "reporting/statistical_methods.tex",
+      "sha256": "2d8e3c0537e34af1b32303153fb49044400fa7bb968d5ce9d9c091f0b2b38ce2"
+    },
+    {
+      "path": "reporting/statistics.py",
+      "sha256": "7c5f41297d671954adc813dd0650062e13871d830ec79be98fe9dc4abf398c8d"
+    },
+    {
+      "path": "requirements-dev.txt",
+      "sha256": "e9f3d47b2d6aede6d485a2970de16c5f021bb0fc91c14105131ebfe6110f9f8a"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "analyses/hoeflin-ferguson/output/pdf/hoeflin_simulations.pdf",
+      "sha256": "1473f556dcec3ae1ae8be03c3989318ce23e0a4396e7f4229cdf6eb132ea48ae"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/build.log",
+      "sha256": "04143166f33f5912ce99144f6c067e8f2a24844b6d523a8a151808d8851b0173"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/historical-records.csv",
+      "sha256": "5e239fb953a8b40e77c1180bca865e4218d37794488a64c11fcb05692f094ede"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/historical.tex",
+      "sha256": "ea35bd542978dbd89ab866fe2ce3ef8f6f8cbb02f6163ebbe4d9dc0e77d89db2"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/macros.tex",
+      "sha256": "06520b67ea90831d12944e1a2b979ec426722861e07ce8a6a0ad2fafa878392d"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/moments.csv",
+      "sha256": "7ff44d7a1237c0215a58e9e39c4c2eb1530c2194217c65fa798463a6210e314c"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/moments.tex",
+      "sha256": "0f29ef7cbe4ac1392869ed01cd767bfaae560b202b1bf73a06fe0b092368a4e3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/rare.tex",
+      "sha256": "021a8d2a676197322ac748dddf91505e9d0e57c2da2c74800d3b801d929fb949"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/replicate-records.csv",
+      "sha256": "e8e77e35c17da890c4de26ce72e5a40aae8f887ff89cd8c6a7b42eeafa136da4"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/replicates.tex",
+      "sha256": "d0f615fcd69f0f02dd79a6ec4f42f8d8a451622daed8a2e249042a1c07eb9f36"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/results-discussion.tex",
+      "sha256": "fcdda5225a3fc840042095246855b2ddd126f8b38d7e87cf45337658499d93f3"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/summary.json",
+      "sha256": "3b9b676c7682654f008eba17fea07449c4af0fe5a7d61118bc255fa61da4c33e"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/tails.csv",
+      "sha256": "7ff44d7a1237c0215a58e9e39c4c2eb1530c2194217c65fa798463a6210e314c"
+    },
+    {
+      "path": "analyses/hoeflin-ferguson/simulation-data/tails.tex",
+      "sha256": "71559c1713c9535fa600d01b58bcf49070b01e99b8a0ad94b679780a62e5c723"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/output/pdf/sequential_simulations.pdf",
+      "sha256": "ec2e8a9048a0178d24213063e565adf4539c13c78ed3a4e4a6374d2e443b300b"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/build.log",
+      "sha256": "ce9ef060a5b559dd645a675302e5b825ed8a9578768c18238c97e4ac3dee5fc5"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/conditional-r1.csv",
+      "sha256": "058e9c3785eb5bf2c4318bafac39cbbb7aaa1ca2a68583161fe00a9ccc77a55d"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/conditional-r2.csv",
+      "sha256": "8d9ecc417bee2a862c59e9c4861644a7eedbf62faaf8a2480e724a2ede778f54"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/conditional-r3.csv",
+      "sha256": "2f4163b3ec36c0805b5392851370dd5744b5fef6b2c2d0ddf63a1bb15a55b630"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/historical-records.csv",
+      "sha256": "4c11f15813f64c821da57a62f29dfc9ca1e651af824fc3cffd21f29fee395e7f"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/historical.tex",
+      "sha256": "c871154f1b3f5db45555d2f3eed4cc30151c4fc55a109bca7f767cb1151d0080"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/limits.tex",
+      "sha256": "5e1c62cd5b95f46026bec9d984e7eaa0f490d7fe45ed6c435d662cd464988026"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/macros.tex",
+      "sha256": "22cb53a6f88b096904ac12320e49d395a920d5f1cc04c8f7c45c95db0c862cda"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/means.tex",
+      "sha256": "55dc223f9eac9593d42d9e0e5bac92c45d757fe90812bd27fde9f9243a952163"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/moments.csv",
+      "sha256": "4fca66ea14be57ee5ecb53a6d9aaaf78e97d57932f5fdc8ab3c09e777be14c00"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/population-means.tex",
+      "sha256": "7d7a6cc183e9a405d4c7908528d65fb0b436e39f3eed09792ab209cd62be6884"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/population-r1.csv",
+      "sha256": "bb7377199e82f8af5c3e82cf7028ee92f166f04a323bf10862062de4e12b1647"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/population-r2.csv",
+      "sha256": "ded840a7e3b4f4d1bb97aa23f91029518287abc23939238345a2bb4a1eea5b0f"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/population-r3.csv",
+      "sha256": "f2a9a1f95fe002137d298458a460bfcb64805f5656765536052bc925d20bd2a9"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/population-sds.tex",
+      "sha256": "bbdd5b1987dc1941be9953f17d930446667db9b476157ae91fcfe70f5585f31b"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/replicate-records.csv",
+      "sha256": "4bc9a92da69a66648e3a142507855d7aace7796bf02db157f3e89078cd1dc48a"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/replicates.tex",
+      "sha256": "12aeb901215b304203b5e6a7901933e49ee06334205d6ef7d45db7fe1bdc8084"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/results-discussion.tex",
+      "sha256": "3dd0224a631fbdc0f3e9418f11ffea71e982a3894076f3904c20aaa8b404e966"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/sds.tex",
+      "sha256": "35748c0ff393bd2b285bb001f88d546d93e509f7a1bef71ca49e9d22af200ee2"
+    },
+    {
+      "path": "analyses/sequential-conditional-means/simulation-data/summary.json",
+      "sha256": "67564d2f13ee7052d2fc333231bf82222461d734a81d3be4dae552489c1f5a4b"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/output/pdf/towers_simulations.pdf",
+      "sha256": "27dc9da212e8ae82103840485c5974caef96554faef1d2042bfee664bce7969f"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/build.log",
+      "sha256": "9280306397029ecc384a14573c191bac5fb9667a9fd3a0160e5ba0d4284cbd52"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/calibration.tex",
+      "sha256": "3fc176206c42fec9e3cdc789d36c7dd0a8da84b9eaf698d5a2d44782776e46ea"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/conditionals.tex",
+      "sha256": "ba9f14067c03ecd93b978b8e89a6ee0710d246464787e2d4cb509fa21555cfce"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/events.csv",
+      "sha256": "22dbce75651533e52c0bac53c228f89dfca845b93ddfff3fc2b68ac2e7cff9c7"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/events.tex",
+      "sha256": "788c649053300ef7cadac75290e0924626ecb10c6cb6e53c02095547307c0970"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/historical-records.csv",
+      "sha256": "c21ca9f21f834d5d24e0bc38460e4590f3f8b608388ca27e5f3a738fd0828209"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/historical.tex",
+      "sha256": "81af305e43ef23f812633ed4a68fadeb736c69bb62d671471324a3b1c98fbef0"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/joint.tex",
+      "sha256": "895a5b94057bfe6d925478964444c870be94c4de90c90debf6301ca2ac20787f"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/macros.tex",
+      "sha256": "4cd83c5edc946eec5e5891a0a45b864b9594d7b25397eaf94b393f5b18909294"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/phi.tex",
+      "sha256": "9b32d2c85ff621c1a463cc959bfeb1d65dd893500318de087010c694de773c74"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/rare-event.tex",
+      "sha256": "433792e5326db9dd5f9bda5cd6b29eaae4fe306f99c36dcea3ec31a788218ff3"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/replicate-records.csv",
+      "sha256": "6a8a758f541866712d6ca72d978c87b6c2ee0916ff9364fdae688440e71aa65a"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/replicates.tex",
+      "sha256": "0955b6494a18c301899f507d28f41d2a7617f8e208698a610448f8e5384a04cf"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/results-discussion.tex",
+      "sha256": "017efcf208afdac4647abc60c9a64ec5cc81843e482056748d5f6913de9e8455"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/reverse-conditionals.tex",
+      "sha256": "a18ab71fb10c340dd65bd8418b036755b3ef9c9dbfb3505524f7ac02362061d0"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/summary.json",
+      "sha256": "d373203ac00cb9b06f58ae56c0881cfca967da3f0f5f605ef73b57210eafb162"
+    },
+    {
+      "path": "analyses/towers-multiple-test-admissions/simulation-data/union.tex",
+      "sha256": "d5eb00ab97ddbcc4cca1ca2137972a5d522ec028ac8e018d9c03ed7551dc8ac6"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+% Shared XeLaTeX report style. Charts consume Dask-produced CSVs via PGFPlots.
+\documentclass[a4paper,fontsize=11pt,parskip=half,headings=small]{scrartcl}
+\usepackage[margin=18mm,includeheadfoot,headheight=14pt,headsep=6mm,footskip=9mm]{geometry}
+\usepackage{fontspec}
+\usepackage{mathtools,amsthm}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
+\setmonofont{Latin Modern Mono}
+\setmathfont{TeX Gyre Pagella Math}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{xcolor,xurl,booktabs,longtable,array,needspace,placeins}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18,width=.92\linewidth,height=6.0cm,
+ every axis/.append style={grid=major,grid style={gray!20},
+ tick label style={font=\small},label style={font=\small},
+ legend style={font=\small,draw=none,fill=white}}}
+\usepgfplotslibrary{groupplots}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\usepackage{bookmark,scrlayer-scrpage}
+\setlength{\emergencystretch}{1.5em}
+\setkomafont{disposition}{\normalfont\sffamily\bfseries}
+\setkomafont{pageheadfoot}{\normalfont\sffamily\small}
+\clearpairofpagestyles
+\ihead{Simulation methods and results}
+\ohead{Dask experiment report}
+\cfoot*{\pagemark}
+\pagestyle{scrheadings}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\SD}{SD}

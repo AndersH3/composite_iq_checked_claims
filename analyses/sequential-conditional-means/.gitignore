@@ -30,3 +30,6 @@ ada/tmp/
 # Native verification logs are scientific evidence, not LaTeX intermediates.
 !evidence/**/*.log
 !evidence/**/*.out
+
+# Retain Dask-driven XeLaTeX build logs alongside their report data.
+!simulation-data/*.log

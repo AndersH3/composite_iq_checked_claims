@@ -1,0 +1,476 @@
+% !TeX program = xelatex
+% Standalone simulation report.  Mathematical exposition is handwritten;
+% every numerical table and plotted coordinate is produced by the shared
+% Dask pipeline.  The original derivation and its evidence stay unchanged.
+\input{../../reporting/simulation_style}
+\hypersetup{pdftitle={Sequential Conditional Means: Simulation Methods and Results},
+  pdfsubject={Dask experiments with population and conditional actual-score means}}
+\title{Sequential Conditional Means:\\Simulation Methods and Results}
+\subtitle{One, two or three initial IQ-150 scores, with every initial score included}
+\author{}
+\date{15 November 2026}
+
+\begin{document}
+\input{simulation-data/macros.tex}
+\maketitle
+\thispagestyle{plain.scrheadings}
+
+\begin{abstract}
+This report explains the simulations accompanying the sequential
+conditional-means analysis. Standardized tests have population mean zero,
+standard deviation one and pairwise correlation \(c=0.6\). One, two or
+three observed starting scores are fixed at IQ 150, followed by one, two
+or ten actual future scores. We simulate whole population batteries and
+conditional future vectors as separate experiments, compare their means
+and standard deviations with the Gaussian formulas, and sample the
+Gaussian laws with the calculated infinite-count parameters. Each case
+uses \SimReplicates{} seeded replicates of \SimTrials{} observations,
+pooled to \SimPooledTrials{} observations. Dask builds and executes the
+array, reduction and report-data graphs; XeLaTeX/PGFPlots draws figures
+from their generated CSVs. The key distinction is between variation in
+actual outcomes and the zero standard deviation of a fixed list of
+predictions. Agreement is evidence about this implementation of the
+assumed model, not empirical validation of that model for IQ data.
+\end{abstract}
+
+\noindent\textbf{AI disclosure.} This report, its Dask implementation and
+its review were prepared with OpenAI Codex and collaborating AI agents.
+The requester specified the questions and required separate simulation
+reports. No new participant data were collected. Independent human peer
+review and empirical psychometric validation are not claimed.
+
+\section{The questions answered by the experiments}
+
+The companion analysis studies an inclusive average: every observed
+starting score contributes to the numerator and denominator. Write
+\(r\in\{1,2,3\}\) for the number of initial scores, \(k\in\{1,2,10\}\)
+for the number of later scores and \(N=r+k\) for the total. All initial
+scores have the same standardized value
+\[
+ a=\frac{150-100}{15}=\frac{10}{3},\qquad Q=100+15X.
+\]
+The reporting transformation changes units; it does not change the
+underlying requirement that each standardized test has population mean
+zero and variance one.
+
+There are three quantities to keep separate. The \emph{population actual
+mean} comes from a newly drawn whole battery, including newly drawn
+initial scores. Its IQ centre is 100. The \emph{conditional actual mean}
+comes from future outcomes after the initial \(r\) scores have been
+observed at 150; its centre is the conditional mean calculated below.
+Finally, the \emph{recursively filled mean} replaces every future outcome
+by its prediction. Once \(r,k,c,a\) are fixed, that is a number rather
+than a new random outcome, and its standard deviation is zero.
+
+The simulations ask whether separately generated whole-battery and
+conditional outcomes reproduce the appropriate theoretical centres and
+spreads. They also ask how those spreads change with the number of
+future scores, and whether the infinite-count parameters are consistent
+with the finite formulas. They do not regard a narrow Monte Carlo
+confidence interval for a simulated centre as a narrow prediction
+interval for a person's actual future score mean.
+
+\section{The Gaussian model and its exact target values}
+
+\subsection{A model with a common factor}
+The experiments assume the jointly Gaussian construction
+\begin{equation}
+ X_i=\sqrt c\,G+\sqrt{1-c}\,E_i,
+ \label{eq:seq-sim-factor}
+\end{equation}
+where \(G,E_0,E_1,\ldots\) are independent standard normals. By linearity
+and independence, each \(X_i\) has mean zero and variance
+\(c+(1-c)=1\), and two distinct tests have covariance \(c\). Thus
+\eqref{eq:seq-sim-factor} realizes the stipulated equicorrelation model.
+Gaussian affine closure and independence of Gaussian blocks with zero
+cross-covariance are established reference results
+\citep[Chapter 3, especially Theorems 3.3.1--3.3.2]{gallager2013}.
+The companion derivation proves their particular conditional-regression
+consequences, including the choice of continuous conditional version.
+
+Put
+\[
+ d_r=1+(r-1)c,\qquad d_N=1+(N-1)c.
+\]
+Every later recursive prediction equals
+\(b_r=rca/d_r\). Consequently the fixed inclusive prediction average and
+the conditional expectation of the actual mean are
+\begin{equation}
+ B_{r,k}=\frac{ra+kb_r}{N}
+        =\frac{r d_N a}{N d_r}.
+ \label{eq:seq-sim-centre}
+\end{equation}
+For completeness, Gaussian regression on any prefix of length \(s\)
+has coefficient \(c/[1+(s-1)c]\) on the sum of that prefix. If the first
+\(r\) values equal \(a\), the next prediction is \(b_r\). If the next
+\(j-1\) predictions already equal \(b_r\), their prefix sum is
+\(ra+(j-1)b_r=ra[d_r+(j-1)c]/d_r\). Substituting it in the regression
+formula gives \(b_r\) again. Mathematical induction therefore proves the
+constant-prediction assertion and \eqref{eq:seq-sim-centre}.
+
+For an actual inclusive mean \(C_{r,k}\), the target variances are
+\begin{align}
+ v_{\mathrm{pop}}&=\frac{d_N}{N},
+   &\operatorname{E}[C_{r,k}]&=0,
+   \label{eq:seq-sim-population}\\
+ v_{\mathrm{cond}}&=\frac{k(1-c)d_N}{N^2d_r},
+   &\operatorname{E}[C_{r,k}\mid X_0=\cdots=X_{r-1}=a]&=B_{r,k}.
+   \label{eq:seq-sim-conditional}
+\end{align}
+An IQ mean is obtained by applying \(x\mapsto100+15x\) to the
+corresponding standardized mean; an IQ standard deviation is 15 times
+the standardized SD. Variances
+therefore multiply by \(15^2\), rather than by 15. The phrase
+``conditional SD'' in the tables always refers to actual outcomes.
+
+\subsection{Generating the conditional future scores directly}
+The new implementation samples every finite future residual component
+rather than sampling only a scalar mean with the already calculated
+variance. It combines their sum with the common factor, using the
+algebraically equivalent construction below without retaining a second
+array of complete scores.
+Let \(Z=(X_0,\ldots,X_{r-1})^{\mathsf T}\). The Gaussian conditioning
+formula gives
+\begin{equation}
+ G\mid Z=a\mathbf1_r\ \sim\ N(\mu_r,\tau_r^2),
+ \qquad \mu_r=\frac{r\sqrt c\,a}{d_r},\quad
+ \tau_r^2=\frac{1-c}{d_r}.
+ \label{eq:seq-sim-posterior-factor}
+\end{equation}
+Indeed, \(\operatorname{Cov}(G,Z)=\sqrt c\,\mathbf1_r^{\mathsf T}\)
+and \(\operatorname{Cov}(Z)\mathbf1_r=d_r\mathbf1_r\). Regression
+therefore gives the displayed mean and variance
+\(1-rc/d_r=(1-c)/d_r\). Here \(d_r>0\) and the covariance of \(Z\)
+is positive definite, so the nonsingular-block Gaussian conditioning
+theorem applies \citep[Theorems 3.5.1--3.5.2]{gallager2013}.
+
+Using fresh standard normals \(H,E_1,\ldots,E_k\), the task graph forms
+\begin{equation}
+ Y_j=\sqrt c\,(\mu_r+\tau_r H)+\sqrt{1-c}\,E_j,
+ \qquad
+ C_{r,k}=\frac{ra+\sum_{j=1}^{k}Y_j}{N}.
+ \label{eq:seq-sim-future-vector}
+\end{equation}
+The future residuals \(E_j\) are independent of the initially observed
+block, so this is the required conditional vector construction. It does
+not repeatedly redraw or pretend to reobserve the fixed starting values.
+In particular, it does not reject unconditioned samples until their
+initial values equal 150: that event has probability zero under this
+continuous model. The continuous Gaussian conditional distribution
+specifies the pointwise experiment.
+
+Each future conditional mean is \(\sqrt c\,\mu_r=b_r\). The sum of the
+future random components has variance
+\[
+ k^2c\tau_r^2+k(1-c)
+ =\frac{k(1-c)(d_r+kc)}{d_r}
+ =\frac{k(1-c)d_N}{d_r}.
+\]
+Dividing by \(N^2\) proves \eqref{eq:seq-sim-conditional}. Similarly,
+counting the \(N\) individual variance terms and \(N(N-1)\)
+covariance terms in the population sum proves
+\eqref{eq:seq-sim-population}. These are consequences of covariance
+bilinearity, rather than results inferred from a successful simulation
+\citep[Theorem 1.6.1 and Section 2.2]{durrett2019}.
+
+\section{Dask implementation and the experimental design}
+
+Dask arrays express the normal draws and vector arithmetic in chunks of
+\SimChunk{} observations. Dask reductions calculate counts, means and
+second moments without retaining every full battery in one in-memory
+object. The sample variance uses denominator \(M-1\), where \(M\)
+is the number of simulated observations contributing to that estimate.
+The report's tables and plotted coordinates are generated from these
+reductions; PGFPlots renders those coordinates in XeLaTeX. There is no
+Matplotlib calculation or plotting stage. The distinction between graph
+construction and execution follows the documented Dask array and delayed
+interfaces \citep{daskArray,daskDelayed}.
+
+Each case uses \SimReplicates{} recorded seed configurations, with
+\SimTrials{} observations per replicate. Results are pooled to
+\SimPooledTrials{} observations per case. Pooling combines sample counts,
+sums and squared sums before forming the overall variance; simply
+averaging replicate SDs would not generally produce the pooled SD.
+The raw replicate results remain available so the pooled estimate does
+not hide replicate-to-replicate differences.
+
+Within a replicate and starting-score count, common factor and residual
+arrays are shared across the selected future counts. This supplies common
+random numbers when comparing \(k=1,2,10\). The case estimates are
+therefore correlated; they are not nine independent replications of one
+experiment. Replicate seed configurations define separate pseudorandom
+streams, whose ideal statistical interpretation assumes independent
+normal observations. Neither the seed choices nor Dask scheduling proves
+true stochastic independence. Versions, seed and chunk configuration are
+part of the reproduction record: changing chunk boundaries can change
+the pseudorandom realization while preserving the intended model.
+
+The finite population and conditional grid contains 18 experiments, and
+six more sample Gaussian laws with the analytic limiting parameters.
+The total number of scalar-mean observations across that grid is
+\(24\times\SimPooledTrials\). This is a count of output observations,
+not of distinct people or independent comparisons between cases, and not
+a count of all underlying normal variates.
+
+\section{Finite-count means: the starting scores remain in the average}
+
+The following table compares observed IQ centres with
+\eqref{eq:seq-sim-centre} and the population centre of 100. Its Monte Carlo
+standard error quantifies uncertainty of the simulated mean estimate.
+For a theoretical actual-outcome variance \(v\) on the standardized
+scale, that standard error in IQ units is \(15\sqrt{v/M}\), as proved
+in the common statistical-methods appendix.
+
+\input{simulation-data/means.tex}
+
+The deterministic target is above the prediction for a subsequent test
+because the inclusive average still gives positive weight to the initial
+150s. With one initial score and ten later scores, the target centre is
+\(1450/11\), about 131.82. With two initial scores it is
+\(1675/12\), about 139.58. With three it is \(20450/143\), about 143.01.
+These values differ because the observed evidence differs, not because
+the population mean of the standardized tests has changed.
+
+The largest absolute discrepancy of a pooled empirical centre from its
+theoretical value is \SimMaxMeanSE{} theoretical standard errors. This
+statistic is a scale-free diagnostic of the fixed recorded grid. It is
+not an effect size measuring the difference between population and
+conditional centres. The latter difference is deliberately introduced by
+conditioning on the high initial scores. Reported numerical agreement
+also does not make extra displayed decimals meaningful measures of
+psychometric precision.
+
+\section{Finite-count standard deviations and what they measure}
+
+\input{simulation-data/sds.tex}
+
+The population SD is the spread of whole-battery averages around IQ 100.
+Its formula depends on total battery size, so cases with equal \(r+k\)
+have the same population SD regardless of how the count is labelled.
+The conditional SD is the spread around the corresponding high
+conditional centre after the initial block is fixed. The two SDs refer
+to different repeated-sampling experiments, not two estimators of the
+same spread. The largest relative discrepancy of a pooled empirical SD
+from its analytic target in the recorded grid is
+\SimMaxSDRelativeError{}; the generated tables retain the individual
+values, so this maximum is not a substitute for inspecting the rows.
+
+% Only Dask-generated coordinates enter these charts.  The lines join the
+% three analytic finite-count values; they are not an additional numerical
+% model fitted by TeX or a claim that only three possible counts exist.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=0.88\textwidth,height=5.5cm,xmode=log,
+ xtick={1,2,10},xticklabels={1,2,10},
+ xlabel={Subsequent scores \(k\)},ylabel={Population SD (IQ points)},
+ legend columns=3,legend style={at={(0.5,1.03)},anchor=south},
+ grid=major]
+\addplot[blue!75!black,thick,forget plot] table[col sep=comma,x=k,y=theory_sd_iq]{simulation-data/population-r1.csv};
+\addplot[blue!75!black,only marks,mark=*] table[col sep=comma,x=k,y=sd_iq]{simulation-data/population-r1.csv};
+\addlegendentry{\(r=1\)}
+\addplot[red!75!black,thick,forget plot] table[col sep=comma,x=k,y=theory_sd_iq]{simulation-data/population-r2.csv};
+\addplot[red!75!black,only marks,mark=square*] table[col sep=comma,x=k,y=sd_iq]{simulation-data/population-r2.csv};
+\addlegendentry{\(r=2\)}
+\addplot[teal!80!black,thick,forget plot] table[col sep=comma,x=k,y=theory_sd_iq]{simulation-data/population-r3.csv};
+\addplot[teal!80!black,only marks,mark=triangle*] table[col sep=comma,x=k,y=sd_iq]{simulation-data/population-r3.csv};
+\addlegendentry{\(r=3\)}
+\end{axis}
+\end{tikzpicture}
+\caption{Whole-battery population SD. Lines connect analytic targets;
+markers are Dask estimates. The horizontal axis uses logarithmic spacing
+but labels the actual future counts. All initial scores are random in
+this experiment.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=0.88\textwidth,height=5.5cm,xmode=log,
+ xtick={1,2,10},xticklabels={1,2,10},
+ xlabel={Subsequent scores \(k\)},ylabel={Conditional SD (IQ points)},
+ legend columns=3,legend style={at={(0.5,1.03)},anchor=south},
+ grid=major]
+\addplot[blue!75!black,thick,forget plot] table[col sep=comma,x=k,y=theory_sd_iq]{simulation-data/conditional-r1.csv};
+\addplot[blue!75!black,only marks,mark=*] table[col sep=comma,x=k,y=sd_iq]{simulation-data/conditional-r1.csv};
+\addlegendentry{\(r=1\)}
+\addplot[red!75!black,thick,forget plot] table[col sep=comma,x=k,y=theory_sd_iq]{simulation-data/conditional-r2.csv};
+\addplot[red!75!black,only marks,mark=square*] table[col sep=comma,x=k,y=sd_iq]{simulation-data/conditional-r2.csv};
+\addlegendentry{\(r=2\)}
+\addplot[teal!80!black,thick,forget plot] table[col sep=comma,x=k,y=theory_sd_iq]{simulation-data/conditional-r3.csv};
+\addplot[teal!80!black,only marks,mark=triangle*] table[col sep=comma,x=k,y=sd_iq]{simulation-data/conditional-r3.csv};
+\addlegendentry{\(r=3\)}
+\end{axis}
+\end{tikzpicture}
+\caption{Actual-outcome SD after fixing \(r\) distinct initial scores at
+IQ 150. The plotted SD concerns future randomness; the fixed list of
+conditional predictions has SD zero. Lines and markers have the same
+meaning as in the population plot.}
+\end{figure}
+
+For two initial scores and ten subsequent outcomes, the theoretical
+population variance is \(285/2\) IQ points squared, whereas the
+conditional variance is \(475/16\). Their SDs are approximately
+11.937336 and 5.448624 IQ points, respectively. The actual conditional
+centre is about 139.583333. A numerical estimate of that centre based on
+millions of simulated batteries can be very precise while an individual
+future battery remains spread around it with SD about 5.45. The fixed
+list \(150,150,137.5,\ldots,137.5\) has exactly that conditional centre
+as its arithmetic mean, with no Monte Carlo randomness of its own.
+
+The generated SD intervals are 95\% chi-square confidence intervals for
+the unknown SD of an actual-outcome distribution, based on the observed
+sample variance. They are not 95\% prediction intervals for individual
+future means and not posterior credible intervals for a person's ability.
+The exact interval formula and its Gaussian sampling assumptions are
+proved in the statistical-methods appendix. Comparing many intervals
+also creates a multiple-comparison issue: nominal 95\% rowwise coverage
+does not imply 95\% simultaneous coverage of every row.
+
+\subsection{Why one SD decreases while the other increases}
+The population variance can be written
+\(c+(1-c)/(r+k)\), so it strictly decreases in \(k\) at \(c=0.6\).
+The conditional variance increases for the selected correlation. To see
+this directly, put \(f(k)=k(d_r+ck)/(r+k)^2\), so that
+\(v_{\mathrm{cond}}=(1-c)f(k)/d_r\). Expanding the finite difference gives
+\[
+ f(k+1)-f(k)=
+ \frac{(2cr-d_r)k^2+(2cr^2+2cr-d_r)k+r^2(c+d_r)}
+ {(r+k)^2(r+k+1)^2}.
+\]
+At \(c=3/5\), the numerator coefficients are respectively
+\((3r-2)/5\), \((6r^2+3r-2)/5\) and
+\(r^2(3r+5)/5\), all positive for \(r\geq1\). Thus the increase follows
+from the formula, independently of the observed ordering in a simulation.
+It is not a universal monotonicity claim for all admissible correlations.
+
+Initially, the known initial block occupies a large fraction of the
+inclusive mean and contributes no conditional variance. Increasing
+\(k\) reduces that fixed fraction. Future measurement noise averages
+away, but uncertainty in the shared factor remains. This explains how
+additional future outcomes can increase the conditional spread of this
+particular inclusive average even while averaging a random whole battery
+reduces its population spread.
+
+\section{The infinite-count cases}
+
+The predicted value of each subsequent score is already constant; it
+does not drift with the prediction index. Increasing \(k\) instead
+reduces the weight of the fixed initial block in the inclusive mean:
+\[
+ B_{r,k}=b_r+\frac{ra(1-c)}{d_r(r+k)}\longrightarrow b_r.
+\]
+The population and conditional SD limits are
+\begin{equation}
+ \sqrt c,\qquad \sqrt{\frac{c(1-c)}{d_r}},
+ \label{eq:seq-sim-limit-sds}
+\end{equation}
+respectively. The first follows by letting \(N\) increase in
+\(c+(1-c)/N\). For the second, rewrite the conditional variance as
+\[
+ \frac{1-c}{d_r}\left[
+ c+\frac{1-(r+1)c}{N}-\frac{r(1-c)}{N^2}\right],
+\]
+and take the limit. Taking nonnegative square roots preserves these
+limits, since \(\lvert\sqrt{x}-\sqrt y\rvert\leq\sqrt{|x-y|}\)
+for nonnegative \(x,y\); that inequality follows by squaring and using
+\((u-v)^2\leq(u-v)(u+v)\) when \(u\geq v\geq0\).
+
+The new limit experiments sample \(\sqrt c\,H\) for the population and
+\(\sqrt c(\mu_r+\tau_rH)\) after conditioning. These distributions have
+exactly the limiting means and variances just derived. They do not use
+an arbitrarily large finite \(k\) as a surrogate for infinity. They
+also do not by themselves prove convergence: the displayed algebra
+establishes the parameter limits. More explicitly, using a common
+standard normal \(H\) to couple Gaussian laws with means \(m_k\) and
+variances \(v_k\) gives squared mean error
+\[
+ \operatorname{E}\left[
+ (m_k+\sqrt{v_k}H-m_\infty-\sqrt{v_\infty}H)^2\right]
+ =(m_k-m_\infty)^2+(\sqrt{v_k}-\sqrt{v_\infty})^2\longrightarrow0.
+\]
+This proves convergence in mean square for that coupling of aggregate
+laws, without asserting a particular pathwise construction for all tests.
+
+\input{simulation-data/limits.tex}
+\input{simulation-data/results-discussion.tex}
+
+The limiting IQ centres for \(r=1,2,3\) are 130, 137.5 and
+\(1550/11\), respectively. The population SD limit is
+\(\sqrt{135}\) IQ points for all three counts. Conditional limiting
+variances are \(54\), \(135/4\) and \(270/11\) IQ points squared.
+More distinct observed initial scores reduce remaining common-factor
+uncertainty through \(\tau_r^2=(1-c)/d_r\). Equal observed values do
+not mean that a single observation was simply duplicated: the model
+assumes distinct tests with distinct residual terms.
+
+\section{Replication and comparison with the retained Ada run}
+
+\input{simulation-data/replicates.tex}
+
+Replicate summaries show the direction and size of ordinary sampling
+fluctuation under fixed model parameters. The pooled values use all the
+observations, but replicate results are retained to reveal whether a
+pooled discrepancy is broadly shared or concentrated in a stream. A
+finite collection of successful seeds does not certify the generator.
+The analytic mean/variance laws are the reference; no seed is selected
+because it produces unusually close agreement.
+
+\input{simulation-data/historical.tex}
+
+The original Ada/SPARK campaign contains 20 finite calculation cases,
+46 population/conditional sampling batches of 200,000 observations each,
+and 18 identity or finite-PMF checks. It also checks independent and
+perfectly correlated cases, a valid negative-correlation interior and
+singular negative endpoints. The new full-vector Dask grid deliberately
+concentrates on the nine requested positive-correlation IQ examples and
+their limits. The earlier boundary results remain available in their
+source-pinned record; this report does not reinterpret the
+nonnegative-factor construction as a negative-correlation sampler.
+
+The retained Ada program samples the scalar Gaussian aggregate law,
+whereas the new finite Dask calculation draws the full future or
+population residual vector and combines its sum with the common factor. Agreement between them
+therefore checks two constructions of the same model. Their random-number
+implementations and sample counts differ, so identical individual draws,
+means or variances are not expected. The comparison is statistical and
+numerical, not an exact replay of the Ada pseudorandom stream. Neither
+implementation is an independent empirical dataset.
+
+The previous native campaign discharged 430 checks across its new and
+reused SPARK units, under the documented numerical and I/O contracts.
+That is evidence about those recorded program obligations, not a new
+formal proof of Dask, NumPy, their random generators, this report or the
+psychometric assumptions. The new Python/Deal contracts, structural
+inventory, static lint and runtime tests are reported separately. Their
+checks cannot turn Monte Carlo agreement into universal formal proof.
+Historical proof and simulation records remain immutable.
+
+\section{What the results establish and what remains assumed}
+
+The recorded calculations make the meaning of the three averages
+concrete. Whole batteries centre at the population mean. Conditioning on
+several high initial scores shifts the centre while reducing remaining
+uncertainty. Filling later entries with their conditional predictions
+removes that remaining outcome variation entirely from the fixed
+numerical list. These statements are mathematical consequences of the
+Gaussian model; the tables show that the Dask implementation reproduces
+them to its reported sampling accuracy.
+
+The experiments assume equicorrelation, Gaussian joint laws, the stated
+reference scale and the specified fixed starting history. They do not
+measure real-test correlation, retest effects, selection mechanisms,
+ceiling validity or extreme-population frequencies. The conditional
+standard deviation is not a standard error for estimating an empirical
+IQ trait from collected participants. The Gaussian point-conditioning
+convention and the common-factor interpretation are stated model choices.
+Their appropriateness for an actual testing situation requires evidence
+outside this simulation study.
+
+\input{../../reporting/statistical_methods}
+
+\bibliographystyle{plainnat}
+\bibliography{simulation_references}
+\end{document}
