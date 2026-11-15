@@ -3,9 +3,30 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **2117 proof scripts** across twenty-four
+for the three principal reports. **2242 proof scripts** across twenty-six
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
+
+## D040x — sharp necessary-and-sufficient reversal thresholds
+
+The shared [`TwoStratumReversal.v`](../library/rocq/TwoStratumReversal.v)
+adds **50 theorem proofs** about pooled association sign thresholds,
+conditioned independence in both strata, elimination of a between-group
+association when either pass-rate gap vanishes, and the exact sign of a
+cross-multiplied conditional admission-rate contrast.
+
+The Towers-specialized [`ThreeTestReversalCriteria.v`](../analyses/towers-multiple-test-admissions/rocq/ThreeTestReversalCriteria.v)
+adds **75 bridge theorem proofs** (25 per pair AB/AC/BC) using the
+eight-outcome model. These identify the selected and nonselected raw
+contingency determinants, give sharp pooled-dependence threshold
+equivalences, establish necessary signs of selection gaps for Simpson
+reversal, and characterize pooled independence under local conditional
+independence. This is exact finite event algebra, not a trivariate
+Gaussian distribution or statistical calibration.
+
+The canonical register now includes **2,228 public theorem/lemma/example
+claims**, plus 14 local helper/model-construction proof blocks,
+for **2,242 kernel-checkable proofs across 26 Rocq modules**.
 
 ## D039x — exact within/between selection association decomposition
 
