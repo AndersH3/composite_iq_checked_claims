@@ -2184,8 +2184,13 @@ Qed.
 Theorem cov2_risk_noise_second_monotone :
  forall a b c u v s x y t, 0<=t -> cov2_risk a b c u v s x y<=cov2_risk a (b+t) c u v s x y.
 Proof.
- intros a b c u v s x y t Ht; rewrite cov2_risk_noise_second.
- assert (Hy:0<=y*y) by nra; nra.
+ intros a b c u v s x y t Ht.
+ rewrite cov2_risk_noise_second.
+ assert (Hsq:0<=y*y) by (change (0<=Rsqr y); apply Rle_0_sqr).
+ assert (Hpen:0<=t*y*y).
+ { replace (t*y*y) with (t*(y*y)) by ring.
+   apply Rmult_le_pos; assumption. }
+ lra.
 Qed.
 
 (**
@@ -2200,8 +2205,13 @@ Qed.
 Theorem cov2_risk_noise_first_monotone :
  forall a b c u v s x y t, 0<=t -> cov2_risk a b c u v s x y<=cov2_risk (a+t) b c u v s x y.
 Proof.
- intros a b c u v s x y t Ht; rewrite cov2_risk_noise_first.
- assert (Hx:0<=x*x) by nra; nra.
+ intros a b c u v s x y t Ht.
+ rewrite cov2_risk_noise_first.
+ assert (Hsq:0<=x*x) by (change (0<=Rsqr x); apply Rle_0_sqr).
+ assert (Hpen:0<=t*x*x).
+ { replace (t*x*x) with (t*(x*x)) by ring.
+   apply Rmult_le_pos; assumption. }
+ lra.
 Qed.
 
 (**
@@ -2216,10 +2226,17 @@ Qed.
 Theorem cov2_risk_noise_both_monotone :
  forall a b c u v s x y t w, 0<=t -> 0<=w -> cov2_risk a b c u v s x y<=cov2_risk (a+t) (b+w) c u v s x y.
 Proof.
- intros a b c u v s x y t w Ht Hw; rewrite cov2_risk_noise_both.
- assert (Hx:0<=x*x) by nra.
- assert (Hy:0<=y*y) by nra.
- nra.
+ intros a b c u v s x y t w Ht Hw.
+ rewrite cov2_risk_noise_both.
+ assert (Hsqx:0<=x*x) by (change (0<=Rsqr x); apply Rle_0_sqr).
+ assert (Hsqy:0<=y*y) by (change (0<=Rsqr y); apply Rle_0_sqr).
+ assert (Hpenx:0<=t*x*x).
+ { replace (t*x*x) with (t*(x*x)) by ring.
+   apply Rmult_le_pos; assumption. }
+ assert (Hpeny:0<=w*y*y).
+ { replace (w*y*y) with (w*(y*y)) by ring.
+   apply Rmult_le_pos; assumption. }
+ lra.
 Qed.
 
 (**
@@ -2234,8 +2251,13 @@ Qed.
 Theorem cov2_risk_noise_second_strict :
  forall a b c u v s x y t, 0<t -> y<>0 -> cov2_risk a b c u v s x y<cov2_risk a (b+t) c u v s x y.
 Proof.
- intros a b c u v s x y t Ht Hy; rewrite cov2_risk_noise_second.
- assert (Hsq:0<y*y) by nra; nra.
+ intros a b c u v s x y t Ht Hy.
+ rewrite cov2_risk_noise_second.
+ assert (Hsq:0<y*y) by nra.
+ assert (Hpen:0<t*y*y).
+ { replace (t*y*y) with (t*(y*y)) by ring.
+   apply Rmult_lt_0_compat; assumption. }
+ lra.
 Qed.
 
 (**
@@ -2250,8 +2272,13 @@ Qed.
 Theorem cov2_risk_noise_first_strict :
  forall a b c u v s x y t, 0<t -> x<>0 -> cov2_risk a b c u v s x y<cov2_risk (a+t) b c u v s x y.
 Proof.
- intros a b c u v s x y t Ht Hx; rewrite cov2_risk_noise_first.
- assert (Hsq:0<x*x) by nra; nra.
+ intros a b c u v s x y t Ht Hx.
+ rewrite cov2_risk_noise_first.
+ assert (Hsq:0<x*x) by nra.
+ assert (Hpen:0<t*x*x).
+ { replace (t*x*x) with (t*(x*x)) by ring.
+   apply Rmult_lt_0_compat; assumption. }
+ lra.
 Qed.
 
 (**
