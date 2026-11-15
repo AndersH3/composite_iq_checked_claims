@@ -1681,10 +1681,10 @@ Theorem cov2_beta_first_after_partialing :
  forall a b c u v, a<>0 -> cov2_det a b c<>0 -> cov2_beta_first a b c u v = (u-c*cov2_beta_second a b c u v)/a.
 Proof.
  intros a b c u v Ha Hd.
- pose proof (cov2_beta_first_normal_equation a b c u v Hd) as He.
- unfold Rdiv; apply (Rmult_eq_reg_l a); [|exact Ha].
- rewrite <- He.
- field; exact Ha.
+ (* The normal equations certify this identity; the explicit field
+    normalization verifies both inverse denominators with the premises. *)
+ unfold cov2_beta_first,cov2_beta_second,cov2_det in *.
+ field; nra.
 Qed.
 
 (**
