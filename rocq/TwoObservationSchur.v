@@ -669,12 +669,10 @@ Theorem cov2_schur_le_unconditional :
  cov2_schur a b c u v s<=s.
 Proof.
  intros a b c u v s Ha Hd.
- pose proof (cov2_quad_positive_semidefinite a b c
-   (cov2_beta_first a b c u v)
-   (cov2_beta_second a b c u v) Ha Hd) as Hq.
- pose proof (cov2_beta_explained_quadratic a b c u v ltac:(lra)) as He.
- unfold cov2_schur.
- lra.
+ (* Reuse the global risk minimum at the unconditional zero predictor. *)
+ pose proof (cov2_risk_minimizer a b c u v s 0 0 Ha Hd) as Hminimum.
+ unfold cov2_risk, cov2_quad in Hminimum.
+ nra.
 Qed.
 
 (**
@@ -776,16 +774,14 @@ Theorem cov2_strict_information_gain :
  cov2_schur a b c u v s<cov2_one_risk a u s.
 Proof.
  intros a b c u v s Ha Hd Hpartial.
- pose proof (cov2_one_to_two_gain a b c u v s ltac:(lra) ltac:(lra)) as Hg.
- assert (Hden:0<a*cov2_det a b c) by nra.
- assert (Hi:0< /(a*cov2_det a b c))
-   by (apply Rinv_0_lt_compat; exact Hden).
- pose (z:=a*v-c*u).
- assert (Hz:z<>0) by (unfold z; lra).
- assert (Hsq:0<z*z) by nra.
- assert (Hgain:0<(a*v-c*u)*(a*v-c*u)/(a*cov2_det a b c)).
- { change (0<z*z/(a*cov2_det a b c)).
-   unfold Rdiv; apply Rmult_lt_0_compat; assumption. }
+ (* Strictness follows from weak improvement and the exact no-gain criterion. *)
+ pose proof (cov2_two_obs_improves_one a b c u v s Ha Hd) as Hweak.
+ assert (Hdifferent :
+   cov2_schur a b c u v s <> cov2_one_risk a u s).
+ { intro Heq.
+   pose proof ((proj1 (cov2_no_additional_gain_iff
+      a b c u v s Ha Hd)) Heq) as Hzero.
+   contradiction. }
  lra.
 Qed.
 
@@ -864,3 +860,471 @@ Proof.
  ring.
 Qed.
 
+(** Continuation D026x: report-facing covariance sensitivity and strict optimization. *)
+
+(**
+ [cov2_quad_swap] (theorem) — Relabeling two tests leaves their covariance energy unchanged.
+ Mathematical meaning: Relabeling two tests leaves their covariance energy unchanged.
+ Exact checked proposition: forall a b c x y, cov2_quad a b c x y = cov2_quad b a c y x.
+ Premises and side conditions: No positivity condition is needed; this is an identity in the real polynomial ring.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_quad_swap :
+ forall a b c x y, cov2_quad a b c x y = cov2_quad b a c y x.
+Proof.
+ intros; unfold cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_quad_target_scale] (theorem) — Scaling both coefficients by the same factor scales covariance energy quadratically.
+ Mathematical meaning: Scaling both coefficients by the same factor scales covariance energy quadratically.
+ Exact checked proposition: forall a b c x y k, cov2_quad a b c (k*x) (k*y) = k*k*cov2_quad a b c x y.
+ Premises and side conditions: Any real scale is permitted, including zero and negative scales.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_quad_target_scale :
+ forall a b c x y k, cov2_quad a b c (k*x) (k*y) = k*k*cov2_quad a b c x y.
+Proof.
+ intros; unfold cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_quad_polarization] (theorem) — The cross term of two covariance-weighted score directions is an explicit bilinear pairing.
+ Mathematical meaning: The cross term of two covariance-weighted score directions is an explicit bilinear pairing.
+ Exact checked proposition: forall a b c x y x' y', cov2_quad a b c (x+x') (y+y') = cov2_quad a b c x y + cov2_quad a b c x' y' + 2*(a*x*x'+c*(x*y'+y*x')+b*y*y').
+ Premises and side conditions: The covariance coefficients and score directions can be arbitrary real numbers.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_quad_polarization :
+ forall a b c x y x' y', cov2_quad a b c (x+x') (y+y') = cov2_quad a b c x y + cov2_quad a b c x' y' + 2*(a*x*x'+c*(x*y'+y*x')+b*y*y').
+Proof.
+ intros; unfold cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_quad_parallelogram] (theorem) — The covariance quadratic form obeys the parallelogram law, allowing deterministic variance decompositions.
+ Mathematical meaning: The covariance quadratic form obeys the parallelogram law, allowing deterministic variance decompositions.
+ Exact checked proposition: forall a b c x y h k, cov2_quad a b c (x+h) (y+k) + cov2_quad a b c (x-h) (y-k) = 2*cov2_quad a b c x y + 2*cov2_quad a b c h k.
+ Premises and side conditions: This holds algebraically even for indefinite symmetric blocks.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_quad_parallelogram :
+ forall a b c x y h k, cov2_quad a b c (x+h) (y+k) + cov2_quad a b c (x-h) (y-k) = 2*cov2_quad a b c x y + 2*cov2_quad a b c h k.
+Proof.
+ intros; unfold cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_det_congruence] (theorem) — Rescaling the two observed tests changes the covariance determinant by the square of the joint scale.
+ Mathematical meaning: Rescaling the two observed tests changes the covariance determinant by the square of the joint scale.
+ Exact checked proposition: forall a b c k l, cov2_det (k*k*a) (l*l*b) (k*l*c) = (k*l)*(k*l)*cov2_det a b c.
+ Premises and side conditions: All scales are allowed; invertibility is considered only in later corollaries.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_det_congruence :
+ forall a b c k l, cov2_det (k*k*a) (l*l*b) (k*l*c) = (k*l)*(k*l)*cov2_det a b c.
+Proof.
+ intros; unfold cov2_det; ring.
+Qed.
+
+(**
+ [cov2_quad_congruence] (theorem) — The covariance energy after changing score units equals the original energy of appropriately scaled coefficients.
+ Mathematical meaning: The covariance energy after changing score units equals the original energy of appropriately scaled coefficients.
+ Exact checked proposition: forall a b c x y k l, cov2_quad (k*k*a) (l*l*b) (k*l*c) x y = cov2_quad a b c (k*x) (l*y).
+ Premises and side conditions: There are no division or invertibility hypotheses.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_quad_congruence :
+ forall a b c x y k l, cov2_quad (k*k*a) (l*l*b) (k*l*c) x y = cov2_quad a b c (k*x) (l*y).
+Proof.
+ intros; unfold cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_risk_congruence] (theorem) — Risk computed after unit changes of both observations equals risk in the original units with correspondingly scaled prediction weights.
+ Mathematical meaning: Risk computed after unit changes of both observations equals risk in the original units with correspondingly scaled prediction weights.
+ Exact checked proposition: forall a b c u v s x y k l, cov2_risk (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) s x y = cov2_risk a b c u v s (k*x) (l*y).
+ Premises and side conditions: This is a deterministic risk identity; no stochastic independence is assumed.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_congruence :
+ forall a b c u v s x y k l, cov2_risk (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) s x y = cov2_risk a b c u v s (k*x) (l*y).
+Proof.
+ intros; unfold cov2_risk; rewrite cov2_quad_congruence; ring.
+Qed.
+
+(**
+ [cov2_risk_swap] (theorem) — Interchanging the two observed tests leaves the full linear squared-error risk invariant.
+ Mathematical meaning: Interchanging the two observed tests leaves the full linear squared-error risk invariant.
+ Exact checked proposition: forall a b c u v s x y, cov2_risk a b c u v s x y = cov2_risk b a c v u s y x.
+ Premises and side conditions: No assumption on the determinant is necessary for evaluating risk.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_swap :
+ forall a b c u v s x y, cov2_risk a b c u v s x y = cov2_risk b a c v u s y x.
+Proof.
+ intros; unfold cov2_risk,cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_schur_swap] (theorem) — Interchanging two observed tests leaves the optimal Schur residual variance unchanged.
+ Mathematical meaning: Interchanging two observed tests leaves the optimal Schur residual variance unchanged.
+ Exact checked proposition: forall a b c u v s, cov2_schur a b c u v s = cov2_schur b a c v u s.
+ Premises and side conditions: This equality remains true for singular blocks because the same totalized real division is used on both sides.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_swap :
+ forall a b c u v s, cov2_schur a b c u v s = cov2_schur b a c v u s.
+Proof.
+ intros a b c u v s; unfold cov2_schur; rewrite <- (cov2_beta_swap_first a b c u v); rewrite <- (cov2_beta_swap_second a b c u v); ring.
+Qed.
+
+(**
+ [cov2_predict_swap] (theorem) — The affine regression predictor is invariant under a consistent relabeling of the two observed test scores.
+ Mathematical meaning: The affine regression predictor is invariant under a consistent relabeling of the two observed test scores.
+ Exact checked proposition: forall mu mu1 mu2 a b c u v x y, cov2_predict mu mu1 mu2 a b c u v x y = cov2_predict mu mu2 mu1 b a c v u y x.
+ Premises and side conditions: All means and scores are real; interpretation as an optimum requires invertibility.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_predict_swap :
+ forall mu mu1 mu2 a b c u v x y, cov2_predict mu mu1 mu2 a b c u v x y = cov2_predict mu mu2 mu1 b a c v u y x.
+Proof.
+ intros mu mu1 mu2 a b c u v x y; unfold cov2_predict; rewrite <- (cov2_beta_swap_first a b c u v); rewrite <- (cov2_beta_swap_second a b c u v); ring.
+Qed.
+
+(**
+ [cov2_risk_variance_shift] (theorem) — Increasing unconditional target variance by a constant increases every candidate squared-error risk by exactly that constant.
+ Mathematical meaning: Increasing unconditional target variance by a constant increases every candidate squared-error risk by exactly that constant.
+ Exact checked proposition: forall a b c u v s x y d, cov2_risk a b c u v (s+d) x y = cov2_risk a b c u v s x y+d.
+ Premises and side conditions: The shift need not be positive for this algebraic identity.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_variance_shift :
+ forall a b c u v s x y d, cov2_risk a b c u v (s+d) x y = cov2_risk a b c u v s x y+d.
+Proof.
+ intros; unfold cov2_risk; ring.
+Qed.
+
+(**
+ [cov2_schur_variance_shift] (theorem) — A constant variance contribution unrelated to the observed scores passes unchanged through the Schur residual.
+ Mathematical meaning: A constant variance contribution unrelated to the observed scores passes unchanged through the Schur residual.
+ Exact checked proposition: forall a b c u v s d, cov2_schur a b c u v (s+d) = cov2_schur a b c u v s+d.
+ Premises and side conditions: No singular denominator is canceled.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_variance_shift :
+ forall a b c u v s d, cov2_schur a b c u v (s+d) = cov2_schur a b c u v s+d.
+Proof.
+ intros; unfold cov2_schur; ring.
+Qed.
+
+(**
+ [cov2_risk_parallelogram] (theorem) — The sum of risks at symmetrically perturbed predictor coefficients separates baseline risk and the perturbation covariance energy.
+ Mathematical meaning: The sum of risks at symmetrically perturbed predictor coefficients separates baseline risk and the perturbation covariance energy.
+ Exact checked proposition: forall a b c u v s x y h k, cov2_risk a b c u v s (x+h) (y+k) + cov2_risk a b c u v s (x-h) (y-k) = 2*cov2_risk a b c u v s x y + 2*cov2_quad a b c h k.
+ Premises and side conditions: This equality holds without any positivity or invertibility assumptions.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_parallelogram :
+ forall a b c u v s x y h k, cov2_risk a b c u v s (x+h) (y+k) + cov2_risk a b c u v s (x-h) (y-k) = 2*cov2_risk a b c u v s x y + 2*cov2_quad a b c h k.
+Proof.
+ intros; unfold cov2_risk,cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_risk_midpoint_identity] (theorem) — The Jensen gap of quadratic prediction risk equals one-half the quadratic covariance energy of the difference between candidate coefficient vectors.
+ Mathematical meaning: The Jensen gap of quadratic prediction risk equals one-half the quadratic covariance energy of the difference between candidate coefficient vectors.
+ Exact checked proposition: forall a b c u v s x y x' y', 2*(cov2_risk a b c u v s x y + cov2_risk a b c u v s x' y' - 2*cov2_risk a b c u v s ((x+x')/2) ((y+y')/2)) = cov2_quad a b c (x-x') (y-y').
+ Premises and side conditions: The midpoint uses division by the nonzero real constant two.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_midpoint_identity :
+ forall a b c u v s x y x' y', 2*(cov2_risk a b c u v s x y + cov2_risk a b c u v s x' y' - 2*cov2_risk a b c u v s ((x+x')/2) ((y+y')/2)) = cov2_quad a b c (x-x') (y-y').
+Proof.
+ intros; unfold cov2_risk,cov2_quad; field; lra.
+Qed.
+
+(**
+ [cov2_risk_midpoint_convex] (theorem) — Under positive-definite observed covariance, least-squares risk is convex between any pair of coefficient vectors.
+ Mathematical meaning: Under positive-definite observed covariance, least-squares risk is convex between any pair of coefficient vectors.
+ Exact checked proposition: forall a b c u v s x y x' y', 0<a -> 0<cov2_det a b c -> 2*cov2_risk a b c u v s ((x+x')/2) ((y+y')/2) <= cov2_risk a b c u v s x y + cov2_risk a b c u v s x' y'.
+ Premises and side conditions: Both the leading variance and the determinant must be strictly positive.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_midpoint_convex :
+ forall a b c u v s x y x' y', 0<a -> 0<cov2_det a b c -> 2*cov2_risk a b c u v s ((x+x')/2) ((y+y')/2) <= cov2_risk a b c u v s x y + cov2_risk a b c u v s x' y'.
+Proof.
+ intros a b c u v s x y x' y' Ha Hd; pose proof (cov2_risk_midpoint_identity a b c u v s x y x' y') as Hi; pose proof (cov2_quad_positive_semidefinite a b c (x-x') (y-y') Ha Hd) as Hq; lra.
+Qed.
+
+(**
+ [cov2_risk_midpoint_strict] (theorem) — Positive-definite covariance makes squared-error prediction risk strictly convex for distinct predictor coefficient vectors.
+ Mathematical meaning: Positive-definite covariance makes squared-error prediction risk strictly convex for distinct predictor coefficient vectors.
+ Exact checked proposition: forall a b c u v s x y x' y', 0<a -> 0<cov2_det a b c -> (x<>x' \/ y<>y') -> 2*cov2_risk a b c u v s ((x+x')/2) ((y+y')/2) < cov2_risk a b c u v s x y + cov2_risk a b c u v s x' y'.
+ Premises and side conditions: The coefficient pairs must differ in at least one real coordinate.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_midpoint_strict :
+ forall a b c u v s x y x' y', 0<a -> 0<cov2_det a b c -> (x<>x' \/ y<>y') -> 2*cov2_risk a b c u v s ((x+x')/2) ((y+y')/2) < cov2_risk a b c u v s x y + cov2_risk a b c u v s x' y'.
+Proof.
+ intros a b c u v s x y x' y' Ha Hd Hneq; assert (Hdelta:x-x'<>0 \/ y-y'<>0) by (destruct Hneq; [left|right]; lra); pose proof (cov2_quad_positive_definite a b c (x-x') (y-y') Ha Hd Hdelta) as Hq; pose proof (cov2_risk_midpoint_identity a b c u v s x y x' y') as Hi; lra.
+Qed.
+
+(**
+ [cov2_risk_strict_above_schur] (theorem) — Every nonoptimal pair of regression coefficients has strictly greater prediction risk than the Schur-optimal pair.
+ Mathematical meaning: Every nonoptimal pair of regression coefficients has strictly greater prediction risk than the Schur-optimal pair.
+ Exact checked proposition: forall a b c u v s x y, 0<a -> 0<cov2_det a b c -> (x<>cov2_beta_first a b c u v \/ y<>cov2_beta_second a b c u v) -> cov2_schur a b c u v s < cov2_risk a b c u v s x y.
+ Premises and side conditions: Positive definiteness and a nonzero coefficient error are essential for strictness.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_strict_above_schur :
+ forall a b c u v s x y, 0<a -> 0<cov2_det a b c -> (x<>cov2_beta_first a b c u v \/ y<>cov2_beta_second a b c u v) -> cov2_schur a b c u v s < cov2_risk a b c u v s x y.
+Proof.
+ intros a b c u v s x y Ha Hd Hneq; pose proof (cov2_risk_completed_square a b c u v s x y ltac:(lra)) as Hr; assert (Hdelta:x-cov2_beta_first a b c u v<>0 \/ y-cov2_beta_second a b c u v<>0) by (destruct Hneq; [left|right]; lra); pose proof (cov2_quad_positive_definite a b c (x-cov2_beta_first a b c u v) (y-cov2_beta_second a b c u v) Ha Hd Hdelta) as Hp; lra.
+Qed.
+
+(**
+ [cov2_risk_optimal_iff] (theorem) — Equality with minimum prediction risk characterizes exactly the unique simultaneous normal-equation coefficients.
+ Mathematical meaning: Equality with minimum prediction risk characterizes exactly the unique simultaneous normal-equation coefficients.
+ Exact checked proposition: forall a b c u v s x y, 0<a -> 0<cov2_det a b c -> (cov2_risk a b c u v s x y = cov2_schur a b c u v s <-> x=cov2_beta_first a b c u v /\ y=cov2_beta_second a b c u v).
+ Premises and side conditions: The covariance block is positive definite, excluding nonunique minima.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_optimal_iff :
+ forall a b c u v s x y, 0<a -> 0<cov2_det a b c -> (cov2_risk a b c u v s x y = cov2_schur a b c u v s <-> x=cov2_beta_first a b c u v /\ y=cov2_beta_second a b c u v).
+Proof.
+ intros a b c u v s x y Ha Hd; split.
+ - intro Hr; exact (cov2_risk_unique_minimizer a b c u v s x y Ha Hd Hr).
+ - intros [Hx Hy]; subst x y; apply cov2_risk_at_optimum; lra.
+Qed.
+
+(**
+ [cov2_schur_second_observation_bound] (theorem) — Adding the first observation cannot worsen optimal prediction relative to using the second observation alone.
+ Mathematical meaning: Adding the first observation cannot worsen optimal prediction relative to using the second observation alone.
+ Exact checked proposition: forall a b c u v s, 0<b -> 0<cov2_det a b c -> cov2_schur a b c u v s <= cov2_one_risk b v s.
+ Premises and side conditions: The second observed variance and common determinant must be strictly positive.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_second_observation_bound :
+ forall a b c u v s, 0<b -> 0<cov2_det a b c -> cov2_schur a b c u v s <= cov2_one_risk b v s.
+Proof.
+ intros a b c u v s Hb Hd; rewrite cov2_schur_swap; apply cov2_two_obs_improves_one; [exact Hb|rewrite <- cov2_det_symmetric; exact Hd].
+Qed.
+
+(**
+ [cov2_schur_second_strict_gain] (theorem) — The first test strictly improves on using only the second if its residual target covariance is nonzero.
+ Mathematical meaning: The first test strictly improves on using only the second if its residual target covariance is nonzero.
+ Exact checked proposition: forall a b c u v s, 0<b -> 0<cov2_det a b c -> b*u<>c*v -> cov2_schur a b c u v s < cov2_one_risk b v s.
+ Premises and side conditions: Strict improvement requires a nonzero partial target covariance and positive covariance minors.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_second_strict_gain :
+ forall a b c u v s, 0<b -> 0<cov2_det a b c -> b*u<>c*v -> cov2_schur a b c u v s < cov2_one_risk b v s.
+Proof.
+ intros a b c u v s Hb Hd Hpartial; rewrite cov2_schur_swap; apply cov2_strict_information_gain; [exact Hb|rewrite <- cov2_det_symmetric; exact Hd|exact Hpartial].
+Qed.
+
+(**
+ [cov2_schur_second_no_gain_iff] (theorem) — The first test provides no extra linear information given the second precisely when its partial target covariance vanishes.
+ Mathematical meaning: The first test provides no extra linear information given the second precisely when its partial target covariance vanishes.
+ Exact checked proposition: forall a b c u v s, 0<b -> 0<cov2_det a b c -> (cov2_schur a b c u v s = cov2_one_risk b v s <-> b*u=c*v).
+ Premises and side conditions: Both positive-definiteness premises are needed for the equivalence.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_second_no_gain_iff :
+ forall a b c u v s, 0<b -> 0<cov2_det a b c -> (cov2_schur a b c u v s = cov2_one_risk b v s <-> b*u=c*v).
+Proof.
+ intros a b c u v s Hb Hd; rewrite cov2_schur_swap; apply cov2_no_additional_gain_iff; [exact Hb|rewrite <- cov2_det_symmetric; exact Hd].
+Qed.
+
+(**
+ [cov2_schur_both_one_score_bounds] (theorem) — Optimal two-test prediction is never inferior to either separate one-test predictor.
+ Mathematical meaning: Optimal two-test prediction is never inferior to either separate one-test predictor.
+ Exact checked proposition: forall a b c u v s, 0<a -> 0<b -> 0<cov2_det a b c -> cov2_schur a b c u v s <= cov2_one_risk a u s /\ cov2_schur a b c u v s <= cov2_one_risk b v s.
+ Premises and side conditions: Both observed variances and the covariance determinant are strictly positive.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_both_one_score_bounds :
+ forall a b c u v s, 0<a -> 0<b -> 0<cov2_det a b c -> cov2_schur a b c u v s <= cov2_one_risk a u s /\ cov2_schur a b c u v s <= cov2_one_risk b v s.
+Proof.
+ intros a b c u v s Ha Hb Hd; split; [apply cov2_two_obs_improves_one|apply cov2_schur_second_observation_bound]; assumption.
+Qed.
+
+(**
+ [cov2_schur_unconditional_eq_iff] (theorem) — The optimal two-test residual variance equals unconditional variance exactly when both observed tests carry zero target covariance.
+ Mathematical meaning: The optimal two-test residual variance equals unconditional variance exactly when both observed tests carry zero target covariance.
+ Exact checked proposition: forall a b c u v s, 0<a -> 0<cov2_det a b c -> (cov2_schur a b c u v s=s <-> u=0 /\ v=0).
+ Premises and side conditions: The observed covariance block must be positive definite for zero explained variance to force both cross-covariances to vanish.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_unconditional_eq_iff :
+ forall a b c u v s, 0<a -> 0<cov2_det a b c -> (cov2_schur a b c u v s=s <-> u=0 /\ v=0).
+Proof.
+ intros a b c u v s Ha Hd; split; intro H; [|destruct H as [Hu Hv]; subst u v; unfold cov2_schur,cov2_beta_first,cov2_beta_second,Rdiv; ring]; pose proof (cov2_beta_explained_quadratic a b c u v ltac:(lra)) as He; assert (Hq:cov2_quad a b c (cov2_beta_first a b c u v) (cov2_beta_second a b c u v)=0) by (unfold cov2_schur in H; lra); apply (proj1 (cov2_quad_zero_iff a b c _ _ Ha Hd)) in Hq; destruct Hq as [Hp Hq]; pose proof (cov2_beta_first_normal_equation a b c u v ltac:(lra)) as H1; pose proof (cov2_beta_second_normal_equation a b c u v ltac:(lra)) as H2; rewrite Hp,Hq in H1,H2; split; nra.
+Qed.
+
+(**
+ [cov2_schur_unconditional_strict_gain] (theorem) — Any nonzero linear covariance signal in either test strictly reduces best linear residual variance below unconditional target variance.
+ Mathematical meaning: Any nonzero linear covariance signal in either test strictly reduces best linear residual variance below unconditional target variance.
+ Exact checked proposition: forall a b c u v s, 0<a -> 0<cov2_det a b c -> (u<>0 \/ v<>0) -> cov2_schur a b c u v s<s.
+ Premises and side conditions: Requires positive definiteness and at least one nonzero target/test covariance.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_unconditional_strict_gain :
+ forall a b c u v s, 0<a -> 0<cov2_det a b c -> (u<>0 \/ v<>0) -> cov2_schur a b c u v s<s.
+Proof.
+ intros a b c u v s Ha Hd Hsignal; pose proof (cov2_schur_le_unconditional a b c u v s Ha Hd) as Hle; assert (Hneq:cov2_schur a b c u v s<>s) by (intro He; pose proof ((proj1 (cov2_schur_unconditional_eq_iff a b c u v s Ha Hd)) He) as [Hu Hv]; destruct Hsignal as [H|H]; contradiction); lra.
+Qed.
+
+(**
+ [cov2_risk_signal_reflection] (theorem) — Simultaneously negating target covariances and prediction weights leaves the quadratic risk invariant.
+ Mathematical meaning: Simultaneously negating target covariances and prediction weights leaves the quadratic risk invariant.
+ Exact checked proposition: forall a b c u v s x y, cov2_risk a b c (-u) (-v) s (-x) (-y) = cov2_risk a b c u v s x y.
+ Premises and side conditions: This algebraic symmetry does not require positive covariance.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_risk_signal_reflection :
+ forall a b c u v s x y, cov2_risk a b c (-u) (-v) s (-x) (-y) = cov2_risk a b c u v s x y.
+Proof.
+ intros; unfold cov2_risk,cov2_quad; ring.
+Qed.
+
+(**
+ [cov2_predict_shift_second] (theorem) — Translating the second test and its mean by the same amount does not change the affine regression prediction.
+ Mathematical meaning: Translating the second test and its mean by the same amount does not change the affine regression prediction.
+ Exact checked proposition: forall mu mu1 mu2 a b c u v x y d, cov2_predict mu mu1 (mu2+d) a b c u v x (y+d) = cov2_predict mu mu1 mu2 a b c u v x y.
+ Premises and side conditions: The observed score and its reference mean must be translated together.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_predict_shift_second :
+ forall mu mu1 mu2 a b c u v x y d, cov2_predict mu mu1 (mu2+d) a b c u v x (y+d) = cov2_predict mu mu1 mu2 a b c u v x y.
+Proof.
+ intros; unfold cov2_predict; ring.
+Qed.
+
+(**
+ [cov2_predict_target_translation] (theorem) — Translating the target mean translates its affine multivariate predictor by exactly the same amount.
+ Mathematical meaning: Translating the target mean translates its affine multivariate predictor by exactly the same amount.
+ Exact checked proposition: forall mu mu1 mu2 a b c u v x y d, cov2_predict (mu+d) mu1 mu2 a b c u v x y = cov2_predict mu mu1 mu2 a b c u v x y+d.
+ Premises and side conditions: No change in covariance or observed-score centering is assumed.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_predict_target_translation :
+ forall mu mu1 mu2 a b c u v x y d, cov2_predict (mu+d) mu1 mu2 a b c u v x y = cov2_predict mu mu1 mu2 a b c u v x y+d.
+Proof.
+ intros; unfold cov2_predict; ring.
+Qed.
+
+(**
+ [cov2_beta_congruence_first] (theorem) — The first regression coefficient transforms contravariantly under independent changes of observed-score units.
+ Mathematical meaning: The first regression coefficient transforms contravariantly under independent changes of observed-score units.
+ Exact checked proposition: forall a b c u v k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> k*cov2_beta_first (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) = cov2_beta_first a b c u v.
+ Premises and side conditions: Both test-unit scales and the original covariance determinant must be nonzero.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_beta_congruence_first :
+ forall a b c u v k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> k*cov2_beta_first (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) = cov2_beta_first a b c u v.
+Proof.
+ intros a b c u v k l Hk Hl Hd; unfold cov2_beta_first; rewrite cov2_det_congruence; unfold Rdiv; field; nra.
+Qed.
+
+(**
+ [cov2_beta_congruence_second] (theorem) — The second regression coefficient transforms contravariantly under independent changes of observed-score units.
+ Mathematical meaning: The second regression coefficient transforms contravariantly under independent changes of observed-score units.
+ Exact checked proposition: forall a b c u v k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> l*cov2_beta_second (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) = cov2_beta_second a b c u v.
+ Premises and side conditions: Both test-unit scales and the original covariance determinant must be nonzero.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_beta_congruence_second :
+ forall a b c u v k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> l*cov2_beta_second (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) = cov2_beta_second a b c u v.
+Proof.
+ intros a b c u v k l Hk Hl Hd; unfold cov2_beta_second; rewrite cov2_det_congruence; unfold Rdiv; field; nra.
+Qed.
+
+(**
+ [cov2_schur_congruence] (theorem) — The optimal two-test residual variance is invariant under arbitrary nonzero changes of measurement units for the two tests.
+ Mathematical meaning: The optimal two-test residual variance is invariant under arbitrary nonzero changes of measurement units for the two tests.
+ Exact checked proposition: forall a b c u v s k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> cov2_schur (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) s = cov2_schur a b c u v s.
+ Premises and side conditions: Changes of score units must be invertible; a nonzero determinant is necessary for the regression formulas.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_schur_congruence :
+ forall a b c u v s k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> cov2_schur (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) s = cov2_schur a b c u v s.
+Proof.
+ intros a b c u v s k l Hk Hl Hd; unfold cov2_schur; replace (k*u*cov2_beta_first (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v)) with (u*(k*cov2_beta_first (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v))) by ring; replace (l*v*cov2_beta_second (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v)) with (v*(l*cov2_beta_second (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v))) by ring; rewrite (cov2_beta_congruence_first a b c u v k l Hk Hl Hd); rewrite (cov2_beta_congruence_second a b c u v k l Hk Hl Hd); reflexivity.
+Qed.
+
+(**
+ [cov2_predict_congruence] (theorem) — An affine two-test predictor is unchanged when both observed scores, their means, and all covariance inputs are converted consistently to new units.
+ Mathematical meaning: An affine two-test predictor is unchanged when both observed scores, their means, and all covariance inputs are converted consistently to new units.
+ Exact checked proposition: forall mu mu1 mu2 a b c u v x y k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> cov2_predict mu (k*mu1) (l*mu2) (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) (k*x) (l*y) = cov2_predict mu mu1 mu2 a b c u v x y.
+ Premises and side conditions: Scales must be nonzero and the covariance block invertible; this is predictor algebra, not Gaussian conditioning.
+ Proof/definition method: Reuse preceding covariance, regression and positivity lemmas, together with Rocq's trusted real-algebra tactics; no new matrix or probability operators are introduced.
+ Library reuse: Rocq Stdlib.Reals, Lra, Psatz, Ring and Field, with the already-kernel-checked TwoObservationSchur theorems rather than duplicated specialized derivations.
+ Boundary: Exact finite-dimensional real covariance and best linear-prediction algebra only; does not assert Gaussian conditional laws, continuous normal tails, or empirical IQ-model validity.
+ *)
+Theorem cov2_predict_congruence :
+ forall mu mu1 mu2 a b c u v x y k l, k<>0 -> l<>0 -> cov2_det a b c<>0 -> cov2_predict mu (k*mu1) (l*mu2) (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v) (k*x) (l*y) = cov2_predict mu mu1 mu2 a b c u v x y.
+Proof.
+ intros mu mu1 mu2 a b c u v x y k l Hk Hl Hd; unfold cov2_predict; replace (cov2_beta_first (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v)*(k*x-k*mu1)) with ((k*cov2_beta_first (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v))*(x-mu1)) by ring; replace (cov2_beta_second (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v)*(l*y-l*mu2)) with ((l*cov2_beta_second (k*k*a) (l*l*b) (k*l*c) (k*u) (l*v))*(y-mu2)) by ring; rewrite (cov2_beta_congruence_first a b c u v k l Hk Hl Hd); rewrite (cov2_beta_congruence_second a b c u v k l Hk Hl Hd); reflexivity.
+Qed.
