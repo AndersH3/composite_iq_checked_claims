@@ -32,8 +32,13 @@ package Bounded_Counts with SPARK_Mode => On is
    --    8-9. Equality with either input characterizes the other as zero.
    --   10. Exactly filling capacity characterizes remaining headroom.
    --
-   --  Flow contracts additionally prohibit global state and declare
-   --  dependency on precisely the two arithmetical inputs.
+   --  Flow contracts additionally prohibit global state. Total
+   --  depends computationally only on Previous and Increment. Capacity
+   --  constrains the admissible domain and the checked assertion, but its
+   --  value is not read to compute Total; the explicit null dependency
+   --  classifies this otherwise unaccounted-for input for GNATprove.
+   --  If the expression later uses Capacity to compute Total, that flow
+   --  contract must be revised rather than suppressing the diagnostic.
    procedure Accumulate
      (Previous  : in Natural;
       Increment : in Natural;
@@ -41,7 +46,8 @@ package Bounded_Counts with SPARK_Mode => On is
       Total     : out Natural)
    with
      Global => null,
-     Depends => (Total => (Previous, Increment)),
+     Depends => (Total => (Previous, Increment),
+                 null => Capacity),
      Pre =>
        (Previous <= Capacity)
        and then (Increment <= Capacity - Previous),
