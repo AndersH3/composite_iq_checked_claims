@@ -569,7 +569,9 @@ Qed.
 Theorem sensitivity_population_independent :
   forall n, sequential_population_variance n 0 = 1/n.
 Proof.
-  intros n; unfold sequential_population_variance, sequential_d; ring.
+  intros n; unfold sequential_population_variance.
+  rewrite sequential_denominator_at_zero_correlation.
+  reflexivity.
 Qed.
 
 (**
