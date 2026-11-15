@@ -3569,16 +3569,8 @@ Proof.
     field; lra.
 Defined.
 
-(* The same centralized finite-event unfolding is used to certify the
-   example's exact marginal and overlap values; this tactic introduces
-   no axioms or independent probability accumulation method. *)
-Ltac simpson_exact :=
-  cbv [pA3 pB3 pC3 pAB3 triple_prob simpson_reversal_model
-       simpson_reversal_weight
-       FiniteUnion.finite_prob FiniteUnion.indicator
-       FiniteUnion.finite_sum FiniteSum.finite_sum triple_cases
-       testA3 testB3 testC3 List.map List.fold_right];
-  field; lra.
+(* Exact Simpson marginals below reuse the checked eight-atom decomposition
+   theorems, avoiding a duplicate probability-integral reduction tactic. *)
 
 (**
  [simpson_A_half] (theorem) — The pooled first-route admission marginal of the certified example equals one-half.
@@ -3600,7 +3592,9 @@ Ltac simpson_exact :=
 Theorem simpson_A_half :
   pA3 simpson_reversal_model = 1/2.
 Proof.
-  simpson_exact.
+  rewrite (triple_first_marginal_atoms simpson_reversal_model).
+  change ((63/200)+(3/200)+(17/200)+(17/200) = 1/2).
+  field; lra.
 Qed.
 
 (**
@@ -3623,7 +3617,9 @@ Qed.
 Theorem simpson_B_half :
   pB3 simpson_reversal_model = 1/2.
 Proof.
-  simpson_exact.
+  rewrite (triple_second_marginal_atoms simpson_reversal_model).
+  change ((63/200)+(3/200)+(17/200)+(17/200) = 1/2).
+  field; lra.
 Qed.
 
 (**
@@ -3646,7 +3642,9 @@ Qed.
 Theorem simpson_C_half :
   pC3 simpson_reversal_model = 1/2.
 Proof.
-  simpson_exact.
+  rewrite (triple_third_marginal_atoms simpson_reversal_model).
+  change ((63/200)+(17/200)+(17/200)+(3/200) = 1/2).
+  field; lra.
 Qed.
 
 (**
@@ -3669,7 +3667,9 @@ Qed.
 Theorem simpson_joint_thirty_three_percent :
   pAB3 simpson_reversal_model = 33/100.
 Proof.
-  simpson_exact.
+  rewrite (triple_first_second_overlap_atoms simpson_reversal_model).
+  change ((63/200)+(3/200) = 33/100).
+  field; lra.
 Qed.
 
 (**
