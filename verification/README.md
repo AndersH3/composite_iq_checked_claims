@@ -23,8 +23,24 @@ named 'deal'`, before any GNATprove execution. Prefer the existing
 ```sh
 cd ~/src/composite_iq_formal_tools
 .venv/bin/python -c 'import deal; print(deal.__version__)'
-.venv/bin/python verification/run_computer10.py --portfolio-only
+.venv/bin/python verification/run_computer10.py --portfolio-only --timeout 30 --wall-seconds 1800
 ```
+
+The explicit `--timeout 30 --wall-seconds 1800` settings reproduce
+the per-prover and per-campaign limits used for the **successful
+November 4 source-pinned proof campaign**, rather than the runner's
+currently shorter defaults (`--timeout 15 --wall-seconds 900`).
+This difference matters: the old Hoeflin report records an Alt-Ergo
+proof of the driver postcondition using **20.1 seconds**, while a
+November 15 run with the 15-second default left the specific
+`Report_IO.Trace.Rows = 8` postcondition unproved (403/404).
+The first two deliberately incorrect control implementations were
+correctly rejected. The resource-limit difference is a compelling
+diagnostic, **not proof that a 30-second rerun must succeed**.
+Do not weaken the eight-row specification to silence the checker.
+Check all native results and retained source hashes before accepting
+a new campaign. Complete the ongoing Towers run before initiating
+another CPU-intensive portfolio.
 
 If the import check fails inside that virtual environment, install the
 repository's pinned dependencies into **that environment only**, then
@@ -33,7 +49,7 @@ rerun the check and campaign:
 ```sh
 .venv/bin/python -m pip install -r requirements-dev.txt
 .venv/bin/python -c 'import deal; print(deal.__version__)'
-.venv/bin/python verification/run_computer10.py --portfolio-only
+.venv/bin/python verification/run_computer10.py --portfolio-only --timeout 30 --wall-seconds 1800
 ```
 
 If `.venv/bin/python` does not exist, create a virtual environment with
