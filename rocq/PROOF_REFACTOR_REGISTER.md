@@ -12,7 +12,7 @@ Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
 The current branch has **1873 public theorem/lemma/example claims**, plus
 one local helper and two constructed `Admissions.TwoEventModel` values:
-**1879 proof scripts** across twenty-one Rocq modules. The claims and scripts
+**1886 proof scripts** across twenty-two Rocq modules. The claims and scripts
 are counted separately because helper and record-constructor proof blocks
 are included in the latter total.
 The record was created after the current generic list-fold and covariance
@@ -2382,6 +2382,18 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 | `triple_bc_odds_one_iff_independent` (theorem) | When both discordant cells have positive product, the B/C odds ratio is one exactly at pairwise independence. Reuses a checked two-event theorem or a canonical eight-cell equality. | Admissions, ThreeTestAdmissions, FiniteUnion/FiniteSum, Stdlib.Lra/Psatz. | Exactly finite Boolean outcomes; conditional interpretation requires positive denominators; no Gaussian-tail inference. |
 | `triple_bc_phi_unit_interval` (theorem) | With strictly positive Bernoulli variances, projected B/C phi correlation lies in [-1,1]. Reuses a checked two-event theorem or a canonical eight-cell equality. | Admissions, ThreeTestAdmissions, FiniteUnion/FiniteSum, Stdlib.Lra/Psatz. | Exactly finite Boolean outcomes; conditional interpretation requires positive denominators; no Gaussian-tail inference. |
 | `triple_bc_union_unit_interval` (theorem) | The projection of B/C admissions has a normalized nonnegative union probability at most one. Reuses a checked two-event theorem or a canonical eight-cell equality. | Admissions, ThreeTestAdmissions, FiniteUnion/FiniteSum, Stdlib.Lra/Psatz. | Exactly finite Boolean outcomes; conditional interpretation requires positive denominators; no Gaussian-tail inference. |
+
+## ThreeTestConditionalStrata.v — 7 proof scripts
+
+| Declaration (proof script) | Refactoring / proof method | Existing libraries or lemmas reused | Scope and boundary |
+|---|---|---|---|
+| `normalized_four_stratum` (definition) | A reusable positive-total normalization of four nonnegative contingency cells into Admissions.TwoEventModel. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
+| `stratum_ab_c_yes` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
+| `stratum_ab_c_no` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
+| `stratum_ac_b_yes` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
+| `stratum_ac_b_no` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
+| `stratum_bc_a_yes` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
+| `stratum_bc_a_no` (definition) | Explicit conditional subpopulation model with four atom-masses divided by its positive stratum total. | Admissions.TwoEventModel, ThreeTestAdmissions.triple_lra, FiniteUnion/FiniteSum, Stdlib real division and field. | Only finite positive-mass strata; not Gaussian conditioning. |
 
 ## SequentialReport.v — 37 proof scripts
 
