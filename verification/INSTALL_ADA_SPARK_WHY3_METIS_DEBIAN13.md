@@ -128,6 +128,55 @@ by `why3 --list-provers`. The previous recommendation to run
 this package. The corrected script issues the documented Debian 13 commands
 directly. After adding Yices, Metis, Gappa, PVS or other provers, repeat configuration detection. If a prover cannot be detected, check compatibility with Why3's supported versions; do not claim it is usable merely because the binary is on `PATH`.
 
+## Why3 1.8.0 prover compatibility observed on computer10
+
+On November 15, 2026, the user's `why3 config detect` output reported
+**CVC5 1.1.2** and **Z3 4.13.3** as recognized. It also reported six
+provers with unrecognized versions among the 13 configurations added.
+In particular, the installed Why3 drivers did not recognize **Gappa
+1.6.0**, **Eprover 3.2.5**, **Beagle 5.5**, or **Yices 2.7.0**.
+The installed Yices detection entry explicitly expects **Yices 1.0.38**;
+Yices 2.x is a different major version, not a straightforward match.
+Why3 also detected **Isabelle 2025-2**, **PVS 8.1**, and **Coq 8.20.1**,
+but reported no compiled Why3 proof-assistant libraries for them.
+
+These messages are **version/driver integration warnings**, not
+evidence that the independently installed solvers or proof assistants
+are defective. Their registrations in `~/.why3.conf` are not sufficient
+for validated Why3 use. Do not suppress the warnings or rewrite
+`~/.why3.conf` to pretend unsupported drivers are supported.
+Note that `Isabelle 2025-2` is only the version detected in the user's
+PATH; it does **not** establish that the separately downloaded
+Isabelle2026 package is installed or accessible to Why3.
+
+### Functional proof tests for recognized backends
+
+After updating this branch, run:
+
+```sh
+shellcheck scripts/test_ada_spark_why3.sh
+shellcheck verification/why3/check_backends.sh
+bash verification/why3/check_backends.sh
+```
+
+The Bash script in `verification/why3/check_backends.sh` invokes Z3 and
+CVC5 **through Why3** on
+[`verification/why3/backend_smoke.why`](why3/backend_smoke.why).
+Both must report `Valid` for integer addition by zero, and `Invalid`
+for the deliberately false statement `0 = 1`. Every prover invocation
+has a 30-second limit. The test checks Why3's **reported proof result**,
+not just whether the command exits with status zero. It does not
+touch the user's Why3 configuration and does not claim the solver's
+general soundness. Unlike the offline regression test, the functional
+test must actually run on computer10 before any pass claim is made.
+
+You can inspect registered names using `why3 --list-provers`, and
+the installed Why3 configuration data with `why3 --print-datadir`.
+Why3's official `provers-detection-data.conf` controls supported
+version patterns and drivers. Installing another Why3 version alone
+does not guarantee Yices 2, Gappa 1.6, or newer Eprover compatibility:
+those drivers and their version patterns must be checked separately.
+
 ## Further Ada/SPARK facilities
 
 For a broader development workflow, consider the Ada Language Server (AdaCore's VS Code Ada extension), GNAT Studio, GNATformat, GNATtest, GNATcov, GNATdoc, gnatcheck and Libadalang. Some are in the [Alire package index](https://alire.ada.dev/crates.html) and some have separate AdaCore community releases. They are **optional** and are not silently downloaded or installed by the base script. Record each available version and license before using it in reproducible project checks.
@@ -152,6 +201,8 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The user subsequently provided Why3 1.8.0 prover detection output and a shellcheck invocation error. The AI incorporated an explicit version-compatibility summary and added a Why3/Z3/CVC5 positive/negative proof smoke test. Its GitHub CI uses mocked prover output, not actual SMT solver execution; real backend success still requires the user to run the smoke test on computer10.
 
 The initial AI-generated installer gave incorrect `alr install` and
 `why3 config --detect` commands for the user's Debian 13 versions.
