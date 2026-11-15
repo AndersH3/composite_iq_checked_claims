@@ -1141,7 +1141,9 @@ Theorem finite_centered_shift_first :
 Proof.
  intros A xs w f g d Hm; unfold finite_centered_cross; replace (finite_weighted_mean xs w (fun x=>f x+d)) with (finite_weighted_mean xs w f+d).
  - apply finite_cross_shift_first.
- - rewrite (finite_weighted_mean_affine A xs w f 1 d Hm); f_equal; ring.
+ - rewrite (finite_weighted_mean_add A xs w f (fun _=>d) Hm).
+   rewrite (finite_weighted_mean_constant A xs w d Hm).
+   reflexivity.
 Qed.
 
 (**
