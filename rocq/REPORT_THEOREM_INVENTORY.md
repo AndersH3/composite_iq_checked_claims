@@ -153,6 +153,6 @@ This continuation extends `Admissions.v` by **33 new named theorems and 5 transp
 
 ## Appendix — Complete AI disclosure
 
-The D027x admissions dependence extension, its 34 new theorem proof drafts, and its source-to-report mapping were prepared with AI assistance. Rocq kernel compilation is required before interpreting any draft theorem as verified. No continuous Gaussian model, normal tail integral or empirical psychometric property has been established.
+The D027x admissions dependence extension, its 33 new theorem proof drafts, and its source-to-report mapping were prepared with AI assistance. Rocq kernel compilation is required before interpreting any draft theorem as verified. No continuous Gaussian model, normal tail integral or empirical psychometric property has been established.
 
 This source-based theorem inventory, its continuation entries, and associated formal proof work were drafted and reviewed with assistance from OpenAI's ChatGPT. Mathematical results are valid only to the extent that their exact propositions are accepted by the Rocq kernel under their stated hypotheses. CI, finite arithmetic, and test checks do not verify the continuous Gaussian-model assumptions, numerical tail-integral accuracy, or any empirical test-population parameter. Repository maintainers remain responsible for independent source review and application of these model-limited claims.
