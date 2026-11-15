@@ -56,7 +56,7 @@ package Normal_Support with SPARK_Mode is
      Contract_Cases => (Seed = 0 => G.State = 0, Seed = Interfaces.Unsigned_64'Last => G.State = Interfaces.Unsigned_64'Last, others => G.State = Seed);
    procedure Uniform (G : in out Generator; U : out Open_Unit) with
      Global => null,
-     Post => (State_Value (G) = State_Value (G)'Old * 6_364_136_223_846_793_005 + 1_442_695_040_888_963_407) and then
+     Post => (State_Value (G) = State_Value (G)'Old * Shared_Normal_Sampling.Multiplier + Shared_Normal_Sampling.Increment) and then
        (U >= 2.0 ** (-53)) and then
        (U <= 1.0 - 2.0 ** (-53)),
      Depends => ((G, U) => G);
