@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `57535b6795e206baf83fa17af76a3d5c1d5a0b7b` (PR #22). **Working branch:** `rocq-finite-covariance-20261115`.
+**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `532a92d945616e479a25fc69190e5c4a4e97b0ae` (PR #23). **Working branch:** `rocq-finite-projection-equality-20261115`.
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
@@ -176,7 +176,19 @@ Proposed **29 substantive source-proved finite covariance theorems**, including 
 
 An additional **24 new Rocq theorem scripts** extend D031x to **53 proposed report-linked theorems**. The exact covariance normal equation, unique optimal linear slope, error-as-completed-square, positive and zero explained-variance criteria, and nonnegative/bounded Schur residual are tied to finite score prediction in the sequential conditional-means and composite-IQ reports. The proof layer reuses the finite weighted Cauchy–Schwarz and previously established covariance bilinearity rather than reproducing a list-recursive optimizer. All claims require pinned Rocq 9.2 verification and do not prove Gaussian distributional assumptions or empirical IQ measurements.
 
+
+### D032x — finite least-squares equality and sharp supported-affinity conditions
+
+**19 proposed additional Rocq theorems** characterize exact finite linear predictability, the equivalence between zero Schur residual, singular two-score covariance determinant, and supportwise affine target/feature equality, along with strict positivity for a non-affine supported observation. The work also derives directional regression-coefficient sign reciprocity and covariance normalization bounds. All formal claims require the pinned Rocq 9.2 kernel and documentation CI before being called proved. These statements apply to a finite nonnegative weighted enumeration and do not establish a Gaussian conditional distribution or any empirical IQ population model.
+
+
+### D032x phase 2 — sharp fitted/residual covariance bounds and equality on supported outcomes
+
+This phase proposes **26 further Rocq theorems**, bringing D032x to **45 named theorem scripts**. It formalizes Cauchy–Schwarz and positive-semidefinite Gram bounds for conditional fitted/residual scores, the between-cell and within-cell covariance matrices, exact supportwise conditions for zero residual variance or zero fitted variance, sharp equality characterizations of the finite total-variance decomposition, and links between conditional cross-covariance and strictly positive original-score variances. All work reuses existing finite two-cell projection, finite conditional covariance, and previously proved finite Cauchy–Schwarz rather than duplicating integration or regression routines. Claims count as formally proved only after pinned Rocq 9.2 and repository CI pass. These results do not establish Gaussian conditional laws or empirical IQ distribution parameters.
+
 ## Appendix — Complete AI disclosure
+
+D032x source theorems, mathematical scope analysis, comments, and report-to-proof mapping were prepared with AI assistance. Kernel compilation checks proof terms for exact propositions; source documentation or compilation does not independently validate IQ population assumptions, normality, Gaussian tail integrals, or empirical test parameters.
 
 D031x finite covariance and least-squares proof scripts, theorem mappings, comments and refactoring choices were generated with AI assistance. Only the exact Rocq kernel-checked propositions under their stated premises count as established. The finite weighted sample algebra does not verify Gaussian conditional laws, empirical IQ distributions, or numerical tail integrals.
 
