@@ -2313,7 +2313,26 @@ Qed.
 Theorem admission_B_strata_gap_numerator :
  forall m, 0 < p_A m -> 0 < admission_not_A_mass m -> p_A m * admission_not_A_mass m * (conditional_B_given_A m - admission_B_given_not_A m) = admission_association m.
 Proof.
- intros m Ha Hna; pose proof (admission_B_uplift_numerator m Ha) as Hu; pose proof (admission_B_downlift_numerator m Hna) as Hd; pose proof (admission_not_A_complement m) as Hmass; nra.
+ intros m Ha Hna.
+ (* Multiply the two separately checked conditional-numerator identities
+    by the opposite stratum mass; their intermediate marginal cancels. *)
+ pose proof (admission_B_uplift_numerator m Ha) as Hu.
+ pose proof (admission_B_downlift_numerator m Hna) as Hd.
+ replace (p_A m * admission_not_A_mass m *
+   (conditional_B_given_A m - admission_B_given_not_A m))
+   with (admission_not_A_mass m *
+          (p_A m * (conditional_B_given_A m - p_B m)) +
+         p_A m *
+          (admission_not_A_mass m * (p_B m - admission_B_given_not_A m)))
+   by ring.
+ rewrite Hu, Hd.
+ replace (admission_not_A_mass m * admission_association m +
+          p_A m * admission_association m)
+   with ((admission_not_A_mass m + p_A m) * admission_association m)
+   by ring.
+ replace (admission_not_A_mass m + p_A m) with 1
+   by (pose proof (admission_not_A_complement m); lra).
+ ring.
 Qed.
 
 (**
@@ -2328,7 +2347,25 @@ Qed.
 Theorem admission_A_strata_gap_numerator :
  forall m, 0 < p_B m -> 0 < admission_not_B_mass m -> p_B m * admission_not_B_mass m * (conditional_A_given_B m - admission_A_given_not_B m) = admission_association m.
 Proof.
- intros m Hb Hnb; pose proof (admission_A_uplift_numerator m Hb) as Hu; pose proof (admission_A_downlift_numerator m Hnb) as Hd; pose proof (admission_not_B_complement m) as Hmass; nra.
+ intros m Hb Hnb.
+ (* The two conditional numerator formulas combine by total mass one. *)
+ pose proof (admission_A_uplift_numerator m Hb) as Hu.
+ pose proof (admission_A_downlift_numerator m Hnb) as Hd.
+ replace (p_B m * admission_not_B_mass m *
+   (conditional_A_given_B m - admission_A_given_not_B m))
+   with (admission_not_B_mass m *
+          (p_B m * (conditional_A_given_B m - p_A m)) +
+         p_B m *
+          (admission_not_B_mass m * (p_A m - admission_A_given_not_B m)))
+   by ring.
+ rewrite Hu, Hd.
+ replace (admission_not_B_mass m * admission_association m +
+          p_B m * admission_association m)
+   with ((admission_not_B_mass m + p_B m) * admission_association m)
+   by ring.
+ replace (admission_not_B_mass m + p_B m) with 1
+   by (pose proof (admission_not_B_complement m); lra).
+ ring.
 Qed.
 
 (**
