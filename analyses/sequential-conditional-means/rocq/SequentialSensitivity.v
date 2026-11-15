@@ -529,3 +529,662 @@ Proof.
   lra.
 Qed.
 
+(**
+ [sensitivity_population_common_idiosyncratic] (theorem) — The population mean-score variance splits into common correlation and the independent residual averaged across n tests.
+ Mathematical meaning: The population mean-score variance splits into common correlation and the independent residual averaged across n tests.
+ Exact checked proposition: forall n c, n <> 0 -> sequential_population_variance n c = c + (1-c)/n.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_common_idiosyncratic :
+  forall n c, n <> 0 -> sequential_population_variance n c = c + (1-c)/n.
+Proof.
+  intros n c Hn; unfold sequential_population_variance, sequential_d; field; nra.
+Qed.
+
+(**
+ [sensitivity_population_independent] (theorem) — The equal-weight average of uncorrelated unit-variance scores has variance exactly reciprocal battery size.
+ Mathematical meaning: The equal-weight average of uncorrelated unit-variance scores has variance exactly reciprocal battery size.
+ Exact checked proposition: forall n, sequential_population_variance n 0 = 1/n.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the maintained ring and nonlinear real arithmetic tactics on the report formulas.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_independent :
+  forall n, sequential_population_variance n 0 = 1/n.
+Proof.
+  intros n; unfold sequential_population_variance, sequential_d; ring.
+Qed.
+
+(**
+ [sensitivity_population_perfect] (theorem) — Perfectly correlated scores retain unit variance no matter how many are averaged, for nonzero count.
+ Mathematical meaning: Perfectly correlated scores retain unit variance no matter how many are averaged, for nonzero count.
+ Exact checked proposition: forall n, n <> 0 -> sequential_population_variance n 1 = 1.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_perfect :
+  forall n, n <> 0 -> sequential_population_variance n 1 = 1.
+Proof.
+  intros n Hn; unfold sequential_population_variance, sequential_d; field; nra.
+Qed.
+
+(**
+ [sensitivity_population_at_least_correlation] (theorem) — With positive count and correlation at most one, population-average variance exceeds its common-factor floor.
+ Mathematical meaning: With positive count and correlation at most one, population-average variance exceeds its common-factor floor.
+ Exact checked proposition: forall n c, 0 < n -> c <= 1 -> c <= sequential_population_variance n c.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_at_least_correlation :
+  forall n c, 0 < n -> c <= 1 -> c <= sequential_population_variance n c.
+Proof.
+  intros n c Hn Hc.
+  pose proof (sensitivity_population_common_idiosyncratic n c
+    (Rgt_not_eq _ _ Hn)) as H.
+  assert (Htail : 0 <= (1-c)/n) by (apply Rdiv_le_0_compat; lra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_population_unit_gap] (theorem) — The distance below unit variance equals the product of extra tests and imperfect correlation divided by count.
+ Mathematical meaning: The distance below unit variance equals the product of extra tests and imperfect correlation divided by count.
+ Exact checked proposition: forall n c, n <> 0 -> 1-sequential_population_variance n c = (n-1)*(1-c)/n.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_unit_gap :
+  forall n c, n <> 0 -> 1-sequential_population_variance n c = (n-1)*(1-c)/n.
+Proof.
+  intros n c Hn; unfold sequential_population_variance, sequential_d; field; nra.
+Qed.
+
+(**
+ [sensitivity_population_bounded_by_one] (theorem) — Averaging at least one score with correlation at most one cannot have variance above one.
+ Mathematical meaning: Averaging at least one score with correlation at most one cannot have variance above one.
+ Exact checked proposition: forall n c, 1 <= n -> c <= 1 -> sequential_population_variance n c <= 1.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_bounded_by_one :
+  forall n c, 1 <= n -> c <= 1 -> sequential_population_variance n c <= 1.
+Proof.
+  intros n c Hn Hc.
+  pose proof (sensitivity_population_unit_gap n c) as Hgap.
+  assert (Hnz : n <> 0) by lra.
+  specialize (Hgap Hnz).
+  assert (Htail : 0 <= (n-1)*(1-c)/n)
+    by (apply Rdiv_le_0_compat; nra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_population_correlation_gap] (theorem) — The exact change in population variance is proportional to correlation increment and off-diagonal test fraction.
+ Mathematical meaning: The exact change in population variance is proportional to correlation increment and off-diagonal test fraction.
+ Exact checked proposition: forall n c1 c2, n <> 0 -> sequential_population_variance n c2 - sequential_population_variance n c1 = (n-1)*(c2-c1)/n.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_correlation_gap :
+  forall n c1 c2, n <> 0 -> sequential_population_variance n c2 - sequential_population_variance n c1 = (n-1)*(c2-c1)/n.
+Proof.
+  intros n c1 c2 Hn; unfold sequential_population_variance, sequential_d; field; nra.
+Qed.
+
+(**
+ [sensitivity_population_count_gap] (theorem) — Increasing battery size reduces population variance by a sharp residual term k(1-c)/(n(n+k)).
+ Mathematical meaning: Increasing battery size reduces population variance by a sharp residual term k(1-c)/(n(n+k)).
+ Exact checked proposition: forall n k c, n <> 0 -> n+k <> 0 -> sequential_population_variance n c - sequential_population_variance (n+k) c = k*(1-c)/(n*(n+k)).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_count_gap :
+  forall n k c, n <> 0 -> n+k <> 0 -> sequential_population_variance n c - sequential_population_variance (n+k) c = k*(1-c)/(n*(n+k)).
+Proof.
+  intros n k c Hn Hnk; unfold sequential_population_variance, sequential_d; field; nra.
+Qed.
+
+(**
+ [sensitivity_population_count_monotone] (theorem) — At correlation at most one, enlarging a positive battery cannot increase equal-weight variance.
+ Mathematical meaning: At correlation at most one, enlarging a positive battery cannot increase equal-weight variance.
+ Exact checked proposition: forall n k c, 0 < n -> 0 <= k -> c <= 1 -> sequential_population_variance (n+k) c <= sequential_population_variance n c.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_count_monotone :
+  forall n k c, 0 < n -> 0 <= k -> c <= 1 -> sequential_population_variance (n+k) c <= sequential_population_variance n c.
+Proof.
+  intros n k c Hn Hk Hc.
+  assert (Hnk : 0 < n+k) by lra.
+  pose proof (sensitivity_population_count_gap n k c
+    (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hnk)) as Hgap.
+  assert (Hge : 0 <= k*(1-c)/(n*(n+k)))
+    by (apply Rdiv_le_0_compat; nra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_population_count_strict] (theorem) — With added scores and imperfect correlation, equal-weight population variance strictly decreases.
+ Mathematical meaning: With added scores and imperfect correlation, equal-weight population variance strictly decreases.
+ Exact checked proposition: forall n k c, 0 < n -> 0 < k -> c < 1 -> sequential_population_variance (n+k) c < sequential_population_variance n c.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_count_strict :
+  forall n k c, 0 < n -> 0 < k -> c < 1 -> sequential_population_variance (n+k) c < sequential_population_variance n c.
+Proof.
+  intros n k c Hn Hk Hc.
+  assert (Hnk : 0 < n+k) by lra.
+  pose proof (sensitivity_population_count_gap n k c
+    (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hnk)) as Hgap.
+  assert (Hpos : 0 < k*(1-c)/(n*(n+k)))
+    by (apply Rdiv_lt_0_compat; nra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_population_correlation_monotone] (theorem) — For at least one test, raising correlation cannot lower the variance of the composite mean.
+ Mathematical meaning: For at least one test, raising correlation cannot lower the variance of the composite mean.
+ Exact checked proposition: forall n c1 c2, 1 <= n -> c1 <= c2 -> sequential_population_variance n c1 <= sequential_population_variance n c2.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_correlation_monotone :
+  forall n c1 c2, 1 <= n -> c1 <= c2 -> sequential_population_variance n c1 <= sequential_population_variance n c2.
+Proof.
+  intros n c1 c2 Hn Hc.
+  pose proof (sensitivity_population_correlation_gap n c1 c2) as Hgap.
+  assert (Hnz : n <> 0) by lra.
+  specialize (Hgap Hnz).
+  assert (Hge : 0 <= (n-1)*(c2-c1)/n)
+    by (apply Rdiv_le_0_compat; nra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_population_correlation_strict] (theorem) — For at least two tests, strictly increased pair correlation strictly increases average-score variance.
+ Mathematical meaning: For at least two tests, strictly increased pair correlation strictly increases average-score variance.
+ Exact checked proposition: forall n c1 c2, 1 < n -> c1 < c2 -> sequential_population_variance n c1 < sequential_population_variance n c2.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_population_correlation_strict :
+  forall n c1 c2, 1 < n -> c1 < c2 -> sequential_population_variance n c1 < sequential_population_variance n c2.
+Proof.
+  intros n c1 c2 Hn Hc.
+  pose proof (sensitivity_population_correlation_gap n c1 c2) as Hgap.
+  assert (Hnz : n <> 0) by lra.
+  specialize (Hgap Hnz).
+  assert (Hpos : 0 < (n-1)*(c2-c1)/n)
+    by (apply Rdiv_lt_0_compat; nra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_conditional_no_future] (theorem) — With no predicted future observations the defined residual variance of the inclusive average vanishes.
+ Mathematical meaning: With no predicted future observations the defined residual variance of the inclusive average vanishes.
+ Exact checked proposition: forall r c, sequential_conditional_variance r 0 c = 0.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the maintained ring and nonlinear real arithmetic tactics on the report formulas.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_no_future :
+  forall r c, sequential_conditional_variance r 0 c = 0.
+Proof.
+  intros r c; unfold sequential_conditional_variance; ring.
+Qed.
+
+(**
+ [sensitivity_conditional_independent] (theorem) — At zero correlation the residual variance contributed by k future independent tests is k/(r+k)^2.
+ Mathematical meaning: At zero correlation the residual variance contributed by k future independent tests is k/(r+k)^2.
+ Exact checked proposition: forall r k, r+k <> 0 -> sequential_conditional_variance r k 0 = k/((r+k)*(r+k)).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_independent :
+  forall r k, r+k <> 0 -> sequential_conditional_variance r k 0 = k/((r+k)*(r+k)).
+Proof.
+  intros r k Hn; unfold sequential_conditional_variance, sequential_d; field; nra.
+Qed.
+
+(**
+ [sensitivity_conditional_explained_gap] (theorem) — The variance explained by the initial r scores is exactly r d_total^2/(total^2 d_r).
+ Mathematical meaning: The variance explained by the initial r scores is exactly r d_total^2/(total^2 d_r).
+ Exact checked proposition: forall r k c, r+k <> 0 -> sequential_d r c <> 0 -> sequential_population_variance (r+k) c - sequential_conditional_variance r k c = r*(sequential_d (r+k) c)*(sequential_d (r+k) c)/((r+k)*(r+k)*sequential_d r c).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_explained_gap :
+  forall r k c, r+k <> 0 -> sequential_d r c <> 0 -> sequential_population_variance (r+k) c - sequential_conditional_variance r k c = r*(sequential_d (r+k) c)*(sequential_d (r+k) c)/((r+k)*(r+k)*sequential_d r c).
+Proof.
+  intros r k c Hn Hd; unfold sequential_population_variance, sequential_conditional_variance, sequential_d in *; field; nra.
+Qed.
+
+(**
+ [sensitivity_conditional_fraction_of_population] (theorem) — The residual-to-population variance ratio is precisely the fraction of future uncorrelated variability.
+ Mathematical meaning: The residual-to-population variance ratio is precisely the fraction of future uncorrelated variability.
+ Exact checked proposition: forall r k c, r+k <> 0 -> sequential_d r c <> 0 -> sequential_d (r+k) c <> 0 -> sequential_conditional_variance r k c / sequential_population_variance (r+k) c = k*(1-c)/((r+k)*sequential_d r c).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_fraction_of_population :
+  forall r k c, r+k <> 0 -> sequential_d r c <> 0 -> sequential_d (r+k) c <> 0 -> sequential_conditional_variance r k c / sequential_population_variance (r+k) c = k*(1-c)/((r+k)*sequential_d r c).
+Proof.
+  intros r k c Hn Hd Htotal; unfold sequential_population_variance, sequential_conditional_variance, sequential_d in *; field; nra.
+Qed.
+
+(**
+ [sensitivity_conditional_strict_positive] (theorem) — For genuinely future scores and imperfect nonnegative correlation, the finite residual-variance formula is strictly positive.
+ Mathematical meaning: For genuinely future scores and imperfect nonnegative correlation, the finite residual-variance formula is strictly positive.
+ Exact checked proposition: forall r k c, 1 <= r -> 0 < k -> 0 <= c -> c < 1 -> 0 < sequential_conditional_variance r k c.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_strict_positive :
+  forall r k c, 1 <= r -> 0 < k -> 0 <= c -> c < 1 -> 0 < sequential_conditional_variance r k c.
+Proof.
+  intros r k c Hr Hk Hc Hcu.
+  assert (Hd : 0 < sequential_d r c)
+    by (apply sequential_denominator_positive_nonnegative_correlation; lra).
+  assert (Ht : 0 < sequential_d (r+k) c)
+    by (apply sequential_denominator_positive_nonnegative_correlation; lra).
+  unfold sequential_conditional_variance.
+  apply Rdiv_lt_0_compat; nra.
+Qed.
+
+(**
+ [sensitivity_conditional_explained_positive] (theorem) — A nonempty observed block under nonnegative correlation explains strictly positive mean-score variance, even at perfect correlation.
+ Mathematical meaning: A nonempty observed block under nonnegative correlation explains strictly positive mean-score variance, even at perfect correlation.
+ Exact checked proposition: forall r k c, 0 < r -> 0 <= k -> 0 <= c -> 0 < sequential_population_variance (r+k) c - sequential_conditional_variance r k c.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_explained_positive :
+  forall r k c, 0 < r -> 0 <= k -> 0 <= c -> 0 < sequential_population_variance (r+k) c - sequential_conditional_variance r k c.
+Proof.
+  intros r k c Hr Hk Hc.
+  assert (Hn : 0 < r+k) by lra.
+  assert (Hdr : 0 < sequential_d r c)
+    by (apply sequential_denominator_positive_nonnegative_correlation; lra).
+  assert (Hdt : 0 < sequential_d (r+k) c)
+    by (apply sequential_denominator_positive_nonnegative_correlation; lra).
+  rewrite sensitivity_conditional_explained_gap
+    by (apply Rgt_not_eq; assumption).
+  apply Rdiv_lt_0_compat; nra.
+Qed.
+
+(**
+ [sensitivity_conditional_below_population] (theorem) — The algebraic residual risk cannot exceed the unconditional composite-score variance for a nonempty initial block.
+ Mathematical meaning: The algebraic residual risk cannot exceed the unconditional composite-score variance for a nonempty initial block.
+ Exact checked proposition: forall r k c, 1 <= r -> 0 <= k -> 0 <= c -> sequential_conditional_variance r k c <= sequential_population_variance (r+k) c.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the maintained ring and nonlinear real arithmetic tactics on the report formulas.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_below_population :
+  forall r k c, 1 <= r -> 0 <= k -> 0 <= c -> sequential_conditional_variance r k c <= sequential_population_variance (r+k) c.
+Proof.
+  intros r k c Hr Hk Hc.
+  pose proof (sensitivity_conditional_explained_positive r k c) as H.
+  assert (Hrp : 0 < r) by lra.
+  specialize (H Hrp Hk Hc); lra.
+Qed.
+
+(**
+ [sensitivity_conditional_first_future] (theorem) — The first predicted score has a closed Schur residual variance with numerator (1-c)(1+rc).
+ Mathematical meaning: The first predicted score has a closed Schur residual variance with numerator (1-c)(1+rc).
+ Exact checked proposition: forall r c, r+1 <> 0 -> sequential_d r c <> 0 -> sequential_conditional_variance r 1 c = (1-c)*(1+r*c)/((r+1)*(r+1)*sequential_d r c).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_conditional_first_future :
+  forall r c, r+1 <> 0 -> sequential_d r c <> 0 -> sequential_conditional_variance r 1 c = (1-c)*(1+r*c)/((r+1)*(r+1)*sequential_d r c).
+Proof.
+  intros r c Hn Hd; unfold sequential_conditional_variance, sequential_d in *; field; nra.
+Qed.
+
+(**
+ [sensitivity_mean_zero_score] (theorem) — A zero initial standardized score gives a zero inclusive predicted mean for any coefficients and counts.
+ Mathematical meaning: A zero initial standardized score gives a zero inclusive predicted mean for any coefficients and counts.
+ Exact checked proposition: forall r k c, sequential_inclusive_mean r k c 0 = 0.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the maintained ring and nonlinear real arithmetic tactics on the report formulas.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_zero_score :
+  forall r k c, sequential_inclusive_mean r k c 0 = 0.
+Proof.
+  intros r k c; unfold sequential_inclusive_mean, sequential_prediction; ring.
+Qed.
+
+(**
+ [sensitivity_mean_no_future] (theorem) — Without later predicted scores, the inclusive average equals the original observed score.
+ Mathematical meaning: Without later predicted scores, the inclusive average equals the original observed score.
+ Exact checked proposition: forall r c a, r <> 0 -> sequential_inclusive_mean r 0 c a = a.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_no_future :
+  forall r c a, r <> 0 -> sequential_inclusive_mean r 0 c a = a.
+Proof.
+  intros r c a Hr.
+  unfold sequential_inclusive_mean.
+  replace (0 * sequential_prediction r c a) with 0 by ring.
+  field; nra.
+Qed.
+
+(**
+ [sensitivity_mean_independent] (theorem) — When all scores are uncorrelated, future expected scores are zero and the inclusive average is diluted by r/(r+k).
+ Mathematical meaning: When all scores are uncorrelated, future expected scores are zero and the inclusive average is diluted by r/(r+k).
+ Exact checked proposition: forall r k a, r+k <> 0 -> sequential_inclusive_mean r k 0 a = r*a/(r+k).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_independent :
+  forall r k a, r+k <> 0 -> sequential_inclusive_mean r k 0 a = r*a/(r+k).
+Proof.
+  intros r k a Hn; unfold sequential_inclusive_mean, sequential_prediction, sequential_d; field; nra.
+Qed.
+
+(**
+ [sensitivity_mean_observed_gap] (theorem) — The exact shrinkage of the inclusive mean below a positive observed score is proportional to k(1-c).
+ Mathematical meaning: The exact shrinkage of the inclusive mean below a positive observed score is proportional to k(1-c).
+ Exact checked proposition: forall r k c a, r+k <> 0 -> sequential_d r c <> 0 -> a-sequential_inclusive_mean r k c a = k*(1-c)*a/((r+k)*sequential_d r c).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_observed_gap :
+  forall r k c a, r+k <> 0 -> sequential_d r c <> 0 -> a-sequential_inclusive_mean r k c a = k*(1-c)*a/((r+k)*sequential_d r c).
+Proof.
+  intros r k c a Hn Hd; unfold sequential_inclusive_mean, sequential_prediction, sequential_d in *; field; nra.
+Qed.
+
+(**
+ [sensitivity_mean_prediction_gap] (theorem) — The inclusive mean exceeds the common future prediction by the initial-score weight r(1-c).
+ Mathematical meaning: The inclusive mean exceeds the common future prediction by the initial-score weight r(1-c).
+ Exact checked proposition: forall r k c a, r+k <> 0 -> sequential_d r c <> 0 -> sequential_inclusive_mean r k c a - sequential_prediction r c a = r*(1-c)*a/((r+k)*sequential_d r c).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_prediction_gap :
+  forall r k c a, r+k <> 0 -> sequential_d r c <> 0 -> sequential_inclusive_mean r k c a - sequential_prediction r c a = r*(1-c)*a/((r+k)*sequential_d r c).
+Proof.
+  intros r k c a Hn Hd; unfold sequential_inclusive_mean, sequential_prediction, sequential_d in *; field; nra.
+Qed.
+
+(**
+ [sensitivity_mean_additive_in_score] (theorem) — A shift of two initial scores induces the sum of their separate inclusive predictions by exact linearity.
+ Mathematical meaning: A shift of two initial scores induces the sum of their separate inclusive predictions by exact linearity.
+ Exact checked proposition: forall r k c a b, sequential_inclusive_mean r k c (a+b) = sequential_inclusive_mean r k c a + sequential_inclusive_mean r k c b.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_additive_in_score :
+  forall r k c a b, sequential_inclusive_mean r k c (a+b) = sequential_inclusive_mean r k c a + sequential_inclusive_mean r k c b.
+Proof.
+  intros r k c a b; unfold sequential_inclusive_mean, sequential_prediction, Rdiv; ring.
+Qed.
+
+(**
+ [sensitivity_mean_homogeneous_in_score] (theorem) — Rescaling the observed standardized score commutes with the inclusive prediction and averaging operation.
+ Mathematical meaning: Rescaling the observed standardized score commutes with the inclusive prediction and averaging operation.
+ Exact checked proposition: forall r k c a t, sequential_inclusive_mean r k c (t*a) = t*sequential_inclusive_mean r k c a.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_homogeneous_in_score :
+  forall r k c a t, sequential_inclusive_mean r k c (t*a) = t*sequential_inclusive_mean r k c a.
+Proof.
+  intros r k c a t; unfold sequential_inclusive_mean, sequential_prediction, Rdiv; ring.
+Qed.
+
+(**
+ [sensitivity_mean_not_above_observation] (theorem) — For a positive observed score and admissible correlation, adding predicted observations cannot increase the inclusive mean above the observation.
+ Mathematical meaning: For a positive observed score and admissible correlation, adding predicted observations cannot increase the inclusive mean above the observation.
+ Exact checked proposition: forall r k c a, 1 <= r -> 0 <= k -> 0 <= c -> c <= 1 -> 0 <= a -> sequential_inclusive_mean r k c a <= a.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_not_above_observation :
+  forall r k c a, 1 <= r -> 0 <= k -> 0 <= c -> c <= 1 -> 0 <= a -> sequential_inclusive_mean r k c a <= a.
+Proof.
+  intros r k c a Hr Hk Hc Hcu Ha.
+  assert (Hn : 0 < r+k) by lra.
+  assert (Hd : 0 < sequential_d r c)
+    by (apply sequential_denominator_positive_nonnegative_correlation; lra).
+  pose proof (sensitivity_mean_observed_gap r k c a
+    (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hd)) as Hgap.
+  assert (Hge : 0 <= k*(1-c)*a/((r+k)*sequential_d r c))
+    by (apply Rdiv_le_0_compat; nra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_mean_not_below_prediction] (theorem) — A nonnegative observed score makes the inclusive mean no smaller than any common linear prediction under admissible correlation.
+ Mathematical meaning: A nonnegative observed score makes the inclusive mean no smaller than any common linear prediction under admissible correlation.
+ Exact checked proposition: forall r k c a, 1 <= r -> 0 <= k -> 0 <= c -> c <= 1 -> 0 <= a -> sequential_prediction r c a <= sequential_inclusive_mean r k c a.
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Reuse the preceding sharp fraction identity and Stdlib division-positivity rules.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_not_below_prediction :
+  forall r k c a, 1 <= r -> 0 <= k -> 0 <= c -> c <= 1 -> 0 <= a -> sequential_prediction r c a <= sequential_inclusive_mean r k c a.
+Proof.
+  intros r k c a Hr Hk Hc Hcu Ha.
+  assert (Hn : 0 < r+k) by lra.
+  assert (Hd : 0 < sequential_d r c)
+    by (apply sequential_denominator_positive_nonnegative_correlation; lra).
+  pose proof (sensitivity_mean_prediction_gap r k c a
+    (Rgt_not_eq _ _ Hn) (Rgt_not_eq _ _ Hd)) as Hgap.
+  assert (Hge : 0 <= r*(1-c)*a/((r+k)*sequential_d r c))
+    by (apply Rdiv_le_0_compat; nra).
+  lra.
+Qed.
+
+(**
+ [sensitivity_mean_correlation_gap] (theorem) — The increase in inclusive mean under a correlation increase has an exact rational derivative-free comparison.
+ Mathematical meaning: The increase in inclusive mean under a correlation increase has an exact rational derivative-free comparison.
+ Exact checked proposition: forall r k c1 c2 a, r+k <> 0 -> sequential_d r c1 <> 0 -> sequential_d r c2 <> 0 -> sequential_inclusive_mean r k c2 a - sequential_inclusive_mean r k c1 a = r*k*a*(c2-c1)/((r+k)*sequential_d r c1*sequential_d r c2).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_correlation_gap :
+  forall r k c1 c2 a, r+k <> 0 -> sequential_d r c1 <> 0 -> sequential_d r c2 <> 0 -> sequential_inclusive_mean r k c2 a - sequential_inclusive_mean r k c1 a = r*k*a*(c2-c1)/((r+k)*sequential_d r c1*sequential_d r c2).
+Proof.
+  intros r k c1 c2 a Hn H1 H2; unfold sequential_inclusive_mean, sequential_prediction, sequential_d in *; field; nra.
+Qed.
+
+(**
+ [sensitivity_mean_future_count_gap] (theorem) — Comparing different numbers of predicted future scores yields an exact decrease proportional to count increase and unpredictable variance.
+ Mathematical meaning: Comparing different numbers of predicted future scores yields an exact decrease proportional to count increase and unpredictable variance.
+ Exact checked proposition: forall r k1 k2 c a, sequential_d r c <> 0 -> r+k1 <> 0 -> r+k2 <> 0 -> sequential_inclusive_mean r k1 c a - sequential_inclusive_mean r k2 c a = r*(k2-k1)*(1-c)*a/(sequential_d r c*(r+k1)*(r+k2)).
+ Premises and side conditions: Assumptions on positive sample sizes, admissible
+ correlation or nonzero denominator appear explicitly in this declaration;
+ no Gaussian regression, distributional independence or measured IQ inputs are assumed.
+ Proof/definition method: Apply Stdlib.Field to exact rational formulas and discharge invertibility by the premises.
+ Library reuse: Stdlib.Reals, Lra, Psatz, Field and the already checked
+ SequentialReport regression denominator, means, and variance formulas.
+ Boundary: The theorem is only exact real algebra for model-specified
+ covariance expressions, not a stochastic conditional distribution proof.
+ *)
+Theorem sensitivity_mean_future_count_gap :
+  forall r k1 k2 c a, sequential_d r c <> 0 -> r+k1 <> 0 -> r+k2 <> 0 -> sequential_inclusive_mean r k1 c a - sequential_inclusive_mean r k2 c a = r*(k2-k1)*(1-c)*a/(sequential_d r c*(r+k1)*(r+k2)).
+Proof.
+  intros r k1 k2 c a Hd H1 H2; unfold sequential_inclusive_mean, sequential_prediction, sequential_d in *; field; nra.
+Qed.
+
