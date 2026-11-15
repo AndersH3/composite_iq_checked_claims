@@ -3,7 +3,8 @@
 # AI disclosure: drafted with AI assistance. This is a smoke test, NOT a
 # proof of the correctness of the underlying SMT solvers.
 #
-# Positive control must be proved Valid; negative control must be Invalid.
+# Positive control must be Valid; false control must never be Valid. Why3 1.8
+# may report Unknown (sat), rather than Invalid, for a satisfiable negation.
 # The script does not change ~/.why3.conf, package versions, opam switches,
 # PATH, or the user's substantive formal proof files.
 set -euo pipefail
@@ -67,23 +68,41 @@ for selector in "Z3,4.13.3," "CVC5,1.1.2,"; do
   fi
 
   printf '\n== %s: false-goal negative control ==\n' "$prover"
-  if negative="$(timeout 30s why3 prove -P "$selector" "$fixture" \
-    -T BackendSmoke -G FalseGoal 2>&1)"; then
-    printf '%s\n' "$negative"
-  else
-    printf '%s\n' "$negative"
-    printf 'ERROR: %s negative-control invocation failed.\n' "$prover" >&2
+  # Why3's "prove" command may exit with status 1 for an unproved goal.
+  # Capture the result anyway; unlike an invocation error, "Unknown (sat)"
+  # is a structured Why3 answer observed on computer10 for 0 = 1.
+  # Do NOT treat a generic Unknown, timeout, or tool failure as success.
+  negative_rc=0
+  negative="$(timeout 30s why3 prove -P "$selector" "$fixture" \
+    -T BackendSmoke -G FalseGoal 2>&1)" || negative_rc=$?
+  printf '%s\n' "$negative"
+  if (( negative_rc != 0 && negative_rc != 1 )); then
+    printf 'ERROR: %s negative control exited unexpectedly (%d).\n' \
+      "$prover" "$negative_rc" >&2
     exit 5
   fi
+
   if why3_result_is "$negative" FalseGoal Valid; then
-    printf 'ERROR: %s incorrectly proved a false goal!\n' "$prover" >&2
+    printf 'ERROR: %s incorrectly proved FalseGoal as Valid!\n' "$prover" >&2
     exit 6
   fi
-  if ! why3_result_is "$negative" FalseGoal Invalid; then
-    printf 'ERROR: %s did not reject FalseGoal as Invalid.\n' "$prover" >&2
+
+  if why3_result_is "$negative" FalseGoal Invalid; then
+    # "Invalid" is Why3's explicit invalidity classification.
+    printf 'PASS: %s proved TrueGoal; Why3 classified FalseGoal Invalid.\n' \
+      "$prover"
+  elif why3_result_is "$negative" FalseGoal 'Unknown \(sat\)'; then
+    # This is a SAT indication, NOT a Why3 Invalid result. Since 0 = 1
+    # is independently false, it is useful evidence that this prover did
+    # not incorrectly discharge the negative control. No claim of a
+    # formally established counterexample is made.
+    printf 'PASS: %s proved TrueGoal; FalseGoal was NOT proved (Unknown (sat)).\n' \
+      "$prover"
+  else
+    printf 'ERROR: %s: FalseGoal must report Invalid or Unknown (sat), not an inconclusive or failed result.\n' \
+      "$prover" >&2
     exit 7
   fi
-  printf 'PASS: %s proved TrueGoal and rejected FalseGoal.\n' "$prover"
 done
 
-printf '\n%s\n' 'PASS: Both Why3 backends passed positive and negative controls.'
+printf '\n%s\n' 'PASS: Both Why3 backend smoke checks completed; inspect each negative-control status.'
