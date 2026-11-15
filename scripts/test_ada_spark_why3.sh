@@ -3,8 +3,17 @@
 # The tests do not use sudo, apt, network, Alire, or a Standard ML compiler.
 set -euo pipefail
 # Make unexpected regressions visible instead of exiting silently under
-# 'set -e'. This diagnostic does not alter expected-failure test cases.
-trap 'status=$?; printf "ERROR: offline regression line %s exited %s: %s\n" "$LINENO" "$status" "$BASH_COMMAND" >&2' ERR
+# 'set -e'. Capture the original exit code as a trap argument, rather than
+# assigning a variable inside an opaque trap string (ShellCheck SC2154).
+# A dedicated function keeps the exit-code reporting easy to test and read.
+report_regression_error() {
+  local exit_code="$1"
+  local line_number="$2"
+  local failed_command="$3"
+  printf 'ERROR: offline regression line %s exited %s: %s\n' \
+    "$line_number" "$exit_code" "$failed_command" >&2
+}
+trap 'report_regression_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 cd "$(dirname "$0")/.."
 installer=scripts/install_ada_spark_why3.sh
 
