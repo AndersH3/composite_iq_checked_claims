@@ -367,10 +367,11 @@ Isabelle theory files compile.
 
 The GNATprove bundle reports newer versions of Z3 and CVC5 than
 Debian's system Why3 1.8.0 uses. Keep the **system Why3** smoke tests
-and the **bundled GNATprove** solver inventory distinct. A successful
-version command establishes installed executable availability, but
-**does not establish that GNATprove successfully discharges SPARK
-verification conditions with Debian GNAT 14**.
+and the **bundled GNATprove** solver inventory distinct. The later
+native GNATprove smoke run **did discharge the bounded-count SPARK
+verification conditions on computer10**. This is an operational
+verification of the isolated fixture only; it does not establish that
+all project code or report-derived theorems are proved.
 
 ### GNATprove 16.1 option syntax correction (computer10)
 
@@ -417,10 +418,50 @@ This follows GNATprove's actual diagnostic; it is **not** an added
 assumption or an excuse to ignore an output dependency. A regression
 assertion now guards against restoring the incomplete contract.
 The user also reported an earlier Phase 1 data-representation generation
-warning: `generation of data representation information failed`;
-its reason is not yet known, and its operational effect should be
-assessed from the next complete GNATprove run. The corrected flow
-contract has not yet been validated by an actual native proof execution.
+warning: `generation of data representation information failed`.
+It did **not** recur in the subsequent successful native run, but its
+earlier cause was not independently diagnosed. The corrected flow
+contract **was validated** by GNATprove in that successful run.
+
+### Confirmed native GNATprove SPARK proof (computer10)
+
+The user ran `bash scripts/smoke_gnatprove.sh` after updating to
+repository branch revision `662cd2b`. The execution reported all
+three GNATprove phases completed, including flow analysis and proof,
+without the earlier representation warning or Depends error.
+The final result was:
+
+```text
+Success: all checks proved (11 checks).
+Summary logged in /tmp/tmp.9UKduIhnMl/obj/gnatprove/gnatprove.out
+Native proof summary from gnatprove.out:
+Total                           11    3 (27%)       8 (73%)      .      .
+PASS: GNATprove completed nonempty SPARK analysis with --checks-as-errors=on.
+GNATprove exit code: 0
+```
+
+The native summary's **11 checks** comprise **three flow** and
+**eight prover-dispatched** checks, with **zero justified** and
+**zero unproved** checks. The ten substantive postcondition clauses
+are *not* ten separate native check-count entries: GNATprove grouped
+and split the postcondition into verification conditions, and
+reported `postcondition proved (Z3: 15 VC ...)`. Its other completed
+obligations included absence of integer overflow, the capacity
+assertion, initialization, data dependencies, and flow dependencies.
+Z3 and CVC5 contributed to the proof as shown by the native
+diagnostic; `--prover=cvc5,z3,altergo` does not imply that each
+solver independently proved every check.
+
+This is actual execution evidence supplied in the user's terminal
+transcript, **not a retained source-pinned raw proof campaign**.
+The smoke script uses a disposable work directory, which it deletes
+on successful exit; the transient `gnatprove.out` file therefore
+is not available as an independently auditable archived artifact.
+For source-pinned evidence across the full Hoeflin/Ferguson and
+Towers projects, continue to use the documented proof runner with
+fresh native reports, hashes, explicit trusted boundaries, and
+negative controls. Do not substitute this isolated proof result for
+those project verification campaigns.
 
 ### Next: actual native SPARK verification, not merely version detection
 
@@ -469,7 +510,7 @@ unsupported OS before download. It additionally checks the exact
 `why3 config detect` dispatch and negative controls for the wrong Metis
 package, and the absence of prohibited automatic system changes. GitHub Actions runs that test as part of its existing Python-contracts workflow, alongside the separate Deal coverage and runtime-test gates.
 
-The user's computer has not been operated remotely by the assistant. Installation, real compiler execution, SPARK proof closure, Metis build success, and Why3 backend acceptance are **not confirmed** until the appropriate commands have run on computer10. Runtime success is distinct from a formal proof of software correctness.
+The user's computer has not been operated remotely by the assistant. User-provided terminal logs confirm real Ada compilation, Isabelle version detection, a checksum-verified GNATprove installation, the system Why3 backends, and **the isolated 11-check native SPARK smoke proof**. Metis build success and a fresh proof of the complete statistical analysis projects remain unconfirmed. Runtime and fixture-proof success are distinct from formal verification of all report-derived claims.
 
 ## Provenance
 
@@ -479,6 +520,18 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The user's latest terminal output confirmed that the AI-assisted
+Bounded_Counts smoke fixture ran under real GNATprove FSF 16.1.0 and
+successfully discharged all 11 native checks (three flow and eight
+prover-dispatched), with zero justified or unproved checks. The user
+reported exit code 0 and a nonempty GNATprove summary. The assistant
+recorded this evidence and corrected the document's previously
+unverified-status statements. No raw ephemeral proof report was
+persisted to the repository, and this fixture does not prove the
+statistical claims in the three reports. Source-pinned project-level
+verification is a separate obligation.
+
 
 The next native run reached GNATprove Phase 2 and failed because the
 AI-authored Bounded_Counts Depends aspect omitted Capacity from its input
