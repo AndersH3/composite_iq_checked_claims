@@ -149,6 +149,25 @@ Note that `Isabelle 2025-2` is only the version detected in the user's
 PATH; it does **not** establish that the separately downloaded
 Isabelle2026 package is installed or accessible to Why3.
 
+### Why3 1.8 prover-selection ambiguity: computer10 follow-up
+
+The user ran `bash verification/why3/check_backends.sh` on computer10.
+The first Z3 invocation failed **before executing the proof** with:
+
+```text
+More than one prover in /home/anonymous/.why3.conf correspond to "Z3":
+Z3 4.13.3, Z3 4.13.3 (counterexamples), Z3 4.13.3 (noBV)
+```
+
+Why3's `-P` selector accepts `name,version,alternative`; the *trailing
+comma* denotes the empty, default alternative. The corrected script pins
+the configurations `Z3,4.13.3,` and `CVC5,1.1.2,` and leaves
+`~/.why3.conf` unchanged. A mock regression rejects the abbreviated
+prover name rather than passing it to a solver; proof results themselves
+still require actual execution on computer10. If versions change, use
+`why3 --list-provers` to inspect the available configurations instead
+of silently selecting a different version.
+
 ### Functional proof tests for recognized backends
 
 After updating this branch, run:
@@ -201,6 +220,8 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The initial Why3 smoke script erroneously passed ambiguous bare prover names to Why3 1.8.0. The user supplied the resulting multi-prover error. A subsequent fix explicitly selects pinned name, version and empty alternative, and the offline mock test now rejects ambiguous shorthand. The exact real prover behavior after that correction is unverified until it is rerun on computer10.
 
 The user subsequently provided Why3 1.8.0 prover detection output and a shellcheck invocation error. The AI incorporated an explicit version-compatibility summary and added a Why3/Z3/CVC5 positive/negative proof smoke test. Its GitHub CI uses mocked prover output, not actual SMT solver execution; real backend success still requires the user to run the smoke test on computer10.
 
