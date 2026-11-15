@@ -5,6 +5,8 @@ on:
     paths:
       - 'library/spark/**'
       - 'analyses/**/ada/**'
+      - 'tests/ada/**'
+      - 'scripts/check_library_layout.sh'
       - '.github/workflows/spark-library-build.yml'
   pull_request:
     paths:
