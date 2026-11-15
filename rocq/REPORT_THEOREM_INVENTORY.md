@@ -2,7 +2,7 @@
 
 # Theorems and mathematical claims actually used in the reports
 
-**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `d1634d535d6027e97c4090671916dea08d955c8c` (PR #19). **Working branch:** `rocq-admissions-sharp-phi-20261115`.
+**Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `6e89d7ee8756c35594eb276cd5466c7f31040654` (PR #20). **Working branch:** `rocq-innovation-noise-20261115`.
 
 The inventory is organized **by the claims in the actual report sources**, not by every theorem that happens to have been proved in Rocq. Thus the audit discriminates relevant proof work from the large general-purpose covariance library. It covers three reports and the sequential report's two included proof appendices:
 
@@ -156,7 +156,14 @@ This continuation extends `Admissions.v` by **33 new named theorems and 5 transp
 
 The new `Admissions.v` extension adds **36 mathematically distinct named Rocq theorem scripts and four transparent real definitions** relevant to the Towers multiple-test admissions report. Unlike inequalities alone, the constructive Fréchet realization theorem gives an explicit normalized four-cell model for **every feasible pair of marginal acceptance rates and overlap**, with necessity/sufficiency and extremal-disjoint, nested and full-coverage witnesses. A second group relates the actual union admissions rate to the matched-marginal independence reference and proves precise conditional/odds-ratio characterizations of binary independence and positive or negative association. Finally, an exact quartic covariance-square gap factorization into four nonnegative triple-cell products gives **a direct finite Cauchy–Schwarz proof** for the binary indicator covariance, from which the normalized phi interval `[-1,1]` and its zero/sign criteria follow under strictly positive Bernoulli variances. Existing four-cell and Stdlib real operations are reused; no Gaussian-copula integration, continuous-score Pearson rho inference or empirical IQ calibration is asserted. These results are kernel-checked **only if** the pinned Rocq 9.2 workflow succeeds for the specific commit.
 
+
+### Continuation D029x — two-test innovation regression and independent measurement-noise sensitivity
+
+The D029x extension of `TwoObservationSchur.v` contains **60 proposed new named Rocq theorems and 3 transparent residualization definitions**. It derives partial covariance/innovation variance directly from the existing two-by-two Schur determinant and normal equations; proves strict improvement criteria, scale and projection invariance, exact gain polarization, covariance quadratic diagonalization, and the uncorrelated-observation simplification. It also proves noise-regularized covariance determinant formulas, fixed-predictor risk penalties, and, critically, **optimal Schur residual risk cannot improve when either or both observations acquire additional nonnegative independent diagonal noise**. This supplies source-to-report mathematical justification for sequential conditional-means information monotonicity and robust composite-score estimation, with explicit positive-minor assumptions and a sharp old-coefficient upper bound. These are exact **best-linear-predictor covariance identities**, not Gaussian conditional-law integrals, normal-tail accuracy claims or empirical psychometric validation. Proposals become kernel-checked only after passing pinned Rocq 9.2 CI.
+
 ## Appendix — Complete AI disclosure
+
+D029x proof source, new covariance residualization definitions, theorem statements, proof refactoring decisions and inventory mapping were generated with AI assistance. Only kernel-checked statements under their exact premises can count as formally verified. These finite algebraic results do not establish Gaussian conditional distributions, continuous normal tails, numerical tail certificates or real IQ test population parameters.
 
 D028x source proof scripts, 36 new theorem statements and four definitions, and the associated report mapping were drafted with AI assistance. The underlying Rocq kernel and separately pinned test workflows—not this text—determine whether a claim is proved; finite binary-event identities cannot validate Gaussian assumptions or observed IQ rates.
 
