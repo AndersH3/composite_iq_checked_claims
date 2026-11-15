@@ -3177,7 +3177,7 @@ Proof.
  intros a b c u v s t Hb Hd Ht.
  rewrite (cov2_schur_swap (a+t) b c u v s).
  rewrite (cov2_schur_swap a b c u v s).
- rewrite (cov2_beta_swap_second a b c u v).
+ rewrite (cov2_beta_swap_first a b c u v).
  apply cov2_schur_noise_second_bound_by_old_slope; try assumption.
  rewrite <- cov2_det_symmetric; exact Hd.
 Qed.
