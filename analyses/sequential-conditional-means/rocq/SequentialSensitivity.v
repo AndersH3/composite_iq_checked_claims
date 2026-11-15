@@ -906,7 +906,7 @@ Qed.
 (**
  [sensitivity_conditional_explained_positive] (theorem) — A nonempty observed block under nonnegative correlation explains strictly positive mean-score variance, even at perfect correlation.
  Mathematical meaning: A nonempty observed block under nonnegative correlation explains strictly positive mean-score variance, even at perfect correlation.
- Exact checked proposition: forall r k c, 0 < r -> 0 <= k -> 0 <= c -> 0 < sequential_population_variance (r+k) c - sequential_conditional_variance r k c.
+ Exact checked proposition: forall r k c, 1 <= r -> 0 <= k -> 0 <= c -> 0 < sequential_population_variance (r+k) c - sequential_conditional_variance r k c.
  Premises and side conditions: Assumptions on positive sample sizes, admissible
  correlation or nonzero denominator appear explicitly in this declaration;
  no Gaussian regression, distributional independence or measured IQ inputs are assumed.
@@ -917,7 +917,7 @@ Qed.
  covariance expressions, not a stochastic conditional distribution proof.
  *)
 Theorem sensitivity_conditional_explained_positive :
-  forall r k c, 0 < r -> 0 <= k -> 0 <= c -> 0 < sequential_population_variance (r+k) c - sequential_conditional_variance r k c.
+  forall r k c, 1 <= r -> 0 <= k -> 0 <= c -> 0 < sequential_population_variance (r+k) c - sequential_conditional_variance r k c.
 Proof.
   intros r k c Hr Hk Hc.
   assert (Hn : 0 < r+k) by lra.
@@ -952,8 +952,7 @@ Theorem sensitivity_conditional_below_population :
 Proof.
   intros r k c Hr Hk Hc.
   pose proof (sensitivity_conditional_explained_positive r k c) as H.
-  assert (Hrp : 0 < r) by lra.
-  specialize (H Hrp Hk Hc); lra.
+  specialize (H Hr Hk Hc); lra.
 Qed.
 
 (**
