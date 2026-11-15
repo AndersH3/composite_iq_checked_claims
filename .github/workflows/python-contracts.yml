@@ -22,6 +22,8 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
       - run: python -m pip install -r requirements-dev.txt
+      - name: Check central library source ownership
+        run: bash scripts/check_library_layout.sh
       - name: Require at least five Deal contracts on every named function
         run: python verification/check_contract_coverage.py
       - name: Require five explicit clauses/flow contracts on every SPARK interface

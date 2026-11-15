@@ -104,17 +104,20 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
     # are intentionally not forced into the optional ten-contract target.
     targeted = {
         "analyses/hoeflin-ferguson/scripts/verify_calculations.py":
-            {"_finite", "variance_factor", "mean_threshold", "_positive_ratio", "_valid_rows",
+            {"variance_factor", "mean_threshold", "_positive_ratio", "_valid_rows",
              "thresholds", "write_csv"},
         "analyses/hoeflin-ferguson/ada/scripts/validate_results.py":
             {"_positive_ratio", "wilson", "csv_rows",
              "validate_calculations", "validate_simulation"},
         "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py":
-            {"_finite", "probability_union", "conditional_probability",
+            {"probability_union", "conditional_probability",
              "_valid_fields_rows", "_valid_admissions", "_valid_grid",
              "admission_rows", "basic_grid", "write_csv"},
         "analyses/towers-multiple-test-admissions/ada/validate_results.py":
             {"_open_unit_ratio", "read"},
+        # The ten-contract canonical guard replaces both former
+        # duplicate _finite implementations; no report may redefine it.
+        "library/python/numeric.py": {"finite_real"},
         "verification/check_contract_coverage.py":
             {"audit_file", "is_contract", "python_files"},
         "verification/spark_coverage.py":
@@ -125,8 +128,18 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
             {"masked", "split_top", "unparenthesized", "clauses", "contract_entries",
              "inventory", "ten_contract_summary", "current_sources", "declarations"},
     }
+    import_only = {"library/__init__.py", "library/python/__init__.py",
+                   "reporting/statistics.py"}
     for path in files:
         report = coverage_checker.audit_file(path)
+        relpath = path.relative_to(ROOT).as_posix()
+        # A module with no named function has no Deal contracts to attach.
+        # Reject any other source that silently becomes import-only:
+        # every new exception requires an explicit source-ownership review.
+        if not report["function_count"]:
+            assert relpath in import_only, relpath
+            assert report["contract_count"] == 0
+            continue
         assert report["imports_deal"], path
         assert not report["missing"], (path, report["missing"])
         assert not report["insufficient"], (path, report["insufficient"])

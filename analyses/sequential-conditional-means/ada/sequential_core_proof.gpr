@@ -1,9 +1,10 @@
 --  Small proof project for iterative core development.  The final campaign
 --  uses sequential_proof.gpr so its native inventory includes every caller.
 project Sequential_Core_Proof is
-   for Source_Dirs use ("src");
+   for Source_Dirs use ("src", "../../../library/spark/src");
    for Source_Files use ("sequential_core.ads", "sequential_core.adb",
-                        "sequential_experiments.ads", "sequential_experiments.adb");
+                        "sequential_experiments.ads", "sequential_experiments.adb",
+                        "shared_equicorrelation.ads", "shared_equicorrelation.adb");
    for Object_Dir use "obj-core-proof";
    package Compiler is
       for Default_Switches ("Ada") use ("-gnat2022", "-gnata", "-gnato");

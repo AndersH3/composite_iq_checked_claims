@@ -12,6 +12,7 @@ import csv
 import fractions
 import json
 import math
+import sys
 from pathlib import Path
 
 import deal
@@ -21,6 +22,12 @@ from scipy.stats import chi2, norm
 
 
 ROOT = Path(__file__).resolve().parents[1]
+# Consume the same numeric guard as the Hoeflin/Ferguson and Towers checks.
+REPOSITORY_ROOT = ROOT.parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+from library.python.numeric import finite_real
+
 MOMENT_FIELDS = frozenset({"prediction_z", "mean_z", "population_variance", "conditional_variance"})
 LIMIT_FIELDS = frozenset({"prediction_limit_z", "mean_limit_z", "population_variance_limit", "conditional_variance_limit"})
 CALCULATION_COLUMNS = frozenset({"r", "k", "c", "a_z"}) | MOMENT_FIELDS | LIMIT_FIELDS
@@ -199,7 +206,7 @@ def read_csv(path):
 def finite_field(row, key):
     """Parse a numeric field without admitting NaN or infinity into comparisons."""
     value = float(row[key])
-    require(math.isfinite(value), f"Nonfinite field {key}")
+    require(finite_real(value), f"Nonfinite field {key}")
     return value
 
 

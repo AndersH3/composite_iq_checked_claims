@@ -26,7 +26,7 @@ from scipy import optimize, stats
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from reporting.statistics import moment_result, event_result, pool_rows
+from library.python.statistics import moment_result, event_result, pool_rows
 from reporting.assets import write_assets
 from verification.run_computer10 import digest, dump
 

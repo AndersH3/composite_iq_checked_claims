@@ -14,36 +14,18 @@ from scipy.stats import norm
 
 
 ROOT = Path(__file__).resolve().parents[1]
+# The reusable numeric boundary is owned by the central library.
+REPOSITORY_ROOT = ROOT.parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+from library.python.numeric import finite_real as _finite
+
 CSV_PATH = ROOT / "data" / "thresholds.csv"
 TEX_PATH = ROOT / "composite_iq_analysis.tex"
 RHO = 0.60
 Q = float(norm.isf(1e-6))
 COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 FIELDS = ("tests", "mean_z", "mean_score_sd16")
-
-
-@deal.post(lambda result: isinstance(result, bool))
-@deal.has()
-@deal.raises()
-@deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
-@deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
-# Explicitly guard each non-finite input category, including the Boolean
-# subclass of int, without strengthening finite numeric input preconditions.
-@deal.ensure(lambda value, result: not isinstance(value, bool) or result is False)
-@deal.ensure(lambda value, result: isinstance(value, (int, float)) or result is False)
-@deal.ensure(lambda value, result:
-             not isinstance(value, float) or not math.isnan(value) or result is False)
-@deal.ensure(lambda value, result:
-             not isinstance(value, float) or value != math.inf or result is False)
-@deal.ensure(lambda value, result:
-             not isinstance(value, float) or value != -math.inf or result is False)
-def _finite(value) -> bool:
-    if not isinstance(value, (int, float)) or isinstance(value, bool):
-        return False
-    try:
-        return math.isfinite(value)
-    except OverflowError:
-        return False
 
 
 @deal.pre(lambda n, rho: isinstance(n, int) and not isinstance(n, bool)

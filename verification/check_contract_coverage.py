@@ -144,8 +144,14 @@ def main() -> None:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     rows = [audit_file(path) for path in python_files(args.root)]
+    # Import-only package entry points and compatibility facades contain
+    # no subprograms and therefore have no Deal obligations to decorate.
+    # A file with even one named function must still import Deal and
+    # meet the full per-function contract floor; the negative fixture
+    # tests this non-vacuous requirement.
     problems = [r for r in rows if r["insufficient"] or r["duplicated"]
-                or not r["imports_deal"] or r["contract_count"] == 0]
+                or (r["function_count"] > 0
+                    and (not r["imports_deal"] or r["contract_count"] == 0))]
     report = {"python_files": len(rows), "named_functions": sum(r["function_count"] for r in rows),
               "deal_contracts": sum(r["contract_count"] for r in rows), "problems": problems,
               "minimum_contracts": MINIMUM_CONTRACTS,

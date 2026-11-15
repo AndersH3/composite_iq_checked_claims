@@ -16,15 +16,41 @@ import re
 import sys
 from pathlib import Path
 
-modules = (
-    "Hoeflin", "Admissions", "FiniteUnion", "FiniteMoments",
-    "FiniteSum", "FiniteBridge", "FourCellBridge", "SequentialReport",
-    "ReportRounding", "ReportCounterexample", "EquicorrelationSpectral",
-    "EquicorrelationVectors", "EquicorrelationInverseVectors",
-    "FiniteTwoCellProjection", "FiniteNestedProjection",
-    "FiniteConditionalCovariance", "FiniteConditionalResidual",
-    "TwoObservationSchur",
-)
+# Canonical source ownership manifest. All 18 module names stay unchanged.
+# Generic mathematical files live only in library/rocq; specialized proofs
+# are owned by their corresponding report project.
+paths_by_module = {
+    "FiniteSum": Path("library/rocq/FiniteSum.v"),
+    "FiniteUnion": Path("library/rocq/FiniteUnion.v"),
+    "FiniteMoments": Path("library/rocq/FiniteMoments.v"),
+    "FiniteBridge": Path("library/rocq/FiniteBridge.v"),
+    "EquicorrelationSpectral": Path("analyses/sequential-conditional-means/rocq/EquicorrelationSpectral.v"),
+    "EquicorrelationVectors": Path("analyses/sequential-conditional-means/rocq/EquicorrelationVectors.v"),
+    "EquicorrelationInverseVectors": Path("analyses/sequential-conditional-means/rocq/EquicorrelationInverseVectors.v"),
+    "FiniteTwoCellProjection": Path("library/rocq/FiniteTwoCellProjection.v"),
+    "FiniteNestedProjection": Path("library/rocq/FiniteNestedProjection.v"),
+    "FiniteConditionalCovariance": Path("library/rocq/FiniteConditionalCovariance.v"),
+    "FiniteConditionalResidual": Path("library/rocq/FiniteConditionalResidual.v"),
+    "TwoObservationSchur": Path("library/rocq/TwoObservationSchur.v"),
+    "Hoeflin": Path("analyses/hoeflin-ferguson/rocq/Hoeflin.v"),
+    "Admissions": Path("analyses/towers-multiple-test-admissions/rocq/Admissions.v"),
+    "FourCellBridge": Path("analyses/towers-multiple-test-admissions/rocq/FourCellBridge.v"),
+    "SequentialReport": Path("analyses/sequential-conditional-means/rocq/SequentialReport.v"),
+    "ReportRounding": Path("analyses/sequential-conditional-means/rocq/ReportRounding.v"),
+    "ReportCounterexample": Path("analyses/sequential-conditional-means/rocq/ReportCounterexample.v"),
+}
+modules = tuple(paths_by_module)
+canonical = set(paths_by_module.values())
+present = set(Path("library/rocq").glob("*.v"))
+for project in ("hoeflin-ferguson", "towers-multiple-test-admissions",
+                "sequential-conditional-means"):
+    present.update(Path("analyses", project, "rocq").glob("*.v"))
+present.update(Path("rocq").glob("*.v"))
+if present != canonical:
+    missing = sorted(map(str, canonical - present))
+    extra = sorted(map(str, present - canonical))
+    raise SystemExit(f"Canonical Rocq source mismatch: missing={missing}; extra={extra}")
+
 decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global|Polymorphic|Program)\s+)?"
     r"(Theorem|Lemma|Example|Definition|Fixpoint|Record|Inductive|"
@@ -52,7 +78,7 @@ proof_decl = re.compile(
 )
 
 for module in modules:
-    path = Path("rocq") / (module + ".v")
+    path = paths_by_module[module]
     source = path.read_text(encoding="utf-8")
     if not source.startswith("(** Module: " + module + ".v"):
         issues.append(f"{path}: explanatory module header missing")

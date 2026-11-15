@@ -6,8 +6,9 @@
 --  arithmetic.  Conversion, square roots, and formatted I/O belong to the
 --  separately documented numerical boundary.  No transcendental backend or
 --  random-number generator is trusted by this package.
+with Shared_Equicorrelation;
 package Sequential_Core with SPARK_Mode is
-   Scale     : constant Long_Long_Integer := 1_000;
+   Scale     : constant Long_Long_Integer := Shared_Equicorrelation.Scale_1000;
    Max_Total : constant := 1_000;
    subtype Count is Positive range 1 .. Max_Total;
    subtype Correlation_Permille is Integer range -1_000 .. 1_000;
