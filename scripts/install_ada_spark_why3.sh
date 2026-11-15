@@ -53,7 +53,7 @@ if [[ "$mode" == "--plan" ]]; then
   printf 'Debian 13 Ada/SPARK/Why3 stack; no changes made.\n'
   printf 'Debian apt packages:'
   printf ' %s' "${ADA_PACKAGES[@]}"
-  printf '\nGNATprove %s: official signed-release host %s\n' "$SPARK_VERSION" "$SPARK_URL"
+  printf '\nGNATprove %s: official release URL %s\n' "$SPARK_VERSION" "$SPARK_URL"
   printf 'GNATprove archive SHA256: %s; size %s bytes\n' "$SPARK_SHA" "$SPARK_SIZE"
   printf 'GNATprove prefix: %s\n' "$SPARK_INSTALL_DIR"
   printf '%s\n' 'NOTE: Alire 1.2.1 catalog lists only older GNATprove releases; do not try alr get gnatprove=16.1.0.'
@@ -156,24 +156,28 @@ if [[ "$mode" == "--install-spark" ]]; then
   fi
 
   if (( archive_ok == 0 )); then
-    # Always download into an exclusive temporary file in the same
-    # directory. A failed download does not replace a previous archive.
-    download_tmp="$(mktemp "$archive_dir/.gnatprove-download.XXXXXXXX")"
-    trap 'rm -f -- "$download_tmp"' EXIT
-    printf 'Downloading verified GNATprove %s archive (%s bytes).\n' \
-      "$SPARK_VERSION" "$SPARK_SIZE"
-    curl --fail --location --retry 3 --connect-timeout 30 \
-      --proto '=https' --proto-redir '=https' \
-      --output "$download_tmp" "$SPARK_URL"
-    if [[ "$(stat -c '%s' "$download_tmp")" != "$SPARK_SIZE" ]] ||
-       ! printf '%s  %s\n' "$SPARK_SHA" "$download_tmp" | sha256sum --check --status; then
-      printf 'ERROR: GNATprove archive length or SHA256 mismatch.\n' >&2
+    # A 473 MB release download may be interrupted. Keep a dedicated
+    # .partial file so subsequent explicit --install-spark calls can resume,
+    # just as the existing Isabelle installer does. Never replace the
+    # verified archive until the partial has passed length and SHA256.
+    partial="$archive.partial"
+    if [[ -L "$partial" || ( -e "$partial" && ! -f "$partial" ) ]]; then
+      printf 'ERROR: Refusing non-regular partial archive: %s\n' "$partial" >&2
       exit 4
     fi
-    # A stale or corrupted regular archive is replaceable only AFTER
-    # the newly downloaded candidate has passed both integrity checks.
-    mv -f -- "$download_tmp" "$archive"
-    trap - EXIT
+    printf 'Downloading/resuming GNATprove %s (%s bytes) to %s\n' \
+      "$SPARK_VERSION" "$SPARK_SIZE" "$partial"
+    curl --fail --location --continue-at - --retry 3 \
+      --connect-timeout 30 --speed-limit 1024 --speed-time 120 \
+      --proto '=https' --proto-redir '=https' \
+      --output "$partial" "$SPARK_URL"
+    if [[ "$(stat -c '%s' "$partial")" != "$SPARK_SIZE" ]] ||
+       ! printf '%s  %s\n' "$SPARK_SHA" "$partial" | sha256sum --check --status; then
+      printf 'ERROR: GNATprove download checksum/length mismatch; partial preserved for inspection.\n' >&2
+      exit 4
+    fi
+    # Replace an old invalid archive only after the new file verifies.
+    mv -f -- "$partial" "$archive"
   fi
 
   # Never make a partial extracted directory appear as an installed
