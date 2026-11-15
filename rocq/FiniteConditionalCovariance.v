@@ -2077,33 +2077,32 @@ Theorem finite_regression_exact_zero_if_affine_witness :
  finite_cov_optimal_variance xs w f g=0.
 Proof.
  intros A xs w f g a b Hm Hv Hw Haff.
- assert (Hvar:0<=finite_cov_residual_variance xs w f g b).
- { apply finite_cov_residual_variance_nonnegative; exact Hw. }
- assert (Hmean:finite_weighted_mean xs w f=a+b*finite_weighted_mean xs w g).
- { assert (Hscore:finite_weighted_score xs w f =
-       finite_weighted_score xs w (fun x=>a+b*g x)).
-   { unfold finite_weighted_score.
-     apply finite_sum_ext_in; intros x Hin.
-     destruct (Rlt_dec 0 (w x)) as [Hpos|Hnot].
-     - rewrite (Haff x Hin Hpos); reflexivity.
-     - assert (Hz:w x=0) by (pose proof (Hw x Hin); lra).
-       rewrite Hz; ring. }
-   unfold finite_weighted_mean.
+ (* Weighted affine equality holds pointwise even at zero-weight samples
+    after multiplication by the weight; reuse affine score linearity. *)
+ assert (Hscore:finite_weighted_score xs w f =
+       finite_weighted_score xs w (fun x=>b*g x+a)).
+ { unfold finite_weighted_score.
+   apply finite_sum_ext_in; intros x Hin.
+   destruct (Rlt_dec 0 (w x)) as [Hpos|Hnot].
+   - rewrite (Haff x Hin Hpos); ring.
+   - assert (Hz:w x=0) by (pose proof (Hw x Hin); lra).
+     rewrite Hz; ring. }
+ assert (Hmean:finite_weighted_mean xs w f=
+      a+b*finite_weighted_mean xs w g).
+ { unfold finite_weighted_mean.
    rewrite Hscore.
    rewrite (finite_weighted_score_affine A xs w g b a).
-   pose proof (finite_weighted_mean_mass_identity A xs w g Hm) as He.
-   unfold finite_weighted_mean in He.
-   field_simplify; try assumption.
-   nra. }
+   field; exact Hm. }
  assert (Hres:finite_cov_residual_variance xs w f g b=0).
  { apply (proj2 (finite_regression_residual_zero_iff_affine_support
        A xs w f g b Hm Hw)).
    intros x Hin Hpos; rewrite (Haff x Hin Hpos), Hmean; ring. }
  pose proof (finite_cov_slope_global_optimality A xs w f g b Hm Hv) as Hopt.
- assert (Hnon:0<=finite_cov_optimal_variance xs w f g)
-   by (apply finite_cov_optimal_variance_nonnegative; try assumption; lra).
- rewrite <- (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)) in Hnon.
- rewrite <- (finite_cov_residual_variance_at_slope A xs w f g Hm ltac:(lra)).
+ pose proof (finite_cov_optimal_variance_nonnegative A xs w f g Hm
+   ltac:(lra) Hw) as Hnon.
+ rewrite (finite_cov_residual_variance_at_slope A xs w f g Hm
+   ltac:(lra)) in Hopt.
+ rewrite Hres in Hopt.
  lra.
 Qed.
 
