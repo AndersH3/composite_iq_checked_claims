@@ -372,6 +372,24 @@ version command establishes installed executable availability, but
 **does not establish that GNATprove successfully discharges SPARK
 verification conditions with Debian GNAT 14**.
 
+### GNATprove 16.1 option syntax correction (computer10)
+
+The first attempted native SPARK proof smoke run did **not** analyze the
+fixture. The user reported exit status 1 with this diagnostic:
+
+```text
+error: wrong argument "--warnings=error" for --checks-as-errors,
+must be one of (on, off)
+```
+
+The original command mistakenly passed bare `--checks-as-errors`.
+GNATprove 16.1 requires **`--checks-as-errors=on`**, while
+`--warnings=error` remains an independent switch. The script and its
+offline regression check now require the explicit, single CLI argument.
+The regression mock records shell argument boundaries and rejects a
+bare `--checks-as-errors`. This fix addresses the CLI parsing error;
+the actual native proof still requires rerunning on computer10.
+
 ### Next: actual native SPARK verification, not merely version detection
 
 Run the dedicated isolated proof fixture from the current repository
@@ -389,7 +407,7 @@ The fixture is `verification/spark_smoke/src/bounded_counts.ads` and
 ten substantive count-accounting postconditions, as well as domain and
 data-flow contracts. The script runs the real GNATprove 16.1.0 through
 its user-local wrapper in a disposable copy, with `--mode=all` and
-`--checks-as-errors`, requesting bundled CVC5, Z3 and Alt-Ergo.
+`--checks-as-errors=on`, requesting bundled CVC5, Z3 and Alt-Ergo.
 It reports PASS **only after GNATprove exits successfully**. This smoke
 suite is not itself a proof of the IQ model calculations or all SPARK
 projects.
@@ -429,6 +447,8 @@ The user's computer has not been operated remotely by the assistant. Installatio
 - [Official Metis release page](https://www.gilith.com/software/metis/) and [Metis development checkout](https://github.com/gilith/metis).
 
 ## Appendix — Full AI disclosure
+
+The user's first execution of the AI-generated native GNATprove smoke script failed before analysis because the CLI flag `--checks-as-errors` was missing its required `=on` value and consumed `--warnings=error` instead. The assistant checked the official AdaCore command-line documentation, corrected the flag, and extended the mocked offline regression to check exact argument boundaries. The result is not yet evidence of a successful SPARK proof until rerun against the actual GNATprove executable.
 
 The user later supplied terminal results confirming GNATprove FSF 16.1.0 downloaded, passed the installer integrity checks, and executed with its bundled Why3, Alt-Ergo, CVC5, and Z3. Isabelle2026 also executed its version command. The assistant added a standalone SPARK counter-increment proof fixture and isolated native proof-runner script; these were authored with AI assistance. Until the user runs the new script, neither the current GNATprove 16 bundle's native proof closure nor its compatibility with the host GNAT compiler is established.
 
