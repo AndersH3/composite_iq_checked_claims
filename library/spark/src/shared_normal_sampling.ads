@@ -50,7 +50,7 @@ package Shared_Normal_Sampling with SPARK_Mode is
      Post =>
        G.State = G.State'Old * Multiplier + Increment
        and then State_Value (G) =
-         State_Value (G)'Old * Multiplier + Increment
+         G.State'Old * Multiplier + Increment
        and then U >= Open_Unit'First
        and then U <= Open_Unit'Last
        and then U > 0.0
