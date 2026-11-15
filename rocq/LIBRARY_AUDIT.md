@@ -1,5 +1,8 @@
 # Rocq proof-library audit and refactoring plan
 
+> **D033x canonical ownership:** Generic finite sums, moments, event bridges, covariance/projection and equicorrelation modules are now stored in [`library/rocq/`](../library/rocq/README.md). The Hoeflin, Admissions/FourCellBridge and SequentialReport/Rounding/Counterexample proof modules live in their corresponding `analyses/*/rocq/` folders, rather than in the previous flat `rocq/` directory. The [canonical compile script](../scripts/compile_rocq.sh) preserves module names and proof order; older flat paths mentioned in historical audit entries refer to the formerly colocated modules.
+
+
 This audit covers all **seven Rocq modules** in the Hoeflin/Ferguson and Towers formalization, including the shared finite-sum, event-to-moment and four-cell interpretation bridge modules.
 It distinguishes **library functionality that should be reused** from
 **report-specific definitions that must remain explicit**.

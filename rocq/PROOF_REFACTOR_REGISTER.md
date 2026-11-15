@@ -1,5 +1,7 @@
 # Complete proof-script refactoring register
 
+> **D033x source ownership:** The proof register is keyed by stable Rocq *module names*, not obsolete flat file paths. Shared modules are now under `library/rocq/`, while Hoeflin, Towers and Sequential specialized modules live in their respective `analyses/*/rocq/` source folders. All original 1,682 scripts and source-order checks remain unchanged. See [canonical build](../scripts/compile_rocq.sh) and [library architecture](../library/README.md).
+
 > **AI disclosure:** This proof audit and the new theorem register entries were prepared with AI assistance. Formal correctness is established only by the separately pinned Rocq 9.2 kernel workflow.
 
 This register inventories **every `Proof. ... Qed.` or `Proof. ... Defined.`

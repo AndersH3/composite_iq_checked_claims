@@ -7,31 +7,16 @@ for the three principal reports. **1682 proof scripts** across eighteen
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
+## Canonical library migration (D033x)
+
+**There are no longer duplicate theorem source files under `rocq/`.** Shared mathematical proofs are maintained only under [`library/rocq/`](../library/rocq/README.md); the Hoeflin/Ferguson, Towers admissions and Sequential conditional-means theorem modules are owned by their respective [report folders](../library/README.md). The compile manifest [`scripts/compile_rocq.sh`](../scripts/compile_rocq.sh) assembles the unique sources in the *original dependency order*, so the eighteen Rocq module names, theorem names, exact propositions and 1,682 registered proof scripts remain unchanged. The full [documentation and source-path audit](../scripts/check_rocq_documentation.sh) checks canonical ownership.
+
 ## Reproduction
 
-With Rocq Prover 9.2 and its standard library, compile from the
-`rocq/` directory so the shared local modules are on the load path:
+With Rocq Prover 9.2 and its standard library, compile canonical shared and report-specific sources from the repository root using a clean temporary build directory:
 
 ```sh
-cd rocq
-rocq compile FiniteSum.v
-rocq compile Hoeflin.v
-rocq compile Admissions.v
-rocq compile FiniteUnion.v
-rocq compile FiniteMoments.v
-rocq compile FiniteBridge.v
-rocq compile FourCellBridge.v
-rocq compile SequentialReport.v
-rocq compile ReportRounding.v
-rocq compile ReportCounterexample.v
-rocq compile EquicorrelationSpectral.v
-rocq compile EquicorrelationVectors.v
-rocq compile EquicorrelationInverseVectors.v
-rocq compile FiniteTwoCellProjection.v
-rocq compile FiniteNestedProjection.v
-rocq compile FiniteConditionalCovariance.v
-rocq compile FiniteConditionalResidual.v
-rocq compile TwoObservationSchur.v
+sh scripts/compile_rocq.sh
 ```
 
 The GitHub Actions workflow at
