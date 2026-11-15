@@ -5,16 +5,19 @@
 > **AI disclosure:** This proof audit and the new theorem register entries were prepared with AI assistance. Formal correctness is established only by the separately pinned Rocq 9.2 kernel workflow.
 
 This register inventories **every `Proof. ... Qed.` or `Proof. ... Defined.`
-script**, including local helpers and two explicit record constructors.
+script**, including the local helper and all explicit record/model constructors.
 It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
 The current branch has **1999 public theorem/lemma/example claims**, plus
-one local helper and two constructed `Admissions.TwoEventModel` values:
-**2013 proof scripts** across twenty-two Rocq modules. The claims and scripts
-are counted separately because helper and record-constructor proof blocks
-are included in the latter total.
+**one local helper** and **thirteen constructed model/record values**:
+**2013 proof scripts** across twenty-two Rocq modules. The difference between the 1,999 claims and 2,013 proof scripts is
+exactly fourteen additional blocks: one local helper, two original
+four-cell Admissions model witnesses, three unconditioned two-test
+projections of the three-test model, and eight conditional/example
+model constructors from D038x. These constructed proof terms are not
+misreported as additional theorem/lemma claims.
 The record was created after the current generic list-fold and covariance
 matrix refactoring and counts explicit proof blocks, not definitions lacking
 proof obligations.
