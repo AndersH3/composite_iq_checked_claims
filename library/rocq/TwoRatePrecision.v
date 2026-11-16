@@ -865,7 +865,7 @@ Qed.
  independent Bernoulli samples; binomial distribution and coverage are
  separate theorems, and no empirical IQ model is validated.
 *)
-Theorem rate_count_disparity : forall n m p q, n*rate_gap p q = rate_count n 0 p q-rate_count n 0 q p.
+Theorem rate_count_disparity : forall n p q, n*rate_gap p q = rate_count n 0 p q-rate_count n 0 q p.
 Proof.
   intros; unfold rate_gap,rate_count; ring.
 Qed.
