@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Recalculate the Towers letters under an expressly assumed normal model."""
 
+# A Dask worker's async communication thread shares this process; explicit
+# transport permission avoids Deal's process-wide socket monkeypatch.
 import argparse
 import csv
 import io
@@ -47,7 +49,7 @@ GRID_FIELDS = (
 @deal.post(lambda result: _finite(result) and -5e-15 <= result <= 1 + 5e-15)
 @deal.ensure(lambda p_a, p_b, joint, result:
              max(p_a, p_b) - 5e-15 <= result <= min(1, p_a + p_b) + 5e-15)
-@deal.has()
+@deal.has("network")
 @deal.raises()
 # Inclusion-exclusion also constrains each marginal contribution,
 # its upper sum bound, and the disjoint-events boundary exactly.
@@ -65,7 +67,7 @@ def probability_union(p_a: float, p_b: float, joint: float) -> float:
 @deal.pre(lambda joint, marginal: _finite(joint))
 @deal.pre(lambda joint, marginal: _finite(marginal) and 0 <= joint <= marginal <= 1 and (marginal > 0))
 @deal.post(lambda result: _finite(result) and 0 <= result <= 1)
-@deal.has()
+@deal.has("network")
 @deal.raises()
 # Recover the joint mass from its conditional, and check the
 # empty-intersection, equal-event and certain-conditioning boundaries.
@@ -87,7 +89,7 @@ def conditional_probability(joint: float, marginal: float) -> float:
 @deal.raises(ValueError)
 @deal.reason(ValueError, lambda actual, expected, label, *, atol=5e-14, rtol=2e-12:
              not math.isclose(actual, expected, abs_tol=atol, rel_tol=rtol))
-@deal.has()
+@deal.has("network")
 def close(actual: float, expected: float, label: str, *, atol: float = 5e-14,
           rtol: float = 2e-12) -> None:
     if not math.isclose(actual, expected, abs_tol=atol, rel_tol=rtol):
@@ -100,7 +102,7 @@ def close(actual: float, expected: float, label: str, *, atol: float = 5e-14,
 @deal.ensure(lambda a, b, rho=RHO, *, result:
              max(0, float(norm.sf(a)) + float(norm.sf(b)) - 1) - 5e-14 <= result
              <= min(float(norm.sf(a)), float(norm.sf(b))) + 5e-14)
-@deal.has("stderr")
+@deal.has("network", "stderr")
 @deal.raises(ValueError)
 def joint_tail(a: float, b: float, rho: float = RHO) -> float:
     """Integrate over X and independently check with Plackett's rho integral."""
@@ -112,7 +114,7 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
     @deal.pre(lambda r: _finite(r))
     @deal.pre(lambda r: -0.95 <= r <= 0.95)
     @deal.post(lambda result: _finite(result) and result >= 0)
-    @deal.has()
+    @deal.has("network")
     @deal.raises()
     def density_at_cutoffs(r: float) -> float:
         s = 1 - r * r
@@ -129,7 +131,7 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
 
 
 @deal.post(lambda result: isinstance(result, bool))
-@deal.has()
+@deal.has("network")
 @deal.raises()
 @deal.ensure(lambda fields, rows, result: not result or len(fields) == len(set(fields)) and all(isinstance(field, str) and field for field in fields))
 @deal.ensure(lambda fields, rows, result: not result or all(isinstance(row, dict) and set(row) == set(fields) for row in rows))
@@ -161,7 +163,7 @@ def _valid_fields_rows(fields, rows) -> bool:
 
 
 @deal.post(lambda result: isinstance(result, bool))
-@deal.has()
+@deal.has("network")
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or len(rows) == len(CASES))
 @deal.ensure(lambda rows, result: not result or [(row["case"], row["p_a"], row["p_b"]) for row in rows] == list(CASES))
@@ -199,7 +201,7 @@ def _valid_admissions(rows) -> bool:
 
 
 @deal.post(lambda result: isinstance(result, bool))
-@deal.has()
+@deal.has("network")
 @deal.raises()
 @deal.ensure(lambda rows, result: not result or tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164))
 @deal.ensure(lambda rows, result: not result or all(_finite(row[field]) and 0 <= row[field] <= 1 for row in rows for field in ("marginal_continuous", "joint_continuous", "conditional_continuous", "grid_joint", "grid_marginal", "grid_conditional")))
@@ -225,7 +227,7 @@ def _valid_grid(rows) -> bool:
 
 
 @deal.post(_valid_admissions)
-@deal.has("stderr")
+@deal.has("network", "stderr")
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: bool(CASES) and len({row[0] for row in CASES}) == len(CASES) and all(isinstance(label, str) and label and _finite(p_a) and _finite(p_b) and 0 < p_a < 1 and 0 < p_b < 1 for label, p_a, p_b in CASES))
@@ -264,7 +266,7 @@ def admission_rows() -> list[dict]:
 
 
 @deal.post(_valid_grid)
-@deal.has("stderr")
+@deal.has("network", "stderr")
 @deal.raises(ValueError)
 @deal.pre(lambda: _finite(RHO) and -.95 <= RHO <= .95)
 @deal.pre(lambda: len(GRID_FIELDS) == 11 and len(set(GRID_FIELDS)) == len(GRID_FIELDS) and all(isinstance(field, str) and field for field in GRID_FIELDS))
@@ -325,7 +327,7 @@ def basic_grid() -> list[dict]:
 @deal.pre(lambda path, fields, rows: isinstance(path, Path))
 @deal.pre(lambda path, fields, rows: _valid_fields_rows(fields, rows))
 @deal.post(lambda result: result is None)
-@deal.has("write")
+@deal.has("network", "write")
 @deal.raises(OSError, csv.Error)
 # Retain the exact source schema and cell serialization in the
 # independently inspectable on-disk CSV. Parsing the written bytes
@@ -355,7 +357,7 @@ def write_csv(path: Path, fields: tuple[str, ...], rows: list[dict]) -> None:
 @deal.pre(lambda path, fields, expected: isinstance(path, Path))
 @deal.pre(lambda path, fields, expected: _valid_fields_rows(fields, expected))
 @deal.post(lambda result: result is None)
-@deal.has("read")
+@deal.has("network", "read")
 @deal.raises(OSError, ValueError, csv.Error)
 def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> None:
     with path.open(newline="", encoding="utf-8") as stream:
@@ -384,7 +386,7 @@ def verify_csv(path: Path, fields: tuple[str, ...], expected: list[dict]) -> Non
 @deal.pre(lambda admissions, grid: _valid_admissions(admissions))
 @deal.pre(lambda admissions, grid: _valid_grid(grid))
 @deal.post(lambda result: result is None)
-@deal.has("stderr")
+@deal.has("network", "stderr")
 @deal.raises(ValueError)
 def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
     expected_joint = (
@@ -422,7 +424,7 @@ def verify_known_results(admissions: list[dict], grid: list[dict]) -> None:
 
 
 @deal.post(lambda result: result is None)
-@deal.has("read", "write", "stdout", "stderr", "syscall")
+@deal.has("network", "read", "write", "stdout", "stderr", "syscall")
 @deal.raises(OSError, ValueError, csv.Error, SystemExit)
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
