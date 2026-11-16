@@ -1,5 +1,13 @@
 # Six-volume Rocq proof-obligation register — D042x
 
+## D048x — finite covariance constraints and remaining stochastic gaps
+
+**AI disclosure:** OpenAI ChatGPT assisted this additional proof mapping. Neither a new Rocq algebra theorem nor the source audit constitutes independent validation of probabilistic assumptions.
+
+The shared `SampleContrastCauchy.v` source supplies **142 new candidate proof scripts** (two generic bridges, 136 explicit four-test contrast Cauchy–Schwarz specializations and four general zero-variance/two-sided-covariance consequences). Their review is in [the dedicated source-order register](PROOF_REFACTOR_SAMPLE_CAUCHY.md). These support the finite-sample portion of `pf:moments`/G01, weighted pooling G12, Hoeflin/Ferguson standardized-score variance and multi-test composite correlations, Towers admissions composite-score feasibility, and Sequential score-history contrast feasibility. Only a valid nonnegative-weight finite sample and positive total mass are modeled; arbitrary covariance symbols are *not* thereby shown to be feasible.
+
+Across all six volumes, no full Gaussian conditional distribution, normal-tail integral enclosure, independent Bernoulli/binomial probability law, normal-sample chi-square pivot, exact confidence interval coverage, pseudorandom-generator accuracy or empirical IQ population model has been proved by these algebraic constraints. The 136 related specializations must never be counted as independent statistical evidence. The canonical Rocq 9.2 workflow remains the formal acceptance gate.
+
 > **AI DISCLOSURE:** This source-audit and formalization backlog were prepared with OpenAI ChatGPT assistance. A report proof, source scan or simulation is not a Rocq kernel proof. Author: **Anders Hellström**.
 
 **Date:** November 16, 2026. **Pinned baseline:** [`5c23afcd48bd36302c0acd2bbdf75271abf06921`](https://github.com/AndersH3/composite_iq_checked_claims/commit/5c23afcd48bd36302c0acd2bbdf75271abf06921). The six authoritative XeLaTeX sources are linked from the four project/reporting READMEs. This register covers all six main/simulation volumes, their proof-bearing inputs and claim-to-evidence maps. It distinguishes the full report proposition from a previously kernel-checked **finite** or **algebraic** fragment.
