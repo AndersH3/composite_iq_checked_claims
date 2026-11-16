@@ -49,4 +49,5 @@ rocq compile TrivariateSchur.v
 rocq compile WilsonScoreAlgebra.v
 rocq compile SamplingPrecision.v
 rocq compile ConditionalRatioStability.v
+rocq compile PooledMomentsAlgebra.v
 rocq compile ThreeTestSchur.v
