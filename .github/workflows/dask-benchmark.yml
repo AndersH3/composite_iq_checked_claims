@@ -1,16 +1,17 @@
 name: Dask scaled Monte Carlo benchmark
 
-# Manual runs are artifacts-only. A one-time tagged push to the current
-# feature branch publishes its fully validated 40M-per-case results.
-# The branch-only trigger will be retired before merging into main.
+# This workflow runs only by manual dispatch. It never overwrites published
+# numerical data unless explicitly requested via publish_results=true.
+# After publication, rebuild all six PDFs using the report-books workflow:
+# GitHub Actions GITHUB_TOKEN pushes do not trigger other workflows.
 on:
-  push:
-    branches:
-      - 'performance/dask-block-summary-scale-20261116'
-    paths:
-      - '.github/workflows/dask-benchmark.yml'
   workflow_dispatch:
     inputs:
+      publish_results:
+        description: 'Commit validated numerical results to the selected branch (off by default)'
+        required: true
+        type: boolean
+        default: false
       trials:
         description: 'Samples per replicate (2..100000000; select based on runner RAM)'
         required: true
@@ -45,7 +46,6 @@ permissions:
 
 jobs:
   benchmark:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[run40m]')
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
@@ -104,21 +104,21 @@ jobs:
               assert len(rows) == expected_rows, path
               assert all(int(row["n_samples"]) == expected * reps for row in rows), path
           PY
-      - name: Publish validated scaled dataset only from the tagged feature-branch push
-        if: github.event_name == 'push'
+      - name: Publish validated scaled dataset only when explicitly requested
+        if: inputs.publish_results == true
         run: |
           set -euo pipefail
           mkdir -p reporting/benchmarks
-          cp dask-plan.json reporting/benchmarks/40m-plan.json
-          cp dask-resource-usage.txt reporting/benchmarks/40m-resource-usage.txt
+          cp dask-plan.json "reporting/benchmarks/plan-${GITHUB_RUN_ID}.json"
+          cp dask-resource-usage.txt "reporting/benchmarks/resource-usage-${GITHUB_RUN_ID}.txt"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add reporting/run.json reporting/benchmarks/40m-plan.json reporting/benchmarks/40m-resource-usage.txt
+          git add reporting/run.json reporting/benchmarks/
           git add analyses/*/simulation-data/*.csv analyses/*/simulation-data/*.json analyses/*/simulation-data/*.tex
           if git diff --cached --quiet; then
             echo 'Numerical assets are already identical to this run'
           else
-            git commit -m 'Record 40 million Dask block samples per case with resource evidence'
+            git commit -m "Record validated Dask block simulation: $TRIALS trials × $REPLICATES replicates"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - name: Upload completed simulation and machine resource diagnostics
