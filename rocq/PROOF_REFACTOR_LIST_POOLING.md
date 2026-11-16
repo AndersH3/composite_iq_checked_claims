@@ -174,7 +174,7 @@ This is the canonical detailed review register for the new `library/rocq/ListPoo
 
 OpenAI ChatGPT assisted with proof scripts, statement documentation, and the source-ordered register. Only exact Rocq 9.2 kernel-accepted propositions constitute verified claims; no Gaussian, chi-square, binomial independence, confidence coverage or IQ-population empirical assumption is certified.
 
-## FourContrastCovariance.v — 157 proof scripts
+## FourContrastCovariance.v — 159 proof scripts
 
 **D047x proof register.** Author: Anders Hellström. **AI disclosure:** These coefficient identities and their register were generated with AI assistance. They are candidate Rocq theorems until accepted by the pinned Rocq 9.2 kernel. The 136 explicit contrast-pair evaluations are specializations of one symmetric bilinear form, not 136 independent stochastic theorems or 136 statistical validation results.
 
@@ -338,5 +338,8 @@ OpenAI ChatGPT assisted with proof scripts, statement documentation, and the sou
 | `four_batch_covariance_linear_right` (theorem) | Linear covariance response to an arbitrary two-score weighted combination on the right, including signed score coefficients. | Canonical FiniteSum/ListPoolingAlgebra and Rocq Stdlib Ring/Field | Finite-sample algebra only; no Gaussian or sampling-law conclusion |
 | `four_batch_covariance_linear_two_composites` (theorem) | The exact four-cross-covariance expansion for the association between two two-test composite scores. | Canonical FiniteSum/ListPoolingAlgebra and Rocq Stdlib Ring/Field | Finite-sample algebra only; no Gaussian or sampling-law conclusion |
 | `four_batch_variance_sum` (theorem) | The exact weighted variance of a sum of two test scores includes twice their sample covariance, not merely the sum of variances. | Canonical FiniteSum/ListPoolingAlgebra and Rocq Stdlib Ring/Field | Finite-sample algebra only; no Gaussian or sampling-law conclusion |
+
+| `four_batch_covariance_bilinear` (theorem) | The exact covariance of any two four-test finite-sample composites is the canonical symmetric bilinear matrix contraction on their actual weighted covariance entries. | Reuses finite-sample covariance bilinearity and symmetry from ListPoolingAlgebra with Rocq Ring | Valid for deterministic weighted batches and nonzero mass; not Gaussian conditioning |
+| `four_batch_variance_quadratic` (theorem) | The variance of any four-test finite-sample composite equals its quadratic form on the actual weighted covariance matrix. | Specializes the finite-sample bilinear bridge and reuses existing covariance-self variance | No Gaussian or chi-square distributional conclusions |
 
 **Complete AI disclosure:** OpenAI ChatGPT contributed specifications, contrast selection, polynomial expansion, Rocq proof scripts, and documentation. The exact proposition and checked source SHA govern any proof status. This source neither establishes Gaussian conditioning nor asserts that arbitrary real matrix entries form a valid covariance matrix. Statistical calibration, covariance feasibility, distributional sampling laws, confidence coverage, and empirical IQ claims remain separate obligations.
