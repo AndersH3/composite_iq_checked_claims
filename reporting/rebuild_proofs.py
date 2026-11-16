@@ -173,7 +173,7 @@ def build_document(document, retained):
 @deal.post(lambda result: result["reports"] and all(len(r["sha256"]) == 64 for r in result["reports"]))
 @deal.ensure(lambda results, retained, graph_tasks, result: result["reports"] == results and result["graph_tasks"] == graph_tasks)
 @deal.ensure(lambda results, retained, graph_tasks, result: result["retained_dask_data"] == retained)
-@deal.raises(OSError, ValueError, TypeError, KeyError)
+@deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
 @deal.has("read", "write")
 def record_revision(results, retained, graph_tasks):
     """Hash document sources/outputs without relabeling old numerical draws."""
