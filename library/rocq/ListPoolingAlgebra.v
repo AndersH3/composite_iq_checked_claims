@@ -405,3 +405,336 @@ Theorem batch_mean_rescale_weights :
 Proof.
   intros A w v xs t Hm Ht; unfold batch_mean; rewrite batch_total_scale_weights, batch_mass_scale_weights; field; nra.
 Qed.
+
+(** [batch_cross] (definition).
+ Mathematical meaning: The mixed second raw moment or weighted inner product of two batch-level attributes.
+ Exact declaration: Definition batch_cross {A:Type} (w v z:A->R) (xs:list A):R := finite_sum (fun x => w x*v x*z x) xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+
+Definition batch_cross {A:Type} (w v z:A->R) (xs:list A):R := finite_sum (fun x => w x*v x*z x) xs.
+
+(** [batch_cross_app] (theorem).
+ Mathematical meaning: The weighted mixed moment is additive over disjoint list concatenation.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs ys:list A), batch_cross w v z (xs++ys)=batch_cross w v z xs+batch_cross w v z ys.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_app :
+  forall (A:Type) (w v z:A->R) (xs ys:list A), batch_cross w v z (xs++ys)=batch_cross w v z xs+batch_cross w v z ys.
+Proof.
+  intros A w v z xs ys; unfold batch_cross; apply finite_sum_app.
+Qed.
+
+(** [batch_cross_permutation] (theorem).
+ Mathematical meaning: Mixed raw moments remain unchanged after any permutation of the batch ordering.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs ys:list A), Permutation xs ys -> batch_cross w v z xs=batch_cross w v z ys.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_permutation :
+  forall (A:Type) (w v z:A->R) (xs ys:list A), Permutation xs ys -> batch_cross w v z xs=batch_cross w v z ys.
+Proof.
+  intros A w v z xs ys Hp; unfold batch_cross; now apply finite_sum_permutation.
+Qed.
+
+(** [batch_cross_symmetry] (theorem).
+ Mathematical meaning: The weighted inner product is symmetric in the two batch-level attributes.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_cross w v z xs=batch_cross w z v xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_symmetry :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_cross w v z xs=batch_cross w z v xs.
+Proof.
+  intros A w v z xs; unfold batch_cross; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(** [batch_cross_add_left] (theorem).
+ Mathematical meaning: The weighted mixed moment is linear in its first variable.
+ Exact proposition: forall (A:Type) (w v z u:A->R) (xs:list A), batch_cross w (fun x=>v x+z x) u xs=batch_cross w v u xs+batch_cross w z u xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_add_left :
+  forall (A:Type) (w v z u:A->R) (xs:list A), batch_cross w (fun x=>v x+z x) u xs=batch_cross w v u xs+batch_cross w z u xs.
+Proof.
+  intros A w v z u xs; unfold batch_cross; transitivity (finite_sum (fun x => w x*v x*u x+w x*z x*u x) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_add; reflexivity].
+Qed.
+
+(** [batch_cross_scale_left] (theorem).
+ Mathematical meaning: Scaling the left attribute scales the complete mixed moment.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross w (fun x=>t*v x) z xs=t*batch_cross w v z xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_scale_left :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross w (fun x=>t*v x) z xs=t*batch_cross w v z xs.
+Proof.
+  intros A w v z xs t; unfold batch_cross; transitivity (finite_sum (fun x => t*(w x*v x*z x)) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; reflexivity].
+Qed.
+
+(** [batch_cross_nonnegative] (theorem).
+ Mathematical meaning: If weights and both attributes are nonnegative, their weighted mixed moment is nonnegative.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=v x) -> (forall x, In x xs -> 0<=z x) -> 0<=batch_cross w v z xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_nonnegative :
+  forall (A:Type) (w v z:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=v x) -> (forall x, In x xs -> 0<=z x) -> 0<=batch_cross w v z xs.
+Proof.
+  intros A w v z xs Hw Hv Hz; unfold batch_cross; apply finite_sum_nonnegative; intros x Hin; apply Rmult_le_pos; [apply Rmult_le_pos; [apply Hw|apply Hv]; exact Hin|apply Hz; exact Hin].
+Qed.
+
+(** [batch_cross_self_second] (theorem).
+ Mathematical meaning: A weighted raw second moment is exactly the mixed moment of an attribute with itself.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_second w v xs=batch_cross w v v xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_self_second :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_second w v xs=batch_cross w v v xs.
+Proof.
+  intros A w v xs; reflexivity.
+Qed.
+
+(** [batch_cross_scale_weights] (theorem).
+ Mathematical meaning: Uniformly scaling sample weights scales the mixed raw moment.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross (fun x=>t*w x) v z xs=t*batch_cross w v z xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_cross_scale_weights :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross (fun x=>t*w x) v z xs=t*batch_cross w v z xs.
+Proof.
+  intros A w v z xs t; unfold batch_cross; transitivity (finite_sum (fun x => t*(w x*v x*z x)) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; reflexivity].
+Qed.
+
+(** [batch_second_sum_square] (theorem).
+ Mathematical meaning: Polarization: the second moment of a sum is the two second moments plus twice their mixed moment.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_second w (fun x=>v x+z x) xs=batch_second w v xs+2*batch_cross w v z xs+batch_second w z xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_second_sum_square :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_second w (fun x=>v x+z x) xs=batch_second w v xs+2*batch_cross w v z xs+batch_second w z xs.
+Proof.
+  intros A w v z xs; unfold batch_second,batch_cross; transitivity (finite_sum (fun x => (w x*v x*v x+2*(w x*v x*z x))+w x*z x*z x) xs); [apply finite_sum_ext; intro x; ring|rewrite !finite_sum_add, finite_sum_scale; ring].
+Qed.
+
+(** [batch_total_constant] (theorem).
+ Mathematical meaning: Every batch receiving a common value has weighted sum equal to that value times total exposure.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A) (c:R), batch_total w (fun _=>c) xs=c*batch_mass w xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_total_constant :
+  forall (A:Type) (w:A->R) (xs:list A) (c:R), batch_total w (fun _=>c) xs=c*batch_mass w xs.
+Proof.
+  intros A w xs c; unfold batch_total,batch_mass; transitivity (finite_sum (fun x=>c*w x) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; reflexivity].
+Qed.
+
+(** [batch_mean_constant] (theorem).
+ Mathematical meaning: The weighted mean of a common constant is that constant when total mass is nonzero.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A) (c:R), batch_mass w xs<>0 -> batch_mean w (fun _=>c) xs=c.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_mean_constant :
+  forall (A:Type) (w:A->R) (xs:list A) (c:R), batch_mass w xs<>0 -> batch_mean w (fun _=>c) xs=c.
+Proof.
+  intros A w xs c H; unfold batch_mean; rewrite batch_total_constant; field; exact H.
+Qed.
+
+(** [batch_mean_total_identity] (theorem).
+ Mathematical meaning: Total weighted first moment equals pooled mean multiplied by total mass when mass is nonzero.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_total w v xs=batch_mean w v xs*batch_mass w xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_mean_total_identity :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_total w v xs=batch_mean w v xs*batch_mass w xs.
+Proof.
+  intros A w v xs H; unfold batch_mean; field; exact H.
+Qed.
+
+(** [batch_mean_zero_iff_total_zero] (theorem).
+ Mathematical meaning: With positive or negative nonzero mass, the weighted mean vanishes iff the first raw weighted moment vanishes.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> (batch_mean w v xs=0 <-> batch_total w v xs=0).
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_mean_zero_iff_total_zero :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> (batch_mean w v xs=0 <-> batch_total w v xs=0).
+Proof.
+  intros A w v xs Hm; split; intro H; [pose proof (batch_mean_total_identity A w v xs Hm) as E; rewrite H in E; nra|unfold batch_mean; rewrite H; field; exact Hm].
+Qed.
+
+(** [batch_centered_expand] (theorem).
+ Mathematical meaning: Arbitrary-list weighted ANOVA expands around any reference into the first and second raw moments.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), batch_centered w v c xs=batch_second w v xs-2*c*batch_total w v xs+c*c*batch_mass w xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_expand :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), batch_centered w v c xs=batch_second w v xs-2*c*batch_total w v xs+c*c*batch_mass w xs.
+Proof.
+  intros A w v xs c; unfold batch_centered,batch_second,batch_total,batch_mass; transitivity (finite_sum (fun x => (w x*v x*v x-(2*c)*(w x*v x))+(c*c)*w x) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_add, finite_sum_sub, !finite_sum_scale; ring].
+Qed.
+
+(** [batch_centered_at_mean_closed] (theorem).
+ Mathematical meaning: The exact corrected sum about the weighted mean is second raw moment minus squared first moment divided by mass.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_centered w v (batch_mean w v xs) xs=batch_second w v xs-(batch_total w v xs*batch_total w v xs)/batch_mass w xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_at_mean_closed :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_centered w v (batch_mean w v xs) xs=batch_second w v xs-(batch_total w v xs*batch_total w v xs)/batch_mass w xs.
+Proof.
+  intros A w v xs H; rewrite batch_centered_expand; unfold batch_mean; field; exact H.
+Qed.
+
+(** [batch_centered_mean_correction] (theorem).
+ Mathematical meaning: The reference-center dispersion differs from the optimized mean-centered dispersion by mass times the squared center discrepancy.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), batch_mass w xs<>0 -> batch_centered w v c xs=batch_centered w v (batch_mean w v xs) xs+batch_mass w xs*(batch_mean w v xs-c)*(batch_mean w v xs-c).
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_mean_correction :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), batch_mass w xs<>0 -> batch_centered w v c xs=batch_centered w v (batch_mean w v xs) xs+batch_mass w xs*(batch_mean w v xs-c)*(batch_mean w v xs-c).
+Proof.
+  intros A w v xs c H; rewrite !batch_centered_expand; pose proof (batch_mean_total_identity A w v xs H) as E; rewrite E; ring.
+Qed.
+
+(** [batch_centered_minimal] (theorem).
+ Mathematical meaning: Under nonnegative weights and positive mass, weighted sample mean minimizes corrected sum of squares.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), 0<batch_mass w xs -> batch_centered w v (batch_mean w v xs) xs<=batch_centered w v c xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_minimal :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), 0<batch_mass w xs -> batch_centered w v (batch_mean w v xs) xs<=batch_centered w v c xs.
+Proof.
+  intros A w v xs c H; rewrite (batch_centered_mean_correction A w v xs c) by lra; assert (Hs:0<=(batch_mean w v xs-c)*(batch_mean w v xs-c)) by (pose proof (Rle_0_sqr (batch_mean w v xs-c)) as E; unfold Rsqr in E; exact E); nra.
+Qed.
+
+(** [batch_centered_constant_zero] (theorem).
+ Mathematical meaning: Every batch equal to a common reference produces zero between-batch corrected dispersion.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A) (c:R), batch_centered w (fun _=>c) c xs=0.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_constant_zero :
+  forall (A:Type) (w:A->R) (xs:list A) (c:R), batch_centered w (fun _=>c) c xs=0.
+Proof.
+  intros A w xs c; unfold batch_centered; transitivity (finite_sum (fun _=>0) xs); [apply finite_sum_ext; intro x; ring|apply finite_sum_zero].
+Qed.
+
+(** [batch_centered_translation] (theorem).
+ Mathematical meaning: Translating all group means and the reference by the same amount preserves between-group dispersion.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c t:R), batch_centered w (fun x=>v x+t) (c+t) xs=batch_centered w v c xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_translation :
+  forall (A:Type) (w v:A->R) (xs:list A) (c t:R), batch_centered w (fun x=>v x+t) (c+t) xs=batch_centered w v c xs.
+Proof.
+  intros A w v xs c t; unfold batch_centered; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(** [batch_centered_scale_values] (theorem).
+ Mathematical meaning: Rescaling both group means and reference scales corrected dispersion by the square of the factor.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c t:R), batch_centered w (fun x=>t*v x) (t*c) xs=t*t*batch_centered w v c xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_scale_values :
+  forall (A:Type) (w v:A->R) (xs:list A) (c t:R), batch_centered w (fun x=>t*v x) (t*c) xs=t*t*batch_centered w v c xs.
+Proof.
+  intros A w v xs c t; unfold batch_centered; transitivity (finite_sum (fun x => (t*t)*(w x*(v x-c)*(v x-c))) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; ring].
+Qed.
+
+(** [batch_centered_scale_weights] (theorem).
+ Mathematical meaning: A uniform sample-size rescaling scales corrected between-batch dispersion linearly.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c t:R), batch_centered (fun x=>t*w x) v c xs=t*batch_centered w v c xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_centered_scale_weights :
+  forall (A:Type) (w v:A->R) (xs:list A) (c t:R), batch_centered (fun x=>t*w x) v c xs=t*batch_centered w v c xs.
+Proof.
+  intros A w v xs c t; unfold batch_centered; transitivity (finite_sum (fun x=>t*(w x*(v x-c)*(v x-c))) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; reflexivity].
+Qed.
+
+(** [batch_total_ss_translation] (theorem).
+ Mathematical meaning: Translation of every group center preserves the total corrected sum, including within-batch sums.
+ Exact proposition: forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_total_ss w (fun x=>v x+t) u xs=batch_total_ss w v u xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_total_ss_translation :
+  forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_total_ss w (fun x=>v x+t) u xs=batch_total_ss w v u xs.
+Proof.
+  intros A w v u xs t H; unfold batch_total_ss; rewrite batch_mean_translation by assumption; rewrite batch_centered_translation; reflexivity.
+Qed.
+
+(** [batch_total_ss_scale] (theorem).
+ Mathematical meaning: Rescaling group values and their within-batch quadratic sums has the expected quadratic effect on total corrected SS.
+ Exact proposition: forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_total_ss w (fun x=>t*v x) (fun x=>(t*t)*u x) xs=t*t*batch_total_ss w v u xs.
+ Premises and side conditions: All positivity, membership and denominator conditions needed for the stated assertion are written explicitly. Group identifiers and observations are deterministic data, not asserted independent random samples.
+ Proof/definition method: Reduce to FiniteSum's certified additive and scalar identities or use standard real arithmetic; reuse earlier bridge lemmas wherever possible.
+ Library reuse: Rocq Stdlib List/Reals/Ring/Field/Lra/Psatz, canonical FiniteSum and prior ListPoolingAlgebra lemmas, not a second recursive aggregator.
+ Boundary: This is a reusable deterministic finite-sample algebraic fact for report G12. The statement alone does not certify a Gaussian/chi-square or independent binomial distribution, IQ-model validity, or confidence coverage.
+*)
+Theorem batch_total_ss_scale :
+  forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_total_ss w (fun x=>t*v x) (fun x=>(t*t)*u x) xs=t*t*batch_total_ss w v u xs.
+Proof.
+  intros A w v u xs t H; unfold batch_total_ss; rewrite batch_mean_scale by assumption; rewrite batch_centered_scale_values; rewrite finite_sum_scale; ring.
+Qed.
