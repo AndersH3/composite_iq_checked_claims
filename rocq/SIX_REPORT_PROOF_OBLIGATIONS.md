@@ -130,7 +130,7 @@ result appears in five volumes, the current per-volume appearances are
 **F=19, A=75, P=59, L=1**, still 154 total; these are not distinct theorems.
 
 The full stochastic and numerical error-certificate acceptance criteria in
-packages G07–G13, G19–G24 remain. No Python/Deal or SPARK execution result
+packages G07–G13, G19–G24 remain. No Python/Deal or retired native implementation execution result
 can substitute for a Rocq proof of a Gaussian or binomial probability law.
 
 ## The six reports
@@ -412,7 +412,7 @@ The claim/evidence maps were also read: `analyses/hoeflin-ferguson/claimmap_hoef
 - This is a **TeX source audit** pinned to `5c23afcd48bd36302c0acd2bbdf75271abf06921`; the linked six PDFs were identified from the READMEs, but PDF binaries were **not** independently rendered or compared with the current source in this pass. Numerical tables and figure inputs remain model/execution evidence, not proof terms.
 - The exhaustive named-environment count is **70** across eleven TeX files; the main SQ computational appendix contributes **two** claims that would otherwise be missed. Other mathematical claims in the six report bodies are grouped above; the audit does not miscount every displayed equation as a distinct needed theorem.
 - For each completed package, add an exact Rocq proposition with explicit positivity, integrability, singularity and conditioning premises, map it to the original report label(s), build with pinned Rocq 9.2 and run the canonical documentation/placeholder/ownership gates. Mark **fully kernel proved** only when its exact report-level statement is established, not merely the coefficient algebra.
-- Run the independent Python/Deal/SPARK checks for changes that affect those implementations. Keep model assumptions, numeric integration error, simulation records, external evidence and analytical theorem validity in separate categories. No amount of simulation establishes an empirical IQ distribution.
+- Run the independent Python/Deal checks for changes that affect those implementations. Keep model assumptions, numeric integration error, simulation records, external evidence and analytical theorem validity in separate categories. No amount of simulation establishes an empirical IQ distribution.
 - Re-scan **all six volumes**, their eleven proof-bearing sources and the five claim maps after any material report edit. A source label or filename change must update this register and `rocq/REPORT_THEOREM_INVENTORY.md`.
 
 ## Exhaustive labelled-equation disposition index (six top-level books)

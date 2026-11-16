@@ -1,0 +1,55 @@
+name: Migration source audit
+
+on:
+  push:
+    paths:
+      - 'analyses/**'
+      - 'reporting/**'
+      - 'library/**'
+      - 'verification/**'
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'scripts/**'
+      - '.github/workflows/migration-audit.yml'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  source-inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory historical engine references in active text sources
+        shell: bash
+        run: |
+          echo '=== Reject references to retired compiler in current text ==='
+          if git grep -nIiE '(SPARK|GNATprove|Ada(/| |\\.|_))' -- '*.md' '*.tex' '*.py' '*.yml' '*.yaml' '*.json' '*.v' '*.bib' '*.sh' ':(exclude).github/workflows/migration-audit.yml' > "$RUNNER_TEMP/retired_refs.txt"; then
+            cat "$RUNNER_TEMP/retired_refs.txt"
+            echo 'Unexpected retired compiler reference found in maintained sources' >&2
+            exit 1
+          fi
+          echo 'No retired compiler brand references in active text sources'
+          echo '=== Retired compiler source count ==='
+          find . -type f \( -name '*.ads' -o -name '*.adb' -o -name '*.gpr' \) -print
+          echo '=== Main report source count ==='
+          for p in analyses/hoeflin-ferguson/composite_iq_analysis.tex analyses/hoeflin-ferguson/hoeflin_simulations.tex analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex analyses/towers-multiple-test-admissions/towers_simulations.tex analyses/sequential-conditional-means/sequential_conditional_means.tex analyses/sequential-conditional-means/sequential_simulations.tex; do test -s "$p"; done
+          echo '=== Inspect six published PDF artifacts for obsolete methodology ==='
+          command -v pdftotext || { sudo apt-get update -qq; sudo apt-get install -y poppler-utils; }
+          count=0
+          for pdf in analyses/*/output/pdf/*.pdf; do
+            test -s "$pdf"
+            count=$((count + 1))
+            if pdftotext -layout "$pdf" - | grep -iE '\b(SPARK|GNATprove|Ada[ /])\b'; then
+              echo "Obsolete simulation/compiler text remains in $pdf" >&2
+              exit 1
+            fi
+            if ! pdftotext -f 1 -l 1 "$pdf" - | grep -q "Anders Hellström"; then
+              echo "Report author missing from title page: $pdf" >&2
+              exit 1
+            fi
+          done
+          test "$count" -eq 6 || { echo "Expected six published report PDFs; found $count" >&2; exit 1; }
+          echo 'All six published PDFs have no obsolete compiler references'
+

@@ -1,4 +1,4 @@
-name: Python contracts
+name: Python contracts and Dask tests
 
 on:
   push:
@@ -8,49 +8,22 @@ permissions:
   contents: read
 
 jobs:
-  contracts:
+  python:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
           cache: pip
           cache-dependency-path: requirements-dev.txt
       - run: python -m pip install -r requirements-dev.txt
-      - name: Check central library source ownership
+      - name: Check Python/Rocq source ownership and excluded compiler sources
         run: bash scripts/check_library_layout.sh
-      - name: Require at least five Deal contracts on every named function
+      - name: Check Deal contract coverage
         run: python verification/check_contract_coverage.py
-      - name: Require five explicit clauses/flow contracts on every SPARK interface
-        run: python verification/spark_contracts.py
-      - name: Static lint with a checked negative control
+      - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
-      - name: Runtime and property tests
+      - name: Python/Dask numerical and property tests
         run: python -m pytest -q tests
-      - name: Symbolically verify acceptance gates and the unchanged negative fixture
-        run: python verification/check_symbolic.py
-      # The retained Nov 5 campaign is a historical, source-pinned artifact.
-      # The live source changes as we strengthen Deal contracts; comparing that
-      # changing tree with its immutable historical Python inventory is invalid.
-      # Keep all archived hashes intact and audit the matching known-good source.
-      - name: Audit archived symbolic/SPARK evidence against its recorded source
-        run: |
-          git worktree add --detach "$RUNNER_TEMP/composite-iq-symbolic-fixture-source" afaa2974b2272dec9ed874c1045a7f577359c860
-          python verification/verify_evidence.py verification/evidence/symbolic-fixture-computer10-20261105 --source-root "$RUNNER_TEMP/composite-iq-symbolic-fixture-source"
-      - name: Audit prior SPARK campaigns against their explicit source revision
-        run: |
-          git worktree add --detach "$RUNNER_TEMP/composite-iq-prior-source" 2c32ecdd87690866bfcbf2d99725abba7cdad55e
-          for campaign in computer10-20261031 deal-spark-computer10-20261031 deal-lint-spark-computer10-20261031; do
-            python verification/verify_evidence.py "verification/evidence/$campaign" --source-root "$RUNNER_TEMP/composite-iq-prior-source"
-          done
-          git worktree add --detach "$RUNNER_TEMP/composite-iq-expanded-source" ce0e895e472de86a6760f05a34d654f32ab0820e
-          python verification/verify_evidence.py verification/evidence/spark-expanded-computer10-20261031 --source-root "$RUNNER_TEMP/composite-iq-expanded-source"
-          git worktree add --detach "$RUNNER_TEMP/composite-iq-ghost-source" 2a8e983fb3c8b90436b89db6e6adfe170872f5f5
-          python verification/verify_evidence.py verification/evidence/ghost-boundaries-computer10-20261101 --source-root "$RUNNER_TEMP/composite-iq-ghost-source"
-          git worktree add --detach "$RUNNER_TEMP/composite-iq-five-contract-source" 1e4990e9eee64c8b353aea4b32da3a367deca1cd
-          python verification/verify_evidence.py verification/evidence/five-contracts-computer10-20261104 --source-root "$RUNNER_TEMP/composite-iq-five-contract-source"

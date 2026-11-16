@@ -1,12 +1,10 @@
 % !TeX program = xelatex
 % Standalone simulation report.  Mathematical exposition is handwritten;
-% Dask numerical tables and plotted coordinates are produced by the shared
-% pipeline. Native tables explicitly identify their retained CSV source.
-% The original numerical experiments and evidence are retained;
-% the mathematical exposition has a separate proof-revision manifest.
+% Python/Dask produces the numerical tables and PGFPlots coordinates.
+% The existing Dask run is documented by its source and data manifest.
 \input{../../reporting/simulation_style}
 \hypersetup{pdftitle={Sequential Conditional Means: Simulation Methods and Results},
-  pdfsubject={SPARK and Dask experiments with population and conditional actual-score means}}
+  pdfsubject={Python/Dask experiments with population and conditional actual-score means}}
 \title{Sequential Conditional Means:\\Simulation Methods and Results}
 \subtitle{One, two or three initial IQ-150 scores, with every initial score included}
 \author{\ProjectAuthor}
@@ -19,27 +17,16 @@
 \thispagestyle{plain.scrheadings}
 
 \begin{abstract}
-This report explains the simulations accompanying the sequential
-conditional-means analysis. Standardized tests have population mean zero,
-standard deviation one and pairwise correlation \(c=0.6\). One, two or
-three observed starting scores are fixed at IQ 150, followed by one, two
-or ten actual future scores. We simulate whole population batteries and
-conditional future vectors as separate experiments, compare their means
-and standard deviations with the Gaussian formulas, and sample the
-Gaussian laws with the calculated infinite-count parameters. The retained
-Ada/SPARK experiment samples scalar aggregate laws in 46 batches of
-200,000 observations, including independent, perfectly correlated and
-finite negative-correlation cases. The Dask experiment instead constructs
-finite score vectors for the requested IQ examples. Each Dask case uses
-\SimReplicates{} seeded replicates of \SimTrials{} observations,
-pooled to \SimPooledTrials{} observations. This report describes both
-algorithms, their full case coverage, results and distinct verification
-limits. Dask builds and executes the
-array, reduction and report-data graphs; XeLaTeX/PGFPlots draws figures
-from their generated CSVs. The key distinction is between variation in
-actual outcomes and the zero standard deviation of a fixed list of
-predictions. Agreement is evidence about this implementation of the
-assumed model, not empirical validation of that model for IQ data.
+This report evaluates Python/Dask simulations of sequential Gaussian test
+scores with one, two, or three observed IQ-150 starting scores and
+one, two or ten subsequent outcomes. The Dask experiment constructs
+finite conditional future-score vectors and separate whole-population
+batteries, in addition to limiting distributions. It reports seeded
+replicates, mean and standard-deviation estimates, and comparisons with
+derived Gaussian reference formulas. These are model-based Monte Carlo
+results, not measurements of real people. Deal runtime contracts and
+Rocq mathematical proofs have distinct scopes and do not prove
+pseudorandom independence or psychometric adequacy.
 \end{abstract}
 
 \noindent\textbf{AI disclosure.} OpenAI Codex and collaborating AI agents
@@ -475,49 +462,29 @@ Explicitly,
 since \(d_{r+1}=d_r+c\). This proves the decrease in remaining factor
 uncertainty at the selected correlation.
 
-\input{spark_simulation_study}
 
-\chapter{Dask replication and comparison with the SPARK experiment}
+
+\chapter{Dask replication, stability and numerical limitations}
 \label{sec:seq-sim-replication}
 
 \input{simulation-data/replicates.tex}
 
-Replicate summaries show the direction and size of ordinary sampling
-fluctuation under fixed model parameters. The pooled values use all the
-observations, but replicate results are retained to reveal whether a
-pooled discrepancy is broadly shared or concentrated in a stream. A
-finite collection of successful seeds does not certify the generator.
-The analytic mean/variance laws are the reference; no seed is selected
-because it produces unusually close agreement.
+The replicate summaries show ordinary sampling variation under fixed
+model parameters. Pooled estimates use all four seeded replicates,
+whereas the reported replicate values show how much results depend on
+individual streams. The nine finite conditional laws and nine finite
+population laws are obtained from full score-vector constructions;
+the six limiting laws use their explicit Gaussian limit formulas.
+These are distinct numerical experiments within one maintained Python
+implementation, not independent psychometric datasets.
 
-\input{simulation-data/historical.tex}
+The full-vector common-factor implementation uses the nonnegative
+correlation domain specified for these examples; negative-correlation
+endpoint claims must be justified mathematically, not extrapolated
+from these simulated vectors. Neither a passing finite diagnostic nor
+Deal contract declarations prove exact random-generator independence,
+normality or universal accuracy.
 
-The native experiment in \Cref{sec:seq-sim-spark} and this Dask experiment
-overlap on 24 laws: nine finite population laws, nine finite conditional
-laws and six limiting laws. The remaining 22 native batches cover the
-11 additional finite cases in \Cref{tab:seq-native-extra}. Thus neither
-implementation's table is a substitute for the other's entire coverage.
-The full-vector Dask construction is used only in its nonnegative
-correlation domain; the native negative-correlation results are scalar
-Gaussian aggregate draws, as proved in \Cref{seq-sim:scalar-law}.
-
-The retained Ada program samples the scalar Gaussian aggregate law,
-whereas the new finite Dask calculation draws the full future or
-population residual vector and combines its sum with the common factor. Agreement between them
-therefore checks two constructions of the same model. Their random-number
-implementations and sample counts differ, so identical individual draws,
-means or variances are not expected. The comparison is statistical and
-numerical, not an exact replay of the Ada pseudorandom stream. Neither
-implementation is an empirical dataset.
-
-The previous native campaign discharged 430 checks across its new and
-reused SPARK units, under the documented numerical and I/O contracts.
-That is evidence about those recorded program obligations, not a new
-formal proof of Dask, NumPy, their random generators, this report or the
-psychometric assumptions. The new Python/Deal contracts, structural
-inventory, static lint and runtime tests are reported separately. Their
-checks cannot turn Monte Carlo agreement into universal formal proof.
-Historical proof and simulation records remain immutable.
 
 \chapter{What the results establish and what remains assumed}
 \label{sec:seq-sim-interpretation}
@@ -528,8 +495,8 @@ several high initial scores shifts the centre while reducing remaining
 uncertainty. Filling later entries with their conditional predictions
 removes that remaining outcome variation entirely from the fixed
 numerical list. These statements are mathematical consequences of the
-Gaussian model; the tables show how both implementations reproduce
-their covered laws to the reported sampling and numerical accuracy.
+Gaussian model; the tables show how the Dask implementation reproduces
+its covered laws to the reported sampling and numerical accuracy.
 
 The experiments assume equicorrelation, Gaussian joint laws, the stated
 reference scale and the specified fixed starting history. They do not
@@ -562,7 +529,5 @@ data were collected. Independent human peer review and empirical
 psychometric validation are not claimed.
 
 \input{../../reporting/ai_disclosure}
-The 16 November 2026 revision used AI agents to expand the SPARK study,
-compare the native and Dask results, audit retained observations and review
-the rebuilt pages. No new random experiment or native prover run was performed.
+The Python/Dask-focused editorial revision removes the discontinued simulation implementation and its comparisons; it does not assert any newly executed Monte Carlo campaign.
 \end{document}

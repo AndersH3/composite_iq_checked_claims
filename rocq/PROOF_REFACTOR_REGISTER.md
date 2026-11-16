@@ -1,5 +1,7 @@
 # Complete proof-script refactoring register
 
+> **Current implementation notice:** The source-ordered theorem audit is preserved; only historical program-verifier wording was updated to reflect the Python/Dask/Deal migration. Rocq proofs and the exact register order are unchanged. Old native campaign records remain in Git history, not the active tree.
+
 **Author:** Anders Hellström.
 
 > **D033x source ownership:** The proof register is keyed by stable Rocq *module names*, not obsolete flat file paths. Shared modules are now under `library/rocq/`, while Hoeflin, Towers and Sequential specialized modules live in their respective `analyses/*/rocq/` source folders. All original 1,682 scripts and source-order checks remain unchanged. See [canonical build](../scripts/compile_rocq.sh) and [library architecture](../library/README.md).
@@ -62,7 +64,7 @@ proof obligations.
    algebra, `Nat.iter`, and the suffix-dependent unordered-pair sum.
 5. Do not introduce a new project-specific axiom, `Admitted`, or unpinned
    matrix/measure library. Review all changes with the pinned Rocq 9.2
-   kernel check and existing Python/Deal/SPARK workflows.
+   kernel check and existing Python/Deal workflows.
 6. Where the existing proof already delegates to a Stdlib theorem
    or a checked lemma in one or two lines, **retain it**; rewriting
    solely to change its text is not a semantic refactor.
@@ -1699,7 +1701,7 @@ own probability premises because strict positivity requires them.
 
 Inventory: **908 public claims, 911 proof scripts, 990 documented
 declarations**, with **497 proof scripts in FiniteMoments.v**, across
-seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal/SPARK
+seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal
 CI. No signed-weight PSD, covariance rank, abstract nullity or
 empirical IQ result follows from these kernel identities.
 
@@ -1723,7 +1725,7 @@ interfaces; there is no new numerical matrix implementation.
 
 Inventory after this addition: **913 public claims, 916 proof scripts,
 1001 documented declarations** (502 FiniteMoments proofs) across seven
-modules, subject to pinned Rocq 9.2 and Python/Deal/SPARK CI.
+modules, subject to pinned Rocq 9.2 and Python/Deal CI.
 
 
 ## Exact two-sample covariance rank-one certificates (13 November 2026)
@@ -1773,7 +1775,7 @@ Signed weights are supported but no PSD claim is made.
 Expected inventory: **927 public claims, 930 proof scripts and
 1015 documented declarations** in seven modules, including
 **516 FiniteMoments proof scripts**, subject to pinned Rocq 9.2
-kernel verification and existing Python/Deal/SPARK regression gates.
+kernel verification and existing Python/Deal regression gates.
 Rank-zero and rank-one here are structural entry certificates,
 not an abstract dimension/rank-nullity formalization.
 
@@ -1854,12 +1856,12 @@ indexed-basis covariance/radical/row-kernel interfaces, the maintained
 typed basis-coordinate selector lemma, the bilinear diagonal identity,
 Stdlib.Reals.Rmult_integral/Req_EM_T, Lra, Ring and tauto.
 No competing finite-sum, matrix representation, generic rank algorithm,
-axiom or admitted lemma is introduced. No Python, Ada/SPARK or archived
+axiom or admitted lemma is introduced. No Python, retired native or archived
 evidence source is modified.
 
 Intended inventory: **947 public checked claims, 950 proof scripts,
 1035 documented declarations**, including **536 FiniteMoments proof
-scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal/SPARK CI
+scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal CI
 remain the verification authorities; these counts alone do not imply
 generic rank-nullity or empirical IQ-test validity.
 
@@ -1886,7 +1888,7 @@ essential for the reconstruction and one-pivot nullity converses.
 Intended inventory: **951 public checked claims, 954 proof scripts,
 1039 documented declarations**, including **540 FiniteMoments proof
 scripts** in seven modules. GitHub Actions Rocq 9.2 kernel checks and
-the existing Python/Deal/SPARK workflows are the verification authority.
+the existing Python/Deal workflows are the verification authority.
 The result does not yet prove an abstract linear-map rank-nullity theorem
 or an empirical covariance inference.
 
@@ -1943,7 +1945,7 @@ The implementation reuses indexed-basis bilinearity, prior typed
 pivot reconstruction, the existing radical and Stdlib.Reals,
 Stdlib.Field, Stdlib.Psatz, Stdlib.Vectors.Vector.map and f_equal.
 No new finite sum, vector recursion, matrix evaluator, determinant,
-axiom or admitted proof is introduced. No Python, SPARK or archived
+axiom or admitted proof is introduced. No Python, retired native implementation or archived
 evidence code is changed. The operator is a concrete, certified
 rank-one-style retraction, **not yet an abstract dimension/rank-nullity
 theorem** over a maintained vector-space theory.
@@ -1969,7 +1971,7 @@ The proofs reuse VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth,
 Stdlib.Ring, the existing covariance bilinearity, coordinate and
 section retraction lemmas, and the earlier signed two-sample
 radical/zero-section theorem. No new vector recursion, finite sums,
-matrix code, axioms, admission, Python, SPARK or historical evidence
+matrix code, axioms, admission, Python, retired native implementation or historical evidence
 changes are introduced.
 
 Expected inventory: **976 public checked claims, 979 proof scripts,
@@ -1998,7 +2000,7 @@ an abstract vector-space rank, dimension, or a general PSD statement. The
 proofs reuse established `indexed_basis_covariance_pivot_*` interfaces,
 `Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2`,
 `Stdlib.Ring` and `Stdlib.Lra`. No new matrix, summation, recursive vector,
-axiom, admitted proof, Python/SPARK source or historical evidence was added.
+axiom, admitted proof, Python/Dask source or historical evidence was added.
 
 Expected inventory after Rocq CI: **983 public claims**, **986 proof scripts**
 and **1075 documented declarations** across seven modules, including
@@ -2032,7 +2034,7 @@ The proofs reuse established \`indexed_basis_covariance_pivot_*\`,
 the certified projection-fiber/radical difference equivalence, covariance
 symmetry, \`Stdlib.Vectors.Vector.map\`, \`Stdlib.Psatz\`, and \`Stdlib.Logic\`.
 No new recursive vector, matrix or finite-sum code, axioms, admits,
-Python/SPARK implementations, or archived verification evidence.
+Python/Dask implementations, or archived verification evidence.
 
 Source-order audit inventory: **992 public checked theorem/lemma/example
 claims**, **995 proof scripts**, **1084 documented declarations** across seven
@@ -2088,7 +2090,7 @@ and dependent score bases, but require exactly two sample occurrences
 and total mass one. Nonisotropic pivots are necessary only for the
 two sign-classification equivalences. No abstract matrix rank,
 dimension theorem, generic signed-weight PSD, empirical correlations,
-new finite-sum/vector recursion, Python/SPARK code or archived evidence
+new finite-sum/vector recursion, Python/Dask code or archived evidence
 modifications are claimed.
 
 Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
@@ -2114,7 +2116,7 @@ and the existing scalar coordinate laws instead.
 The generic complement is **not** claimed to be the full covariance
 radical for arbitrary sample counts; that special identification
 requires two normalized sampled occurrences. No abstract rank-nullity,
-new vector or matrix implementation, admits, axioms, Python/SPARK
+new vector or matrix implementation, admits, axioms, Python/Dask
 changes, or archived evidence alterations.
 
 Expected pinned Rocq 9.2 counts: **1002 public checked claims**,
@@ -2144,7 +2146,7 @@ The proof chain reuses existing covariance bilinearity, projection
 and remainder reconstruction, pivot-coordinate zero, covariance
 symmetry, standard Vector.map/map2, real Field/Ring arithmetic.
 No new summation, matrix evaluator, vector recursion, axiom, admitted
-proof, Python/SPARK code or archived evidence alterations.
+proof, Python/Dask code or archived evidence alterations.
 
 Expected pinned CI totals after this additional batch:
 **1008 public claims; 1011 proof scripts; 1100 documented
@@ -2172,7 +2174,7 @@ The proofs reuse the previously verified scalar/residual covariance
 block identity, symmetric typed pairing, standard real Field, Ring,
 Lra, Psatz and nonnegative-square/product lemmas. They introduce no
 extra matrix representation, vector recursion, summation evaluator,
-axiom, admitted proof, Python/SPARK modification or evidence edits.
+axiom, admitted proof, Python/Dask modification or evidence edits.
 The exact checked inventory is determined by the pinned Rocq 9.2
 documentation and kernel CI, not by this commentary: expected **1012
 public checked claims, 1015 proof scripts, 1104 declarations**, with
@@ -2196,7 +2198,7 @@ The statements about normalized nonnegative weights explicitly carry
 those hypotheses. We reuse existing covariance bilinearity, symmetry,
 Schur decomposition, Rocq Stdlib Field/Psatz/Lra, vector reconstruction,
 positive-semidefinite and Cauchy--Schwarz theorems. No new custom sum,
-vector recursion, matrix evaluator, axioms, admits, Python/SPARK source,
+vector recursion, matrix evaluator, axioms, admits, Python/Dask source,
 or archived evidence edits. The expected Rocq 9.2 inventory is **1029
 public claims, 1032 proof scripts, 1121 documented declarations**
 including **618 FiniteMoments scripts**; verify by pinned CI.
@@ -2225,7 +2227,7 @@ coordinate/equivalently zero typed projection even for signed weights.
 
 Everything reuses checked covariance symmetry/bilinearity and prior
 pivot identities, Rocq Stdlib Vector, Field, Reals, Lra and Psatz.
-No new sum/matrix/vector recursion, new axiom or admit, Python/SPARK
+No new sum/matrix/vector recursion, new axiom or admit, Python/Dask
 source change, or evidence alteration. Expected after pinned Rocq
 9.2 kernel and CI audit: **1044 public checked claims,
 1047 proof scripts, 1136 declarations**
@@ -2258,7 +2260,7 @@ All source/proof declarations have extensive local commentary, reuse
 prior checked Schur complement, residual bilinearity, covariance symmetry,
 vector reconstruction, and Rocq Stdlib Field/Ring/Lra/Psatz. No custom
 matrix rank algebra, duplicate finite-sum algorithms, axioms, admits,
-Python/SPARK source changes or archived evidence modifications.
+Python/Dask source changes or archived evidence modifications.
 Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims,
 1065 total proof scripts, 1155 documented declarations**, including
 **651 FiniteMoments proof scripts**.
@@ -3491,7 +3493,7 @@ Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims
 
 ## Appendix — Complete AI disclosure
 
-OpenAI's assistant inspected the previously merged proof modules, developed and revised the 34 new `EquicorrelationVectors.v` theorem scripts, updated this source-ordered register, and checked the GitHub Actions build logs against individual commit SHAs. The assistant did not assume a spectral theorem, construct Gaussian random variables, or verify statistical calibration; all mathematical conclusions are confined to explicitly stated finite real lists, positive correlation/eigenvalue conditions and deterministic matrix identities. The `Rocq 9.2` kernel checks the final source terms, while the documentation checker verifies this register's source order rather than the truth of propositions. The continuation additionally contributed 26 theorem scripts covering actual finite-list two-sided inverse actions, precision quadratic decompositions and unique least-squares regression coefficients, with a distinct proof register and kernel CI. AI assistance also contributed the 26 finite two-cell conditional-expectation projection, tower, orthogonality, best prediction, zero-support and total-variance proofs, all explicitly limited to finite enumerated outcome lists with the relevant mass hypotheses. The assistant additionally prepared 29 nested-refinement projection and risk-decomposition theorem scripts, including pointwise finite conditional tower, idempotence, residual orthogonality to four-cell functions and an exact nested law of total variance; all require independent Rocq checking. The assistant additionally drafted and registered 31 finite conditional covariance and pull-out theorem scripts, including a finite law of total covariance, bilinear polarization and exact affine two-cell projections. Rocq kernel checking is required to establish these claims. AI assistance additionally prepared and registered 30 theorems on conditional fitted and residual covariance, orthogonality, nonnegative variance decomposition, within/between conditional covariance identification and uniqueness of finite conditional least-squares prediction. Pinned Rocq kernel verification is required. The assistant additionally authored and documented 33 proposed two-observation Schur regression theorem scripts, exact full-rank inverse, nonnegative/positive-definite covariance quadratic, unique least-squares solution, sharp second-test gain, and affine IQ predictor transformation. These rely on independent Rocq kernel validation; Gaussian conditioning and empirical psychometric claims remain outside proved scope. Repository Python/Deal and Ada/SPARK checks remain independent evidence and do not substitute for Rocq proof checking.
+OpenAI's assistant inspected the previously merged proof modules, developed and revised the 34 new `EquicorrelationVectors.v` theorem scripts, updated this source-ordered register, and checked the GitHub Actions build logs against individual commit SHAs. The assistant did not assume a spectral theorem, construct Gaussian random variables, or verify statistical calibration; all mathematical conclusions are confined to explicitly stated finite real lists, positive correlation/eigenvalue conditions and deterministic matrix identities. The `Rocq 9.2` kernel checks the final source terms, while the documentation checker verifies this register's source order rather than the truth of propositions. The continuation additionally contributed 26 theorem scripts covering actual finite-list two-sided inverse actions, precision quadratic decompositions and unique least-squares regression coefficients, with a distinct proof register and kernel CI. AI assistance also contributed the 26 finite two-cell conditional-expectation projection, tower, orthogonality, best prediction, zero-support and total-variance proofs, all explicitly limited to finite enumerated outcome lists with the relevant mass hypotheses. The assistant additionally prepared 29 nested-refinement projection and risk-decomposition theorem scripts, including pointwise finite conditional tower, idempotence, residual orthogonality to four-cell functions and an exact nested law of total variance; all require independent Rocq checking. The assistant additionally drafted and registered 31 finite conditional covariance and pull-out theorem scripts, including a finite law of total covariance, bilinear polarization and exact affine two-cell projections. Rocq kernel checking is required to establish these claims. AI assistance additionally prepared and registered 30 theorems on conditional fitted and residual covariance, orthogonality, nonnegative variance decomposition, within/between conditional covariance identification and uniqueness of finite conditional least-squares prediction. Pinned Rocq kernel verification is required. The assistant additionally authored and documented 33 proposed two-observation Schur regression theorem scripts, exact full-rank inverse, nonnegative/positive-definite covariance quadratic, unique least-squares solution, sharp second-test gain, and affine IQ predictor transformation. These rely on independent Rocq kernel validation; Gaussian conditioning and empirical psychometric claims remain outside proved scope. Repository Python/Deal and retired native checks remain independent evidence and do not substitute for Rocq proof checking.
 
 ### D035x AI disclosure — Sequential sensitivity continuation
 

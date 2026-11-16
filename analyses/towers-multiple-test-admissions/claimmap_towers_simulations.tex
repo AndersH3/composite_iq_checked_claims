@@ -69,27 +69,25 @@ endpoint limits and the unique root. The generated calibration table is
 the fixed-root simulation record. A 95\% interval can miss its target;
 Proposition~\ref{sm:multiple} separates pointwise intervals from broad diagnostic
 checks. The observed miss is retained without seed or cutoff tuning.\\
-SPARK generator and ideal normal transformation
-& \Cref{tw:box-muller} proves the continuous-uniform Box--Muller law by the
-change-of-variables theorem and independence. \Cref{tw:gaussian} proves the
-correlated pair's ideal law. The Park--Miller recurrence and finite checked
-bounds are source-pinned implementation facts, not proofs of IID randomness.\\
-All native cells, rates, campaign replay and Dask comparison
-& \Cref{sec:towers-spark-study} identifies the immutable 31 October and
-byte-identical 4 November outputs, source manifest and CSV hash. Integer
-cells and execution statuses are recorded observations. \Cref{tw:simulation}
-proves the cell-derived rates; \cref{sm:binomial,sm:conditional-count,sm:rare}
-prove their ideal sampling laws. Native and Dask denominators are retained
-separately. The fourfold-size/half-SE statement follows by substituting
-\(4T\) into \(p(1-p)/T\), not from an assumption of independent finite
-streams. Wilson and exact intervals have the distinct proofs in
-\cref{sm:wilson,sm:clopper-pearson}.\\
-Native proof totals, trusted completions and source context
-& The dated 4 November portfolio and runtime manifests record 696 checks,
-230 flow/466 prover, 99 project subprograms/557 clauses, exact replay and
-\(10^{-10}\) numerical tolerance. These are source-pinned evidence,
-not newly rerun proofs of later refactored source, Dask, third-party
-libraries, ideal IID assumptions, physical I/O or model adequacy.\\
+Python/Dask normal simulation and common random numbers
+& Proposition~\ref{tw:gaussian} establishes the assumed
+correlated Gaussian pair law from its stated mathematical hypotheses.
+The maintained Python/Dask model records explicit seeds and all four
+Boolean event cells. A finite pseudorandom generator does not prove
+exact independent Gaussian sampling.\\
+Simulation counts, denominators and comparison with analytic targets
+& The retained \path{simulation-data/events.csv} and
+\path{simulation-data/conditionals.tex} record the Dask experiment.
+Propositions~\ref{tw:simulation}, \ref{sm:binomial},
+\ref{sm:conditional-count}, and \ref{sm:rare} establish
+the ideal finite-model sampling formulas under their premises;
+the actual recorded counts are numerical observations.\\
+Python/Deal contracts, reproducibility and AI disclosure
+& The environment, seeds, Dask task graph, current numerical
+model source and generated tables are documented separately
+from mathematical proofs. Deal contracts, runtime/property tests
+and automated checks are not a guarantee of library accuracy,
+file persistence, actual test validity or independent human review.\\
 Binary correlation \eqref{eq:towers-phi} and phi table
 & Proposition~\ref{tw:events} proves the population indicator formula from
 its moments. Replacing probabilities by empirical frequencies gives the
@@ -101,12 +99,12 @@ Propositions~\ref{tw:original-bound}, \ref{tw:rarity}, \ref{tw:attempts}
 give mathematical contradictions or explicit nonidentifiability
 counterexamples. The model supplies no empirical membership or validity
 study; recommendations remain recommendations.\\
-Dask, libraries, contracts, SPARK, provenance and AI disclosure
+Dask, libraries, Deal contracts, provenance and AI disclosure
 & Source, versioned environment, generated manifest and dated native
 evidence provide operational records. These are distinct from the written
 model proofs, structural contract inventories, runtime/property tests,
 limited symbolic proofs and trusted-completion boundaries. The report adds
-no native SPARK campaign. No theorem here proves finite generator quality,
+no new numerical experiment. No theorem here proves finite generator quality,
 library accuracy, file persistence, actual test validity or human review.\\
 \bottomrule
 \end{longtable}

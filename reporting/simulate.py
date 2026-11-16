@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Dask-native simulation, analysis, asset and XeLaTeX task graphs.
 
-The existing Ada/SPARK evidence is immutable input. Fresh random arrays,
-reductions and report production are Dask tasks; no Matplotlib is imported.
+Fresh random arrays, reductions and report production are Dask tasks;
+no retired native implementation or historical CSV input is required.
 Small scalar reference calculations reuse the maintained SciPy code inside
 Dask delayed tasks. No expensive computation happens during graph creation.
 """
@@ -28,37 +28,32 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from library.python.statistics import moment_result, event_result, pool_rows
 from reporting.assets import write_assets
-from verification.run_computer10 import digest, dump
+from reporting.provenance import digest, dump
 
 PROJECTS = ("hoeflin-ferguson", "towers-multiple-test-admissions", "sequential-conditional-means")
 COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 SEEDS = (20261114, 20261115, 20261116, 20261117)
-SOURCES = {
-    PROJECTS[0]: "verification/evidence/computer10-20261031/runtime/hoeflin/simulation.csv",
-    PROJECTS[1]: "verification/evidence/computer10-20261031/runtime/towers/simulation.csv",
-    PROJECTS[2]: "analyses/sequential-conditional-means/evidence/campaign-20261114-current/runtime/simulation.csv",
-}
 
 
 @deal.pre(lambda project: project in PROJECTS)
-@deal.post(lambda result: isinstance(result, dict) and {"project", "historical", "sources", "cases"} <= result.keys())
-@deal.post(lambda result: bool(result["historical"]) and bool(result["sources"]))
+@deal.post(lambda result: isinstance(result, dict) and {"project", "sources", "cases"} == result.keys())
+@deal.post(lambda result: isinstance(result["cases"], list) and isinstance(result["sources"], list))
+@deal.post(lambda result: len(result["cases"]) == (5 if result["project"] == PROJECTS[1] else 0))
+@deal.post(lambda result: len(result["sources"]) == (1 if result["project"] == PROJECTS[1] else 0))
 @deal.ensure(lambda project, result: result["project"] == project)
 @deal.post(lambda result: all(len(row["sha256"]) == 64 for row in result["sources"]))
+@deal.post(lambda result: all(isinstance(row["path"], str) and not row["path"].startswith("/") for row in result["sources"]))
+@deal.post(lambda result: len({row["path"] for row in result["sources"]}) == len(result["sources"]))
+@deal.post(lambda result: len({row["case_index"] for row in result["cases"]}) == len(result["cases"]))
 @deal.raises(OSError, ValueError, TypeError, ImportError)
 @deal.has("read", "import")
 def reference_data(project):
-    """Read/hash original observations and compute reference cases in a task.
+    """Compute numerical reference cases without importing a retired simulator.
 
-    The historical generator is never replayed under a new name. Its original
-    observations remain a separate comparison, with their own sample counts.
-    Towers' two independent quadrature formulas and scalar root finder are
-    reused rather than writing a new bivariate-normal integration routine.
+    SciPy/NumPy and the maintained Python calculation modules own the
+    reference quadrature. Sources are SHA-256 recorded for reproducibility.
     """
-    source = ROOT.joinpath(SOURCES[project])
-    with source.open() as stream:
-        historical = list(csv.DictReader(line for line in stream if not line.startswith("#")))
-    sources = [{"path": SOURCES[project], "sha256": digest(source)}]
+    sources = []
     cases = []
     if project == PROJECTS[1]:
         script_path = ROOT.joinpath("analyses", project, "scripts", "verify_calculations.py")
@@ -74,7 +69,7 @@ def reference_data(project):
         marginal = float(stats.norm.sf(cutoff))
         cases.append({"case_index": 5, "case": "calibrated_or", "label": "Calibrated", "p_a": marginal, "p_b": marginal,
                       "cutoff_a": cutoff, "cutoff_b": cutoff, "theory_joint": library["joint_tail"](cutoff, cutoff, .7)})
-    return {"project": project, "historical": historical, "sources": sources, "cases": cases}
+    return {"project": project, "sources": sources, "cases": cases}
 
 
 @deal.pre(lambda config: isinstance(config, dict) and {"trials", "chunk", "seeds"} <= config.keys())
@@ -161,7 +156,7 @@ def graph_sequential(config):
     Conditional sampling draws the posterior common factor directly. Rejecting
     unconditioned draws until r exact IQ values are 150 would fail for a
     continuous model. Finite vectors supply an independent implementation of
-    the scalar aggregate sampler used in the retained Ada experiment.
+    a separate implementation using maintained Gaussian algebra.
     """
     rows = []
     n, chunk = config["trials"], config["chunk"]
@@ -217,7 +212,7 @@ def analyze_and_write(project, rows, reference, config):
             for count, probability in ((row["both"], row["theory_joint"]), (row["union_count"], row["theory_union"])):
                 if float(stats.binomtest(count, row["n_samples"], probability).pvalue) < 1e-10:
                     raise ValueError("Event count differs from its fixed binomial diagnostic")
-    data = {"pooled": pooled, "replicates": rows, "historical": reference["historical"],
+    data = {"pooled": pooled, "replicates": rows,
             "config": config, "sources": reference["sources"], "diagnostics_passed": True,
             "diagnostic_tail": 1e-10}
     return write_assets(project, data)
@@ -259,7 +254,7 @@ def finalize_run(results, config, task_count):
     """Hash the actual source/data/PDF artifacts in the final Dask task.
 
     This manifest is excluded from its own output list to avoid a circular
-    self-hash. Historical inputs are separately hashed in each summary.json.
+    self-hash. Python source, configuration and Dask data are hashed directly.
     Fresh figures are TeX/PGFPlots output; no plotting runtime is imported.
     """
     source_paths = list(ROOT.joinpath("reporting").glob("*.py")) + list(ROOT.joinpath("reporting").glob("*.tex")) + list(ROOT.joinpath("reporting").glob("*.bib"))
@@ -273,7 +268,7 @@ def finalize_run(results, config, task_count):
         if "pdf" in result:
             output_paths.append(ROOT.joinpath(result["pdf"]))
     record = {"schema": "dask-simulation-reports-v1", "config": config, "graph_tasks": task_count,
-              "results": results, "new_spark_proof_run": False, "matplotlib_used": False,
+              "results": results, "matplotlib_used": False,
               "sources": [{"path": str(path.relative_to(ROOT)), "sha256": digest(path)} for path in sorted(set(source_paths))],
               "outputs": [{"path": str(path.relative_to(ROOT)), "sha256": digest(path)} for path in sorted(set(output_paths))]}
     dump(ROOT.joinpath("reporting", "run.json"), record)

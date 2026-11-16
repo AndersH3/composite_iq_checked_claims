@@ -1,9 +1,7 @@
 % !TeX program = xelatex
-% Dask schedules the numerical analysis and report build. Source-pinned SPARK
-% runtime observations and Dask results are reported as separate experiments.
 \input{../../reporting/simulation_style}
 \title{Simulating Multiple-Test Admissions}
-\subtitle{SPARK and Dask methods, results and verification limits}
+\subtitle{Python/Dask methods, results and verification limits}
 \author{\ProjectAuthor}
 \date{16 November 2026}
 
@@ -13,24 +11,16 @@
 \input{simulation-data/macros.tex}
 
 \begin{abstract}
-This report explains what the multiple-test admissions simulations generate,
-what their counts estimate, and what the resulting uncertainty permits us to
-conclude. The SPARK implementation generates one million shared correlated
-pairs for four cutoff rules, records all four event cells and calculates
-joint and conditional frequencies. Its source-pinned proof campaign,
-Ghost Check and Ghost Ignore replays, and numerical validators are explained
-separately from its sampling results. A Dask task graph generates correlated normal pairs, evaluates four
-original cutoff rules and a fifth calibrated OR rule, combines seeded
-replicates, and prepares the tables used below. The correlation is the
-explicit model input \(\rho=0.7\). The main questions are the joint passing
-probability, eligibility through either test, and repeat qualification after
-passing a specified test. These are different probabilities. The simulations
-are compared with numerical Gaussian integrals and across both implementations;
-the retained native records remain immutable historical results. Particular attention is
-given to rare joint events, random conditional denominators, and why nominal
-per-test eligibility does not equal eligibility under a multiple-test rule.
-The experiment is a computational study of the stated model, not an empirical
-study of society membership or actual IQ-test validity.
+This report describes the Python/Dask simulation of multiple-test admission
+rules under a specified correlated Gaussian model. A Dask task graph
+generates shared correlated pairs, evaluates four threshold rules and a
+fifth calibrated union rule, reduces independently seeded replicates,
+and compares event, union and conditional frequencies with numerical
+Gaussian reference integrals. We state denominators, rare-event
+uncertainty and finite-model limitations explicitly. Deal contracts
+and runtime tests address selected implementation properties; the
+simulation does not prove independence of pseudorandom observations
+or establish membership frequencies in a real population.
 \end{abstract}
 
 \noindent\textbf{AI disclosure.} OpenAI Codex and collaborating AI agents
@@ -400,7 +390,7 @@ the model, not a process of tuning the cutoff to make a particular random run
 contain exactly 2\% passers. Conditional repeat qualification and joint passing
 remain separate outputs even when the union is calibrated to 2\%.
 
-\input{spark_simulation_study}
+
 
 \section{Continuous correlation is not binary correlation}
 
@@ -435,23 +425,19 @@ reproducibility record \citep{daskDelayed,daskArray}. Changing chunking or a
 random-library version can change a pseudorandom realization even when the
 statistical model and human-readable seed are unchanged.
 
-The Dask experiment's tables and the coordinates in Figure~\ref{fig:towers-events} come
-from the Dask-generated files in \texttt{simulation-data/}. The SPARK study
-also reports the native CSV's source-pinned event cells and validation records;
-their provenance is specified in \cref{sec:towers-spark-study}. XeLaTeX and
-PGFPlots render those coordinates; Matplotlib is not used. Scalar SciPy
-functions and the existing checked numerical calculation run inside scheduled
-tasks rather than being replaced with new probability algorithms. The data
-manifest identifies the historical inputs and generated outputs by hash.
+The numerical tables and plotted coordinates in
+\texttt{simulation-data/} are produced from the Dask-generated data.
+XeLaTeX and PGFPlots render those values without Matplotlib. SciPy
+supplies established distribution and numerical-integration routines;
+the project does not implement a second normal-tail library.
+The reproducibility record identifies the active Python source, model
+configuration, seeds, and calculated assets.
 
-The project requires at least five meaningful Deal decorators on every named
-Python function, with a staged target of ten where distinct properties are
-justified. Source contracts, runtime tests and structural inventories are
-reported separately. Existing SPARK results concern their source-pinned
-bounded arithmetic, counts, flow and checked interfaces. This report adds a
-Dask numerical experiment; it does not relabel an old native campaign as a
-proof of the new Python graph, and it does not claim new universal SPARK
-verification merely because a simulation or static contract count passed.
+Deal contracts describe selected input, output and side-effect
+properties of the Python implementation. Runtime tests and statistical
+diagnostics are not proofs of the pseudorandom generator or the
+underlying population model. Theorems checked in Rocq apply only to
+their explicitly stated mathematical hypotheses.
 
 The main limitations are therefore specific. The normal generator is a
 finite-state pseudorandom implementation; the normal model, fixed \(\rho\)
@@ -472,7 +458,5 @@ model predicts without eliminating those distinctions.
 \bibliography{references,simulation_references}
 \chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
 \input{../../reporting/ai_disclosure}
-The 16 November 2026 revision used AI agents to expand the SPARK study,
-compare the native and Dask results, audit retained observations and review
-the rebuilt pages. No new random experiment or native prover run was performed.
+The Python/Dask-focused editorial revision removes the discontinued simulation implementation and its comparisons; it does not assert any newly executed Monte Carlo campaign.
 \end{document}

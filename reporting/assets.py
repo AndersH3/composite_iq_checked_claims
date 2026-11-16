@@ -7,13 +7,11 @@ precision; TeX tables round only their displayed representations.
 """
 import csv
 import json
-import math
 from pathlib import Path
 
 import deal
 
 ROOT = Path(__file__).resolve().parents[1]
-START_Z = 10 / 3  # Standardized starting IQ: (150 - 100) / 15.
 PROJECTS = frozenset({"hoeflin-ferguson", "towers-multiple-test-admissions", "sequential-conditional-means"})
 
 
@@ -90,8 +88,8 @@ def write_table(path, headers, rows, title):
 
 
 @deal.pre(lambda project, data: isinstance(project, str) and project in PROJECTS)
-@deal.pre(lambda project, data: isinstance(data, dict) and {"pooled", "replicates", "historical", "config"} <= data.keys())
-@deal.pre(lambda project, data: all(isinstance(data[key], list) and bool(data[key]) and all(isinstance(row, dict) for row in data[key]) for key in ("pooled", "replicates", "historical")))
+@deal.pre(lambda project, data: isinstance(data, dict) and {"pooled", "replicates", "config"} <= data.keys())
+@deal.pre(lambda project, data: all(isinstance(data[key], list) and bool(data[key]) and all(isinstance(row, dict) for row in data[key]) for key in ("pooled", "replicates")))
 @deal.pre(lambda project, data: isinstance(data["config"], dict) and all(type(data["config"][key]) is int and data["config"][key] > 0 for key in ("trials", "replicates", "chunk")))
 @deal.post(lambda result: isinstance(result, dict) and result.keys() == {"project", "directory", "files", "n_rows", "n_replicates"})
 @deal.ensure(lambda project, data, result: result["project"] == project and result["n_rows"] == len(data["pooled"]) and result["n_replicates"] == len(data["replicates"]))
@@ -102,21 +100,20 @@ def write_table(path, headers, rows, title):
 def write_assets(project, data):
     """Create the report's CSV/TeX/JSON assets from the Dask terminal record.
 
-    Every report retains full pooled, replicate and historical CSVs and its
+    Every report retains its Dask-pooled and replicate CSVs and its
     full numerical configuration. The printed tables are tailored selections,
     with population/conditional labels and trial denominators kept explicit.
     This is an output boundary, rather than a new statistical calculator.
     """
     directory = ROOT.joinpath("analyses", project, "simulation-data")
     directory.mkdir(parents=True, exist_ok=True)
-    pooled, replicas, historical, config = (data[key] for key in ("pooled", "replicates", "historical", "config"))
+    pooled, replicas, config = (data[key] for key in ("pooled", "replicates", "config"))
     directory.joinpath("summary.json").write_text(json.dumps(data, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     # Private per-case metadata is retained losslessly in summary.json. Plot
     # CSVs contain scalar fields only: PGFPlots is not a general JSON decoder.
     pooled = [{key: value for key, value in row.items() if not key.startswith("_") and (value is None or isinstance(value, (str, int, float, bool)))} for row in pooled]
     replicas = [{key: value for key, value in row.items() if not key.startswith("_") and (value is None or isinstance(value, (str, int, float, bool)))} for row in replicas]
     write_csv(directory.joinpath("replicate-records.csv"), replicas)
-    write_csv(directory.joinpath("historical-records.csv"), historical)
     max_mean = max(abs(float(row.get("mean_error_se", 0))) for row in pooled)
     max_event = max(abs(float(row.get("mean_error_se", 0))) for row in pooled + replicas)
     ratios = [abs(float(row["sd_iq"]) / float(row["theory_sd_iq"]) - 1) for row in pooled if row.get("theory_sd_iq", 0) > 0]
@@ -158,18 +155,6 @@ def write_assets(project, data):
                               format_number(int(selected["count_rare"]))])
         write_table(directory.joinpath("replicates.tex"), ["Replicate", "Seed", "Max $|z_{mean}|$", "Max $|S^2-1|$", "$K_q$ at $n=1000$"], seed_rows,
                     "Individual seeded runs; maxima are over the eight coupled sizes")
-        write_table(directory.joinpath("historical.tex"), ["$n$", "Archived mean", "Archived variance", "$K_2$", "$K_3$", "$K_q$"],
-                    [[format_number(int(row["tests"])), format_number(float(row["mean_composite_z"])), format_number(float(row["variance_composite_z"])),
-                      format_number(int(row["above2"])), format_number(int(row["above3"])), format_number(int(row["above_rare"]))] for row in historical],
-                    "Retained Ada run: one million observations per size")
-        rare_min, rare_max = min(int(row["count_rare"]) for row in pooled), max(int(row["count_rare"]) for row in pooled)
-        ratios = [abs(float(row["observed_sd"]) / float(row["theory_sd"]) - 1) for row in pooled]
-
-    elif project == "towers-multiple-test-admissions":
-        write_csv(directory.joinpath("events.csv"), pooled)
-        # Five maintained labels are deliberately short and contain no TeX
-        # control characters; the published report uses OR2 for calibration.
-        labels = {"E2": "E2", "E0.1": "E0.1", "Rare": "Rare", "Mixed": "Mixed", "Calibrated": "OR2", "OR2": "OR2"}
         write_table(directory.joinpath("events.tex"), ["Rule", "Neither", "$A$ only", "$B$ only", "Both"],
                     [[labels[row["label"]]] + [format_number(int(row[key])) for key in ("neither", "a_only", "b_only", "both")] for row in pooled],
                     "Pooled event-cell counts")
@@ -202,10 +187,6 @@ def write_assets(project, data):
                       format_number(float(calibrated["union"])), format_number(float(calibrated["union_low"])), format_number(float(calibrated["union_high"]))]],
                     "Calibrated common cutoff and observed combined eligibility")
         old_labels = {"equal_top_2_percent": "E2", "equal_top_0_1_percent": "E0.1", "equal_top_1_in_33000": "Rare", "mixed_top_2_and_0_1_percent": "Mixed"}
-        write_table(directory.joinpath("historical.tex"), ["Rule", "$N_A$", "$N_B$", "Both", "Union", "$P(B|A)$"],
-                    [[old_labels[row["case"]]] + [format_number(int(row[key])) for key in ("marginal_a", "marginal_b", "both", "union")] +
-                     [format_number(float(row["conditional_b_given_a"]))] for row in historical],
-                    "Retained Ada run: one million pairs under each rule")
         write_table(directory.joinpath("phi.tex"), ["Rule", "Continuous correlation", "Binary phi target", "Binary phi observed"],
                     [[labels[row["label"]], "$0.7$", format_number(row["theory_phi"]), format_number(row["phi"])] for row in pooled],
                     "Continuous-score correlation and thresholded indicator correlation")
@@ -257,20 +238,6 @@ def write_assets(project, data):
                               format_number(float(selected["mean_iq"]), 4), format_number(float(selected["sd_iq"]), 4)])
         write_table(directory.joinpath("replicates.tex"), ["Replicate", "Base seed", "Max $|z_{mean}|$", "$r=3,k=10$ mean IQ", "SD IQ"], seed_rows,
                     "Separate seeded runs; maxima cover all 24 laws")
-        old_rows = []
-        for r in (1, 2, 3):
-            for k in (1, 2, 10):
-                matching = [row for row in historical if int(row["r"]) == r and int(row["k"]) == k and abs(float(row["c"]) - .6) < 1e-12 and abs(float(row["a_z"]) - START_Z) < 1e-12]
-                population = next((row for row in matching if row["mode"] == "population"), None)
-                conditional = next((row for row in matching if row["mode"] == "conditional"), None)
-                if population is None or conditional is None:
-                    raise ValueError("Retained IQ example is missing a population or conditional row")
-                old_rows.append([format_number(r), format_number(k), format_number(100 + 15 * float(population["sample_mean_z"]), 4),
-                                 format_number(15 * math.sqrt(float(population["sample_variance_z"])), 4), format_number(100 + 15 * float(conditional["sample_mean_z"]), 4),
-                                 format_number(15 * math.sqrt(float(conditional["sample_variance_z"])), 4)])
-        write_table(directory.joinpath("historical.tex"), ["$r$", "$k$", "Pop. mean", "Pop. SD", "Cond. mean", "Cond. SD"], old_rows,
-                    "Retained Ada IQ examples: 200,000 observations per row")
-
     # Narrative values are generated with the tables, so a different trial
     # count or seed configuration cannot leave hardcoded observations behind.
     if project == "hoeflin-ferguson":

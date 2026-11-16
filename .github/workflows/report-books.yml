@@ -1,0 +1,94 @@
+name: Build six XeLaTeX books
+
+on:
+  push:
+    paths:
+      - 'analyses/**/*.tex'
+      - 'reporting/*.tex'
+      - '.github/workflows/report-books.yml'
+  pull_request:
+    paths:
+      - 'analyses/**/*.tex'
+      - 'reporting/*.tex'
+      - '.github/workflows/report-books.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compile:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { project: hoeflin-ferguson, stem: composite_iq_analysis }
+          - { project: hoeflin-ferguson, stem: hoeflin_simulations }
+          - { project: towers-multiple-test-admissions, stem: towers_admissions_analysis }
+          - { project: towers-multiple-test-admissions, stem: towers_simulations }
+          - { project: sequential-conditional-means, stem: sequential_conditional_means }
+          - { project: sequential-conditional-means, stem: sequential_simulations }
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with XeLaTeX, KOMA-Script and latexmk
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: analyses/${{ matrix.project }}
+          root_file: ${{ matrix.stem }}.tex
+          latexmk_use_xelatex: true
+          args: -file-line-error -interaction=nonstopmode -halt-on-error -outdir=output/pdf
+          extra_system_packages: "fontconfig"
+        env:
+          BIBINPUTS: "../../reporting//:.:"
+      - name: Reject unresolved references in the final XeLaTeX pass
+        shell: bash
+        run: |
+          log="analyses/${{ matrix.project }}/output/pdf/${{ matrix.stem }}.log"
+          test -s "$log" || { echo "Missing final XeLaTeX log: $log" >&2; exit 1; }
+          if grep -nE '(undefined on input line|There were undefined references|There were undefined citations)' "$log"; then
+            echo "Unresolved TeX cross-reference or citation in $log" >&2
+            exit 1
+          fi
+      - name: Stage compiled PDF under its repository path
+        run: |
+          test -s "analyses/${{ matrix.project }}/output/pdf/${{ matrix.stem }}.pdf"
+          mkdir -p "assembled/analyses/${{ matrix.project }}/output/pdf"
+          cp "analyses/${{ matrix.project }}/output/pdf/${{ matrix.stem }}.pdf" "assembled/analyses/${{ matrix.project }}/output/pdf/"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: book-${{ matrix.stem }}
+          path: assembled/
+          retention-days: 14
+
+  publish-branch-pdfs:
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+    needs: compile
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: book-*
+          merge-multiple: true
+          path: .
+      - name: Commit PDFs corresponding to the revised TeX source
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analyses/*/output/pdf/*.pdf
+          if git diff --cached --quiet; then
+            echo 'Compiled PDFs already match tracked bytes'
+          else
+            git commit -m 'Rebuild all six books from Python/Dask/Deal XeLaTeX source'
+            # Documentation may have advanced while the six PDF jobs ran.
+            # Rebase only this PDF commit onto the latest branch head.
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

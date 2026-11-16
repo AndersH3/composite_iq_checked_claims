@@ -98,35 +98,22 @@ def test_coverage_checks_nested_functions(coverage_checker, tmp_path):
 def test_every_repository_python_function_has_a_real_contract(coverage_checker):
     files = coverage_checker.python_files(ROOT)
     assert files
-    # Preserve strengthened, mathematically motivated contracts in historic
-    # independent reference calculations and Ada result validators. The
-    # deliberately false negative-control and pinned symbolic theorem inputs
-    # are intentionally not forced into the optional ten-contract target.
+    # Preserve strengthened contracts in maintained Python numerical,
+    # Dask and core validation interfaces; retired sources are excluded.
     targeted = {
         "analyses/hoeflin-ferguson/scripts/verify_calculations.py":
             {"variance_factor", "mean_threshold", "_positive_ratio", "_valid_rows",
              "thresholds", "write_csv"},
-        "analyses/hoeflin-ferguson/ada/scripts/validate_results.py":
-            {"_positive_ratio", "wilson", "csv_rows",
-             "validate_calculations", "validate_simulation"},
         "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py":
             {"probability_union", "conditional_probability",
              "_valid_fields_rows", "_valid_admissions", "_valid_grid",
              "admission_rows", "basic_grid", "write_csv"},
-        "analyses/towers-multiple-test-admissions/ada/validate_results.py":
-            {"_open_unit_ratio", "read"},
-        # The ten-contract canonical guard replaces both former
-        # duplicate _finite implementations; no report may redefine it.
         "library/python/numeric.py": {"finite_real"},
         "verification/check_contract_coverage.py":
             {"audit_file", "is_contract", "python_files"},
-        "verification/spark_coverage.py":
-            {"location", "normalize_entity", "unique_object", "read_coverage"},
-        "verification/proof_gate.py":
-            {"totals_balanced", "successful_checks"},
-        "verification/spark_contracts.py":
-            {"masked", "split_top", "unparenthesized", "clauses", "contract_entries",
-             "inventory", "ten_contract_summary", "current_sources", "declarations"},
+        "reporting/provenance.py": {"digest", "dump"},
+        "reporting/simulate.py": {"reference_data"},
+        "reporting/assets.py": {"write_assets"},
     }
     import_only = {"library/__init__.py", "library/python/__init__.py",
                    "reporting/statistics.py"}
