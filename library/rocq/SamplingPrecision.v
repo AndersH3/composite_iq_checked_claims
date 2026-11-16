@@ -107,7 +107,7 @@ Definition sampling_relative_variance (n p:R) : R:=(1-p)/(n*p).
 *)
 Theorem sampling_variance_complement: forall p, sampling_bernoulli_variance (1-p)=sampling_bernoulli_variance p.
 Proof.
-  intro p; unfold sampling_bernoulli_variance; ring.
+  intro p; unfold sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [sampling_variance_nonnegative] (theorem).
@@ -207,7 +207,7 @@ Qed.
 *)
 Theorem sampling_variance_maximum_attained: sampling_bernoulli_variance (1/2)=1/4.
 Proof.
-  unfold sampling_bernoulli_variance; ring.
+  unfold sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [sampling_variance_maximum_unique] (theorem).
@@ -247,7 +247,7 @@ Qed.
 *)
 Theorem sampling_variance_midpoint_gap: forall p, 1/4-sampling_bernoulli_variance p=(p-1/2)*(p-1/2).
 Proof.
-  intro p; unfold sampling_bernoulli_variance; ring.
+  intro p; unfold sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [sampling_variance_comparison] (theorem).
@@ -267,7 +267,7 @@ Qed.
 *)
 Theorem sampling_variance_comparison: forall p q, sampling_bernoulli_variance q-sampling_bernoulli_variance p=(q-p)*(1-p-q).
 Proof.
-  intros p q; unfold sampling_bernoulli_variance; ring.
+  intros p q; unfold sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [sampling_variance_monotone_lower_half] (theorem).
