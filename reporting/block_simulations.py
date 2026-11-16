@@ -112,7 +112,7 @@ def merge_moments(parts):
 @deal.ensure(lambda seed, block_index, size, rare_threshold, result: all(row["counts"][0] <= size for row in result.values()))
 @deal.ensure(lambda seed, block_index, size, rare_threshold, result: all(math.isfinite(row["mean"]) for row in result.values()))
 @deal.ensure(lambda seed, block_index, size, rare_threshold, result: len(result) == 8)
-@deal.raises(ValueError, TypeError, OverflowError)
+@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError)
 @deal.has("random", "import")
 def hoeflin_block(seed, block_index, size, rare_threshold):
     """Compute all eight composite-score cases from one common pair of draws.
@@ -179,7 +179,7 @@ def towers_block(seed, block_index, size, reference):
 @deal.ensure(lambda seed, block_index, size, r, result: all(row["counts"] == (0, 0, 0) for row in result.values()))
 @deal.ensure(lambda seed, block_index, size, r, result: all(math.isfinite(row["mean"]) for row in result.values()))
 @deal.ensure(lambda seed, block_index, size, r, result: (0, "population") in result and (0, "conditional") in result)
-@deal.raises(ValueError, TypeError, OverflowError)
+@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError)
 @deal.has("random", "import")
 def sequential_block(seed, block_index, size, r):
     """Compute all eight conditional/population cases for one starting count.
@@ -223,7 +223,7 @@ def sequential_block(seed, block_index, size, r):
 @deal.ensure(lambda meta, parts, key, result: result["mean_se"] >= 0 and result["mean_error_se"] >= 0)
 @deal.ensure(lambda meta, parts, key, result: math.isfinite(result["mean"]) and math.isfinite(result["variance"]))
 @deal.ensure(lambda meta, parts, key, result: all(result[field] == meta[field] for field in ("replicate", "seed", "project")))
-@deal.raises(ValueError, TypeError, OverflowError, KeyError)
+@deal.raises(ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError)
 @deal.has()
 def finish_moment(meta, parts, key):
     """Return the same statistics schema as the canonical array engine."""
