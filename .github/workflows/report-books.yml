@@ -42,6 +42,15 @@ jobs:
           extra_system_packages: "fontconfig"
         env:
           BIBINPUTS: "../../reporting//:.:"
+      - name: Reject unresolved references in the final XeLaTeX pass
+        shell: bash
+        run: |
+          log="analyses/${{ matrix.project }}/output/pdf/${{ matrix.stem }}.log"
+          test -s "$log" || { echo "Missing final XeLaTeX log: $log" >&2; exit 1; }
+          if grep -nE '(undefined on input line|There were undefined references|There were undefined citations)' "$log"; then
+            echo "Unresolved TeX cross-reference or citation in $log" >&2
+            exit 1
+          fi
       - name: Stage compiled PDF under its repository path
         run: |
           test -s "analyses/${{ matrix.project }}/output/pdf/${{ matrix.stem }}.pdf"

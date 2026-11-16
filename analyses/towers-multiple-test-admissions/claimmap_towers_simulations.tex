@@ -70,11 +70,11 @@ the fixed-root simulation record. A 95\% interval can miss its target;
 Proposition~\ref{sm:multiple} separates pointwise intervals from broad diagnostic
 checks. The observed miss is retained without seed or cutoff tuning.\\
 Python/Dask normal simulation and common random numbers
-& \Cref{tw:box-muller} gives a mathematical construction
-of ideal Gaussian variables; \Cref{tw:gaussian} establishes
-the assumed correlated-pair law. The maintained Python/Dask
-model has fixed seeds and records all four Boolean event cells.
-A finite pseudorandom generator does not prove IID sampling.\\
+& Proposition~\ref{tw:gaussian} establishes the assumed
+correlated Gaussian pair law from its stated mathematical hypotheses.
+The maintained Python/Dask model records explicit seeds and all four
+Boolean event cells. A finite pseudorandom generator does not prove
+exact independent Gaussian sampling.\\
 Simulation counts, denominators and comparison with analytic targets
 & The retained \path{simulation-data/events.csv} and
 \path{simulation-data/conditionals.tex} record the Dask experiment.
