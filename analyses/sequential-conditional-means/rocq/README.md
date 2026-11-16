@@ -4,10 +4,10 @@
 
 > **AI disclosure:** OpenAI ChatGPT/Codex materially assisted theorem selection, Rocq proof scripts and commentary. Mathematical proof status depends exclusively on Rocq 9.2 kernel validation of the exact source revision.
 
-## D049x — arbitrary unequal observed-score histories (106 theorem scripts)
+## D049x — arbitrary unequal observed-score histories (120 theorem scripts)
 
 The specialized [UnequalHistoryLinearPrediction.v](UnequalHistoryLinearPrediction.v)
-module contains 106 newly documented deterministic identities for the candidate
+module contains 120 newly documented deterministic identities for the candidate
 equicorrelation predictor based on the **sum of arbitrarily unequal observed
 scores**, predicted future-batch totals, inclusive means, outcome innovations,
 and shifts of the baseline/score scale. It reuses the original
