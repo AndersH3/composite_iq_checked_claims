@@ -2141,7 +2141,16 @@ Qed.
 Theorem batch_variance_rate_shift_uniform :
   forall (A:Type) (w p:A->R) (xs:list A) (c:R), batch_bernoulli_variance w (fun x=>p x+c) xs=batch_bernoulli_variance w p xs+c*batch_mass w xs-2*c*batch_total w p xs-c*c*batch_mass w xs.
 Proof.
-  intros A w p xs c; pose proof (batch_variance_rate_difference A w p (fun x=>p x+c) xs) as H; assert (E:finite_sum (fun x=>w x*((p x+c)-p x)*(1-p x-(p x+c))) xs=c*batch_mass w xs-2*c*batch_total w p xs-c*c*batch_mass w xs). { transitivity (finite_sum (fun x=>(c*w x-(2*c)*(w x*p x))-(c*c)*w x) xs); [apply finite_sum_ext; intro x; ring|rewrite !finite_sum_sub, !finite_sum_scale; unfold batch_mass,batch_total; ring]. } cbn beta in H; rewrite E in H; lra.
+  intros A w p xs c.
+  unfold batch_bernoulli_variance, batch_mass, batch_total.
+  transitivity
+    (finite_sum (fun x =>
+      ((w x*sampling_bernoulli_variance (p x)+c*w x)
+        -(2*c)*(w x*p x))-(c*c)*w x) xs).
+  - apply finite_sum_ext; intro x.
+    unfold sampling_bernoulli_variance; ring.
+  - rewrite !finite_sum_sub, !finite_sum_add, !finite_sum_scale.
+    ring.
 Qed.
 
 (** [batch_variance_monotone_below_half] (theorem).
