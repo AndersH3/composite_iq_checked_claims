@@ -2320,7 +2320,8 @@ Proof.
  unfold four_batch_score.
  rewrite four_batch_covariance_add_left by exact Hm.
  rewrite !four_batch_covariance_add_right by exact Hm.
- rewrite !four_batch_covariance_linear_two_composites by exact Hm.
+ rewrite !four_batch_covariance_linear_left by exact Hm.
+ rewrite !batch_covariance_scale_right by exact Hm.
  rewrite !batch_covariance_self_variance.
  rewrite (batch_covariance_symmetry A w x2 x1 xs).
  rewrite (batch_covariance_symmetry A w x3 x1 xs).
