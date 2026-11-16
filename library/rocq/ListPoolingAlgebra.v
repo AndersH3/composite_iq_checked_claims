@@ -2006,7 +2006,7 @@ Proof.
   { intro Hwx0; pose proof (Hw x Hin) as Hwx_positive; rewrite Hwx0 in Hwx_positive; lra. }
   apply Rmult_integral in Hterm.
   destruct Hterm as [Hwx_zero | Hsquare_zero].
-  - contradiction.
+  - pose proof (Hw x Hin) as Hpositive; nra.
   - apply Rmult_integral in Hsquare_zero.
     destruct Hsquare_zero as [Hrate_zero | Hrate_zero]; lra.
 Qed.
