@@ -19,7 +19,7 @@
  AI disclosure: OpenAI ChatGPT assisted specification, source creation,
  algebraic validation and reporting. Rocq kernel checks are authoritative.
 *)
-From Stdlib Require Import Reals Ring Field.
+From Stdlib Require Import Reals Ring Field Lra.
 Require Import FiniteSum ListPoolingAlgebra.
 Open Scope R_scope.
 
@@ -2360,5 +2360,122 @@ Proof.
  rewrite <- (batch_covariance_self_variance A w
    (four_batch_score x1 x2 x3 x4 a1 a2 a3 a4) xs).
  apply four_batch_covariance_bilinear; exact Hm.
+Qed.
+
+(** [four_sample_covariance_matrix_psd] (theorem).
+ Mathematical meaning: The empirical four-test covariance matrix is positive semidefinite: every real coefficient vector has nonnegative quadratic variance when each listed weight is nonnegative and pooled mass is strictly positive.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A) (a1 a2 a3 a4:R), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> 0<=four_quadratic (batch_variance w x1 xs) (batch_variance w x2 xs) (batch_variance w x3 xs) (batch_variance w x4 xs) (batch_covariance w x1 x2 xs) (batch_covariance w x1 x3 xs) (batch_covariance w x1 x4 xs) (batch_covariance w x2 x3 xs) (batch_covariance w x2 x4 xs) (batch_covariance w x3 x4 xs) a1 a2 a3 a4
+ Premises and side conditions: Every score is a real-valued function on a finite list. The shared batch weight function is arbitrary but its total mass must be nonzero for covariance identities; the semidefinite result separately requires nonnegative weights and positive mass.
+ Proof/definition method: Instantiate the earlier kernel-checked exact four-composite covariance/variance sample bridges and the corresponding explicitly proved symbolic covariance coefficient or nonnegative sample variance theorem.
+ Library reuse: Canonical ListPoolingAlgebra and FiniteSum, symmetric four_covariant, Rocq Stdlib Ring/Lra; these results do not define another moment function or assume a Gaussian sampling law.
+ Boundary: Exact finite weighted-score variance and covariance calculations usable in G01/G12 and composite-selection checks. A deterministic equality is not a statement about population IQ values, Gaussian distributions, confidence coverage or binomial independence.
+*)
+Theorem four_sample_covariance_matrix_psd :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A) (a1 a2 a3 a4:R), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> 0<=four_quadratic (batch_variance w x1 xs) (batch_variance w x2 xs) (batch_variance w x3 xs) (batch_variance w x4 xs) (batch_covariance w x1 x2 xs) (batch_covariance w x1 x3 xs) (batch_covariance w x1 x4 xs) (batch_covariance w x2 x3 xs) (batch_covariance w x2 x4 xs) (batch_covariance w x3 x4 xs) a1 a2 a3 a4.
+Proof.
+ intros A w x1 x2 x3 x4 xs a1 a2 a3 a4 Hw Hm.
+ assert (Hne: batch_mass w xs<>0) by lra.
+ pose proof (four_batch_variance_quadratic A w x1 x2 x3 x4 xs a1 a2 a3 a4 Hne) as Heq.
+ rewrite <- Heq.
+ apply batch_variance_nonnegative; assumption.
+Qed.
+
+(** [four_sample_variance_difference12] (theorem).
+ Mathematical meaning: The variance of a within-battery test-score difference includes the negative twice-covariance correction.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (four_batch_score x1 x2 x3 x4 1 (-1) 0 0) xs = (batch_variance w x1 xs) + (batch_variance w x2 xs) - 2*(batch_covariance w x1 x2 xs)
+ Premises and side conditions: Every score is a real-valued function on a finite list. The shared batch weight function is arbitrary but its total mass must be nonzero for covariance identities; the semidefinite result separately requires nonnegative weights and positive mass.
+ Proof/definition method: Instantiate the earlier kernel-checked exact four-composite covariance/variance sample bridges and the corresponding explicitly proved symbolic covariance coefficient or nonnegative sample variance theorem.
+ Library reuse: Canonical ListPoolingAlgebra and FiniteSum, symmetric four_covariant, Rocq Stdlib Ring/Lra; these results do not define another moment function or assume a Gaussian sampling law.
+ Boundary: Exact finite weighted-score variance and covariance calculations usable in G01/G12 and composite-selection checks. A deterministic equality is not a statement about population IQ values, Gaussian distributions, confidence coverage or binomial independence.
+*)
+Theorem four_sample_variance_difference12 :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (four_batch_score x1 x2 x3 x4 1 (-1) 0 0) xs = (batch_variance w x1 xs) + (batch_variance w x2 xs) - 2*(batch_covariance w x1 x2 xs).
+Proof.
+ intros A w x1 x2 x3 x4 xs Hm.
+ rewrite four_batch_variance_quadratic by exact Hm.
+ unfold four_quadratic.
+ apply four_contrast_cov_difference12_difference12.
+Qed.
+
+(** [four_sample_variance_total_four] (theorem).
+ Mathematical meaning: The variance of a four-test additive composite contains all six pairwise covariance contributions.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (four_batch_score x1 x2 x3 x4 1 1 1 1) xs = (batch_variance w x1 xs) + (batch_variance w x2 xs) + (batch_variance w x3 xs) + (batch_variance w x4 xs) + 2*(batch_covariance w x1 x2 xs) + 2*(batch_covariance w x1 x3 xs) + 2*(batch_covariance w x1 x4 xs) + 2*(batch_covariance w x2 x3 xs) + 2*(batch_covariance w x2 x4 xs) + 2*(batch_covariance w x3 x4 xs)
+ Premises and side conditions: Every score is a real-valued function on a finite list. The shared batch weight function is arbitrary but its total mass must be nonzero for covariance identities; the semidefinite result separately requires nonnegative weights and positive mass.
+ Proof/definition method: Instantiate the earlier kernel-checked exact four-composite covariance/variance sample bridges and the corresponding explicitly proved symbolic covariance coefficient or nonnegative sample variance theorem.
+ Library reuse: Canonical ListPoolingAlgebra and FiniteSum, symmetric four_covariant, Rocq Stdlib Ring/Lra; these results do not define another moment function or assume a Gaussian sampling law.
+ Boundary: Exact finite weighted-score variance and covariance calculations usable in G01/G12 and composite-selection checks. A deterministic equality is not a statement about population IQ values, Gaussian distributions, confidence coverage or binomial independence.
+*)
+Theorem four_sample_variance_total_four :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (four_batch_score x1 x2 x3 x4 1 1 1 1) xs = (batch_variance w x1 xs) + (batch_variance w x2 xs) + (batch_variance w x3 xs) + (batch_variance w x4 xs) + 2*(batch_covariance w x1 x2 xs) + 2*(batch_covariance w x1 x3 xs) + 2*(batch_covariance w x1 x4 xs) + 2*(batch_covariance w x2 x3 xs) + 2*(batch_covariance w x2 x4 xs) + 2*(batch_covariance w x3 x4 xs).
+Proof.
+ intros A w x1 x2 x3 x4 xs Hm.
+ rewrite four_batch_variance_quadratic by exact Hm.
+ unfold four_quadratic.
+ apply four_contrast_cov_allfour_allfour.
+Qed.
+
+(** [four_sample_variance_balanced_pairs] (theorem).
+ Mathematical meaning: The variance of a balanced difference of two test pairs identifies both within-pair covariance gains and across-pair covariance subtractions.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (four_batch_score x1 x2 x3 x4 1 1 (-1) (-1)) xs = (batch_variance w x1 xs) + (batch_variance w x2 xs) + (batch_variance w x3 xs) + (batch_variance w x4 xs) + 2*(batch_covariance w x1 x2 xs) - 2*(batch_covariance w x1 x3 xs) - 2*(batch_covariance w x1 x4 xs) - 2*(batch_covariance w x2 x3 xs) - 2*(batch_covariance w x2 x4 xs) + 2*(batch_covariance w x3 x4 xs)
+ Premises and side conditions: Every score is a real-valued function on a finite list. The shared batch weight function is arbitrary but its total mass must be nonzero for covariance identities; the semidefinite result separately requires nonnegative weights and positive mass.
+ Proof/definition method: Instantiate the earlier kernel-checked exact four-composite covariance/variance sample bridges and the corresponding explicitly proved symbolic covariance coefficient or nonnegative sample variance theorem.
+ Library reuse: Canonical ListPoolingAlgebra and FiniteSum, symmetric four_covariant, Rocq Stdlib Ring/Lra; these results do not define another moment function or assume a Gaussian sampling law.
+ Boundary: Exact finite weighted-score variance and covariance calculations usable in G01/G12 and composite-selection checks. A deterministic equality is not a statement about population IQ values, Gaussian distributions, confidence coverage or binomial independence.
+*)
+Theorem four_sample_variance_balanced_pairs :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (four_batch_score x1 x2 x3 x4 1 1 (-1) (-1)) xs = (batch_variance w x1 xs) + (batch_variance w x2 xs) + (batch_variance w x3 xs) + (batch_variance w x4 xs) + 2*(batch_covariance w x1 x2 xs) - 2*(batch_covariance w x1 x3 xs) - 2*(batch_covariance w x1 x4 xs) - 2*(batch_covariance w x2 x3 xs) - 2*(batch_covariance w x2 x4 xs) + 2*(batch_covariance w x3 x4 xs).
+Proof.
+ intros A w x1 x2 x3 x4 xs Hm.
+ rewrite four_batch_variance_quadratic by exact Hm.
+ unfold four_quadratic.
+ apply four_contrast_cov_balanced12v34_balanced12v34.
+Qed.
+
+(** [four_sample_covariance_differences] (theorem).
+ Mathematical meaning: Covariance between disjoint pairwise test differences depends on four specific across-pair covariance entries with alternating signs.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (four_batch_score x1 x2 x3 x4 1 (-1) 0 0) (four_batch_score x1 x2 x3 x4 0 0 1 (-1)) xs = (batch_covariance w x1 x3 xs) - (batch_covariance w x1 x4 xs) - (batch_covariance w x2 x3 xs) + (batch_covariance w x2 x4 xs)
+ Premises and side conditions: Every score is a real-valued function on a finite list. The shared batch weight function is arbitrary but its total mass must be nonzero for covariance identities; the semidefinite result separately requires nonnegative weights and positive mass.
+ Proof/definition method: Instantiate the earlier kernel-checked exact four-composite covariance/variance sample bridges and the corresponding explicitly proved symbolic covariance coefficient or nonnegative sample variance theorem.
+ Library reuse: Canonical ListPoolingAlgebra and FiniteSum, symmetric four_covariant, Rocq Stdlib Ring/Lra; these results do not define another moment function or assume a Gaussian sampling law.
+ Boundary: Exact finite weighted-score variance and covariance calculations usable in G01/G12 and composite-selection checks. A deterministic equality is not a statement about population IQ values, Gaussian distributions, confidence coverage or binomial independence.
+*)
+Theorem four_sample_covariance_differences :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (four_batch_score x1 x2 x3 x4 1 (-1) 0 0) (four_batch_score x1 x2 x3 x4 0 0 1 (-1)) xs = (batch_covariance w x1 x3 xs) - (batch_covariance w x1 x4 xs) - (batch_covariance w x2 x3 xs) + (batch_covariance w x2 x4 xs).
+Proof.
+ intros A w x1 x2 x3 x4 xs Hm.
+ rewrite four_batch_covariance_bilinear by exact Hm.
+ apply four_contrast_cov_difference12_difference34.
+Qed.
+
+(** [four_sample_covariance_test1_total] (theorem).
+ Mathematical meaning: Covariance of test 1 with the complete four-test composite includes its variance plus all three covariances with the remaining tests.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (four_batch_score x1 x2 x3 x4 1 0 0 0) (four_batch_score x1 x2 x3 x4 1 1 1 1) xs = (batch_variance w x1 xs) + (batch_covariance w x1 x2 xs) + (batch_covariance w x1 x3 xs) + (batch_covariance w x1 x4 xs)
+ Premises and side conditions: Every score is a real-valued function on a finite list. The shared batch weight function is arbitrary but its total mass must be nonzero for covariance identities; the semidefinite result separately requires nonnegative weights and positive mass.
+ Proof/definition method: Instantiate the earlier kernel-checked exact four-composite covariance/variance sample bridges and the corresponding explicitly proved symbolic covariance coefficient or nonnegative sample variance theorem.
+ Library reuse: Canonical ListPoolingAlgebra and FiniteSum, symmetric four_covariant, Rocq Stdlib Ring/Lra; these results do not define another moment function or assume a Gaussian sampling law.
+ Boundary: Exact finite weighted-score variance and covariance calculations usable in G01/G12 and composite-selection checks. A deterministic equality is not a statement about population IQ values, Gaussian distributions, confidence coverage or binomial independence.
+*)
+Theorem four_sample_covariance_test1_total :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (four_batch_score x1 x2 x3 x4 1 0 0 0) (four_batch_score x1 x2 x3 x4 1 1 1 1) xs = (batch_variance w x1 xs) + (batch_covariance w x1 x2 xs) + (batch_covariance w x1 x3 xs) + (batch_covariance w x1 x4 xs).
+Proof.
+ intros A w x1 x2 x3 x4 xs Hm.
+ rewrite four_batch_covariance_bilinear by exact Hm.
+ apply four_contrast_cov_test1_allfour.
+Qed.
+
+(** [four_sample_covariance_test4_triple] (theorem).
+ Mathematical meaning: Covariance of test 4 with a composite of the other three tests equals the sum of its three corresponding cross-covariances.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (four_batch_score x1 x2 x3 x4 0 0 0 1) (four_batch_score x1 x2 x3 x4 1 1 1 0) xs = (batch_covariance w x1 x4 xs) + (batch_covariance w x2 x4 xs) + (batch_covariance w x3 x4 xs)
+ Premises and side conditions: Every score is a real-valued function on a finite list. The shared batch weight function is arbitrary but its total mass must be nonzero for covariance identities; the semidefinite result separately requires nonnegative weights and positive mass.
+ Proof/definition method: Instantiate the earlier kernel-checked exact four-composite covariance/variance sample bridges and the corresponding explicitly proved symbolic covariance coefficient or nonnegative sample variance theorem.
+ Library reuse: Canonical ListPoolingAlgebra and FiniteSum, symmetric four_covariant, Rocq Stdlib Ring/Lra; these results do not define another moment function or assume a Gaussian sampling law.
+ Boundary: Exact finite weighted-score variance and covariance calculations usable in G01/G12 and composite-selection checks. A deterministic equality is not a statement about population IQ values, Gaussian distributions, confidence coverage or binomial independence.
+*)
+Theorem four_sample_covariance_test4_triple :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (four_batch_score x1 x2 x3 x4 0 0 0 1) (four_batch_score x1 x2 x3 x4 1 1 1 0) xs = (batch_covariance w x1 x4 xs) + (batch_covariance w x2 x4 xs) + (batch_covariance w x3 x4 xs).
+Proof.
+ intros A w x1 x2 x3 x4 xs Hm.
+ rewrite four_batch_covariance_bilinear by exact Hm.
+ apply four_contrast_cov_test4_triple123.
 Qed.
 
