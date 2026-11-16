@@ -2,6 +2,9 @@
 
 # Theorems and mathematical claims actually used in the reports
 
+> **Update, November 16, 2026 — full six-report source audit:** The authoritative [six-volume proof-obligation register](SIX_REPORT_PROOF_OBLIGATIONS.md) covers **all three main reports and all three simulation reports**, their eleven proof-bearing TeX sources, 70 individually labelled mathematical results and 24 reusable proof-work packages. This older inventory remains the detailed **three-analytical-report history**; do not infer that its older scope or status covers simulation diagnostics, chi-square, Wilson or Clopper–Pearson theorems. A limited finite/algebraic Rocq proof must not be equated with full Gaussian/statistical coverage.
+
+
 **Author, researcher and requester:** Anders Hellström.
 
 **Audit date:** November 14, 2026. **Original audit baseline:** `main` at merge commit `b90da09b4df1ee7ba8b502b6afe484a4046a1455` (PR #7). **Current continuation base:** `main` at merge commit `694bf832697d59ccb07f2645e711e28120bdd688` (PR #24). **Working branch:** `architecture-central-libraries-20261115` (PR #25).
