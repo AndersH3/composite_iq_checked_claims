@@ -14,3 +14,5 @@ numpy==2.5.4
 
 # Dask owns the simulation and report task graphs; no plotting runtime.
 dask[array]==2026.8.0
+# Optional LocalCluster scheduler, managed worker memory and dashboard.
+distributed==2026.8.0
