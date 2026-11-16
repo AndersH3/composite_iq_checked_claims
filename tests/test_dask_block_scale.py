@@ -61,7 +61,7 @@ def test_centered_block_moment_merge_and_seeded_substreams():
 @deal.ensure(lambda *, result: protected_history_intact())
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("read", "import", "syscall", "random", "global")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError)
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError, ImportError)
 @deal.ensure(lambda *, result: result is None)
 def test_large_default_graph_has_fewer_tasks_than_recorded_small_graph():
     """A tenfold sample increase must not create a larger task graph."""
@@ -93,7 +93,7 @@ def test_large_default_graph_has_fewer_tasks_than_recorded_small_graph():
 @deal.ensure(lambda *, result: protected_history_intact())
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("read", "import", "random", "global", "syscall")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError)
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError, ImportError)
 @deal.ensure(lambda *, result: result is None)
 @deal.pre(lambda: len(simulate.PROJECTS) == 3)
 def test_seeded_block_simulations_match_analytic_reference_laws():
@@ -131,7 +131,7 @@ def test_seeded_block_simulations_match_analytic_reference_laws():
 @deal.ensure(lambda capsys, result: protected_history_intact())
 @deal.ensure(lambda capsys, result: reference_inputs_intact())
 @deal.has("read", "write", "stdout", "stderr", "time", "import", "syscall", "random", "global")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, RuntimeError, JSONDecodeError)
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, RuntimeError, JSONDecodeError)
 @deal.ensure(lambda capsys, result: result is None)
 @deal.pre(lambda capsys: simulate.DEFAULT_TRIALS > 1_000_000)
 def test_dry_run_reports_scaling_without_touching_published_results(capsys):
