@@ -57,6 +57,8 @@ def test_coverage_accepts_a_real_deal_import_alias(coverage_checker, tmp_path):
     assert report["function_count"] == 1 and report["contract_count"] == 5
     assert report["missing"] == []
     assert report["insufficient"] == []
+    assert report["insufficient_file"] is True
+    assert report["file_distinct_contract_count"] == 5
     # Check the exact AST classification boundaries, not just aggregated
     # counts: only direct imported Deal attribute calls qualify.
     is_deal = coverage_checker.is_contract
@@ -131,6 +133,9 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         assert not report["missing"], (path, report["missing"])
         assert not report["insufficient"], (path, report["insufficient"])
         assert not report["duplicated"], (path, report["duplicated"])
+        assert not report["insufficient_file"], (path, report["file_distinct_contract_count"])
+        assert report["file_distinct_contract_count"] >= 15, path
+        assert report["minimum_file_contracts"] == 15
         assert report["contract_count"] > 0, path
         target_names = targeted.get(path.relative_to(ROOT).as_posix(), set())
         counts = {entry["name"]: entry["distinct_contract_count"]
@@ -167,6 +172,38 @@ def test_contract_floor_accepts_five_or_more_distinct_decorators(coverage_checke
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
 @deal.post(lambda result: result is None)
 @deal.has("read", "write", "import")
+def test_file_floor_distinguishes_fourteen_from_fifteen_contracts(
+        coverage_checker, tmp_path):
+    """Every callable can pass its own floor while its source file fails."""
+    path = tmp_path / "aggregate.py"
+    decorators = [
+        "@deal.raises()", "@deal.has()",
+        "@deal.post(lambda result: isinstance(result, int))",
+        "@deal.post(lambda result: result == 1)",
+        "@deal.post(lambda result: result >= 0)",
+        "@deal.post(lambda result: result <= 1)",
+        "@deal.post(lambda result: result != 0)",
+        "@deal.post(lambda result: result in (1,))",
+    ]
+    for last in (7, 8):
+        parts = ["import deal", ""]
+        for name, count in (("first", 7), ("second", last)):
+            parts.extend(decorators[:count])
+            parts.extend([f"def {name}():", "    return 1", ""])
+        path.write_text("\n".join(parts), encoding="utf-8")
+        report = coverage_checker.audit_file(path)
+        assert report["function_count"] == 2
+        assert not report["insufficient"]
+        assert not report["duplicated"]
+        assert report["file_distinct_contract_count"] == 7 + last
+        assert report["insufficient_file"] is (last == 7)
+
+
+@deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
+@deal.ensure(lambda coverage_checker, tmp_path, *, result: reference_inputs_intact())
+@deal.post(lambda result: result is None)
+@deal.has("read", "write", "import")
 def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker, tmp_path):
     path = tmp_path / "duplicates.py"
     path.write_text("import deal\nimport deal as contracts\n"
@@ -181,6 +218,7 @@ def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker
     assert row["distinct_contract_count"] == 4
     assert row["duplicate_contract_count"] == 1
     assert report["insufficient"] == [row]
+    assert report["insufficient_file"] is True
     assert report["duplicated"] == [row]
 
 
