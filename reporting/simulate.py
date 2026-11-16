@@ -338,7 +338,7 @@ def graph_sequential_blocks(config):
 @deal.pre(lambda config, task_count: isinstance(config["seeds"], list) and bool(config["seeds"]))
 @deal.pre(lambda config, task_count: type(config["workers"]) is int and 1 <= config["workers"] <= 32)
 @deal.pre(lambda config, task_count: config["engine"] in ("blocks", "arrays"))
-@deal.pre(lambda config, task_count: config["scheduler"] in ("processes", "distributed"))
+@deal.pre(lambda config, task_count: config["scheduler"] in ("processes", "distributed", "single-threaded"))
 @deal.ensure(lambda config, task_count, result: result["graph_tasks"] == task_count)
 @deal.ensure(lambda config, task_count, result: result["samples_per_case"] == config["trials"] * len(config["seeds"]))
 @deal.ensure(lambda config, task_count, result: result["blocks_per_replicate"] == (config["trials"] + config["chunk"] - 1) // config["chunk"])
@@ -484,7 +484,7 @@ def main(argv=None):
     parser.add_argument("--workers", type=int, default=min(4, os.cpu_count() or 1))
     parser.add_argument("--engine", choices=("blocks", "arrays"), default="blocks",
                         help="Block summaries reduce graph overhead; arrays retain the legacy cross-check")
-    parser.add_argument("--scheduler", choices=("processes", "distributed"),
+    parser.add_argument("--scheduler", choices=("processes", "distributed", "single-threaded"),
                         default="processes", help="Local process pool or distributed LocalCluster")
     parser.add_argument("--memory-limit", default="2GiB",
                         help="Per-worker memory limit for the distributed scheduler")
@@ -544,6 +544,10 @@ def main(argv=None):
                                           if args.performance_report else nullcontext())
                     with diagnostic_context:
                         record = client.compute(terminal).result()
+        elif args.scheduler == "single-threaded":
+            # Diagnostic path: preserve the original Python exception trace
+            # without process-pool serialization masking contract failures.
+            record = dask.compute(terminal, scheduler="single-threaded")[0]
         else:
             record = dask.compute(terminal, scheduler="processes", num_workers=args.workers)[0]
     except RemoteException as error:
