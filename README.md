@@ -4,7 +4,7 @@
 
 > **AI DISCLOSURE:** OpenAI ChatGPT/Codex and collaborating AI systems have substantially assisted with the mathematical analyses, program development, formalization, simulation reporting, editing, and repository maintenance. Automated checks do not constitute independent human review.
 
-This repository examines composite IQ scores, multiple-test admissions, and sequential conditional means under explicitly stated statistical models. **The maintained computational stack is Python, Dask, NumPy/SciPy, and Deal. Rocq is used for separately scoped mathematical proofs.** The former Ada/SPARK simulation and verification implementation has been removed from the current tree; its historical revisions remain accessible through Git history. No retired proof run is evidence that current Python is formally verified.
+This repository examines composite IQ scores, multiple-test admissions, and sequential conditional means under explicitly stated statistical models. **The maintained computational stack is Python, Dask, NumPy/SciPy, and Deal. Rocq is used for separately scoped mathematical proofs.** The former discontinued alternate-engine simulation and verification implementation has been removed from the current tree; its historical revisions remain accessible through Git history. No retired proof run is evidence that current Python is formally verified.
 
 ## Six reports
 
@@ -41,6 +41,6 @@ The mathematical reports distinguish deductions from model assumptions and obser
 
 ## Provenance and disclosure
 
-Historical Ada/SPARK files, old verification campaigns and experimental comparisons were removed from the **active tree** as part of the Python/Dask transition. Git history preserves the earlier source revisions and their methodological context; those outputs must not be attributed to the current Python/Dask implementation. New numerical results require a fresh explicit Dask run with recorded configuration and model assumptions. No participant data were collected for the model simulations.
+Historical discontinued alternate-engine files, old verification campaigns and experimental comparisons were removed from the **active tree** as part of the Python/Dask transition. Git history preserves the earlier source revisions and their methodological context; those outputs must not be attributed to the current Python/Dask implementation. New numerical results require a fresh explicit Dask run with recorded configuration and model assumptions. No participant data were collected for the model simulations.
 
 **Full AI disclosure:** The requesting researcher Anders Hellström defined the questions and priorities. OpenAI ChatGPT/Codex and AI-assisted workflows contributed textual and mathematical drafts, Python/Dask source, Deal contracts, Rocq proof scripts, report structure, verification procedures, documentation and repository edits. Automated mathematics and CI apply only to their exact statements and checked revisions. Independent human peer review, empirical psychometric validation, guaranteed PRNG independence and complete per-line human/AI authorship are not claimed. The report PDFs contain their own AI disclosure appendices. Repository licensing applies to original materials subject to third-party rights.
