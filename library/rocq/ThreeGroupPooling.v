@@ -604,13 +604,13 @@ Proof.
   set (t := three_mean n m k a b c).
   assert (Ha : 0 <= n*(a-t)*(a-t)).
   { replace (n*(a-t)*(a-t)) with (n*((a-t)*(a-t))) by ring.
-    apply Rmult_le_pos; [exact Hn | nra]. }
+    apply Rmult_le_pos; [exact Hn | apply Rle_0_sqr]. }
   assert (Hb : 0 <= m*(b-t)*(b-t)).
   { replace (m*(b-t)*(b-t)) with (m*((b-t)*(b-t))) by ring.
-    apply Rmult_le_pos; [exact Hm | nra]. }
+    apply Rmult_le_pos; [exact Hm | apply Rle_0_sqr]. }
   assert (Hc : 0 <= k*(c-t)*(c-t)).
   { replace (k*(c-t)*(c-t)) with (k*((c-t)*(c-t))) by ring.
-    apply Rmult_le_pos; [exact Hk | nra]. }
+    apply Rmult_le_pos; [exact Hk | apply Rle_0_sqr]. }
   nra.
 Qed.
 
