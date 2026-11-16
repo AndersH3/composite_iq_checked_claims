@@ -2057,7 +2057,7 @@ Qed.
 Theorem batch_centered_zero_forces_constant :
   forall (A:Type) (w v:A->R) (xs:list A) (c:R), (forall x, In x xs -> 0<w x) -> batch_centered w v c xs=0 -> forall x, In x xs -> v x=c.
 Proof.
-  intros A w v xs c Hw Hz x Hin; unfold batch_centered in Hz; assert (Hnon:forall y, In y xs -> 0<=w y*(v y-c)*(v y-c)). { intros y Hy; replace (w y*(v y-c)*(v y-c)) with (w y*((v y-c)*(v y-c))) by ring; apply Rmult_le_pos; [apply Rlt_le, Hw; exact Hy|pose proof (Rle_0_sqr (v y-c)) as E; unfold Rsqr in E; exact E]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*(v y-c)*(v y-c)) Hnon Hz x Hin) as Hterm; replace (w x*(v x-c)*(v x-c)) with (w x*((v x-c)*(v x-c))) in Hterm by ring; apply Rmult_integral in Hterm; destruct Hterm as [Hwx|Hsq]; [pose proof (Hw x Hin); lra|apply Rmult_integral in Hsq; destruct Hsq; lra].
+  intros A w v xs c Hw Hz x Hin; unfold batch_centered in Hz; assert (Hnon:forall y, In y xs -> 0<=w y*(v y-c)*(v y-c)). { intros y Hy; replace (w y*(v y-c)*(v y-c)) with (w y*((v y-c)*(v y-c))) by ring; apply Rmult_le_pos; [apply Rlt_le, Hw; exact Hy|pose proof (Rle_0_sqr (v y-c)) as E; unfold Rsqr in E; exact E]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*(v y-c)*(v y-c)) Hnon Hz x Hin) as Hterm; replace (w x*(v x-c)*(v x-c)) with (w x*((v x-c)*(v x-c))) in Hterm by ring; assert (Hpositive:0<w x) by (apply Hw; exact Hin); assert (Hfactor:w x*((v x-c)*(v x-c))=0) by exact Hterm; destruct (Rmult_integral (w x) ((v x-c)*(v x-c)) Hfactor) as [Hweight_zero|Hsq]; [exfalso; lra|destruct (Rmult_integral (v x-c) (v x-c) Hsq) as [Hdelta|Hdelta]; lra].
 Qed.
 
 (** [batch_centered_zero_iff_constant] (theorem).
