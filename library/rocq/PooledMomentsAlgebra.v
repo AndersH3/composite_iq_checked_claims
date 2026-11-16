@@ -447,7 +447,7 @@ Qed.
 *)
 Theorem pooled_between_nonnegative: forall n m a b, 0<n -> 0<m -> 0<=pooled_between n m a b.
 Proof.
-  intros n m a b Hn Hm. unfold pooled_between,Rdiv. assert (Hs:0<=(a-b)*(a-b)) by nra. assert (Hnm:0<=n*m) by nra. assert (Hnum:0<=n*m*((a-b)*(a-b))) by (apply Rmult_le_pos; assumption). assert (Hinv:0</pooled_mass n m) by (apply Rinv_0_lt_compat; apply pooled_mass_positive; assumption). nra.
+  intros n m a b Hn Hm. unfold pooled_between,Rdiv. pose proof (Rle_0_sqr (a-b)) as Hs. unfold Rsqr in Hs. assert (Hnm:0<=n*m) by nra. assert (Hnum:0<=n*m*((a-b)*(a-b))) by (apply Rmult_le_pos; assumption). assert (Hinv:0</pooled_mass n m) by (apply Rinv_0_lt_compat; apply pooled_mass_positive; assumption). nra.
 Qed.
 
 (** [pooled_between_positive_ordered] (theorem).
@@ -466,7 +466,7 @@ Qed.
 *)
 Theorem pooled_between_positive_ordered: forall n m a b, 0<n -> 0<m -> a<b -> 0<pooled_between n m a b.
 Proof.
-  intros n m a b Hn Hm Hab. unfold pooled_between,Rdiv. assert (Hs:0<(a-b)*(a-b)) by nra. assert (Hnm:0<n*m) by nra. assert (Hnum:0<n*m*((a-b)*(a-b))) by (apply Rmult_lt_0_compat; assumption). assert (Hinv:0</pooled_mass n m) by (apply Rinv_0_lt_compat; apply pooled_mass_positive; assumption). nra.
+  intros n m a b Hn Hm Hab. unfold pooled_between,Rdiv. assert (Hgap:0<b-a) by lra. assert (Hs:0<(b-a)*(b-a)) by (apply Rmult_lt_0_compat; assumption). replace ((b-a)*(b-a)) with ((a-b)*(a-b)) in Hs by ring. assert (Hnm:0<n*m) by nra. assert (Hnum:0<n*m*((a-b)*(a-b))) by (apply Rmult_lt_0_compat; assumption). assert (Hinv:0</pooled_mass n m) by (apply Rinv_0_lt_compat; apply pooled_mass_positive; assumption). nra.
 Qed.
 
 (** [pooled_between_centered_identity] (theorem).
@@ -523,7 +523,7 @@ Qed.
 *)
 Theorem pooled_between_upper_bound: forall n m a b, 0<n -> 0<m -> pooled_between n m a b<=pooled_mass n m*(a-b)*(a-b)/4.
 Proof.
-  intros n m a b Hn Hm. assert (Hd:0<pooled_mass n m) by (apply pooled_mass_positive; assumption). unfold pooled_between,pooled_mass,Rdiv in *. assert (Hsq:0<=(a-b)*(a-b)) by nra. assert (Hnm:4*n*m <= (n+m)*(n+m)) by nra. assert (Hin:0</(n+m)) by (apply Rinv_0_lt_compat; lra). assert (Hfactor:0<=((n+m)*(n+m)-4*n*m)*((a-b)*(a-b))) by (apply Rmult_le_pos; nra). nra.
+  intros n m a b Hn Hm. assert (Hd:0<pooled_mass n m) by (apply pooled_mass_positive; assumption). unfold pooled_between,pooled_mass,Rdiv in *. pose proof (Rle_0_sqr (a-b)) as Hsq. unfold Rsqr in Hsq. assert (Hnm:4*n*m <= (n+m)*(n+m)) by nra. assert (Hin:0</(n+m)) by (apply Rinv_0_lt_compat; lra). assert (Hfactor:0<=((n+m)*(n+m)-4*n*m)*((a-b)*(a-b))) by (apply Rmult_le_pos; nra). nra.
 Qed.
 
 (** [pooled_ss_above_within] (theorem).
