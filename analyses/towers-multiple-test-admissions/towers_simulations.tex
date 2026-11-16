@@ -86,6 +86,13 @@ replications of the same test. Separate seeded replicate streams provide the
 between-run comparison. Their pseudorandom construction and the finite
 sampling assumptions remain distinct from a mathematical independence proof.
 
+\noindent\textbf{Execution provenance.}
+The observed event counts and plotted CSVs are derived from the
+same executed \SimPooledTrials{}-pair Monte Carlo campaign.
+\texttt{reporting/run.json} identifies its task graph, seed streams
+and output hashes. The recorded resource measurement is machine
+specific and does not independently establish the Gaussian assumption.
+
 \section{The five decision rules}
 
 Four rules reproduce the questions in the existing analysis. The last asks a
