@@ -70,7 +70,7 @@ The same standard-normal arrays are reused across battery sizes within a
 replicate. Thus the eight reported results are coupled comparisons; they
 are not eight independent replications of a population experiment.
 
-The simulations reported here use four seeded Python/Dask replicates.
+The simulations reported here use \SimReplicates{} seeded Python/Dask replicates.
 The pooled sample size is \SimPooledTrials\ for each fixed composite
 size; runs at different sizes may reuse shared random draws, so their
 counts must not be treated as independent observations.
@@ -209,25 +209,26 @@ cannot identify an actual latent target from the score law alone.
 
 
 
-\noindent\textbf{Recorded engine and scaled engine.}
-The empirical tables and the \SimReplicates{} original replicates in this
-publication were produced with the earlier Dask Array graph. The maintained
-source now also offers a higher-throughput \texttt{blocks} engine, which
-generates Gaussian vectors within bounded Dask delayed worker blocks,
-computes all eight coupled composite cases on each block, and transfers
-only centered-moment summaries and threshold counts to the reduction
-stage. Its default future configuration is eight replicates of five
-million observations, rather than the recorded four replicates of one
-million. This is a prospective configuration change, \emph{not} an
-assertion that the displayed tables or rare-event counts were
-recomputed. See \texttt{reporting/README.md} for resource planning and
-the independent graph-budget test.
+\noindent\textbf{Reproducible block aggregation.}
+The maintained simulation supports a Dask Array reference implementation
+and a scalable Dask delayed implementation. In the latter, one worker
+block generates shared Gaussian factors, evaluates all eight coupled
+composite cases, and returns centered second moments, prediction-error
+sums and exceedance counts rather than complete score arrays. The
+reported replicate, block and pooled sample sizes are
+\SimReplicates{}, \SimChunk{} and \SimPooledTrials{}, respectively;
+the numerical provenance manifest identifies the actual executed
+engine and seed set. Source-level defaults do not count as observed
+simulation results without an executed and recorded run.
 
 \chapter{Dask execution, reductions and recorded diagnostics}
-Dask creates lazy random arrays in chunks of \SimChunk\ observations and
-constructs shared tasks for \(G\) and \(E\). Arithmetic, sums, squared
-sums, exceedance counts, replicate comparisons and pooled results belong
-to the task graph. The graph is computed after its dependent results have
+Dask schedules blocks of \SimChunk\ observations and shares the
+underlying \(G\) and \(E\) draws across the eight coupled cases.
+In the \texttt{blocks} engine, each worker reduces its Gaussian
+vectors to centered moments and exceedance counts before transmission;
+the Dask Array reference engine instead exposes array reductions as
+graph nodes. Replicate comparisons and pooled statistics remain
+dependent tasks of the same graph. The graph is computed after its dependent results have
 been assembled, following Dask's documented delayed/array approach
 \citep{daskdocs,daskArray,daskDelayed}. SciPy supplies distributional
 reference calculations inside those tasks. Report tables are written from
@@ -359,10 +360,12 @@ That range is reported as observed; it is not eight independent estimates
 because the comparisons share \(G,E\).
 
 A rare count of zero does not show that the true probability is zero.
-Under the model a single one-million-observation replicate has zero rare
-exceedances with probability \((1-10^{-6})^{10^6}\), approximately
-\(e^{-1}\). The pooled four-million-observation probability is
-\((1-10^{-6})^{4\times10^6}\), approximately \(e^{-4}\).
+Under the model, a single replicate with \(\SimTrials\) observations
+has zero rare exceedances with probability
+\((1-10^{-6})^{\SimTrials}\), approximately
+\(\exp(-10^{-6}\SimTrials)\). The pooled probability is
+\((1-10^{-6})^{\SimPooledTrials}\), approximately
+\(\exp(-10^{-6}\SimPooledTrials)\).
 The exact probability follows by multiplying the independent failure
 probabilities; the exponential approximation follows from
 \(\log(1-p)=-p+O(p^2)\). Confidence bounds in the table preserve
@@ -384,7 +387,9 @@ For Bernoulli exceedances, the empirical frequency has variance
 \(p(1-p)/T\), because it is an average of independent zero-one
 indicators. Its relative standard error is therefore
 \(\sqrt{(1-p)/(Tp)}\). At \(p=10^{-6}\), the present expected count
-of four gives roughly \(50\%\) relative standard error. Even a
+of \(10^{-6}\SimPooledTrials\) gives relative standard error
+\(\sqrt{(1-10^{-6})/(10^{-6}\SimPooledTrials)}\).
+Even a
 \(10\%\) relative \emph{standard error}, rather than a 95\% interval
 half-width, would require roughly one hundred million observations
 per fixed size. This requirement follows by solving
@@ -398,7 +403,7 @@ Results~\ref{sm:wilson} and \ref{sm:clopper-pearson}.
 
 \chapter{Dask replicates, numerical agreement and uncertainty}
 \label{sec:hf-dask-validation}
-The Python/Dask experiment pools four seeded replicates for each
+The Python/Dask experiment pools \SimReplicates{} seeded replicates for each
 composite size. The ideal standardized composite has mean zero and
 variance one under the explicitly assumed Gaussian model.
 The numerical tables report sample moments and pointwise uncertainty,
