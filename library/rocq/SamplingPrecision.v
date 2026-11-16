@@ -547,7 +547,7 @@ Qed.
 *)
 Theorem sampling_count_variance_le_expected_failures: forall n p, 0<=n -> 0<=p -> p<=1 -> sampling_count_variance n p<=n*(1-p).
 Proof.
-  intros n p Hn Hp H1; unfold sampling_count_variance,sampling_bernoulli_variance; nra.
+  intros n p Hn Hp H1. unfold sampling_count_variance,sampling_bernoulli_variance. assert (Hsq:0<=(1-p)*(1-p)) by nra. assert (Hprod:0<=n*((1-p)*(1-p))) by (apply Rmult_le_pos; assumption). nra.
 Qed.
 
 (** [sampling_mean_count_additive] (theorem).
