@@ -15,6 +15,10 @@ Researcher/requester: Anders Hellström.
 AI disclosure: OpenAI ChatGPT/Codex assisted algorithms, contracts, and tests.
 """
 
+# Dask distributed workers share their process with an asynchronous socket
+# event loop. Deal's runtime offline checker monkeypatches socket process-wide;
+# permitting the worker transport avoids breaking unrelated scheduler I/O.
+# Source-level numeric invariants and exception contracts remain in force.
 import math
 
 import deal
@@ -43,7 +47,7 @@ COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 @deal.ensure(lambda values, mse=None, rare_threshold=None, result=None: result["counts"][0] >= result["counts"][1] >= result["counts"][2])
 @deal.ensure(lambda values, mse=None, rare_threshold=None, result=None: mse is not None or result["mse_sum"] == 0)
 @deal.raises(ValueError, TypeError, OverflowError)
-@deal.has()
+@deal.has("network")
 def partial_moment(values, mse=None, rare_threshold=None):
     """Center each block before squaring to avoid unstable raw second moments.
 
@@ -76,7 +80,7 @@ def partial_moment(values, mse=None, rare_threshold=None):
 @deal.ensure(lambda parts, result: math.isclose(result["mse_sum"], math.fsum(item["mse_sum"] for item in parts), rel_tol=1e-13, abs_tol=1e-12))
 @deal.ensure(lambda parts, result: 0 <= result["counts"][2] <= result["counts"][1] <= result["counts"][0] <= result["n"])
 @deal.raises(ValueError, TypeError, OverflowError, KeyError)
-@deal.has()
+@deal.has("network")
 def merge_moments(parts):
     """Merge partial centered moments without ignoring between-block shifts.
 
@@ -113,7 +117,7 @@ def merge_moments(parts):
 @deal.ensure(lambda seed, block_index, size, rare_threshold, result: all(math.isfinite(row["mean"]) for row in result.values()))
 @deal.ensure(lambda seed, block_index, size, rare_threshold, result: len(result) == 8)
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError)
-@deal.has("random", "import")
+@deal.has("network", "random", "import")
 def hoeflin_block(seed, block_index, size, rare_threshold):
     """Compute all eight composite-score cases from one common pair of draws.
 
@@ -146,7 +150,7 @@ def hoeflin_block(seed, block_index, size, rare_threshold):
 @deal.ensure(lambda seed, block_index, size, reference, result: all(all(type(count) is int and count >= 0 for count in counts) for counts in result.values()))
 @deal.ensure(lambda seed, block_index, size, reference, result: len(result) == len(reference["cases"]))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError)
-@deal.has("random", "import")
+@deal.has("network", "random", "import")
 def towers_block(seed, block_index, size, reference):
     """Classify each paired observation once per admission rule, in one task.
 
@@ -180,7 +184,7 @@ def towers_block(seed, block_index, size, reference):
 @deal.ensure(lambda seed, block_index, size, r, result: all(math.isfinite(row["mean"]) for row in result.values()))
 @deal.ensure(lambda seed, block_index, size, r, result: (0, "population") in result and (0, "conditional") in result)
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError)
-@deal.has("random", "import")
+@deal.has("network", "random", "import")
 def sequential_block(seed, block_index, size, r):
     """Compute all eight conditional/population cases for one starting count.
 
@@ -224,7 +228,7 @@ def sequential_block(seed, block_index, size, r):
 @deal.ensure(lambda meta, parts, key, result: math.isfinite(result["mean"]) and math.isfinite(result["variance"]))
 @deal.ensure(lambda meta, parts, key, result: all(result[field] == meta[field] for field in ("replicate", "seed", "project")))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError)
-@deal.has()
+@deal.has("network")
 def finish_moment(meta, parts, key):
     """Return the same statistics schema as the canonical array engine."""
     summary = merge_moments([block[key] for block in parts])
@@ -245,7 +249,7 @@ def finish_moment(meta, parts, key):
 @deal.ensure(lambda meta, parts, index, reference, result: result["replicate"] == meta["replicate"] and result["seed"] == meta["seed"])
 @deal.ensure(lambda meta, parts, index, reference, result: 0 <= result["joint"] <= result["union"] <= 1)
 @deal.raises(ValueError, TypeError, OverflowError, KeyError)
-@deal.has()
+@deal.has("network")
 def finish_event(meta, parts, index, reference):
     """Reduce per-block disjoint cell counts with exact integer addition."""
     case = reference["cases"][index - 1]
