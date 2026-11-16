@@ -102,21 +102,20 @@ Normative proposals, explicitly attributed to the testing standards
 \citep[Standards 1.1--1.4, 1.14, 5.8--5.9]{standards2014}.
 A normative recommendation is not presented as a theorem derived from
 the common-factor model.\\
-Numerical reproduction and the software-verification appendix &
-Reproducible numerical evidence and source-pinned historical campaign
-records, as linked in \Cref{sec:verification}. Those records,
-rather than a mathematical citation, support check totals, source
-coverage, negative controls, replay, tool versions and contract counts.
-The historical counts describe their snapshots, not the current tree.\\
-What software evidence does and does not establish &
-Native SPARK checks concern the encoded program contracts under trusted
-interfaces; Deal runtime/property tests, limited symbolic checks,
-structural counts, numerical comparisons and model validity remain
-separate. For the mathematical sampling claims see
+Numerical reproduction and Python/Dask verification scope &
+The maintained \texttt{scripts/verify\_calculations.py} provides
+independent numerical reference values. Python/Dask results are
+model-dependent finite observations with recorded seeds and denominators.
+Deal contracts, runtime/property checks and Rocq proofs establish
+different explicitly limited properties; no retired native campaign
+is invoked or represented as a current-source proof.\\
+What implementation checks do and do not establish &
+The Python/Dask workflow records simulations, source configuration and
+finite numerical checks. It does not prove third-party library internals,
+pseudorandom independence, arbitrary floating-point precision or
+psychometric Gaussianity. Ideal sampling calculations are derived in
 Proposition~\ref{hfpr:simulation} and
-\Cref{sec:simulation-statistical-methods}. No proof of foreign
-libraries, pseudorandom independence, physical I/O or human-score
-Gaussianity is claimed.\\
+\Cref{sec:simulation-statistical-methods}.\\
 AI contribution, provenance and absence of participant data &
 Project process disclosure in \Cref{sec:ai-disclosure}, not a
 mathematical proposition or a claim of independent human review.\\
