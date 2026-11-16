@@ -44,6 +44,7 @@ paths_by_module = {
     "TrivariateSchur": Path("library/rocq/TrivariateSchur.v"),
     "WilsonScoreAlgebra": Path("library/rocq/WilsonScoreAlgebra.v"),
     "SamplingPrecision": Path("library/rocq/SamplingPrecision.v"),
+    "ConditionalRatioStability": Path("library/rocq/ConditionalRatioStability.v"),
     "ThreeTestSelectionDecomposition": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSelectionDecomposition.v"),
     "ThreeTestReversalCriteria": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestReversalCriteria.v"),
     "ThreeTestSchur": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSchur.v"),
