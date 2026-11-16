@@ -73,7 +73,7 @@ def partial_moment(values, mse=None, rare_threshold=None):
 @deal.ensure(lambda parts, result: result["n"] > 0 and result["m2"] >= 0 and result["mse_sum"] >= 0)
 @deal.ensure(lambda parts, result: math.isfinite(result["mean"]) and math.isfinite(result["m2"]))
 @deal.ensure(lambda parts, result: result["counts"] == tuple(sum(item["counts"][i] for item in parts) for i in range(3)))
-@deal.ensure(lambda parts, result: result["mse_sum"] == sum(item["mse_sum"] for item in parts))
+@deal.ensure(lambda parts, result: math.isclose(result["mse_sum"], math.fsum(item["mse_sum"] for item in parts), rel_tol=1e-13, abs_tol=1e-12))
 @deal.ensure(lambda parts, result: 0 <= result["counts"][2] <= result["counts"][1] <= result["counts"][0] <= result["n"])
 @deal.raises(ValueError, TypeError, OverflowError, KeyError)
 @deal.has()
@@ -85,7 +85,7 @@ def merge_moments(parts):
     Counts and squared prediction errors are additive. The merge order is
     fixed by the ascending block index and independent of task completion.
     """
-    n, mean, m2, mse_sum = 0, 0.0, 0.0, 0.0
+    n, mean, m2 = 0, 0.0, 0.0
     counts = [0, 0, 0]
     for item in parts:
         size = item["n"]
@@ -93,12 +93,12 @@ def merge_moments(parts):
         delta = item["mean"] - mean
         mean += delta * (size / new_total)
         m2 += item["m2"] + delta * delta * (n * size / new_total)
-        mse_sum += item["mse_sum"]
         for j in range(3):
             counts[j] += item["counts"][j]
         n = new_total
     return {"n": n, "mean": mean, "m2": m2,
-            "mse_sum": mse_sum, "counts": tuple(counts)}
+            "mse_sum": math.fsum(item["mse_sum"] for item in parts),
+            "counts": tuple(counts)}
 
 
 @deal.pre(lambda seed, block_index, size, rare_threshold: type(seed) is int and 0 <= seed < 2**32)
