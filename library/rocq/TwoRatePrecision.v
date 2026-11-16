@@ -507,7 +507,7 @@ Qed.
 *)
 Theorem rate_var_midpoint_gap : forall p q, 1/2-rate_var p q=(p-1/2)*(p-1/2)+(q-1/2)*(q-1/2).
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  intros; unfold rate_var,sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [rate_var_shift_first] (theorem).
@@ -1083,7 +1083,7 @@ Qed.
 *)
 Theorem rate_var_first_balanced : forall q, rate_var (1/2) q=1/4+sampling_bernoulli_variance q.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  intros; unfold rate_var,sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [rate_var_second_balanced] (theorem).
@@ -1102,7 +1102,7 @@ Qed.
 *)
 Theorem rate_var_second_balanced : forall p, rate_var p (1/2)=sampling_bernoulli_variance p+1/4.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+  intros; unfold rate_var,sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [rate_var_maximum_only_balanced] (theorem).
@@ -1330,7 +1330,7 @@ Qed.
 *)
 Theorem rate_count_variance_balanced : forall n m, rate_count_variance n m (1/2) (1/2)=(n+m)/4.
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [rate_count_variance_gap_max] (theorem).
@@ -1349,7 +1349,7 @@ Qed.
 *)
 Theorem rate_count_variance_gap_max : forall n m p q, (n+m)/4-rate_count_variance n m p q=n*(p-1/2)*(p-1/2)+m*(q-1/2)*(q-1/2).
 Proof.
-  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; field; nra.
 Qed.
 
 (** [rate_count_variance_first_rate_difference] (theorem).
