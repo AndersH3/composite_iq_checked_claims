@@ -9,6 +9,18 @@ import deal
 @deal.ensure(lambda numerator, denominator, result: result <= numerator)
 @deal.raises()
 @deal.has()
+# Independently check zero propagation, positivity, the identity divisor,
+# strictly shrinking a positive numerator for a larger divisor, and NaNs.
+# Do not introduce any unchecked division inside the contracts themselves.
+@deal.ensure(lambda numerator, denominator, result:
+             numerator != 0.0 or result == 0.0)
+@deal.ensure(lambda numerator, denominator, result:
+             numerator <= 0.0 or result > 0.0)
+@deal.ensure(lambda numerator, denominator, result:
+             denominator != 1.0 or result == numerator)
+@deal.ensure(lambda numerator, denominator, result:
+             denominator <= 1.0 or numerator <= 0.0 or result < numerator)
+@deal.post(lambda result: result == result)
 def positive_ratio(numerator: float, denominator: float) -> float:
     return numerator / denominator
 
