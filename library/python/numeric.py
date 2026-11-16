@@ -6,13 +6,15 @@ large integers. It never coerces a string to a real number. The contract
 conditions document the precise rejection boundary; source ownership is
 central so specialized scripts cannot silently diverge.
 """
+# A Dask worker's async communication thread shares this process; explicit
+# transport permission avoids Deal's process-wide socket monkeypatch.
 import math
 
 import deal
 
 
 @deal.post(lambda result: isinstance(result, bool))
-@deal.has()
+@deal.has("network")
 @deal.raises()
 @deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
 @deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
