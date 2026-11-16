@@ -32,6 +32,8 @@ jobs:
       # These executions write only into the disposable Actions checkout.
       # They validate Dask worker serialization and output dependencies,
       # NOT the unexecuted future default 40M-sample production experiment.
+      - name: Diagnostic end-to-end block run with unmasked tracebacks
+        run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --scheduler single-threaded
       - name: Small end-to-end block run using local processes
         run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler processes
       - name: Small end-to-end block run using distributed LocalCluster
