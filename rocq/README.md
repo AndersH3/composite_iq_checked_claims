@@ -1,5 +1,22 @@
 # Rocq formalization of checked claims
 
+## D049x — arbitrary unequal-history linear prediction (106 candidate proofs)
+
+**AI disclosure:** OpenAI ChatGPT assisted source, proof design and documentation.
+Only the pinned Rocq 9.2 kernel can verify these exact propositions.
+
+The new [UnequalHistoryLinearPrediction.v](../analyses/sequential-conditional-means/rocq/UnequalHistoryLinearPrediction.v)
+module adds 106 explicitly documented statements on unequal initial test
+scores: next-score candidate regression from the score *sum*, future expected
+totals, inclusive averages, innovation corrections and affine IQ scale
+transformations. It reuses the shared report denominator instead of
+implementing another summation or statistical model. The
+[proof-by-proof review](PROOF_REFACTOR_UNEQUAL_HISTORY.md) records the 106
+related algebraic consequences and limitations. These are deterministic
+candidate regression expressions, **not** Gaussian conditional-expectation,
+independent-sampling, coverage or psychometric validity theorems.
+
+
 > **Current source policy (November 16, 2026):** Python/Dask/Deal is the only maintained simulation and program-contract stack; Rocq 9.2 continues to check this entire mathematical library. Historical mentions of a retired native implementation below describe earlier repository revisions, not executable current code or current Python verification. AI assistance was used throughout; kernel validation applies only to exact formal propositions.
 
 ## D048x — finite weighted-sample covariance constraints
