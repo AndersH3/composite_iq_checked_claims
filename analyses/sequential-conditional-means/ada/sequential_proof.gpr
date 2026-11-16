@@ -1,6 +1,0 @@
---  Fresh full-source proof project. Separate objects keep build output apart
---  from the recorded native proof run. The CLI body is an explicit boundary.
-project Sequential_Proof extends "sequential.gpr" is
-   for Object_Dir use "obj-proof";
-   for Exec_Dir use "bin-proof";
-end Sequential_Proof;
