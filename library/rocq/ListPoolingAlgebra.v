@@ -15,7 +15,7 @@
  assisted by OpenAI ChatGPT. Kernel compilation is the proof criterion.
 *)
 From Stdlib Require Import Reals Lra Psatz Ring Field List Sorting.Permutation.
-Require Import FiniteSum PooledMomentsAlgebra.
+Require Import FiniteSum PooledMomentsAlgebra SamplingPrecision.
 Import ListNotations.
 Open Scope R_scope.
 
@@ -1093,4 +1093,360 @@ Theorem batch_second_mean_lower_bound :
   forall (A:Type) (w v:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> batch_mass w xs*batch_mean w v xs*batch_mean w v xs<=batch_second w v xs.
 Proof.
   intros A w v xs Hm Hw; pose proof (batch_centered_nonnegative A w v (batch_mean w v xs) xs Hw) as E; rewrite batch_centered_expand in E; rewrite (batch_mean_total_identity A w v xs) in E by lra; nra.
+Qed.
+
+(** [batch_failure] (definition).
+ Mathematical meaning: Ideal failure count target obtained by summing the cohort-wise complements of success probabilities.
+ Exact declaration: Definition batch_failure {A:Type} (w p:A->R) (xs:list A):R := batch_total w (fun x=>1-p x) xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Definition batch_failure {A:Type} (w p:A->R) (xs:list A):R := batch_total w (fun x=>1-p x) xs.
+
+(** [batch_bernoulli_variance] (definition).
+ Mathematical meaning: Ideal heterogeneous Bernoulli count variance target, reusing SamplingPrecision rather than redefining p(1-p).
+ Exact declaration: Definition batch_bernoulli_variance {A:Type} (w p:A->R) (xs:list A):R := finite_sum (fun x => w x*sampling_bernoulli_variance (p x)) xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Definition batch_bernoulli_variance {A:Type} (w p:A->R) (xs:list A):R := finite_sum (fun x => w x*sampling_bernoulli_variance (p x)) xs.
+
+(** [batch_failure_app] (theorem).
+ Mathematical meaning: Ideal expected failure counts add exactly when two arbitrary cohort lists are joined.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs ys:list A), batch_failure w p (xs++ys)=batch_failure w p xs+batch_failure w p ys.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_failure_app :
+  forall (A:Type) (w p:A->R) (xs ys:list A), batch_failure w p (xs++ys)=batch_failure w p xs+batch_failure w p ys.
+Proof.
+  intros A w p xs ys; unfold batch_failure; apply batch_total_app.
+Qed.
+
+(** [batch_failure_permutation] (theorem).
+ Mathematical meaning: Ideal failure counts do not depend on the order of cohorts.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs ys:list A), Permutation xs ys -> batch_failure w p xs=batch_failure w p ys.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_failure_permutation :
+  forall (A:Type) (w p:A->R) (xs ys:list A), Permutation xs ys -> batch_failure w p xs=batch_failure w p ys.
+Proof.
+  intros A w p xs ys Hp; unfold batch_failure; now apply batch_total_permutation.
+Qed.
+
+(** [batch_success_failure_total] (theorem).
+ Mathematical meaning: Across arbitrarily many cohorts, ideal successes plus failures equal total cohort exposure.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_total w p xs+batch_failure w p xs=batch_mass w xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_success_failure_total :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_total w p xs+batch_failure w p xs=batch_mass w xs.
+Proof.
+  intros A w p xs; unfold batch_failure; rewrite <- batch_total_add_values; transitivity (batch_total w (fun _=>1) xs); [unfold batch_total; apply finite_sum_ext; intro x; ring|rewrite batch_total_constant; ring].
+Qed.
+
+(** [batch_failure_mass_minus_success] (theorem).
+ Mathematical meaning: Ideal failures equal exposure minus ideal successes without restrictions on cohort rates.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_failure w p xs=batch_mass w xs-batch_total w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_failure_mass_minus_success :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_failure w p xs=batch_mass w xs-batch_total w p xs.
+Proof.
+  intros A w p xs; pose proof (batch_success_failure_total A w p xs); lra.
+Qed.
+
+(** [batch_failure_nonnegative] (theorem).
+ Mathematical meaning: Admissible probabilities and nonnegative cohort weights imply nonnegative expected failures.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> p x<=1) -> 0<=batch_failure w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_failure_nonnegative :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> p x<=1) -> 0<=batch_failure w p xs.
+Proof.
+  intros A w p xs Hw Hp; unfold batch_failure; apply batch_total_nonnegative; [exact Hw|intros x Hin; specialize (Hp x Hin); lra].
+Qed.
+
+(** [batch_success_nonnegative] (theorem).
+ Mathematical meaning: Admissible nonnegative rates and exposure weights imply nonnegative ideal expected success count.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x) -> 0<=batch_total w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_success_nonnegative :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x) -> 0<=batch_total w p xs.
+Proof.
+  intros A w p xs Hw Hp; now apply batch_total_nonnegative.
+Qed.
+
+(** [batch_bernoulli_variance_app] (theorem).
+ Mathematical meaning: Heterogeneous ideal Bernoulli count-variance contributions add over concatenated independent-model cohort summaries.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs ys:list A), batch_bernoulli_variance w p (xs++ys)=batch_bernoulli_variance w p xs+batch_bernoulli_variance w p ys.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_app :
+  forall (A:Type) (w p:A->R) (xs ys:list A), batch_bernoulli_variance w p (xs++ys)=batch_bernoulli_variance w p xs+batch_bernoulli_variance w p ys.
+Proof.
+  intros A w p xs ys; unfold batch_bernoulli_variance; apply finite_sum_app.
+Qed.
+
+(** [batch_bernoulli_variance_permutation] (theorem).
+ Mathematical meaning: Cohort ordering cannot change the ideal heterogeneous Bernoulli variance target.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs ys:list A), Permutation xs ys -> batch_bernoulli_variance w p xs=batch_bernoulli_variance w p ys.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_permutation :
+  forall (A:Type) (w p:A->R) (xs ys:list A), Permutation xs ys -> batch_bernoulli_variance w p xs=batch_bernoulli_variance w p ys.
+Proof.
+  intros A w p xs ys Hp; unfold batch_bernoulli_variance; now apply finite_sum_permutation.
+Qed.
+
+(** [batch_bernoulli_variance_scale_weights] (theorem).
+ Mathematical meaning: Uniform exposure scaling scales the ideal count variance linearly.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A) (t:R), batch_bernoulli_variance (fun x=>t*w x) p xs=t*batch_bernoulli_variance w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_scale_weights :
+  forall (A:Type) (w p:A->R) (xs:list A) (t:R), batch_bernoulli_variance (fun x=>t*w x) p xs=t*batch_bernoulli_variance w p xs.
+Proof.
+  intros A w p xs t; unfold batch_bernoulli_variance; transitivity (finite_sum (fun x=>t*(w x*sampling_bernoulli_variance (p x))) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; reflexivity].
+Qed.
+
+(** [batch_bernoulli_variance_complement] (theorem).
+ Mathematical meaning: Exchanging successes and failures in every cohort leaves ideal Bernoulli count variance unchanged.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_bernoulli_variance w (fun x=>1-p x) xs=batch_bernoulli_variance w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_complement :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_bernoulli_variance w (fun x=>1-p x) xs=batch_bernoulli_variance w p xs.
+Proof.
+  intros A w p xs; unfold batch_bernoulli_variance; apply finite_sum_ext; intro x; rewrite sampling_variance_complement; reflexivity.
+Qed.
+
+(** [batch_bernoulli_variance_as_moments] (theorem).
+ Mathematical meaning: Ideal heterogeneous Bernoulli variance equals weighted first raw moment minus weighted second raw moment.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_bernoulli_variance w p xs=batch_total w p xs-batch_second w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_as_moments :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_bernoulli_variance w p xs=batch_total w p xs-batch_second w p xs.
+Proof.
+  intros A w p xs; unfold batch_bernoulli_variance,batch_total,batch_second; transitivity (finite_sum (fun x=>w x*p x-w x*p x*p x) xs); [apply finite_sum_ext; intro x; unfold sampling_bernoulli_variance; ring|rewrite finite_sum_sub; reflexivity].
+Qed.
+
+(** [batch_bernoulli_variance_nonnegative] (theorem).
+ Mathematical meaning: Every admissible heterogeneous Bernoulli rate and nonnegative weight contributes a nonnegative ideal variance.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x<=1) -> 0<=batch_bernoulli_variance w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_nonnegative :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x<=1) -> 0<=batch_bernoulli_variance w p xs.
+Proof.
+  intros A w p xs Hw Hp; unfold batch_bernoulli_variance; apply finite_sum_nonnegative; intros x Hin; apply Rmult_le_pos; [apply Hw; exact Hin|apply sampling_variance_nonnegative; [apply (Hp x Hin)|apply (Hp x Hin)]].
+Qed.
+
+(** [batch_bernoulli_deficit_square] (theorem).
+ Mathematical meaning: The gap between total exposure and four times ideal Bernoulli variance is a sum of weighted squared rate imbalances.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_mass w xs-4*batch_bernoulli_variance w p xs=finite_sum (fun x=>w x*(2*p x-1)*(2*p x-1)) xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_deficit_square :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_mass w xs-4*batch_bernoulli_variance w p xs=finite_sum (fun x=>w x*(2*p x-1)*(2*p x-1)) xs.
+Proof.
+  intros A w p xs; unfold batch_mass,batch_bernoulli_variance; rewrite <- (finite_sum_scale xs 4 (fun x=>w x*sampling_bernoulli_variance (p x))); rewrite <- (finite_sum_sub xs w (fun x=>4*(w x*sampling_bernoulli_variance (p x)))); apply finite_sum_ext; intro x; unfold sampling_bernoulli_variance; ring.
+Qed.
+
+(** [batch_bernoulli_variance_sharp_quarter] (theorem).
+ Mathematical meaning: The total ideal Bernoulli count variance is at most one quarter of nonnegative total sample exposure, even with heterogeneous rates.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 4*batch_bernoulli_variance w p xs<=batch_mass w xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_sharp_quarter :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 4*batch_bernoulli_variance w p xs<=batch_mass w xs.
+Proof.
+  intros A w p xs Hw; assert (H:0<=batch_mass w xs-4*batch_bernoulli_variance w p xs). { rewrite batch_bernoulli_deficit_square; apply finite_sum_nonnegative; intros x Hin; replace (w x*(2*p x-1)*(2*p x-1)) with (w x*((2*p x-1)*(2*p x-1))) by ring; apply Rmult_le_pos; [apply Hw; exact Hin|pose proof (Rle_0_sqr (2*p x-1)) as E; unfold Rsqr in E; exact E]. } lra.
+Qed.
+
+(** [batch_bernoulli_variance_max_attained] (theorem).
+ Mathematical meaning: Every cohort rate at one half attains the sharp aggregate one-quarter Bernoulli count variance bound.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> p x=1/2) -> 4*batch_bernoulli_variance w p xs=batch_mass w xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_max_attained :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> p x=1/2) -> 4*batch_bernoulli_variance w p xs=batch_mass w xs.
+Proof.
+  intros A w p xs Hp; assert (Hz:batch_mass w xs-4*batch_bernoulli_variance w p xs=0). { rewrite batch_bernoulli_deficit_square; rewrite (finite_sum_ext_in xs (fun x=>w x*(2*p x-1)*(2*p x-1)) (fun _=>0)); [apply finite_sum_zero|intros x Hin; rewrite (Hp x Hin); ring]. } lra.
+Qed.
+
+(** [batch_bernoulli_variance_le_success] (theorem).
+ Mathematical meaning: With nonnegative group weights, ideal Bernoulli count variance never exceeds ideal success count.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_total w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_le_success :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_total w p xs.
+Proof.
+  intros A w p xs Hw; rewrite batch_bernoulli_variance_as_moments; pose proof (batch_second_nonnegative A w p xs Hw) as H; lra.
+Qed.
+
+(** [batch_bernoulli_variance_le_failure] (theorem).
+ Mathematical meaning: With nonnegative weights, ideal Bernoulli variance never exceeds expected failure count.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_failure w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_le_failure :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_failure w p xs.
+Proof.
+  intros A w p xs Hw; rewrite <- (batch_bernoulli_variance_complement A w p xs); unfold batch_failure; apply batch_bernoulli_variance_le_success; exact Hw.
+Qed.
+
+(** [batch_bernoulli_variance_pooled_decomposition] (theorem).
+ Mathematical meaning: Heterogeneous Bernoulli variance plus between-cohort rate dispersion equals the homogeneous-matched-rate variance target.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)=batch_bernoulli_variance w p xs+batch_centered w p (batch_mean w p xs) xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_pooled_decomposition :
+  forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)=batch_bernoulli_variance w p xs+batch_centered w p (batch_mean w p xs) xs.
+Proof.
+  intros A w p xs Hm; rewrite batch_bernoulli_variance_as_moments; rewrite batch_centered_at_mean_closed by lra; rewrite (batch_mean_total_identity A w p xs) by lra; unfold sampling_bernoulli_variance; field; lra.
+Qed.
+
+(** [batch_bernoulli_variance_le_homogeneous] (theorem).
+ Mathematical meaning: For nonnegative weights, heterogeneity cannot increase ideal Bernoulli variance beyond the rate-matched homogeneous benchmark.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs).
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_le_homogeneous :
+  forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs).
+Proof.
+  intros A w p xs Hm Hw; pose proof (batch_bernoulli_variance_pooled_decomposition A w p xs Hm) as H; pose proof (batch_centered_nonnegative A w p (batch_mean w p xs) xs Hw) as Hc; lra.
+Qed.
+
+(** [batch_bernoulli_variance_homogeneous] (theorem).
+ Mathematical meaning: Constant cohort event rates yield total ideal Bernoulli count variance equal to mass times the common Bernoulli variance.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A) (p:R), batch_bernoulli_variance w (fun _=>p) xs=batch_mass w xs*sampling_bernoulli_variance p.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_homogeneous :
+  forall (A:Type) (w:A->R) (xs:list A) (p:R), batch_bernoulli_variance w (fun _=>p) xs=batch_mass w xs*sampling_bernoulli_variance p.
+Proof.
+  intros A w xs p; unfold batch_bernoulli_variance,batch_mass; transitivity (finite_sum (fun x=>sampling_bernoulli_variance p*w x) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; ring].
+Qed.
+
+(** [batch_bernoulli_variance_zero_probability] (theorem).
+ Mathematical meaning: When every cohort has zero success probability, the ideal count variance vanishes.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A), batch_bernoulli_variance w (fun _=>0) xs=0.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_zero_probability :
+  forall (A:Type) (w:A->R) (xs:list A), batch_bernoulli_variance w (fun _=>0) xs=0.
+Proof.
+  intros A w xs; rewrite batch_bernoulli_variance_homogeneous; unfold sampling_bernoulli_variance; ring.
+Qed.
+
+(** [batch_bernoulli_variance_certain_probability] (theorem).
+ Mathematical meaning: When every cohort has certain success, the ideal count variance vanishes.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A), batch_bernoulli_variance w (fun _=>1) xs=0.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_bernoulli_variance_certain_probability :
+  forall (A:Type) (w:A->R) (xs:list A), batch_bernoulli_variance w (fun _=>1) xs=0.
+Proof.
+  intros A w xs; rewrite batch_bernoulli_variance_homogeneous; unfold sampling_bernoulli_variance; ring.
+Qed.
+
+(** [batch_expected_success_complement] (theorem).
+ Mathematical meaning: The expected successes of complement events equal the expected failures of the original events.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_total w (fun x=>1-p x) xs=batch_failure w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_expected_success_complement :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_total w (fun x=>1-p x) xs=batch_failure w p xs.
+Proof.
+  intros A w p xs; reflexivity.
+Qed.
+
+(** [batch_failure_double_complement] (theorem).
+ Mathematical meaning: Complementing an already complemented success rate restores the original success count.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_failure w (fun x=>1-p x) xs=batch_total w p xs.
+ Premises and side conditions: Every member-weight, parameter-domain or nonzero-denominator requirement is explicit. Statements concern ideal, input-supplied Bernoulli moment targets, not a derived independent-trial probability model.
+ Proof/definition method: Use the canonical SamplingPrecision variance factor and finite_sum linearity, positive-term arguments, exact weighted ANOVA and Rocq field/ring normalization.
+ Library reuse: Rocq Stdlib List/Reals/Lra/Psatz/Ring/Field and existing FiniteSum, SamplingPrecision, ListPoolingAlgebra; no duplicated scalar Bernoulli implementation or random-count generator.
+ Boundary: Supports the heterogeneous-rate algebra of reports sm:binomial/sm:rare and Towers admissions. No binomial PMF, independent trials, conditional-count law, chi-square pivot, or confidence coverage is proved.
+*)
+Theorem batch_failure_double_complement :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_failure w (fun x=>1-p x) xs=batch_total w p xs.
+Proof.
+  intros A w p xs; unfold batch_failure,batch_total; apply finite_sum_ext; intro x; ring.
 Qed.
