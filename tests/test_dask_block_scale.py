@@ -131,7 +131,7 @@ def test_seeded_block_simulations_match_analytic_reference_laws():
 @deal.ensure(lambda capsys, result: protected_history_intact())
 @deal.ensure(lambda capsys, result: reference_inputs_intact())
 @deal.has("read", "write", "stdout", "stderr", "time", "import", "syscall", "random", "global")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, RuntimeError, JSONDecodeError)
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, ImportError, RuntimeError, JSONDecodeError)
 @deal.ensure(lambda capsys, result: result is None)
 @deal.pre(lambda capsys: simulate.DEFAULT_TRIALS > 1_000_000)
 def test_dry_run_reports_scaling_without_touching_published_results(capsys):
