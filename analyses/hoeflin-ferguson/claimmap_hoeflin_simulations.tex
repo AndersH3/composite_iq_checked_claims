@@ -91,53 +91,25 @@ Proposition~\ref{hfpr:simulation} demonstrates dependence of the score
 arrays. Proposition~\ref{sm:pooling} applies across ideal independent
 replicates, and Proposition~\ref{sm:multiple} gives a union-bound
 interpretation of several diagnostics without assuming independent rows.\\
-SPARK algorithm, source context, all eight native rows, resets and coupled
-sizes; \cref{sec:hf-spark-study} &
-The source-pinned 4 November campaign's
-\path{runtime-final/hoeflin/check/runtime.json},
-\path{simulation.csv}, \path{replay-normal.json} and optimized replay;
-the CSV is byte-identical to the original historical Dask input.
-\path{simulation-data/historical.tex} displays all native rows.
-Proposition~\ref{hfpr:factor} proves the ideal aggregate law;
-\ref{hfpr:simulation} proves the non-nested coupling distinction.\\
-LCG open-unit bounds and the ideal Box--Muller construction &
-Integer division gives the displayed finite-grid bounds directly.
-Proposition~\ref{hfsp:box-muller} proves the ideal density and independent
-normal marginals by change of variables, following
-\citet{boxmuller1958hf}. Continuous independent inputs are hypotheses,
-not consequences of a finite-state generator or native range proofs.\\
-Native estimators, mean/variance sampling errors, moderate intervals and
-zero/one rare counts &
-The variance numerator expansion is given in
-\cref{sec:hf-spark-study}; Proposition~\ref{sm:normal-sample} proves
-unbiasedness and the Gaussian/chi-square laws. Propositions
-\ref{sm:binomial}, \ref{sm:wilson} and \ref{hfpr:simulation} prove the
-count, score-interval and zero-count statements. Printed intervals and
-all 16 observed inclusions are recorded in
-\path{runtime-final/hoeflin/check/validation-normal.json}.\\
-Native nine threshold rows, four worked outputs and validator tolerance;
-\cref{sec:hf-spark-calculations} &
-\path{calculations.csv} and normal/optimized validation JSON in the same
-native runtime directory; exact formulas and interpretation are proved
-in Propositions~\ref{hfpr:thresholds} and \ref{hfpr:numerics}.
-Computed-reference agreement is not an analytic numerical enclosure.\\
-Cross-implementation precision, selected means/variances and tail rates;
-\cref{sec:hf-dual-comparison} &
-Native CSV and retained Dask \path{simulation-data/moments.csv} and
-\path{tails.csv}. Proposition~\ref{sm:normal-sample}'s chi-square law
-gives variance SE by scaling; \ref{sm:binomial} gives relative rate SE.
-The Dask singleton three-SD pointwise interval misses its target as
-printed; \ref{sm:wilson} and \ref{sm:multiple} qualify coverage.
-No independent cross-language difference test is asserted.\\
-SPARK/Deal proof claims, deterministic replay, CLI cases, Ghost policy
-comparison and trusted numerical/I/O boundaries &
-Historical source-pinned evidence: the 4 November native
-\path{hoeflin/portfolio/result.json}, structural inventory and
-\path{runtime-final/summary.json}, plus project runtime/replay records.
-404 discharged obligations, 53/14 entity statuses and 63 subprograms/356
-clauses are distinct historical inventories. No new native proof
-campaign, proof of refactored shared bodies, library proof or proof of
-the statistical model follows from these simulations.\\
+Python/Dask composite simulation, seeded replicates and coupled sizes &
+The recorded \path{simulation-data/moments.csv} and
+\path{simulation-data/tails.csv} retain the per-size sample moments
+and exceedance frequencies. Proposition~\ref{hfpr:simulation}
+explains why shared draws across sizes are not independent.
+The generator is not assumed to establish a human population model.\\
+Model-based sampling precision and rare-event uncertainty &
+Propositions~\ref{sm:normal-sample}, \ref{sm:binomial},
+\ref{sm:wilson}, \ref{sm:clopper-pearson} and
+\ref{sm:multiple} establish the ideal Gaussian/binomial
+precision and diagnostic-coverage statements. Computed finite
+intervals may miss their nominal target; many coupled diagnostic
+intervals are not a simultaneous 95\% confidence statement.\\
+Python/Deal contracts and mathematical proof boundaries &
+The Dask source, simulation configuration and retained numerical
+tables document the implementation. Deal lint and tests check
+specified Python properties; Rocq checks precisely stated formal
+theorems. No archived compiler run, third-party implementation proof
+or direct psychometric data validation is claimed.\\
 Lack of real-model validation, latent-factor identification and
 population-tail evidence &
 Propositions~\ref{hfpr:normality} and \ref{hfpr:nonidentification}
