@@ -46,6 +46,7 @@ paths_by_module = {
     "SamplingPrecision": Path("library/rocq/SamplingPrecision.v"),
     "ConditionalRatioStability": Path("library/rocq/ConditionalRatioStability.v"),
     "PooledMomentsAlgebra": Path("library/rocq/PooledMomentsAlgebra.v"),
+    "ListPoolingAlgebra": Path("library/rocq/ListPoolingAlgebra.v"),
     "ThreeGroupPooling": Path("library/rocq/ThreeGroupPooling.v"),
     "TwoRatePrecision": Path("library/rocq/TwoRatePrecision.v"),
     "StratifiedBernoulli": Path("library/rocq/StratifiedBernoulli.v"),
@@ -88,6 +89,7 @@ total = 0
 theorems = 0
 total_scripts = 0
 refactor_register = Path("rocq/PROOF_REFACTOR_REGISTER.md").read_text(encoding="utf-8")
+list_pooling_register = Path("rocq/PROOF_REFACTOR_LIST_POOLING.md").read_text(encoding="utf-8")
 proof_decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global)\s+)?"
     r"(?:Theorem|Lemma|Example|Definition|Fixpoint|Record)\s+"
@@ -148,15 +150,17 @@ for module in modules:
             continue
         expected.append(preceding[-1].group(1))
 
+    selected_register = (list_pooling_register if module == "ListPoolingAlgebra"
+                         else refactor_register)
     section_match = re.search(
         r"^## " + re.escape(module) + r"\.v — [0-9]+ proof scripts$",
-        refactor_register,
+        selected_register,
         re.MULTILINE,
     )
     if section_match is None:
         issues.append(f"{path}: missing proof-by-proof review section")
     else:
-        section_tail = refactor_register[section_match.end():]
+        section_tail = selected_register[section_match.end():]
         next_heading = re.search(r"^## ", section_tail, re.MULTILINE)
         section = section_tail[:next_heading.start()] if next_heading else section_tail
         recorded = re.findall(r"^\| `([A-Za-z_][\w']*)` \(", section, re.MULTILINE)

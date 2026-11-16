@@ -2,6 +2,20 @@
 
 # Theorems and mathematical claims actually used in the reports
 
+> **D046x verified continuation (November 16, 2026).**
+> The [159 new Rocq 9.2 kernel-checked statements](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43847174190) in
+> [`ListPoolingAlgebra.v`](../library/rocq/ListPoolingAlgebra.v)
+> extend `sm:pooling` (G12) to arbitrary finite lists of group summaries,
+> with exact weighted ANOVA, centered cross-products and covariance.
+> They also supply deterministic heterogeneous Bernoulli rate/variance
+> bounds for `sm:binomial` and `sm:rare` (G08/G13).
+> The 16 definitions and 159 theorems are documented in the
+> [dedicated source-ordered register](PROOF_REFACTOR_LIST_POOLING.md).
+> Verified inventory: **2,947 scripts, 36 modules**. The full stochastic
+> distribution and interval-coverage obligations remain open; no
+> empirical test-population law was proved. AI-assisted specification,
+> proofs and documentation are limited to exact kernel-accepted statements.
+>
 > **D044x kernel-checked extension (November 16, 2026).** The
 > [full six-volume obligation register](SIX_REPORT_PROOF_OBLIGATIONS.md)
 > maps **111 additional** proofs: [39 three-group pooling theorems](../library/rocq/ThreeGroupPooling.v)
