@@ -219,7 +219,7 @@ Qed.
 *)
 Theorem wilson_center_complement : forall n h z, wilson_center n (1-h) z = wilson_total n z - wilson_center n h z.
 Proof.
-  intros; unfold wilson_center,wilson_total; ring.
+  intros; unfold wilson_center,wilson_total; field; nra.
 Qed.
 
 (** [wilson_radical_complement] (theorem).
@@ -259,7 +259,7 @@ Qed.
 *)
 Theorem wilson_radical_nonnegative : forall n h z, 0<=n -> 0<=h -> h<=1 -> 0<=wilson_radical_square n h z.
 Proof.
-  intros n h z Hn Hh Hupper. unfold wilson_radical_square. assert (Ha:0<=h*(1-h)) by nra. assert (Hb:0<=n*(h*(1-h))) by (apply Rmult_le_pos; assumption). assert (Hc:0<=z*z) by nra. assert (Hd:0<=z*z/4) by nra. assert (He:0<=n*(h*(1-h))+z*z/4) by nra. apply Rmult_le_pos; assumption.
+  intros n h z Hn Hh Hupper. unfold wilson_radical_square. assert (Ha:0<=h*(1-h)) by nra. assert (Hb:0<=n*(h*(1-h))) by (apply Rmult_le_pos; assumption). assert (Hc:0<=z*z) by nra. assert (Hd:0<=z*z/4) by nra. assert (He:0<=n*(h*(1-h))+z*z/4) by nra. apply Rmult_le_pos; [exact Hc|nra].
 Qed.
 
 (** [wilson_score_at_empirical] (theorem).
