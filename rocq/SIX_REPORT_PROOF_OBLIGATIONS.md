@@ -4,6 +4,16 @@
 
 **Date:** November 16, 2026. **Pinned baseline:** [`5c23afcd48bd36302c0acd2bbdf75271abf06921`](https://github.com/AndersH3/composite_iq_checked_claims/commit/5c23afcd48bd36302c0acd2bbdf75271abf06921). The six authoritative XeLaTeX sources are linked from the four project/reporting READMEs. This register covers all six main/simulation volumes, their proof-bearing inputs and claim-to-evidence maps. It distinguishes the full report proposition from a previously kernel-checked **finite** or **algebraic** fragment.
 
+## D047x — four-test covariance contractions and finite-list bridges (169 proof scripts)
+
+**Author:** Anders Hellström. **AI disclosure:** OpenAI ChatGPT assisted statement design, polynomial expansion, proof scripting and this register. Kernel compilation at an exact source revision—not text or code generation—determines proof status.
+
+The new shared [`FourContrastCovariance.v`](../library/rocq/FourContrastCovariance.v) has **169 explicit theorem proofs and 3 definitions**. Fourteen general matrix-bilinearity/quadratic identities and 136 exact variance/covariance evaluations of 16 meaningful score contrasts establish the symbolic contraction algebra. The remaining 19 proofs establish actual finite-list covariance linearity, four-test sample covariance and variance matrix bridges, nonnegative empirical covariance quadratic forms under nonnegative sample weights and positive mass, six applied composite-score formulas, and four-score sample mean linearity.
+
+For the shared report proposition `pf:moments` (G01) this provides a direct **deterministic four-score finite-sample analogue** of `Var(w^T X)=w^T Sigma w` and `E(w^T X)=w^T mu`, plus the constructive positive-semidefinite sample covariance result. The D046x pooling results underpin the moment calculations (G12). The 136 evaluations are *related specializations* of one symmetric polynomial, not 136 independent scientific discoveries.
+
+**Checked inventory when validated at the final source head:** 3,116 proof scripts, 3,102 public theorem/lemma/example statements, 3,414 documented declarations, across 37 modules. The symbolic ten-entry covariance form does **not** assert feasibility for arbitrary real matrix inputs: PSD is proved only for matrices constructed from nonnegative-weight finite samples. The report's general random-variable expectation theory, Gaussian conditional distributions, normal tails, chi-square pivots, independent binomial laws, interval coverage, Monte Carlo accuracy, and empirical IQ-model assumptions remain outside these finite/algebraic statements.
+
 ## D046x status — kernel-checked arbitrary-list pooling, covariance and rate diagnostics
 
 On [exact Rocq 9.2 CI at commit `469f2cb2ed`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43847174190), the shared
