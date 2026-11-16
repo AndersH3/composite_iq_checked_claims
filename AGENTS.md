@@ -8,7 +8,7 @@ Every named function, including test helpers and fixtures, must carry **at least
 
 Use existing maintained standard-library, NumPy/SciPy and Dask functions rather than implementing parallel summation, random sampling, probability or matrix libraries. Keep Dask random seeds, chunk sizes, scheduler configuration, model parameters and exact source/data revisions explicit. Do not claim that random draws are independent merely because the generator takes separate seeds. Preserve reproducible numerical tables and distinguish analytical formulas, empirical data and Monte Carlo estimates.
 
-Run `make check`, including Python/Rocq ownership checks, Deal contract coverage, static lint with its deliberate negative control, and Python/Dask tests. Run the pinned Rocq 9.2 proof workflow for changes to formal proofs. No Ada/SPARK, GNATprove or native campaign steps are part of the active CI.
+Run `make check`, including Python/Rocq ownership checks, Deal contract coverage, static lint with its deliberate negative control, and Python/Dask tests. Run the pinned Rocq 9.2 proof workflow for changes to formal proofs. No discontinued alternate-engine, retired compiler proof or native campaign steps are part of the active CI.
 
 All Rocq source files need explanatory module headers and extensive comments for definitions, lemmas, theorems and hypotheses. Refactor proof code continuously and reuse previously checked definitions and Stdlib lemmas. No admitted proof placeholders, extra axioms or unverifiable theorem-count inflation.
 
