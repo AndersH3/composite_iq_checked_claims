@@ -9,7 +9,7 @@ exact Git commit is necessary before calling them checked.
 The report-local `UnequalHistoryLinearPrediction.v` now defines a candidate
 linear next-score forecast from an arbitrary observed test-score *sum* and
 its associated future-score total, inclusive mean, realized-outcome innovation
-and affine baseline correction. The source adds 106 related, general
+and affine baseline correction. The source adds 120 related, general
 real-algebra identities checked by the standard proof workflow; see
 [the source-order register](PROOF_REFACTOR_UNEQUAL_HISTORY.md).
 This broadens the algebra beyond initially *equal* test scores without
