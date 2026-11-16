@@ -2002,7 +2002,7 @@ Qed.
 Theorem batch_variance_maximum_requires_half :
   forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<w x) -> 4*batch_bernoulli_variance w p xs=batch_mass w xs -> forall x, In x xs -> p x=1/2.
 Proof.
-  intros A w p xs Hw Hmax x Hin; assert (Hz:finite_sum (fun y=>w y*(2*p y-1)*(2*p y-1)) xs=0). { rewrite <- batch_bernoulli_deficit_square; lra. } assert (Hnon:forall y, In y xs -> 0<=w y*(2*p y-1)*(2*p y-1)). { intros y Hy; replace (w y*(2*p y-1)*(2*p y-1)) with (w y*((2*p y-1)*(2*p y-1))) by ring; apply Rmult_le_pos; [apply Rlt_le, Hw; exact Hy|pose proof (Rle_0_sqr (2*p y-1)) as E; unfold Rsqr in E; exact E]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*(2*p y-1)*(2*p y-1)) Hnon Hz x Hin) as Hterm; replace (w x*(2*p x-1)*(2*p x-1)) with (w x*((2*p x-1)*(2*p x-1))) in Hterm by ring; apply Rmult_integral in Hterm; destruct Hterm as [Hwz|Hsq]; [exfalso; pose proof (Hw x Hin) as Hwx; lra|apply Rmult_integral in Hsq; destruct Hsq; lra].
+  intros A w p xs Hw Hmax x Hin; assert (Hz:finite_sum (fun y=>w y*(2*p y-1)*(2*p y-1)) xs=0). { rewrite <- batch_bernoulli_deficit_square; lra. } assert (Hnon:forall y, In y xs -> 0<=w y*(2*p y-1)*(2*p y-1)). { intros y Hy; replace (w y*(2*p y-1)*(2*p y-1)) with (w y*((2*p y-1)*(2*p y-1))) by ring; apply Rmult_le_pos; [apply Rlt_le, Hw; exact Hy|pose proof (Rle_0_sqr (2*p y-1)) as E; unfold Rsqr in E; exact E]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*(2*p y-1)*(2*p y-1)) Hnon Hz x Hin) as Hterm; replace (w x*(2*p x-1)*(2*p x-1)) with (w x*((2*p x-1)*(2*p x-1))) in Hterm by ring; repeat match goal with H : _ * _ = 0 |- _ => apply Rmult_integral in H; destruct H end; pose proof (Hw x Hin) as Hwx; lra.
 Qed.
 
 (** [batch_variance_maximum_iff_half] (theorem).
