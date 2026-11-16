@@ -52,7 +52,7 @@ The historical article and other cited works are not reproduced or relicensed he
 
 ## Dedicated simulation report
 
-The [simulation report](output/pdf/hoeflin_simulations.pdf) describes the simulated probability model, experiment design, Dask execution, pooled and replicate results, uncertainty, historical Ada comparison and interpretation limits in detail. Its [XeLaTeX source](hoeflin_simulations.tex) consumes the generated tables in [simulation-data](simulation-data/). Charts are drawn by XeLaTeX/PGFPlots from Dask-produced CSVs.
+The [simulation report](output/pdf/hoeflin_simulations.pdf) covers **both SPARK and Dask**: native generator and aggregate algorithm, all eight native result rows, deterministic calculations, Dask pooled/replicate results, direct comparisons and verification limits. It derives the ideal Box–Muller law and explains why its hypotheses do not follow from a finite-state generator. Its [XeLaTeX source](hoeflin_simulations.tex) consumes the generated tables in [simulation-data](simulation-data/); scientific charts use XeLaTeX/PGFPlots with Dask-produced CSVs. The [dual-simulation revision](../../reporting/dual-simulation/README.md) pins and audits the retained native observations without claiming a new native proof or random experiment. Rebuild the three simulation volumes with `make simulation-reports PYTHON=.venv/bin/python` from the repository root.
 
 From the repository root, regenerate all three experiments, tables, PDFs and rendered review pages with:
 

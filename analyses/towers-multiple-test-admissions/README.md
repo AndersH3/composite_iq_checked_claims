@@ -53,7 +53,7 @@ The historical letters are cited and analysed, not reproduced or relicensed here
 
 ## Dedicated simulation report
 
-The [simulation report](output/pdf/towers_simulations.pdf) describes the simulated probability model, experiment design, Dask execution, pooled and replicate results, uncertainty, historical Ada comparison and interpretation limits in detail. Its [XeLaTeX source](towers_simulations.tex) consumes the generated tables in [simulation-data](simulation-data/). Charts are drawn by XeLaTeX/PGFPlots from Dask-produced CSVs.
+The [simulation report](output/pdf/towers_simulations.pdf) covers **both SPARK and Dask**: native random-pair construction, all four native event-cell rows, rates and conditional denominators, Dask pooled/replicate results, cross-implementation comparisons and verification limits. It distinguishes the native one-million-pair experiment from Dask's four-million-pair pool and additional calibrated OR rule. Its [XeLaTeX source](towers_simulations.tex) consumes the generated tables in [simulation-data](simulation-data/); scientific charts use XeLaTeX/PGFPlots with Dask-produced CSVs. The [dual-simulation revision](../../reporting/dual-simulation/README.md) pins and audits the retained native observations without claiming a new native proof or random experiment. Rebuild the three simulation volumes with `make simulation-reports PYTHON=.venv/bin/python` from the repository root.
 
 From the repository root, regenerate all three experiments, tables, PDFs and rendered review pages with:
 

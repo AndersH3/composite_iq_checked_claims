@@ -24,6 +24,8 @@ Load `fontspec`, `unicode-math`, `tcolorbox`, `tabularray`, `hyperref`, `bookmar
 
 Build and render through the Dask report workflow, check all final references/citations and layout diagnostics, and visually review the resulting pages. Record a new presentation revision separately from earlier simulation and proof-evidence records.
 
+Each sub-project's simulation report must explain both the SPARK and Dask experiments: their algorithms, cases and sample sizes, observed numerical results, comparisons and verification limits. Identify source-pinned native campaigns and additional cases covered by only one implementation. Duplicated Ghost-policy runs and exact replay do not add independent Monte Carlo observations; historical native proof results do not certify later changed sources.
+
 
 # Project attribution
 

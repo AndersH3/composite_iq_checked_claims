@@ -1,11 +1,11 @@
 % !TeX program = xelatex
-% The maintained Dask pipeline supplies every numerical table and plot CSV.
-% This source supplies interpretation; PGFPlots renders the precomputed data.
+% Dask schedules the numerical analysis and report build. Source-pinned SPARK
+% runtime observations and Dask results are reported as separate experiments.
 \input{../../reporting/simulation_style}
 \title{Simulating Multiple-Test Admissions}
-\subtitle{A detailed companion to the Towers analysis}
+\subtitle{SPARK and Dask methods, results and verification limits}
 \author{\ProjectAuthor\\{\normalsize\ProjectRoles}}
-\date{15 November 2026}
+\date{16 November 2026}
 
 \begin{document}
 \frontmatter
@@ -15,14 +15,18 @@
 \begin{abstract}
 This report explains what the multiple-test admissions simulations generate,
 what their counts estimate, and what the resulting uncertainty permits us to
-conclude. A Dask task graph generates correlated normal pairs, evaluates four
-original cutoff rules and a fifth calibrated OR rule, combines independent
+conclude. The SPARK implementation generates one million shared correlated
+pairs for four cutoff rules, records all four event cells and calculates
+joint and conditional frequencies. Its source-pinned proof campaign,
+Ghost Check and Ghost Ignore replays, and numerical validators are explained
+separately from its sampling results. A Dask task graph generates correlated normal pairs, evaluates four
+original cutoff rules and a fifth calibrated OR rule, combines seeded
 replicates, and prepares the tables used below. The correlation is the
 explicit model input \(\rho=0.7\). The main questions are the joint passing
 probability, eligibility through either test, and repeat qualification after
 passing a specified test. These are different probabilities. The simulations
-are compared with numerical Gaussian integrals and with the retained Ada run;
-the latter remains an immutable historical result. Particular attention is
+are compared with numerical Gaussian integrals and across both implementations;
+the retained native records remain immutable historical results. Particular attention is
 given to rare joint events, random conditional denominators, and why nominal
 per-test eligibility does not equal eligibility under a multiple-test rule.
 The experiment is a computational study of the stated model, not an empirical
@@ -396,30 +400,7 @@ the model, not a process of tuning the cutoff to make a particular random run
 contain exactly 2\% passers. Conditional repeat qualification and joint passing
 remain separate outputs even when the union is calibrated to 2\%.
 
-\chapter{Comparison with the retained Ada simulation}
-
-The original retained million-pair run used the repository's Ada generator,
-seed 20261030, and the four original rules. Its both-pass counts were 6,239,
-167, 4 and 640 for E2, E0.1, Rare and Mixed, respectively. The following table
-places that historical evidence beside the new Dask experiment while retaining
-the different denominators.
-\input{simulation-data/historical.tex}
-
-The historical rare count of four corresponds to a joint frequency of
-\(4\times10^{-6}\), compared with the Gaussian reference of approximately
-\(2.3125\times10^{-6}\). Four observations do not support fine distinctions
-between those small probabilities. The historical conditional rate
-\(4/32=0.125\) after passing the specified first test likewise has a random
-denominator of only 32. It should not be read as an accurate estimate of a
-population repeat-qualification percentage to several decimal places.
-
-Agreement between the new and historical results is assessed through their
-relationship to the mathematical targets and their sampling uncertainty.
-Exact event-count equality is not expected: the implementations use different
-random generators, seed schemes and random streams. A bit-for-bit replay of
-the old generator is a different verification task already described in the
-repository. The historical CSVs are inputs here and are not rewritten to
-match the new output.
+\input{spark_simulation_study}
 
 \section{Continuous correlation is not binary correlation}
 
@@ -454,8 +435,10 @@ reproducibility record \citep{daskDelayed,daskArray}. Changing chunking or a
 random-library version can change a pseudorandom realization even when the
 statistical model and human-readable seed are unchanged.
 
-All report tables and the coordinates in Figure~\ref{fig:towers-events} come
-from the Dask-generated files in \texttt{simulation-data/}. XeLaTeX and
+The Dask experiment's tables and the coordinates in Figure~\ref{fig:towers-events} come
+from the Dask-generated files in \texttt{simulation-data/}. The SPARK study
+also reports the native CSV's source-pinned event cells and validation records;
+their provenance is specified in \cref{sec:towers-spark-study}. XeLaTeX and
 PGFPlots render those coordinates; Matplotlib is not used. Scalar SciPy
 functions and the existing checked numerical calculation run inside scheduled
 tasks rather than being replaced with new probability algorithms. The data
@@ -489,4 +472,7 @@ model predicts without eliminating those distinctions.
 \bibliography{references,simulation_references}
 \chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
 \input{../../reporting/ai_disclosure}
+The 16 November 2026 revision used AI agents to expand the SPARK study,
+compare the native and Dask results, audit retained observations and review
+the rebuilt pages. No new random experiment or native prover run was performed.
 \end{document}

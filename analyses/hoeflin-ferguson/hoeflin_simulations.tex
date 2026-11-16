@@ -3,9 +3,9 @@
 % The primary analysis and historical evidence remain separate source files.
 \input{../../reporting/simulation_style}
 \title{Hoeflin/Ferguson: Simulation Methods and Results}
-\subtitle{Composite standardization, latent prediction and rare-tail uncertainty}
+\subtitle{SPARK and Dask experiments: composites, prediction and rare tails}
 \author{\ProjectAuthor\\{\normalsize\ProjectRoles}}
-\date{15 November 2026}
+\date{16 November 2026}
 
 \begin{document}
 \frontmatter
@@ -14,16 +14,19 @@
 \input{simulation-data/macros.tex}
 
 \begin{abstract}
-This report explains the simulations accompanying the Hoeflin/Ferguson
-analysis and gives a new Dask-based reproduction under the same expressly
-assumed Gaussian common-factor model. Eight battery sizes are examined at
-correlation \(0.6\). Four seeded replicates supply \SimTrials\ observations
+This report explains both the SPARK/Ada simulations accompanying the
+Hoeflin/Ferguson analysis and their Dask reproduction under the same
+expressly assumed Gaussian common-factor model. The source-pinned native
+experiment supplies one million observations for each of eight battery
+sizes at correlation \(0.6\). In Dask, four seeded replicates supply \SimTrials\ observations
 per size per replicate, or \SimPooledTrials\ observations for each fixed
 size. We examine the variance of the unstandardized mean, the calibration
 of the standardized composite, prediction of the simulated common factor,
 and exceedance counts at moderate and one-in-a-million thresholds. The
-numerical results are compared with exact Gaussian targets and the retained
-Ada simulation. Dask constructs and executes the numerical task graph;
+numerical results, algorithms, estimators and verification boundaries are
+examined for both implementations against exact Gaussian targets. The
+native experiment reports composite moments and tail counts; Dask also
+measures latent-factor prediction error. Dask constructs and executes the numerical task graph;
 XeLaTeX/PGFPlots renders charts from its output tables. No real test data
 are generated or analysed, and numerical agreement does not establish the
 psychometric model.
@@ -74,13 +77,17 @@ The same standard-normal arrays are reused across battery sizes within a
 replicate. Thus the eight reported results are coupled comparisons; they
 are not eight independent replications of a population experiment.
 
-Two sources of simulation evidence remain distinct. The new results are
-computed with Dask arrays and their recorded random generator, seeds,
-chunks and software versions. The historical Ada file contains one million
-observations per size, with the seed reset to \texttt{20261030} for every
-size. Its original bytes are preserved. Different generators and execution
-plans give different individual draws, so comparison concerns distributions
-and sampling errors, rather than equality of counts.
+Two sources of simulation evidence remain distinct. The Dask results use
+the recorded random generator, seeds, chunks and software versions. The
+SPARK/Ada experiment contains one million observations per size, with the
+seed reset to \texttt{20261030} for every size. Its final 4 November native
+runtime reproduced the original archived CSV byte for byte; this report
+therefore discusses the full native experiment without counting that
+repeat as fresh Monte Carlo information. Different generators and
+execution plans give different individual draws. Comparison concerns the
+defined distributions, estimators and sampling precision, rather than
+equality of counts. \Cref{sec:hf-spark-study} documents the native methods,
+results, proof scope and exact retained source context.
 
 \chapter{Model and exact targets}
 \section{From individual tests to the simulated aggregate}
@@ -211,6 +218,8 @@ argument, predictor variance and MSE optimality from Gaussian independence.
 Proposition~\ref{hfpr:nonidentification} proves why these conclusions
 cannot identify an actual latent target from the score law alone.
 
+\input{spark_simulation_study}
+
 \chapter{Dask execution, reductions and recorded diagnostics}
 Dask creates lazy random arrays in chunks of \SimChunk\ observations and
 constructs shared tasks for \(G\) and \(E\). Arithmetic, sums, squared
@@ -238,6 +247,32 @@ chi-square reference law. \Cref{sec:simulation-statistical-methods}
 derives the mean, variance and count reference calculations and explains
 their scope. These checks concern the implementation under ideal sampling;
 they cannot validate the chosen psychometric assumptions.
+
+The additional Dask latent-prediction diagnostic compares the empirical
+mean squared residual with \eqref{eq:hf-mse}, as shown in
+\cref{fig:hf-mse}. The next chapter reports the same estimates alongside
+the composite moments and raw-average SDs.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[
+ width=.90\linewidth,height=48mm,
+ xlabel={Number of tests \(n\)},ylabel={Mean squared factor-prediction error},
+ xmin=1,xmax=1000,
+ legend style={font=\small,at={(.98,.98)},anchor=north east},grid=major]
+\addplot+[blue,mark=*] table[x=n,y=theory_mse,col sep=comma]
+ {simulation-data/moments.csv};
+\addlegendentry{Exact target}
+\addplot+[red,dashed,mark=x] table[x=n,y=mse,col sep=comma]
+ {simulation-data/moments.csv};
+\addlegendentry{Dask estimate}
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{The model's factor-prediction MSE declines towards zero even
+though the raw score mean has a positive limiting population SD.}
+\label{fig:hf-mse}
+\end{figure}
 
 \chapter{Observed moments and the variance floor}
 \begingroup\small
@@ -283,7 +318,7 @@ standardized separately to SD one; it is not the quantity on this axis.}
 \label{fig:hf-sd}
 \end{figure}
 
-The mean-squared-error columns examine a different prediction target.
+The mean-squared-error columns and \cref{fig:hf-mse} examine a different prediction target.
 For a single test the exact MSE is \(0.4\); at ten tests it is
 \(0.0625\); at one thousand it is \(0.4/600.4\). These are direct
 substitutions in \eqref{eq:hf-mse}. Their square roots are residual SDs
@@ -291,27 +326,6 @@ for predicting \(G\), not population SDs of the score average. Numerical
 agreement with these targets demonstrates the distinction in simulated
 data; it does not identify a real common factor or show that residual
 errors in real tests are independent.
-
-\begin{figure}[htbp]
-\centering
-\begin{tikzpicture}
-\begin{loglogaxis}[
- width=.90\linewidth,height=48mm,
- xlabel={Number of tests \(n\)},ylabel={Mean squared factor-prediction error},
- xmin=1,xmax=1000,
- legend style={font=\small,at={(.98,.98)},anchor=north east},grid=major]
-\addplot+[blue,mark=*] table[x=n,y=theory_mse,col sep=comma]
- {simulation-data/moments.csv};
-\addlegendentry{Exact target}
-\addplot+[red,dashed,mark=x] table[x=n,y=mse,col sep=comma]
- {simulation-data/moments.csv};
-\addlegendentry{Dask estimate}
-\end{loglogaxis}
-\end{tikzpicture}
-\caption{The model's factor-prediction MSE declines towards zero even
-though the raw score mean has a positive limiting population SD.}
-\label{fig:hf-mse}
-\end{figure}
 
 \chapter{Tail counts, rare events and replicate variation}
 \begingroup\small
@@ -379,35 +393,62 @@ Proposition~\ref{hfpr:simulation} and
 Proposition~\ref{sm:binomial}; interval coverage is addressed in
 Results~\ref{sm:wilson} and \ref{sm:clopper-pearson}.
 
-\chapter{Comparison with the retained Ada simulation}
-\begingroup\small
-\input{simulation-data/historical.tex}
-\endgroup
-The retained million-observation Ada output has standardized means from
-approximately \(0.000397\) to \(0.000729\), and reported variances from
-\(0.999023\) to \(1.001649\). Its rare-event count is zero
-for \(n=2\) and one for each other listed size. These are observations
-in that archived file, not rounded theoretical targets. The scale of its
-mean fluctuations is consistent with a one-million-observation standard
-error of \(0.001\); rare counts around zero or one are likewise
-unsurprising when the expected count is one.
+\chapter{Comparing the SPARK and Dask experiments}
+\label{sec:hf-dual-comparison}
+Both implementations simulate \eqref{eq:hf-aggregate} and standardize with
+the same \(v_n\). Both report the unbiased sample variance with denominator
+\(T-1\). Thus their composite means, variances and exceedance frequencies
+have the same ideal targets, although their finite random streams and
+reduction orders differ. The mathematical equivalence follows from
+Proposition~\ref{hfpr:factor}; the source-pinned driver and replay records
+establish which formulas these particular native executions used.
 
-The two implementations use different generators and numerical paths.
-They consequently should not reproduce one another's rare counts bit for
-bit. Their relevant agreement is that raw/composite moments and moderate
-tail frequencies match the respective Gaussian targets at the sampling
-precision supported by their own trial counts. Historical last-digit
-variance differences also depend on the recorded variance estimator and
-output rounding; they are not an accuracy ranking of the two languages.
-The source/provenance record identifies the archived input exactly.
+The Dask pool has four times the observations of the native experiment
+for each fixed size. By Proposition~\ref{sm:normal-sample}, its ideal
+mean SE is \(0.0005\), compared with \(0.001\) in SPARK; the variance SE
+is \(\sqrt{2/(T-1)}\), approximately \(0.000707\) and \(0.001414\),
+respectively. The variance-SE formula follows directly from that
+proposition's chi-square law and \(\operatorname{Var}(\chi^2_\nu)=2\nu\).
+This predicts greater precision at the larger sample size, rather than
+superiority of a programming language or generator.
 
-The old SPARK evidence applies to its specified arithmetic, ranges,
-bookkeeping and control flow under documented trusted interfaces. This
-new Dask report does not relabel that evidence as a proof of the Python
-random generator, the external numerical libraries, or the present
-statistical model. Deal contracts and runtime/property tests have their
-own separately recorded scope. No fresh native proof campaign is implied
-by re-reading or comparing the retained CSV.
+At \(n=1\), SPARK records mean \(0.000396961\) and variance
+\(0.999022835\); Dask records mean \(0.000188666\) and variance
+\(1.000254209\). At \(n=1000\), the respective means are
+\(0.000729021\) and \(0.000330421\), and variances are
+\(1.001649339\) and \(1.000209530\). Every native and pooled Dask mean
+is less than one of its own theoretical SEs from zero. These are
+descriptions of the two recorded samples, not additional independent
+experiments at each plotted size. Different seeds and generators alone
+would not justify treating cross-implementation differences as independent
+normal errors; no such difference test is used here.
+
+At \(n=1\), native moderate-tail counts are \(22603\) and \(1312\),
+versus pooled Dask counts \(90719\) and \(5544\); their denominators are
+one million and four million. The resulting rates fluctuate on either
+side of the same targets. A useful caution is the Dask \(Z>3\) interval
+for this size: its pointwise 95\% Wilson lower endpoint is approximately
+\(0.001350017\), just above the target \(0.001349898\). The table retains
+this discrepancy. A nominal pointwise interval is not guaranteed to cover
+on every run, and multiple coupled diagnostics are not a simultaneous
+95\% guarantee; see Propositions~\ref{sm:wilson} and \ref{sm:multiple}.
+
+The native rare counts are zero or one, while pooled Dask counts range
+from one to four. Their expected counts are one and four. From
+Proposition~\ref{sm:binomial}, rare-frequency relative SE is
+\(\sqrt{(1-p)/(Tp)}\): approximately 100\% for SPARK and 50\% for the
+Dask pool at \(p=10^{-6}\). This proves why agreement of tiny counts is
+weak evidence about the numerical experiment's tail and supplies no
+empirical validation of a psychometric extreme tail.
+
+The native CSV does not record latent-factor squared errors. Dask's MSE
+columns therefore test an additional model consequence, rather than
+replicate an unreported SPARK measurement. SPARK's deterministic
+calculation output does check the corresponding conditional-factor
+formulas and worked examples, as described in
+\cref{sec:hf-spark-calculations}. Neither implementation observes real
+latent ability. Runtime tests, native arithmetic proofs, limited Python
+verification and statistical-model assumptions keep their separate scopes.
 
 \chapter{Interpretation and practical limits}
 The computations illustrate a specific mathematical distinction.
@@ -437,9 +478,12 @@ has, and has not, been demonstrated.
 \begingroup
 \setlength{\bibsep}{3pt}
 \bibliographystyle{plainnat}
-\bibliography{simulation_references,references}
+\bibliography{simulation_references,references,hf_simulation_references}
 \endgroup
 \clearpage
 \chapter{AI disclosure and provenance}\label{sec:ai-disclosure}
 \input{../../reporting/ai_disclosure}
+The 16 November 2026 revision used AI agents to expand the SPARK study,
+compare the native and Dask results, audit retained observations and review
+the rebuilt pages. No new random experiment or native prover run was performed.
 \end{document}

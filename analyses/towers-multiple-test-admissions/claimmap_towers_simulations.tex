@@ -69,12 +69,27 @@ endpoint limits and the unique root. The generated calibration table is
 the fixed-root simulation record. A 95\% interval can miss its target;
 Proposition~\ref{sm:multiple} separates pointwise intervals from broad diagnostic
 checks. The observed miss is retained without seed or cutoff tuning.\\
-Retained Ada counts, historical comparison and replay limits
-& The historical CSV and manifest supply the four counts, denominators and
-seed. The rare frequency is \(4/10^6\), the historical conditional is
-\(4/32\). Their uncertainty follows from Propositions~\ref{sm:binomial},
-\ref{sm:conditional-count}; a different generator need not reproduce exact
-counts. Historical records are preserved, not re-proved by the new Dask run.\\
+SPARK generator and ideal normal transformation
+& \Cref{tw:box-muller} proves the continuous-uniform Box--Muller law by the
+change-of-variables theorem and independence. \Cref{tw:gaussian} proves the
+correlated pair's ideal law. The Park--Miller recurrence and finite checked
+bounds are source-pinned implementation facts, not proofs of IID randomness.\\
+All native cells, rates, campaign replay and Dask comparison
+& \Cref{sec:towers-spark-study} identifies the immutable 31 October and
+byte-identical 4 November outputs, source manifest and CSV hash. Integer
+cells and execution statuses are recorded observations. \Cref{tw:simulation}
+proves the cell-derived rates; \cref{sm:binomial,sm:conditional-count,sm:rare}
+prove their ideal sampling laws. Native and Dask denominators are retained
+separately. The fourfold-size/half-SE statement follows by substituting
+\(4T\) into \(p(1-p)/T\), not from an assumption of independent finite
+streams. Wilson and exact intervals have the distinct proofs in
+\cref{sm:wilson,sm:clopper-pearson}.\\
+Native proof totals, trusted completions and source context
+& The dated 4 November portfolio and runtime manifests record 696 checks,
+230 flow/466 prover, 99 project subprograms/557 clauses, exact replay and
+\(10^{-10}\) numerical tolerance. These are source-pinned evidence,
+not newly rerun proofs of later refactored source, Dask, third-party
+libraries, ideal IID assumptions, physical I/O or model adequacy.\\
 Binary correlation \eqref{eq:towers-phi} and phi table
 & Proposition~\ref{tw:events} proves the population indicator formula from
 its moments. Replacing probabilities by empirical frequencies gives the

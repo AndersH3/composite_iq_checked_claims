@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild all six proof-complete KOMA-Script books in one Dask graph.
+"""Rebuild selected proof-complete KOMA-Script books in one Dask graph.
 
 The November simulation campaign is immutable input. This document revision
 neither reruns its random experiment nor relabels its old source hashes as
@@ -7,6 +7,7 @@ current. Maintained XeLaTeX/BibTeX and Poppler tools handle typesetting and
 rendering; Dask schedules those tasks and the final revision manifest.
 """
 import argparse
+import csv
 import json
 from json import JSONDecodeError
 import os
@@ -20,6 +21,10 @@ from dask.multiprocessing import RemoteException
 import deal
 
 from verification.run_computer10 import digest, dump
+# Keep the caller's imported grid distinct from audit_project's own PROJECTS
+# global. Deal's static cross-module extractor otherwise builds an invalid
+# import-node location when compiling that callee's unchanged preconditions.
+from reporting.native_audit import PROJECTS as AUDIT_PROJECTS, audit_project
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCUMENTS = (
@@ -30,8 +35,39 @@ DOCUMENTS = (
     ("sequential-conditional-means", "sequential_conditional_means"),
     ("sequential-conditional-means", "sequential_simulations"),
 )
-RECORD = ROOT.joinpath("reporting", "attribution", "revision.json")
+RECORD = ROOT.joinpath("reporting", "dual-simulation", "revision.json")
 CAMPAIGN = ROOT.joinpath("reporting", "run.json")
+# Pin the actual native experiment and validation files used by the expanded
+# reports, not merely the old Dask reproduction's historical CSV copies.
+# Reading an archived manifest does not rerun GNATprove or prove current code.
+NATIVE_CAMPAIGN = "verification/evidence/five-contracts-computer10-20261104"
+SEQUENTIAL_CAMPAIGN = "analyses/sequential-conditional-means/evidence/campaign-20261114-current"
+NATIVE_INPUTS = (
+    NATIVE_CAMPAIGN + "/manifest.json",
+    NATIVE_CAMPAIGN + "/artifacts.json",
+    NATIVE_CAMPAIGN + "/REPORT.md",
+    NATIVE_CAMPAIGN + "/hoeflin/portfolio/result.json",
+    NATIVE_CAMPAIGN + "/towers/portfolio/result.json",
+    NATIVE_CAMPAIGN + "/runtime-final/summary.json",
+    NATIVE_CAMPAIGN + "/runtime-final/hoeflin/check/simulation.csv",
+    NATIVE_CAMPAIGN + "/runtime-final/hoeflin/check/calculations.csv",
+    NATIVE_CAMPAIGN + "/runtime-final/hoeflin/check/runtime.json",
+    NATIVE_CAMPAIGN + "/runtime-final/hoeflin/check/replay-normal.json",
+    NATIVE_CAMPAIGN + "/runtime-final/hoeflin/check/replay-optimized.json",
+    NATIVE_CAMPAIGN + "/runtime-final/hoeflin/check/validation-normal.json",
+    NATIVE_CAMPAIGN + "/runtime-final/hoeflin/check/validation-optimized.json",
+    NATIVE_CAMPAIGN + "/runtime-final/towers/check/simulation.csv",
+    NATIVE_CAMPAIGN + "/runtime-final/towers/check/runtime.json",
+    NATIVE_CAMPAIGN + "/runtime-final/towers/check/validation-normal.log",
+    NATIVE_CAMPAIGN + "/runtime-final/towers/check/validation-optimized.log",
+    SEQUENTIAL_CAMPAIGN + "/runtime/simulation.csv",
+    SEQUENTIAL_CAMPAIGN + "/runtime/calculation.csv",
+    SEQUENTIAL_CAMPAIGN + "/runtime/checks.csv",
+    SEQUENTIAL_CAMPAIGN + "/runtime/validation.json",
+    SEQUENTIAL_CAMPAIGN + "/campaign.json",
+    SEQUENTIAL_CAMPAIGN + "/sources.tar.gz",
+    SEQUENTIAL_CAMPAIGN + "/gnatprove.out",
+)
 REQUIRED_PACKAGES = (
     "fontspec", "unicode-math", "tcolorbox", "tabularray", "hyperref",
     "bookmark", "mathtools", "microtype", "scrlayer-scrpage", "cleveref",
@@ -47,6 +83,8 @@ REQUIRED_PACKAGES = (
 @deal.post(lambda result: all("/simulation-data/" in row["path"] for row in result["inputs"]))
 @deal.post(lambda result: all(len(row["sha256"]) == 64 for row in result["inputs"]))
 @deal.post(lambda result: len({row["path"] for row in result["inputs"]}) == len(result["inputs"]))
+@deal.post(lambda result: {row["path"] for row in result["native_campaign_inputs"]} == set(NATIVE_INPUTS))
+@deal.post(lambda result: all(len(row["sha256"]) == 64 for row in result["native_campaign_inputs"]))
 @deal.ensure(lambda *, result: result["campaign_sha256"] == digest(CAMPAIGN))
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
 @deal.has("read")
@@ -65,7 +103,9 @@ def retained_data():
         source = ROOT.joinpath(row["path"])
         if not source.is_relative_to(ROOT) or digest(source) != row["sha256"]:
             raise ValueError("Retained campaign input hash mismatch: " + row["path"])
-    return {"verified": True, "campaign_sha256": digest(CAMPAIGN), "inputs": inputs}
+    native_inputs = [{"path": name, "sha256": digest(ROOT.joinpath(name))} for name in NATIVE_INPUTS]
+    return {"verified": True, "campaign_sha256": digest(CAMPAIGN), "inputs": inputs,
+            "native_campaign_inputs": native_inputs}
 
 
 @deal.pre(lambda document, retained: document in DOCUMENTS)
@@ -135,7 +175,7 @@ def build_document(document, retained):
     if "Anders Hellström" not in title or "Author, researcher and requester" not in title:
         raise ValueError("Missing visible author/researcher/requester credit: " + stem)
     pages = int(next(line.split(":", 1)[1] for line in info.splitlines() if line.startswith("Pages:")))
-    render = directory.joinpath("tmp", "pdfs", "book-format", stem)
+    render = directory.joinpath("tmp", "pdfs", "dual-simulation", stem)
     render.mkdir(parents=True, exist_ok=True)
     # A shorter revised PDF must not leave a stale final page in visual QA.
     # Only this report's temporary, reproducible page images are removed.
@@ -150,17 +190,21 @@ def build_document(document, retained):
             "visible_project_roles": True}
 
 
-@deal.pre(lambda results, retained, graph_tasks: isinstance(results, list) and len(results) == len(DOCUMENTS))
-@deal.pre(lambda results, retained, graph_tasks: {(row["project"], row["stem"]) for row in results} == set(DOCUMENTS))
-@deal.pre(lambda results, retained, graph_tasks: type(graph_tasks) is int and graph_tasks >= 8)
-@deal.post(lambda result: result["schema"] == "dask-six-report-attribution-v1")
-@deal.post(lambda result: len(result["reports"]) == 6 and result["simulation_rerun"] is False)
+@deal.pre(lambda results, retained, graph_tasks, audits: isinstance(results, list) and 0 < len(results) <= len(DOCUMENTS))
+@deal.pre(lambda results, retained, graph_tasks, audits: len({(row["project"], row["stem"]) for row in results}) == len(results))
+@deal.pre(lambda results, retained, graph_tasks, audits: all((row["project"], row["stem"]) in DOCUMENTS for row in results))
+@deal.pre(lambda results, retained, graph_tasks, audits: type(graph_tasks) is int and graph_tasks >= len(results) + 5)
+@deal.pre(lambda results, retained, graph_tasks, audits: len(audits) == 3 and {row["project"] for row in audits} == set(AUDIT_PROJECTS))
+@deal.post(lambda result: result["schema"] == "dask-report-dual-simulation-v1")
+@deal.post(lambda result: result["simulation_rerun"] is False)
 @deal.post(lambda result: result["new_native_proof_run"] is False)
-@deal.ensure(lambda results, retained, graph_tasks, result: result["retained_campaign"] == retained)
-@deal.ensure(lambda results, retained, graph_tasks, result: result["graph_tasks"] == graph_tasks)
+@deal.ensure(lambda results, retained, graph_tasks, audits, result: result["reports"] == results)
+@deal.ensure(lambda results, retained, graph_tasks, audits, result: result["retained_campaign"] == retained)
+@deal.ensure(lambda results, retained, graph_tasks, audits, result: result["graph_tasks"] == graph_tasks)
+@deal.ensure(lambda results, retained, graph_tasks, audits, result: result["native_results_audit"] == audits)
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
 @deal.has("read", "write")
-def record_revision(results, retained, graph_tasks):
+def record_revision(results, retained, graph_tasks, audits):
     """Pin this revision while keeping original campaign and evidence intact.
 
     Hash all TeX/Bib sources in each project because a main document can input
@@ -171,14 +215,15 @@ def record_revision(results, retained, graph_tasks):
     if retained_data() != retained:
         raise ValueError("Retained simulation inputs changed during the document revision")
     sources = list(ROOT.joinpath("reporting").glob("*.tex")) + list(ROOT.joinpath("reporting").glob("*.bib"))
-    sources += [Path(__file__).resolve(), ROOT.joinpath("verification", "run_computer10.py"),
+    sources += [Path(__file__).resolve(), ROOT.joinpath("reporting", "native_audit.py"),
+                ROOT.joinpath("library", "python", "statistics.py"), ROOT.joinpath("verification", "run_computer10.py"),
                 ROOT.joinpath("AGENTS.md"), ROOT.joinpath("requirements-dev.txt")]
     for project in sorted({document[0] for document in DOCUMENTS}):
         directory = ROOT.joinpath("analyses", project)
         sources += list(directory.glob("*.tex")) + list(directory.glob("*.bib"))
-    record = {"schema": "dask-six-report-attribution-v1", "date": "2026-11-15",
+    record = {"schema": "dask-report-dual-simulation-v1", "date": "2026-11-16",
               "scheduler": "processes", "dask_version": dask.__version__,
-              "graph_tasks": graph_tasks, "reports": results,
+              "graph_tasks": graph_tasks, "reports": results, "native_results_audit": audits,
               "simulation_rerun": False, "new_native_proof_run": False, "matplotlib_used": False,
               "retained_campaign": retained,
               "sources": [{"path": path.relative_to(ROOT).as_posix(), "sha256": digest(path)} for path in sorted(set(sources))]}
@@ -189,21 +234,25 @@ def record_revision(results, retained, graph_tasks):
 @deal.pre(lambda argv=None: argv is None or isinstance(argv, list) and all(isinstance(arg, str) and "\x00" not in arg for arg in argv))
 @deal.pre(lambda argv=None: ROOT.is_dir())
 @deal.post(lambda result: result == 0)
-@deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
+@deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError, StopIteration, IndexError, OverflowError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
 @deal.has("read", "write", "syscall", "import", "stdout", "stderr")
 def main(argv=None):
-    """Execute one shared graph: retained inputs, six builds and one manifest."""
+    """Schedule the chosen books after their immutable experiment input audit."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workers", type=int, choices=range(1, 5), default=2)
+    parser.add_argument("--simulations-only", action="store_true",
+                        help="Build the three simulation books; leave analytical PDFs untouched")
     args = parser.parse_args(argv)
+    documents = tuple(document for document in DOCUMENTS if not args.simulations_only or document[1].endswith("simulations"))
     retained = dask.delayed(retained_data)()
-    builds = [dask.delayed(build_document)(document, retained) for document in DOCUMENTS]
-    graph_tasks = len(dask.highlevelgraph.HighLevelGraph.merge(*(item.dask for item in builds))) + 1
-    terminal = dask.delayed(record_revision)(builds, retained, graph_tasks)
+    builds = [dask.delayed(build_document)(document, retained) for document in documents]
+    audits = [dask.delayed(audit_project)(project) for project in AUDIT_PROJECTS]
+    graph_tasks = len(dask.highlevelgraph.HighLevelGraph.merge(*(item.dask for item in builds + audits))) + 1
+    terminal = dask.delayed(record_revision)(builds, retained, graph_tasks, audits)
     try:
         record = dask.compute(terminal, scheduler="processes", num_workers=args.workers)[0]
     except RemoteException as error:
-        raise RuntimeError("Dask attribution build failed; inspect reporting/attribution build logs") from error
+        raise RuntimeError("Dask report build failed; inspect reporting/dual-simulation build logs") from error
     print(json.dumps(record, indent=2))
     return 0
 

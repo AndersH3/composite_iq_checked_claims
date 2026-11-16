@@ -93,7 +93,26 @@ four replicates, output counts and shared random numbers &
 seed/chunk/sharing choices are implementation records. &
 Finite-sum identities. Independent-observation sampling laws are stated
 ideal assumptions, rather than consequences of seed values.\\\midrule
-Tables, figures, generated discussion and retained Ada comparison &
+\Cref{sec:seq-sim-spark}: native scalar sampler, additional negative and
+singular cases, native/Dask sampling precision and difference variance &
+\Cref{seq-sim:scalar-law} proves the aggregate law from the full PSD
+Gaussian covariance, including its degenerate cases. The chapter expands
+the sample-square identity and all supplementary rational targets, derives
+the \(\sqrt{20}\) SE ratio, and retains the cross-estimator covariance
+term. Native output counts follow from \(2\cdot20+6=46\). &
+Spectral realization, Gaussian regression, covariance bilinearity and the
+normal sample theorem, \ref{pf:spectral}, \ref{pf:conditioning},
+\ref{pf:moments}, \ref{sm:normal-sample}
+\citep{axler2024,gallager2013,durrett2019}.\\\midrule
+\Cref{sec:seq-sim-spark}: finite diagnostics and false-alarm scope &
+The \(92\cdot10^{-10}\) bound is the explicit union bound for at most
+two ideal-law diagnostics per native row, proved in \ref{sm:multiple}.
+The source-pinned CSV, archived source and validation record establish
+the observed values and check counts, not current-source verification. &
+Normal/chi-square pivots and the union bound,
+\ref{sm:normal-sample}, \ref{sm:multiple}. Finite-state generator validity
+is not deduced from either the seed labels or program contracts.\\\midrule
+Tables, figures, generated discussion and SPARK/Dask comparison &
 Observed estimates, maxima, intervals, CSV coordinates, seeds and proof
 counts are finite reproduction records. Their exact scope and the
 counterexample to inferring universal correctness from tests appear in

@@ -30,3 +30,7 @@ proof-reports:
 
 .PHONY: report-books
 report-books: proof-reports
+
+.PHONY: simulation-reports
+simulation-reports:
+	$(PYTHON) -m reporting.rebuild_proofs --simulations-only

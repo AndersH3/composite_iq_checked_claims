@@ -1,15 +1,16 @@
 % !TeX program = xelatex
 % Standalone simulation report.  Mathematical exposition is handwritten;
-% every numerical table and plotted coordinate is produced by the shared
-% Dask pipeline.  The original numerical experiment and evidence are retained;
+% Dask numerical tables and plotted coordinates are produced by the shared
+% pipeline. Native tables explicitly identify their retained CSV source.
+% The original numerical experiments and evidence are retained;
 % the mathematical exposition has a separate proof-revision manifest.
 \input{../../reporting/simulation_style}
 \hypersetup{pdftitle={Sequential Conditional Means: Simulation Methods and Results},
-  pdfsubject={Dask experiments with population and conditional actual-score means}}
+  pdfsubject={SPARK and Dask experiments with population and conditional actual-score means}}
 \title{Sequential Conditional Means:\\Simulation Methods and Results}
 \subtitle{One, two or three initial IQ-150 scores, with every initial score included}
 \author{\ProjectAuthor\\{\normalsize\ProjectRoles}}
-\date{15 November 2026}
+\date{16 November 2026}
 
 \begin{document}
 \frontmatter
@@ -25,9 +26,15 @@ three observed starting scores are fixed at IQ 150, followed by one, two
 or ten actual future scores. We simulate whole population batteries and
 conditional future vectors as separate experiments, compare their means
 and standard deviations with the Gaussian formulas, and sample the
-Gaussian laws with the calculated infinite-count parameters. Each case
-uses \SimReplicates{} seeded replicates of \SimTrials{} observations,
-pooled to \SimPooledTrials{} observations. Dask builds and executes the
+Gaussian laws with the calculated infinite-count parameters. The retained
+Ada/SPARK experiment samples scalar aggregate laws in 46 batches of
+200,000 observations, including independent, perfectly correlated and
+finite negative-correlation cases. The Dask experiment instead constructs
+finite score vectors for the requested IQ examples. Each Dask case uses
+\SimReplicates{} seeded replicates of \SimTrials{} observations,
+pooled to \SimPooledTrials{} observations. This report describes both
+algorithms, their full case coverage, results and distinct verification
+limits. Dask builds and executes the
 array, reduction and report-data graphs; XeLaTeX/PGFPlots draws figures
 from their generated CSVs. The key distinction is between variation in
 actual outcomes and the zero standard deviation of a fixed list of
@@ -153,7 +160,7 @@ These transformations follow from the affine moment proof in
 Propositions~\ref{pf:moments} and \ref{seqp:recursion}.
 
 \section{Generating the conditional future scores directly}
-The new implementation samples every finite future residual component
+The Dask implementation samples every finite future residual component
 rather than sampling only a scalar mean with the already calculated
 variance. It combines their sum with the common factor, using the
 algebraically equivalent construction below without retaining a second
@@ -432,7 +439,7 @@ limits, since \(\lvert\sqrt{x}-\sqrt y\rvert\leq\sqrt{|x-y|}\)
 for nonnegative \(x,y\); that inequality follows by squaring and using
 \((u-v)^2\leq(u-v)(u+v)\) when \(u\geq v\geq0\).
 
-The new limit experiments sample \(\sqrt c\,H\) for the population and
+The Dask limit experiments sample \(\sqrt c\,H\) for the population and
 \(\sqrt c(\mu_r+\tau_rH)\) after conditioning. These distributions have
 exactly the limiting means and variances just derived. They do not use
 an arbitrarily large finite \(k\) as a surrogate for infinity. They
@@ -468,7 +475,9 @@ Explicitly,
 since \(d_{r+1}=d_r+c\). This proves the decrease in remaining factor
 uncertainty at the selected correlation.
 
-\chapter{Replication and comparison with the retained Ada run}
+\input{spark_simulation_study}
+
+\chapter{Dask replication and comparison with the SPARK experiment}
 \label{sec:seq-sim-replication}
 
 \input{simulation-data/replicates.tex}
@@ -483,15 +492,14 @@ because it produces unusually close agreement.
 
 \input{simulation-data/historical.tex}
 
-The original Ada/SPARK campaign contains 20 finite calculation cases,
-46 population/conditional sampling batches of 200,000 observations each,
-and 18 identity or finite-PMF checks. It also checks independent and
-perfectly correlated cases, a valid negative-correlation interior and
-singular negative endpoints. The new full-vector Dask grid deliberately
-concentrates on the nine requested positive-correlation IQ examples and
-their limits. The earlier boundary results remain available in their
-source-pinned record; this report does not reinterpret the
-nonnegative-factor construction as a negative-correlation sampler.
+The native experiment in \Cref{sec:seq-sim-spark} and this Dask experiment
+overlap on 24 laws: nine finite population laws, nine finite conditional
+laws and six limiting laws. The remaining 22 native batches cover the
+11 additional finite cases in \Cref{tab:seq-native-extra}. Thus neither
+implementation's table is a substitute for the other's entire coverage.
+The full-vector Dask construction is used only in its nonnegative
+correlation domain; the native negative-correlation results are scalar
+Gaussian aggregate draws, as proved in \Cref{seq-sim:scalar-law}.
 
 The retained Ada program samples the scalar Gaussian aggregate law,
 whereas the new finite Dask calculation draws the full future or
@@ -500,7 +508,7 @@ therefore checks two constructions of the same model. Their random-number
 implementations and sample counts differ, so identical individual draws,
 means or variances are not expected. The comparison is statistical and
 numerical, not an exact replay of the Ada pseudorandom stream. Neither
-implementation is an independent empirical dataset.
+implementation is an empirical dataset.
 
 The previous native campaign discharged 430 checks across its new and
 reused SPARK units, under the documented numerical and I/O contracts.
@@ -520,8 +528,8 @@ several high initial scores shifts the centre while reducing remaining
 uncertainty. Filling later entries with their conditional predictions
 removes that remaining outcome variation entirely from the fixed
 numerical list. These statements are mathematical consequences of the
-Gaussian model; the tables show that the Dask implementation reproduces
-them to its reported sampling accuracy.
+Gaussian model; the tables show how both implementations reproduce
+their covered laws to the reported sampling and numerical accuracy.
 
 The experiments assume equicorrelation, Gaussian joint laws, the stated
 reference scale and the specified fixed starting history. They do not
@@ -554,4 +562,7 @@ data were collected. Independent human peer review and empirical
 psychometric validation are not claimed.
 
 \input{../../reporting/ai_disclosure}
+The 16 November 2026 revision used AI agents to expand the SPARK study,
+compare the native and Dask results, audit retained observations and review
+the rebuilt pages. No new random experiment or native prover run was performed.
 \end{document}
