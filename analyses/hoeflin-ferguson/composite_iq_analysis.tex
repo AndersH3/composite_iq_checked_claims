@@ -405,219 +405,30 @@ real-arithmetic enclosure for \(q\) or independently prove the accuracy
 of SciPy. \Cref{hfpr:numerics} separates exact formulas and rounding
 certificates from these backend-dependent approximations.
 
-\chapter{Expanded software verification and its limits}
+\chapter{Python, Dask, and Deal verification scope}
 \label{sec:verification}
+The maintained computational path uses Python for reference calculations,
+NumPy and SciPy for established numerical procedures, and Dask to construct,
+execute, and reduce reproducible Monte Carlo tasks. The implementation
+records explicit model inputs, seed choices, counts, numerical summaries,
+and uncertainty estimates. The source and generated tables remain distinct:
+a numerical match is not a proof of the assumed population distribution.
 
-\textbf{Historical source context.} This chapter describes the source-pinned
-4--5 November 2026 campaigns linked below. Counts and ``analyzed'' status
-refer to those recorded snapshots; they are not a claim that this report's
-15 November mathematical additions reran GNATprove or recounted the
-present repository. The immutable evidence supplies the support for these
-software observations. The mathematical proofs added in this revision
-are separate from native SPARK checks.
+Deal contracts specify finite input domains, output structure, raised
+exceptions and expected side effects for Python functions. Static lint and
+runtime/property checks detect particular classes of mistakes; neither the
+number of decorators nor a successful finite test establishes the
+correctness of an unexamined numerical library or a pseudorandom generator.
+The repository's Rocq proofs independently establish *stated formal
+propositions* under explicit hypotheses, without certifying Python's
+floating-point implementation or any empirical psychometric assumption.
 
-The original verification selected only the arithmetic core. That boundary
-was broader than necessary: the calculation and simulation drivers and
-most numerical orchestration can be analyzed in SPARK. The expanded
-implementation makes \texttt{Hoeflin\_Calculations},
-\texttt{Hoeflin\_Simulation}, and the algorithm bodies in
-\texttt{Normal\_Support} SPARK-on, alongside the original arithmetic in
-\texttt{Hoeflin\_Core}. Argument parsing and CSV rendering are isolated in
-\texttt{Report\_IO}, whose SPARK interface explicitly models external state.
-The proof project enumerates all ten source files, including the trusted
-I/O completion, rather than selecting only the core.
-
-The \href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/five-contracts-computer10-20261104/REPORT.md}{Five-contract computer10 evidence report}
-records source hashes, commands, tool identities, native reports, coverage
-and numerical comparisons from 4 November 2026. The
-\href{https://github.com/AndersH3/composite_iq_checked_claims/blob/main/verification/evidence/symbolic-fixture-computer10-20261105/REPORT.md}{symbolic-check follow-up}
-adds fresh Python verification and re-audits these unchanged native records;
-it does not claim new prover invocations. Earlier 47-check and 110-test results remain
-immutable historical snapshots, not counts for the expanded implementation.
-
-\section{What the expanded campaign analyzed}
-
-In that expanded source snapshot, SPARK covers the inverse-survival bisection loop, exact 64-bit random
-state recurrence, open-unit conversion, Box--Muller composition, common-factor
-simulation, signed and squared accumulations, event-count updates, and both
-main procedures. Random generation uses procedures with explicit state
-updates instead of side-effecting functions. Proved loop invariants and
-small SPARK helpers bound accumulation; the exact integer-to-floating
-successor lemma is proved, not imported as an axiom. The original arithmetic
-core still establishes exact integer variance bookkeeping, bounded
-floating-point transforms, and nested event counts with specified increments.
-
-The 4 November five-prover portfolio discharged \textbf{404 native checks:
-129 flow checks and 275 prover checks}, with zero unproved and zero justified
-checks. CVC5, Z3, Alt-Ergo, classic COLIBRI, and Yices were requested together.
-This result does not imply that every solver independently completed every
-obligation. The deliberately incorrect inclusion-exclusion control was
-rejected with an unproved functional contract. Fresh source copies and
-object directories prevent reuse of stale proof results. The compiler
-identifies itself as GNAT 13.2.0; the matching GNATprove banner is
-\texttt{0.0w}. Exact executable identities are retained in the manifest.
-
-Native coverage records 53 \texttt{all}, 14 \texttt{spec}, and zero
-\texttt{no} entities. Here \texttt{all} describes a SPARK specification and
-body, or a declaration requiring no body; it is not itself a proof result.
-The \texttt{spec} entries expose trusted completions. In the earlier source,
-whole off-mode units emitted empty entity arrays, so zero \texttt{no}
-entries must never be interpreted as zero excluded code. The retained
-flow-only baseline has nine \texttt{all} entities and is explicitly not a
-new proof campaign. Native proof totals and coverage statuses are audited
-separately.
-
-The first attempt left the newly added driver receipt postcondition
-unproved. A fresh full-project retry added outer-loop receipt invariants
-and discharged every check. The initial failed result and source remain
-recorded. The final manifest combines actual successful invocations and
-fresh source-pinned structural audits; it is not a claim that the initial
-launcher exited successfully.
-
-\section{Trusted numerical and I/O boundaries}
-
-The campaign leaves five numerical completions outside SPARK in
-\texttt{Normal\_Support}:
-\begin{itemize}
-\item \texttt{Square\_Root} and \texttt{Survival};
-\item \texttt{Check\_Inverse\_Bracket} and \texttt{Rare\_Quantile};
-\item \texttt{Checked\_Radius}.
-\end{itemize}
-Their bodies check each promised normal-return range or relationship and
-raise on rejection; they do not clamp values.
-The foreign C \texttt{erfc} import and \texttt{Report\_IO}'s parsing,
-formatting, output, and exceptions remain trusted. The installed Ada
-elementary-function specifications are SPARK-compatible, but their limited
-contracts and unproved implementations remain part of the proof boundary.
-
-Consequently, a caller proof is conditional on these interfaces: it does
-not prove numerical backend accuracy, that a guard cannot reject, or that
-I/O succeeds. Bisection bounds do not prove survival-function monotonicity,
-inverse convergence, or an approximation-error bound. No project
-\texttt{pragma Assume}, imported proof axiom, or suppressed check is used.
-Zero explicit assumptions or suppressions in native metadata does not
-eliminate trust in off-mode completions or library contracts.
-
-\section{Five explicit contracts per subprogram}
-
-Every SPARK function and procedure in the campaign's audited snapshot,
-including local and Ghost helpers and trusted interfaces, has at least
-five explicit entries. That snapshot inventories 35 functions and 28
-procedures in this project; its repository inventory has 164 subprograms
-and 923 entries, including both negative controls.
-The audit counts top-level \texttt{Pre}/\texttt{Post} conjuncts,
-\texttt{Contract\_Cases} alternatives and explicit
-\texttt{Global}/\texttt{Depends} aspects. Mode flags, subtype declarations,
-body assertions, duplicates and literal Boolean padding do not count.
-The entries can overlap logically; five does not mean five independent
-guarantees.
-
-The checker handles this project's restricted Ada subset and cross-checks
-native locations and \texttt{all}/\texttt{spec} statuses; GNAT checks syntax
-and conformance. This structural floor does not certify specification
-adequacy, trusted implementation refinement or statistical validity.
-
-Python requires at least five distinct real Deal decorators per named
-function, expressing appropriate domain, result, exception, side-effect
-or preservation properties. There is no upper limit: regression cases
-accept five, six, seven and eight distinct decorators and reject zero
-through four. Repeated normalized syntax cannot pad the count.
-
-\section{Ghost models for the remaining interfaces}
-
-\texttt{Hoeflin\_Boundary\_Models} is an implemented SPARK model package.
-Its pure predicates, projection types and receipt transitions are ordinary
-SPARK; observation and lexical-check procedures remain explicitly Ghost.
-It defines acceptance predicates for the five excluded numerical completions,
-a proved scaling model for an accepted C \texttt{erfc} value, and explicit
-observations of the actual sine and cosine results in
-\texttt{Normal\_Pair}. The trigonometric model records the range
-\([-1,1]\) under the installed library specification; it does not establish
-a trigonometric identity, rounding bound, or backend correctness.
-
-Excluded numerical bodies call Ghost observation procedures after their
-ordinary checks. An observation procedure's precondition is checked when
-Ghost is enabled; its analyzed body and model do not prove that a call
-inside an excluded body always meets that precondition. The original
-ordinary contracts and guards are retained. Ghost checking can be disabled
-while ordinary assertions remain enabled, without placing Ghost-dependent
-expressions inside an ordinary postcondition.
-
-The ordinary output receipt records an event, typed payload, nominal column count,
-section, and whether the latest request is admissible. Its counters are
-modular, and it is a bounded receipt summary rather than a complete
-character history. The receipt update remains active under Ghost Ignore so the main procedures
-can state executable normal-return postconditions. The admissibility flag
-is observed, not a theorem that
-all external calls obey a protocol. Models also cover canonical decimal
-integer images, requested numeric value and precision, and label length
-and separator counts. The numeric projection does not prove correct
-rounding or actual printed characters. The I/O implementation's refinement
-of these models, physical output, and exception behavior remain unproved.
-
-The source-pinned register maps every native specification-only entity,
-the foreign import, and all three private formatting helpers to actual
-Ghost observations or ordinary receipt updates and analyzed model entities. Standard-library dependencies and
-unproved obligations are also inventoried. Separate sine and cosine links
-are checked against their actual cached assignments and observer calls.
-The register is a coverage and provenance audit, not a proof of model
-adequacy. The deliberately wrong Ghost event-counter postcondition must
-be rejected, in addition to the original incorrect union control.
-
-The 4 November builds with Ghost enabled and disabled retain ordinary assertion
-checking. Both policies reproduce the original million-trial CSVs byte for
-byte, and the validators and replay pass in normal and optimized Python.
-Representative decimal, signed, whitespace, underscore, based-literal,
-and exponent forms of the existing Ada option grammar are checked under
-both policies. These finite erasure regressions complement SPARK's Ghost
-rules; they do not prove noninterference or totality of excluded bodies.
-The role and erasure rules of Ghost code are described in
-\href{https://docs.adacore.com/live/wave/spark2014/html/spark2014_ug/en/source/specification_features.html}{AdaCore's specification guide}.
-
-Runtime checks exposed a failed assertion in the installed GNAT 13.2.0
-build at \texttt{-O2}, for a classification postcondition written with
-Boolean equivalences. An isolated test of all four Boolean inputs passed
-at \texttt{-O0} and with GNAT 14.2.0. The equivalent guarded conditions pass
-in the required GNAT 13.2.0 \texttt{-O2} build, with the function body
-unchanged. The failed attempt and compatibility probes are retained.
-Compiler correctness remains part of the trusted infrastructure; finite
-compatibility tests are not a compiler proof.
-
-\section{Numerical regression, Deal, and audit results}
-
-The simulation uses 1,000,000 trials per case, resetting seed
-\texttt{20261030} across the eight cases. Replay matches all tail counts
-exactly; moments meet the validators' tolerances. CLI boundary tests also
-pass. Numerical equivalence of the core's evaluation orders is checked
-against the report formulas; bit identity is claimed only for the CSV
-comparisons.
-
-In the recorded Python snapshot, all 28 Python files import Deal. All 292
-named functions, including tests and evidence tools, carry at least five
-distinct decorators: 1,460 in total, with zero gaps. All 27 positive files
-are lint-clean; the negative fixture gives exactly the expected
-\texttt{DEL012}. All 343 tests, numerical scripts, contract coverage and
-historical-source audits pass in the recorded normal and optimized runs;
-CLI contracts remain enabled.
-The version-pinned symbolic gate proves three correct theorems and rejects the
-unchanged negative fixture with a counterexample. Six postconditions prove and one
-fails as expected, with no skips. Its integer-type model preserves Boolean subtype
-semantics; restricted chain expansion retains both bounds. Unsupported forms fail
-closed. The adapter and normalizer are trusted tooling, not proofs of arbitrary
-Python, libraries or the full programs. Original contracts and dependencies are unchanged.
-
-The auditor checks required projects and SPARK-on bodies, native totals, coverage,
-source identities, checksums and negative controls. Historical Ada requires an
-explicit matching source tree; historical Python may use verified immutable Git blobs.
-Audits do not rerun provers or independently validate SMT proof objects.
-
-Common random numbers make the eight simulation cases dependent. Replay
-does not establish independent draws; rare counts at this sample size do
-not validate a one-in-a-million tail. Neither Deal nor SPARK proves the
-Gaussian common-factor model, empirical covariance calibration, an
-identification of correlation with reliability, or a psychometric
-interpretation. The distinction between a standardized composite and
-latent ability remains essential.
+For replication, use the Python/Dask workflow documented in the project
+README and the numerical cross-checks in this report. Archived results
+from a discontinued alternative implementation are available through
+earlier Git revisions, but they are not an active implementation, an
+additional independent experiment, or evidence for the current Python
+revision. No new experimental draws are claimed by this editorial migration.
 
 \clearpage
 \input{../../reporting/proof_foundations}
@@ -642,8 +453,7 @@ as well as the present additions.
 AI contributions included interpreting the supplied articles, drafting and
 revising the mathematical exposition and statistical discussion, selecting
 and checking numerical examples, researching references, designing and
-editing the Python/Deal and Ada/SPARK programs, ghost models, tests and
-evidence auditors, orchestrating verification, typesetting and inspecting
+editing Python/Dask/Deal programs, tests and numerical auditors, orchestrating verification, typesetting and inspecting
 the PDFs, and preparing repository commits. The requester \mbox{\ProjectAuthor} supplied
 the source articles, specified the objectives, formats and verification
 requirements, requested revisions, and authorized repository publication.
@@ -660,18 +470,13 @@ text, software documentation and bibliographic metadata. Per-reference
 notes identify relevant access limits; full-text review of every cited
 work is not claimed.
 
-Calculations, tests and prover invocations were actually executed on
-\texttt{computer10}; the retained commands, native outputs, source hashes,
-tool versions and checksums provide the verification evidence. These are
-machine-checker results under the documented contracts and assumptions,
-not evidence supplied solely by an AI assertion. Here ``independent''
-validation or replay means a separate implementation, algorithm or library;
-it does not mean independent human authorship. The implementations,
-contracts, tests and their reviews were developed within the same AI
-workflow. Formal proof covers the encoded properties; correctness of the
-specifications, excluded implementation refinement and statistical-model
-adequacy remain distinct obligations. Ghost models do not establish
-correctness of foreign numerical libraries or physical I/O.
+Recorded numerical results correspond to the identified source
+revisions and model assumptions. Python/Deal checks, numerical validation,
+and Rocq kernel proofs establish their own explicitly scoped properties;
+neither an automated proof count nor a finite simulation validates the
+assumed psychometric population. The removed implementation's history
+remains available in earlier Git revisions and is not represented as
+current experimental evidence.
 
 No new participant data were collected and no empirical psychometric
 validation study was conducted for this project. Simulations use synthetic
