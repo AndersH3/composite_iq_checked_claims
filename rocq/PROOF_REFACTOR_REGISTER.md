@@ -12,7 +12,21 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-> **D044x current checked count (November 16, 2026):** After
+> **D045x current verified baseline (November 16, 2026):** After
+> [the pinned Rocq 9.2 kernel CI run](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43832111166)
+> at `028d427d74a6fd8d81d9060d1feaa68aecbf96db`, **2,788 proof scripts** in **35 source modules**:
+> 2,774 public theorem/lemma/example claims, one earlier local helper,
+> 13 existing model/record constructors, and **3,067 fully documented
+> declarations** (2,775 theorem/helper proofs). The new
+> `StratifiedBernoulli.v` section below records all **185** theorems
+> in exact source order, including 15 sharp bounds/ordering results.
+> Earlier D044x/D043x numbers remain historical checkpoints.
+> AI-assisted proof development is restricted to exact propositions
+> verified by the pinned kernel; no independent Bernoulli sampling
+> distribution, confidence-interval coverage or empirical IQ model
+> is thereby proven.
+>
+> **D044x historical checked count (November 16, 2026):** After
 > [Rocq 9.2 CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43819739947) on
 > `491ad9bbe79d2a1e8b6739885248ef06657cb307`, **2,603 proof scripts** are
 > registered across **34 modules**: 2,589 public theorem/lemma/example
