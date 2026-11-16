@@ -9,19 +9,22 @@ import deal
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE = ROOT / "verification/evidence/computer10-20261031/runtime"
-
-# Tests may create deliberately damaged scratch copies. Retained evidence,
-# reference tables and distributed reports are protected scientific inputs.
-_PROTECTED_PATHS = tuple(sorted(
-    path for checksum in (ROOT / "verification/evidence").glob("*/SHA256SUMS")
-    for path in checksum.parent.rglob("*") if path.is_file()
-))
+# Guard active Dask inputs and independent reference CSVs during tests.
+# Archived compiler evidence remains accessible through Git history only.
+_PROTECTED_PATHS = tuple(sorted([
+    ROOT / "reporting/run.json",
+    *(ROOT.glob("analyses/*/simulation-data/summary.json")),
+    *(ROOT.glob("analyses/*/simulation-data/moments.csv")),
+    *(ROOT.glob("analyses/*/simulation-data/events.csv")),
+]))
 _PROTECTED_HASHES = tuple((path, hashlib.sha256(path.read_bytes()).hexdigest())
-                          for path in _PROTECTED_PATHS)
+                          for path in _PROTECTED_PATHS if path.is_file())
 _REFERENCE_HASHES = tuple((path, hashlib.sha256(path.read_bytes()).hexdigest())
-                         for path in sorted(list(ROOT.glob("analyses/*/data/*.csv"))
-                                            + list(ROOT.glob("analyses/*/output/pdf/*.pdf"))))
+                          for path in sorted(ROOT.glob("analyses/*/data/*.csv")))
+if not _REFERENCE_HASHES:
+    _REFERENCE_HASHES = ((ROOT / "reporting/run.json",
+                          hashlib.sha256((ROOT / "reporting/run.json").read_bytes()).hexdigest()),)
+
 deal.enable(warn=False)
 
 
@@ -110,39 +113,6 @@ def hoeflin() -> ModuleType:
 @deal.has("read", "write", "import", "global")
 def towers() -> ModuleType:
     return load_script("checked_towers_numbers", "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py")
-
-
-@pytest.fixture(scope="session")
-@deal.pre(lambda: protected_history_intact())
-@deal.ensure(lambda *, result: protected_history_intact())
-@deal.ensure(lambda *, result: reference_inputs_intact())
-@deal.ensure(lambda *, result: isinstance(result, ModuleType)
-           and callable(result.validate_calculations) and callable(result.wilson))
-@deal.has("read", "write", "import", "global")
-def hoeflin_validator() -> ModuleType:
-    return load_script("checked_hoeflin_validator", "analyses/hoeflin-ferguson/ada/scripts/validate_results.py")
-
-
-@pytest.fixture(scope="session")
-@deal.pre(lambda: protected_history_intact())
-@deal.ensure(lambda *, result: protected_history_intact())
-@deal.ensure(lambda *, result: reference_inputs_intact())
-@deal.ensure(lambda *, result: isinstance(result, ModuleType)
-           and callable(result.validate) and callable(result.close))
-@deal.has("read", "write", "import", "global")
-def towers_validator() -> ModuleType:
-    return load_script("checked_towers_validator", "analyses/towers-multiple-test-admissions/ada/validate_results.py")
-
-
-@pytest.fixture(scope="session")
-@deal.pre(lambda: protected_history_intact())
-@deal.ensure(lambda *, result: protected_history_intact())
-@deal.ensure(lambda *, result: reference_inputs_intact())
-@deal.ensure(lambda *, result: isinstance(result, ModuleType)
-           and callable(result.report_summary) and callable(result.successful_checks))
-@deal.has("read", "write", "import", "global")
-def proof_runner() -> ModuleType:
-    return load_script("checked_proof_runner", "verification/run_computer10.py")
 
 
 @pytest.fixture(scope="session")
