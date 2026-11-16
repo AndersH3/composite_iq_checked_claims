@@ -270,6 +270,144 @@ The claim/evidence maps were also read: `analyses/hoeflin-ferguson/claimmap_hoef
 - Run the independent Python/Deal/SPARK checks for changes that affect those implementations. Keep model assumptions, numeric integration error, simulation records, external evidence and analytical theorem validity in separate categories. No amount of simulation establishes an empirical IQ distribution.
 - Re-scan **all six volumes**, their eleven proof-bearing sources and the five claim maps after any material report edit. A source label or filename change must update this register and `rocq/REPORT_THEOREM_INVENTORY.md`.
 
+## Exhaustive labelled-equation disposition index (six top-level books)
+
+Unlike the preceding thematic matrix, this index gives a disposition for **every `eq:` anchor** in the six authoritatively linked source books. Status codes here are **D** = definition/assumption (no theorem merely by declaration); **F** = finite or real-algebraic counterpart exists at its limited scope; **A** = only an algebraic part is Rocq-proved, a stochastic/limit or presentation-level inference remains; **P** = mathematical Gaussian/distributional theorem absent; **N** = numeric model target requiring certified tail/quantile/root evaluation. Identical symbols may appear in multiple formulas; a label is not one independently unproved theorem. The task IDs explain what remains.
+
+### HF-M: 17 distinct labels
+
+| Exact source anchor | Disposition | Remaining proof task(s) |
+|---|---|---|
+| [`eq:variance-sum`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L55) | **F** | `G01` |
+| [`eq:standardize`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L112) | **D** | Not a theorem on its own |
+| [`eq:weighted-variance`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L132) | **F** | `G01` |
+| [`eq:weighted-composite`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L137) | **D** | Not a theorem on its own |
+| [`eq:average-correlation`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L152) | **D** | Not a theorem on its own |
+| [`eq:mean-variance`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L163) | **F** | `G01` |
+| [`eq:equal-composite`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L168) | **F** | `G01` |
+| [`eq:reporting-scale`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L185) | **D** | Not a theorem on its own |
+| [`eq:iq-composite`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L191) | **F** | `G01` |
+| [`eq:worked-example`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L200) | **A** | `G14`, `G18` |
+| [`eq:quantile`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L224) | **P** | `G14`, `G24` |
+| [`eq:threshold`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L229) | **A** | `G14`, `G18` |
+| [`eq:limit`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L281) | **A** | `G14`, `G18` |
+| [`eq:factor-model`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L352) | **D** | Not a theorem on its own |
+| [`eq:factor-reliability`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L363) | **A** | `G03`, `G15` |
+| [`eq:latent-mean`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L368) | **A** | `G03`, `G15` |
+| [`eq:latent-variance`](../analyses/hoeflin-ferguson/composite_iq_analysis.tex#L370) | **A** | `G03`, `G15` |
+
+### HF-S: 7 distinct labels
+
+| Exact source anchor | Disposition | Remaining proof task(s) |
+|---|---|---|
+| [`eq:hf-factor-model`](../analyses/hoeflin-ferguson/hoeflin_simulations.tex#L91) | **D** | Not a theorem on its own |
+| [`eq:hf-average-variance`](../analyses/hoeflin-ferguson/hoeflin_simulations.tex#L103) | **F** | `G01` |
+| [`eq:hf-aggregate`](../analyses/hoeflin-ferguson/hoeflin_simulations.tex#L117) | **P** | `G02`, `G15`, `G17` |
+| [`eq:hf-composite`](../analyses/hoeflin-ferguson/hoeflin_simulations.tex#L141) | **F** | `G01` |
+| [`eq:hf-tail-targets`](../analyses/hoeflin-ferguson/hoeflin_simulations.tex#L152) | **P** | `G14`, `G24` |
+| [`eq:hf-predictor`](../analyses/hoeflin-ferguson/hoeflin_simulations.tex#L180) | **A** | `G03`, `G15` |
+| [`eq:hf-mse`](../analyses/hoeflin-ferguson/hoeflin_simulations.tex#L191) | **A** | `G03`, `G15` |
+
+### TW-M: 17 distinct labels
+
+| Exact source anchor | Disposition | Remaining proof task(s) |
+|---|---|---|
+| [`eq:model`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L168) | **D** | Not a theorem on its own |
+| [`eq:cutoffs`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L182) | **D** | Not a theorem on its own |
+| [`eq:joint`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L188) | **P** | `G19` |
+| [`eq:union`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L193) | **F** | `G06` |
+| [`eq:conditionals`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L194) | **F** | `G06` |
+| [`eq:phi`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L204) | **F** | `G06` |
+| [`eq:equal-results`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L221) | **N** | `G19`, `G24` |
+| [`eq:repeat-pass`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L228) | **F** | `G06` |
+| [`eq:union-denominator`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L238) | **F** | `G06` |
+| [`eq:mixed-joint`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L273) | **N** | `G19`, `G24` |
+| [`eq:mixed-conditionals`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L278) | **N** | `G19`, `G24` |
+| [`eq:mixed-remainder`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L280) | **N** | `G19`, `G24` |
+| [`eq:rarity`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L311) | **P** | `G14`, `G20`, `G24` |
+| [`eq:calibration`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L325) | **P** | `G14`, `G20`, `G24` |
+| [`eq:bounds`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L356) | **F** | `G06` |
+| [`eq:grid`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L386) | **A** | `G21` |
+| [`eq:rho-integral`](../analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex#L465) | **P** | `G19` |
+
+### TW-S: 6 distinct labels
+
+| Exact source anchor | Disposition | Remaining proof task(s) |
+|---|---|---|
+| [`eq:towers-union`](../analyses/towers-multiple-test-admissions/towers_simulations.tex#L64) | **F** | `G06` |
+| [`eq:towers-conditionals`](../analyses/towers-multiple-test-admissions/towers_simulations.tex#L67) | **F** | `G06` |
+| [`eq:towers-generator`](../analyses/towers-multiple-test-admissions/towers_simulations.tex#L116) | **P** | `G02`, `G19` |
+| [`eq:towers-reference-integral`](../analyses/towers-multiple-test-admissions/towers_simulations.tex#L161) | **P** | `G02`, `G19` |
+| [`eq:towers-calibration`](../analyses/towers-multiple-test-admissions/towers_simulations.tex#L365) | **N** | `G20`, `G24` |
+| [`eq:towers-phi`](../analyses/towers-multiple-test-admissions/towers_simulations.tex#L430) | **F** | `G06` |
+
+### SQ-M: 50 distinct labels
+
+| Exact source anchor | Disposition | Remaining proof task(s) |
+|---|---|---|
+| [`eq:standardization`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L72) | **D** | Not a theorem on its own |
+| [`eq:first`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L84) | **D** | Not a theorem on its own |
+| [`eq:definition`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L87) | **D** | Not a theorem on its own |
+| [`eq:target`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L92) | **D** | Not a theorem on its own |
+| [`eq:covariance`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L126) | **D** | Not a theorem on its own |
+| [`eq:domain`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L133) | **A** | `G02`, `G03`, `G04` |
+| [`eq:factor`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L153) | **D** | Not a theorem on its own |
+| [`eq:inverse`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L195) | **F** | `G01` |
+| [`eq:coefficient`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L210) | **A** | `G02`, `G03`, `G04` |
+| [`eq:residual`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L217) | **A** | `G02`, `G03`, `G04` |
+| [`eq:conditional-mean`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L239) | **A** | `G02`, `G03`, `G04` |
+| [`eq:conditional-variance`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L260) | **A** | `G02`, `G03`, `G04` |
+| [`eq:recursion`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L282) | **A** | `G03` |
+| [`eq:all-predictions`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L294) | **A** | `G03` |
+| [`eq:answer`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L301) | **A** | `G03` |
+| [`eq:total-count`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L312) | **A** | `G03` |
+| [`eq:fixed-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L359) | **F** | `G01` |
+| [`eq:actual-average`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L376) | **D** | Not a theorem on its own |
+| [`eq:population-variance`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L389) | **F** | `G01` |
+| [`eq:population-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L396) | **F** | `G01` |
+| [`eq:population-sd-total`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L402) | **F** | `G01` |
+| [`eq:actual-mean`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L432) | **A** | `G02`, `G03`, `G04` |
+| [`eq:actual-variance`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L440) | **A** | `G02`, `G03`, `G04` |
+| [`eq:conditional-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L446) | **A** | `G02`, `G03`, `G04` |
+| [`eq:conditional-sd-total`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L454) | **A** | `G02`, `G03`, `G04` |
+| [`eq:predictions-only`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L493) | **A** | `G03` |
+| [`eq:random-start`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L505) | **A** | `G03` |
+| [`eq:multiple-history`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L537) | **D** | Not a theorem on its own |
+| [`eq:multiple-domain`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L546) | **A** | `G02`, `G03`, `G04` |
+| [`eq:multiple-recursion`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L577) | **A** | `G03` |
+| [`eq:multiple-predictions`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L592) | **A** | `G03` |
+| [`eq:multiple-mean`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L601) | **A** | `G03` |
+| [`eq:multiple-population-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L627) | **F** | `G01` |
+| [`eq:multiple-conditional-variance`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L670) | **A** | `G02`, `G03`, `G04` |
+| [`eq:multiple-conditional-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L677) | **A** | `G02`, `G03`, `G04` |
+| [`eq:two-predictions`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L695) | **A** | `G03` |
+| [`eq:two-mean`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L698) | **A** | `G03` |
+| [`eq:two-population-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L704) | **F** | `G01` |
+| [`eq:two-conditional-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L708) | **A** | `G02`, `G03`, `G04` |
+| [`eq:three-predictions`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L726) | **A** | `G03` |
+| [`eq:three-mean`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L729) | **A** | `G03` |
+| [`eq:three-population-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L735) | **F** | `G01` |
+| [`eq:three-conditional-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L739) | **A** | `G02`, `G03`, `G04` |
+| [`eq:iq-scale`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L839) | **D** | Not a theorem on its own |
+| [`eq:iq150-start`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L844) | **D** | Not a theorem on its own |
+| [`eq:iq150-prediction`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L864) | **A** | `G18` |
+| [`eq:iq150-predictions`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L870) | **A** | `G18` |
+| [`eq:iq150-mean`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L882) | **A** | `G18` |
+| [`eq:iq150-population-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L898) | **F** | `G01` |
+| [`eq:iq150-conditional-sd`](../analyses/sequential-conditional-means/sequential_conditional_means.tex#L901) | **A** | `G18` |
+
+### SQ-S: 7 distinct labels
+
+| Exact source anchor | Disposition | Remaining proof task(s) |
+|---|---|---|
+| [`eq:seq-sim-factor`](../analyses/sequential-conditional-means/sequential_simulations.tex#L100) | **D** | Not a theorem on its own |
+| [`eq:seq-sim-centre`](../analyses/sequential-conditional-means/sequential_simulations.tex#L126) | **A** | `G03`, `G04` |
+| [`eq:seq-sim-population`](../analyses/sequential-conditional-means/sequential_simulations.tex#L142) | **F** | `G01` |
+| [`eq:seq-sim-conditional`](../analyses/sequential-conditional-means/sequential_simulations.tex#L145) | **A** | `G03`, `G04` |
+| [`eq:seq-sim-posterior-factor`](../analyses/sequential-conditional-means/sequential_simulations.tex#L167) | **P** | `G03`, `G04` |
+| [`eq:seq-sim-future-vector`](../analyses/sequential-conditional-means/sequential_simulations.tex#L181) | **P** | `G03`, `G04` |
+| [`eq:seq-sim-limit-sds`](../analyses/sequential-conditional-means/sequential_simulations.tex#L422) | **A** | `G22`, `G23` |
+
 ## Appendix — full AI disclosure
 
 OpenAI ChatGPT reviewed the four specified project/reporting READMEs, identified the six linked authoritative XeLaTeX report sources, inspected their theorem/proof-bearing inputs and claim maps, compared their mathematical obligations with the existing finite/algebraic Rocq inventory and known module names, and prepared this register and backlog. ChatGPT classified proof status, assigned candidate dependencies and drafted documentation. The classifications are an assessment to be independently reviewed, **not** kernel certificates of the full report theorems, not a demonstration that the PDFs equal the TeX, and not a new proof of Gaussian laws. Some formal claims have exact finite witnesses or partial algebraic proof terms; these must not be conflated with measure-theoretic theorems. No new mathematical theorem was proved in creating this audit. The source files, referenced external results, statistical assumptions, simulation outputs and formal proofs remain subject to their separate evidence standards. The author, researcher and requester is Anders Hellström.
