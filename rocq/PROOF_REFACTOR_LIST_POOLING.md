@@ -1,10 +1,10 @@
-# D046x authoritative source-ordered list-pooling proof register
+# D046x–D047x authoritative source-ordered covariance and list-pooling proof registers
 
 **Author:** Anders Hellström.
 
 > **AI DISCLOSURE:** OpenAI ChatGPT assisted theorem generation, proof construction and this source audit. Every listed proposition must pass pinned Rocq 9.2 kernel verification; documentation alone is not a proof.
 
-This is the canonical detailed review register for the new `library/rocq/ListPoolingAlgebra.v` module. The historical monolithic `PROOF_REFACTOR_REGISTER.md` remains the authoritative register for earlier modules and retains historical D044x/D045x sections; this separate audit removes the prior 1 MB file-size limit. Each entry represents an explicit source-ordered proof script, not an independent scientific model result.
+This is the canonical detailed review register for D046x `library/rocq/ListPoolingAlgebra.v` and D047x `library/rocq/FourContrastCovariance.v`. The historical monolithic `PROOF_REFACTOR_REGISTER.md` remains the authoritative register for earlier modules and retains historical D044x/D045x sections; this separate audit removes the prior 1 MB file-size limit. Each entry represents an explicit source-ordered proof script, not an independent scientific model result.
 
 ## ListPoolingAlgebra.v — 159 proof scripts
 
