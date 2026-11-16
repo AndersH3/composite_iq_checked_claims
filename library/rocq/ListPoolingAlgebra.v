@@ -2336,7 +2336,7 @@ Qed.
 Theorem batch_bernoulli_strict_heterogeneity :
   forall (A:Type) (w p:A->R) (xs:list A) (x:A), 0<batch_mass w xs -> (forall y, In y xs -> 0<w y) -> In x xs -> p x<>batch_mean w p xs -> batch_bernoulli_variance w p xs<batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs).
 Proof.
-  intros A w p xs x Hm Hw Hin Hne; assert (Hnon:forall y, In y xs -> 0<=w y) by (intros y Hy; apply Rlt_le, Hw; exact Hy); pose proof (batch_bernoulli_variance_le_homogeneous A w p xs Hm Hnon) as Hle; destruct (Rlt_dec (batch_bernoulli_variance w p xs) (batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs))) as [Hlt|Hnot]; [exact Hlt|assert (Heq:batch_bernoulli_variance w p xs=batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)) by lra; apply (proj1 (batch_variance_pooled_equality_iff_homogeneous A w p xs Hm Hw)) in Heq; exfalso; apply Hne; exact (Heq x Hin)].
+  intros A w p xs x Hm Hw Hin Hne; assert (Hnon:forall y, In y xs -> 0<=w y) by (intros y Hy; apply Rlt_le, Hw; exact Hy); pose proof (batch_bernoulli_variance_le_homogeneous A w p xs Hm Hnon) as Hle; destruct (Rlt_dec (batch_bernoulli_variance w p xs) (batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs))) as [Hlt|Hnot]; [exact Hlt|assert (Heq:batch_bernoulli_variance w p xs=batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)) by lra; pose proof ((proj1 (batch_variance_pooled_equality_iff_homogeneous A w p xs Hm Hw)) Heq x Hin) as Hx; exfalso; apply Hne; exact Hx].
 Qed.
 
 (** [batch_cross_complement_right] (theorem).
