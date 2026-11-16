@@ -523,7 +523,20 @@ Qed.
 *)
 Theorem pooled_between_upper_bound: forall n m a b, 0<n -> 0<m -> pooled_between n m a b<=pooled_mass n m*(a-b)*(a-b)/4.
 Proof.
-  intros n m a b Hn Hm. assert (Hd:0<pooled_mass n m) by (apply pooled_mass_positive; assumption). unfold pooled_between,pooled_mass,Rdiv in *. pose proof (Rle_0_sqr (a-b)) as Hsq. unfold Rsqr in Hsq. assert (Hnm:4*n*m <= (n+m)*(n+m)) by nra. assert (Hin:0</(n+m)) by (apply Rinv_0_lt_compat; lra). assert (Hfactor:0<=((n+m)*(n+m)-4*n*m)*((a-b)*(a-b))) by (apply Rmult_le_pos; nra). nra.
+intros n m a b Hn Hm.
+  assert (Hd : 0 < n+m) by lra.
+  pose proof (Rle_0_sqr (n-m)) as Hmass; unfold Rsqr in Hmass.
+  pose proof (Rle_0_sqr (a-b)) as Hscore; unfold Rsqr in Hscore.
+  assert (Hproduct : 0 <= ((n-m)*(n-m))*((a-b)*(a-b))) by
+    (apply Rmult_le_pos; assumption).
+  assert (Hinv : 0 < /(4*(n+m))) by (apply Rinv_0_lt_compat; nra).
+  assert (Hnonneg : 0 <= ((n-m)*(n-m)*((a-b)*(a-b)))/(4*(n+m))).
+  { unfold Rdiv; apply Rmult_le_pos; [exact Hproduct|lra]. }
+  unfold pooled_between, pooled_mass.
+  assert (Hdifference :
+    (n+m)*(a-b)*(a-b)/4 - n*m*(a-b)*(a-b)/(n+m)
+      = ((n-m)*(n-m)*((a-b)*(a-b)))/(4*(n+m))) by (field; nra).
+  lra.
 Qed.
 
 (** [pooled_ss_above_within] (theorem).
