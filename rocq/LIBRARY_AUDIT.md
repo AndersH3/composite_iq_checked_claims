@@ -9,6 +9,22 @@ This audit covers all **seven Rocq modules** in the Hoeflin/Ferguson and Towers 
 It distinguishes **library functionality that should be reused** from
 **report-specific definitions that must remain explicit**.
 
+## D045x reuse audit — 185 heterogeneous-cohort moment theorems
+
+The shared `StratifiedBernoulli.v` module extends the existing
+`SamplingPrecision.v` Bernoulli variance factor and the
+`TwoRatePrecision.v` two-cohort count/variance definitions. The
+source-ordered register documents 185 new proofs. Most exact identities
+use Stdlib `Ring`; the sharper positivity and sharp variance claims
+reuse `Rmult_le_pos`, `Rle_0_sqr`, `Lra`, and `Psatz`.
+Five proofs reuse earlier established decompositions rather than
+reexpand the weighted formulas. No competing event-probability library
+or sampling recursion was introduced. The [Rocq 9.2 checked source](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43832111166)
+is commit `028d427d74a6fd8d81d9060d1feaa68aecbf96db` with **35 modules**, **2,788 scripts**.
+This is exact deterministic algebra supporting
+`sm:binomial`/`sm:rare` and Towers rates, not a binomial law or
+a Gaussian/chi-square proof. The source and audit were AI-assisted.
+
 ## Confirmed standard-library substitutions
 
 | Module | Existing library facilities | Refactoring decision |

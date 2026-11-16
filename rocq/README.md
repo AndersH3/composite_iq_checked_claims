@@ -5,9 +5,39 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for all three analytical reports and their three simulation companions. **2,603 proof scripts** across **34 Rocq modules** are tracked for Rocq 9.2 kernel compilation (2,589 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
+for all three analytical reports and their three simulation companions. **2,788 proof scripts** across **35 Rocq modules** have passed the pinned Rocq 9.2 kernel (2,774 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
+
+## D045x — 185 kernel-checked heterogeneous three-cohort moment and calibration theorems
+
+On [exact Rocq 9.2 CI run](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43832111166) at
+[commit `028d427d74`](https://github.com/AndersH3/composite_iq_checked_claims/commit/028d427d74a6fd8d81d9060d1feaa68aecbf96db),
+the shared [`StratifiedBernoulli.v`](../library/rocq/StratifiedBernoulli.v)
+contributes **185 new theorem proofs** (170 exact polynomial identities and
+15 explicit inequalities/bounds) plus **9 documented definitions**.
+
+The stronger statements include the general three-cohort weighted identity
+`mass * squared_calibration_loss = pairwise_rate_dispersion + squared_count_residual`,
+a sharp three-cohort Bernoulli variance deficit, its `4 * variance <= total exposure`
+consequence for nonnegative sizes, and count/variance/loss/dispersion
+nonnegativity and ordering results. Five dependent proofs were refactored
+to reuse earlier identities rather than unfold all expressions again.
+The theorem-family specializations include symmetry, zero-exposure
+irrelevance, benchmark and rate transformations, and exact sensitivities.
+
+**Current checked inventory:** **2,788** proof scripts across **35**
+modules; **2,774** public theorem/lemma/example claims, one local helper,
+13 existing constructors, **3,067** documented declarations, and **2,775**
+theorem/helper proofs counted by the strict documentation audit. This is an
+increase of **185** over the completed D044x baseline, not 185
+stochastic probability laws. The work supports `sm:binomial`, `sm:rare`
+(G08/G13) and heterogeneous Towers event/admission diagnostics; original
+report-level binomial-distribution, Gaussian, chi-square, exact interval
+coverage, arbitrary-list sample pooling and empirical IQ obligations
+remain explicitly **unproved**. Proof development and documentation
+were AI-assisted; mathematical certainty is limited to the propositions
+accepted by the pinned Rocq kernel.
 
 ## D044x — 111 checked six-volume pooling and heterogeneous-rate proofs
 

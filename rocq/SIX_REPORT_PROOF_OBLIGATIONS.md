@@ -4,6 +4,32 @@
 
 **Date:** November 16, 2026. **Pinned baseline:** [`5c23afcd48bd36302c0acd2bbdf75271abf06921`](https://github.com/AndersH3/composite_iq_checked_claims/commit/5c23afcd48bd36302c0acd2bbdf75271abf06921). The six authoritative XeLaTeX sources are linked from the four project/reporting READMEs. This register covers all six main/simulation volumes, their proof-bearing inputs and claim-to-evidence maps. It distinguishes the full report proposition from a previously kernel-checked **finite** or **algebraic** fragment.
 
+## D045x status — stratified Bernoulli diagnostics and sharp variance bounds
+
+A [Rocq 9.2 kernel validation](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43832111166) on exact commit
+[`028d427d74a6fd8d81d9060d1feaa68aecbf96db`](https://github.com/AndersH3/composite_iq_checked_claims/commit/028d427d74a6fd8d81d9060d1feaa68aecbf96db)
+certified **185 further source-documented theorems** in
+[`StratifiedBernoulli.v`](../library/rocq/StratifiedBernoulli.v).
+All three cohort count, failure-count, ideal Bernoulli variance, rate
+second moment, squared calibration loss and pairwise rate-dispersion
+definitions are shared rather than report-local. The sharp
+four-times-variance bound, moment decomposition of rate dispersion,
+nonnegativity and benchmark/error sensitivities help audit G08/G13
+(`sm:binomial`, `sm:rare`) and Towers admission-rate contrasts.
+
+**Scope boundary:** no binomial PMF, independence theorem,
+conditional-count sampling distribution, Gaussian tail/conditional law,
+chi-square pivot, interval coverage or arbitrary-length pooled sample
+distribution is proved. In particular, the source-labelled report
+classification remains partial (A) for `sm:binomial` and
+`sm:rare`. The new 185 theorem proofs are deterministic real
+algebra, including related cohort-wise specializations; do not
+count each as a different stochastic law. The audited repository now
+has **2,788 proof scripts in 35 modules**, 2,774 public claims and
+3,067 fully documented declarations. Mathematical development and
+this register were AI-assisted; exact statements are certified by
+Rocq rather than the narrative.
+
 ## D044x status — extended three-replicate ANOVA and multi-rate precision
 
 On exact source commit [`491ad9bbe79d2a1e8b6739885248ef06657cb307`](https://github.com/AndersH3/composite_iq_checked_claims/commit/491ad9bbe79d2a1e8b6739885248ef06657cb307),
