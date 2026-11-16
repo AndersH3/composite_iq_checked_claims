@@ -35,11 +35,10 @@ from library.python.statistics import moment_result, event_result, pool_rows
 from reporting.assets import write_assets
 from reporting.provenance import digest, dump
 from reporting.block_simulations import (
-    hoeflin_block, towers_block, sequential_block, finish_moment, finish_event,
+    COUNTS, hoeflin_block, towers_block, sequential_block, finish_moment, finish_event,
 )
 
 PROJECTS = ("hoeflin-ferguson", "towers-multiple-test-admissions", "sequential-conditional-means")
-COUNTS = (1, 2, 3, 4, 5, 10, 100, 1000)
 SEEDS = (20261114, 20261115, 20261116, 20261117,
          20261118, 20261119, 20261120, 20261121)
 DEFAULT_TRIALS = 5_000_000
@@ -234,7 +233,7 @@ def block_sizes(trials, chunk):
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
 @deal.ensure(lambda config, result: all(row.key for row in result))
-@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, NotImplementedError)
+@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, KeyError, NotImplementedError)
 @deal.has("import")
 def graph_hoeflin_blocks(config):
     """Create one Dask worker task per common-random-number block and replicate.
@@ -295,7 +294,7 @@ def graph_towers_blocks(config, reference):
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
 @deal.ensure(lambda config, result: all(row.key for row in result))
-@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, NotImplementedError)
+@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, KeyError, NotImplementedError)
 @deal.has("import")
 def graph_sequential_blocks(config):
     """Generate finite score vectors within each worker, never across workers.
