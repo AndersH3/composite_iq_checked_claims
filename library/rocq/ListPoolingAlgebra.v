@@ -1450,3 +1450,417 @@ Theorem batch_failure_double_complement :
 Proof.
   intros A w p xs; unfold batch_failure,batch_total; apply finite_sum_ext; intro x; ring.
 Qed.
+
+(** [batch_centered_total] (definition).
+ Mathematical meaning: Weighted signed deviation from an arbitrary reference center.
+ Exact declaration: Definition batch_centered_total {A:Type} (w v:A->R) (c:R) (xs:list A):R := finite_sum (fun x => w x*(v x-c)) xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Definition batch_centered_total {A:Type} (w v:A->R) (c:R) (xs:list A):R := finite_sum (fun x => w x*(v x-c)) xs.
+
+(** [batch_centered_cross] (definition).
+ Mathematical meaning: Cross-product of two centered group attributes, weighted over arbitrary group lists.
+ Exact declaration: Definition batch_centered_cross {A:Type} (w v z:A->R) (c d:R) (xs:list A):R := finite_sum (fun x => w x*(v x-c)*(z x-d)) xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Definition batch_centered_cross {A:Type} (w v z:A->R) (c d:R) (xs:list A):R := finite_sum (fun x => w x*(v x-c)*(z x-d)) xs.
+
+(** [batch_cov_numer] (definition).
+ Mathematical meaning: Centered cross-product sum at both weighted sample means.
+ Exact declaration: Definition batch_cov_numer {A:Type} (w v z:A->R) (xs:list A):R := batch_centered_cross w v z (batch_mean w v xs) (batch_mean w z xs) xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Definition batch_cov_numer {A:Type} (w v z:A->R) (xs:list A):R := batch_centered_cross w v z (batch_mean w v xs) (batch_mean w z xs) xs.
+
+(** [batch_variance] (definition).
+ Mathematical meaning: Population-style normalized corrected-sum-of-squares of deterministic batch centers.
+ Exact declaration: Definition batch_variance {A:Type} (w v:A->R) (xs:list A):R := batch_centered w v (batch_mean w v xs) xs / batch_mass w xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Definition batch_variance {A:Type} (w v:A->R) (xs:list A):R := batch_centered w v (batch_mean w v xs) xs / batch_mass w xs.
+
+(** [batch_covariance] (definition).
+ Mathematical meaning: Normalized batch cross-product centered at both weighted sample means.
+ Exact declaration: Definition batch_covariance {A:Type} (w v z:A->R) (xs:list A):R := batch_cov_numer w v z xs / batch_mass w xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Definition batch_covariance {A:Type} (w v z:A->R) (xs:list A):R := batch_cov_numer w v z xs / batch_mass w xs.
+
+(** [batch_centered_total_app] (theorem).
+ Mathematical meaning: Signed deviations add over arbitrary concatenated batch partitions.
+ Exact proposition: forall (A:Type) (w v:A->R) (c:R) (xs ys:list A), batch_centered_total w v c (xs++ys)=batch_centered_total w v c xs+batch_centered_total w v c ys.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_app :
+  forall (A:Type) (w v:A->R) (c:R) (xs ys:list A), batch_centered_total w v c (xs++ys)=batch_centered_total w v c xs+batch_centered_total w v c ys.
+Proof.
+  intros A w v c xs ys; unfold batch_centered_total; apply finite_sum_app.
+Qed.
+
+(** [batch_centered_total_permutation] (theorem).
+ Mathematical meaning: Reordering groups leaves the signed aggregate deviation unchanged.
+ Exact proposition: forall (A:Type) (w v:A->R) (c:R) (xs ys:list A), Permutation xs ys -> batch_centered_total w v c xs=batch_centered_total w v c ys.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_permutation :
+  forall (A:Type) (w v:A->R) (c:R) (xs ys:list A), Permutation xs ys -> batch_centered_total w v c xs=batch_centered_total w v c ys.
+Proof.
+  intros A w v c xs ys H; unfold batch_centered_total; now apply finite_sum_permutation.
+Qed.
+
+(** [batch_centered_total_expand] (theorem).
+ Mathematical meaning: The signed deviation equals the raw weighted moment minus center times mass.
+ Exact proposition: forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_centered_total w v c xs=batch_total w v xs-c*batch_mass w xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_expand :
+  forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_centered_total w v c xs=batch_total w v xs-c*batch_mass w xs.
+Proof.
+  intros A w v c xs; unfold batch_centered_total,batch_total,batch_mass; transitivity (finite_sum (fun x=>w x*v x-c*w x) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_sub,finite_sum_scale; ring].
+Qed.
+
+(** [batch_centered_total_mean_zero] (theorem).
+ Mathematical meaning: The signed weighted residuals cancel exactly at the weighted mean.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_centered_total w v (batch_mean w v xs) xs=0.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_mean_zero :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_centered_total w v (batch_mean w v xs) xs=0.
+Proof.
+  intros A w v xs H; rewrite batch_centered_total_expand; pose proof (batch_mean_total_identity A w v xs H) as E; rewrite E; ring.
+Qed.
+
+(** [batch_centered_total_add] (theorem).
+ Mathematical meaning: Signed deviations are additive in two group-center attributes.
+ Exact proposition: forall (A:Type) (w v z:A->R) (c d:R) (xs:list A), batch_centered_total w (fun x=>v x+z x) (c+d) xs=batch_centered_total w v c xs+batch_centered_total w z d xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_add :
+  forall (A:Type) (w v z:A->R) (c d:R) (xs:list A), batch_centered_total w (fun x=>v x+z x) (c+d) xs=batch_centered_total w v c xs+batch_centered_total w z d xs.
+Proof.
+  intros A w v z c d xs; rewrite !batch_centered_total_expand, batch_total_add_values; ring.
+Qed.
+
+(** [batch_centered_total_scale] (theorem).
+ Mathematical meaning: A common scale for group centers and reference scales signed residuals linearly.
+ Exact proposition: forall (A:Type) (w v:A->R) (c t:R) (xs:list A), batch_centered_total w (fun x=>t*v x) (t*c) xs=t*batch_centered_total w v c xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_scale :
+  forall (A:Type) (w v:A->R) (c t:R) (xs:list A), batch_centered_total w (fun x=>t*v x) (t*c) xs=t*batch_centered_total w v c xs.
+Proof.
+  intros A w v c t xs; rewrite !batch_centered_total_expand, batch_total_scale_values; ring.
+Qed.
+
+(** [batch_centered_total_translate] (theorem).
+ Mathematical meaning: Translating every observation and center identically does not change signed residuals.
+ Exact proposition: forall (A:Type) (w v:A->R) (c t:R) (xs:list A), batch_centered_total w (fun x=>v x+t) (c+t) xs=batch_centered_total w v c xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_translate :
+  forall (A:Type) (w v:A->R) (c t:R) (xs:list A), batch_centered_total w (fun x=>v x+t) (c+t) xs=batch_centered_total w v c xs.
+Proof.
+  intros A w v c t xs; unfold batch_centered_total; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(** [batch_centered_total_shift_center] (theorem).
+ Mathematical meaning: Changing reference center modifies signed deviation by the total mass times that center shift.
+ Exact proposition: forall (A:Type) (w v:A->R) (c d:R) (xs:list A), batch_centered_total w v c xs-batch_centered_total w v d xs=(d-c)*batch_mass w xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_total_shift_center :
+  forall (A:Type) (w v:A->R) (c d:R) (xs:list A), batch_centered_total w v c xs-batch_centered_total w v d xs=(d-c)*batch_mass w xs.
+Proof.
+  intros A w v c d xs; rewrite !batch_centered_total_expand; ring.
+Qed.
+
+(** [batch_centered_cross_app] (theorem).
+ Mathematical meaning: Reference-centered cross-product sums add over any group partition.
+ Exact proposition: forall (A:Type) (w v z:A->R) (c d:R) (xs ys:list A), batch_centered_cross w v z c d (xs++ys)=batch_centered_cross w v z c d xs+batch_centered_cross w v z c d ys.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_cross_app :
+  forall (A:Type) (w v z:A->R) (c d:R) (xs ys:list A), batch_centered_cross w v z c d (xs++ys)=batch_centered_cross w v z c d xs+batch_centered_cross w v z c d ys.
+Proof.
+  intros A w v z c d xs ys; unfold batch_centered_cross; apply finite_sum_app.
+Qed.
+
+(** [batch_centered_cross_permutation] (theorem).
+ Mathematical meaning: Reordering arbitrary group IDs does not alter weighted cross-product dispersion.
+ Exact proposition: forall (A:Type) (w v z:A->R) (c d:R) (xs ys:list A), Permutation xs ys -> batch_centered_cross w v z c d xs=batch_centered_cross w v z c d ys.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_cross_permutation :
+  forall (A:Type) (w v z:A->R) (c d:R) (xs ys:list A), Permutation xs ys -> batch_centered_cross w v z c d xs=batch_centered_cross w v z c d ys.
+Proof.
+  intros A w v z c d xs ys H; unfold batch_centered_cross; now apply finite_sum_permutation.
+Qed.
+
+(** [batch_centered_cross_symmetry] (theorem).
+ Mathematical meaning: The centered weighted cross-product is symmetric in attributes and their reference centers.
+ Exact proposition: forall (A:Type) (w v z:A->R) (c d:R) (xs:list A), batch_centered_cross w v z c d xs=batch_centered_cross w z v d c xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_cross_symmetry :
+  forall (A:Type) (w v z:A->R) (c d:R) (xs:list A), batch_centered_cross w v z c d xs=batch_centered_cross w z v d c xs.
+Proof.
+  intros A w v z c d xs; unfold batch_centered_cross; apply finite_sum_ext; intro x; ring.
+Qed.
+
+(** [batch_centered_cross_self] (theorem).
+ Mathematical meaning: The centered weighted second moment equals the centered cross-product of a value with itself.
+ Exact proposition: forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_centered w v c xs=batch_centered_cross w v v c c xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_cross_self :
+  forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_centered w v c xs=batch_centered_cross w v v c c xs.
+Proof.
+  intros A w v c xs; reflexivity.
+Qed.
+
+(** [batch_centered_cross_expand] (theorem).
+ Mathematical meaning: The general weighted cross-product expands into raw mixed moment, weighted first moments and a constant mass term.
+ Exact proposition: forall (A:Type) (w v z:A->R) (c d:R) (xs:list A), batch_centered_cross w v z c d xs=batch_cross w v z xs-c*batch_total w z xs-d*batch_total w v xs+c*d*batch_mass w xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_centered_cross_expand :
+  forall (A:Type) (w v z:A->R) (c d:R) (xs:list A), batch_centered_cross w v z c d xs=batch_cross w v z xs-c*batch_total w z xs-d*batch_total w v xs+c*d*batch_mass w xs.
+Proof.
+  intros A w v z c d xs; unfold batch_centered_cross,batch_cross,batch_total,batch_mass; transitivity (finite_sum (fun x => (w x*v x*z x-c*(w x*z x))-(d*(w x*v x)-c*d*w x)) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_sub, finite_sum_sub, !finite_sum_add, !finite_sum_scale; ring].
+Qed.
+
+(** [batch_cov_numer_closed] (theorem).
+ Mathematical meaning: The centered covariance numerator is mixed raw moment minus the product of weighted first moments divided by mass.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_cov_numer w v z xs=batch_cross w v z xs-(batch_total w v xs*batch_total w z xs)/batch_mass w xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_cov_numer_closed :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_cov_numer w v z xs=batch_cross w v z xs-(batch_total w v xs*batch_total w z xs)/batch_mass w xs.
+Proof.
+  intros A w v z xs H; unfold batch_cov_numer; rewrite batch_centered_cross_expand; unfold batch_mean; field; exact H.
+Qed.
+
+(** [batch_cov_numer_symmetry] (theorem).
+ Mathematical meaning: Arbitrary-list covariance numerator is symmetric under swapping variables.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_cov_numer w v z xs=batch_cov_numer w z v xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_cov_numer_symmetry :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_cov_numer w v z xs=batch_cov_numer w z v xs.
+Proof.
+  intros A w v z xs; unfold batch_cov_numer; apply batch_centered_cross_symmetry.
+Qed.
+
+(** [batch_cov_numer_self] (theorem).
+ Mathematical meaning: The covariance numerator on an attribute with itself equals its corrected sum of squares.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_cov_numer w v v xs=batch_centered w v (batch_mean w v xs) xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_cov_numer_self :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_cov_numer w v v xs=batch_centered w v (batch_mean w v xs) xs.
+Proof.
+  intros A w v xs; unfold batch_cov_numer; symmetry; apply batch_centered_cross_self.
+Qed.
+
+(** [batch_cov_numer_nonnegative_self] (theorem).
+ Mathematical meaning: Every attribute has nonnegative weighted covariance numerator for nonnegative group sizes.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 0<=batch_cov_numer w v v xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_cov_numer_nonnegative_self :
+  forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 0<=batch_cov_numer w v v xs.
+Proof.
+  intros A w v xs Hw; rewrite batch_cov_numer_self; apply batch_centered_nonnegative; exact Hw.
+Qed.
+
+(** [batch_covariance_symmetry] (theorem).
+ Mathematical meaning: Normalized covariance is exactly symmetric for any real group weights.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_covariance w v z xs=batch_covariance w z v xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_covariance_symmetry :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_covariance w v z xs=batch_covariance w z v xs.
+Proof.
+  intros A w v z xs; unfold batch_covariance; now rewrite batch_cov_numer_symmetry.
+Qed.
+
+(** [batch_covariance_self_variance] (theorem).
+ Mathematical meaning: Diagonal normalized covariance equals normalized corrected variance.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_covariance w v v xs=batch_variance w v xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_covariance_self_variance :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_covariance w v v xs=batch_variance w v xs.
+Proof.
+  intros A w v xs; unfold batch_covariance,batch_variance; now rewrite batch_cov_numer_self.
+Qed.
+
+(** [batch_variance_nonnegative] (theorem).
+ Mathematical meaning: Under positive total mass and nonnegative weights, normalized corrected variance is nonnegative.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 0<batch_mass w xs -> 0<=batch_variance w v xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_variance_nonnegative :
+  forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 0<batch_mass w xs -> 0<=batch_variance w v xs.
+Proof.
+  intros A w v xs Hw Hm; unfold batch_variance,Rdiv; apply Rmult_le_pos; [apply batch_centered_nonnegative; exact Hw|left; apply Rinv_0_lt_compat; exact Hm].
+Qed.
+
+(** [batch_variance_constant_zero] (theorem).
+ Mathematical meaning: The variance of identical group means is zero, provided total group mass is nonzero.
+ Exact proposition: forall (A:Type) (w:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun _=>c) xs=0.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_variance_constant_zero :
+  forall (A:Type) (w:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun _=>c) xs=0.
+Proof.
+  intros A w c xs H; unfold batch_variance; rewrite (batch_mean_constant A w xs c H); rewrite batch_centered_constant_zero; ring.
+Qed.
+
+(** [batch_variance_translation] (theorem).
+ Mathematical meaning: A common score translation does not change the weighted batch-level variance.
+ Exact proposition: forall (A:Type) (w v:A->R) (t:R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun x=>v x+t) xs=batch_variance w v xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_variance_translation :
+  forall (A:Type) (w v:A->R) (t:R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun x=>v x+t) xs=batch_variance w v xs.
+Proof.
+  intros A w v t xs H; unfold batch_variance; rewrite batch_mean_translation by assumption; rewrite batch_centered_translation; reflexivity.
+Qed.
+
+(** [batch_variance_scale] (theorem).
+ Mathematical meaning: Scaling every score by a real factor scales the normalized variance by the factor squared.
+ Exact proposition: forall (A:Type) (w v:A->R) (t:R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun x=>t*v x) xs=t*t*batch_variance w v xs.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_variance_scale :
+  forall (A:Type) (w v:A->R) (t:R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun x=>t*v x) xs=t*t*batch_variance w v xs.
+Proof.
+  intros A w v t xs H; unfold batch_variance; rewrite batch_mean_scale by assumption; rewrite batch_centered_scale_values; unfold Rdiv; ring.
+Qed.
+
+(** [batch_covariance_closed] (theorem).
+ Mathematical meaning: Normalized covariance is the raw mixed moment divided by mass minus the product of raw first moments divided by squared mass.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w v z xs=batch_cross w v z xs/batch_mass w xs-(batch_total w v xs*batch_total w z xs)/(batch_mass w xs*batch_mass w xs).
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_covariance_closed :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w v z xs=batch_cross w v z xs/batch_mass w xs-(batch_total w v xs*batch_total w z xs)/(batch_mass w xs*batch_mass w xs).
+Proof.
+  intros A w v z xs H; unfold batch_covariance; rewrite batch_cov_numer_closed by exact H; field; exact H.
+Qed.
+
+(** [batch_covariance_constant_zero] (theorem).
+ Mathematical meaning: A constant first attribute has zero covariance with any second attribute, given nonzero total weight.
+ Exact proposition: forall (A:Type) (w z:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (fun _=>c) z xs=0.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_covariance_constant_zero :
+  forall (A:Type) (w z:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (fun _=>c) z xs=0.
+Proof.
+  intros A w z c xs H; unfold batch_covariance,batch_cov_numer,batch_centered_cross; rewrite (batch_mean_constant A w xs c H); transitivity (finite_sum (fun _=>0) xs/batch_mass w xs); [f_equal; apply finite_sum_ext; intro x; ring|rewrite finite_sum_zero; ring].
+Qed.
+
+(** [batch_covariance_constant_zero_right] (theorem).
+ Mathematical meaning: A constant second attribute has zero covariance with any first attribute, given nonzero total weight.
+ Exact proposition: forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w v (fun _=>c) xs=0.
+ Premises and side conditions: The stated finite-list, real-number, positivity and denominator hypotheses are explicit. An observation is not thereby assumed to have any particular probability distribution.
+ Proof/definition method: Rewrite into the canonical FiniteSum fold, use earlier list-pooling facts and Rocq Stdlib real arithmetic; ensure all cross-term cancellations are proved rather than asserted.
+ Library reuse: Stdlib Reals/List/Permutation/Ring/Field/Lra/Psatz, FiniteSum and canonical prior ListPoolingAlgebra definitions; never introduce a parallel summation or random-sampling engine.
+ Boundary: Deterministic G12 finite-sample aggregation and covariance algebra only; no Gaussian independence, chi-square law, finite-sample statistical coverage, or empirical IQ model is proved.
+*)
+Theorem batch_covariance_constant_zero_right :
+  forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w v (fun _=>c) xs=0.
+Proof.
+  intros A w v c xs H; rewrite batch_covariance_symmetry; apply batch_covariance_constant_zero; exact H.
+Qed.
