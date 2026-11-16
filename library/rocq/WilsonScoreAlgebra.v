@@ -499,7 +499,7 @@ Qed.
 *)
 Theorem wilson_score_zero_quantile_unique : forall n h p, 0<n -> wilson_score n h 0 p = 0 -> p=h.
 Proof.
-  intros n h p Hn Hzero; rewrite wilson_score_zero_quantile in Hzero; nra.
+  intros n h p Hn Hzero. rewrite wilson_score_zero_quantile in Hzero. apply Rmult_integral in Hzero. destruct Hzero as [Hfirst|Hdiff]. - apply Rmult_integral in Hfirst. destruct Hfirst as [Hnzero|Hdiff]; lra. - lra.
 Qed.
 
 (** [wilson_complete_square] (theorem).
