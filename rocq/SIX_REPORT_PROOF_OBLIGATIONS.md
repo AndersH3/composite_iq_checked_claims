@@ -17,6 +17,22 @@
 
 **Verification codes:** **F** = existing finite/algebraic Rocq theorem directly covers that limited counterpart (not any broader stochastic wording); **A** = some exact covariance, regression, induction, finite event or arithmetic part is proved, but a substantive report claim remains; **P** = written TeX proof/reference exists, but no matching Rocq theorem for the full proposition was identified; **L** = direct Rocq Stdlib theorem (do not reinvent). A model choice, statistical output, numerical approximation or empirical claim is not by itself a universal proof obligation. **None** of F/A should be promoted to a general Gaussian probability theorem without the missing bridge.
 
+## Coverage by actual report volume
+
+These are **per-volume appearances** of labelled formal statements after resolving shared proof inputs, not distinct theorem obligations. Shared propositions are counted once in the 70-result unique-source total, and multiple statements within one proposition can require multiple Rocq lemmas.
+
+| Report | Linked proof statements | F (finite scope) | A (partial) | P (report only) | L (Stdlib) | Body equation anchors |
+|---|---:|---:|---:|---:|---:|---:|
+| HF-M — Hoeflin analytical | 25 | 4 | 10 | 11 | 0 | 17 |
+| HF-S — Hoeflin simulation | 25 | 4 | 10 | 11 | 0 | 7 |
+| TW-M — Towers analytical | 27 | 3 | 11 | 13 | 0 | 17 |
+| TW-S — Towers simulation | 27 | 3 | 11 | 13 | 0 | 6 |
+| SQ-M — Sequential analytical | 30 | 3 | 19 | 7 | 1 | 50 |
+| SQ-S — Sequential simulation | 20 | 2 | 9 | 9 | 0 | 7 |
+| **Total appearances** | **154** | **19** | **70** | **64** | **1** | **104** |
+
+The number of unique source statements is **70**, not 154. In the same way, the **104** labelled equations are equation anchors, not 104 independent unproved theorems. The proof backlog below represents 24 reusable mathematical work packages, several of which will require numerous distinct Rocq statements.
+
 ## Source-by-source theorem/proposition inventory
 
 The following register enumerates **every labelled `theorem`, `lemma`, `proposition` and `corollary` environment** found in the eleven proof-bearing source files, counting shared imports only once. Individual rows can contain multiple logically independent subclaims, so they do not represent one-to-one new Rocq theorems.
