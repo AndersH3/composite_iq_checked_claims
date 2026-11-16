@@ -2004,11 +2004,15 @@ Theorem batch_variance_maximum_requires_half :
 Proof.
   intros A w p xs Hw Hmax x Hin; assert (Hz:finite_sum (fun y=>w y*(2*p y-1)*(2*p y-1)) xs=0). { rewrite <- batch_bernoulli_deficit_square; lra. } assert (Hnon:forall y, In y xs -> 0<=w y*(2*p y-1)*(2*p y-1)). { intros y Hy; replace (w y*(2*p y-1)*(2*p y-1)) with (w y*((2*p y-1)*(2*p y-1))) by ring; apply Rmult_le_pos; [apply Rlt_le, Hw; exact Hy|pose proof (Rle_0_sqr (2*p y-1)) as E; unfold Rsqr in E; exact E]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*(2*p y-1)*(2*p y-1)) Hnon Hz x Hin) as Hterm; replace (w x*(2*p x-1)*(2*p x-1)) with (w x*((2*p x-1)*(2*p x-1))) in Hterm by ring; assert (Hwx_nonzero : w x <> 0).
   { intro Hwx0; pose proof (Hw x Hin) as Hwx_positive; rewrite Hwx0 in Hwx_positive; lra. }
-  apply Rmult_integral in Hterm.
-  destruct Hterm as [Hwx_zero | Hsquare_zero].
-  - pose proof (Hw x Hin) as Hpositive; nra.
-  - apply Rmult_integral in Hsquare_zero.
-    destruct Hsquare_zero as [Hrate_zero | Hrate_zero]; lra.
+  assert (Hfactor :
+    w x * ((2 * p x - 1) * (2 * p x - 1)) = 0) by exact Hterm.
+  destruct (Rmult_integral (w x)
+    ((2 * p x - 1) * (2 * p x - 1)) Hfactor)
+    as [Hweight_zero | Hsquare_zero].
+  - exfalso; apply Hwx_nonzero; exact Hweight_zero.
+  - destruct (Rmult_integral (2 * p x - 1)
+      (2 * p x - 1) Hsquare_zero) as [Hdiff_zero | Hdiff_zero];
+      lra.
 Qed.
 
 (** [batch_variance_maximum_iff_half] (theorem).
