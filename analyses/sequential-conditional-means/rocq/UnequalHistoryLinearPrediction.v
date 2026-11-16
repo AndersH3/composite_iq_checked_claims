@@ -1,6 +1,6 @@
 (** Module: UnequalHistoryLinearPrediction.v
  Purpose: Extend the six statistical books' sequential equal-history calculations
- to arbitrary, unequal observed-score totals, cohort perturbations, inclusive
+ to arbitrary, unequal observed-score lists and totals, cohort perturbations, inclusive
  averages, future-count aggregation, innovations, and affine score baselines.
  Mathematical representation: Exact real algebra with observed score sum s,
  sample count n, correlation c, future horizon k, and realized score x.
@@ -8,8 +8,8 @@
  model; these polynomial linearity identities do not require an invertible
  denominator, because Rocq's total real division is used consistently.
  A regression interpretation does require the positive equicorrelation domain.
- Library use: Reuse the canonical SequentialReport.sequential_d denominator
- and Stdlib Reals/Ring. No custom finite sums, Gaussian kernels, matrices,
+ Library use: Reuse the canonical SequentialReport.sequential_d denominator,
+ EquicorrelationVectors.vector_real_sum and FiniteSum; Stdlib Reals/Ring/List. No custom finite sums, Gaussian kernels, matrices,
  recursive predictions or duplicative conditional-probability definitions.
  Limitations: The results establish exact identities among deterministic
  candidate forecasts, not the Gaussian conditional expectation property,
@@ -19,8 +19,9 @@
  AI disclosure: Proof design, documentation and code were AI-assisted;
  only kernel-checked exact propositions count as formally proved.
 *)
-From Stdlib Require Import Reals Ring Lra Psatz Field.
-Require Import SequentialReport.
+From Stdlib Require Import Reals Ring Lra Psatz Field List Sorting.Permutation.
+Require Import SequentialReport EquicorrelationVectors FiniteSum.
+Import ListNotations.
 Open Scope R_scope.
 
 (** [hp] (definition).
@@ -2225,4 +2226,340 @@ Qed.
 Theorem total_forecast_extra : forall (n k t c s:R), ht n k c s +hf n t c s=ht n (k+t) c s.
 Proof.
  intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
+Qed.
+
+(** [lhp] (definition).
+ Mathematical meaning: Candidate forecast on an arbitrary ordered score list, using its actual length and canonical finite real sum.
+ Exact definition: lhp (xs:list R) (c:R) : R := hp (INR (length xs)) c (vector_real_sum xs).
+ Premises and side conditions: A finite list of real scores is supplied;
+ nonzero division and a Gaussian interpretation require additional
+ hypotheses on count and correlation. Repeated scores remain repeated.
+ Proof/definition method: Compose previously checked vector_real_sum with
+ the existing general unequal-history predictor, without defining a new fold.
+ Library reuse: EquicorrelationVectors, FiniteSum, SequentialReport, Stdlib List.
+ Boundary: Finite list transformation and real algebra, not conditional
+ probability, covariance realization, or a model of actual IQ participants.
+*)
+Definition lhp (xs:list R) (c:R) : R := hp (INR (length xs)) c (vector_real_sum xs).
+
+(** [lhf] (definition).
+ Mathematical meaning: Future score-total forecast computed from an arbitrary finite observed score list.
+ Exact definition: lhf (xs:list R) (k c:R) : R := hf (INR (length xs)) k c (vector_real_sum xs).
+ Premises and side conditions: A finite list of real scores is supplied;
+ nonzero division and a Gaussian interpretation require additional
+ hypotheses on count and correlation. Repeated scores remain repeated.
+ Proof/definition method: Compose previously checked vector_real_sum with
+ the existing general unequal-history predictor, without defining a new fold.
+ Library reuse: EquicorrelationVectors, FiniteSum, SequentialReport, Stdlib List.
+ Boundary: Finite list transformation and real algebra, not conditional
+ probability, covariance realization, or a model of actual IQ participants.
+*)
+Definition lhf (xs:list R) (k c:R) : R := hf (INR (length xs)) k c (vector_real_sum xs).
+
+(** [lht] (definition).
+ Mathematical meaning: Observed plus future predicted score total with list-derived count and sum.
+ Exact definition: lht (xs:list R) (k c:R) : R := ht (INR (length xs)) k c (vector_real_sum xs).
+ Premises and side conditions: A finite list of real scores is supplied;
+ nonzero division and a Gaussian interpretation require additional
+ hypotheses on count and correlation. Repeated scores remain repeated.
+ Proof/definition method: Compose previously checked vector_real_sum with
+ the existing general unequal-history predictor, without defining a new fold.
+ Library reuse: EquicorrelationVectors, FiniteSum, SequentialReport, Stdlib List.
+ Boundary: Finite list transformation and real algebra, not conditional
+ probability, covariance realization, or a model of actual IQ participants.
+*)
+Definition lht (xs:list R) (k c:R) : R := ht (INR (length xs)) k c (vector_real_sum xs).
+
+(** [lhm] (definition).
+ Mathematical meaning: Inclusive predicted mean on a finite score history with unequal entries.
+ Exact definition: lhm (xs:list R) (k c:R) : R := hm (INR (length xs)) k c (vector_real_sum xs).
+ Premises and side conditions: A finite list of real scores is supplied;
+ nonzero division and a Gaussian interpretation require additional
+ hypotheses on count and correlation. Repeated scores remain repeated.
+ Proof/definition method: Compose previously checked vector_real_sum with
+ the existing general unequal-history predictor, without defining a new fold.
+ Library reuse: EquicorrelationVectors, FiniteSum, SequentialReport, Stdlib List.
+ Boundary: Finite list transformation and real algebra, not conditional
+ probability, covariance realization, or a model of actual IQ participants.
+*)
+Definition lhm (xs:list R) (k c:R) : R := hm (INR (length xs)) k c (vector_real_sum xs).
+
+(** [lhp_empty] (theorem).
+ Mathematical meaning: An empty observed history has a zero candidate numerator even though no statistical conditional forecast is asserted.
+ Exact checked proposition: forall c, lhp [] c = 0.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_empty : forall c, lhp [] c = 0.
+Proof.
+ intro c; unfold lhp, hp, vector_real_sum, finite_sum, Rdiv; simpl; ring.
+Qed.
+
+(** [lhp_cons] (theorem).
+ Mathematical meaning: Prepending an observed score increases the battery count by one and its sufficient score statistic by x.
+ Exact checked proposition: forall x xs c, lhp (x::xs) c = hp (INR (length xs)+1) c (x+vector_real_sum xs).
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_cons : forall x xs c, lhp (x::xs) c = hp (INR (length xs)+1) c (x+vector_real_sum xs).
+Proof.
+ intros x xs c; unfold lhp; simpl length; rewrite S_INR; change (vector_real_sum (x::xs)) with (x+vector_real_sum xs); reflexivity.
+Qed.
+
+(** [lhp_append] (theorem).
+ Mathematical meaning: Combining arbitrary observed cohorts uses the sum of their lengths and totals, including repeated observations.
+ Exact checked proposition: forall xs ys c, lhp (xs++ys) c = hp (INR (length xs)+INR (length ys)) c (vector_real_sum xs+vector_real_sum ys).
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_append : forall xs ys c, lhp (xs++ys) c = hp (INR (length xs)+INR (length ys)) c (vector_real_sum xs+vector_real_sum ys).
+Proof.
+ intros xs ys c; unfold lhp; rewrite app_length, INR_plus, vector_real_sum_append; reflexivity.
+Qed.
+
+(** [lhp_scale] (theorem).
+ Mathematical meaning: Scaling every original score commutes with list-based linear prediction.
+ Exact checked proposition: forall xs c q, lhp (map (fun x => q*x) xs) c=q*lhp xs c.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_scale : forall xs c q, lhp (map (fun x => q*x) xs) c=q*lhp xs c.
+Proof.
+ intros xs c q; unfold lhp; rewrite length_map, vector_real_sum_scale; apply hp_scale.
+Qed.
+
+(** [lhp_affine] (theorem).
+ Mathematical meaning: An affine IQ conversion shifts the forecast by the baseline contribution of every original observation.
+ Exact checked proposition: forall xs c q t, lhp (map (fun x => q*x+t) xs) c=q*lhp xs c+hp (INR (length xs)) c (INR (length xs)*t).
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_affine : forall xs c q t, lhp (map (fun x => q*x+t) xs) c=q*lhp xs c+hp (INR (length xs)) c (INR (length xs)*t).
+Proof.
+ intros xs c q t; unfold lhp; rewrite length_map, vector_real_sum_affine; unfold hp, Rdiv; ring.
+Qed.
+
+(** [lhp_repeat] (theorem).
+ Mathematical meaning: When all n observed scores are equal, the arbitrary-score-list model reduces exactly to the original report formula.
+ Exact checked proposition: forall n a c, lhp (repeat a n) c = sequential_prediction (INR n) c a.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_repeat : forall n a c, lhp (repeat a n) c = sequential_prediction (INR n) c a.
+Proof.
+ intros n a c; unfold lhp; rewrite repeat_length, vector_real_sum_repeat; unfold hp, sequential_prediction, Rdiv; ring.
+Qed.
+
+(** [lhp_rev] (theorem).
+ Mathematical meaning: Reversing the temporal order of an equicorrelated observed history leaves its forecast unchanged.
+ Exact checked proposition: forall xs c, lhp (rev xs) c=lhp xs c.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_rev : forall xs c, lhp (rev xs) c=lhp xs c.
+Proof.
+ intros xs c; unfold lhp; rewrite rev_length; unfold vector_real_sum at 1; rewrite finite_sum_rev; reflexivity.
+Qed.
+
+(** [lhp_permutation] (theorem).
+ Mathematical meaning: Any permutation of initial score observations preserves the sufficient statistic and prediction.
+ Exact checked proposition: forall xs ys c, Permutation xs ys -> lhp xs c=lhp ys c.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhp_permutation : forall xs ys c, Permutation xs ys -> lhp xs c=lhp ys c.
+Proof.
+ intros xs ys c H; unfold lhp; rewrite (Permutation_length H); unfold vector_real_sum; rewrite (finite_sum_permutation xs ys (fun x:R=>x) H); reflexivity.
+Qed.
+
+(** [lhf_repeat] (theorem).
+ Mathematical meaning: Summing expected k future scores after equal observations matches the original per-score prediction.
+ Exact checked proposition: forall n a k c, lhf (repeat a n) k c = k*sequential_prediction (INR n) c a.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhf_repeat : forall n a k c, lhf (repeat a n) k c = k*sequential_prediction (INR n) c a.
+Proof.
+ intros n a k c; unfold lhf; rewrite repeat_length, vector_real_sum_repeat; unfold hf, hp, sequential_prediction, Rdiv; ring.
+Qed.
+
+(** [lht_repeat] (theorem).
+ Mathematical meaning: The list-based inclusive total agrees with observed equal-score sum plus the report's k forecasts.
+ Exact checked proposition: forall n a k c, lht (repeat a n) k c = INR n*a + k*sequential_prediction (INR n) c a.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lht_repeat : forall n a k c, lht (repeat a n) k c = INR n*a + k*sequential_prediction (INR n) c a.
+Proof.
+ intros n a k c; unfold lht; rewrite repeat_length, vector_real_sum_repeat; unfold ht, hf, hp, sequential_prediction, Rdiv; ring.
+Qed.
+
+(** [lhm_repeat] (theorem).
+ Mathematical meaning: The arbitrary-list inclusive score mean reduces to the report's equal-history mean for any n.
+ Exact checked proposition: forall n a k c, lhm (repeat a n) k c = sequential_inclusive_mean (INR n) k c a.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhm_repeat : forall n a k c, lhm (repeat a n) k c = sequential_inclusive_mean (INR n) k c a.
+Proof.
+ intros n a k c; unfold lhm; rewrite repeat_length, vector_real_sum_repeat; unfold hm, ht, hf, hp, sequential_inclusive_mean, sequential_prediction, Rdiv; ring.
+Qed.
+
+(** [lhm_rev] (theorem).
+ Mathematical meaning: Permuting chronology by reversing initial observations preserves the eventual inclusive score mean.
+ Exact checked proposition: forall xs k c, lhm (rev xs) k c=lhm xs k c.
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhm_rev : forall xs k c, lhm (rev xs) k c=lhm xs k c.
+Proof.
+ intros xs k c; unfold lhm; rewrite rev_length; unfold vector_real_sum at 1; rewrite finite_sum_rev; reflexivity.
+Qed.
+
+(** [lhf_append] (theorem).
+ Mathematical meaning: The forecast of a future cohort depends only on the pooled length and observed sum of prior batteries.
+ Exact checked proposition: forall xs ys k c, lhf (xs++ys) k c = hf (INR (length xs)+INR (length ys)) k c (vector_real_sum xs+vector_real_sum ys).
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhf_append : forall xs ys k c, lhf (xs++ys) k c = hf (INR (length xs)+INR (length ys)) k c (vector_real_sum xs+vector_real_sum ys).
+Proof.
+ intros xs ys k c; unfold lhf; rewrite app_length, INR_plus, vector_real_sum_append; reflexivity.
+Qed.
+
+(** [lhm_append] (theorem).
+ Mathematical meaning: The inclusive mean for unequal prior batteries is computed from pooled sample count and score total.
+ Exact checked proposition: forall xs ys k c, lhm (xs++ys) k c = hm (INR (length xs)+INR (length ys)) k c (vector_real_sum xs+vector_real_sum ys).
+ Premises and side conditions: Initial scores are an explicit finite list;
+ where needed the permutation hypothesis is stated. Gaussianity,
+ independence, distributional normality and admissible covariance domains
+ must be established separately for probabilistic interpretations.
+ Proof/definition method: Rewrite using canonical length/map/append/reverse
+ identities and existing vector real-sum lemmas; use Rocq Stdlib Ring only
+ for exact real algebra. No new recursion or unproved summation axiom.
+ Library reuse: Rocq Stdlib List/Sorting.Permutation, FiniteSum and
+ EquicorrelationVectors, plus SequentialReport for equal-score reduction.
+ Boundary: Sufficient-statistic equivalence of finite score sequences;
+ it does not establish that Gaussian conditioning holds in a real cohort.
+*)
+Theorem lhm_append : forall xs ys k c, lhm (xs++ys) k c = hm (INR (length xs)+INR (length ys)) k c (vector_real_sum xs+vector_real_sum ys).
+Proof.
+ intros xs ys k c; unfold lhm; rewrite app_length, INR_plus, vector_real_sum_append; reflexivity.
 Qed.
