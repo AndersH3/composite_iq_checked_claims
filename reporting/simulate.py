@@ -550,5 +550,8 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    deal.enable(warn=False)
+    # Function-level Deal contracts are already active in normal Python runs.
+    # Do not globally monkey-patch socket.socket: the Dask distributed import
+    # initializes ssl/asyncio, and its workers need standard socket behavior.
+    # Preconditions and postconditions remain enforced by their decorators.
     raise SystemExit(main())
