@@ -6,7 +6,7 @@
 \hypersetup{pdftitle={Sequential Conditional Means: Simulation Methods and Results},
   pdfsubject={Python/Dask experiments with population and conditional actual-score means}}
 \title{Sequential Conditional Means:\\Simulation Methods and Results}
-\subtitle{One, two or three initial IQ-150 scores, with every initial score included}
+\subtitle{Arbitrary initial count in theory; one, two and three IQ-150 scores sampled}
 \author{\ProjectAuthor}
 \date{16 November 2026}
 
@@ -17,9 +17,11 @@
 \thispagestyle{plain.scrheadings}
 
 \begin{abstract}
-This report evaluates Python/Dask simulations of sequential Gaussian test
-scores with one, two, or three observed IQ-150 starting scores and
-one, two or ten subsequent outcomes. The Dask experiment constructs
+The companion mathematical model allows any positive integer \(n\) of
+initial results equal to \(a\). This report evaluates the currently
+recorded Python/Dask simulations with \(n=1,2,3\) initial IQ-150 scores
+and one, two or ten subsequent outcomes. The limited numerical grid
+is not a restriction of the general mathematical theorem. The Dask experiment constructs
 finite conditional future-score vectors and separate whole-population
 batteries, in addition to limiting distributions. It reports seeded
 replicates, mean and standard-deviation estimates, and comparisons with
@@ -48,9 +50,13 @@ specified in \Cref{seqp:record-scope}.
 \label{sec:seq-sim-questions}
 
 The companion analysis studies an inclusive average: every observed
-starting score contributes to the numerator and denominator. Write
-\(r\in\{1,2,3\}\) for the number of initial scores, \(k\in\{1,2,10\}\)
-for the number of later scores and \(N=r+k\) for the total. All initial
+starting score contributes to the numerator and denominator. In the
+\emph{general} model there are \(n\geq1\) initial results all equal to
+\(a\) and \(k\geq1\) later scores. For the recorded finite experiment
+only, write \(r\in\{1,2,3\}\) for the number of initial scores,
+\(k\in\{1,2,10\}\) for the number of later scores, and \(N=r+k\) for
+the total. Thus \(r\) and \(n\) denote the same general initial-count
+parameter; the special grid \(r=1,2,3\) does not define its domain. All initial
 scores have the same standardized value
 \[
  a=\frac{150-100}{15}=\frac{10}{3},\qquad Q=100+15X.
@@ -145,6 +151,45 @@ therefore multiply by \(15^2\), rather than by 15. The phrase
 ``conditional SD'' in the tables always refers to actual outcomes.
 These transformations follow from the affine moment proof in
 Propositions~\ref{pf:moments} and \ref{seqp:recursion}.
+
+
+\section{The analytic case of any \(n\) initial results equal to \(a\)}
+\label{sec:seq-sim-arbitrary-n}
+For arbitrary integers \(n,k\geq1\), let the observed history be
+\(X_0=\cdots=X_{n-1}=a\), and set \(D_n=1+(n-1)c\) and
+\(D_{n+k}=1+(n+k-1)c\). The companion proof, using the equicorrelation
+regression coefficient and an induction on subsequent predictions, gives
+\begin{align}
+ b_n&=\frac{nca}{D_n},&
+ B_{n,k}&=\frac{nD_{n+k}a}{(n+k)D_n},\\
+ \operatorname{Var}(C_{n,k})
+   &=\frac{D_{n+k}}{n+k},&
+ \operatorname{Var}(C_{n,k}\given a\mathbf1_n)
+   &=\frac{k(1-c)D_{n+k}}{(n+k)^2D_n}.
+ \label{eq:seq-sim-arbitrary-n}
+\end{align}
+The finite correlation domain is
+\(-1/(n+k-1)\leq c\leq1\). At \(c=1\) conditional statements
+refer to compatible histories on the diagonal Gaussian support.
+For the sampled \(0\leq c\leq1\), the latent-factor conditioning
+algorithm below applies at any such integer \(n\), although the
+\emph{recorded} arrays and figures were generated only at \(n=1,2,3\).
+No result for an unrecorded \(n\) is presented as an observed simulation.
+
+As an exact analytic illustration \emph{outside} the recorded grid,
+take \(n=5\) initial IQ-150 results, \(k=10\), \(c=3/5\), and
+\(a=10/3\). Then \(D_n=17/5\), \(D_{n+k}=47/5\), and
+\[
+ b_5=\frac{50}{17},\qquad B_{5,10}=\frac{470}{153},\qquad
+ \operatorname{Var}(C_{5,10})=\frac{47}{75},\qquad
+ \operatorname{Var}(C_{5,10}\given a\mathbf1_5)=\frac{188}{3825}.
+\]
+The next predicted IQ is \(100+15(50/17)\approx144.12\), while
+the inclusive predicted IQ mean is
+\(100+15(470/153)\approx146.08\). Its conditional actual-outcome
+SD is \(15\sqrt{188/3825}\approx3.33\) IQ points.
+These values follow by exact rational substitution; they are
+not additional Monte Carlo measurements.
 
 \section{Generating the conditional future scores directly}
 The Dask implementation samples every finite future residual component
