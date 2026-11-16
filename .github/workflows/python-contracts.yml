@@ -25,5 +25,39 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
+      - name: Validate scaled 40-million-sample Dask task budget without execution
+        run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
       - name: Python/Dask numerical and property tests
         run: python -m pytest -q tests
+      # These executions write only into the disposable Actions checkout.
+      # They validate Dask worker serialization and output dependencies,
+      # NOT the unexecuted future default 40M-sample production experiment.
+      - name: Diagnostic end-to-end block run with unmasked tracebacks
+        run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --scheduler single-threaded
+      - name: Small end-to-end block run using local processes
+        run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler processes
+      - name: Small end-to-end block run using distributed LocalCluster
+        run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler distributed --memory-limit 1GiB
+      - name: Verify regenerated report assets match actual simulation, not stale files
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+
+          for path in (
+              "analyses/hoeflin-ferguson/simulation-data/moments.csv",
+              "analyses/towers-multiple-test-admissions/simulation-data/events.csv",
+              "analyses/sequential-conditional-means/simulation-data/moments.csv",
+          ):
+              with Path(path).open(newline="", encoding="utf-8") as handle:
+                  rows = list(csv.DictReader(handle))
+              assert rows and all(int(row["n_samples"]) == 10000 for row in rows), path
+
+          manifest = json.loads(Path("reporting/run.json").read_text(encoding="utf-8"))
+          assert manifest["config"]["trials"] == 10000
+          assert manifest["config"]["replicates"] == 1
+          assert manifest["config"]["scheduler"] == "distributed"
+          assert len(manifest["results"]) == 3
+          assert all(result["project"] for result in manifest["results"])
+          PY

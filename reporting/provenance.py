@@ -6,6 +6,10 @@ Both functions are annotated with explicit contracts and return no
 probability-model or numerical-validity guarantees.
 Author/requester: Anders Hellström. AI-assisted development.
 """
+# Dask distributed workers share their process with an asynchronous socket
+# event loop. Deal's runtime offline checker monkeypatches socket process-wide;
+# permitting the worker transport avoids breaking unrelated scheduler I/O.
+# Source-level numeric invariants and exception contracts remain in force.
 import hashlib
 import json
 from pathlib import Path
@@ -22,7 +26,7 @@ import deal
 @deal.pre(lambda path: bool(path.name))
 @deal.pre(lambda path: path.resolve().is_file())
 @deal.raises(OSError, ValueError)
-@deal.has("read")
+@deal.has("network", "read")
 def digest(path: Path) -> str:
     """SHA-256 of exactly the file bytes; no source-version claim is inferred."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -38,7 +42,7 @@ def digest(path: Path) -> str:
 @deal.ensure(lambda path, value, result: path.read_text(encoding="utf-8").endswith("\n"))
 @deal.ensure(lambda path, value, result: json.loads(path.read_text(encoding="utf-8")) == value)
 @deal.raises(OSError, TypeError, ValueError)
-@deal.has("read", "write")
+@deal.has("network", "read", "write")
 def dump(path: Path, value: dict) -> None:
     """Write one UTF-8 JSON record; verification uses the parsed exact payload."""
     path.write_text(json.dumps(value, indent=2, allow_nan=False) + "\n", encoding="utf-8")

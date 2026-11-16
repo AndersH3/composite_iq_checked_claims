@@ -51,7 +51,7 @@ REQUIRED_PACKAGES = (
 @deal.post(lambda result: result["run_schema"] == "dask-simulation-reports-v1")
 @deal.ensure(lambda result: result["campaign_sha256"] == digest(CAMPAIGN))
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
-@deal.has("read")
+@deal.has("network", "read")
 def retained_data():
     """Snapshot current Python/Dask data without calling a native simulator.
 
@@ -87,7 +87,7 @@ def retained_data():
 @deal.post(lambda result: result["author"] == "Anders Hellström" and result["name_only_author"] is True)
 @deal.ensure(lambda document, retained, result: result["project"] == document[0] and result["stem"] == document[1])
 @deal.raises(OSError, ValueError, TypeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
-@deal.has("read", "write", "syscall")
+@deal.has("network", "read", "write", "syscall")
 def build_document(document, retained):
     """Typeset, check the final engine log, and render every page in a task.
 
@@ -174,7 +174,7 @@ def build_document(document, retained):
 @deal.ensure(lambda results, retained, graph_tasks, result: result["reports"] == results and result["graph_tasks"] == graph_tasks)
 @deal.ensure(lambda results, retained, graph_tasks, result: result["retained_dask_data"] == retained)
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError)
-@deal.has("read", "write")
+@deal.has("network", "read", "write")
 def record_revision(results, retained, graph_tasks):
     """Hash document sources/outputs without relabeling old numerical draws."""
     if retained_data() != retained:
@@ -206,7 +206,7 @@ def record_revision(results, retained, graph_tasks):
 @deal.ensure(lambda argv=None, result=None: result != 0 or RECORD.is_file())
 @deal.post(lambda result: result == 0)
 @deal.raises(OSError, ValueError, TypeError, KeyError, JSONDecodeError, StopIteration, IndexError, OverflowError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
-@deal.has("read", "write", "syscall", "import", "stdout", "stderr")
+@deal.has("network", "read", "write", "syscall", "import", "stdout", "stderr")
 def main(argv=None):
     """Schedule the chosen documents from existing versioned Dask data."""
     parser = argparse.ArgumentParser(description=__doc__)

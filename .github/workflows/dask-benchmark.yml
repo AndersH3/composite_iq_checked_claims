@@ -1,0 +1,139 @@
+name: Dask scaled Monte Carlo benchmark
+
+# This workflow runs only by manual dispatch. It never overwrites published
+# numerical data unless explicitly requested via publish_results=true.
+# After publication, rebuild all six PDFs using the report-books workflow:
+# GitHub Actions GITHUB_TOKEN pushes do not trigger other workflows.
+on:
+  workflow_dispatch:
+    inputs:
+      publish_results:
+        description: 'Commit validated numerical results to the selected branch (off by default)'
+        required: true
+        type: boolean
+        default: false
+      trials:
+        description: 'Samples per replicate (2..100000000; select based on runner RAM)'
+        required: true
+        type: number
+        default: 5000000
+      chunk:
+        description: 'Rows per worker task (recommended 250000..500000)'
+        required: true
+        type: number
+        default: 500000
+      replicates:
+        description: 'Independent seed replicates (1..8)'
+        required: true
+        type: choice
+        options: ['1', '2', '4', '8']
+        default: '8'
+      workers:
+        description: 'Concurrent Dask workers; runner CPU/RAM bounds still apply'
+        required: true
+        type: choice
+        options: ['1', '2', '4']
+        default: '2'
+      scheduler:
+        description: 'Dask scheduling backend'
+        required: true
+        type: choice
+        options: ['processes', 'distributed']
+        default: 'processes'
+
+permissions:
+  contents: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      TRIALS: ${{ inputs.trials || '5000000' }}
+      CHUNK: ${{ inputs.chunk || '500000' }}
+      REPLICATES: ${{ inputs.replicates || '8' }}
+      WORKERS: ${{ inputs.workers || '2' }}
+      SCHEDULER: ${{ inputs.scheduler || 'processes' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Validate lazy graph and print requested sample count
+        run: |
+          set -euo pipefail
+          python -m reporting.simulate --plan --trials "$TRIALS" --chunk "$CHUNK" --replicates "$REPLICATES" --workers "$WORKERS" --scheduler "$SCHEDULER" | tee dask-plan.json
+      - name: Draw and reduce synthetic Gaussian samples with memory/time diagnostics
+        run: |
+          set -euo pipefail
+          extra=()
+          if [[ "$SCHEDULER" == "distributed" ]]; then
+            extra=(--memory-limit 2GiB)
+            # Optional Bokeh performance-report capture is available from
+            # the CLI when users deliberately install Bokeh.
+          fi
+          /usr/bin/time -v python -m reporting.simulate --trials "$TRIALS" --chunk "$CHUNK" --replicates "$REPLICATES" --workers "$WORKERS" --scheduler "$SCHEDULER" "${extra[@]}" 2> dask-resource-usage.txt | tee dask-run-result.json
+      - name: Verify full-scale records before publication
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+
+          meta = json.loads(Path("reporting/run.json").read_text())
+          expected = int("${{ env.TRIALS }}")
+          reps = int("${{ env.REPLICATES }}")
+          assert meta["config"]["engine"] == "blocks"
+          assert meta["config"]["trials"] == expected
+          assert meta["config"]["replicates"] == reps
+          assert 0 < meta["graph_tasks"] < 10000
+          for project, table, expected_rows in (
+              ("hoeflin-ferguson", "moments.csv", 8),
+              ("towers-multiple-test-admissions", "events.csv", 5),
+              ("sequential-conditional-means", "moments.csv", 24),
+          ):
+              path = Path("analyses") / project / "simulation-data" / table
+              with path.open(newline="", encoding="utf-8") as handle:
+                  rows = list(csv.DictReader(handle))
+              assert len(rows) == expected_rows, path
+              assert all(int(row["n_samples"]) == expected * reps for row in rows), path
+          PY
+      - name: Publish validated scaled dataset only when explicitly requested
+        if: inputs.publish_results == true
+        run: |
+          set -euo pipefail
+          mkdir -p reporting/benchmarks
+          cp dask-plan.json "reporting/benchmarks/plan-${GITHUB_RUN_ID}.json"
+          cp dask-resource-usage.txt "reporting/benchmarks/resource-usage-${GITHUB_RUN_ID}.txt"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add reporting/run.json reporting/benchmarks/
+          git add analyses/*/simulation-data/*.csv analyses/*/simulation-data/*.json analyses/*/simulation-data/*.tex
+          if git diff --cached --quiet; then
+            echo 'Numerical assets are already identical to this run'
+          else
+            git commit -m "Record validated Dask block simulation: $TRIALS trials × $REPLICATES replicates"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+      - name: Upload completed simulation and machine resource diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dask-block-benchmark-${{ github.run_number }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            dask-plan.json
+            dask-run-result.json
+            dask-resource-usage.txt
+            dask-performance.html
+            reporting/run.json
+            analyses/*/simulation-data/*.csv
+            analyses/*/simulation-data/*.json
+            analyses/*/simulation-data/*.tex

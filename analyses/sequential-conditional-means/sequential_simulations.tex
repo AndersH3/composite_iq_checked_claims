@@ -244,10 +244,21 @@ bilinearity, rather than results inferred from a successful simulation
 \chapter{Dask implementation and the experimental design}
 \label{sec:seq-sim-design}
 
-Dask arrays express the normal draws and vector arithmetic in chunks of
-\SimChunk{} observations. Dask reductions calculate counts, means and
-second moments without retaining every full battery in one in-memory
-object. The sample variance uses denominator \(M-1\), where \(M\)
+
+\noindent\textbf{Two maintained numerical engines.}
+The source includes a Dask Array reference implementation and a
+block-aggregated Dask delayed implementation. The latter draws latent
+Gaussian factors and residual vectors locally in worker blocks,
+evaluates the coupled population and conditional laws, and sends only
+centered moments to the reducer. The compiled tables and figures
+correspond to the seeds, engine, and sample counts recorded with the
+numeric results, not to unexecuted source defaults.
+
+Dask executes blocks of \SimChunk{} observations. The reference
+Dask Array graph reduces arrays explicitly; the optimized delayed
+graph generates and summarizes bounded arrays within each worker.
+Both produce count, mean and centered-second-moment summaries without
+retaining every simulated battery in the driver process. The sample variance uses denominator \(M-1\), where \(M\)
 is the number of simulated observations contributing to that estimate.
 The report's tables and plotted coordinates are generated from these
 reductions; PGFPlots renders those coordinates in XeLaTeX. There is no
@@ -515,7 +526,7 @@ uncertainty at the selected correlation.
 \input{simulation-data/replicates.tex}
 
 The replicate summaries show ordinary sampling variation under fixed
-model parameters. Pooled estimates use all four seeded replicates,
+model parameters. Pooled estimates use all \SimReplicates{} seeded replicates,
 whereas the reported replicate values show how much results depend on
 individual streams. The nine finite conditional laws and nine finite
 population laws are obtained from full score-vector constructions;

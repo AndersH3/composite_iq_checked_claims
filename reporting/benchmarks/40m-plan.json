@@ -1,0 +1,34 @@
+{
+  "config": {
+    "trials": 5000000,
+    "chunk": 500000,
+    "replicates": 8,
+    "seeds": [
+      20261114,
+      20261115,
+      20261116,
+      20261117,
+      20261118,
+      20261119,
+      20261120,
+      20261121
+    ],
+    "engine": "blocks",
+    "scheduler": "processes",
+    "workers": 2,
+    "memory_limit": null,
+    "versions": {
+      "dask": "2026.8.0",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "deal": "4.24.6"
+    }
+  },
+  "graph_tasks": 3303,
+  "blocks_per_replicate": 10,
+  "samples_per_case": 40000000,
+  "estimated_gaussian_input_bytes_per_sequential_block": 96000000,
+  "expected_rare_events_per_case": 40.0,
+  "relative_poisson_noise_at_rare_event": 0.15811388300841897,
+  "notes": "Raw block bytes exclude intermediate arrays, memory overlap, scheduler overhead and PDF production; measure peak RSS on target hardware."
+}
