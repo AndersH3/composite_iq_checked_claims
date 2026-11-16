@@ -199,3 +199,57 @@ Conditional limit, \(r=3\) & \(270/11\) & 193169781 & 242811875 \\
 \end{tabular}
 \end{center}
 Each integer is positive, so the lemma proves each displayed SD rounding.
+
+
+\section{Two distinct large-count limits: initially observed versus future tests}
+\label{sec:two-count-limits}
+The preceding limits hold the number of initial observations \(r\) fixed
+and let the subsequent count \(k\) grow. The arbitrary-initial-count
+result in Corollary~\ref{cor:many-equal-starts} instead holds \(k\)
+fixed and lets the number \(n=r\) of initially observed scores equal to
+\(a\) grow. Interchanging these operations requires separate analysis.
+
+\begin{theorem}[Order of the two sequential-count limits]
+\label{thm:two-count-limits}
+For fixed \(a\in\mathbb R\) and \(0\leq c\leq1\), let
+\[
+ B_{n,k}=\frac{n[1+(n+k-1)c]a}
+                  {(n+k)[1+(n-1)c]},\qquad n,k\geq1.
+\]
+When \(c=0\), the iterated limits generally differ:
+\[
+ \lim_{n\to\infty}\lim_{k\to\infty}B_{n,k}=0,\qquad
+ \lim_{k\to\infty}\lim_{n\to\infty}B_{n,k}=a.
+\]
+They coincide only if \(a=0\). For every fixed \(0<c\leq1\),
+both iterated limits equal \(a\). In contrast, the population SD has
+both iterated limits \(\sqrt c\), and the conditional SD of the
+actual inclusive mean has both iterated limits zero, throughout
+\(0\leq c\leq1\).
+\end{theorem}
+\begin{proof}
+At \(c=0\), the general mean simplifies to \(na/(n+k)\).
+For each fixed \(n\), it tends to zero as \(k\) increases; for each
+fixed \(k\), it tends to \(a\) as \(n\) increases. These yield the
+two stated orders of limits. For fixed \(c>0\), the limit as \(k\)
+grows is \(b_n=nca/[1+(n-1)c]\), by
+Theorem~\ref{thm:prediction-limits}; dividing numerator and denominator
+by \(n\) shows \(\lim_{n\to\infty}b_n=a\). In the reverse order,
+Corollary~\ref{cor:many-equal-starts} proves
+\(\lim_{n\to\infty}B_{n,k}=a\) for each fixed \(k\), and the
+outer \(k\)-limit leaves this constant unchanged.
+
+The population variance
+\(\operatorname{Var}(C_{n,k})=c+(1-c)/(n+k)\)
+has limit \(c\) in either count order. For conditional variance, the
+fixed-\(k\), growing-\(n\) limit is zero by
+Corollary~\ref{cor:many-equal-starts}, whereas the fixed-\(n\),
+growing-\(k\) limit is \(c(1-c)/[1+(n-1)c]\)
+by Theorem~\ref{thm:prediction-limits}. The latter tends to
+zero as \(n\) grows if \(c>0\), and is identically zero if
+\(c=0\) or \(c=1\). Continuity of the nonnegative square root,
+proved in Lemma~\ref{lem:square-root-limit-bound}, transfers these
+variance limits to the corresponding SD limits. Fixed negative
+correlations are excluded, since the covariance matrix cannot remain
+positive semidefinite along either unbounded sequence of counts.
+\end{proof}

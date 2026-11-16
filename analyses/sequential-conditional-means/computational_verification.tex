@@ -11,9 +11,17 @@ Independent Python reference calculations use the standard library's
 rational arithmetic and established SciPy/NumPy numerical methods
 rather than a second unreviewed probability implementation.
 
-The nine IQ-150 examples, finite covariance endpoints and
+The nine IQ-150 Monte Carlo examples, finite covariance endpoints and
 analytically derived limits are compared against explicit formulas.
-A pass on one finite grid only checks those numerical instances.
+The main mathematical theorem additionally covers every integer
+\(n\geq1\) of identical starting observations \(a\). An exact rational
+Python calculator for arbitrary \(n,k\geq1\) is maintained in
+\texttt{library/python/sequential.py}; its independent regression tests
+check conditional means and variances using matrix Schur complements,
+including \(n=5\) and singular correlation endpoints. These are exact
+algebraic and finite-dimensional checks, not new Dask replications.
+A pass on the recorded \(n\in\{1,2,3\}\) grid only checks those numerical
+instances and cannot establish a uniform sampling-error bound for all \(n\).
 Floating-point rounding, finite-state pseudorandom generators and
 error bounds for numerical integration require separate evaluation.
 
