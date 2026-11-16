@@ -14,7 +14,7 @@ import deal
 
 
 @deal.post(lambda result: isinstance(result, bool))
-@deal.has("network")
+@deal.has()
 @deal.raises()
 @deal.ensure(lambda value, result: not result or isinstance(value, (int, float)) and not isinstance(value, bool))
 @deal.ensure(lambda value, result: not result or -math.inf < value < math.inf)
