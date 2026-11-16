@@ -1322,7 +1322,7 @@ Qed.
 Theorem batch_bernoulli_variance_max_attained :
   forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> p x=1/2) -> 4*batch_bernoulli_variance w p xs=batch_mass w xs.
 Proof.
-  intros A w p xs Hp; assert (Hz:batch_mass w xs-4*batch_bernoulli_variance w p xs=0). { rewrite batch_bernoulli_deficit_square; rewrite (finite_sum_ext_in xs (fun x=>w x*(2*p x-1)*(2*p x-1)) (fun _=>0)); [apply finite_sum_zero|intros x Hin; rewrite (Hp x Hin); ring]. } lra.
+  intros A w p xs Hp; assert (Hz:batch_mass w xs-4*batch_bernoulli_variance w p xs=0). { rewrite batch_bernoulli_deficit_square; rewrite (finite_sum_ext_in xs (fun x=>w x*(2*p x-1)*(2*p x-1)) (fun _=>0)); [apply finite_sum_zero|intros x Hin; rewrite (Hp x Hin); field; lra]. } lra.
 Qed.
 
 (** [batch_bernoulli_variance_le_success] (theorem).
