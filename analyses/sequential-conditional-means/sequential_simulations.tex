@@ -244,6 +244,20 @@ bilinearity, rather than results inferred from a successful simulation
 \chapter{Dask implementation and the experimental design}
 \label{sec:seq-sim-design}
 
+
+\noindent\textbf{Two maintained numerical engines.}
+The finite sample values and figure coordinates printed here are the
+original Dask Array results, with the recorded \SimReplicates{} replicates
+and \SimTrials{} draws per replicate. The new scalable \texttt{blocks}
+engine instead schedules bounded Dask delayed tasks. Each worker draws
+its own Gaussian latent and residual arrays, computes all coupled
+population and conditional cases for a fixed initial-score count, and
+sends only centered moments to the graph reductions. This reduces
+scheduler traffic and prevents whole score matrices being returned to
+the driver. Its higher default sample count is not an additional
+numerical result in this edition; the displayed estimates retain
+their documented recorded sample size.
+
 Dask arrays express the normal draws and vector arithmetic in chunks of
 \SimChunk{} observations. Dask reductions calculate counts, means and
 second moments without retaining every full battery in one in-memory
