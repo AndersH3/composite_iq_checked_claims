@@ -29,3 +29,10 @@ jobs:
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
       - name: Python/Dask numerical and property tests
         run: python -m pytest -q tests
+      # These executions write only into the disposable Actions checkout.
+      # They validate Dask worker serialization and output dependencies,
+      # NOT the unexecuted future default 40M-sample production experiment.
+      - name: Small end-to-end block run using local processes
+        run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler processes
+      - name: Small end-to-end block run using distributed LocalCluster
+        run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler distributed --memory-limit 1GiB
