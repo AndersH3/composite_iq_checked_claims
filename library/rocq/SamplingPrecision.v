@@ -187,7 +187,7 @@ Qed.
 *)
 Theorem sampling_variance_maximum: forall p, sampling_bernoulli_variance p<=1/4.
 Proof.
-  intro p; unfold sampling_bernoulli_variance; nra.
+  intro p. pose proof (Rle_0_sqr (p-1/2)) as Hsquare. unfold sampling_bernoulli_variance. nra.
 Qed.
 
 (** [sampling_variance_maximum_attained] (theorem).
