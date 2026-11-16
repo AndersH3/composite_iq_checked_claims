@@ -3976,7 +3976,7 @@ Review: two heterogeneous pass probabilities and group sizes, with exact
 AI-assisted statistical-algebra formalization; only Rocq 9.2 verifies exact theorem statements. Existing binomial and Gaussian distributional gaps remain.
 
 
-## StratifiedBernoulli.v — 170 proof scripts
+## StratifiedBernoulli.v — 185 proof scripts
 
 Review: G08/G13 report obligations concerning heterogeneous success counts, calibration residuals, squared rate dispersion, variation and aggregation of three independent hypothetical cohorts. Each source-ordered result is a distinct exact identity. Reuse canonical Rocq Stdlib Ring and SamplingPrecision/TwoRatePrecision; no distribution implementation or extra axiom. Proof correctness requires passing Rocq 9.2 kernel CI at the committed head.
 
@@ -4152,3 +4152,19 @@ Review: G08/G13 report obligations concerning heterogeneous success counts, cali
 | `loss_offset_difference_identity` (theorem) | Heterogeneity dispersion is invariant under calibration-benchmark choice. | Reals/Ring; SamplingPrecision/TwoRatePrecision. | Exact deterministic moments, not a binomial law. |
 | `success_two_rate_bridge` (theorem) | Three-group expected counts recover the existing canonical two-rate expression. | Reals/Ring; SamplingPrecision/TwoRatePrecision. | Exact deterministic moments, not a binomial law. |
 | `variance_two_rate_bridge` (theorem) | Three-group hypothetical Bernoulli variance specializes to the canonical two-rate target. | Reals/Ring; SamplingPrecision/TwoRatePrecision. | Exact deterministic moments, not a binomial law. |
+
+| `sb_mass_nonnegative` (theorem) | If all three cohort exposures are nonnegative their combined population weight cannot be negative. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_mass_strict_positive` (theorem) | Strictly positive sample sizes imply a strictly positive combined exposure for denominator-safe future pooling. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_success_nonnegative` (theorem) | Nonnegative cohort sizes and nonnegative event rates imply nonnegative hypothetical expected success counts. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_success_le_exposure` (theorem) | Expected successful admissions cannot exceed the total opportunities when every component event rate is at most one. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_failure_nonnegative` (theorem) | Expected complementary failures remain nonnegative whenever all cohort rates lie at most one and exposures are nonnegative. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_failure_le_exposure` (theorem) | Complementary failure expectations do not exceed the total three-cohort exposure when event rates are nonnegative. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_second_nonnegative` (theorem) | The weighted second rate moment is nonnegative for arbitrary real event rates and nonnegative exposures. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_variance_nonnegative` (theorem) | The ideal heterogeneous count-variance expression is nonnegative for valid Bernoulli probabilities and nonnegative cohort counts. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_variance_le_success` (theorem) | The sum of ideal Bernoulli variance contributions is bounded above by total expected successes even without a probability range assumption. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_variance_le_failure` (theorem) | The same Bernoulli-count variance is also bounded by expected failures, by event-complement symmetry. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_loss_nonnegative` (theorem) | Weighted squared calibration deviation cannot be negative when each cohort exposure is nonnegative. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_dispersion_nonnegative` (theorem) | Three-way pairwise squared-rate dispersion cannot be negative when sample weights are nonnegative. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_dispersion_le_scaled_loss` (theorem) | The between-cohort heterogeneity term cannot exceed scaled calibration loss, since the omitted squared benchmark residual is nonnegative. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_variance_four_gap_identity` (theorem) | Sharp variance-deficit certificate decomposes the distance from the Bernoulli quarter maximum into three weighted squared contrasts. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |
+| `sb_variance_four_bound` (theorem) | The sum of three hypothetical independent Bernoulli count variances obeys the sharp total-exposure quarter bound. | Reuses Reals/Psatz/Lra/Ring and prior canonical moments. | Explicit rate/weight constraints, not a sampling law. |

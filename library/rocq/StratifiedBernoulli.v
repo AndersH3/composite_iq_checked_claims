@@ -2057,7 +2057,7 @@ Qed.
 *)
 Theorem net_as_two_success_minus_mass : forall (n m k p q r:R), sb_net n m k p q r = 2*(sb_success n m k p q r)-sb_mass n m k.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  intros; rewrite net_as_success_failure_gap, failure_as_complement; ring.
 Qed.
 
 (** [net_plus_twice_failures] (theorem).
@@ -2109,7 +2109,7 @@ Qed.
 *)
 Theorem second_as_success_minus_variance : forall (n m k p q r:R), sb_second n m k p q r = sb_success n m k p q r-sb_variance n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  intros; rewrite variance_as_success_minus_square; ring.
 Qed.
 
 (** [variance_second_sum] (theorem).
@@ -2122,7 +2122,7 @@ Qed.
 *)
 Theorem variance_second_sum : forall (n m k p q r:R), sb_variance n m k p q r+sb_second n m k p q r = sb_success n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  intros; rewrite variance_as_success_minus_square; ring.
 Qed.
 
 (** [loss_second_moment_expansion] (theorem).
@@ -2278,7 +2278,7 @@ Qed.
 *)
 Theorem pair_dispersion_loss_certificate : forall (n m k p q r t:R), (sb_mass n m k)*(sb_loss n m k p q r t) = sb_dispersion n m k p q r+(sb_offset n m k p q r t)*(sb_offset n m k p q r t).
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  intros; rewrite pair_dispersion_moment_identity, loss_second_moment_expansion, offset_from_success; ring.
 Qed.
 
 (** [loss_offset_difference_identity] (theorem).
@@ -2291,7 +2291,7 @@ Qed.
 *)
 Theorem loss_offset_difference_identity : forall (n m k p q r t:R), (sb_mass n m k)*(sb_loss n m k p q r t)-(sb_offset n m k p q r t)*(sb_offset n m k p q r t) = sb_dispersion n m k p q r.
 Proof.
-  intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+  intros; rewrite pair_dispersion_loss_certificate; ring.
 Qed.
 
 (** [success_two_rate_bridge] (theorem).
@@ -2318,5 +2318,250 @@ Qed.
 Theorem variance_two_rate_bridge : forall (n m k p q r:R), sb_variance n m 0 p q r = rate_count_variance n m p q.
 Proof.
   intros; cbv [sb_mass sb_success sb_failure sb_variance sb_second sb_loss sb_dispersion sb_net sb_offset sampling_bernoulli_variance rate_count rate_count_variance]; ring.
+Qed.
+
+(** [sb_mass_nonnegative] (theorem).
+ Mathematical meaning: If all three cohort exposures are nonnegative their combined population weight cannot be negative.
+ Exact proposition: Theorem sb_mass_nonnegative : forall (n m k:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_mass n m k.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_mass_nonnegative : forall (n m k:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_mass n m k.
+Proof.
+  intros; unfold sb_mass; lra.
+Qed.
+
+(** [sb_mass_strict_positive] (theorem).
+ Mathematical meaning: Strictly positive sample sizes imply a strictly positive combined exposure for denominator-safe future pooling.
+ Exact proposition: Theorem sb_mass_strict_positive : forall (n m k:R), 0<n -> 0<m -> 0<k -> 0<sb_mass n m k.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_mass_strict_positive : forall (n m k:R), 0<n -> 0<m -> 0<k -> 0<sb_mass n m k.
+Proof.
+  intros; unfold sb_mass; lra.
+Qed.
+
+(** [sb_success_nonnegative] (theorem).
+ Mathematical meaning: Nonnegative cohort sizes and nonnegative event rates imply nonnegative hypothetical expected success counts.
+ Exact proposition: Theorem sb_success_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=p -> 0<=q -> 0<=r -> 0<=sb_success n m k p q r.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_success_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=p -> 0<=q -> 0<=r -> 0<=sb_success n m k p q r.
+Proof.
+  intros; unfold sb_success; nra.
+Qed.
+
+(** [sb_success_le_exposure] (theorem).
+ Mathematical meaning: Expected successful admissions cannot exceed the total opportunities when every component event rate is at most one.
+ Exact proposition: Theorem sb_success_le_exposure : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> p<=1 -> q<=1 -> r<=1 -> sb_success n m k p q r <= sb_mass n m k.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_success_le_exposure : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> p<=1 -> q<=1 -> r<=1 -> sb_success n m k p q r <= sb_mass n m k.
+Proof.
+  intros; unfold sb_success, sb_mass; nra.
+Qed.
+
+(** [sb_failure_nonnegative] (theorem).
+ Mathematical meaning: Expected complementary failures remain nonnegative whenever all cohort rates lie at most one and exposures are nonnegative.
+ Exact proposition: Theorem sb_failure_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> p<=1 -> q<=1 -> r<=1 -> 0<=sb_failure n m k p q r.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_failure_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> p<=1 -> q<=1 -> r<=1 -> 0<=sb_failure n m k p q r.
+Proof.
+  intros; unfold sb_failure; nra.
+Qed.
+
+(** [sb_failure_le_exposure] (theorem).
+ Mathematical meaning: Complementary failure expectations do not exceed the total three-cohort exposure when event rates are nonnegative.
+ Exact proposition: Theorem sb_failure_le_exposure : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=p -> 0<=q -> 0<=r -> sb_failure n m k p q r <= sb_mass n m k.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_failure_le_exposure : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=p -> 0<=q -> 0<=r -> sb_failure n m k p q r <= sb_mass n m k.
+Proof.
+  intros; unfold sb_failure, sb_mass; nra.
+Qed.
+
+(** [sb_second_nonnegative] (theorem).
+ Mathematical meaning: The weighted second rate moment is nonnegative for arbitrary real event rates and nonnegative exposures.
+ Exact proposition: Theorem sb_second_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_second n m k p q r.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_second_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_second n m k p q r.
+Proof.
+  intros n m k p q r Hn Hm Hk; unfold sb_second.
+  assert (H1: 0<=n*p*p).
+  { replace (n*p*p) with (n*(p*p)) by ring.
+    apply Rmult_le_pos; [exact Hn|nra]. }
+  assert (H2: 0<=m*q*q).
+  { replace (m*q*q) with (m*(q*q)) by ring.
+    apply Rmult_le_pos; [exact Hm|nra]. }
+  assert (H3: 0<=k*r*r).
+  { replace (k*r*r) with (k*(r*r)) by ring.
+    apply Rmult_le_pos; [exact Hk|nra]. }
+  lra.
+Qed.
+
+(** [sb_variance_nonnegative] (theorem).
+ Mathematical meaning: The ideal heterogeneous count-variance expression is nonnegative for valid Bernoulli probabilities and nonnegative cohort counts.
+ Exact proposition: Theorem sb_variance_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> 0<=r -> r<=1 -> 0<=sb_variance n m k p q r.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_variance_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> 0<=r -> r<=1 -> 0<=sb_variance n m k p q r.
+Proof.
+  intros n m k p q r Hn Hm Hk Hp0 Hp1 Hq0 Hq1 Hr0 Hr1.
+  assert (H1: 0<=n*sampling_bernoulli_variance p).
+  { apply Rmult_le_pos; [exact Hn|unfold sampling_bernoulli_variance; nra]. }
+  assert (H2: 0<=m*sampling_bernoulli_variance q).
+  { apply Rmult_le_pos; [exact Hm|unfold sampling_bernoulli_variance; nra]. }
+  assert (H3: 0<=k*sampling_bernoulli_variance r).
+  { apply Rmult_le_pos; [exact Hk|unfold sampling_bernoulli_variance; nra]. }
+  unfold sb_variance; lra.
+Qed.
+
+(** [sb_variance_le_success] (theorem).
+ Mathematical meaning: The sum of ideal Bernoulli variance contributions is bounded above by total expected successes even without a probability range assumption.
+ Exact proposition: Theorem sb_variance_le_success : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> sb_variance n m k p q r <= sb_success n m k p q r.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_variance_le_success : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> sb_variance n m k p q r <= sb_success n m k p q r.
+Proof.
+  intros n m k p q r Hn Hm Hk.
+  pose proof (sb_second_nonnegative n m k p q r Hn Hm Hk) as Hsq.
+  rewrite variance_as_success_minus_square; lra.
+Qed.
+
+(** [sb_variance_le_failure] (theorem).
+ Mathematical meaning: The same Bernoulli-count variance is also bounded by expected failures, by event-complement symmetry.
+ Exact proposition: Theorem sb_variance_le_failure : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> sb_variance n m k p q r <= sb_failure n m k p q r.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_variance_le_failure : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> sb_variance n m k p q r <= sb_failure n m k p q r.
+Proof.
+  intros n m k p q r Hn Hm Hk.
+  pose proof (sb_variance_le_success n m k (1-p) (1-q) (1-r) Hn Hm Hk) as H.
+  rewrite variance_complement_event_rates in H.
+  rewrite success_complement_event_rates in H.
+  exact H.
+Qed.
+
+(** [sb_loss_nonnegative] (theorem).
+ Mathematical meaning: Weighted squared calibration deviation cannot be negative when each cohort exposure is nonnegative.
+ Exact proposition: Theorem sb_loss_nonnegative : forall (n m k p q r t:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_loss n m k p q r t.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_loss_nonnegative : forall (n m k p q r t:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_loss n m k p q r t.
+Proof.
+  intros n m k p q r t Hn Hm Hk; unfold sb_loss.
+  assert (H1: 0<=n*(p-t)*(p-t)).
+  { replace (n*(p-t)*(p-t)) with (n*((p-t)*(p-t))) by ring.
+    apply Rmult_le_pos; [exact Hn|nra]. }
+  assert (H2: 0<=m*(q-t)*(q-t)).
+  { replace (m*(q-t)*(q-t)) with (m*((q-t)*(q-t))) by ring.
+    apply Rmult_le_pos; [exact Hm|nra]. }
+  assert (H3: 0<=k*(r-t)*(r-t)).
+  { replace (k*(r-t)*(r-t)) with (k*((r-t)*(r-t))) by ring.
+    apply Rmult_le_pos; [exact Hk|nra]. }
+  lra.
+Qed.
+
+(** [sb_dispersion_nonnegative] (theorem).
+ Mathematical meaning: Three-way pairwise squared-rate dispersion cannot be negative when sample weights are nonnegative.
+ Exact proposition: Theorem sb_dispersion_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_dispersion n m k p q r.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_dispersion_nonnegative : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 0<=sb_dispersion n m k p q r.
+Proof.
+  intros n m k p q r Hn Hm Hk; unfold sb_dispersion.
+  assert (H1: 0<=n*m*(p-q)*(p-q)).
+  { replace (n*m*(p-q)*(p-q)) with ((n*m)*((p-q)*(p-q))) by ring.
+    apply Rmult_le_pos; nra. }
+  assert (H2: 0<=m*k*(q-r)*(q-r)).
+  { replace (m*k*(q-r)*(q-r)) with ((m*k)*((q-r)*(q-r))) by ring.
+    apply Rmult_le_pos; nra. }
+  assert (H3: 0<=k*n*(r-p)*(r-p)).
+  { replace (k*n*(r-p)*(r-p)) with ((k*n)*((r-p)*(r-p))) by ring.
+    apply Rmult_le_pos; nra. }
+  lra.
+Qed.
+
+(** [sb_dispersion_le_scaled_loss] (theorem).
+ Mathematical meaning: The between-cohort heterogeneity term cannot exceed scaled calibration loss, since the omitted squared benchmark residual is nonnegative.
+ Exact proposition: Theorem sb_dispersion_le_scaled_loss : forall (n m k p q r t:R), sb_dispersion n m k p q r <= sb_mass n m k * sb_loss n m k p q r t.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_dispersion_le_scaled_loss : forall (n m k p q r t:R), sb_dispersion n m k p q r <= sb_mass n m k * sb_loss n m k p q r t.
+Proof.
+  intros n m k p q r t.
+  pose proof (pair_dispersion_loss_certificate n m k p q r t) as H.
+  assert (Hsq: 0<=sb_offset n m k p q r t*sb_offset n m k p q r t) by nra.
+  lra.
+Qed.
+
+(** [sb_variance_four_gap_identity] (theorem).
+ Mathematical meaning: Sharp variance-deficit certificate decomposes the distance from the Bernoulli quarter maximum into three weighted squared contrasts.
+ Exact proposition: Theorem sb_variance_four_gap_identity : forall (n m k p q r:R), sb_mass n m k-4*sb_variance n m k p q r = n*(2*p-1)*(2*p-1)+m*(2*q-1)*(2*q-1)+k*(2*r-1)*(2*r-1).
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_variance_four_gap_identity : forall (n m k p q r:R), sb_mass n m k-4*sb_variance n m k p q r = n*(2*p-1)*(2*p-1)+m*(2*q-1)*(2*q-1)+k*(2*r-1)*(2*r-1).
+Proof.
+  intros; unfold sb_mass, sb_variance, sampling_bernoulli_variance; ring.
+Qed.
+
+(** [sb_variance_four_bound] (theorem).
+ Mathematical meaning: The sum of three hypothetical independent Bernoulli count variances obeys the sharp total-exposure quarter bound.
+ Exact proposition: Theorem sb_variance_four_bound : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 4*sb_variance n m k p q r <= sb_mass n m k.
+ Premises and side conditions: Every real-order hypothesis needed by this statement is explicit. Real event rates may also require probability-range assumptions for a statistical interpretation; this does not assert independence or construct Bernoulli draws.
+ Proof/definition method: Reuse a previously kernel-checked moment identity or Stdlib real ordered-ring nonnegativity, Lra/Psatz/Ring and Rmult_le_pos; prove only the necessary new rate bound or quadratic certificate.
+ Library reuse: Rocq Stdlib Reals, Ring, Lra and Psatz; established SamplingPrecision, TwoRatePrecision and earlier StratifiedBernoulli results.
+ Boundary: These are exact deterministic nonnegative-exposure inequalities, not stochastic count distributions, empirical data validation or confidence-interval coverage.
+*)
+Theorem sb_variance_four_bound : forall (n m k p q r:R), 0<=n -> 0<=m -> 0<=k -> 4*sb_variance n m k p q r <= sb_mass n m k.
+Proof.
+  intros n m k p q r Hn Hm Hk.
+  pose proof (sb_variance_four_gap_identity n m k p q r) as Hgap.
+  pose proof (sb_second_nonnegative n m k (2*p-1) (2*q-1) (2*r-1) Hn Hm Hk) as Hsq.
+  unfold sb_second in Hsq.
+  lra.
 Qed.
 
