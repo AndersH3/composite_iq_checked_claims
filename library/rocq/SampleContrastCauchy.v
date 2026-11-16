@@ -2515,3 +2515,73 @@ Proof.
    (four_batch_score x1 x2 x3 x4 1 1 (-1) (-1)) (four_batch_score x1 x2 x3 x4 1 1 (-1) (-1)) xs Hw Hm).
 Qed.
 
+(** [sample_zero_variance_uncorrelated_left] (theorem).
+ Mathematical meaning: Any sample score with exactly zero weighted variance has zero covariance with every other score, provided all occurrence weights are nonnegative and total exposure is positive.
+ Exact checked proposition: forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> batch_variance w f xs=0 -> batch_covariance w f g xs=0
+ Premises and side conditions: Nonnegative listed weights and positive total mass ensure sample variance and covariance are order-compatible. An exact zero variance is an empirical finite-list property, not a claim of population constancy or Gaussian independence.
+ Proof/definition method: Use the previously kernel-checked squared covariance Cauchy-Schwarz inequality or nonnegative sum/difference sample variance; reduce the remainder with standard Rocq Psatz, Lra and existing covariance scaling formulas.
+ Library reuse: FiniteConditionalCovariance, ListPoolingAlgebra and FourContrastCovariance, plus Stdlib real arithmetic. No new finite sum, estimator or independent-sampling assumption.
+ Boundary: Empirical deterministic covariance restrictions relevant to pf:moments/G01, not distributional Gaussian/chi-square, confidence-coverage or real-world IQ-validity conclusions.
+*)
+Theorem sample_zero_variance_uncorrelated_left :
+ forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> batch_variance w f xs=0 -> batch_covariance w f g xs=0.
+Proof.
+ intros A w f g xs Hw Hm Hzero.
+ pose proof (sample_covariance_cauchy_schwarz A w f g xs Hw Hm) as Hcs.
+ rewrite Hzero in Hcs; nra.
+Qed.
+
+(** [sample_zero_variance_uncorrelated_right] (theorem).
+ Mathematical meaning: Any sample score with exactly zero weighted variance has zero covariance when used as the second variable of the covariance calculation.
+ Exact checked proposition: forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> batch_variance w g xs=0 -> batch_covariance w f g xs=0
+ Premises and side conditions: Nonnegative listed weights and positive total mass ensure sample variance and covariance are order-compatible. An exact zero variance is an empirical finite-list property, not a claim of population constancy or Gaussian independence.
+ Proof/definition method: Use the previously kernel-checked squared covariance Cauchy-Schwarz inequality or nonnegative sum/difference sample variance; reduce the remainder with standard Rocq Psatz, Lra and existing covariance scaling formulas.
+ Library reuse: FiniteConditionalCovariance, ListPoolingAlgebra and FourContrastCovariance, plus Stdlib real arithmetic. No new finite sum, estimator or independent-sampling assumption.
+ Boundary: Empirical deterministic covariance restrictions relevant to pf:moments/G01, not distributional Gaussian/chi-square, confidence-coverage or real-world IQ-validity conclusions.
+*)
+Theorem sample_zero_variance_uncorrelated_right :
+ forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> batch_variance w g xs=0 -> batch_covariance w f g xs=0.
+Proof.
+ intros A w f g xs Hw Hm Hzero.
+ pose proof (sample_covariance_cauchy_schwarz A w f g xs Hw Hm) as Hcs.
+ rewrite Hzero in Hcs; nra.
+Qed.
+
+(** [sample_covariance_lower_amgm] (theorem).
+ Mathematical meaning: Nonnegative variance of a sum of two finite weighted scores proves a two-sided covariance feasibility component: the covariance cannot be less than minus half the sum of their variances.
+ Exact checked proposition: forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> - (batch_variance w f xs+batch_variance w g xs) <= 2*batch_covariance w f g xs
+ Premises and side conditions: Nonnegative listed weights and positive total mass ensure sample variance and covariance are order-compatible. An exact zero variance is an empirical finite-list property, not a claim of population constancy or Gaussian independence.
+ Proof/definition method: Use the previously kernel-checked squared covariance Cauchy-Schwarz inequality or nonnegative sum/difference sample variance; reduce the remainder with standard Rocq Psatz, Lra and existing covariance scaling formulas.
+ Library reuse: FiniteConditionalCovariance, ListPoolingAlgebra and FourContrastCovariance, plus Stdlib real arithmetic. No new finite sum, estimator or independent-sampling assumption.
+ Boundary: Empirical deterministic covariance restrictions relevant to pf:moments/G01, not distributional Gaussian/chi-square, confidence-coverage or real-world IQ-validity conclusions.
+*)
+Theorem sample_covariance_lower_amgm :
+ forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> - (batch_variance w f xs+batch_variance w g xs) <= 2*batch_covariance w f g xs.
+Proof.
+ intros A w f g xs Hw Hm.
+ assert (Hne: batch_mass w xs<>0) by lra.
+ pose proof (batch_variance_nonnegative A w (fun t=>f t+g t) xs Hw Hm) as Hsum.
+ rewrite (four_batch_variance_sum A w f g xs Hne) in Hsum.
+ lra.
+Qed.
+
+(** [sample_covariance_upper_amgm] (theorem).
+ Mathematical meaning: Nonnegative variance of a finite weighted score difference proves the companion upper bound: twice covariance cannot exceed the sum of their two variances.
+ Exact checked proposition: forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> 2*batch_covariance w f g xs <= batch_variance w f xs+batch_variance w g xs
+ Premises and side conditions: Nonnegative listed weights and positive total mass ensure sample variance and covariance are order-compatible. An exact zero variance is an empirical finite-list property, not a claim of population constancy or Gaussian independence.
+ Proof/definition method: Use the previously kernel-checked squared covariance Cauchy-Schwarz inequality or nonnegative sum/difference sample variance; reduce the remainder with standard Rocq Psatz, Lra and existing covariance scaling formulas.
+ Library reuse: FiniteConditionalCovariance, ListPoolingAlgebra and FourContrastCovariance, plus Stdlib real arithmetic. No new finite sum, estimator or independent-sampling assumption.
+ Boundary: Empirical deterministic covariance restrictions relevant to pf:moments/G01, not distributional Gaussian/chi-square, confidence-coverage or real-world IQ-validity conclusions.
+*)
+Theorem sample_covariance_upper_amgm :
+ forall (A:Type) (w f g:A->R) (xs:list A), (forall t, In t xs -> 0<=w t) -> 0<batch_mass w xs -> 2*batch_covariance w f g xs <= batch_variance w f xs+batch_variance w g xs.
+Proof.
+ intros A w f g xs Hw Hm.
+ assert (Hne: batch_mass w xs<>0) by lra.
+ pose proof (batch_variance_nonnegative A w (fun t=>f t+(-1)*g t) xs Hw Hm) as Hdiff.
+ rewrite (four_batch_variance_sum A w f (fun t=>(-1)*g t) xs Hne) in Hdiff.
+ rewrite (batch_variance_scale A w g (-1) xs Hne) in Hdiff.
+ rewrite (batch_covariance_scale_right A w f g xs (-1) Hne) in Hdiff.
+ nra.
+Qed.
+
