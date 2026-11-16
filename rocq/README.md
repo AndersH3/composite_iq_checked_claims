@@ -1,19 +1,21 @@
 # Rocq formalization of checked claims
 
+> **Current source policy (November 16, 2026):** Python/Dask/Deal is the only maintained simulation and program-contract stack; Rocq 9.2 continues to check this entire mathematical library. Historical mentions of a retired native implementation below describe earlier repository revisions, not executable current code or current Python verification. AI assistance was used throughout; kernel validation applies only to exact formal propositions.
+
 ## D048x — finite weighted-sample covariance constraints
 
 **AI disclosure:** These proposed finite-sample proofs and this source mapping were prepared with OpenAI ChatGPT assistance; Rocq's pinned kernel, not the proof count or this documentation, determines proof status.
 
 [`SampleContrastCauchy.v`](../library/rocq/SampleContrastCauchy.v) contains **142 Rocq-9.2-checked theorem scripts** beyond D047x, mapped to shared `pf:moments` (G01), G12 weighted pooling, and the multiple-test-composite covariance restrictions used across all six reports. The central result is `sample_covariance_cauchy_schwarz` under nonnegative weights and strictly positive mass. The 136 individual four-test contrast bounds are related **specializations**, not 136 unrelated sampling laws. The four further general implications show that zero empirical variance forces zero covariance and that the covariance lies between ±half the sum of two empirical variances.
 
-The [exact proof-by-proof audit](PROOF_REFACTOR_SAMPLE_CAUCHY.md) is maintained separately from historical source registers. The authoritative deterministic corpus target on this branch is **3,258 proof scripts in 38 modules** (D047x baseline 3,116 plus 142); the 142-proof source passed the pinned Rocq 9.2 kernel on commit `9d069baf779c8e351b06a98bfb14667080752f13` ([workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43918132367)). This work does not establish positive-definite Gaussian constructions, normal probabilities, independent draws, model validity, interval coverage or a new SPARK campaign.
+The [exact proof-by-proof audit](PROOF_REFACTOR_SAMPLE_CAUCHY.md) is maintained separately from historical source registers. The authoritative deterministic corpus target on this branch is **3,258 proof scripts in 38 modules** (D047x baseline 3,116 plus 142); the 142-proof source passed the pinned Rocq 9.2 kernel on commit `9d069baf779c8e351b06a98bfb14667080752f13` ([workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43918132367)). This work does not establish positive-definite Gaussian constructions, normal probabilities, independent draws, model validity, interval coverage or a new retired native implementation campaign.
 
 **Author:** Anders Hellström.
 
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for all three analytical reports and their three simulation companions. **3,116 proof scripts** across **37 Rocq modules** have passed the pinned Rocq 9.2 kernel (2,933 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
+for all three analytical reports and their three simulation companions. **3,116 proof scripts** across **37 Rocq modules** have passed the pinned Rocq 9.2 kernel (2,933 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing retired native
 verification, Python/Deal contracts, and numerical integration checks.
 
 
@@ -535,7 +537,7 @@ changed by the documentation-only commits. The separate static
 documentation-checking script is enforced in GitHub Actions **before**
 Rocq kernel checking. The checker is implemented as a shell utility rather than adding a new
 Python source module, preserving the historical source-pinned Python
-Deal/SPARK inventory and all existing contract quality gates.
+Deal inventory and all existing contract quality gates.
 
 Three small library-backed proof additions precede the documentation
 pass: `FiniteSum.finite_sum_filter` proves that summing over
@@ -661,7 +663,7 @@ disposition.
 No previously named theorem statements were modified; this iteration
 adds four named propositions and rewrites only the proof body and
 adjacent commentary of `finite_prob_event_ext_on_samples`. The report
-data, historical evidence and previously verified SPARK/Python sources
+data, historical evidence and previously verified retired native/Python sources
 are unaffected.
 
 ## Previous continuation: remove weighted covariance induction by finite-sum laws
@@ -865,7 +867,7 @@ limited to generic fold/list algebra, the `Nat.iter`
 recurrence and suffix-sensitive finite covariance properties.
 No preexisting theorem statement was changed, no new
 recursive filter/sum implementation was added, and historical
-Python/SPARK verification evidence remains untouched.
+Python/Dask verification evidence remains untouched.
 
 ## Previous continuation: unconditional composite and covariance-matrix algebra
 
@@ -911,7 +913,7 @@ by CI for the exact order and names of all 350 scripts.
 generic fold, `Nat.iter` recurrence or suffix-dependent covariance
 model requires them. No new list fold, matrix construction, axiom,
 `Admitted`, external library or modification to historical
-Python/Deal/SPARK evidence was introduced.
+Python/Deal evidence was introduced.
 
 ## Current continuation: normalization-free unweighted score-list algebra
 
@@ -2020,7 +2022,7 @@ nonnegative two-coordinate principal-minor expression
 indexed symmetry, including repeated indices.
 
 No new list recursion, matrix algorithms, external dependencies,
-axioms, Python modules, or historical source-pinned SPARK evidence
+axioms, Python modules, or historical source-pinned retired native implementation evidence
 have been introduced. Rank-nullity and spectral decompositions
 remain separate, unproved extensions.
 
@@ -2044,7 +2046,7 @@ propositional `tauto` tactic.
 
 The model still lacks a generic matrix rank/kernel dimension theorem;
 no such claim is made. The changes introduce no custom matrix
-operation, new external dependency, Python code or SPARK modifications.
+operation, new external dependency, Python code or retired native implementation modifications.
 
 Current inventory: **573 public claims, 576 proof scripts,
 639 documented declarations** in seven Rocq modules.
@@ -2102,7 +2104,7 @@ the two-score linear combination on positive-weight sample support.
 No list iteration, matrix multiplication, general determinant
 algorithm, axiom or external library was added. Full matrix
 kernel/rank results and continuous distribution theory remain
-separately unproved. No Python source or archived SPARK evidence
+separately unproved. No Python source or archived retired native implementation evidence
 was modified.
 
 Current inventory: **573 public claims, 576 proof scripts,
@@ -2157,7 +2159,7 @@ interface, not an independent indexed-matrix multiplication
 implementation or a kernel-dimension theorem.
 
 No Python files, new Rocq axioms, external dependencies or
-historical source-pinned SPARK verification artifacts were changed.
+historical source-pinned retired native implementation verification artifacts were changed.
 
 Current inventory: **573 public claims, 576 proof scripts,
 639 documented declarations** across seven Rocq modules.
@@ -2180,7 +2182,7 @@ fixed-basis results and `VectorSpec.length_to_list` where required.
 Theorems preserve the normalized nonnegative-weight assumptions;
 none asserts finite matrix rank or continuous probability results.
 There are no new Python changes, matrix algorithms, dependencies,
-axioms or edits to source-pinned SPARK evidence.
+axioms or edits to source-pinned retired native implementation evidence.
 
 Current inventory: **573 public claims, 576 proof scripts,
 639 documented declarations** across seven Rocq modules.
@@ -2207,7 +2209,7 @@ row-kernel equivalence and rank dimensions remain future work.
 
 All theorem comments and the proof inventory were updated;
 no Python sources, new axioms, custom finite sums or
-source-pinned SPARK evidence were changed.
+source-pinned retired native implementation evidence were changed.
 
 Current inventory: **573 public claims, 576 proof scripts,
 639 documented declarations** across seven Rocq modules.
@@ -3561,7 +3563,7 @@ rather than detouring through a separate covariance radical.
 
 Current intended inventory: **759 public checked claims,
 762 proof scripts, 832 documented declarations** across seven
-Rocq modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
+Rocq modules, subject to pinned Rocq 9.2 and Python/Dask CI.
 
 ## Positive definiteness iff the centered sample evaluator separates coefficient vectors (12 November 2026)
 
@@ -3581,7 +3583,7 @@ new matrix infrastructure or general dimension/rank calculation.
 
 Current intended inventory: **760 public checked claims,
 763 proof scripts, 833 documented declarations** in seven
-modules, subject to Rocq 9.2 and Python/SPARK CI verification.
+modules, subject to Rocq 9.2 and Python/Dask CI verification.
 
 ## Exact injectivity of the centered finite sample evaluator (12 November 2026)
 
@@ -3601,7 +3603,7 @@ real numbers and has no numerical decision or rank content.
 
 Current intended inventory: **762 public checked claims,
 765 proof scripts, 835 documented declarations** across seven
-modules, subject to pinned Rocq 9.2 and Python/SPARK CI.
+modules, subject to pinned Rocq 9.2 and Python/Dask CI.
 
 ## Linear zero-coordinate-sum target for finite centered sample outputs (12 November 2026)
 
@@ -3689,7 +3691,7 @@ vectors, or a covariance-matrix rank/nullity result.
 Current intended inventory: **780 public checked claims,
 783 proof scripts and 856 documented declarations**
 across seven Rocq modules, subject to final Rocq 9.2 and
-Python/SPARK CI checks.
+Python/Dask CI checks.
 
 ## Exact inverse on the zero-sum target (12 November 2026)
 
@@ -3756,7 +3758,7 @@ matrix or coordinate-recursion code.
 Current intended inventory: **795 public checked claims,
 798 proof scripts and 872 documented declarations**
 across seven Rocq modules, subject to final Rocq 9.2 and
-Python/SPARK CI. These concrete projection identities do not
+Python/Dask CI. These concrete projection identities do not
 yet establish a subspace dimension or covariance rank formula.
 
 ## Linearity of the canonical zero-sum projection (12 November 2026)
@@ -3788,7 +3790,7 @@ additional vector induction or hand-written linear algebra.
 Current intended inventory: **801 public checked claims,
 804 proof scripts and 878 documented declarations**
 across seven Rocq modules, pending pinned Rocq 9.2 and
-Python/SPARK CI verification.
+Python/Dask CI verification.
 
 ## Explicit head-only projection-kernel normal form (12 November 2026)
 
@@ -3921,7 +3923,7 @@ finite covariance form is not expanded again.
 
 The repository now contains **836 public claims, 839 proof scripts,
 and 916 documented declarations** across seven modules, subject to
-pinned Rocq 9.2 and Python/Deal/SPARK workflow verification.
+pinned Rocq 9.2 and Python/Deal workflow verification.
 The results are not abstract dimension or matrix rank-nullity theorems.
 
 ## Zero-total product representation and projection factoring (12 November 2026)
@@ -3957,7 +3959,7 @@ extensionality and `Ring` rather than custom recursive vector code.
 
 Intended inventory: **851 public claims, 854 proof scripts and
 932 documented declarations** across seven Rocq modules, subject to
-pinned Rocq 9.2 verification and independent Deal/SPARK CI.
+pinned Rocq 9.2 verification and independent Deal CI.
 No abstract finite-dimensional vector-space isomorphism, dimension
 formula or covariance-matrix rank theorem is claimed here.
 
@@ -3980,7 +3982,7 @@ no new recursive vector code or matrix operations are introduced.
 
 The intended inventory is **860 public claims, 863 proof scripts and
 941 documented declarations** across seven modules, pending Rocq
-9.2 kernel checks and Python/Deal/SPARK CI. This is an exact
+9.2 kernel checks and Python/Deal CI. This is an exact
 concrete linearity interface, not an abstract vector-space
 dimension or covariance rank certificate.
 
@@ -3997,7 +3999,7 @@ additional recursive vector or matrix code.
 
 Intended inventory: **864 public claims, 867 proof scripts
 and 945 documented declarations**, subject to pinned Rocq 9.2
-and Python/Deal/SPARK CI. The abstract rank-nullity and covariance
+and Python/Deal CI. The abstract rank-nullity and covariance
 rank extensions remain unproved.
 
 ## Unique affine-fiber coordinates (13 November 2026)
@@ -4013,7 +4015,7 @@ Each proof composes already verified affine-axis lemmas and Stdlib
 
 Intended inventory: **868 public claims, 871 proof scripts and
 949 documented declarations**, pending pinned Rocq 9.2 and
-Python/Deal/SPARK CI. Abstract rank and dimension assertions remain
+Python/Deal CI. Abstract rank and dimension assertions remain
 out of scope at this stage.
 
 ## Zero-sum translation laws (13 November 2026)
@@ -4029,7 +4031,7 @@ matrix implementation, unproved assumptions or empirical claims.
 
 Targeted inventory: **871 public claims, 874 proof scripts and
 952 documented declarations**, subject to Rocq 9.2 and
-Python/Deal/SPARK CI. Library-level direct-sum dimensions and
+Python/Deal CI. Library-level direct-sum dimensions and
 covariance-rank formalization remain separate work.
 
 ## Bijective linear tail coordinates for zero-sum vectors (13 November 2026)
@@ -4046,7 +4048,7 @@ writing fresh vector recursion or matrix arithmetic.
 
 Target inventory: **876 public claims, 879 proof scripts, and
 957 documented declarations** (seven Rocq modules), subject to
-pinned kernel and Python/Deal/SPARK workflow checks. This concrete
+pinned kernel and Python/Deal workflow checks. This concrete
 linear bijection is not yet a packaged algebra-library linear
 equivalence, hyperplane dimension calculation, covariance rank,
 or empirical psychometric proof.
@@ -4064,7 +4066,7 @@ matrix recursion or additional axioms.
 
 Intended inventory: **881 public claims, 884 proof scripts,
 962 documented declarations** across seven Rocq modules, pending
-pinned Rocq and Python/Deal/SPARK CI. These concrete coordinate
+pinned Rocq and Python/Deal CI. These concrete coordinate
 identities do not constitute a maintained abstract vector-space
 direct-sum isomorphism or dimension/rank theorem.
 
@@ -4080,7 +4082,7 @@ arithmetic, a matrix class, or a second abstract vector type.
 
 Target inventory: **887 public claims, 890 proof scripts and
 968 documented declarations** across seven Rocq modules, subject
-to pinned Rocq 9.2 and Python/Deal/SPARK workflows. The
+to pinned Rocq 9.2 and Python/Deal workflows. The
 concrete additive equivalence does not yet certify an abstract
 dimension or covariance matrix rank bound.
 
@@ -4103,7 +4105,7 @@ no duplicate matrix/spectral/rank implementation is added.
 
 Intended inventory: **895 public claims, 898 proof scripts and
 977 documented declarations** in seven Rocq modules, subject to
-Rocq 9.2 kernel checking and Python/Deal/SPARK workflows.
+Rocq 9.2 kernel checking and Python/Deal workflows.
 This gives a concrete rank-deficiency witness but does not
 prove a general rank-nullity dimension formula or assess
 any empirical IQ covariance matrix.
@@ -4120,7 +4122,7 @@ covariance_with_constant_first and indexed_basis_affine_prefix_weighted_score
 rather than implementing new matrices, sums or positivity arguments.
 The intended inventory is **897 public claims, 900 proof scripts and
 979 documented declarations** across seven modules; Rocq 9.2 and
-Python/Deal/SPARK CI remain the verification authorities. No
+Python/Deal CI remain the verification authorities. No
 rank/nullity theorem or signed-weight positive-semidefiniteness is claimed.
 
 ## Signed-weight covariance row-kernel witnesses (13 November 2026)
@@ -4136,7 +4138,7 @@ the older nonnegative-weight row theorem now delegates to it. No
 new summation, matrix implementation or positivity assertion is made.
 The intended inventory is **899 public claims, 902 proof scripts, 981
 documented declarations** across seven modules, subject to Rocq 9.2
-kernel and existing Python/Deal/SPARK CI. Rank/nullity remains open.
+kernel and existing Python/Deal CI. Rank/nullity remains open.
 
 ## Unconditional covariance radical and row-kernel equivalence (13 November 2026)
 
@@ -4174,7 +4176,7 @@ own probability premises because strict positivity requires them.
 
 Inventory: **908 public claims, 911 proof scripts, 990 documented
 declarations**, with **497 proof scripts in FiniteMoments.v**, across
-seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal/SPARK
+seven Rocq modules. Pin to Rocq 9.2 and run existing Python/Deal
 CI. No signed-weight PSD, covariance rank, abstract nullity or
 empirical IQ result follows from these kernel identities.
 
@@ -4197,7 +4199,7 @@ interfaces; there is no new numerical matrix implementation.
 
 Inventory after this addition: **913 public claims, 916 proof scripts,
 1001 documented declarations** (502 FiniteMoments proofs) across seven
-modules, subject to pinned Rocq 9.2 and Python/Deal/SPARK CI.
+modules, subject to pinned Rocq 9.2 and Python/Deal CI.
 
 ## Exact two-sample covariance rank-one certificates (13 November 2026)
 
@@ -4245,7 +4247,7 @@ Signed weights are supported but no PSD claim is made.
 Expected inventory: **927 public claims, 930 proof scripts and
 1015 documented declarations** in seven modules, including
 **516 FiniteMoments proof scripts**, subject to pinned Rocq 9.2
-kernel verification and existing Python/Deal/SPARK regression gates.
+kernel verification and existing Python/Deal regression gates.
 Rank-zero and rank-one here are structural entry certificates,
 not an abstract dimension/rank-nullity formalization.
 
@@ -4328,12 +4330,12 @@ indexed-basis covariance/radical/row-kernel interfaces, the maintained
 typed basis-coordinate selector lemma, the bilinear diagonal identity,
 Stdlib.Reals.Rmult_integral/Req_EM_T, Lra, Ring and tauto.
 No competing finite-sum, matrix representation, generic rank algorithm,
-axiom or admitted lemma is introduced. No Python, Ada/SPARK or archived
+axiom or admitted lemma is introduced. No Python, retired native or archived
 evidence source is modified.
 
 Intended inventory: **947 public checked claims, 950 proof scripts,
 1035 documented declarations**, including **536 FiniteMoments proof
-scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal/SPARK CI
+scripts** in seven modules. Pinned Rocq 9.2 and Python/Deal CI
 remain the verification authorities; these counts alone do not imply
 generic rank-nullity or empirical IQ-test validity.
 
@@ -4361,7 +4363,7 @@ essential for the reconstruction and one-pivot nullity converses.
 Intended inventory: **951 public checked claims, 954 proof scripts,
 1039 documented declarations**, including **540 FiniteMoments proof
 scripts** in seven modules. GitHub Actions Rocq 9.2 kernel checks and
-the existing Python/Deal/SPARK workflows are the verification authority.
+the existing Python/Deal workflows are the verification authority.
 The result does not yet prove an abstract linear-map rank-nullity theorem
 or an empirical covariance inference.
 
@@ -4420,7 +4422,7 @@ The implementation reuses indexed-basis bilinearity, prior typed
 pivot reconstruction, the existing radical and Stdlib.Reals,
 Stdlib.Field, Stdlib.Psatz, Stdlib.Vectors.Vector.map and f_equal.
 No new finite sum, vector recursion, matrix evaluator, determinant,
-axiom or admitted proof is introduced. No Python, SPARK or archived
+axiom or admitted proof is introduced. No Python, retired native implementation or archived
 evidence code is changed. The operator is a concrete, certified
 rank-one-style retraction, **not yet an abstract dimension/rank-nullity
 theorem** over a maintained vector-space theory.
@@ -4447,7 +4449,7 @@ The proofs reuse VectorSpec.eq_nth_iff/nth_map/nth_map2/const_nth,
 Stdlib.Ring, the existing covariance bilinearity, coordinate and
 section retraction lemmas, and the earlier signed two-sample
 radical/zero-section theorem. No new vector recursion, finite sums,
-matrix code, axioms, admission, Python, SPARK or historical evidence
+matrix code, axioms, admission, Python, retired native implementation or historical evidence
 changes are introduced.
 
 Expected inventory: **976 public checked claims, 979 proof scripts,
@@ -4476,7 +4478,7 @@ an abstract vector-space rank, dimension, or a general PSD statement. The
 proofs reuse established `indexed_basis_covariance_pivot_*` interfaces,
 `Stdlib.Vectors.VectorSpec.eq_nth_iff/nth_map/nth_map2`,
 `Stdlib.Ring` and `Stdlib.Lra`. No new matrix, summation, recursive vector,
-axiom, admitted proof, Python/SPARK source or historical evidence was added.
+axiom, admitted proof, Python/Dask source or historical evidence was added.
 
 Expected inventory after Rocq CI: **983 public claims**, **986 proof scripts**
 and **1075 documented declarations** across seven modules, including
@@ -4510,7 +4512,7 @@ The proofs reuse established \`indexed_basis_covariance_pivot_*\`,
 the certified projection-fiber/radical difference equivalence, covariance
 symmetry, \`Stdlib.Vectors.Vector.map\`, \`Stdlib.Psatz\`, and \`Stdlib.Logic\`.
 No new recursive vector, matrix or finite-sum code, axioms, admits,
-Python/SPARK implementations, or archived verification evidence.
+Python/Dask implementations, or archived verification evidence.
 
 Source-order audit inventory: **992 public checked theorem/lemma/example
 claims**, **995 proof scripts**, **1084 documented declarations** across seven
@@ -4566,7 +4568,7 @@ and dependent score bases, but require exactly two sample occurrences
 and total mass one. Nonisotropic pivots are necessary only for the
 two sign-classification equivalences. No abstract matrix rank,
 dimension theorem, generic signed-weight PSD, empirical correlations,
-new finite-sum/vector recursion, Python/SPARK code or archived evidence
+new finite-sum/vector recursion, Python/Dask code or archived evidence
 modifications are claimed.
 
 Expected pinned-CI inventory: **999 public claims, 1002 proof scripts,
@@ -4592,7 +4594,7 @@ and the existing scalar coordinate laws instead.
 The generic complement is **not** claimed to be the full covariance
 radical for arbitrary sample counts; that special identification
 requires two normalized sampled occurrences. No abstract rank-nullity,
-new vector or matrix implementation, admits, axioms, Python/SPARK
+new vector or matrix implementation, admits, axioms, Python/Dask
 changes, or archived evidence alterations.
 
 Expected pinned Rocq 9.2 counts: **1002 public checked claims**,
@@ -4622,7 +4624,7 @@ The proof chain reuses existing covariance bilinearity, projection
 and remainder reconstruction, pivot-coordinate zero, covariance
 symmetry, standard Vector.map/map2, real Field/Ring arithmetic.
 No new summation, matrix evaluator, vector recursion, axiom, admitted
-proof, Python/SPARK code or archived evidence alterations.
+proof, Python/Dask code or archived evidence alterations.
 
 Expected pinned CI totals after this additional batch:
 **1008 public claims; 1011 proof scripts; 1100 documented
@@ -4664,7 +4666,7 @@ The proofs reuse the previously verified scalar/residual covariance
 block identity, symmetric typed pairing, standard real Field, Ring,
 Lra, Psatz and nonnegative-square/product lemmas. They introduce no
 extra matrix representation, vector recursion, summation evaluator,
-axiom, admitted proof, Python/SPARK modification or evidence edits.
+axiom, admitted proof, Python/Dask modification or evidence edits.
 The exact checked inventory is determined by the pinned Rocq 9.2
 documentation and kernel CI, not by this commentary: expected **1012
 public checked claims, 1015 proof scripts, 1104 declarations**, with
@@ -4688,7 +4690,7 @@ The statements about normalized nonnegative weights explicitly carry
 those hypotheses. We reuse existing covariance bilinearity, symmetry,
 Schur decomposition, Rocq Stdlib Field/Psatz/Lra, vector reconstruction,
 positive-semidefinite and Cauchy--Schwarz theorems. No new custom sum,
-vector recursion, matrix evaluator, axioms, admits, Python/SPARK source,
+vector recursion, matrix evaluator, axioms, admits, Python/Dask source,
 or archived evidence edits. The expected Rocq 9.2 inventory is **1029
 public claims, 1032 proof scripts, 1121 documented declarations**
 including **618 FiniteMoments scripts**; verify by pinned CI.
@@ -4717,7 +4719,7 @@ coordinate/equivalently zero typed projection even for signed weights.
 
 Everything reuses checked covariance symmetry/bilinearity and prior
 pivot identities, Rocq Stdlib Vector, Field, Reals, Lra and Psatz.
-No new sum/matrix/vector recursion, new axiom or admit, Python/SPARK
+No new sum/matrix/vector recursion, new axiom or admit, Python/Dask
 source change, or evidence alteration. Expected after pinned Rocq
 9.2 kernel and CI audit: **1044 public checked claims,
 1047 proof scripts, 1136 declarations**
@@ -4750,7 +4752,7 @@ All source/proof declarations have extensive local commentary, reuse
 prior checked Schur complement, residual bilinearity, covariance symmetry,
 vector reconstruction, and Rocq Stdlib Field/Ring/Lra/Psatz. No custom
 matrix rank algebra, duplicate finite-sum algorithms, axioms, admits,
-Python/SPARK source changes or archived evidence modifications.
+Python/Dask source changes or archived evidence modifications.
 Expected pinned Rocq CI inventory if kernel passes: **1062 public checked claims,
 1065 total proof scripts, 1155 documented declarations**, including
 **651 FiniteMoments proof scripts**.
@@ -4870,6 +4872,6 @@ The dedicated `FiniteConditionalResidual.v` extends the prior finite covariance 
 
 ## Appendix — Complete AI disclosure (finite-vector bridge)
 
-OpenAI's assistant designed the finite-vector theorem statements, composed the Rocq proof scripts and accompanying documentation, and wired the module into the pinned CI validation. The independent operational evidence is the Rocq 9.2 kernel compilation and repository-wide Python/Deal/SPARK CI gates; no extrapolation from a successful algebraic proof to empirical IQ calibration or continuous Gaussian probability is made.
+OpenAI's assistant designed the finite-vector theorem statements, composed the Rocq proof scripts and accompanying documentation, and wired the module into the pinned CI validation. The independent operational evidence is the Rocq 9.2 kernel compilation and repository-wide Python/Deal CI gates; no extrapolation from a successful algebraic proof to empirical IQ calibration or continuous Gaussian probability is made.
 
 The final algebraic refinements identify the aggregate equicorrelation quadratic form with the **literal finite sum of each coordinate times its rank-one covariance-matrix action**; show every zero-sum vector is a contrast eigenvector; and characterize the exact nullspace under strict eigenvalue positivity using Stdlib.Forall and the shared finite-sum support lemmas. These statements are a finite real-vector realization, not a general matrix spectral theorem or probabilistic Gaussian model. Subsequent AI assistance developed and kernel-tested (subject to final pinned CI) the new full finite-list inverse, precision quadratic, linear-regression least-squares and Schur-vector theorems, and edited this README, report inventory, checker, and proof register. The assistant also authored the 26 finite two-cell conditional projection and total-variance proofs and wired them into the kernel and documentation audit without introducing a new summation algorithm. The assistant also prepared a 29-script nested finite projection continuation, including a source-ordered proof audit, CI registration and direct report mapping; its correctness depends on the pinned Rocq kernel. The assistant additionally drafted 31 bilinear finite covariance, affine predictor, pull-out and total-covariance theorem scripts, with a documented source-to-report mapping and CI check. The assistant additionally authored 30 finite conditional residual/fitted covariance and uniquely optimal projection proofs and registered their source documentation and CI checks; only the Rocq kernel establishes formal correctness. AI assistance subsequently produced 33 new general covariance-block linear-regression and Schur information-gain theorem scripts, updated their full source-order register and reporting inventory, and pinned their kernel build. No continuous Gaussian random-variable model or empirical IQ interpretation was independently proved.
