@@ -19,7 +19,7 @@
  AI disclosure: OpenAI ChatGPT assisted specification, source creation,
  algebraic validation and reporting. Rocq kernel checks are authoritative.
 *)
-From Stdlib Require Import Reals Ring Field Lra.
+From Stdlib Require Import Reals Ring Field Lra List.
 Require Import FiniteSum ListPoolingAlgebra.
 Open Scope R_scope.
 
