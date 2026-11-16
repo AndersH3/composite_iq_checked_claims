@@ -2479,3 +2479,58 @@ Proof.
  apply four_contrast_cov_test4_triple123.
 Qed.
 
+
+(** [four_batch_mean_add] (theorem).
+ Mathematical meaning: Weighted finite-list means preserve addition of two real score attributes whenever the total exposure is nonzero.
+ Exact checked proposition: forall (A:Type) (w x y:A->R) (xs:list A), batch_mass w xs<>0 -> batch_mean w (fun t=>x t+y t) xs=batch_mean w x xs+batch_mean w y xs
+ Premises and side conditions: The shared weighted list mean uses the canonical first-moment finite sum divided by the same nonzero total mass for every score. Test-score functions and coefficients are arbitrary reals, and no Gaussian population assumptions are included.
+ Proof/definition method: Apply earlier FiniteSum weighted-total linearity together with the already checked scalar mean law, then instantiate the two-score result for a four-score composite without expanding any new recursive implementation.
+ Library reuse: ListPoolingAlgebra.batch_mean, batch_mean_scale, batch_total_add_values; Rocq Stdlib Field and Ring. No second mean or independent sampling engine is defined.
+ Boundary: Exact deterministic finite-list counterpart to the report proposition pf:moments; the general expectation operator on a probability space and statistical population inference remain separate.
+*)
+Theorem four_batch_mean_add :
+ forall (A:Type) (w x y:A->R) (xs:list A), batch_mass w xs<>0 -> batch_mean w (fun t=>x t+y t) xs=batch_mean w x xs+batch_mean w y xs.
+Proof.
+ intros A w x y xs Hm.
+ unfold batch_mean.
+ rewrite batch_total_add_values.
+ field; exact Hm.
+Qed.
+
+
+(** [four_batch_mean_linear_two] (theorem).
+ Mathematical meaning: The mean of a linear two-test composite is the coefficient-weighted sum of its two finite-sample means.
+ Exact checked proposition: forall (A:Type) (w x y:A->R) (xs:list A) (a b:R), batch_mass w xs<>0 -> batch_mean w (fun t=>a*x t+b*y t) xs=a*batch_mean w x xs+b*batch_mean w y xs
+ Premises and side conditions: The shared weighted list mean uses the canonical first-moment finite sum divided by the same nonzero total mass for every score. Test-score functions and coefficients are arbitrary reals, and no Gaussian population assumptions are included.
+ Proof/definition method: Apply earlier FiniteSum weighted-total linearity together with the already checked scalar mean law, then instantiate the two-score result for a four-score composite without expanding any new recursive implementation.
+ Library reuse: ListPoolingAlgebra.batch_mean, batch_mean_scale, batch_total_add_values; Rocq Stdlib Field and Ring. No second mean or independent sampling engine is defined.
+ Boundary: Exact deterministic finite-list counterpart to the report proposition pf:moments; the general expectation operator on a probability space and statistical population inference remain separate.
+*)
+Theorem four_batch_mean_linear_two :
+ forall (A:Type) (w x y:A->R) (xs:list A) (a b:R), batch_mass w xs<>0 -> batch_mean w (fun t=>a*x t+b*y t) xs=a*batch_mean w x xs+b*batch_mean w y xs.
+Proof.
+ intros A w x y xs a b Hm.
+ rewrite four_batch_mean_add by exact Hm.
+ rewrite !batch_mean_scale by exact Hm.
+ reflexivity.
+Qed.
+
+
+(** [four_batch_mean_linear_four] (theorem).
+ Mathematical meaning: The exact first-moment analogue of the four-test quadratic variance bridge: the pooled mean of a four-test composite is the linear combination of four pooled means.
+ Exact checked proposition: forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A) (a1 a2 a3 a4:R), batch_mass w xs<>0 -> batch_mean w (four_batch_score x1 x2 x3 x4 a1 a2 a3 a4) xs=a1*batch_mean w x1 xs+a2*batch_mean w x2 xs+a3*batch_mean w x3 xs+a4*batch_mean w x4 xs
+ Premises and side conditions: The shared weighted list mean uses the canonical first-moment finite sum divided by the same nonzero total mass for every score. Test-score functions and coefficients are arbitrary reals, and no Gaussian population assumptions are included.
+ Proof/definition method: Apply earlier FiniteSum weighted-total linearity together with the already checked scalar mean law, then instantiate the two-score result for a four-score composite without expanding any new recursive implementation.
+ Library reuse: ListPoolingAlgebra.batch_mean, batch_mean_scale, batch_total_add_values; Rocq Stdlib Field and Ring. No second mean or independent sampling engine is defined.
+ Boundary: Exact deterministic finite-list counterpart to the report proposition pf:moments; the general expectation operator on a probability space and statistical population inference remain separate.
+*)
+Theorem four_batch_mean_linear_four :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A) (a1 a2 a3 a4:R), batch_mass w xs<>0 -> batch_mean w (four_batch_score x1 x2 x3 x4 a1 a2 a3 a4) xs=a1*batch_mean w x1 xs+a2*batch_mean w x2 xs+a3*batch_mean w x3 xs+a4*batch_mean w x4 xs.
+Proof.
+ intros A w x1 x2 x3 x4 xs a1 a2 a3 a4 Hm.
+ unfold four_batch_score.
+ rewrite four_batch_mean_add by exact Hm.
+ rewrite !four_batch_mean_linear_two by exact Hm.
+ ring.
+Qed.
+
