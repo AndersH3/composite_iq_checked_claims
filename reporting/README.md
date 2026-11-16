@@ -2,6 +2,8 @@
 
 **Author, researcher and requester:** Anders Hellström.
 
+**All-six-volume formalization scan:** [Rocq proof obligations and source-located report claims](../rocq/SIX_REPORT_PROOF_OBLIGATIONS.md) covers all three analytical books and all three simulation books, including the shared statistical appendix. It distinguishes finite algebra already checked from missing Gaussian/sample-distribution/interval-coverage theorems.
+
 Each sub-project has its own detailed XeLaTeX report:
 
 | Sub-project | Report | Pages |

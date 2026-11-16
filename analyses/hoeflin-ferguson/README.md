@@ -2,6 +2,9 @@
 
 **Author, researcher and requester:** Anders Hellström.
 
+**Formal proof coverage:** [Six-report Rocq proof-obligation audit](../../rocq/SIX_REPORT_PROOF_OBLIGATIONS.md) scans the **three analytical and three simulation volumes**, including imported proof appendices and source-mapped missing Rocq theorems. A written TeX proof, a finite algebraic proof and a certified Gaussian probability theorem are recorded separately.
+
+
 A statistical analysis and independently written replacement for Ronald K. Hoeflin's [article on combining IQ scores](https://megasociety.org/noesis/141/ferguson.html). The report preserves the valid covariance algebra, corrects the numerical table, and distinguishes standardized composites from latent-ability estimates and empirically established extreme percentiles.
 
 - [Compiled PDF](output/pdf/composite_iq_analysis.pdf)

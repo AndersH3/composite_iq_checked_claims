@@ -2,6 +2,9 @@
 
 **Author, researcher and requester:** Anders Hellström.
 
+**Formal proof coverage:** [Six-report Rocq proof-obligation audit](../../rocq/SIX_REPORT_PROOF_OBLIGATIONS.md) scans the **three analytical and three simulation volumes**, including imported proof appendices and source-mapped missing Rocq theorems. A written TeX proof, a finite algebraic proof and a certified Gaussian probability theorem are recorded separately.
+
+
 A full derivation for the average of `a, e_1, ..., e_k`, including the fixed starting score `a` as the first value. Every test has population mean **0** and standard deviation **1**. Under joint Gaussianity and equal pairwise correlation `c`, every subsequent recursive prediction equals `c a`, so the requested average is **`a (1 + k c) / (k + 1)`**. Here `k` counts subsequent predictions and `k + 1` counts all values in the average.
 
 - [Compiled PDF](output/pdf/sequential_conditional_means.pdf)

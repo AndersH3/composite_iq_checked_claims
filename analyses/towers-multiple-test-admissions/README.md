@@ -2,6 +2,9 @@
 
 **Author, researcher and requester:** Anders Hellström.
 
+**Formal proof coverage:** [Six-report Rocq proof-obligation audit](../../rocq/SIX_REPORT_PROOF_OBLIGATIONS.md) scans the **three analytical and three simulation volumes**, including imported proof appendices and source-mapped missing Rocq theorems. A written TeX proof, a finite algebraic proof and a certified Gaussian probability theorem are recorded separately.
+
+
 A joint statistical analysis and independently written corrected treatment of Grady Towers's two letters about multiple tests for high-IQ society admissions. The report distinguishes nominal population eligibility under OR and AND rules, conditional pass probabilities, and claims about underlying ability or actual society membership.
 
 - [Compiled PDF](output/pdf/towers_admissions_analysis.pdf)
