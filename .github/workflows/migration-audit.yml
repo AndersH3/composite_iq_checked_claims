@@ -24,8 +24,13 @@ jobs:
       - name: Inventory historical engine references in active text sources
         shell: bash
         run: |
-          echo '=== Remaining references (excluding Git history) ==='
-          git grep -nIiE '(SPARK|GNATprove|Ada(/| |\\.|_))' -- '*.md' '*.tex' '*.py' '*.yml' '*.yaml' '*.json' | head -n 350 || true
+          echo '=== Reject references to retired compiler in current text ==='
+          if git grep -nIiE '(SPARK|GNATprove|Ada(/| |\\.|_))' -- '*.md' '*.tex' '*.py' '*.yml' '*.yaml' '*.json' '*.v' '*.bib' '*.sh' ':(exclude).github/workflows/migration-audit.yml' > "$RUNNER_TEMP/retired_refs.txt"; then
+            cat "$RUNNER_TEMP/retired_refs.txt"
+            echo 'Unexpected retired compiler reference found in maintained sources' >&2
+            exit 1
+          fi
+          echo 'No retired compiler brand references in active text sources'
           echo '=== Retired compiler source count ==='
           find . -type f \( -name '*.ads' -o -name '*.adb' -o -name '*.gpr' \) -print
           echo '=== Main report source count ==='
