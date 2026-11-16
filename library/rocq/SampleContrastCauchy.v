@@ -35,7 +35,9 @@ Proof.
    finite_centered_cross, finite_weighted_cross,
    finite_weighted_score, finite_weighted_mean,
    finite_weight_mass, batch_mean, batch_total, batch_mass.
- apply finite_sum_ext; intro x; ring.
+ apply finite_sum_ext; intro x.
+ match goal with |- ?G => idtac "D048 centered bridge goal:" G end.
+ ring.
 Qed.
 
 (** [sample_covariance_cauchy_schwarz] (theorem).
