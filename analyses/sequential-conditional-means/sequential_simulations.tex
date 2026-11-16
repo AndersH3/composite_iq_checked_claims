@@ -246,22 +246,19 @@ bilinearity, rather than results inferred from a successful simulation
 
 
 \noindent\textbf{Two maintained numerical engines.}
-The finite sample values and figure coordinates printed here are the
-original Dask Array results, with the recorded \SimReplicates{} replicates
-and \SimTrials{} draws per replicate. The new scalable \texttt{blocks}
-engine instead schedules bounded Dask delayed tasks. Each worker draws
-its own Gaussian latent and residual arrays, computes all coupled
-population and conditional cases for a fixed initial-score count, and
-sends only centered moments to the graph reductions. This reduces
-scheduler traffic and prevents whole score matrices being returned to
-the driver. Its higher default sample count is not an additional
-numerical result in this edition; the displayed estimates retain
-their documented recorded sample size.
+The source includes a Dask Array reference implementation and a
+block-aggregated Dask delayed implementation. The latter draws latent
+Gaussian factors and residual vectors locally in worker blocks,
+evaluates the coupled population and conditional laws, and sends only
+centered moments to the reducer. The compiled tables and figures
+correspond to the seeds, engine, and sample counts recorded with the
+numeric results, not to unexecuted source defaults.
 
-Dask arrays express the normal draws and vector arithmetic in chunks of
-\SimChunk{} observations. Dask reductions calculate counts, means and
-second moments without retaining every full battery in one in-memory
-object. The sample variance uses denominator \(M-1\), where \(M\)
+Dask executes blocks of \SimChunk{} observations. The reference
+Dask Array graph reduces arrays explicitly; the optimized delayed
+graph generates and summarizes bounded arrays within each worker.
+Both produce count, mean and centered-second-moment summaries without
+retaining every simulated battery in the driver process. The sample variance uses denominator \(M-1\), where \(M\)
 is the number of simulated observations contributing to that estimate.
 The report's tables and plotted coordinates are generated from these
 reductions; PGFPlots renders those coordinates in XeLaTeX. There is no
@@ -529,7 +526,7 @@ uncertainty at the selected correlation.
 \input{simulation-data/replicates.tex}
 
 The replicate summaries show ordinary sampling variation under fixed
-model parameters. Pooled estimates use all four seeded replicates,
+model parameters. Pooled estimates use all \SimReplicates{} seeded replicates,
 whereas the reported replicate values show how much results depend on
 individual streams. The nine finite conditional laws and nine finite
 population laws are obtained from full score-vector constructions;
