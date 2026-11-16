@@ -1792,7 +1792,7 @@ Qed.
 Theorem batch_variance_constant_zero :
   forall (A:Type) (w:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun _=>c) xs=0.
 Proof.
-  intros A w c xs H; unfold batch_variance; rewrite (batch_mean_constant A w xs c H); rewrite batch_centered_constant_zero; ring.
+  intros A w c xs H; unfold batch_variance; rewrite (batch_mean_constant A w xs c H); rewrite batch_centered_constant_zero; unfold Rdiv; ring.
 Qed.
 
 (** [batch_variance_translation] (theorem).
