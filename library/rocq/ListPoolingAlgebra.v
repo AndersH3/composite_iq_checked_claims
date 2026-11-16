@@ -1848,7 +1848,7 @@ Qed.
 Theorem batch_covariance_constant_zero :
   forall (A:Type) (w z:A->R) (c:R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (fun _=>c) z xs=0.
 Proof.
-  intros A w z c xs H; unfold batch_covariance,batch_cov_numer,batch_centered_cross; rewrite (batch_mean_constant A w xs c H); transitivity (finite_sum (fun _=>0) xs/batch_mass w xs); [f_equal; apply finite_sum_ext; intro x; ring|rewrite finite_sum_zero; ring].
+  intros A w z c xs H; unfold batch_covariance,batch_cov_numer,batch_centered_cross; rewrite (batch_mean_constant A w xs c H); transitivity (finite_sum (fun _=>0) xs/batch_mass w xs); [f_equal; apply finite_sum_ext; intro x; ring|rewrite finite_sum_zero; unfold Rdiv; ring].
 Qed.
 
 (** [batch_covariance_constant_zero_right] (theorem).
