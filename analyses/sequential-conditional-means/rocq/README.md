@@ -6,7 +6,7 @@
 
 ## D049x — arbitrary unequal observed-score histories (120 theorem scripts)
 
-The specialized [UnequalHistoryLinearPrediction.v](UnequalHistoryLinearPrediction.v)
+The pinned Rocq 9.2 kernel [accepted the 120 proofs](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43982923903) at source revision `87227eef93b3`; the full corpus comprises 3,378 proof scripts across 39 modules. The specialized [UnequalHistoryLinearPrediction.v](UnequalHistoryLinearPrediction.v)
 module contains 120 newly documented deterministic identities for the candidate
 equicorrelation predictor based on the **sum of arbitrarily unequal observed
 scores**, predicted future-batch totals, inclusive means, outcome innovations,
@@ -22,7 +22,7 @@ distributional and empirical assumptions. The source must pass the Rocq 9.2
 kernel and documentation/source-ownership workflows before any formalized claim
 can be considered established.
 
-The report-local Rocq modules (SequentialReport.v, SequentialSensitivity.v, EquicorrelationSpectral.v, EquicorrelationVectors.v, EquicorrelationInverseVectors.v, ReportRounding.v, ReportCounterexample.v) formalize sequential regression algebra, equicorrelation vectors, sensitivity, rounding certificates and finite counterexamples with explicit hypotheses, reusing the [canonical shared mathematical library](../../../library/rocq/README.md). They contain separate explanations of every definition, theorem and proof strategy. The full source-order register and six-volume proof-obligation ledger are maintained in the central Rocq documentation.
+The report-local Rocq modules (SequentialReport.v, SequentialSensitivity.v, EquicorrelationSpectral.v, EquicorrelationVectors.v, EquicorrelationInverseVectors.v, ReportRounding.v, ReportCounterexample.v, UnequalHistoryLinearPrediction.v) formalize sequential regression algebra, equicorrelation vectors, sensitivity, rounding certificates and finite counterexamples with explicit hypotheses, reusing the [canonical shared mathematical library](../../../library/rocq/README.md). They contain separate explanations of every definition, theorem and proof strategy. The full source-order register and six-volume proof-obligation ledger are maintained in the central Rocq documentation.
 
 Numerical reference calculations are implemented in [Python](../../../reporting/simulate.py) with NumPy/SciPy where appropriate. [Dask](../../../reporting/simulate.py) constructs the maintained Monte Carlo workflow and Deal specifies selected source-level contracts. These numerical computations and Rocq proofs address different propositions.
 
