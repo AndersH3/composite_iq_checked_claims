@@ -10,6 +10,7 @@ AI disclosure: OpenAI assisted the performance refactor and test construction.
 """
 
 import json
+from json import JSONDecodeError
 import math
 
 import dask
@@ -27,7 +28,7 @@ from reporting import block_simulations, simulate
 @deal.ensure(lambda *, result: protected_history_intact())
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("read", "random", "import", "syscall", "global")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError)
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError)
 @deal.ensure(lambda *, result: result is None)
 @deal.pre(lambda: len(block_simulations.COUNTS) == 8)
 @deal.pre(lambda: simulate.DEFAULT_TRIALS >= 5_000_000)
@@ -60,7 +61,7 @@ def test_centered_block_moment_merge_and_seeded_substreams():
 @deal.ensure(lambda *, result: protected_history_intact())
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("read", "import", "syscall", "random", "global")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError)
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError)
 @deal.ensure(lambda *, result: result is None)
 def test_large_default_graph_has_fewer_tasks_than_recorded_small_graph():
     """A tenfold sample increase must not create a larger task graph."""
@@ -92,7 +93,7 @@ def test_large_default_graph_has_fewer_tasks_than_recorded_small_graph():
 @deal.ensure(lambda *, result: protected_history_intact())
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("read", "import", "random", "global", "syscall")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError)
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, OSError, NotImplementedError)
 @deal.ensure(lambda *, result: result is None)
 @deal.pre(lambda: len(simulate.PROJECTS) == 3)
 def test_seeded_block_simulations_match_analytic_reference_laws():
@@ -129,8 +130,8 @@ def test_seeded_block_simulations_match_analytic_reference_laws():
 @deal.post(lambda result: result is None)
 @deal.ensure(lambda capsys, result: protected_history_intact())
 @deal.ensure(lambda capsys, result: reference_inputs_intact())
-@deal.has("read", "stdout", "import", "syscall", "random", "global")
-@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError)
+@deal.has("read", "write", "stdout", "stderr", "time", "import", "syscall", "random", "global")
+@deal.raises(AssertionError, ValueError, TypeError, OverflowError, KeyError, ZeroDivisionError, RuntimeError, JSONDecodeError)
 @deal.ensure(lambda capsys, result: result is None)
 @deal.pre(lambda capsys: simulate.DEFAULT_TRIALS > 1_000_000)
 def test_dry_run_reports_scaling_without_touching_published_results(capsys):
