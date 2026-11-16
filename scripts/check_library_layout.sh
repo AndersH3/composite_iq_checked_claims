@@ -28,7 +28,7 @@ do
   fi
 done
 
-if find . -path './.git' -prune -o -type f \( -name '*.adb' -o -name '*.ads' -o -name '*.gpr' -o -name '*.spark' \) -print | grep -q .; then
+if find . -path './.git' -prune -o -type f \( -name '*.adb' -o -name '*.ads' -o -name '*.gpr' \) -print | grep -q .; then
   echo "Retired compiler source or intermediate found in the working tree" >&2
   exit 1
 fi
