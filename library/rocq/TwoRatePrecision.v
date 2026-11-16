@@ -567,7 +567,7 @@ Qed.
 *)
 Theorem rate_var_increasing_lower_first : forall p q r, 0<=p -> p<=r -> r<=1/2 -> rate_var p q<=rate_var r q.
 Proof.
-  intros p q r Hp Hpr Hr; rewrite (rate_var_shift_first p q r); unfold rate_var at 1; unfold rate_var at 1; (* use direct difference sign *) unfold rate_var,sampling_bernoulli_variance; nra.
+  intros p q r Hp Hpr Hr; unfold rate_var; pose proof (sampling_variance_monotone_lower_half p r Hp Hpr Hr) as H; lra.
 Qed.
 
 (** [rate_var_decreasing_upper_first] (theorem).
@@ -587,7 +587,7 @@ Qed.
 *)
 Theorem rate_var_decreasing_upper_first : forall p q r, 1/2<=p -> p<=r -> r<=1 -> rate_var r q<=rate_var p q.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; nra.
+  intros p q r Hp Hpr Hr; unfold rate_var; pose proof (sampling_variance_monotone_upper_half p r Hp Hpr Hr) as H; lra.
 Qed.
 
 (** [rate_var_increasing_lower_second] (theorem).
@@ -607,7 +607,7 @@ Qed.
 *)
 Theorem rate_var_increasing_lower_second : forall p q r, 0<=q -> q<=r -> r<=1/2 -> rate_var p q<=rate_var p r.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; nra.
+  intros p q r Hq Hqr Hr; unfold rate_var; pose proof (sampling_variance_monotone_lower_half q r Hq Hqr Hr) as H; lra.
 Qed.
 
 (** [rate_var_decreasing_upper_second] (theorem).
@@ -627,7 +627,7 @@ Qed.
 *)
 Theorem rate_var_decreasing_upper_second : forall p q r, 1/2<=q -> q<=r -> r<=1 -> rate_var p r<=rate_var p q.
 Proof.
-  intros; unfold rate_var,sampling_bernoulli_variance; nra.
+  intros p q r Hq Hqr Hr; unfold rate_var; pose proof (sampling_variance_monotone_upper_half q r Hq Hqr Hr) as H; lra.
 Qed.
 
 (** [rate_count_add_first] (theorem).
