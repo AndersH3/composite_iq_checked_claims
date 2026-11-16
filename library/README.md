@@ -1,6 +1,6 @@
 # Canonical shared libraries
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 > **AI disclosure:** This source architecture and documentation were drafted with AI assistance. Rocq compilation, Python contracts and static SPARK checks have separate verification scopes; model validity is not inferred from source reuse.
 

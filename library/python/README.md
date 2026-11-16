@@ -1,6 +1,6 @@
 # Shared Python source
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 > **AI disclosure:** The consolidation and this documentation were AI-assisted.
 

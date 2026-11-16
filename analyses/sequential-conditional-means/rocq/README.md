@@ -1,6 +1,6 @@
 # Sequential conditional-means specialized Rocq proofs
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 > **AI disclosure:** This source-ownership documentation was AI-assisted.
 

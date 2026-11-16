@@ -35,7 +35,7 @@ DOCUMENTS = (
     ("sequential-conditional-means", "sequential_conditional_means"),
     ("sequential-conditional-means", "sequential_simulations"),
 )
-RECORD = ROOT.joinpath("reporting", "dual-simulation", "revision.json")
+RECORD = ROOT.joinpath("reporting", "contextual-attribution", "revision.json")
 CAMPAIGN = ROOT.joinpath("reporting", "run.json")
 # Pin the actual native experiment and validation files used by the expanded
 # reports, not merely the old Dask reproduction's historical CSV copies.
@@ -116,7 +116,7 @@ def retained_data():
 @deal.post(lambda result: len(result["sha256"]) == 64)
 @deal.post(lambda result: result["layout_diagnostics"] == [])
 @deal.post(lambda result: result["document_class"] == "scrbook" and result["toc"] and result["final_ai_appendix"])
-@deal.post(lambda result: result["author"] == "Anders Hellström" and result["visible_project_roles"] is True)
+@deal.post(lambda result: result["author"] == "Anders Hellström" and result["name_only_author"] is True)
 @deal.ensure(lambda document, retained, result: result["project"] == document[0] and result["stem"] == document[1])
 @deal.raises(OSError, ValueError, TypeError, StopIteration, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
 @deal.has("read", "write", "syscall")
@@ -172,10 +172,15 @@ def build_document(document, retained):
     if author != "Anders Hellström":
         raise ValueError("Incorrect PDF author metadata: " + stem)
     title = subprocess.run(["pdftotext", "-f", "1", "-l", "1", str(pdf), "-"], capture_output=True, text=True, check=True, timeout=30).stdout
-    if "Anders Hellström" not in title or "Author, researcher and requester" not in title:
-        raise ValueError("Missing visible author/researcher/requester credit: " + stem)
+    # Check the author declaration as well as extracted text: a prefixed name
+    # or a second role line is not an acceptable replacement for the author.
+    source = directory.joinpath(stem + ".tex").read_text(encoding="utf-8")
+    declarations = re.findall(r"\\author\{([^\n]*)\}", source)
+    title_lines = [line.strip() for line in title.splitlines() if line.strip()]
+    if declarations != [r"\ProjectAuthor"] or title_lines.count("Anders Hellström") != 1:
+        raise ValueError("Author must be the name alone in source and title page: " + stem)
     pages = int(next(line.split(":", 1)[1] for line in info.splitlines() if line.startswith("Pages:")))
-    render = directory.joinpath("tmp", "pdfs", "dual-simulation", stem)
+    render = directory.joinpath("tmp", "pdfs", "contextual-attribution", stem)
     render.mkdir(parents=True, exist_ok=True)
     # A shorter revised PDF must not leave a stale final page in visual QA.
     # Only this report's temporary, reproducible page images are removed.
@@ -187,7 +192,7 @@ def build_document(document, retained):
             "document_class": "scrbook", "required_packages": list(REQUIRED_PACKAGES),
             "toc": True, "final_ai_appendix": True, "margin_mm": 16,
             "actual_margins_pt": margins, "author": author,
-            "visible_project_roles": True}
+            "name_only_author": True}
 
 
 @deal.pre(lambda results, retained, graph_tasks, audits: isinstance(results, list) and 0 < len(results) <= len(DOCUMENTS))
@@ -195,7 +200,7 @@ def build_document(document, retained):
 @deal.pre(lambda results, retained, graph_tasks, audits: all((row["project"], row["stem"]) in DOCUMENTS for row in results))
 @deal.pre(lambda results, retained, graph_tasks, audits: type(graph_tasks) is int and graph_tasks >= len(results) + 5)
 @deal.pre(lambda results, retained, graph_tasks, audits: len(audits) == 3 and {row["project"] for row in audits} == set(AUDIT_PROJECTS))
-@deal.post(lambda result: result["schema"] == "dask-report-dual-simulation-v1")
+@deal.post(lambda result: result["schema"] == "dask-contextual-attribution-v1")
 @deal.post(lambda result: result["simulation_rerun"] is False)
 @deal.post(lambda result: result["new_native_proof_run"] is False)
 @deal.ensure(lambda results, retained, graph_tasks, audits, result: result["reports"] == results)
@@ -221,7 +226,7 @@ def record_revision(results, retained, graph_tasks, audits):
     for project in sorted({document[0] for document in DOCUMENTS}):
         directory = ROOT.joinpath("analyses", project)
         sources += list(directory.glob("*.tex")) + list(directory.glob("*.bib"))
-    record = {"schema": "dask-report-dual-simulation-v1", "date": "2026-11-16",
+    record = {"schema": "dask-contextual-attribution-v1", "date": "2026-11-16",
               "scheduler": "processes", "dask_version": dask.__version__,
               "graph_tasks": graph_tasks, "reports": results, "native_results_audit": audits,
               "simulation_rerun": False, "new_native_proof_run": False, "matplotlib_used": False,
@@ -252,7 +257,7 @@ def main(argv=None):
     try:
         record = dask.compute(terminal, scheduler="processes", num_workers=args.workers)[0]
     except RemoteException as error:
-        raise RuntimeError("Dask report build failed; inspect reporting/dual-simulation build logs") from error
+        raise RuntimeError("Dask report build failed; inspect reporting/contextual-attribution build logs") from error
     print(json.dumps(record, indent=2))
     return 0
 

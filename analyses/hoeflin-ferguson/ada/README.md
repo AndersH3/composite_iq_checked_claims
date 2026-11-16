@@ -1,6 +1,6 @@
 # Hoeflin/Ferguson calculations in Ada and SPARK
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 This standalone implementation reproduces the corrected thresholds and worked examples in the parent analysis. It also simulates the expressly assumed Gaussian common-factor model. It does not treat that model as an empirical fact about IQ tests.
 

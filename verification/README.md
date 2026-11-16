@@ -1,6 +1,6 @@
 # Ada/SPARK verification on computer10
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 The analysis folders contain standalone Ada implementations:
 

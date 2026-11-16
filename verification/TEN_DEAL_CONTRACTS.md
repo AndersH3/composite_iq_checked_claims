@@ -1,6 +1,6 @@
 # Meaningful Python Deal-contract expansion
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 ## Contract-policy interpretation
 

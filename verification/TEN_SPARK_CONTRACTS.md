@@ -1,6 +1,6 @@
 # Staged ten-clause SPARK contracts — 9 November 2026
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 ## Scope and policy
 

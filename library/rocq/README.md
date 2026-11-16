@@ -1,6 +1,6 @@
 # Shared Rocq mathematical source
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 > **AI disclosure:** This source-location refactor and accompanying documentation were AI-assisted; only the separately pinned Rocq kernel checks theorems.
 

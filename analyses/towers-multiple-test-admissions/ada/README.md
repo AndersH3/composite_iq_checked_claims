@@ -1,6 +1,6 @@
 # Ada calculations, Monte Carlo simulation, and SPARK contracts
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 This standalone project calculates the four nominal-cutoff examples in the joint Towers report, reproduces the follow-up's finite BASIC grid, calibrates a two-test OR rule, and simulates correlated Gaussian scores. All files stay with this analysis.
 

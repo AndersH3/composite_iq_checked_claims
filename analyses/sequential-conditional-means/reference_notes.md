@@ -1,6 +1,6 @@
 # Reference notes and theorem-to-claim map
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 Sources were accessed on **14 November 2026**. This register identifies the editions, author versions, and selected passages consulted for the mathematical claims in this analysis. It does not claim that every page of every cited book was read. The report supplies its own proofs and algebraic substitutions; references identify the established theorems on which those proofs rest.
 

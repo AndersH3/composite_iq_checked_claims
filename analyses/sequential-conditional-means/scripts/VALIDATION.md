@@ -1,4 +1,4 @@
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 The supplementary validator checks the SPARK executable's CSV output with
 Python libraries that use different numerical methods. From the repository

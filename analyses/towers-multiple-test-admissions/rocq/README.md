@@ -1,6 +1,6 @@
 # Towers admissions specialized Rocq proofs
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 > **AI disclosure:** This module-ownership documentation was AI-assisted.
 

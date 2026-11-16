@@ -1,6 +1,6 @@
 # Complete proof-script refactoring register
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 > **D033x source ownership:** The proof register is keyed by stable Rocq *module names*, not obsolete flat file paths. Shared modules are now under `library/rocq/`, while Hoeflin, Towers and Sequential specialized modules live in their respective `analyses/*/rocq/` source folders. All original 1,682 scripts and source-order checks remain unchanged. See [canonical build](../scripts/compile_rocq.sh) and [library architecture](../library/README.md).
 

@@ -1,6 +1,6 @@
 # Composite IQ: Checked Claims
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 Statistical analyses of claims about combining IQ scores. Each analysis has its own folder containing its source, compiled report, references, and supporting calculations.
 

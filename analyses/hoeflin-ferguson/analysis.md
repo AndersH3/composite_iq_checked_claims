@@ -1,6 +1,6 @@
 # Combining IQ Scores: Analysis and a Corrected Version
 
-**Author, researcher and requester:** Anders Hellström.
+**Author:** Anders Hellström.
 
 Prepared 30 October 2026. This is an independently written statistical treatment, not a transcription of the source.
 
