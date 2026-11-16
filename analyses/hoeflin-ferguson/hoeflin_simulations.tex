@@ -208,6 +208,21 @@ cannot identify an actual latent target from the score law alone.
 
 
 
+
+\noindent\textbf{Recorded engine and scaled engine.}
+The empirical tables and the \SimReplicates{} original replicates in this
+publication were produced with the earlier Dask Array graph. The maintained
+source now also offers a higher-throughput \texttt{blocks} engine, which
+generates Gaussian vectors within bounded Dask delayed worker blocks,
+computes all eight coupled composite cases on each block, and transfers
+only centered-moment summaries and threshold counts to the reduction
+stage. Its default future configuration is eight replicates of five
+million observations, rather than the recorded four replicates of one
+million. This is a prospective configuration change, \emph{not} an
+assertion that the displayed tables or rare-event counts were
+recomputed. See \texttt{reporting/README.md} for resource planning and
+the independent graph-budget test.
+
 \chapter{Dask execution, reductions and recorded diagnostics}
 Dask creates lazy random arrays in chunks of \SimChunk\ observations and
 constructs shared tasks for \(G\) and \(E\). Arithmetic, sums, squared
