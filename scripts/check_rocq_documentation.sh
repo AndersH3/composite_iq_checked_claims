@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Verify Rocq module headers and theorem-level comments before kernel checking.
 # The checker intentionally lives in a shell utility rather than an additional
-# Python source module: the repository's Python contract inventory is pinned
-# to historical, source-specific Deal/SPARK verification evidence.
+# Python source module: the active Python/Deal contract inventory remains
+# separate from the source-comment and proof-documentation audit.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
