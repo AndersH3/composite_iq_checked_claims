@@ -1121,7 +1121,16 @@ Qed.
 *)
 Theorem rate_var_maximum_only_balanced : forall p q, rate_var p q=1/2 -> p=1/2 /\ q=1/2.
 Proof.
-  intros p q H; pose proof (rate_var_midpoint_gap p q) as E; rewrite H in E; nra.
+  intros p q H.
+  pose proof (rate_var_midpoint_gap p q) as E.
+  rewrite H in E.
+  assert (Hp : 0 <= (p-1/2)*(p-1/2)) by apply Rle_0_sqr.
+  assert (Hq : 0 <= (q-1/2)*(q-1/2)) by apply Rle_0_sqr.
+  assert (Zp : (p-1/2)*(p-1/2)=0) by lra.
+  assert (Zq : (q-1/2)*(q-1/2)=0) by lra.
+  apply Rmult_integral in Zp.
+  apply Rmult_integral in Zq.
+  destruct Zp as [Zp|Zp]; destruct Zq as [Zq|Zq]; split; lra.
 Qed.
 
 (** [rate_var_zero_if_both_impossible] (theorem).
