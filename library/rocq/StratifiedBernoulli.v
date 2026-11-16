@@ -2486,13 +2486,13 @@ Proof.
   intros n m k p q r t Hn Hm Hk; unfold sb_loss.
   assert (H1: 0<=n*(p-t)*(p-t)).
   { replace (n*(p-t)*(p-t)) with (n*((p-t)*(p-t))) by ring.
-    apply Rmult_le_pos; [exact Hn|nra]. }
+    apply Rmult_le_pos; [exact Hn|apply Rle_0_sqr]. }
   assert (H2: 0<=m*(q-t)*(q-t)).
   { replace (m*(q-t)*(q-t)) with (m*((q-t)*(q-t))) by ring.
-    apply Rmult_le_pos; [exact Hm|nra]. }
+    apply Rmult_le_pos; [exact Hm|apply Rle_0_sqr]. }
   assert (H3: 0<=k*(r-t)*(r-t)).
   { replace (k*(r-t)*(r-t)) with (k*((r-t)*(r-t))) by ring.
-    apply Rmult_le_pos; [exact Hk|nra]. }
+    apply Rmult_le_pos; [exact Hk|apply Rle_0_sqr]. }
   lra.
 Qed.
 
@@ -2509,13 +2509,13 @@ Proof.
   intros n m k p q r Hn Hm Hk; unfold sb_dispersion.
   assert (H1: 0<=n*m*(p-q)*(p-q)).
   { replace (n*m*(p-q)*(p-q)) with ((n*m)*((p-q)*(p-q))) by ring.
-    apply Rmult_le_pos; nra. }
+    apply Rmult_le_pos; [nra|apply Rle_0_sqr]. }
   assert (H2: 0<=m*k*(q-r)*(q-r)).
   { replace (m*k*(q-r)*(q-r)) with ((m*k)*((q-r)*(q-r))) by ring.
-    apply Rmult_le_pos; nra. }
+    apply Rmult_le_pos; [nra|apply Rle_0_sqr]. }
   assert (H3: 0<=k*n*(r-p)*(r-p)).
   { replace (k*n*(r-p)*(r-p)) with ((k*n)*((r-p)*(r-p))) by ring.
-    apply Rmult_le_pos; nra. }
+    apply Rmult_le_pos; [nra|apply Rle_0_sqr]. }
   lra.
 Qed.
 
@@ -2531,7 +2531,7 @@ Theorem sb_dispersion_le_scaled_loss : forall (n m k p q r t:R), sb_dispersion n
 Proof.
   intros n m k p q r t.
   pose proof (pair_dispersion_loss_certificate n m k p q r t) as H.
-  assert (Hsq: 0<=sb_offset n m k p q r t*sb_offset n m k p q r t) by nra.
+  assert (Hsq: 0<=sb_offset n m k p q r t*sb_offset n m k p q r t) by apply Rle_0_sqr.
   lra.
 Qed.
 
