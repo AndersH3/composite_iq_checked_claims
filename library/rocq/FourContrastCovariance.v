@@ -8,8 +8,8 @@
  Explicit hypotheses: Symbolic covariance entries and score coefficients
  are arbitrary real numbers; positivity and PSD must not be inferred
  without a separately stated covariance feasibility premise.
- Library use: Rocq Stdlib Reals, Ring and Psatz; all polynomial identities
- are reduced by the maintained ring tactic, not a custom algebra system.
+ Library use: Rocq Stdlib Reals, Ring, Field, Lra and List; polynomial
+ identities use maintained ring and field tactics, not custom algebra.
  The existing ListPoolingAlgebra is the canonical finite-sample owner.
  Limitations: Entries must be provided by a valid covariance construction
  in statistical applications. No stochastic Gaussian conditioning,
