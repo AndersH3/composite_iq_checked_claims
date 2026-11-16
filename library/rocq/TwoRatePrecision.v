@@ -767,7 +767,11 @@ Qed.
 *)
 Theorem rate_count_within_bounds : forall n m p q, 0<=n -> 0<=m -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> 0<=rate_count n m p q<=n+m.
 Proof.
-  intros; unfold rate_count; nra.
+  intros n m p q Hn Hm Hp Hp1 Hq Hq1.
+  pose proof (sampling_mean_count_within_sample_size n p Hn Hp Hp1) as A.
+  pose proof (sampling_mean_count_within_sample_size m q Hm Hq Hq1) as B.
+  unfold sampling_mean_count in A,B.
+  unfold rate_count; lra.
 Qed.
 
 (** [rate_count_nonnegative] (theorem).
@@ -787,7 +791,10 @@ Qed.
 *)
 Theorem rate_count_nonnegative : forall n m p q, 0<=n -> 0<=m -> 0<=p -> 0<=q -> 0<=rate_count n m p q.
 Proof.
-  intros; unfold rate_count; nra.
+  intros n m p q Hn Hm Hp Hq.
+  assert (A:0<=n*p) by (apply Rmult_le_pos; assumption).
+  assert (B:0<=m*q) by (apply Rmult_le_pos; assumption).
+  unfold rate_count; lra.
 Qed.
 
 (** [rate_count_zero_rates] (theorem).
@@ -947,7 +954,14 @@ Qed.
 *)
 Theorem rate_count_variance_nonnegative : forall n m p q, 0<=n -> 0<=m -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> 0<=rate_count_variance n m p q.
 Proof.
-  intros n m p q Hn Hm Hp Hp1 Hq Hq1; unfold rate_count_variance; pose proof (sampling_variance_nonnegative p Hp Hp1) as A; pose proof (sampling_variance_nonnegative q Hq Hq1) as B; nra.
+  intros n m p q Hn Hm Hp Hp1 Hq Hq1.
+  pose proof (sampling_variance_nonnegative p Hp Hp1) as A.
+  pose proof (sampling_variance_nonnegative q Hq Hq1) as B.
+  assert (An:0<=n*sampling_bernoulli_variance p)
+    by (apply Rmult_le_pos; assumption).
+  assert (Bm:0<=m*sampling_bernoulli_variance q)
+    by (apply Rmult_le_pos; assumption).
+  unfold rate_count_variance; lra.
 Qed.
 
 (** [rate_count_variance_bound] (theorem).
@@ -967,7 +981,14 @@ Qed.
 *)
 Theorem rate_count_variance_bound : forall n m p q, 0<=n -> 0<=m -> rate_count_variance n m p q <= (n+m)/4.
 Proof.
-  intros n m p q Hn Hm; unfold rate_count_variance; pose proof (sampling_variance_maximum p) as A; pose proof (sampling_variance_maximum q) as B; nra.
+  intros n m p q Hn Hm.
+  pose proof (sampling_variance_maximum p) as A.
+  pose proof (sampling_variance_maximum q) as B.
+  assert (An:n*sampling_bernoulli_variance p<=n*(1/4))
+    by (apply Rmult_le_compat_l; assumption).
+  assert (Bm:m*sampling_bernoulli_variance q<=m*(1/4))
+    by (apply Rmult_le_compat_l; assumption).
+  unfold rate_count_variance; nra.
 Qed.
 
 (** [rate_count_variance_zero_deterministic] (theorem).
@@ -1472,7 +1493,14 @@ Qed.
 *)
 Theorem rate_count_variance_below_count : forall n m p q, 0<=n -> 0<=m -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> rate_count_variance n m p q<=rate_count n m p q.
 Proof.
-  intros n m p q Hn Hm Hp Hp1 Hq Hq1; unfold rate_count_variance,rate_count; pose proof (sampling_variance_below_success_probability p Hp Hp1) as A; pose proof (sampling_variance_below_success_probability q Hq Hq1) as B; nra.
+  intros n m p q Hn Hm Hp Hp1 Hq Hq1.
+  pose proof (sampling_variance_below_success_probability p Hp Hp1) as A.
+  pose proof (sampling_variance_below_success_probability q Hq Hq1) as B.
+  assert (An:n*sampling_bernoulli_variance p<=n*p)
+    by (apply Rmult_le_compat_l; assumption).
+  assert (Bm:m*sampling_bernoulli_variance q<=m*q)
+    by (apply Rmult_le_compat_l; assumption).
+  unfold rate_count_variance,rate_count; lra.
 Qed.
 
 (** [rate_count_variance_below_failures] (theorem).
@@ -1491,5 +1519,12 @@ Qed.
 *)
 Theorem rate_count_variance_below_failures : forall n m p q, 0<=n -> 0<=m -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> rate_count_variance n m p q<=rate_count n m (1-p) (1-q).
 Proof.
-  intros n m p q Hn Hm Hp Hp1 Hq Hq1; unfold rate_count_variance,rate_count; pose proof (sampling_variance_below_failure_probability p Hp Hp1) as A; pose proof (sampling_variance_below_failure_probability q Hq Hq1) as B; nra.
+  intros n m p q Hn Hm Hp Hp1 Hq Hq1.
+  pose proof (sampling_variance_below_failure_probability p Hp Hp1) as A.
+  pose proof (sampling_variance_below_failure_probability q Hq Hq1) as B.
+  assert (An:n*sampling_bernoulli_variance p<=n*(1-p))
+    by (apply Rmult_le_compat_l; assumption).
+  assert (Bm:m*sampling_bernoulli_variance q<=m*(1-q))
+    by (apply Rmult_le_compat_l; assumption).
+  unfold rate_count_variance,rate_count; lra.
 Qed.
