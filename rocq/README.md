@@ -1,9 +1,11 @@
 # Rocq formalization of checked claims
 
-## D049x — arbitrary unequal-history linear prediction (120 candidate proofs)
+## D049x — 120 Rocq-checked unequal-history and finite-list proofs
 
 **AI disclosure:** OpenAI ChatGPT assisted source, proof design and documentation.
 Only the pinned Rocq 9.2 kernel can verify these exact propositions.
+
+At source revision [`87227eef93b3`](https://github.com/AndersH3/composite_iq_checked_claims/commit/87227eef93b33fabc36d1fe76b1bbcff426d49e1), the [pinned Rocq 9.2 kernel workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43982923903) passed **3,378 proof scripts in 39 modules**, with **3,365 theorem/helper proofs and 3,686 documented declarations**. This is the previous 3,258-script D048x baseline plus 120, not 120 additional independent stochastic probability results.
 
 The new [UnequalHistoryLinearPrediction.v](../analyses/sequential-conditional-means/rocq/UnequalHistoryLinearPrediction.v)
 module adds 120 explicitly documented statements on unequal initial test
@@ -25,7 +27,7 @@ independent-sampling, coverage or psychometric validity theorems.
 
 [`SampleContrastCauchy.v`](../library/rocq/SampleContrastCauchy.v) contains **142 Rocq-9.2-checked theorem scripts** beyond D047x, mapped to shared `pf:moments` (G01), G12 weighted pooling, and the multiple-test-composite covariance restrictions used across all six reports. The central result is `sample_covariance_cauchy_schwarz` under nonnegative weights and strictly positive mass. The 136 individual four-test contrast bounds are related **specializations**, not 136 unrelated sampling laws. The four further general implications show that zero empirical variance forces zero covariance and that the covariance lies between ±half the sum of two empirical variances.
 
-The [exact proof-by-proof audit](PROOF_REFACTOR_SAMPLE_CAUCHY.md) is maintained separately from historical source registers. The authoritative deterministic corpus target on this branch is **3,258 proof scripts in 38 modules** (D047x baseline 3,116 plus 142); the 142-proof source passed the pinned Rocq 9.2 kernel on commit `9d069baf779c8e351b06a98bfb14667080752f13` ([workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43918132367)). This work does not establish positive-definite Gaussian constructions, normal probabilities, independent draws, model validity, interval coverage or a new retired native implementation campaign.
+The [exact proof-by-proof audit](PROOF_REFACTOR_SAMPLE_CAUCHY.md) is maintained separately from historical source registers. The D048x historical deterministic corpus checkpoint was **3,258 proof scripts in 38 modules** (D047x baseline 3,116 plus 142); the 142-proof source passed the pinned Rocq 9.2 kernel on commit `9d069baf779c8e351b06a98bfb14667080752f13` ([workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43918132367)). This work does not establish positive-definite Gaussian constructions, normal probabilities, independent draws, model validity, interval coverage or a new retired native implementation campaign.
 
 **Author:** Anders Hellström.
 
