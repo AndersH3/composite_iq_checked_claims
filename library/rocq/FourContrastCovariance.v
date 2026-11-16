@@ -2279,3 +2279,85 @@ Proof.
   ring.
 Qed.
 
+
+(** [four_batch_score] (definition).
+ Mathematical meaning: Build a linear four-score composite pointwise from four observed batch attributes; retain explicit grouping for the two-pair covariance bridge.
+ Exact declaration: forall (A:Type), (A->R)^4 inputs and four real coefficients determine one A->R output.
+ Premises and side conditions: The four input observations and arbitrary finite batch identifiers are exact real-valued functions. Total sample exposure must be nonzero for a quotient-level covariance identity. Symbolic covariance entries are instantiated by actual sample moment definitions, not unconstrained arbitrary matrix symbols.
+ Proof/definition method: Use the standard Rplus/Rmult operations and the existing batch observations, without recursively defining a second moment collector.
+ Library reuse: The canonical FiniteSum and ListPoolingAlgebra covariance, variance and linearity theorems are reused directly; Rocq Stdlib Ring/Field handles only real algebra and no new statistics implementation is introduced.
+ Boundary: This bridge establishes deterministic weighted finite-list covariance for composite test scores. Gaussian conditional distributions, independent sampling and all confidence-coverage claims remain unproved.
+*)
+
+Definition four_batch_score {A:Type} (x1 x2 x3 x4:A->R) (a1 a2 a3 a4:R) : A->R :=
+ fun t => (a1*x1 t+a2*x2 t)+(a3*x3 t+a4*x4 t).
+
+(** [four_batch_covariance_bilinear] (theorem).
+ Mathematical meaning: The sample covariance between two four-score composites equals the 4-by-4 symbolic bilinear form evaluated at the ten actual weighted sample variances and covariances.
+ Exact checked proposition: forall A w x1 x2 x3 x4 xs a1..b4, mass <> 0 -> covariance(score(a),score(b)) = four_covariant(sample_covariance_matrix,a,b).
+ Premises and side conditions: The four input observations and arbitrary finite batch identifiers are exact real-valued functions. Total sample exposure must be nonzero for a quotient-level covariance identity. Symbolic covariance entries are instantiated by actual sample moment definitions, not unconstrained arbitrary matrix symbols.
+ Proof/definition method: Expand each composite into two score pairs using the seven already checked finite-sample covariance bridge theorems, use symmetry and covariance-self variance, and normalize the remaining polynomial with ring.
+ Library reuse: The canonical FiniteSum and ListPoolingAlgebra covariance, variance and linearity theorems are reused directly; Rocq Stdlib Ring/Field handles only real algebra and no new statistics implementation is introduced.
+ Boundary: This bridge establishes deterministic weighted finite-list covariance for composite test scores. Gaussian conditional distributions, independent sampling and all confidence-coverage claims remain unproved.
+*)
+
+Theorem four_batch_covariance_bilinear :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A)
+        (a1 a2 a3 a4 b1 b2 b3 b4:R),
+  batch_mass w xs<>0 ->
+  batch_covariance w
+   (four_batch_score x1 x2 x3 x4 a1 a2 a3 a4)
+   (four_batch_score x1 x2 x3 x4 b1 b2 b3 b4) xs =
+  four_covariant
+   (batch_variance w x1 xs) (batch_variance w x2 xs)
+   (batch_variance w x3 xs) (batch_variance w x4 xs)
+   (batch_covariance w x1 x2 xs) (batch_covariance w x1 x3 xs)
+   (batch_covariance w x1 x4 xs) (batch_covariance w x2 x3 xs)
+   (batch_covariance w x2 x4 xs) (batch_covariance w x3 x4 xs)
+   a1 a2 a3 a4 b1 b2 b3 b4.
+Proof.
+ intros A w x1 x2 x3 x4 xs a1 a2 a3 a4 b1 b2 b3 b4 Hm.
+ unfold four_batch_score.
+ rewrite four_batch_covariance_add_left by exact Hm.
+ rewrite !four_batch_covariance_add_right by exact Hm.
+ rewrite !four_batch_covariance_linear_two_composites by exact Hm.
+ rewrite !batch_covariance_self_variance.
+ rewrite (batch_covariance_symmetry A w x2 x1 xs).
+ rewrite (batch_covariance_symmetry A w x3 x1 xs).
+ rewrite (batch_covariance_symmetry A w x4 x1 xs).
+ rewrite (batch_covariance_symmetry A w x3 x2 xs).
+ rewrite (batch_covariance_symmetry A w x4 x2 xs).
+ rewrite (batch_covariance_symmetry A w x4 x3 xs).
+ cbv [four_covariant].
+ ring.
+Qed.
+
+(** [four_batch_variance_quadratic] (theorem).
+ Mathematical meaning: The finite-sample variance of a four-test composite is exactly the symbolic covariance quadratic evaluated on the ten observed covariance-matrix entries.
+ Exact checked proposition: forall A w x1 x2 x3 x4 xs a1..a4, mass <> 0 -> variance(score(a)) = quadratic(actual_sample_covariances,a).
+ Premises and side conditions: The four input observations and arbitrary finite batch identifiers are exact real-valued functions. Total sample exposure must be nonzero for a quotient-level covariance identity. Symbolic covariance entries are instantiated by actual sample moment definitions, not unconstrained arbitrary matrix symbols.
+ Proof/definition method: Apply the general kernel-checked composite covariance bridge to a coefficient vector paired with itself, then use the existing covariance-self variance theorem.
+ Library reuse: The canonical FiniteSum and ListPoolingAlgebra covariance, variance and linearity theorems are reused directly; Rocq Stdlib Ring/Field handles only real algebra and no new statistics implementation is introduced.
+ Boundary: This bridge establishes deterministic weighted finite-list covariance for composite test scores. Gaussian conditional distributions, independent sampling and all confidence-coverage claims remain unproved.
+*)
+
+Theorem four_batch_variance_quadratic :
+ forall (A:Type) (w x1 x2 x3 x4:A->R) (xs:list A)
+        (a1 a2 a3 a4:R),
+  batch_mass w xs<>0 ->
+  batch_variance w (four_batch_score x1 x2 x3 x4 a1 a2 a3 a4) xs =
+  four_quadratic
+   (batch_variance w x1 xs) (batch_variance w x2 xs)
+   (batch_variance w x3 xs) (batch_variance w x4 xs)
+   (batch_covariance w x1 x2 xs) (batch_covariance w x1 x3 xs)
+   (batch_covariance w x1 x4 xs) (batch_covariance w x2 x3 xs)
+   (batch_covariance w x2 x4 xs) (batch_covariance w x3 x4 xs)
+   a1 a2 a3 a4.
+Proof.
+ intros A w x1 x2 x3 x4 xs a1 a2 a3 a4 Hm.
+ unfold four_quadratic.
+ rewrite <- (batch_covariance_self_variance A w
+   (four_batch_score x1 x2 x3 x4 a1 a2 a3 a4) xs).
+ apply four_batch_covariance_bilinear; exact Hm.
+Qed.
+
