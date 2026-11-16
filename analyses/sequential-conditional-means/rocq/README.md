@@ -1,19 +1,13 @@
-# Sequential conditional-means specialized Rocq proofs
+# Sequential conditional-means — Rocq formalization
 
-**Author:** Anders Hellström.
+**Researcher:** Anders Hellström.
 
-> **AI disclosure:** This source-ownership documentation was AI-assisted.
+> **AI disclosure:** OpenAI ChatGPT/Codex materially assisted theorem selection, Rocq proof scripts and commentary. Mathematical proof status depends exclusively on Rocq 9.2 kernel validation of the exact source revision.
 
-[`SequentialReport.v`](SequentialReport.v), [`SequentialSensitivity.v`](SequentialSensitivity.v), [`EquicorrelationSpectral.v`](EquicorrelationSpectral.v), [`EquicorrelationVectors.v`](EquicorrelationVectors.v), [`EquicorrelationInverseVectors.v`](EquicorrelationInverseVectors.v), [`ReportRounding.v`](ReportRounding.v) and [`ReportCounterexample.v`](ReportCounterexample.v) formalize the report's sequential regression algebra, exact parameter and sample-size sensitivity, exact rounding certificates and finite counterexamples. The three equicorrelation spectral/vector modules remain here because they import the specialized `SequentialReport` proof; only report-neutral finite sums, moments, conditional covariance/projection and Schur algebra are imported from [the central Rocq library](../../../library/rocq/README.md). Domain-specific SPARK implementations and independent Python validation stay alongside the report.
+The report-local Rocq modules (SequentialReport.v, SequentialSensitivity.v, EquicorrelationSpectral.v, EquicorrelationVectors.v, EquicorrelationInverseVectors.v, ReportRounding.v, ReportCounterexample.v) formalize sequential regression algebra, equicorrelation vectors, sensitivity, rounding certificates and finite counterexamples with explicit hypotheses, reusing the [canonical shared mathematical library](../../../library/rocq/README.md). They contain separate explanations of every definition, theorem and proof strategy. The full source-order register and six-volume proof-obligation ledger are maintained in the central Rocq documentation.
 
-Compile using `sh scripts/compile_rocq.sh` from the repository root. Consult the [report theorem inventory](../../../rocq/REPORT_THEOREM_INVENTORY.md) for the exact scope. The new 55-script sensitivity module reuses `SequentialReport.sequential_d`,
-`sequential_prediction`, `sequential_population_variance`, and
-`sequential_conditional_variance`; it does not implement independent sum,
-probability, matrix or inversion libraries. These sharp deterministic
-sensitivity results give report-auditable signs, bounds, exact finite-count
-and correlation differences, and a variance-explained decomposition.
-The conditional-mean and Gaussian-tail implications beyond finite algebra remain explicit research gaps.
+Numerical reference calculations are implemented in [Python](../../../reporting/simulate.py) with NumPy/SciPy where appropriate. [Dask](../../../reporting/simulate.py) constructs the maintained Monte Carlo workflow and Deal specifies selected source-level contracts. These numerical computations and Rocq proofs address different propositions.
 
-## Complete AI disclosure
+No formal proof of Gaussian pseudorandom sampling, individual test-taking behavior, tail calibration, external numerical library implementations or empirical IQ validity is implied by checking finite algebraic identities.
 
-OpenAI ChatGPT assisted with classification and source relocation. Pinned kernel checking is confined to the formal statements; no Gaussian conditional-distribution existence or empirical test parameter has been proved by this refactor.
+**Full AI disclosure:** The project used AI assistance for specification, mathematics, tests, source, formatting and reports. The user-directed research questions and priorities originated with Anders Hellström. Automated checks do not constitute independent human peer review or actual participant data.
