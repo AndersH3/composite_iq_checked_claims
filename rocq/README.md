@@ -1,5 +1,13 @@
 # Rocq formalization of checked claims
 
+## D048x — finite weighted-sample covariance constraints
+
+**AI disclosure:** These proposed finite-sample proofs and this source mapping were prepared with OpenAI ChatGPT assistance; Rocq's pinned kernel, not the proof count or this documentation, determines proof status.
+
+[`SampleContrastCauchy.v`](../library/rocq/SampleContrastCauchy.v) contains **142 Rocq-9.2-checked theorem scripts** beyond D047x, mapped to shared `pf:moments` (G01), G12 weighted pooling, and the multiple-test-composite covariance restrictions used across all six reports. The central result is `sample_covariance_cauchy_schwarz` under nonnegative weights and strictly positive mass. The 136 individual four-test contrast bounds are related **specializations**, not 136 unrelated sampling laws. The four further general implications show that zero empirical variance forces zero covariance and that the covariance lies between ±half the sum of two empirical variances.
+
+The [exact proof-by-proof audit](PROOF_REFACTOR_SAMPLE_CAUCHY.md) is maintained separately from historical source registers. The authoritative deterministic corpus target on this branch is **3,258 proof scripts in 38 modules** (D047x baseline 3,116 plus 142); the 142-proof source passed the pinned Rocq 9.2 kernel on commit `9d069baf779c8e351b06a98bfb14667080752f13` ([workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43918132367)). This work does not establish positive-definite Gaussian constructions, normal probabilities, independent draws, model validity, interval coverage or a new SPARK campaign.
+
 **Author:** Anders Hellström.
 
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
