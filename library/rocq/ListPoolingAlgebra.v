@@ -1680,7 +1680,7 @@ Qed.
 Theorem batch_centered_cross_expand :
   forall (A:Type) (w v z:A->R) (c d:R) (xs:list A), batch_centered_cross w v z c d xs=batch_cross w v z xs-c*batch_total w z xs-d*batch_total w v xs+c*d*batch_mass w xs.
 Proof.
-  intros A w v z c d xs; unfold batch_centered_cross,batch_cross,batch_total,batch_mass; transitivity (finite_sum (fun x => (w x*v x*z x-c*(w x*z x))-(d*(w x*v x)-c*d*w x)) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_sub, finite_sum_sub, !finite_sum_add, !finite_sum_scale; ring].
+  intros A w v z c d xs; unfold batch_centered_cross,batch_cross,batch_total,batch_mass; transitivity (finite_sum (fun x => (w x*v x*z x-c*(w x*z x))-(d*(w x*v x)-c*d*w x)) xs); [apply finite_sum_ext; intro x; ring|rewrite !finite_sum_sub, !finite_sum_scale; ring].
 Qed.
 
 (** [batch_cov_numer_closed] (theorem).
