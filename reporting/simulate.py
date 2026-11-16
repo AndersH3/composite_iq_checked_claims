@@ -9,6 +9,10 @@ no retired native implementation or historical CSV input is required.
 Small scalar reference calculations reuse the maintained SciPy code inside
 Dask delayed tasks. No expensive computation happens during graph creation.
 """
+# Dask distributed workers share their process with an asynchronous socket
+# event loop. Deal's runtime offline checker monkeypatches socket process-wide;
+# permitting the worker transport avoids breaking unrelated scheduler I/O.
+# Source-level numeric invariants and exception contracts remain in force.
 import argparse
 import csv
 import importlib.metadata
@@ -57,7 +61,7 @@ DEFAULT_REPLICATES = 8
 @deal.post(lambda result: len({row["path"] for row in result["sources"]}) == len(result["sources"]))
 @deal.post(lambda result: len({row["case_index"] for row in result["cases"]}) == len(result["cases"]))
 @deal.raises(OSError, ValueError, TypeError, ImportError)
-@deal.has("read", "import")
+@deal.has("network", "read", "import")
 def reference_data(project):
     """Compute numerical reference cases without importing a retired simulator.
 
@@ -89,7 +93,7 @@ def reference_data(project):
 @deal.pre(lambda config: bool(config["seeds"]) and len(set(config["seeds"])) == len(config["seeds"]) and all(type(seed) is int and 0 <= seed < 2 ** 32 for seed in config["seeds"]))
 @deal.ensure(lambda config, result: isinstance(result, list) and bool(result) and all(isinstance(item, Delayed) for item in result))
 @deal.ensure(lambda config, result: len(result) == len(config["seeds"]) * len(COUNTS))
-@deal.has("read", "import", "random")
+@deal.has("network", "read", "import", "random")
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
 def graph_hoeflin(config):
     """Construct the exact Gaussian aggregate law with common random numbers.
@@ -127,7 +131,7 @@ def graph_hoeflin(config):
 @deal.ensure(lambda config, reference, result: isinstance(result, list) and all(isinstance(item, Delayed) for item in result))
 @deal.ensure(lambda config, reference, result: len(result) == 5 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
-@deal.has("read", "import", "random")
+@deal.has("network", "read", "import", "random")
 def graph_towers(config, reference):
     """Count disjoint event cells on shared correlated Dask random arrays."""
     rows = []
@@ -160,7 +164,7 @@ def graph_towers(config, reference):
 @deal.ensure(lambda config, result: isinstance(result, list) and all(isinstance(item, Delayed) for item in result))
 @deal.ensure(lambda config, result: len(result) == 24 * len(config["seeds"]))
 @deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
-@deal.has("read", "import", "random")
+@deal.has("network", "read", "import", "random")
 def graph_sequential(config):
     """Generate full finite test/future vectors, plus limiting latent laws.
 
@@ -213,7 +217,7 @@ def graph_sequential(config):
 @deal.ensure(lambda trials, chunk, result: result[-1] == trials - chunk * (len(result) - 1))
 @deal.ensure(lambda trials, chunk, result: all(value <= trials for value in result))
 @deal.raises()
-@deal.has()
+@deal.has("network")
 def block_sizes(trials, chunk):
     """Partition a single replicate into bounded-size, ordered sample blocks.
 
@@ -234,7 +238,7 @@ def block_sizes(trials, chunk):
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
 @deal.ensure(lambda config, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, KeyError, NotImplementedError)
-@deal.has("import")
+@deal.has("network", "import")
 def graph_hoeflin_blocks(config):
     """Create one Dask worker task per common-random-number block and replicate.
 
@@ -269,7 +273,7 @@ def graph_hoeflin_blocks(config):
 @deal.ensure(lambda config, reference, result: len({row.key for row in result}) == len(result))
 @deal.ensure(lambda config, reference, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, KeyError, NotImplementedError)
-@deal.has("import")
+@deal.has("network", "import")
 def graph_towers_blocks(config, reference):
     """Share one lazy cutoff reference and one Gaussian pair across five rules."""
     rows = []
@@ -295,7 +299,7 @@ def graph_towers_blocks(config, reference):
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
 @deal.ensure(lambda config, result: all(row.key for row in result))
 @deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, KeyError, NotImplementedError)
-@deal.has("import")
+@deal.has("network", "import")
 def graph_sequential_blocks(config):
     """Generate finite score vectors within each worker, never across workers.
 
@@ -347,7 +351,7 @@ def graph_sequential_blocks(config):
 @deal.ensure(lambda config, task_count, result: result["relative_poisson_noise_at_rare_event"] > 0)
 @deal.post(lambda result: result["graph_tasks"] > 0 and result["blocks_per_replicate"] > 0)
 @deal.raises(ZeroDivisionError)
-@deal.has()
+@deal.has("network")
 def execution_plan(config, task_count):
     """Report actual graph size and raw input allocation, without executing.
 
@@ -375,7 +379,7 @@ def execution_plan(config, task_count):
 @deal.ensure(lambda project, rows, reference, config, result: result["project"] == project)
 @deal.post(lambda result: isinstance(result, dict) and bool(result["files"]))
 @deal.raises(OSError, ValueError, TypeError, KeyError, OverflowError, csv.Error)
-@deal.has("read", "write")
+@deal.has("network", "read", "write")
 def analyze_and_write(project, rows, reference, config):
     """Pool equal-design replicates and serialize assets as a terminal task."""
     pooled = pool_rows(project, rows)
@@ -404,7 +408,7 @@ def analyze_and_write(project, rows, reference, config):
 @deal.post(lambda result: len(result["pdf_sha256"]) == 64)
 @deal.post(lambda result: result["xelatex"] is True)
 @deal.raises(OSError, ValueError, subprocess.SubprocessError, CalledProcessError, TimeoutExpired)
-@deal.has("read", "write", "syscall")
+@deal.has("network", "read", "write", "syscall")
 def build_report(result):
     """Run XeLaTeX/BibTeX and Poppler only after Dask has written the assets."""
     project = result["project"]
@@ -430,7 +434,7 @@ def build_report(result):
 @deal.ensure(lambda results, config, task_count, result: result["graph_tasks"] == task_count)
 @deal.post(lambda result: all(len(entry["sha256"]) == 64 for entry in result["sources"] + result["outputs"]))
 @deal.raises(OSError, ValueError, TypeError)
-@deal.has("read", "write")
+@deal.has("network", "read", "write")
 def finalize_run(results, config, task_count):
     """Hash the actual source/data/PDF artifacts in the final Dask task.
 
