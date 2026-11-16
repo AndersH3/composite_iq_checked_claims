@@ -17,6 +17,6 @@ Deal contracts specify input domains, output invariants, exceptions and effects 
 
 Rocq uses a separate pinned 9.2 GitHub Actions workflow to kernel-check explicitly stated mathematical propositions; see [formal proof inventory](../rocq/README.md). Its finite statistical algebra is not a proof of Gaussian conditioning, confidence coverage or population psychometric validity.
 
-The discontinued Ada/SPARK compiler sources and recorded native campaigns were removed from the working tree. Their contents remain accessible through Git history, but those earlier results are not current-source verification for Python/Dask/Deal.
+The discontinued discontinued alternate-engine compiler sources and recorded native campaigns were removed from the working tree. Their contents remain accessible through Git history, but those earlier results are not current-source verification for Python/Dask/Deal.
 
 **Full AI disclosure:** AI assistance covered specification, test scripting, debugging, source/document refactoring and automated audit design. The published status is limited to checks actually run on the exact source revision; no independent human peer review or empirical population validity is claimed.
