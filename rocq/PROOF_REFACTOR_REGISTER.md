@@ -12,7 +12,17 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-As of D043x the current branch has **2,478 public theorem/lemma/example claims**, plus
+> **D044x current checked count (November 16, 2026):** After
+> [Rocq 9.2 CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43819739947) on
+> `491ad9bbe79d2a1e8b6739885248ef06657cb307`, **2,603 proof scripts** are
+> registered across **34 modules**: 2,589 public theorem/lemma/example
+> claims, one local lemma, 13 existing model/record constructors.
+> There are 2,873 documented declarations and 2,590 theorem/helper
+> results. This D044x addition has **39 ThreeGroupPooling** plus
+> **72 TwoRatePrecision** new proofs; D043x totals below are preserved
+> as their historical baseline. This mathematical documentation and proof development were AI-assisted; mathematical validity applies only to explicit Rocq propositions accepted by the pinned kernel. Neither empirical IQ assumptions nor stochastic sampling distributions are proved by these real-algebra results.
+>
+As of D043x (historical baseline) the repository had **2,478 public theorem/lemma/example claims**, plus
 **one local helper** and **thirteen constructed model/record values**:
 **2,492 proof scripts** across **32** Rocq modules. The difference between
 2,478 public claims and 2,492 explicit proof scripts is exactly fourteen

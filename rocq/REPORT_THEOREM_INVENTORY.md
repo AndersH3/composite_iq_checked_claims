@@ -2,6 +2,19 @@
 
 # Theorems and mathematical claims actually used in the reports
 
+> **D044x kernel-checked extension (November 16, 2026).** The
+> [full six-volume obligation register](SIX_REPORT_PROOF_OBLIGATIONS.md)
+> maps **111 additional** proofs: [39 three-group pooling theorems](../library/rocq/ThreeGroupPooling.v)
+> including iterative within/between corrected SS, and
+> [72 two-rate precision theorems](../library/rocq/TwoRatePrecision.v)
+> covering rate contrasts, expectation/variance expressions and sharp
+> Bernoulli variance bounds. [Rocq 9.2 kernel CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43819739947)
+> verified **2,603 scripts in 34 modules**. These prove exact algebraic
+> parts of `sm:pooling`, `sm:binomial` and `sm:rare` for formal
+> rate/count expressions. They do **not** prove independent-trial sampling,
+> a binomial PMF, chi-square pivot, Gaussian tails or confidence coverage.
+> This mathematical documentation and proof development were AI-assisted; mathematical validity applies only to explicit Rocq propositions accepted by the pinned kernel. Neither empirical IQ assumptions nor stochastic sampling distributions are proved by these real-algebra results.
+>
 > **D043x kernel-checked update (November 16, 2026):** The
 > [six-volume register](SIX_REPORT_PROOF_OBLIGATIONS.md) now tracks **142
 > additional** substantive real-algebra theorems in four canonical modules:
