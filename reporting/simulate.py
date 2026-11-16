@@ -460,7 +460,15 @@ def finalize_run(results, config, task_count):
 @deal.pre(lambda argv=None: ROOT.is_dir())
 @deal.post(lambda result: result == 0)
 @deal.raises(OSError, ValueError, TypeError, KeyError, ImportError, OverflowError, NotImplementedError, ZeroDivisionError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
-@deal.has("read", "write", "syscall", "import", "random", "stdout", "stderr", "time")
+@deal.pre(lambda argv=None: argv is None or len(argv) <= 128)
+@deal.pre(lambda argv=None: argv is None or all(bool(arg) for arg in argv))
+@deal.pre(lambda argv=None: argv is None or all(len(arg) <= 4096 for arg in argv))
+@deal.ensure(lambda argv=None, result=None: result == 0)
+@deal.ensure(lambda argv=None, result=None: argv is None or all("\\x00" not in arg for arg in argv))
+@deal.ensure(lambda argv=None, result=None: ROOT.is_dir())
+# Do not apply @deal.has to the *outer* Dask scheduler entrypoint: its
+# socket monkeypatch breaks ssl.SSLSocket when Dask imports distributed.
+# Contracted inner data/report operations retain their own effect scopes.
 def main(argv=None):
     """Execute one shared graph for all three sub-projects, not a case loop of compute calls."""
     parser = argparse.ArgumentParser(description=__doc__)
