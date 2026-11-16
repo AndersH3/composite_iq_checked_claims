@@ -43,7 +43,7 @@ from library.python.sequential import equal_initial_scores
 @deal.ensure(lambda n, k, a, c, expected, result: result is None)
 @deal.ensure(lambda n, k, a, c, expected, result: protected_history_intact())
 @deal.ensure(lambda n, k, a, c, expected, result: reference_inputs_intact())
-@deal.raises(AssertionError)
+@deal.raises(AssertionError, np.linalg.LinAlgError)
 @deal.has("read", "import")
 def test_general_n_exact_values_and_gaussian_schur_complement(n, k, a, c, expected):
     """Check eight exact cases and an independent finite-matrix calculation."""
