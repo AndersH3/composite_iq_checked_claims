@@ -167,7 +167,7 @@ Qed.
 *)
 Theorem sampling_variance_zero_iff_extreme: forall p, 0<=p -> p<=1 -> (sampling_bernoulli_variance p=0 <-> p=0 \/ p=1).
 Proof.
-  intros p Hl Hu; unfold sampling_bernoulli_variance; split; intro H. - destruct (Req_EM_T p 0) as [Hz|Hz]; [left; exact Hz|right; nra]. - destruct H as [H|H]; subst; ring.
+  intros p Hl Hu; unfold sampling_bernoulli_variance; split; intro H. - apply Rmult_integral in H. destruct H as [H|H]; [left; exact H|right; lra]. - destruct H as [H|H]; subst; ring.
 Qed.
 
 (** [sampling_variance_maximum] (theorem).
@@ -807,7 +807,7 @@ Qed.
 *)
 Theorem sampling_relative_variance_zero_at_certain_event: forall n, sampling_relative_variance n 1=0.
 Proof.
-  intro n; unfold sampling_relative_variance; field.
+  intro n; unfold sampling_relative_variance,Rdiv; ring.
 Qed.
 
 (** [sampling_relative_variance_double] (theorem).
@@ -967,7 +967,7 @@ Qed.
 *)
 Theorem sampling_frequency_variance_zero_at_impossible_event: forall n, sampling_frequency_variance n 0=0.
 Proof.
-  intro n; unfold sampling_frequency_variance,sampling_bernoulli_variance; field.
+  intro n; unfold sampling_frequency_variance,sampling_bernoulli_variance,Rdiv; ring.
 Qed.
 
 (** [sampling_frequency_variance_zero_at_certain_event] (theorem).
@@ -987,6 +987,6 @@ Qed.
 *)
 Theorem sampling_frequency_variance_zero_at_certain_event: forall n, sampling_frequency_variance n 1=0.
 Proof.
-  intro n; unfold sampling_frequency_variance,sampling_bernoulli_variance; field.
+  intro n; unfold sampling_frequency_variance,sampling_bernoulli_variance,Rdiv; ring.
 Qed.
 
