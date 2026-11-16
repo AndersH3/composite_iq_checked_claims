@@ -66,6 +66,19 @@ both tests in the whole reference population. Reporting one as another would
 answer a different question even if every simulated count were exact.
 Proposition~\ref{tw:events} derives each event formula and denominator.
 
+
+\noindent\textbf{Recorded sample versus scalable implementation.}
+The numerical values in this report remain the checked-in Dask Array
+experiment. The maintained Python source additionally provides a
+block-aggregated Dask delayed engine: a worker generates one bounded
+Gaussian pair block, applies all five rules to the \emph{same} pairs,
+and returns only four-cell counts to the scheduler. Its future default
+is eight replicates of five million pairs; the larger run is not
+substituted for the numerical evidence printed here without execution,
+validation, and a new provenance record. This separation avoids
+mistaking a prospective 40-million-pair default for the actual recorded
+four-million-pair experiment.
+
 The study uses \SimReplicates{} replicate streams, each with
 \SimTrials{} pairs, for \SimPooledTrials{} pairs per rule after pooling.
 Dask Array processes chunks of \SimChunk{} observations. The same pairs are
