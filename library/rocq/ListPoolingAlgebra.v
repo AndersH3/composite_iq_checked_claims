@@ -738,3 +738,359 @@ Theorem batch_total_ss_scale :
 Proof.
   intros A w v u xs t H; unfold batch_total_ss; rewrite batch_mean_scale by assumption; rewrite batch_centered_scale_values; rewrite finite_sum_scale; ring.
 Qed.
+
+(** [batch_pairwise] (definition).
+ Mathematical meaning: Twice-counted sample-size-weighted pairwise squared differences among all batch centers.
+ Exact declaration: Definition batch_pairwise {A:Type} (w v:A->R) (xs:list A):R := finite_sum (fun i => finite_sum (fun j => w i*w j*(v i-v j)*(v i-v j)) xs) xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Definition batch_pairwise {A:Type} (w v:A->R) (xs:list A):R := finite_sum (fun i => finite_sum (fun j => w i*w j*(v i-v j)*(v i-v j)) xs) xs.
+
+(** [batch_unbiased_variance] (definition).
+ Mathematical meaning: Deterministic unbiased-style pooled variance quotient when aggregate sample count exceeds one.
+ Exact declaration: Definition batch_unbiased_variance {A:Type} (w v u:A->R) (xs:list A):R := batch_total_ss w v u xs / (batch_mass w xs-1).
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Definition batch_unbiased_variance {A:Type} (w v u:A->R) (xs:list A):R := batch_total_ss w v u xs / (batch_mass w xs-1).
+
+(** [batch_mass_rev] (theorem).
+ Mathematical meaning: Reversing the order of arbitrary batches preserves total mass.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A), batch_mass w (rev xs)=batch_mass w xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mass_rev :
+  forall (A:Type) (w:A->R) (xs:list A), batch_mass w (rev xs)=batch_mass w xs.
+Proof.
+  intros A w xs; unfold batch_mass; apply finite_sum_rev.
+Qed.
+
+(** [batch_total_rev] (theorem).
+ Mathematical meaning: Reversing batches preserves their weighted first moment.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_total w v (rev xs)=batch_total w v xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_total_rev :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_total w v (rev xs)=batch_total w v xs.
+Proof.
+  intros A w v xs; unfold batch_total; apply finite_sum_rev.
+Qed.
+
+(** [batch_second_rev] (theorem).
+ Mathematical meaning: Reversing batches preserves weighted second raw moments.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_second w v (rev xs)=batch_second w v xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_second_rev :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_second w v (rev xs)=batch_second w v xs.
+Proof.
+  intros A w v xs; unfold batch_second; apply finite_sum_rev.
+Qed.
+
+(** [batch_centered_rev] (theorem).
+ Mathematical meaning: Reversing batches preserves arbitrary-reference corrected sums of squares.
+ Exact proposition: forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_centered w v c (rev xs)=batch_centered w v c xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_centered_rev :
+  forall (A:Type) (w v:A->R) (c:R) (xs:list A), batch_centered w v c (rev xs)=batch_centered w v c xs.
+Proof.
+  intros A w v c xs; unfold batch_centered; apply finite_sum_rev.
+Qed.
+
+(** [batch_mean_rev] (theorem).
+ Mathematical meaning: The weighted mean is invariant under reversing a finite list.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_mean w v (rev xs)=batch_mean w v xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mean_rev :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_mean w v (rev xs)=batch_mean w v xs.
+Proof.
+  intros A w v xs; unfold batch_mean; now rewrite batch_total_rev,batch_mass_rev.
+Qed.
+
+(** [batch_mass_zero_characterization] (theorem).
+ Mathematical meaning: A finite sum of nonnegative weights is zero precisely when every enumerated weight is zero.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (batch_mass w xs=0 <-> forall x, In x xs -> w x=0).
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mass_zero_characterization :
+  forall (A:Type) (w:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (batch_mass w xs=0 <-> forall x, In x xs -> w x=0).
+Proof.
+  intros A w xs Hw; unfold batch_mass; now apply finite_sum_nonnegative_zero_iff.
+Qed.
+
+(** [batch_mass_constant_weights] (theorem).
+ Mathematical meaning: Constant batch weights result in the exact list-length scaling of mass.
+ Exact proposition: forall (A:Type) (xs:list A) (c:R), batch_mass (fun _=>c) xs=INR (length xs)*c.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mass_constant_weights :
+  forall (A:Type) (xs:list A) (c:R), batch_mass (fun _=>c) xs=INR (length xs)*c.
+Proof.
+  intros A xs c; unfold batch_mass; apply finite_sum_const.
+Qed.
+
+(** [batch_total_nonnegative] (theorem).
+ Mathematical meaning: Weights and group values that are each nonnegative yield a nonnegative pooled first moment.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=v x) -> 0<=batch_total w v xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_total_nonnegative :
+  forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=v x) -> 0<=batch_total w v xs.
+Proof.
+  intros A w v xs Hw Hv; unfold batch_total; apply finite_sum_nonnegative; intros x Hin; apply Rmult_le_pos; [apply Hw|apply Hv]; exact Hin.
+Qed.
+
+(** [batch_total_monotone_values] (theorem).
+ Mathematical meaning: With nonnegative sample weights, increasing every group value cannot decrease its weighted total.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> v x<=z x) -> batch_total w v xs<=batch_total w z xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_total_monotone_values :
+  forall (A:Type) (w v z:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> v x<=z x) -> batch_total w v xs<=batch_total w z xs.
+Proof.
+  intros A w v z xs Hw Hle; unfold batch_total; apply finite_sum_monotone; intros x Hin; pose proof (Hw x Hin) as Hwx; pose proof (Hle x Hin) as Hx; nra.
+Qed.
+
+(** [batch_mean_monotone_values] (theorem).
+ Mathematical meaning: The pooled mean is monotone in the group observations when total sample exposure is positive.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> v x<=z x) -> batch_mean w v xs<=batch_mean w z xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mean_monotone_values :
+  forall (A:Type) (w v z:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> v x<=z x) -> batch_mean w v xs<=batch_mean w z xs.
+Proof.
+  intros A w v z xs Hm Hw Hle; pose proof (batch_total_monotone_values A w v z xs Hw Hle) as Ht; rewrite (batch_mean_total_identity A w v xs) in Ht by lra; rewrite (batch_mean_total_identity A w z xs) in Ht by lra; nra.
+Qed.
+
+(** [batch_mean_lower_bound] (theorem).
+ Mathematical meaning: A sample-size-weighted average cannot fall below a lower bound satisfied by every batch value.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (a:R), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> a<=v x) -> a<=batch_mean w v xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mean_lower_bound :
+  forall (A:Type) (w v:A->R) (xs:list A) (a:R), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> a<=v x) -> a<=batch_mean w v xs.
+Proof.
+  intros A w v xs a Hm Hw Hlo; pose proof (batch_mean_monotone_values A w (fun _=>a) v xs Hm Hw Hlo) as H; rewrite (batch_mean_constant A w xs a) in H by lra; exact H.
+Qed.
+
+(** [batch_mean_upper_bound] (theorem).
+ Mathematical meaning: A weighted mean cannot exceed a common upper bound on its sample groups.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (b:R), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> v x<=b) -> batch_mean w v xs<=b.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mean_upper_bound :
+  forall (A:Type) (w v:A->R) (xs:list A) (b:R), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> v x<=b) -> batch_mean w v xs<=b.
+Proof.
+  intros A w v xs b Hm Hw Hup; pose proof (batch_mean_monotone_values A w v (fun _=>b) xs Hm Hw Hup) as H; rewrite (batch_mean_constant A w xs b) in H by lra; exact H.
+Qed.
+
+(** [batch_mean_interval] (theorem).
+ Mathematical meaning: If every group value belongs to an interval, the weighted mean belongs to that interval.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (a b:R), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> a<=v x<=b) -> a<=batch_mean w v xs<=b.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mean_interval :
+  forall (A:Type) (w v:A->R) (xs:list A) (a b:R), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> a<=v x<=b) -> a<=batch_mean w v xs<=b.
+Proof.
+  intros A w v xs a b Hm Hw Hr; split; [apply batch_mean_lower_bound with (a:=a); try assumption; intros x Hin; apply (Hr x Hin)|apply batch_mean_upper_bound with (b:=b); try assumption; intros x Hin; apply (Hr x Hin)].
+Qed.
+
+(** [batch_pairwise_nonnegative] (theorem).
+ Mathematical meaning: Every weighted pairwise contrast-squared term is nonnegative when the group weights are nonnegative.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 0<=batch_pairwise w v xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_pairwise_nonnegative :
+  forall (A:Type) (w v:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> 0<=batch_pairwise w v xs.
+Proof.
+  intros A w v xs Hw; unfold batch_pairwise; apply finite_sum_nonnegative; intros i Hi; apply finite_sum_nonnegative; intros j Hj; replace (w i*w j*(v i-v j)*(v i-v j)) with ((w i*w j)*((v i-v j)*(v i-v j))) by ring; apply Rmult_le_pos; [apply Rmult_le_pos; [apply Hw; exact Hi|apply Hw; exact Hj]|pose proof (Rle_0_sqr (v i-v j)) as E; unfold Rsqr in E; exact E].
+Qed.
+
+(** [batch_pairwise_closed] (theorem).
+ Mathematical meaning: The all-pairs weighted squared-difference statistic equals twice mass times second moment minus twice squared first moment.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_pairwise w v xs=2*(batch_mass w xs*batch_second w v xs-batch_total w v xs*batch_total w v xs).
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_pairwise_closed :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_pairwise w v xs=2*(batch_mass w xs*batch_second w v xs-batch_total w v xs*batch_total w v xs).
+Proof.
+  intros A w v xs; unfold batch_pairwise; transitivity (finite_sum (fun i=>w i*batch_centered w v (v i) xs) xs). { apply finite_sum_ext; intro i; unfold batch_centered; transitivity (finite_sum (fun j=>w i*(w j*(v j-v i)*(v j-v i))) xs); [apply finite_sum_ext; intro j; ring|rewrite finite_sum_scale; reflexivity]. } transitivity (finite_sum (fun i=>(batch_second w v xs*w i-(2*batch_total w v xs)*(w i*v i))+batch_mass w xs*(w i*v i*v i)) xs). { apply finite_sum_ext; intro i; rewrite batch_centered_expand; ring. } rewrite finite_sum_add, finite_sum_sub, !finite_sum_scale; unfold batch_mass,batch_second,batch_total; ring.
+Qed.
+
+(** [batch_pairwise_mean_bridge] (theorem).
+ Mathematical meaning: For nonzero total mass, twice mass times mean-centered dispersion exactly equals the weighted all-pairs squared discrepancy.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_pairwise w v xs=2*batch_mass w xs*batch_centered w v (batch_mean w v xs) xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_pairwise_mean_bridge :
+  forall (A:Type) (w v:A->R) (xs:list A), batch_mass w xs<>0 -> batch_pairwise w v xs=2*batch_mass w xs*batch_centered w v (batch_mean w v xs) xs.
+Proof.
+  intros A w v xs H; rewrite batch_pairwise_closed, batch_centered_at_mean_closed by assumption; field; exact H.
+Qed.
+
+(** [batch_mean_append_two_groups] (theorem).
+ Mathematical meaning: The mean over any concatenation is exactly the earlier two-group pooled mean computed from both list summaries.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs ys:list A), 0<batch_mass w xs -> 0<batch_mass w ys -> batch_mean w v (xs++ys)=pooled_mean (batch_mass w xs) (batch_mass w ys) (batch_mean w v xs) (batch_mean w v ys).
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_mean_append_two_groups :
+  forall (A:Type) (w v:A->R) (xs ys:list A), 0<batch_mass w xs -> 0<batch_mass w ys -> batch_mean w v (xs++ys)=pooled_mean (batch_mass w xs) (batch_mass w ys) (batch_mean w v xs) (batch_mean w v ys).
+Proof.
+  intros A w v xs ys Hx Hy; unfold batch_mean,pooled_mean,pooled_mass; rewrite batch_total_app,batch_mass_app; field; lra.
+Qed.
+
+(** [batch_centered_append_anova] (theorem).
+ Mathematical meaning: Exact arbitrary-list two-block ANOVA: the pooled between-batch sum equals both sublist dispersions plus the between-sublist correction.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs ys:list A), 0<batch_mass w xs -> 0<batch_mass w ys -> batch_centered w v (batch_mean w v (xs++ys)) (xs++ys)=batch_centered w v (batch_mean w v xs) xs+batch_centered w v (batch_mean w v ys) ys+pooled_between (batch_mass w xs) (batch_mass w ys) (batch_mean w v xs) (batch_mean w v ys).
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_centered_append_anova :
+  forall (A:Type) (w v:A->R) (xs ys:list A), 0<batch_mass w xs -> 0<batch_mass w ys -> batch_centered w v (batch_mean w v (xs++ys)) (xs++ys)=batch_centered w v (batch_mean w v xs) xs+batch_centered w v (batch_mean w v ys) ys+pooled_between (batch_mass w xs) (batch_mass w ys) (batch_mean w v xs) (batch_mean w v ys).
+Proof.
+  intros A w v xs ys Hx Hy; rewrite batch_centered_app; rewrite (batch_centered_mean_correction A w v xs (batch_mean w v (xs++ys))) by lra; rewrite (batch_centered_mean_correction A w v ys (batch_mean w v (xs++ys))) by lra; rewrite (batch_mean_append_two_groups A w v xs ys Hx Hy); unfold pooled_between,pooled_mean,pooled_mass; field; lra.
+Qed.
+
+(** [batch_total_ss_append_anova] (theorem).
+ Mathematical meaning: Exact arbitrary-list pooling of within-plus-between corrected sums matches the two-group ANOVA correction.
+ Exact proposition: forall (A:Type) (w v u:A->R) (xs ys:list A), 0<batch_mass w xs -> 0<batch_mass w ys -> batch_total_ss w v u (xs++ys)=batch_total_ss w v u xs+batch_total_ss w v u ys+pooled_between (batch_mass w xs) (batch_mass w ys) (batch_mean w v xs) (batch_mean w v ys).
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_total_ss_append_anova :
+  forall (A:Type) (w v u:A->R) (xs ys:list A), 0<batch_mass w xs -> 0<batch_mass w ys -> batch_total_ss w v u (xs++ys)=batch_total_ss w v u xs+batch_total_ss w v u ys+pooled_between (batch_mass w xs) (batch_mass w ys) (batch_mean w v xs) (batch_mean w v ys).
+Proof.
+  intros A w v u xs ys Hx Hy; unfold batch_total_ss; rewrite finite_sum_app; rewrite (batch_centered_append_anova A w v xs ys Hx Hy); ring.
+Qed.
+
+(** [batch_total_ss_within_lower] (theorem).
+ Mathematical meaning: For nonnegative sample weights, total corrected sum of squares dominates all supplied within-group sums.
+ Exact proposition: forall (A:Type) (w v u:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> finite_sum u xs<=batch_total_ss w v u xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_total_ss_within_lower :
+  forall (A:Type) (w v u:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> finite_sum u xs<=batch_total_ss w v u xs.
+Proof.
+  intros A w v u xs Hw; unfold batch_total_ss; pose proof (batch_centered_nonnegative A w v (batch_mean w v xs) xs Hw); lra.
+Qed.
+
+(** [batch_unbiased_variance_nonnegative] (theorem).
+ Mathematical meaning: Positive degrees of freedom and nonnegative within/between components imply nonnegative unbiased-style pooled variance.
+ Exact proposition: forall (A:Type) (w v u:A->R) (xs:list A), 1<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=u x) -> 0<=batch_unbiased_variance w v u xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_unbiased_variance_nonnegative :
+  forall (A:Type) (w v u:A->R) (xs:list A), 1<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=u x) -> 0<=batch_unbiased_variance w v u xs.
+Proof.
+  intros A w v u xs Hm Hw Hu; unfold batch_unbiased_variance,Rdiv; apply Rmult_le_pos; [apply batch_total_ss_nonnegative; assumption|apply Rlt_le, Rinv_0_lt_compat; lra].
+Qed.
+
+(** [batch_unbiased_variance_translation] (theorem).
+ Mathematical meaning: Translating every group center leaves pooled unbiased-style sample variance unchanged.
+ Exact proposition: forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_unbiased_variance w (fun x=>v x+t) u xs=batch_unbiased_variance w v u xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_unbiased_variance_translation :
+  forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_unbiased_variance w (fun x=>v x+t) u xs=batch_unbiased_variance w v u xs.
+Proof.
+  intros A w v u xs t H; unfold batch_unbiased_variance; rewrite batch_total_ss_translation by assumption; reflexivity.
+Qed.
+
+(** [batch_unbiased_variance_scale] (theorem).
+ Mathematical meaning: Rescaling all observations by a factor scales the pooled unbiased-style variance quadratically.
+ Exact proposition: forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_unbiased_variance w (fun x=>t*v x) (fun x=>(t*t)*u x) xs=t*t*batch_unbiased_variance w v u xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_unbiased_variance_scale :
+  forall (A:Type) (w v u:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_unbiased_variance w (fun x=>t*v x) (fun x=>(t*t)*u x) xs=t*t*batch_unbiased_variance w v u xs.
+Proof.
+  intros A w v u xs t H; unfold batch_unbiased_variance; rewrite batch_total_ss_scale by assumption; unfold Rdiv; ring.
+Qed.
+
+(** [batch_second_mean_lower_bound] (theorem).
+ Mathematical meaning: For nonnegative weights and positive total exposure, weighted second moment bounds mass times squared pooled mean.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> batch_mass w xs*batch_mean w v xs*batch_mean w v xs<=batch_second w v xs.
+ Premises and side conditions: Finite input lists and all positive mass, sign, and sample-size hypotheses are stated where required. Observations and weights are numerical data rather than random variables.
+ Proof/definition method: Compose the canonical FiniteSum algebra, the already established weighted moment identities and ordinary Rocq real field/ring/order lemmas.
+ Library reuse: Rocq Stdlib Reals, List, Sorting.Permutation, Ring, Field, Lra, Psatz and canonical FiniteSum/PooledMomentsAlgebra; no recursive duplicate integrator or hidden statistical assumptions.
+ Boundary: Deterministic arbitrary-list pooling supports report sm:pooling (G12), but does not by itself prove the report's independent-binomial summation, a chi-square pivot, Gaussianity or coverage.
+*)
+Theorem batch_second_mean_lower_bound :
+  forall (A:Type) (w v:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> batch_mass w xs*batch_mean w v xs*batch_mean w v xs<=batch_second w v xs.
+Proof.
+  intros A w v xs Hm Hw; pose proof (batch_centered_nonnegative A w v (batch_mean w v xs) xs Hw) as E; rewrite batch_centered_expand in E; rewrite (batch_mean_total_identity A w v xs) in E by lra; nra.
+Qed.
