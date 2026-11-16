@@ -234,7 +234,7 @@ def block_sizes(trials, chunk):
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
 @deal.ensure(lambda config, result: all(row.key for row in result))
-@deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
+@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, NotImplementedError)
 @deal.has("import")
 def graph_hoeflin_blocks(config):
     """Create one Dask worker task per common-random-number block and replicate.
@@ -295,7 +295,7 @@ def graph_towers_blocks(config, reference):
 @deal.ensure(lambda config, result: all(isinstance(row, Delayed) for row in result))
 @deal.ensure(lambda config, result: len({row.key for row in result}) == len(result))
 @deal.ensure(lambda config, result: all(row.key for row in result))
-@deal.raises(ValueError, TypeError, OverflowError, NotImplementedError)
+@deal.raises(ValueError, TypeError, OverflowError, ZeroDivisionError, NotImplementedError)
 @deal.has("import")
 def graph_sequential_blocks(config):
     """Generate finite score vectors within each worker, never across workers.
@@ -347,7 +347,7 @@ def graph_sequential_blocks(config):
 @deal.ensure(lambda config, task_count, result: result["expected_rare_events_per_case"] == result["samples_per_case"] / 1_000_000)
 @deal.ensure(lambda config, task_count, result: result["relative_poisson_noise_at_rare_event"] > 0)
 @deal.post(lambda result: result["graph_tasks"] > 0 and result["blocks_per_replicate"] > 0)
-@deal.raises()
+@deal.raises(ZeroDivisionError)
 @deal.has()
 def execution_plan(config, task_count):
     """Report actual graph size and raw input allocation, without executing.
@@ -460,7 +460,7 @@ def finalize_run(results, config, task_count):
 @deal.pre(lambda argv=None: argv is None or isinstance(argv, list) and all(isinstance(arg, str) and "\x00" not in arg for arg in argv))
 @deal.pre(lambda argv=None: ROOT.is_dir())
 @deal.post(lambda result: result == 0)
-@deal.raises(OSError, ValueError, TypeError, KeyError, ImportError, OverflowError, NotImplementedError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
+@deal.raises(OSError, ValueError, TypeError, KeyError, ImportError, OverflowError, NotImplementedError, ZeroDivisionError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
 @deal.has("read", "write", "syscall", "import", "random", "stdout", "stderr", "time")
 def main(argv=None):
     """Execute one shared graph for all three sub-projects, not a case loop of compute calls."""
