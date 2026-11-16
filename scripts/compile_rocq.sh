@@ -1,6 +1,6 @@
 #!/bin/sh
 # Canonical Rocq source compiler for the shared math library and the three
-# specialized report libraries. Uses the extended 26-module dependency order,
+# specialized report libraries. Uses the complete explicit 32-module dependency order,
 # never copies sources back into Git, and rejects duplicate module basenames.
 # This is a build utility, not a substitute for the Rocq kernel checker.
 set -eu
