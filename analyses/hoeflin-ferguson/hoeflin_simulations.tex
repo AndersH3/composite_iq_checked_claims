@@ -221,6 +221,15 @@ the numerical provenance manifest identifies the actual executed
 engine and seed set. Source-level defaults do not count as observed
 simulation results without an executed and recorded run.
 
+\noindent\textbf{Execution evidence and resource qualification.}
+The numerical CSVs, \SimReplicates{} replicate summaries and figures
+correspond to the executed campaign identified by
+\texttt{reporting/run.json}; the published repository also retains
+measured machine resource logs for the scaled campaign.
+A single measured execution time, and the reduction in Dask task
+count, do not alone establish a hardware-normalized speedup or bound
+the aggregate peak memory of concurrent worker processes.
+
 \chapter{Dask execution, reductions and recorded diagnostics}
 Dask schedules blocks of \SimChunk\ observations and shares the
 underlying \(G\) and \(E\) draws across the eight coupled cases.
