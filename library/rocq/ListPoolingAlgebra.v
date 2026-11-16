@@ -1864,3 +1864,381 @@ Theorem batch_covariance_constant_zero_right :
 Proof.
   intros A w v c xs H; rewrite batch_covariance_symmetry; apply batch_covariance_constant_zero; exact H.
 Qed.
+
+(** [batch_mean_complement] (theorem).
+ Mathematical meaning: The weighted mean success rate and the weighted mean failure rate sum to one for nonzero total mass.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), batch_mass w xs<>0 -> batch_mean w (fun x=>1-p x) xs=1-batch_mean w p xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_mean_complement :
+  forall (A:Type) (w p:A->R) (xs:list A), batch_mass w xs<>0 -> batch_mean w (fun x=>1-p x) xs=1-batch_mean w p xs.
+Proof.
+  intros A w p xs Hm; unfold batch_mean; change (batch_failure w p xs/batch_mass w xs=1-batch_total w p xs/batch_mass w xs); rewrite batch_failure_mass_minus_success; field; exact Hm.
+Qed.
+
+(** [batch_mean_probability_interval] (theorem).
+ Mathematical meaning: For admissible cohort probabilities and nonnegative weights the overall pooled event fraction remains in the unit interval.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x<=1) -> 0<=batch_mean w p xs<=1.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_mean_probability_interval :
+  forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x<=1) -> 0<=batch_mean w p xs<=1.
+Proof.
+  intros A w p xs Hm Hw Hp; apply (batch_mean_interval A w p xs 0 1 Hm Hw); exact Hp.
+Qed.
+
+(** [batch_success_le_exposure] (theorem).
+ Mathematical meaning: If every cohort success rate is at most one, ideal expected successes cannot exceed total nonnegative exposure.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> p x<=1) -> batch_total w p xs<=batch_mass w xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_success_le_exposure :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> p x<=1) -> batch_total w p xs<=batch_mass w xs.
+Proof.
+  intros A w p xs Hw Hp; pose proof (batch_failure_nonnegative A w p xs Hw Hp) as Hf; pose proof (batch_success_failure_total A w p xs) as H; lra.
+Qed.
+
+(** [batch_failure_le_exposure] (theorem).
+ Mathematical meaning: Nonnegative event probabilities imply expected failures do not exceed total exposure.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x) -> batch_failure w p xs<=batch_mass w xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_failure_le_exposure :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 0<=p x) -> batch_failure w p xs<=batch_mass w xs.
+Proof.
+  intros A w p xs Hw Hp; pose proof (batch_success_nonnegative A w p xs Hw Hp) as Hs; pose proof (batch_success_failure_total A w p xs) as H; lra.
+Qed.
+
+(** [batch_variance_le_both_counts] (theorem).
+ Mathematical meaning: Ideal Bernoulli variance is bounded by both complementary expected event counts.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_total w p xs /\ batch_bernoulli_variance w p xs<=batch_failure w p xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_le_both_counts :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_total w p xs /\ batch_bernoulli_variance w p xs<=batch_failure w p xs.
+Proof.
+  intros A w p xs Hw; split; [apply batch_bernoulli_variance_le_success|apply batch_bernoulli_variance_le_failure]; exact Hw.
+Qed.
+
+(** [batch_variance_le_total_exposure] (theorem).
+ Mathematical meaning: The sharp one-quarter bound entails an absolute upper bound by sample exposure for nonnegative weights.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_mass w xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_le_total_exposure :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> batch_bernoulli_variance w p xs<=batch_mass w xs.
+Proof.
+  intros A w p xs Hw; pose proof (batch_bernoulli_variance_sharp_quarter A w p xs Hw) as H; pose proof (batch_mass_nonnegative A w xs Hw) as Hm; lra.
+Qed.
+
+(** [batch_variance_zero_extreme_rates] (theorem).
+ Mathematical meaning: Cohorts whose rates are all either zero or one contribute exactly zero ideal Bernoulli variance.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> p x=0 \/ p x=1) -> batch_bernoulli_variance w p xs=0.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_zero_extreme_rates :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> p x=0 \/ p x=1) -> batch_bernoulli_variance w p xs=0.
+Proof.
+  intros A w p xs Hp; unfold batch_bernoulli_variance; rewrite (finite_sum_ext_in xs (fun x=>w x*sampling_bernoulli_variance (p x)) (fun _=>0)); [apply finite_sum_zero|intros x Hin; destruct (Hp x Hin) as [H|H]; rewrite H; unfold sampling_bernoulli_variance; ring].
+Qed.
+
+(** [batch_variance_zero_member_extreme] (theorem).
+ Mathematical meaning: A zero nonnegative aggregate Bernoulli variance forces each cohort with positive exposure to have a degenerate rate.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> (forall y, In y xs -> 0<=p y<=1) -> batch_bernoulli_variance w p xs=0 -> In x xs -> 0<w x -> p x=0 \/ p x=1.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_zero_member_extreme :
+  forall (A:Type) (w p:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> (forall y, In y xs -> 0<=p y<=1) -> batch_bernoulli_variance w p xs=0 -> In x xs -> 0<w x -> p x=0 \/ p x=1.
+Proof.
+  intros A w p xs x Hw Hp Hz Hin Hwx; unfold batch_bernoulli_variance in Hz; assert (Hnon: forall y, In y xs -> 0<=w y*sampling_bernoulli_variance (p y)). { intros y Hy; apply Rmult_le_pos; [apply Hw; exact Hy|apply sampling_variance_nonnegative; [apply (Hp y Hy)|apply (Hp y Hy)]]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*sampling_bernoulli_variance (p y)) Hnon Hz x Hin) as Hterm; apply Rmult_integral in Hterm; destruct Hterm as [H0|H0]; [lra|apply (proj1 (sampling_variance_zero_iff_extreme (p x) (proj1 (Hp x Hin)) (proj2 (Hp x Hin)))); exact H0].
+Qed.
+
+(** [batch_variance_zero_iff_all_extreme] (theorem).
+ Mathematical meaning: With strictly positive weights, aggregate ideal Bernoulli variance vanishes exactly when every listed rate is zero or one.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<w x) -> (forall x, In x xs -> 0<=p x<=1) -> (batch_bernoulli_variance w p xs=0 <-> forall x, In x xs -> p x=0 \/ p x=1).
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_zero_iff_all_extreme :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<w x) -> (forall x, In x xs -> 0<=p x<=1) -> (batch_bernoulli_variance w p xs=0 <-> forall x, In x xs -> p x=0 \/ p x=1).
+Proof.
+  intros A w p xs Hw Hp; split; [intros Hz x Hin; apply (batch_variance_zero_member_extreme A w p xs x); [intros y Hy; specialize (Hw y Hy); lra|exact Hp|exact Hz|exact Hin|apply Hw; exact Hin]|apply batch_variance_zero_extreme_rates].
+Qed.
+
+(** [batch_variance_maximum_requires_half] (theorem).
+ Mathematical meaning: Saturating the sharp aggregate variance bound forces every strictly positive weight cohort to have event rate one half.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<w x) -> 4*batch_bernoulli_variance w p xs=batch_mass w xs -> forall x, In x xs -> p x=1/2.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_maximum_requires_half :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<w x) -> 4*batch_bernoulli_variance w p xs=batch_mass w xs -> forall x, In x xs -> p x=1/2.
+Proof.
+  intros A w p xs Hw Hmax x Hin; assert (Hz:finite_sum (fun y=>w y*(2*p y-1)*(2*p y-1)) xs=0). { rewrite <- batch_bernoulli_deficit_square; lra. } assert (Hnon:forall y, In y xs -> 0<=w y*(2*p y-1)*(2*p y-1)). { intros y Hy; replace (w y*(2*p y-1)*(2*p y-1)) with (w y*((2*p y-1)*(2*p y-1))) by ring; apply Rmult_le_pos; [apply Rlt_le, Hw; exact Hy|pose proof (Rle_0_sqr (2*p y-1)) as E; unfold Rsqr in E; exact E]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*(2*p y-1)*(2*p y-1)) Hnon Hz x Hin) as Hterm; replace (w x*(2*p x-1)*(2*p x-1)) with (w x*((2*p x-1)*(2*p x-1))) in Hterm by ring; apply Rmult_integral in Hterm; destruct Hterm as [Hwz|Hsq]; [pose proof (Hw x Hin); lra|apply Rmult_integral in Hsq; destruct Hsq; lra].
+Qed.
+
+(** [batch_variance_maximum_iff_half] (theorem).
+ Mathematical meaning: For strictly positive weights the ideal aggregate variance bound is saturated exactly by universally balanced cohort rates.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<w x) -> (4*batch_bernoulli_variance w p xs=batch_mass w xs <-> forall x, In x xs -> p x=1/2).
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_maximum_iff_half :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> 0<w x) -> (4*batch_bernoulli_variance w p xs=batch_mass w xs <-> forall x, In x xs -> p x=1/2).
+Proof.
+  intros A w p xs Hw; split; [apply batch_variance_maximum_requires_half; exact Hw|apply batch_bernoulli_variance_max_attained].
+Qed.
+
+(** [batch_centered_zero_if_constant] (theorem).
+ Mathematical meaning: If every listed group center equals the reference, the weighted corrected sum of squares is zero.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), (forall x, In x xs -> v x=c) -> batch_centered w v c xs=0.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_centered_zero_if_constant :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), (forall x, In x xs -> v x=c) -> batch_centered w v c xs=0.
+Proof.
+  intros A w v xs c Hv; unfold batch_centered; rewrite (finite_sum_ext_in xs (fun x=>w x*(v x-c)*(v x-c)) (fun _=>0)); [apply finite_sum_zero|intros x Hin; rewrite (Hv x Hin); ring].
+Qed.
+
+(** [batch_centered_zero_forces_constant] (theorem).
+ Mathematical meaning: With strictly positive sample weights, zero corrected dispersion forces every batch mean to equal the chosen center.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), (forall x, In x xs -> 0<w x) -> batch_centered w v c xs=0 -> forall x, In x xs -> v x=c.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_centered_zero_forces_constant :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), (forall x, In x xs -> 0<w x) -> batch_centered w v c xs=0 -> forall x, In x xs -> v x=c.
+Proof.
+  intros A w v xs c Hw Hz x Hin; unfold batch_centered in Hz; assert (Hnon:forall y, In y xs -> 0<=w y*(v y-c)*(v y-c)). { intros y Hy; replace (w y*(v y-c)*(v y-c)) with (w y*((v y-c)*(v y-c))) by ring; apply Rmult_le_pos; [apply Rlt_le, Hw; exact Hy|pose proof (Rle_0_sqr (v y-c)) as E; unfold Rsqr in E; exact E]. } pose proof (finite_sum_nonnegative_zero xs (fun y=>w y*(v y-c)*(v y-c)) Hnon Hz x Hin) as Hterm; replace (w x*(v x-c)*(v x-c)) with (w x*((v x-c)*(v x-c))) in Hterm by ring; apply Rmult_integral in Hterm; destruct Hterm as [Hwx|Hsq]; [pose proof (Hw x Hin); lra|apply Rmult_integral in Hsq; destruct Hsq; lra].
+Qed.
+
+(** [batch_centered_zero_iff_constant] (theorem).
+ Mathematical meaning: Under strictly positive listed weights, zero weighted corrected dispersion is equivalent to all values being the same reference.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), (forall x, In x xs -> 0<w x) -> (batch_centered w v c xs=0 <-> forall x, In x xs -> v x=c).
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_centered_zero_iff_constant :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), (forall x, In x xs -> 0<w x) -> (batch_centered w v c xs=0 <-> forall x, In x xs -> v x=c).
+Proof.
+  intros A w v xs c Hw; split; [apply batch_centered_zero_forces_constant; exact Hw|apply batch_centered_zero_if_constant].
+Qed.
+
+(** [batch_variance_pooled_equality_iff_homogeneous] (theorem).
+ Mathematical meaning: For positive weights, heterogeneous ideal count variance reaches the homogeneous matched-rate benchmark exactly for constant cohort rates.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<w x) -> (batch_bernoulli_variance w p xs=batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs) <-> forall x, In x xs -> p x=batch_mean w p xs).
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_pooled_equality_iff_homogeneous :
+  forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> (forall x, In x xs -> 0<w x) -> (batch_bernoulli_variance w p xs=batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs) <-> forall x, In x xs -> p x=batch_mean w p xs).
+Proof.
+  intros A w p xs Hm Hw; pose proof (batch_bernoulli_variance_pooled_decomposition A w p xs Hm) as H; rewrite <- (batch_centered_zero_iff_constant A w p xs (batch_mean w p xs) Hw); split; intro He; lra.
+Qed.
+
+(** [batch_success_rate_difference] (theorem).
+ Mathematical meaning: The change in ideal expected successes between two arbitrary rate vectors equals their weighted pointwise difference.
+ Exact proposition: forall (A:Type) (w p q:A->R) (xs:list A), batch_total w q xs-batch_total w p xs=batch_total w (fun x=>q x-p x) xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_success_rate_difference :
+  forall (A:Type) (w p q:A->R) (xs:list A), batch_total w q xs-batch_total w p xs=batch_total w (fun x=>q x-p x) xs.
+Proof.
+  intros A w p q xs; unfold batch_total; transitivity (finite_sum (fun x=>w x*q x-w x*p x) xs); [rewrite finite_sum_sub; reflexivity|apply finite_sum_ext; intro x; ring].
+Qed.
+
+(** [batch_failure_rate_difference] (theorem).
+ Mathematical meaning: Changing cohort rates changes failures by the negative of the corresponding expected success-count change.
+ Exact proposition: forall (A:Type) (w p q:A->R) (xs:list A), batch_failure w q xs-batch_failure w p xs=-(batch_total w q xs-batch_total w p xs).
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_failure_rate_difference :
+  forall (A:Type) (w p q:A->R) (xs:list A), batch_failure w q xs-batch_failure w p xs=-(batch_total w q xs-batch_total w p xs).
+Proof.
+  intros A w p q xs; rewrite !batch_failure_mass_minus_success; ring.
+Qed.
+
+(** [batch_variance_rate_difference] (theorem).
+ Mathematical meaning: The ideal variance change factors exactly by the cohort rate difference and the complement of the sum of old and new rates.
+ Exact proposition: forall (A:Type) (w p q:A->R) (xs:list A), batch_bernoulli_variance w q xs-batch_bernoulli_variance w p xs=finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_rate_difference :
+  forall (A:Type) (w p q:A->R) (xs:list A), batch_bernoulli_variance w q xs-batch_bernoulli_variance w p xs=finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs.
+Proof.
+  intros A w p q xs; unfold batch_bernoulli_variance; transitivity (finite_sum (fun x=>w x*sampling_bernoulli_variance (q x)-w x*sampling_bernoulli_variance (p x)) xs); [rewrite finite_sum_sub; reflexivity|apply finite_sum_ext; intro x; unfold sampling_bernoulli_variance; ring].
+Qed.
+
+(** [batch_variance_rate_shift_uniform] (theorem).
+ Mathematical meaning: A common rate increment changes ideal count variance by a linear mass term, a first-moment term, and a quadratic mass penalty.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A) (c:R), batch_bernoulli_variance w (fun x=>p x+c) xs=batch_bernoulli_variance w p xs+c*batch_mass w xs-2*c*batch_total w p xs-c*c*batch_mass w xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_rate_shift_uniform :
+  forall (A:Type) (w p:A->R) (xs:list A) (c:R), batch_bernoulli_variance w (fun x=>p x+c) xs=batch_bernoulli_variance w p xs+c*batch_mass w xs-2*c*batch_total w p xs-c*c*batch_mass w xs.
+Proof.
+  intros A w p xs c; pose proof (batch_variance_rate_difference A w p (fun x=>p x+c) xs) as H; assert (E:finite_sum (fun x=>w x*((p x+c)-p x)*(1-p x-(p x+c))) xs=c*batch_mass w xs-2*c*batch_total w p xs-c*c*batch_mass w xs). { transitivity (finite_sum (fun x=>(c*w x-(2*c)*(w x*p x))-(c*c)*w x) xs); [apply finite_sum_ext; intro x; ring|rewrite !finite_sum_sub, !finite_sum_scale; unfold batch_mass,batch_total; ring]. } rewrite E in H; lra.
+Qed.
+
+(** [batch_variance_monotone_below_half] (theorem).
+ Mathematical meaning: If all rates increase but remain at most one half, ideal Bernoulli variance cannot decrease.
+ Exact proposition: forall (A:Type) (w p q:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> p x<=q x<=1/2) -> batch_bernoulli_variance w p xs<=batch_bernoulli_variance w q xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_monotone_below_half :
+  forall (A:Type) (w p q:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> p x<=q x<=1/2) -> batch_bernoulli_variance w p xs<=batch_bernoulli_variance w q xs.
+Proof.
+  intros A w p q xs Hw Hp; pose proof (batch_variance_rate_difference A w p q xs) as H; rewrite H; assert (Hnon:0<=finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs). { apply finite_sum_nonnegative; intros x Hin; pose proof (Hw x Hin) as E; pose proof (Hp x Hin) as F; nra. } lra.
+Qed.
+
+(** [batch_variance_monotone_above_half] (theorem).
+ Mathematical meaning: If all rates increase starting at one half, ideal Bernoulli variance cannot increase.
+ Exact proposition: forall (A:Type) (w p q:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 1/2<=p x<=q x) -> batch_bernoulli_variance w q xs<=batch_bernoulli_variance w p xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_monotone_above_half :
+  forall (A:Type) (w p q:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 1/2<=p x<=q x) -> batch_bernoulli_variance w q xs<=batch_bernoulli_variance w p xs.
+Proof.
+  intros A w p q xs Hw Hp; pose proof (batch_variance_rate_difference A w p q xs) as H; rewrite H; assert (Hnon:finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs<=0). { assert (E:0<=finite_sum (fun x=>- (w x*(q x-p x)*(1-p x-q x))) xs). { apply finite_sum_nonnegative; intros x Hin; pose proof (Hw x Hin) as W; pose proof (Hp x Hin) as P; nra. } rewrite finite_sum_neg in E; lra. } lra.
+Qed.
+
+(** [batch_success_strict_positive_member] (theorem).
+ Mathematical meaning: A positive rate in one cohort with positive weight ensures a positive total ideal success count when other contributions are nonnegative.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> (forall y, In y xs -> 0<=p y) -> In x xs -> 0<w x -> 0<p x -> 0<batch_total w p xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_success_strict_positive_member :
+  forall (A:Type) (w p:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> (forall y, In y xs -> 0<=p y) -> In x xs -> 0<w x -> 0<p x -> 0<batch_total w p xs.
+Proof.
+  intros A w p xs x Hw Hp Hin Hwx Hpx; unfold batch_total; apply (finite_sum_positive_of_positive_member xs (fun y=>w y*p y) x); [intros y Hy; apply Rmult_le_pos; [apply Hw|apply Hp]; exact Hy|exact Hin|apply Rmult_lt_0_compat; assumption].
+Qed.
+
+(** [batch_variance_strict_positive_member] (theorem).
+ Mathematical meaning: One positively weighted nondegenerate Bernoulli cohort makes the total ideal variance strictly positive when all other cohorts are admissible.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> (forall y, In y xs -> 0<=p y<=1) -> In x xs -> 0<w x -> 0<p x<1 -> 0<batch_bernoulli_variance w p xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_strict_positive_member :
+  forall (A:Type) (w p:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> (forall y, In y xs -> 0<=p y<=1) -> In x xs -> 0<w x -> 0<p x<1 -> 0<batch_bernoulli_variance w p xs.
+Proof.
+  intros A w p xs x Hw Hp Hin Hwx Hpx; unfold batch_bernoulli_variance; apply (finite_sum_positive_of_positive_member xs (fun y=>w y*sampling_bernoulli_variance (p y)) x); [intros y Hy; apply Rmult_le_pos; [apply Hw; exact Hy|apply sampling_variance_nonnegative; [apply (Hp y Hy)|apply (Hp y Hy)]]|exact Hin|apply Rmult_lt_0_compat; [exact Hwx|apply sampling_variance_strictly_positive; [apply Hpx|apply Hpx]]].
+Qed.
+
+(** [batch_mass_member_bound] (theorem).
+ Mathematical meaning: Every nonnegative individual group weight is at most the aggregate sample-size exposure.
+ Exact proposition: forall (A:Type) (w:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> In x xs -> w x<=batch_mass w xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_mass_member_bound :
+  forall (A:Type) (w:A->R) (xs:list A) (x:A), (forall y, In y xs -> 0<=w y) -> In x xs -> w x<=batch_mass w xs.
+Proof.
+  intros A w xs x Hw Hin; unfold batch_mass; apply (finite_sum_member_le xs w x Hw Hin).
+Qed.
+
+(** [batch_variance_zero_weights] (theorem).
+ Mathematical meaning: All-zero exposure weights force the ideal cohort count variance to vanish even when nominal probabilities are arbitrary.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> w x=0) -> batch_bernoulli_variance w p xs=0.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_variance_zero_weights :
+  forall (A:Type) (w p:A->R) (xs:list A), (forall x, In x xs -> w x=0) -> batch_bernoulli_variance w p xs=0.
+Proof.
+  intros A w p xs Hw; unfold batch_bernoulli_variance; rewrite (finite_sum_ext_in xs (fun x=>w x*sampling_bernoulli_variance (p x)) (fun _=>0)); [apply finite_sum_zero|intros x Hin; rewrite (Hw x Hin); ring].
+Qed.
+
+(** [batch_centered_unique_minimizer] (theorem).
+ Mathematical meaning: The weighted mean is the unique minimizer of reference-centered dispersion for positive total mass.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), 0<batch_mass w xs -> batch_centered w v c xs=batch_centered w v (batch_mean w v xs) xs -> c=batch_mean w v xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_centered_unique_minimizer :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), 0<batch_mass w xs -> batch_centered w v c xs=batch_centered w v (batch_mean w v xs) xs -> c=batch_mean w v xs.
+Proof.
+  intros A w v xs c Hm Heq; rewrite (batch_centered_mean_correction A w v xs c) in Heq by lra; assert (Hz:(batch_mean w v xs-c)*(batch_mean w v xs-c)=0) by nra; apply Rmult_integral in Hz; destruct Hz; lra.
+Qed.
+
+(** [batch_centered_strictly_larger_off_mean] (theorem).
+ Mathematical meaning: Any reference differing from the weighted mean has strictly larger corrected dispersion for positive total mass.
+ Exact proposition: forall (A:Type) (w v:A->R) (xs:list A) (c:R), 0<batch_mass w xs -> c<>batch_mean w v xs -> batch_centered w v (batch_mean w v xs) xs<batch_centered w v c xs.
+ Premises and side conditions: All restrictions on list support, nonnegative/strictly positive weights, variance-rate domains and denominators are explicit. A deterministic ideal moment identity does not certify independence.
+ Proof/definition method: Reuse the checked finite-sum zero and positivity criteria, earlier generic moment/variance decompositions, and standard Rocq real polynomial normalization rather than restating lengthy arithmetic proofs.
+ Library reuse: Rocq Stdlib Reals/List/Ring/Lra/Psatz/Field, canonical FiniteSum, SamplingPrecision and prior ListPoolingAlgebra results, including ANOVA and the sharp Bernoulli deficit identity.
+ Boundary: These are algebraic G08/G12/G13 and Towers event-rate diagnostics; Gaussian law, chi-square pivot, binomial PMF, independent experimental observations, exact coverage and IQ-model calibration remain outside the claims.
+*)
+Theorem batch_centered_strictly_larger_off_mean :
+  forall (A:Type) (w v:A->R) (xs:list A) (c:R), 0<batch_mass w xs -> c<>batch_mean w v xs -> batch_centered w v (batch_mean w v xs) xs<batch_centered w v c xs.
+Proof.
+  intros A w v xs c Hm Hne; rewrite (batch_centered_mean_correction A w v xs c) by lra; assert (Hs:0<(batch_mean w v xs-c)*(batch_mean w v xs-c)). { destruct (Rlt_dec (batch_mean w v xs) c); nra. } nra.
+Qed.
