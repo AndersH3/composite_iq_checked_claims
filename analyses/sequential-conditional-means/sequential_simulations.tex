@@ -266,6 +266,14 @@ Matplotlib calculation or plotting stage. The distinction between graph
 construction and execution follows the documented Dask array and delayed
 interfaces \citep{daskArray,daskDelayed}.
 
+\noindent\textbf{Published numerical run.}
+The Gaussian draws, \SimReplicates{} seed streams and
+\SimPooledTrials{} observations per law are the executed sample
+recorded in \texttt{reporting/run.json}; they are not merely
+configuration defaults. The shared block moments preserve the
+between-worker variance contribution, but a measured Dask execution
+time cannot itself validate the assumed joint-normal model.
+
 Each case uses \SimReplicates{} recorded seed configurations, with
 \SimTrials{} observations per replicate. Results are pooled to
 \SimPooledTrials{} observations per case. Pooling combines sample counts,
