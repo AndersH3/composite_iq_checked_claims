@@ -47,6 +47,7 @@ paths_by_module = {
     "ConditionalRatioStability": Path("library/rocq/ConditionalRatioStability.v"),
     "PooledMomentsAlgebra": Path("library/rocq/PooledMomentsAlgebra.v"),
     "ThreeGroupPooling": Path("library/rocq/ThreeGroupPooling.v"),
+    "TwoRatePrecision": Path("library/rocq/TwoRatePrecision.v"),
     "ThreeTestSelectionDecomposition": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSelectionDecomposition.v"),
     "ThreeTestReversalCriteria": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestReversalCriteria.v"),
     "ThreeTestSchur": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSchur.v"),
