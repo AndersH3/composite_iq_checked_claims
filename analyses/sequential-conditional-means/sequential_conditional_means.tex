@@ -2,15 +2,15 @@
 \input{../../reporting/book_style}
 \hypersetup{
   pdftitle={Sequential Conditional Means of Equicorrelated Scores},
-  pdfsubject={One, two or three fixed starting scores included in the mean and its standard deviation}}
+  pdfsubject={Arbitrary n equal initial observations and k later predictions: conditional Gaussian means and variances}}
 \ihead{Sequential conditional means}
 \ohead{Derivation and assumptions}
 \cfoot*{\pagemark}
 \pagestyle{scrheadings}
 \title{Sequential Conditional Means of Equicorrelated Scores}
-\subtitle{One, two or three fixed starting scores included in the average}
+\subtitle{The general case of \(n\) initial results equal to \(a\), followed by \(k\) predictions}
 \author{\ProjectAuthor}
-\date{15 November 2026}
+\date{16 November 2026}
 
 \begin{document}
 \frontmatter
@@ -29,9 +29,13 @@ The actual \((k+1)\)-test average has population standard deviation
 standard deviation is \(\sqrt{k(1-c)(1+kc)}/(k+1)\).
 We derive the Gaussian conditional mean, solve the recursion,
 describe the admissible correlations and singular endpoints, and distinguish
-these sources of variation. A general derivation also gives the cases with
-two or three initial scores all fixed at \(a\), including every starting
-score in the average. Worked examples use initial IQ scores of 150 on a
+these sources of variation. More generally, for any integer \(n\geq1\)
+initial test results all equal to \(a\), followed by \(k\geq1\) predictions,
+each prediction equals \(nca/[1+(n-1)c]\). The inclusive average equals
+\(n[1+(n+k-1)c]a/[(n+k)(1+(n-1)c)]\); we also derive the
+corresponding conditional Gaussian law, its standard deviation, and the
+limit as the number of initial results grows. The one-, two- and
+three-initial-score examples are special cases, not the extent of the theorem. Worked examples use initial IQ scores of 150 on a
 mean-100, SD-15 reporting scale, correlation \(0.6\), and one, two or ten
 subsequent predictions. A counterexample shows that means, variances and
 correlations alone do not determine the recursive conditional means.
@@ -94,8 +98,11 @@ The quantity of interest is
 It contains \(k+1\) values: the starting score \(a\) is the first value,
 followed by the \(k\) predictions \(e_1,\ldots,e_k\). Thus \(k\) counts
 subsequent predictions, while \(k+1\) counts all values in the average.
-\Cref{sec:multiple-starts} extends this setup to \(r\) initial scores
-all fixed at \(a\), followed by \(k\) predictions, for \(r+k\) total values.
+\Cref{sec:multiple-starts} extends this setup to \emph{any} positive
+integer \(n\) of initial results equal to \(a\), followed by \(k\)
+predictions, for \(n+k\) total values. In the existing general proof and
+simulation tables the initial count is denoted by \(r\); it is exactly
+the same parameter as \(n\) in the explicit arbitrary-\(n\) theorem.
 
 For continuous distributions, conditioning on a particular score is not a
 ratio of probabilities of point events. A conditional mean is ordinarily
@@ -523,10 +530,15 @@ For the fixed starting score in this problem, the answer is
 mean \(0\) and standard deviation \(1\); the arithmetic average has its own
 distribution and is not rescaled to unit standard deviation.
 
-\chapter{Two or three initial scores equal to the starting value}
+\chapter{The general case: any number of initial scores equal to \texorpdfstring{\(a\)}{a}}
 \label{sec:multiple-starts}
 
-\section{General setup with several fixed starting scores}
+\section{General setup with \(n\) fixed starting scores}
+The desired general case has an arbitrary positive integer \(n\) of
+initial observations, all equal to the same standardized value \(a\).
+To preserve the established notation for existing formulas and finite
+simulation tables, write \(r=n\) throughout this derivation. No restriction
+to \(n\in\{1,2,3\}\) is imposed by the mathematics.
 Let \(r\geq1\) be the number of starting scores and keep \(k\geq1\) for
 the number of subsequent predictions. There are now \(N=r+k\) jointly
 Gaussian scores \(X_0,\ldots,X_{N-1}\), each with population mean \(0\),
@@ -683,6 +695,98 @@ mean itself has standard deviation zero. An across-population calculation
 with random initial scores uses a random starting \emph{block}. The single
 random-start interpretation in \eqref{eq:random-start} does not specify a
 distribution for several starting scores constrained to share one random value.
+
+
+\section{Explicit arbitrary-\texorpdfstring{\(n\)}{n} formulation and an additional limit theorem}
+\begin{theorem}[Any \(n\) initial results equal to \(a\)]
+\label{thm:arbitrary-n-equal-starts}
+Fix integers \(n,k\geq1\), a real observation \(a\), and a jointly
+Gaussian, centered, unit-variance, equicorrelated vector with \(n+k\)
+coordinates. Suppose the first \(n\) results are observed at \(a\).
+Write \(D_n=1+(n-1)c\) and \(D_{n+k}=1+(n+k-1)c\). For the full finite
+admissible correlation domain
+\(-1/(n+k-1)\leq c\leq1\), the subsequent recursive predictions,
+the inclusive fixed average, and the law of the actual inclusive mean are
+\begin{align}
+ \widehat X_{n+j-1}
+   &=\boxed{\frac{nc}{D_n}\,a},
+   &&1\leq j\leq k, \label{eq:general-n-prediction}\\
+ B_{n,k}
+   &=\boxed{\frac{nD_{n+k}}{(n+k)D_n}\,a},
+   &\operatorname{SD}(B_{n,k})&=0,
+      \label{eq:general-n-average}\\
+ C_{n,k}
+   &\sim N\left(0,\frac{D_{n+k}}{n+k}\right),
+   &&\text{unconditionally},\label{eq:general-n-population}\\
+ C_{n,k}\given(X_0,\ldots,X_{n-1})=a\one_n
+   &\sim N\left(B_{n,k},
+       \frac{k(1-c)D_{n+k}}{(n+k)^2D_n}\right).
+   &&\label{eq:general-n-conditional}
+\end{align}
+The conditioning notation denotes the continuous Gaussian conditional
+version, not a positive-probability point event. At \(c=1\), the
+conditional law is interpreted on the diagonal support of the model.
+Thus this theorem includes the original \(n=1\) calculation, the \(n=2,3\)
+examples, and every larger integer \(n\); only the simulation grid is
+restricted to those first three cases.
+\end{theorem}
+\begin{proof}
+Put \(r=n\) in Theorem~\ref{thm:multiple-mean}; its induction applies to
+all positive integer counts, not only to the two numerical examples.
+This proves \eqref{eq:general-n-prediction} and
+\eqref{eq:general-n-average}. The covariance eigenvalues in
+Proposition~\ref{prop:domain} with total count \(n+k\) establish the
+correlation interval. For \(c<1\), the observed block has positive
+definite covariance since
+\(D_n\geq k/(n+k-1)>0\); Theorem~\ref{thm:multiple-sd} therefore gives
+the conditional mean and variance displayed in
+\eqref{eq:general-n-conditional}. Both the unconditional mean and the
+conditional aggregate are affine functions of Gaussian vectors; by
+Theorem~\ref{thm:gaussian}, they have the normal laws with the means
+and variances established in Theorem~\ref{thm:multiple-sd}. At the
+negative endpoint, the conditional variance vanishes, consistent with
+the singular Gaussian law. For \(c=1\), the diagonal-support argument
+in Proposition~\ref{prop:multiple-boundaries} gives predicted value
+\(a\), a conditional point mass at \(a\), and unconditional variance
+one. Substitution into the formulas yields exactly those values.
+Finally, the recursively filled average is deterministic once the
+observations and model parameters have been fixed, so its SD is zero.
+\end{proof}
+
+\begin{corollary}[More equal initial observations, with \(k\) fixed]
+\label{cor:many-equal-starts}
+For fixed \(k\geq1\), \(a\in\mathbb R\), and \(0\leq c\leq1\), as the
+number \(n\) of equal initial observations increases,
+\[
+ B_{n,k}
+ =a-\frac{k(1-c)a}{(n+k)[1+(n-1)c]}
+ \longrightarrow a,\qquad
+ \operatorname{SD}(C_{n,k}\given a\one_n)\longrightarrow0,
+\]
+while \(\operatorname{SD}(C_{n,k})\longrightarrow\sqrt c\).
+The prediction of a single next score approaches \(a\) when \(c>0\);
+when \(c=0\) that prediction stays zero. Thus convergence of the
+\emph{inclusive} average to \(a\) does not imply that future scores
+become predictable under independence.
+\end{corollary}
+\begin{proof}
+Subtract \(a\) from the formula
+\(B_{n,k}=(na+kb_n)/(n+k)\), and use
+\(a-b_n=a(1-c)/D_n\), proving the displayed exact identity.
+Since \(D_n\geq1\), its absolute error is bounded by
+\(k|a|/(n+k)\), which tends to zero. The population variance is
+\(c+(1-c)/(n+k)\), hence tends to \(c\). For the conditional variance,
+\(D_{n+k}=D_n+kc\) and \(D_n\geq1\), so
+\[
+ 0\leq\frac{k(1-c)D_{n+k}}{(n+k)^2D_n}
+ \leq\frac{k(1+k)}{(n+k)^2}\longrightarrow0.
+\]
+Continuity of the square root yields both SD limits. Finally,
+\(b_n=nca/D_n\) tends to \(a\) for fixed \(c>0\), whereas for \(c=0\)
+it equals zero for all \(n\). These limits hold only for a sequence
+of Gaussian batteries that exists at every count; a fixed negative
+equicorrelation is not admissible for arbitrarily large \(n\).
+\end{proof}
 
 \section{Special case: two starting scores equal to \texorpdfstring{\(a\)}{a}}
 \begin{corollary}[Two starting scores]
