@@ -599,7 +599,19 @@ Qed.
 *)
 Theorem three_dispersion_nonnegative : forall n m k a b c, 0<=n -> 0<=m -> 0<=k -> 0<=three_dispersion n m k a b c.
 Proof.
-  intros; unfold three_dispersion; nra.
+  intros n m k a b c Hn Hm Hk.
+  unfold three_dispersion.
+  set (t := three_mean n m k a b c).
+  assert (Ha : 0 <= n*(a-t)*(a-t)).
+  { replace (n*(a-t)*(a-t)) with (n*((a-t)*(a-t))) by ring.
+    apply Rmult_le_pos; [exact Hn | nra]. }
+  assert (Hb : 0 <= m*(b-t)*(b-t)).
+  { replace (m*(b-t)*(b-t)) with (m*((b-t)*(b-t))) by ring.
+    apply Rmult_le_pos; [exact Hm | nra]. }
+  assert (Hc : 0 <= k*(c-t)*(c-t)).
+  { replace (k*(c-t)*(c-t)) with (k*((c-t)*(c-t))) by ring.
+    apply Rmult_le_pos; [exact Hk | nra]. }
+  nra.
 Qed.
 
 (** [three_dispersion_constant] (theorem).
