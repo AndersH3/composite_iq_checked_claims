@@ -143,7 +143,7 @@ Qed.
 *)
 Theorem pooled_mean_swap: forall n m a b, pooled_mean n m a b=pooled_mean m n b a.
 Proof.
-  intros n m a b; unfold pooled_mean,pooled_mass; ring.
+  intros n m a b; unfold pooled_mean,pooled_mass; replace (m+n) with (n+m) by ring; ring.
 Qed.
 
 (** [pooled_mean_constant] (theorem).
@@ -371,7 +371,7 @@ Qed.
 *)
 Theorem pooled_between_swap: forall n m a b, pooled_between n m a b=pooled_between m n b a.
 Proof.
-  intros n m a b; unfold pooled_between,pooled_mass; ring.
+  intros n m a b; unfold pooled_between,pooled_mass; replace (m+n) with (n+m) by ring; ring.
 Qed.
 
 (** [pooled_between_constant_means] (theorem).
