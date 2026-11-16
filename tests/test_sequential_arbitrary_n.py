@@ -57,25 +57,31 @@ def test_general_n_exact_values_and_gaussian_schur_complement(n, k, a, c, expect
         "conditional_variance",
     )) == expected
 
-    # An independent numerical Schur complement checks full-battery
-    # covariance against the algebra, including the singular full
-    # covariance at its negative lower boundary.
-    count = n + k
-    correlation = float(c)
-    covariance = (1 - correlation) * np.eye(count) + correlation * np.ones((count, count))
-    weights = np.full(count, 1.0 / count)
-    observed_covariance = covariance[:n, :n]
-    cross_covariance = covariance[:n, :] @ weights
-    start_scores = np.full(n, float(a))
-    regression = np.linalg.solve(observed_covariance, cross_covariance)
-    numerical_mean = float(np.dot(start_scores, regression))
-    numerical_conditional_variance = float(
-        weights @ covariance @ weights - cross_covariance @ regression
-    )
-    assert numerical_mean == pytest.approx(float(observed["inclusive_mean"]), abs=2e-12)
-    assert numerical_conditional_variance == pytest.approx(
-        float(observed["conditional_variance"]), abs=2e-12,
-    )
+    # For c<1 the observed block is positive definite, including when
+    # the *full* covariance is singular at its negative lower endpoint.
+    # At c=1 the observed block is rank one and must be treated on its
+    # diagonal support, not inverted as if it were nonsingular.
+    if c < 1:
+        count = n + k
+        correlation = float(c)
+        covariance = (1 - correlation) * np.eye(count) + correlation * np.ones((count, count))
+        weights = np.full(count, 1.0 / count)
+        observed_covariance = covariance[:n, :n]
+        cross_covariance = covariance[:n, :] @ weights
+        start_scores = np.full(n, float(a))
+        regression = np.linalg.solve(observed_covariance, cross_covariance)
+        numerical_mean = float(np.dot(start_scores, regression))
+        numerical_conditional_variance = float(
+            weights @ covariance @ weights - cross_covariance @ regression
+        )
+        assert numerical_mean == pytest.approx(float(observed["inclusive_mean"]), abs=2e-12)
+        assert numerical_conditional_variance == pytest.approx(
+            float(observed["conditional_variance"]), abs=2e-12,
+        )
+    else:
+        assert observed["next_prediction"] == a
+        assert observed["inclusive_mean"] == a
+        assert observed["conditional_variance"] == 0
 
     # Test rejection of count, value, type and covariance-domain violations.
     # n=5 is deliberately beyond the recorded n=1,2,3 Dask grid.
