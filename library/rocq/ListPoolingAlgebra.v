@@ -2242,3 +2242,171 @@ Theorem batch_centered_strictly_larger_off_mean :
 Proof.
   intros A w v xs c Hm Hne; rewrite (batch_centered_mean_correction A w v xs c) by lra; assert (Hs:0<(batch_mean w v xs-c)*(batch_mean w v xs-c)). { destruct (Rlt_dec (batch_mean w v xs) c); nra. } nra.
 Qed.
+
+(** [batch_mean_rate_difference] (theorem).
+ Mathematical meaning: The change between two list-pooled rates equals the weighted average of their pointwise rate differences.
+ Exact proposition: forall (A:Type) (w p q:A->R) (xs:list A), batch_mass w xs<>0 -> batch_mean w q xs-batch_mean w p xs=batch_mean w (fun x=>q x-p x) xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_mean_rate_difference :
+  forall (A:Type) (w p q:A->R) (xs:list A), batch_mass w xs<>0 -> batch_mean w q xs-batch_mean w p xs=batch_mean w (fun x=>q x-p x) xs.
+Proof.
+  intros A w p q xs Hm; unfold batch_mean; rewrite <- (batch_success_rate_difference A w p q xs); field; exact Hm.
+Qed.
+
+(** [batch_bernoulli_gap_pairwise] (theorem).
+ Mathematical meaning: Twice total exposure times homogeneous-minus-heterogeneous Bernoulli variance equals the pairwise rate-dispersion statistic.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> 2*batch_mass w xs*(batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)-batch_bernoulli_variance w p xs)=batch_pairwise w p xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_bernoulli_gap_pairwise :
+  forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> 2*batch_mass w xs*(batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)-batch_bernoulli_variance w p xs)=batch_pairwise w p xs.
+Proof.
+  intros A w p xs Hm; rewrite (batch_bernoulli_variance_pooled_decomposition A w p xs Hm); rewrite (batch_pairwise_mean_bridge A w p xs) by lra; ring.
+Qed.
+
+(** [batch_bernoulli_gap_pairwise_quotient] (theorem).
+ Mathematical meaning: The rate-matched homogeneous variance excess is the all-pairs squared-difference statistic divided by twice total mass.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)-batch_bernoulli_variance w p xs=batch_pairwise w p xs/(2*batch_mass w xs).
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_bernoulli_gap_pairwise_quotient :
+  forall (A:Type) (w p:A->R) (xs:list A), 0<batch_mass w xs -> batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)-batch_bernoulli_variance w p xs=batch_pairwise w p xs/(2*batch_mass w xs).
+Proof.
+  intros A w p xs Hm; rewrite (batch_bernoulli_variance_pooled_decomposition A w p xs Hm); rewrite (batch_pairwise_mean_bridge A w p xs) by lra; field; lra.
+Qed.
+
+(** [batch_bernoulli_strict_heterogeneity] (theorem).
+ Mathematical meaning: With positive cohort weights, one event rate differing from the pooled rate yields a strict ideal variance reduction against the matched homogeneous model.
+ Exact proposition: forall (A:Type) (w p:A->R) (xs:list A) (x:A), 0<batch_mass w xs -> (forall y, In y xs -> 0<w y) -> In x xs -> p x<>batch_mean w p xs -> batch_bernoulli_variance w p xs<batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs).
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_bernoulli_strict_heterogeneity :
+  forall (A:Type) (w p:A->R) (xs:list A) (x:A), 0<batch_mass w xs -> (forall y, In y xs -> 0<w y) -> In x xs -> p x<>batch_mean w p xs -> batch_bernoulli_variance w p xs<batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs).
+Proof.
+  intros A w p xs x Hm Hw Hin Hne; assert (Hnon:forall y, In y xs -> 0<=w y) by (intros y Hy; apply Rlt_le, Hw; exact Hy); pose proof (batch_bernoulli_variance_le_homogeneous A w p xs Hm Hnon) as Hle; destruct (Rlt_dec (batch_bernoulli_variance w p xs) (batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs))) as [Hlt|Hnot]; [exact Hlt|assert (Heq:batch_bernoulli_variance w p xs=batch_mass w xs*sampling_bernoulli_variance (batch_mean w p xs)) by lra; apply (proj1 (batch_variance_pooled_equality_iff_homogeneous A w p xs Hm Hw)) in Heq; exfalso; apply Hne; apply Heq; exact Hin].
+Qed.
+
+(** [batch_cross_complement_right] (theorem).
+ Mathematical meaning: Complementing the right batch attribute subtracts the original cross moment from the first raw moment.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_cross w v (fun x=>1-z x) xs=batch_total w v xs-batch_cross w v z xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_cross_complement_right :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_cross w v (fun x=>1-z x) xs=batch_total w v xs-batch_cross w v z xs.
+Proof.
+  intros A w v z xs; unfold batch_cross,batch_total; transitivity (finite_sum (fun x=>w x*v x-w x*v x*z x) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_sub; reflexivity].
+Qed.
+
+(** [batch_covariance_complement_right] (theorem).
+ Mathematical meaning: The covariance with a complementary indicator has the opposite sign of the original covariance.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w v (fun x=>1-z x) xs= - batch_covariance w v z xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_covariance_complement_right :
+  forall (A:Type) (w v z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w v (fun x=>1-z x) xs= - batch_covariance w v z xs.
+Proof.
+  intros A w v z xs Hm; rewrite !batch_covariance_closed by assumption; rewrite batch_cross_complement_right; change (batch_total w (fun x=>1-z x) xs) with (batch_failure w z xs); rewrite batch_failure_mass_minus_success; field; exact Hm.
+Qed.
+
+(** [batch_cross_translate_right] (theorem).
+ Mathematical meaning: A common translation of the right attribute adds shift times the first attribute's weighted total to the mixed raw moment.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross w v (fun x=>z x+t) xs=batch_cross w v z xs+t*batch_total w v xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_cross_translate_right :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross w v (fun x=>z x+t) xs=batch_cross w v z xs+t*batch_total w v xs.
+Proof.
+  intros A w v z xs t; unfold batch_cross,batch_total; transitivity (finite_sum (fun x=>w x*v x*z x+t*(w x*v x)) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_add, finite_sum_scale; ring].
+Qed.
+
+(** [batch_covariance_translate_right] (theorem).
+ Mathematical meaning: Adding a constant to the right variable leaves their weighted covariance unchanged.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w v (fun x=>z x+t) xs=batch_covariance w v z xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_covariance_translate_right :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w v (fun x=>z x+t) xs=batch_covariance w v z xs.
+Proof.
+  intros A w v z xs t Hm; rewrite !batch_covariance_closed by assumption; rewrite batch_cross_translate_right, batch_total_translate_values; field; exact Hm.
+Qed.
+
+(** [batch_covariance_translate_left] (theorem).
+ Mathematical meaning: Adding a constant to the left variable also leaves the weighted covariance unchanged.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w (fun x=>v x+t) z xs=batch_covariance w v z xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_covariance_translate_left :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w (fun x=>v x+t) z xs=batch_covariance w v z xs.
+Proof.
+  intros A w v z xs t Hm; rewrite (batch_covariance_symmetry A w (fun x=>v x+t) z xs); rewrite (batch_covariance_symmetry A w v z xs); apply batch_covariance_translate_right; exact Hm.
+Qed.
+
+(** [batch_cross_scale_right] (theorem).
+ Mathematical meaning: Rescaling the right variable rescales their mixed weighted raw moment linearly.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross w v (fun x=>t*z x) xs=t*batch_cross w v z xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_cross_scale_right :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_cross w v (fun x=>t*z x) xs=t*batch_cross w v z xs.
+Proof.
+  intros A w v z xs t; unfold batch_cross; transitivity (finite_sum (fun x=>t*(w x*v x*z x)) xs); [apply finite_sum_ext; intro x; ring|rewrite finite_sum_scale; reflexivity].
+Qed.
+
+(** [batch_covariance_scale_right] (theorem).
+ Mathematical meaning: Rescaling the right attribute rescales the normalized covariance by the same factor.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w v (fun x=>t*z x) xs=t*batch_covariance w v z xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_covariance_scale_right :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w v (fun x=>t*z x) xs=t*batch_covariance w v z xs.
+Proof.
+  intros A w v z xs t Hm; rewrite !batch_covariance_closed by assumption; rewrite batch_cross_scale_right,batch_total_scale_values; field; exact Hm.
+Qed.
+
+(** [batch_covariance_scale_left] (theorem).
+ Mathematical meaning: Rescaling the left attribute rescales the normalized covariance by the same factor.
+ Exact proposition: forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w (fun x=>t*v x) z xs=t*batch_covariance w v z xs.
+ Premises and side conditions: Nonzero/positive total sample mass and explicit cohort hypotheses are necessary where included. These definitions concern exact algebra over supplied finite groups, not independent random draws.
+ Proof/definition method: Reuse the existing sharp Bernoulli heterogeneity identity, pairwise ANOVA, finite-sum bilinearity or covariance closed form; normalize the remainder by Rocq Stdlib Ring/Field/Lra.
+ Library reuse: Rocq Stdlib Reals, List, Ring, Field and Lra plus canonical FiniteSum, SamplingPrecision, PooledMomentsAlgebra and earlier ListPoolingAlgebra. No new covariance implementation is introduced.
+ Boundary: Reports G01/G08/G12/G13 receive exact covariance, rate and dispersion algebra. No Gaussian conditional distribution, chi-square sampling law, independent binomial PMF, or confidence coverage follows from these statements.
+*)
+Theorem batch_covariance_scale_left :
+  forall (A:Type) (w v z:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> batch_covariance w (fun x=>t*v x) z xs=t*batch_covariance w v z xs.
+Proof.
+  intros A w v z xs t Hm; rewrite (batch_covariance_symmetry A w (fun x=>t*v x) z xs); rewrite (batch_covariance_symmetry A w v z xs); apply batch_covariance_scale_right; exact Hm.
+Qed.
