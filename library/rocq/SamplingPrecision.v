@@ -227,7 +227,7 @@ Qed.
 *)
 Theorem sampling_variance_maximum_unique: forall p, sampling_bernoulli_variance p=1/4 -> p=1/2.
 Proof.
-  intros p H; unfold sampling_bernoulli_variance in H; nra.
+  intros p H. unfold sampling_bernoulli_variance in H. assert (Hs:(p-1/2)*(p-1/2)=0) by nra. apply Rmult_integral in Hs. destruct Hs as [Hleft|Hright]; lra.
 Qed.
 
 (** [sampling_variance_midpoint_gap] (theorem).
