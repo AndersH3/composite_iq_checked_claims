@@ -46,6 +46,7 @@ paths_by_module = {
     "SamplingPrecision": Path("library/rocq/SamplingPrecision.v"),
     "ConditionalRatioStability": Path("library/rocq/ConditionalRatioStability.v"),
     "PooledMomentsAlgebra": Path("library/rocq/PooledMomentsAlgebra.v"),
+    "ListPoolingAlgebra": Path("library/rocq/ListPoolingAlgebra.v"),
     "ThreeGroupPooling": Path("library/rocq/ThreeGroupPooling.v"),
     "TwoRatePrecision": Path("library/rocq/TwoRatePrecision.v"),
     "StratifiedBernoulli": Path("library/rocq/StratifiedBernoulli.v"),
