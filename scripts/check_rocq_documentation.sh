@@ -48,6 +48,7 @@ paths_by_module = {
     "PooledMomentsAlgebra": Path("library/rocq/PooledMomentsAlgebra.v"),
     "ListPoolingAlgebra": Path("library/rocq/ListPoolingAlgebra.v"),
     "FourContrastCovariance": Path("library/rocq/FourContrastCovariance.v"),
+    "SampleContrastCauchy": Path("library/rocq/SampleContrastCauchy.v"),
     "ThreeGroupPooling": Path("library/rocq/ThreeGroupPooling.v"),
     "TwoRatePrecision": Path("library/rocq/TwoRatePrecision.v"),
     "StratifiedBernoulli": Path("library/rocq/StratifiedBernoulli.v"),
@@ -91,6 +92,7 @@ theorems = 0
 total_scripts = 0
 refactor_register = Path("rocq/PROOF_REFACTOR_REGISTER.md").read_text(encoding="utf-8")
 list_pooling_register = Path("rocq/PROOF_REFACTOR_LIST_POOLING.md").read_text(encoding="utf-8")
+sample_cauchy_register = Path("rocq/PROOF_REFACTOR_SAMPLE_CAUCHY.md").read_text(encoding="utf-8")
 proof_decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global)\s+)?"
     r"(?:Theorem|Lemma|Example|Definition|Fixpoint|Record)\s+"
@@ -151,7 +153,9 @@ for module in modules:
             continue
         expected.append(preceding[-1].group(1))
 
-    selected_register = (list_pooling_register if module in {"ListPoolingAlgebra", "FourContrastCovariance"}
+    selected_register = (sample_cauchy_register if module == "SampleContrastCauchy"
+                         else list_pooling_register if module in
+                           {"ListPoolingAlgebra", "FourContrastCovariance"}
                          else refactor_register)
     section_match = re.search(
         r"^## " + re.escape(module) + r"\.v — [0-9]+ proof scripts$",
