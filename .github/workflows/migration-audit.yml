@@ -1,0 +1,32 @@
+name: Migration source audit
+
+on:
+  push:
+    paths:
+      - 'analyses/**'
+      - 'reporting/**'
+      - 'library/**'
+      - 'verification/**'
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'scripts/**'
+      - '.github/workflows/migration-audit.yml'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  source-inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory historical engine references in active text sources
+        shell: bash
+        run: |
+          echo '=== Remaining references (excluding Git history) ==='
+          git grep -nIiE '(SPARK|GNATprove|Ada(/| |\\.|_))' -- '*.md' '*.tex' '*.py' '*.yml' '*.yaml' '*.json' | head -n 350 || true
+          echo '=== Retired compiler source count ==='
+          find . -type f \( -name '*.ads' -o -name '*.adb' -o -name '*.gpr' \) -print
+          echo '=== Main report source count ==='
+          for p in analyses/hoeflin-ferguson/composite_iq_analysis.tex analyses/hoeflin-ferguson/hoeflin_simulations.tex analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex analyses/towers-multiple-test-admissions/towers_simulations.tex analyses/sequential-conditional-means/sequential_conditional_means.tex analyses/sequential-conditional-means/sequential_simulations.tex; do test -s "$p"; done
