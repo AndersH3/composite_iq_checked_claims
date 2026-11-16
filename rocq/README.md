@@ -5,9 +5,19 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for all three analytical reports and their three simulation companions. **2,947 proof scripts** across **36 Rocq modules** have passed the pinned Rocq 9.2 kernel (2,933 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
+for all three analytical reports and their three simulation companions. **3,116 proof scripts** across **37 Rocq modules** have passed the pinned Rocq 9.2 kernel (2,933 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
+
+## D047x — four-test covariance contractions and finite-list bridges (169 proof scripts)
+
+**Author:** Anders Hellström. **AI disclosure:** OpenAI ChatGPT assisted statement design, polynomial expansion, proof scripting and this register. Kernel compilation at an exact source revision—not text or code generation—determines proof status.
+
+The new shared [`FourContrastCovariance.v`](../library/rocq/FourContrastCovariance.v) has **169 explicit theorem proofs and 3 definitions**. Fourteen general matrix-bilinearity/quadratic identities and 136 exact variance/covariance evaluations of 16 meaningful score contrasts establish the symbolic contraction algebra. The remaining 19 proofs establish actual finite-list covariance linearity, four-test sample covariance and variance matrix bridges, nonnegative empirical covariance quadratic forms under nonnegative sample weights and positive mass, six applied composite-score formulas, and four-score sample mean linearity.
+
+For the shared report proposition `pf:moments` (G01) this provides a direct **deterministic four-score finite-sample analogue** of `Var(w^T X)=w^T Sigma w` and `E(w^T X)=w^T mu`, plus the constructive positive-semidefinite sample covariance result. The D046x pooling results underpin the moment calculations (G12). The 136 evaluations are *related specializations* of one symmetric polynomial, not 136 independent scientific discoveries.
+
+**Checked inventory when validated at the final source head:** 3,116 proof scripts, 3,102 public theorem/lemma/example statements, 3,414 documented declarations, across 37 modules. The symbolic ten-entry covariance form does **not** assert feasibility for arbitrary real matrix inputs: PSD is proved only for matrices constructed from nonnegative-weight finite samples. The report's general random-variable expectation theory, Gaussian conditional distributions, normal tails, chi-square pivots, independent binomial laws, interval coverage, Monte Carlo accuracy, and empirical IQ-model assumptions remain outside these finite/algebraic statements.
 
 ## D046x — 159 checked arbitrary-list pooling and covariance theorems
 
