@@ -1,12 +1,12 @@
 # Rocq formalization of checked claims
 
-## D049x — arbitrary unequal-history linear prediction (106 candidate proofs)
+## D049x — arbitrary unequal-history linear prediction (120 candidate proofs)
 
 **AI disclosure:** OpenAI ChatGPT assisted source, proof design and documentation.
 Only the pinned Rocq 9.2 kernel can verify these exact propositions.
 
 The new [UnequalHistoryLinearPrediction.v](../analyses/sequential-conditional-means/rocq/UnequalHistoryLinearPrediction.v)
-module adds 106 explicitly documented statements on unequal initial test
+module adds 120 explicitly documented statements on unequal initial test
 scores: next-score candidate regression from the score *sum*, future expected
 totals, inclusive averages, innovation corrections and affine IQ scale
 transformations. It reuses the shared report denominator instead of
