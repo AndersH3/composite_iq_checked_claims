@@ -476,7 +476,15 @@ Qed.
 *)
 Theorem three_mean_zero_center : forall n m k a b c, 0<three_mass n m k -> (three_mean n m k a b c=0 <-> three_numerator n m k a b c=0).
 Proof.
-  intros n m k a b c H; unfold three_mean; split; intro Q; [rewrite Q in *|rewrite Q]; try (field in *; lra); try (field; lra).
+  intros n m k a b c H; unfold three_mean.
+  split; intro Q.
+  - apply (Rmult_eq_compat_l (three_mass n m k)) in Q.
+    rewrite Rmult_0_r in Q.
+    unfold Rdiv in Q.
+    rewrite Rmult_assoc in Q.
+    rewrite Rinv_l in Q by lra.
+    nra.
+  - rewrite Q; field; lra.
 Qed.
 
 (** [three_raw_second_comm] (theorem).
@@ -656,7 +664,7 @@ Qed.
 *)
 Theorem three_ss_above_within : forall n m k u v w a b c, 0<=n -> 0<=m -> 0<=k -> u+v+w<=three_ss n m k u v w a b c.
 Proof.
-  intros; unfold three_ss; pose proof (three_dispersion_nonnegative n m k a b c) as H; nra.
+  intros n m k u v w a b c Hn Hm Hk; unfold three_ss; pose proof (three_dispersion_nonnegative n m k a b c Hn Hm Hk) as H; nra.
 Qed.
 
 (** [three_ss_nonnegative] (theorem).
@@ -676,7 +684,7 @@ Qed.
 *)
 Theorem three_ss_nonnegative : forall n m k u v w a b c, 0<=n -> 0<=m -> 0<=k -> 0<=u -> 0<=v -> 0<=w -> 0<=three_ss n m k u v w a b c.
 Proof.
-  intros; unfold three_ss; pose proof (three_dispersion_nonnegative n m k a b c) as H; nra.
+  intros n m k u v w a b c Hn Hm Hk Hu Hv Hw; unfold three_ss; pose proof (three_dispersion_nonnegative n m k a b c Hn Hm Hk) as H; nra.
 Qed.
 
 (** [three_ss_within_increment] (theorem).
