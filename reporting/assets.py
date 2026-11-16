@@ -155,28 +155,31 @@ def write_assets(project, data):
                               format_number(int(selected["count_rare"]))])
         write_table(directory.joinpath("replicates.tex"), ["Replicate", "Seed", "Max $|z_{mean}|$", "Max $|S^2-1|$", "$K_q$ at $n=1000$"], seed_rows,
                     "Individual seeded runs; maxima are over the eight coupled sizes")
+    elif project == "towers-multiple-test-admissions":
+        # Event tables use the validated reference-case labels directly;
+        # no second, potentially inconsistent display-name mapping is needed.
         write_table(directory.joinpath("events.tex"), ["Rule", "Neither", "$A$ only", "$B$ only", "Both"],
-                    [[labels[row["label"]]] + [format_number(int(row[key])) for key in ("neither", "a_only", "b_only", "both")] for row in pooled],
+                    [[row["label"]] + [format_number(int(row[key])) for key in ("neither", "a_only", "b_only", "both")] for row in pooled],
                     "Pooled event-cell counts")
         for name, estimate, target, low, high, title in [
             ("joint", "joint", "theory_joint", "joint_low", "joint_high", "Joint probabilities and 95\\% Wilson bounds"),
             ("union", "union", "theory_union", "union_low", "union_high", "OR-rule probabilities and 95\\% Wilson bounds")]:
             write_table(directory.joinpath(name + ".tex"), ["Rule", "Target", "Observed", "95\\% lower", "95\\% upper"],
-                        [[labels[row["label"]]] + [format_number(None if row[key] is None else float(row[key])) for key in (target, estimate, low, high)] for row in pooled], title)
+                        [[row["label"]] + [format_number(None if row[key] is None else float(row[key])) for key in (target, estimate, low, high)] for row in pooled], title)
             with directory.joinpath("events.tex").open("a", encoding="utf-8") as stream:
                 stream.write("\\input{simulation-data/" + name + ".tex}\n")
         write_table(directory.joinpath("conditionals.tex"), ["Rule", "$N_A$", "$P(B|A)$ target", "Observed", "95\\% lower", "95\\% upper"],
-                    [[labels[row["label"]], format_number(int(row["marginal_a"]))] +
+                    [[row["label"], format_number(int(row["marginal_a"]))] +
                      [format_number(None if row[key] is None else float(row[key])) for key in ("theory_conditional_b_given_a", "conditional_b_given_a", "conditional_b_given_a_low", "conditional_b_given_a_high")] for row in pooled],
                     "Repeat qualification among passers of test A")
         write_table(directory.joinpath("reverse-conditionals.tex"), ["Rule", "$N_B$", "$P(A|B)$ target", "Observed", "95\\% lower", "95\\% upper"],
-                    [[labels[row["label"]], format_number(int(row["marginal_b"]))] +
+                    [[row["label"], format_number(int(row["marginal_b"]))] +
                      [format_number(None if row[key] is None else float(row[key])) for key in ("theory_conditional_a_given_b", "conditional_a_given_b", "conditional_a_given_b_low", "conditional_a_given_b_high")] for row in pooled],
                     "Repeat qualification among passers of test B")
         with directory.joinpath("conditionals.tex").open("a", encoding="utf-8") as stream:
             stream.write("\\input{simulation-data/reverse-conditionals.tex}\n")
         write_table(directory.joinpath("replicates.tex"), ["Replicate", "Rule", "$N_A$", "$N_B$", "Both", "Union"],
-                    [[format_number(int(row["replicate"])), labels[row["label"]]] +
+                    [[format_number(int(row["replicate"])), row["label"]] +
                      [format_number(int(row[key])) for key in ("marginal_a", "marginal_b", "both", "union_count")] for row in replicas],
                     "Each seeded replicate retains its own event denominators")
         calibrated = next((row for row in pooled if row["label"] in {"Calibrated", "OR2"}), None)
@@ -186,9 +189,8 @@ def write_assets(project, data):
                     [[format_number(float(calibrated["cutoff_a"])), format_number(100 + 16 * float(calibrated["cutoff_a"])), "$0.02$",
                       format_number(float(calibrated["union"])), format_number(float(calibrated["union_low"])), format_number(float(calibrated["union_high"]))]],
                     "Calibrated common cutoff and observed combined eligibility")
-        old_labels = {"equal_top_2_percent": "E2", "equal_top_0_1_percent": "E0.1", "equal_top_1_in_33000": "Rare", "mixed_top_2_and_0_1_percent": "Mixed"}
         write_table(directory.joinpath("phi.tex"), ["Rule", "Continuous correlation", "Binary phi target", "Binary phi observed"],
-                    [[labels[row["label"]], "$0.7$", format_number(row["theory_phi"]), format_number(row["phi"])] for row in pooled],
+                    [[row["label"], "$0.7$", format_number(row["theory_phi"]), format_number(row["phi"])] for row in pooled],
                     "Continuous-score correlation and thresholded indicator correlation")
         rare_case = next((row for row in pooled if row["label"] == "Rare"), None)
         if rare_case is None:
