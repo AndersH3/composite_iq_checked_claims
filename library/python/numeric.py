@@ -28,6 +28,22 @@ import deal
              not isinstance(value, float) or value != math.inf or result is False)
 @deal.ensure(lambda value, result:
              not isinstance(value, float) or value != -math.inf or result is False)
+# A finite float is accepted exactly; numeric integer boundaries are
+# independently specified so Python's float-conversion overflow cannot
+# silently turn a large integer into a valid report observation.
+@deal.ensure(lambda value, result:
+             not isinstance(value, float) or result is math.isfinite(value))
+@deal.ensure(lambda value, result:
+             not (isinstance(value, int) and not isinstance(value, bool)
+                  and value.bit_length() <= 1023) or result is True)
+@deal.ensure(lambda value, result:
+             not (isinstance(value, int) and not isinstance(value, bool)
+                  and value.bit_length() >= 1026) or result is False)
+# Distinct unsupported input families must never be coerced into a real.
+@deal.ensure(lambda value, result:
+             not isinstance(value, complex) or result is False)
+@deal.ensure(lambda value, result:
+             not isinstance(value, (str, bytes, bytearray)) or result is False)
 def finite_real(value) -> bool:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return False
