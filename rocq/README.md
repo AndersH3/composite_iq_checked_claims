@@ -9,6 +9,11 @@ for the three principal reports. **2350 proof scripts** across twenty-eight
 Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
+
+## All six reports: cross-volume proof-obligation audit (D042x)
+
+The [six-report mathematical proof register](SIX_REPORT_PROOF_OBLIGATIONS.md) scans the three principal analytical volumes **and** their three dedicated simulation companions, including their shared and project-specific proof appendices. It accounts for 70 source-labelled results across eleven TeX inputs, classifies scoped finite/algebraic evidence versus full distribution-theoretic proof gaps, and organizes 24 reusable work packages. Its shared statistical-methods findings include normal-sample chi-square pivots, Wilson/Clopper–Pearson intervals and random-denominator conditional binomial laws. It adds **no Rocq theorem scripts** itself; the project’s preceding kernel-checked theorem totals are unchanged.
+
 ## D041x — trivariate Schur covariance identities and three pairwise conditioning orders
 
 The shared [`TrivariateSchur.v`](../library/rocq/TrivariateSchur.v)
