@@ -4,6 +4,35 @@
 
 **Date:** November 16, 2026. **Pinned baseline:** [`5c23afcd48bd36302c0acd2bbdf75271abf06921`](https://github.com/AndersH3/composite_iq_checked_claims/commit/5c23afcd48bd36302c0acd2bbdf75271abf06921). The six authoritative XeLaTeX sources are linked from the four project/reporting READMEs. This register covers all six main/simulation volumes, their proof-bearing inputs and claim-to-evidence maps. It distinguishes the full report proposition from a previously kernel-checked **finite** or **algebraic** fragment.
 
+## D043x status update — exact statistical algebra (kernel checked)
+
+The D042x source scan and its statement-location counts below are preserved as
+the audit baseline. The following **new** Rocq results have since been
+checked with Rocq 9.2 on commit
+[`955379823a469ff57e8eb5f2320994697c7d5ef0`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43812796040):
+
+| Module | New theorem proofs | Specific six-volume obligations newly supported | Boundary still open |
+|---|---:|---|---|
+| [WilsonScoreAlgebra.v](../library/rocq/WilsonScoreAlgebra.v) | 36 | `sm:wilson` exact completed-square inversion, endpoints and symmetric/range constraints | Wilson coverage is nominal/approximate, not an exact finite-sample theorem |
+| [SamplingPrecision.v](../library/rocq/SamplingPrecision.v) | 45 | `sm:binomial`, `sm:rare`: exact moment expressions, finite-sample precision and sample-count scaling | Independent-trial binomial distribution law and zero-count powers remain |
+| [ConditionalRatioStability.v](../library/rocq/ConditionalRatioStability.v) | 30 | `tw:events`, `tw:quantization` and `sm:conditional-count`: ratio/positive-denominator algebra and sensitivity | Perturbed numerator/denominator simultaneous error certificate and random-denominator binomial law remain |
+| [PooledMomentsAlgebra.v](../library/rocq/PooledMomentsAlgebra.v) | 31 | `sm:pooling`: exact two-batch within/between variance decomposition | Induction to arbitrary positive-size group lists and stochastic pooling law remain |
+| **Total** | **142** | Common reusable definitions across the six report books | No normal-tail, Gaussian-conditioning, chi-square-pivot, Clopper–Pearson or empirical model claim is upgraded |
+
+The original `P` status of `sm:wilson` in the D042x ledger below should
+now be read as **A (partially formalized)**: its exact quadratic inversion is
+kernel checked; its coverage interpretation is still not a Rocq theorem.
+The other 69 source-labelled statements retain their D042x classifications
+unless an exact report-level theorem is newly mapped. Accordingly the current
+scoped ledger distribution is **F=8, A=38, P=23, L=1**, rather than
+the historical D042x **F=8, A=37, P=24, L=1**. Since the shared `sm:wilson`
+result appears in five volumes, the current per-volume appearances are
+**F=19, A=75, P=59, L=1**, still 154 total; these are not distinct theorems.
+
+The full stochastic and numerical error-certificate acceptance criteria in
+packages G07–G13, G19–G24 remain. No Python/Deal or SPARK execution result
+can substitute for a Rocq proof of a Gaussian or binomial probability law.
+
 ## The six reports
 
 | ID | Report | Authoritative source | Linked PDF |
