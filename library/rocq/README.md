@@ -1,5 +1,7 @@
 # Shared Rocq mathematical source
 
+**Current full-corpus checkpoint:** The pinned Rocq 9.2 kernel accepted 3,378 proof scripts in 39 modules at D049x source revision `87227eef93b3`. The 120 additional proofs are report-local and reuse this shared library. The earlier D048x 3,258-script numbers below are historical checkpoints, not the latest corpus count. AI assisted proof development; only kernel acceptance establishes the exact propositions.
+
 ## D048x — finite-sample contrast Cauchy–Schwarz and covariance feasibility
 
 **AI disclosure:** OpenAI ChatGPT assisted theorem specifications, proofs, refactoring and this audit; only successful Rocq 9.2 kernel checks at an exact source SHA establish the formal statements.

@@ -1,5 +1,25 @@
 # Six-volume Rocq proof-obligation register — D042x
 
+## D049x — unequal history score sensitivity and prediction bridge
+
+**AI disclosure:** OpenAI ChatGPT assisted with specifying, documenting and
+auditing these candidate proofs. A successful Rocq 9.2 kernel run on the
+exact Git commit is necessary before calling them checked.
+
+The report-local `UnequalHistoryLinearPrediction.v` now defines a candidate
+linear next-score forecast from an arbitrary observed test-score *sum* and
+its associated future-score total, inclusive mean, realized-outcome innovation
+and affine baseline correction. The source adds 120 related, general
+real-algebra identities checked by the standard proof workflow; see
+[the source-order register](PROOF_REFACTOR_UNEQUAL_HISTORY.md).
+This broadens the algebra beyond initially *equal* test scores without
+proving the underlying Gaussian conditioning theorem or the existence of
+a positive-definite covariance model for all real inputs. It is relevant to
+the sequential analytic and simulation volumes and to the standardized
+composite-score transformations in Hoeflin/Ferguson. No new simulation
+data or empirical IQ scores are asserted.
+
+
 ## D048x — finite covariance constraints and remaining stochastic gaps
 
 **AI disclosure:** OpenAI ChatGPT assisted this additional proof mapping. Neither a new Rocq algebra theorem nor the source audit constitutes independent validation of probabilistic assumptions.

@@ -57,6 +57,7 @@ paths_by_module = {
     "ThreeTestSchur": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSchur.v"),
     "SequentialReport": Path("analyses/sequential-conditional-means/rocq/SequentialReport.v"),
     "SequentialSensitivity": Path("analyses/sequential-conditional-means/rocq/SequentialSensitivity.v"),
+    "UnequalHistoryLinearPrediction": Path("analyses/sequential-conditional-means/rocq/UnequalHistoryLinearPrediction.v"),
     "ReportRounding": Path("analyses/sequential-conditional-means/rocq/ReportRounding.v"),
     "ReportCounterexample": Path("analyses/sequential-conditional-means/rocq/ReportCounterexample.v"),
 }
@@ -93,6 +94,7 @@ total_scripts = 0
 refactor_register = Path("rocq/PROOF_REFACTOR_REGISTER.md").read_text(encoding="utf-8")
 list_pooling_register = Path("rocq/PROOF_REFACTOR_LIST_POOLING.md").read_text(encoding="utf-8")
 sample_cauchy_register = Path("rocq/PROOF_REFACTOR_SAMPLE_CAUCHY.md").read_text(encoding="utf-8")
+unequal_history_register = Path("rocq/PROOF_REFACTOR_UNEQUAL_HISTORY.md").read_text(encoding="utf-8")
 proof_decl = re.compile(
     r"^[ \t]*(?:(?:Local|Global)\s+)?"
     r"(?:Theorem|Lemma|Example|Definition|Fixpoint|Record)\s+"
@@ -153,7 +155,8 @@ for module in modules:
             continue
         expected.append(preceding[-1].group(1))
 
-    selected_register = (sample_cauchy_register if module == "SampleContrastCauchy"
+    selected_register = (unequal_history_register if module == "UnequalHistoryLinearPrediction"
+                         else sample_cauchy_register if module == "SampleContrastCauchy"
                          else list_pooling_register if module in
                            {"ListPoolingAlgebra", "FourContrastCovariance"}
                          else refactor_register)
