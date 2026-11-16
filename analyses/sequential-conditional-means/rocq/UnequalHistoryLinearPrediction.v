@@ -2341,7 +2341,7 @@ Qed.
 *)
 Theorem lhp_append : forall xs ys c, lhp (xs++ys) c = hp (INR (length xs)+INR (length ys)) c (vector_real_sum xs+vector_real_sum ys).
 Proof.
- intros xs ys c; unfold lhp; rewrite app_length, INR_plus, vector_real_sum_append; reflexivity.
+ intros xs ys c; unfold lhp; rewrite length_app, plus_INR, vector_real_sum_append; reflexivity.
 Qed.
 
 (** [lhp_scale] (theorem).
@@ -2541,7 +2541,7 @@ Qed.
 *)
 Theorem lhf_append : forall xs ys k c, lhf (xs++ys) k c = hf (INR (length xs)+INR (length ys)) k c (vector_real_sum xs+vector_real_sum ys).
 Proof.
- intros xs ys k c; unfold lhf; rewrite app_length, INR_plus, vector_real_sum_append; reflexivity.
+ intros xs ys k c; unfold lhf; rewrite length_app, plus_INR, vector_real_sum_append; reflexivity.
 Qed.
 
 (** [lhm_append] (theorem).
@@ -2561,5 +2561,5 @@ Qed.
 *)
 Theorem lhm_append : forall xs ys k c, lhm (xs++ys) k c = hm (INR (length xs)+INR (length ys)) k c (vector_real_sum xs+vector_real_sum ys).
 Proof.
- intros xs ys k c; unfold lhm; rewrite app_length, INR_plus, vector_real_sum_append; reflexivity.
+ intros xs ys k c; unfold lhm; rewrite length_app, plus_INR, vector_real_sum_append; reflexivity.
 Qed.
