@@ -42,6 +42,7 @@ paths_by_module = {
     "TwoStratumAssociation": Path("library/rocq/TwoStratumAssociation.v"),
     "TwoStratumReversal": Path("library/rocq/TwoStratumReversal.v"),
     "TrivariateSchur": Path("library/rocq/TrivariateSchur.v"),
+    "WilsonScoreAlgebra": Path("library/rocq/WilsonScoreAlgebra.v"),
     "ThreeTestSelectionDecomposition": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSelectionDecomposition.v"),
     "ThreeTestReversalCriteria": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestReversalCriteria.v"),
     "ThreeTestSchur": Path("analyses/towers-multiple-test-admissions/rocq/ThreeTestSchur.v"),
