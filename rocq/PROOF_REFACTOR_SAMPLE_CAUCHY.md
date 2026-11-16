@@ -6,7 +6,7 @@
 
 The source-ordered register below records every `Proof.` block of the shared `SampleContrastCauchy.v` module. Covariance feasibility inequalities are deterministic necessary constraints on observed finite weighted samples, not evidence of independent sampling, Gaussianity, or interval coverage.
 
-## SampleContrastCauchy.v — 138 proof scripts
+## SampleContrastCauchy.v — 142 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -151,6 +151,11 @@ The source-ordered register below records every `Proof.` block of the shared `Sa
 | `sample_contrast_cs_balanced12v34_balanced12v34` (theorem) | For the difference between the two pairs score contrast and the difference between the two pairs score contrast, a nonnegative-weight finite sample must satisfy the sharp squared covariance-versus-variance feasibility constraint. The coefficients determine a specific multi-test contrast pair relevant to finite composite-score stability checks. | Reuses one general Cauchy–Schwarz bridge and the canonical four-test composite representation | Deterministic pair-specific covariance feasibility constraint; no distribution or coverage theorem |
 
 The 136 pair-specific constraints above are **specializations of one general finite-sample Cauchy–Schwarz theorem**, not 136 independently developed probability laws. The first 2 named results provide the reusable covariance-numerator bridge and general inequality. Each specialization has an explicit four-test contrast vector and nonnegative-weight/positive-mass premises.
+
+| `sample_zero_variance_uncorrelated_left` (theorem) | Any sample score with exactly zero weighted variance has zero covariance with every other score, provided all occurrence weights are nonnegative and total exposure is positive. | Reuses previously verified finite-sample Cauchy–Schwarz or positive variance of score sums/differences | Empirical covariance constraint; no general sampling law |
+| `sample_zero_variance_uncorrelated_right` (theorem) | Any sample score with exactly zero weighted variance has zero covariance when used as the second variable of the covariance calculation. | Reuses previously verified finite-sample Cauchy–Schwarz or positive variance of score sums/differences | Empirical covariance constraint; no general sampling law |
+| `sample_covariance_lower_amgm` (theorem) | Nonnegative variance of a sum of two finite weighted scores proves a two-sided covariance feasibility component: the covariance cannot be less than minus half the sum of their variances. | Reuses previously verified finite-sample Cauchy–Schwarz or positive variance of score sums/differences | Empirical covariance constraint; no general sampling law |
+| `sample_covariance_upper_amgm` (theorem) | Nonnegative variance of a finite weighted score difference proves the companion upper bound: twice covariance cannot exceed the sum of their two variances. | Reuses previously verified finite-sample Cauchy–Schwarz or positive variance of score sums/differences | Empirical covariance constraint; no general sampling law |
 
 ## Full AI disclosure
 
