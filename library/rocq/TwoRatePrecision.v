@@ -1009,3 +1009,478 @@ Theorem rate_count_variance_equal_rate : forall n m p, rate_count_variance n m p
 Proof.
   intros; unfold rate_count_variance; ring.
 Qed.
+
+(** [rate_var_equal_rate] (theorem).
+ Mathematical meaning: The two-margin contrast variance is twice the one-margin Bernoulli variance when both pass rates coincide.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_equal_rate : forall p, rate_var p p=2*sampling_bernoulli_variance p.
+Proof.
+  intros; unfold rate_var; ring.
+Qed.
+
+(** [rate_var_one_certain] (theorem).
+ Mathematical meaning: A deterministic second event contributes no additional variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_one_certain : forall p, rate_var p 1=sampling_bernoulli_variance p.
+Proof.
+  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_var_one_impossible] (theorem).
+ Mathematical meaning: An impossible second event contributes no additional variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_one_impossible : forall p, rate_var p 0=sampling_bernoulli_variance p.
+Proof.
+  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_var_first_balanced] (theorem).
+ Mathematical meaning: A balanced first margin contributes exactly the maximal Bernoulli variance one quarter.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_first_balanced : forall q, rate_var (1/2) q=1/4+sampling_bernoulli_variance q.
+Proof.
+  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_var_second_balanced] (theorem).
+ Mathematical meaning: A balanced second margin contributes one quarter to the total comparison variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_second_balanced : forall p, rate_var p (1/2)=sampling_bernoulli_variance p+1/4.
+Proof.
+  intros; unfold rate_var,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_var_maximum_only_balanced] (theorem).
+ Mathematical meaning: Both event rates must be balanced to attain the maximal combined Bernoulli variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_maximum_only_balanced : forall p q, rate_var p q=1/2 -> p=1/2 /\ q=1/2.
+Proof.
+  intros p q H; pose proof (rate_var_midpoint_gap p q) as E; rewrite H in E; nra.
+Qed.
+
+(** [rate_var_zero_if_both_impossible] (theorem).
+ Mathematical meaning: If neither event can occur, the contrast has zero Bernoulli variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_zero_if_both_impossible : rate_var 0 0=0.
+Proof.
+  unfold rate_var,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_var_zero_if_both_certain] (theorem).
+ Mathematical meaning: If both events are certain, the contrast has zero Bernoulli variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_var_zero_if_both_certain : rate_var 1 1=0.
+Proof.
+  unfold rate_var,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_first_rate_shift] (theorem).
+ Mathematical meaning: Changing the first event probability changes expected successes in proportion to the first sample size.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_first_rate_shift : forall n m p q r, rate_count n m r q-rate_count n m p q=n*(r-p).
+Proof.
+  intros; unfold rate_count; ring.
+Qed.
+
+(** [rate_count_second_rate_shift] (theorem).
+ Mathematical meaning: Changing the second probability changes expected successes according to the second trial count.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_second_rate_shift : forall n m p q r, rate_count n m p r-rate_count n m p q=m*(r-q).
+Proof.
+  intros; unfold rate_count; ring.
+Qed.
+
+(** [rate_count_add_first_size] (theorem).
+ Mathematical meaning: Adding k trials at the first rate increases the expected count by k times that rate.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_add_first_size : forall n m k p q, rate_count (n+k) m p q=rate_count n m p q+k*p.
+Proof.
+  intros; unfold rate_count; ring.
+Qed.
+
+(** [rate_count_add_second_size] (theorem).
+ Mathematical meaning: Adding a second-group trial batch increases the expected count by its expected successes.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_add_second_size : forall n m k p q, rate_count n (m+k) p q=rate_count n m p q+k*q.
+Proof.
+  intros; unfold rate_count; ring.
+Qed.
+
+(** [rate_count_rate_monotone_first] (theorem).
+ Mathematical meaning: Expected successes are nondecreasing in the first event rate at nonnegative sample size.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_rate_monotone_first : forall n m p q r, 0<=n -> p<=r -> rate_count n m p q<=rate_count n m r q.
+Proof.
+  intros; unfold rate_count; nra.
+Qed.
+
+(** [rate_count_rate_monotone_second] (theorem).
+ Mathematical meaning: Expected successes are nondecreasing in the second event rate.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_rate_monotone_second : forall n m p q r, 0<=m -> q<=r -> rate_count n m p q<=rate_count n m p r.
+Proof.
+  intros; unfold rate_count; nra.
+Qed.
+
+(** [rate_count_variance_zero_all_impossible] (theorem).
+ Mathematical meaning: Both impossible outcomes yield zero count variance expression.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_zero_all_impossible : forall n m, rate_count_variance n m 0 0=0.
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_zero_all_certain] (theorem).
+ Mathematical meaning: Both certain outcomes yield zero Bernoulli count variance expression.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_zero_all_certain : forall n m, rate_count_variance n m 1 1=0.
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_balanced] (theorem).
+ Mathematical meaning: Balanced success probabilities attain the sharp count-variance upper bound.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_balanced : forall n m, rate_count_variance n m (1/2) (1/2)=(n+m)/4.
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_gap_max] (theorem).
+ Mathematical meaning: The exact heterogeneity gap from the maximum variance is a weighted sum of squared marginal imbalances.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_gap_max : forall n m p q, (n+m)/4-rate_count_variance n m p q=n*(p-1/2)*(p-1/2)+m*(q-1/2)*(q-1/2).
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_first_rate_difference] (theorem).
+ Mathematical meaning: A first-event rate change has an exact count-variance sensitivity polynomial.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_first_rate_difference : forall n m p q r, rate_count_variance n m r q-rate_count_variance n m p q=n*(r-p)*(1-r-p).
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_second_rate_difference] (theorem).
+ Mathematical meaning: Second-event rate changes obey the corresponding exact variance sensitivity expression.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_second_rate_difference : forall n m p q r, rate_count_variance n m p r-rate_count_variance n m p q=m*(r-q)*(1-r-q).
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_add_second_size] (theorem).
+ Mathematical meaning: Variance targets are additive when adding independent second-rate trials.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_add_second_size : forall n m k p q, rate_count_variance n (m+k) p q=rate_count_variance n m p q+k*sampling_bernoulli_variance q.
+Proof.
+  intros; unfold rate_count_variance; ring.
+Qed.
+
+(** [rate_count_variance_complement_first] (theorem).
+ Mathematical meaning: Complementing the first Bernoulli outcome preserves its count variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_complement_first : forall n m p q, rate_count_variance n m (1-p) q=rate_count_variance n m p q.
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_complement_second] (theorem).
+ Mathematical meaning: Complementing the second Bernoulli outcome preserves its count variance.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_complement_second : forall n m p q, rate_count_variance n m p (1-q)=rate_count_variance n m p q.
+Proof.
+  intros; unfold rate_count_variance,sampling_bernoulli_variance; ring.
+Qed.
+
+(** [rate_count_variance_below_count] (theorem).
+ Mathematical meaning: For event rates in [0,1], the binomial count variance expression does not exceed the expected success count.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_below_count : forall n m p q, 0<=n -> 0<=m -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> rate_count_variance n m p q<=rate_count n m p q.
+Proof.
+  intros n m p q Hn Hm Hp Hp1 Hq Hq1; unfold rate_count_variance,rate_count; pose proof (sampling_variance_below_success_probability p Hp Hp1) as A; pose proof (sampling_variance_below_success_probability q Hq Hq1) as B; nra.
+Qed.
+
+(** [rate_count_variance_below_failures] (theorem).
+ Mathematical meaning: For feasible event rates, the variance expression is bounded by the expected number of failures as well.
+ Exact proposition: This universal real formula is a quantitative
+ sampling-size, marginal-rate or heterogeneity bound from the six reports.
+ Premises and side conditions: All nonnegativity, probability unit-interval,
+ strictness and sample size requirements are stated as explicit hypotheses.
+ Proof/definition method: Use previously checked SamplingPrecision results
+ or standard real algebra and ring to derive this exact formula. No claim
+ presupposes a Gaussian law, binomial PMF or asymptotic approximation.
+ Library reuse: SamplingPrecision, canonical Reals, Ring, Lra, Psatz, Field.
+ Boundary: Precise deterministic expectation/variance expressions for
+ hypothetical Bernoulli sampling, not an actual PRNG independence theorem
+ or a statement about observed people or normal confidence interval coverage.
+*)
+Theorem rate_count_variance_below_failures : forall n m p q, 0<=n -> 0<=m -> 0<=p -> p<=1 -> 0<=q -> q<=1 -> rate_count_variance n m p q<=rate_count n m (1-p) (1-q).
+Proof.
+  intros n m p q Hn Hm Hp Hp1 Hq Hq1; unfold rate_count_variance,rate_count; pose proof (sampling_variance_below_failure_probability p Hp Hp1) as A; pose proof (sampling_variance_below_failure_probability q Hq Hq1) as B; nra.
+Qed.
