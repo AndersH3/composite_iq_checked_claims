@@ -4,6 +4,28 @@
 
 **Date:** November 16, 2026. **Pinned baseline:** [`5c23afcd48bd36302c0acd2bbdf75271abf06921`](https://github.com/AndersH3/composite_iq_checked_claims/commit/5c23afcd48bd36302c0acd2bbdf75271abf06921). The six authoritative XeLaTeX sources are linked from the four project/reporting READMEs. This register covers all six main/simulation volumes, their proof-bearing inputs and claim-to-evidence maps. It distinguishes the full report proposition from a previously kernel-checked **finite** or **algebraic** fragment.
 
+## D044x status — extended three-replicate ANOVA and multi-rate precision
+
+On exact source commit [`491ad9bbe79d2a1e8b6739885248ef06657cb307`](https://github.com/AndersH3/composite_iq_checked_claims/commit/491ad9bbe79d2a1e8b6739885248ef06657cb307),
+[Rocq 9.2 kernel CI](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43819739947) proved **111 new, documented, reusable
+real-algebra theorems** in two shared modules:
+
+| Shared source | Theorems | Six-volume audit coverage | Outstanding gap |
+|---|---:|---|---|
+| [`ThreeGroupPooling.v`](../library/rocq/ThreeGroupPooling.v) | **39** | `sm:pooling` G12: real-valued three-replicate weighted mean, corrected SS, two-stage associativity and nonnegative variance | Arbitrary nonempty **list** of groups; sampling distribution of pooled statistic |
+| [`TwoRatePrecision.v`](../library/rocq/TwoRatePrecision.v) | **72** | `sm:binomial`, `sm:rare` G08/G13, Towers rate contrasts: explicit hypothetical Bernoulli moment formulas, sensitivity and sharp variance gaps | Independent-trial binomial PMF, random-denominator sampling, interval coverage |
+| **Total** | **111** | 6 report books reuse the same two modules; repeated import does not multiply theorem count | Gaussian tails, exact conditional distributions, normal sample chi-square pivots |
+
+The original D042x **70 source-labelled statements** and 104 equation
+anchors retain their source-scan identity. The D043x partial-coverage
+classification remains appropriate: D044x extends the already partially
+formalized portions of `sm:pooling`, `sm:binomial`, `sm:rare`, but does
+not completely establish their report-level stochastic theorems. The
+real-algebra statements are not promoted to full confidence-coverage,
+sampling or IQ-population conclusions.
+
+This mathematical documentation and proof development were AI-assisted; mathematical validity applies only to explicit Rocq propositions accepted by the pinned kernel. Neither empirical IQ assumptions nor stochastic sampling distributions are proved by these real-algebra results.
+
 ## D043x status update — exact statistical algebra (kernel checked)
 
 The D042x source scan and its statement-location counts below are preserved as

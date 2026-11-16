@@ -4,6 +4,21 @@
 
 > **AI disclosure:** This source-location refactor and accompanying documentation were AI-assisted; only the separately pinned Rocq kernel checks theorems.
 
+## D044x — three-batch and heterogeneous-rate formalization
+
+The canonical [`ThreeGroupPooling.v`](ThreeGroupPooling.v) module proves
+**39** theorems for 3 pooled replicate groups, including the exact
+associativity of corrected sum-of-squares pooling with the existing
+two-group `PooledMomentsAlgebra.v` definitions. The canonical
+[`TwoRatePrecision.v`](TwoRatePrecision.v) proves **72** complementary
+rate-contrast, expected-count and Bernoulli count-variance results,
+reusing `SamplingPrecision.v` rather than constructing a second
+statistical library. The [Rocq 9.2 kernel validation](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43819739947)
+accepted all 111 new proof blocks. The 34-module source order and
+source-by-source review are checked by the canonical build/documentation
+scripts. Arbitrary-list pooling, independent-sampling laws and
+interval-coverage results remain separate. This mathematical documentation and proof development were AI-assisted; mathematical validity applies only to explicit Rocq propositions accepted by the pinned kernel. Neither empirical IQ assumptions nor stochastic sampling distributions are proved by these real-algebra results.
+
 ## D043x — shared statistical-algebra modules
 
 The four newly checked shared Rocq modules are
@@ -29,7 +44,7 @@ Only genuinely report-neutral mathematical modules are owned **once** under this
 
 Report-specific lemmas and models remain with their reports: [Hoeflin/Ferguson](../../analyses/hoeflin-ferguson/rocq/), [Towers admissions](../../analyses/towers-multiple-test-admissions/rocq/), and [Sequential conditional means](../../analyses/sequential-conditional-means/rocq/).
 
-The canonical 32-module dependency order is encoded in [`scripts/compile_rocq.sh`](../../scripts/compile_rocq.sh). It copies each uniquely named source into a clean temporary workspace and runs `rocq compile` in that order. From the repository root:
+The canonical 34-module dependency order is encoded in [`scripts/compile_rocq.sh`](../../scripts/compile_rocq.sh). It copies each uniquely named source into a clean temporary workspace and runs `rocq compile` in that order. From the repository root:
 
 ```sh
 bash scripts/check_rocq_documentation.sh

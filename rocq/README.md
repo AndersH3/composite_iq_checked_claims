@@ -5,9 +5,34 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for all three analytical reports and their three simulation companions. **2,492 proof scripts** across **32 Rocq modules** are tracked for Rocq 9.2 kernel compilation (2,478 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
+for all three analytical reports and their three simulation companions. **2,603 proof scripts** across **34 Rocq modules** are tracked for Rocq 9.2 kernel compilation (2,589 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
+
+## D044x — 111 checked six-volume pooling and heterogeneous-rate proofs
+
+The full [Rocq 9.2 proof workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43819739947) succeeded at exact source head
+[`491ad9bbe79d2a1e8b6739885248ef06657cb307`](https://github.com/AndersH3/composite_iq_checked_claims/commit/491ad9bbe79d2a1e8b6739885248ef06657cb307),
+including the strict source-order documentation audit. The shared
+[`ThreeGroupPooling.v`](../library/rocq/ThreeGroupPooling.v) adds **39** theorems
+about three-batch weighted centers, second moments, nonnegative dispersion,
+and the exact **two-stage ANOVA corrected-sum-of-squares identity**.
+[`TwoRatePrecision.v`](../library/rocq/TwoRatePrecision.v) adds **72**
+theorems on heterogeneous pass probabilities, contrast variance,
+count expectations, the sharp one-quarter variance bound, and exact
+rate/count sensitivity. They reuse `PooledMomentsAlgebra`,
+`SamplingPrecision`, and Rocq Stdlib rather than copying sample
+summations or introducing a probability distribution implementation.
+
+**Current baseline:** **2,603 kernel-checked proof scripts in 34 modules**,
+including **2,589 public named theorem/lemma/example statements**, one
+local helper and 13 model/record constructors. The documentation audit
+counts **2,873 declarations** and **2,590 theorem/helper proofs**.
+The new 111 statements are real-algebra results, not 111 independent
+normal-distribution or coverage theorems. The generalized arbitrary-list
+group-pooling induction, binomial independence law, chi-square pivot,
+Gaussian conditional law, exact normal tails and numerical enclosures
+remain open. This mathematical documentation and proof development were AI-assisted; mathematical validity applies only to explicit Rocq propositions accepted by the pinned kernel. Neither empirical IQ assumptions nor stochastic sampling distributions are proved by these real-algebra results.
 
 ## D043x — 142 kernel-checked report statistical-algebra theorems
 
