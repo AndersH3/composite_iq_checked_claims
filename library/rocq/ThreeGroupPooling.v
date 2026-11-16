@@ -793,3 +793,103 @@ Theorem three_ss_zero_within_equal : forall n m k a, 0<three_mass n m k -> three
 Proof.
   intros n m k a H; unfold three_ss; rewrite three_dispersion_constant by exact H; ring.
 Qed.
+
+(** [three_dispersion_raw_second_identity] (theorem).
+ Mathematical meaning: Three-group between-replicate corrected sum of squares equals the weighted raw second moment minus pooled weighted-score-square over total mass.
+ Exact proposition: Establishes an explicit identity or nonnegative
+ condition for the three-replicate within/between sample variance analysis.
+ Premises and side conditions: Real sample-size positivity, nonzero
+ denominators and nonnegative sums are asserted explicitly. Independent
+ observations or normal-distribution assumptions are not needed for algebra.
+ Proof/definition method: Reuses the canonical two-batch corrected-SS and
+ pooled variance construction, and normalizes rational expressions with
+ Rocq Stdlib Ring/Field/Lra/Psatz; no new fold or probability generator.
+ Library reuse: PooledMomentsAlgebra.v and Stdlib real-number algebra.
+ Boundary: This identity is a finite three-batch ANOVA consequence and
+ cannot establish a chi-square sampling pivot, numerical confidence
+ coverage, or external human test-score assumptions.
+*)
+Theorem three_dispersion_raw_second_identity : forall n m k a b c, 0<three_mass n m k -> three_dispersion n m k a b c = three_raw_second n m k a b c - three_numerator n m k a b c * three_numerator n m k a b c / three_mass n m k.
+Proof.
+  intros n m k a b c H. unfold three_dispersion,three_mean,three_raw_second,three_numerator,three_mass in *. field; nra.
+Qed.
+
+(** [three_dispersion_two_stage] (theorem).
+ Mathematical meaning: Associativity of corrected between-group SS: three replicates can be pooled by first combining two, then merging the third without losing variation.
+ Exact proposition: Establishes an explicit identity or nonnegative
+ condition for the three-replicate within/between sample variance analysis.
+ Premises and side conditions: Real sample-size positivity, nonzero
+ denominators and nonnegative sums are asserted explicitly. Independent
+ observations or normal-distribution assumptions are not needed for algebra.
+ Proof/definition method: Reuses the canonical two-batch corrected-SS and
+ pooled variance construction, and normalizes rational expressions with
+ Rocq Stdlib Ring/Field/Lra/Psatz; no new fold or probability generator.
+ Library reuse: PooledMomentsAlgebra.v and Stdlib real-number algebra.
+ Boundary: This identity is a finite three-batch ANOVA consequence and
+ cannot establish a chi-square sampling pivot, numerical confidence
+ coverage, or external human test-score assumptions.
+*)
+Theorem three_dispersion_two_stage : forall n m k a b c, 0<n -> 0<m -> 0<k -> three_dispersion n m k a b c = pooled_between n m a b + pooled_between (n+m) k (pooled_mean n m a b) c.
+Proof.
+  intros n m k a b c Hn Hm Hk. unfold three_dispersion,three_mean,three_mass,three_numerator,pooled_between,pooled_mean,pooled_mass. field; nra.
+Qed.
+
+(** [three_ss_two_stage] (theorem).
+ Mathematical meaning: The full three-replicate corrected sum of squares agrees with iterative two-batch ANOVA pooling.
+ Exact proposition: Establishes an explicit identity or nonnegative
+ condition for the three-replicate within/between sample variance analysis.
+ Premises and side conditions: Real sample-size positivity, nonzero
+ denominators and nonnegative sums are asserted explicitly. Independent
+ observations or normal-distribution assumptions are not needed for algebra.
+ Proof/definition method: Reuses the canonical two-batch corrected-SS and
+ pooled variance construction, and normalizes rational expressions with
+ Rocq Stdlib Ring/Field/Lra/Psatz; no new fold or probability generator.
+ Library reuse: PooledMomentsAlgebra.v and Stdlib real-number algebra.
+ Boundary: This identity is a finite three-batch ANOVA consequence and
+ cannot establish a chi-square sampling pivot, numerical confidence
+ coverage, or external human test-score assumptions.
+*)
+Theorem three_ss_two_stage : forall n m k u v w a b c, 0<n -> 0<m -> 0<k -> three_ss n m k u v w a b c = pooled_ss (n+m) k (pooled_ss n m u v a b) w (pooled_mean n m a b) c.
+Proof.
+  intros n m k u v w a b c Hn Hm Hk. unfold three_ss,pooled_ss. rewrite three_dispersion_two_stage by assumption. ring.
+Qed.
+
+(** [three_variance_two_stage] (theorem).
+ Mathematical meaning: The corrected total sample variance is invariant under the two-stage pooling of three source replicates.
+ Exact proposition: Establishes an explicit identity or nonnegative
+ condition for the three-replicate within/between sample variance analysis.
+ Premises and side conditions: Real sample-size positivity, nonzero
+ denominators and nonnegative sums are asserted explicitly. Independent
+ observations or normal-distribution assumptions are not needed for algebra.
+ Proof/definition method: Reuses the canonical two-batch corrected-SS and
+ pooled variance construction, and normalizes rational expressions with
+ Rocq Stdlib Ring/Field/Lra/Psatz; no new fold or probability generator.
+ Library reuse: PooledMomentsAlgebra.v and Stdlib real-number algebra.
+ Boundary: This identity is a finite three-batch ANOVA consequence and
+ cannot establish a chi-square sampling pivot, numerical confidence
+ coverage, or external human test-score assumptions.
+*)
+Theorem three_variance_two_stage : forall n m k u v w a b c, 0<n -> 0<m -> 0<k -> three_variance n m k u v w a b c = pooled_unbiased_variance (n+m) k (pooled_ss n m u v a b) w (pooled_mean n m a b) c.
+Proof.
+  intros n m k u v w a b c Hn Hm Hk. unfold three_variance,pooled_unbiased_variance. rewrite three_ss_two_stage by assumption. unfold three_mass,pooled_mass. replace (n+m+k-1) with ((n+m)+k-1) by ring. reflexivity.
+Qed.
+
+(** [three_variance_nonnegative] (theorem).
+ Mathematical meaning: With a positive degrees-of-freedom denominator and nonnegative within/weight inputs, the pooled three-batch sample variance is nonnegative.
+ Exact proposition: Establishes an explicit identity or nonnegative
+ condition for the three-replicate within/between sample variance analysis.
+ Premises and side conditions: Real sample-size positivity, nonzero
+ denominators and nonnegative sums are asserted explicitly. Independent
+ observations or normal-distribution assumptions are not needed for algebra.
+ Proof/definition method: Reuses the canonical two-batch corrected-SS and
+ pooled variance construction, and normalizes rational expressions with
+ Rocq Stdlib Ring/Field/Lra/Psatz; no new fold or probability generator.
+ Library reuse: PooledMomentsAlgebra.v and Stdlib real-number algebra.
+ Boundary: This identity is a finite three-batch ANOVA consequence and
+ cannot establish a chi-square sampling pivot, numerical confidence
+ coverage, or external human test-score assumptions.
+*)
+Theorem three_variance_nonnegative : forall n m k u v w a b c, 0<=n -> 0<=m -> 0<=k -> 1<three_mass n m k -> 0<=u -> 0<=v -> 0<=w -> 0<=three_variance n m k u v w a b c.
+Proof.
+  intros n m k u v w a b c Hn Hm Hk Htot Hu Hv Hw. pose proof (three_ss_nonnegative n m k u v w a b c Hn Hm Hk Hu Hv Hw) as Hss. unfold three_variance,Rdiv. apply Rmult_le_pos; [exact Hss | left; apply Rinv_0_lt_compat; lra].
+Qed.
