@@ -221,7 +221,7 @@ Qed.
 Theorem batch_total_ss_permutation :
   forall (A:Type) (w v u:A->R) (xs ys:list A), Permutation xs ys -> batch_total_ss w v u xs=batch_total_ss w v u ys.
 Proof.
-  intros A w v u xs ys H; unfold batch_total_ss; rewrite (finite_sum_permutation xs ys u H), (batch_mean_permutation A w v xs ys H); now apply batch_centered_permutation.
+  intros A w v u xs ys H; unfold batch_total_ss; rewrite (finite_sum_permutation xs ys u H), (batch_mean_permutation A w v xs ys H); now rewrite (batch_centered_permutation A w v (batch_mean w v ys) xs ys H).
 Qed.
 
 (** [batch_mass_nonnegative] (theorem).
@@ -403,5 +403,5 @@ Qed.
 Theorem batch_mean_rescale_weights :
   forall (A:Type) (w v:A->R) (xs:list A) (t:R), batch_mass w xs<>0 -> t<>0 -> batch_mean (fun x => t*w x) v xs=batch_mean w v xs.
 Proof.
-  intros A w v xs t Hm Ht; unfold batch_mean; rewrite batch_total_scale_weights, batch_mass_scale_weights; field; split; assumption.
+  intros A w v xs t Hm Ht; unfold batch_mean; rewrite batch_total_scale_weights, batch_mass_scale_weights; field; nra.
 Qed.
