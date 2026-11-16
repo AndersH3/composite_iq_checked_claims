@@ -907,7 +907,7 @@ Qed.
 *)
 Theorem sampling_relative_variance_rate_monotone: forall n p q, 0<n -> 0<p -> p<=q -> sampling_relative_variance n q<=sampling_relative_variance n p.
 Proof.
-  intros n p q Hn Hp Hpq. assert (Hq:0<q) by lra. pose proof (sampling_relative_variance_rate_difference n p q Hn Hp Hq) as Hid. assert (Hden:0<n*p*q) by nra. assert (Hfrac:0<= (q-p)/(n*p*q)) by (unfold Rdiv; apply Rmult_le_pos; [lra|left; apply Rinv_0_lt_compat; exact Hden]). lra.
+  intros n p q Hn Hp Hpq. assert (Hq:0<q) by lra. pose proof (sampling_relative_variance_rate_difference n p q Hn Hp Hq) as Hid. assert (Hnp:0<n*p) by (apply Rmult_lt_0_compat; assumption). assert (Hden:0<(n*p)*q) by (apply Rmult_lt_0_compat; assumption). assert (Hfrac:0<= (q-p)/(n*p*q)) by (unfold Rdiv; apply Rmult_le_pos; [lra|left; apply Rinv_0_lt_compat; exact Hden]). lra.
 Qed.
 
 (** [sampling_relative_variance_rate_strict] (theorem).
@@ -927,7 +927,7 @@ Qed.
 *)
 Theorem sampling_relative_variance_rate_strict: forall n p q, 0<n -> 0<p -> p<q -> sampling_relative_variance n q<sampling_relative_variance n p.
 Proof.
-  intros n p q Hn Hp Hpq. assert (Hq:0<q) by lra. pose proof (sampling_relative_variance_rate_difference n p q Hn Hp Hq) as Hid. assert (Hden:0<n*p*q) by nra. assert (Hfrac:0< (q-p)/(n*p*q)) by (unfold Rdiv; apply Rmult_lt_0_compat; [lra|apply Rinv_0_lt_compat; exact Hden]). lra.
+  intros n p q Hn Hp Hpq. assert (Hq:0<q) by lra. pose proof (sampling_relative_variance_rate_difference n p q Hn Hp Hq) as Hid. assert (Hnp:0<n*p) by (apply Rmult_lt_0_compat; assumption). assert (Hden:0<(n*p)*q) by (apply Rmult_lt_0_compat; assumption). assert (Hfrac:0< (q-p)/(n*p*q)) by (unfold Rdiv; apply Rmult_lt_0_compat; [lra|apply Rinv_0_lt_compat; exact Hden]). lra.
 Qed.
 
 (** [sampling_relative_variance_coarse_bound] (theorem).
