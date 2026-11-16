@@ -174,7 +174,7 @@ This is the canonical detailed review register for the new `library/rocq/ListPoo
 
 OpenAI ChatGPT assisted with proof scripts, statement documentation, and the source-ordered register. Only exact Rocq 9.2 kernel-accepted propositions constitute verified claims; no Gaussian, chi-square, binomial independence, confidence coverage or IQ-population empirical assumption is certified.
 
-## FourContrastCovariance.v — 166 proof scripts
+## FourContrastCovariance.v — 169 proof scripts
 
 **D047x proof register.** Author: Anders Hellström. **AI disclosure:** These coefficient identities and their register were generated with AI assistance. They are candidate Rocq theorems until accepted by the pinned Rocq 9.2 kernel. The 136 explicit contrast-pair evaluations are specializations of one symmetric bilinear form, not 136 independent stochastic theorems or 136 statistical validation results.
 
@@ -349,5 +349,9 @@ OpenAI ChatGPT assisted with proof scripts, statement documentation, and the sou
 | `four_sample_covariance_differences` (theorem) | Covariance between disjoint pairwise test differences depends on four specific across-pair covariance entries with alternating signs. | The canonical finite-sample variance/covariance bridge and selected Rocq-checked symbolic contrast identity | Deterministic weighted scores only; no sampling distribution or coverage law |
 | `four_sample_covariance_test1_total` (theorem) | Covariance of test 1 with the complete four-test composite includes its variance plus all three covariances with the remaining tests. | The canonical finite-sample variance/covariance bridge and selected Rocq-checked symbolic contrast identity | Deterministic weighted scores only; no sampling distribution or coverage law |
 | `four_sample_covariance_test4_triple` (theorem) | Covariance of test 4 with a composite of the other three tests equals the sum of its three corresponding cross-covariances. | The canonical finite-sample variance/covariance bridge and selected Rocq-checked symbolic contrast identity | Deterministic weighted scores only; no sampling distribution or coverage law |
+
+| `four_batch_mean_add` (theorem) | Weighted finite-list means preserve addition of two real score attributes whenever the total exposure is nonzero. | Canonical ListPoolingAlgebra weighted mean, FiniteSum additivity and Rocq Field/Ring | Finite-list mean only; no Gaussian or population expectation law |
+| `four_batch_mean_linear_two` (theorem) | The mean of a linear two-test composite is the coefficient-weighted sum of its two finite-sample means. | Canonical ListPoolingAlgebra weighted mean, FiniteSum additivity and Rocq Field/Ring | Finite-list mean only; no Gaussian or population expectation law |
+| `four_batch_mean_linear_four` (theorem) | The exact first-moment analogue of the four-test quadratic variance bridge: the pooled mean of a four-test composite is the linear combination of four pooled means. | Canonical ListPoolingAlgebra weighted mean, FiniteSum additivity and Rocq Field/Ring | Finite-list mean only; no Gaussian or population expectation law |
 
 **Complete AI disclosure:** OpenAI ChatGPT contributed specifications, contrast selection, polynomial expansion, Rocq proof scripts, and documentation. The exact proposition and checked source SHA govern any proof status. This source neither establishes Gaussian conditioning nor asserts that arbitrary real matrix entries form a valid covariance matrix. Statistical calibration, covariance feasibility, distributional sampling laws, confidence coverage, and empirical IQ claims remain separate obligations.
