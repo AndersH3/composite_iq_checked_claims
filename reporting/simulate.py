@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Dask-native simulation, analysis, asset and XeLaTeX task graphs.
 
-Fresh random arrays, reductions and report production are Dask tasks;
+The scalable default uses one Dask task per seeded sample block and returns
+compact numerical statistics rather than moving full samples between workers.
+The retained reference Dask Array engine supports historical cross-checks;
+report production and reference calculations also remain in the task graph.
 no retired native implementation or historical CSV input is required.
 Small scalar reference calculations reuse the maintained SciPy code inside
 Dask delayed tasks. No expensive computation happens during graph creation.
@@ -458,7 +461,7 @@ def finalize_run(results, config, task_count):
 @deal.pre(lambda argv=None: ROOT.is_dir())
 @deal.post(lambda result: result == 0)
 @deal.raises(OSError, ValueError, TypeError, KeyError, ImportError, OverflowError, NotImplementedError, csv.Error, subprocess.SubprocessError, CalledProcessError, TimeoutExpired, RuntimeError, SystemExit)
-@deal.has("read", "write", "syscall", "import", "random", "stdout", "stderr")
+@deal.has("read", "write", "syscall", "import", "random", "stdout", "stderr", "time")
 def main(argv=None):
     """Execute one shared graph for all three sub-projects, not a case loop of compute calls."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -477,6 +480,8 @@ def main(argv=None):
                         help="Per-worker memory limit for the distributed scheduler")
     parser.add_argument("--dashboard-address", default=None,
                         help="Optional distributed dashboard bind (for example :8787)")
+    parser.add_argument("--performance-report", default=None,
+                        help="Optional distributed scheduler performance HTML output")
     parser.add_argument("--plan", action="store_true",
                         help="Build and inspect the lazy task graph without drawing samples or writing files")
     parser.add_argument("--pdf", action="store_true", help="Build and render all three XeLaTeX reports after analysis")
@@ -489,8 +494,8 @@ def main(argv=None):
         parser.error("too many blocks per replicate (maximum 1024); increase --chunk")
     if args.engine == "arrays" and args.trials > 1_000_000:
         parser.error("the reference Dask Array engine is limited to <=1 million trials per replicate; use --engine blocks for scale")
-    if args.scheduler != "distributed" and args.dashboard_address:
-        parser.error("--dashboard-address requires --scheduler distributed")
+    if args.scheduler != "distributed" and (args.dashboard_address or args.performance_report):
+        parser.error("--dashboard-address and --performance-report require --scheduler distributed")
     config = {"trials": args.trials, "chunk": min(args.chunk, args.trials),
               "replicates": args.replicates, "seeds": list(SEEDS[:args.replicates]),
               "engine": args.engine, "scheduler": args.scheduler, "workers": args.workers,
@@ -519,12 +524,16 @@ def main(argv=None):
         if args.scheduler == "distributed":
             # Optional worker memory spilling and live observability. No nested
             # Dask computations: all reductions and file writes are DAG nodes.
-            from dask.distributed import Client, LocalCluster
+            from contextlib import nullcontext
+            from dask.distributed import Client, LocalCluster, performance_report
             with LocalCluster(n_workers=args.workers, threads_per_worker=1,
                               processes=True, memory_limit=args.memory_limit,
                               dashboard_address=args.dashboard_address) as cluster:
                 with Client(cluster) as client:
-                    record = client.compute(terminal).result()
+                    diagnostic_context = (performance_report(filename=args.performance_report)
+                                          if args.performance_report else nullcontext())
+                    with diagnostic_context:
+                        record = client.compute(terminal).result()
         else:
             record = dask.compute(terminal, scheduler="processes", num_workers=args.workers)[0]
     except RemoteException as error:
@@ -532,6 +541,7 @@ def main(argv=None):
         raise RuntimeError("Dask worker task failed; inspect the chained error and build logs") from error
     elapsed = time.monotonic() - started
     print(json.dumps({"execution_seconds": elapsed,
+                      "performance_report": args.performance_report,
                       "samples_per_case": config["trials"] * len(config["seeds"]),
                       "graph_tasks": task_count,
                       "total_case_observations": config["trials"] * len(config["seeds"]) * (8 + 5 + 24),
