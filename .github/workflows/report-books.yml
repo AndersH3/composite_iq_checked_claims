@@ -78,5 +78,8 @@ jobs:
             echo 'Compiled PDFs already match tracked bytes'
           else
             git commit -m 'Rebuild all six books from Python/Dask/Deal XeLaTeX source'
+            # Documentation may have advanced while the six PDF jobs ran.
+            # Rebase only this PDF commit onto the latest branch head.
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
