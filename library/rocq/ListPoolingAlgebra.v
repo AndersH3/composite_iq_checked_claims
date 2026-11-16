@@ -2164,7 +2164,14 @@ Qed.
 Theorem batch_variance_monotone_below_half :
   forall (A:Type) (w p q:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> p x<=q x<=1/2) -> batch_bernoulli_variance w p xs<=batch_bernoulli_variance w q xs.
 Proof.
-  intros A w p q xs Hw Hp; pose proof (batch_variance_rate_difference A w p q xs) as H; rewrite H; assert (Hnon:0<=finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs). { apply finite_sum_nonnegative; intros x Hin; pose proof (Hw x Hin) as E; pose proof (Hp x Hin) as F; nra. } lra.
+  intros A w p q xs Hw Hp.
+  pose proof (batch_variance_rate_difference A w p q xs) as H.
+  assert (Hnon: 0<=finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs).
+  { apply finite_sum_nonnegative; intros x Hin.
+    apply Rmult_le_pos.
+    - apply Rmult_le_pos; [apply Hw; exact Hin|pose proof (Hp x Hin); lra].
+    - pose proof (Hp x Hin); lra. }
+  lra.
 Qed.
 
 (** [batch_variance_monotone_above_half] (theorem).
@@ -2178,7 +2185,18 @@ Qed.
 Theorem batch_variance_monotone_above_half :
   forall (A:Type) (w p q:A->R) (xs:list A), (forall x, In x xs -> 0<=w x) -> (forall x, In x xs -> 1/2<=p x<=q x) -> batch_bernoulli_variance w q xs<=batch_bernoulli_variance w p xs.
 Proof.
-  intros A w p q xs Hw Hp; pose proof (batch_variance_rate_difference A w p q xs) as H; rewrite H; assert (Hnon:finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs<=0). { assert (E:0<=finite_sum (fun x=>- (w x*(q x-p x)*(1-p x-q x))) xs). { apply finite_sum_nonnegative; intros x Hin; pose proof (Hw x Hin) as W; pose proof (Hp x Hin) as P; nra. } rewrite finite_sum_neg in E; lra. } lra.
+  intros A w p q xs Hw Hp.
+  pose proof (batch_variance_rate_difference A w p q xs) as H.
+  assert (Hnon: finite_sum (fun x=>w x*(q x-p x)*(1-p x-q x)) xs<=0).
+  { assert (E:0<=finite_sum (fun x=>- (w x*(q x-p x)*(1-p x-q x))) xs).
+    { apply finite_sum_nonnegative; intros x Hin.
+      replace (- (w x*(q x-p x)*(1-p x-q x)))
+        with (w x*(q x-p x)*(p x+q x-1)) by ring.
+      apply Rmult_le_pos.
+      - apply Rmult_le_pos; [apply Hw; exact Hin|pose proof (Hp x Hin); lra].
+      - pose proof (Hp x Hin); lra. }
+    rewrite finite_sum_neg in E; lra. }
+  lra.
 Qed.
 
 (** [batch_success_strict_positive_member] (theorem).
