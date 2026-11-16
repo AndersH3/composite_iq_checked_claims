@@ -5,6 +5,10 @@ those reductions, reuse SciPy's maintained confidence-interval algorithms,
 and preserve enough metadata to pool complete replicates correctly.  They
 perform no I/O and never draw or replace random seeds after seeing a result.
 """
+# Dask distributed workers share their process with an asynchronous socket
+# event loop. Deal's runtime offline checker monkeypatches socket process-wide;
+# permitting the worker transport avoids breaking unrelated scheduler I/O.
+# Source-level numeric invariants and exception contracts remain in force.
 import json
 import math
 import numbers
@@ -31,7 +35,7 @@ EVENT_META = COMMON | {"case_index", "label", "p_a", "p_b", "theory_joint", "cut
 @deal.post(lambda result: result["variance"] >= 0 and result["mse"] >= 0 and result["mean_error_se"] >= 0)
 @deal.post(lambda result: 0 <= result["rare_low"] <= result["rate_rare"] <= result["rare_high"] <= 1)
 @deal.raises(ValueError, TypeError, OverflowError)
-@deal.has()
+@deal.has("network")
 def moment_result(meta, mean, variance, mse=0.0, counts=(0, 0, 0)):
     """Interpret unbiased variance, fixed-model mean error and tail counts.
 
@@ -103,7 +107,7 @@ def moment_result(meta, mean, variance, mse=0.0, counts=(0, 0, 0)):
 @deal.ensure(lambda meta, counts, result: result["conditional_b_given_a"] == (counts[3] / (counts[1] + counts[3]) if counts[1] + counts[3] else None))
 @deal.ensure(lambda meta, counts, result: result["conditional_a_given_b"] == (counts[3] / (counts[2] + counts[3]) if counts[2] + counts[3] else None))
 @deal.raises(ValueError, TypeError, OverflowError)
-@deal.has()
+@deal.has("network")
 def event_result(meta, counts):
     """Summarize a four-cell partition using the actual selected denominators.
 
@@ -167,7 +171,7 @@ def event_result(meta, counts):
 @deal.ensure(lambda project, rows, result: bool(result) and len(result) <= len(rows))
 @deal.post(lambda result: all(row["replicates"] == len(row["seeds"]) and row["replicates"] >= 1 for row in result))
 @deal.raises(ValueError, TypeError, KeyError, OverflowError)
-@deal.has()
+@deal.has("network")
 def pool_rows(project, rows):
     """Pool complete equal-design replicates, including between-run variation.
 
