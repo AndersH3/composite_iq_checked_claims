@@ -25,5 +25,7 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
+      - name: Validate scaled 40-million-sample Dask task budget without execution
+        run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
       - name: Python/Dask numerical and property tests
         run: python -m pytest -q tests
