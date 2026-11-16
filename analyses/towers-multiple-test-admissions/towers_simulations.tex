@@ -67,21 +67,17 @@ answer a different question even if every simulated count were exact.
 Proposition~\ref{tw:events} derives each event formula and denominator.
 
 
-\noindent\textbf{Recorded sample versus scalable implementation.}
-The numerical values in this report remain the checked-in Dask Array
-experiment. The maintained Python source additionally provides a
-block-aggregated Dask delayed engine: a worker generates one bounded
-Gaussian pair block, applies all five rules to the \emph{same} pairs,
-and returns only four-cell counts to the scheduler. Its future default
-is eight replicates of five million pairs; the larger run is not
-substituted for the numerical evidence printed here without execution,
-validation, and a new provenance record. This separation avoids
-mistaking a prospective 40-million-pair default for the actual recorded
-four-million-pair experiment.
+\noindent\textbf{Block-aggregated Dask experiment.}
+The source supports a Dask Array reference engine and an optimized
+Dask delayed engine. The latter evaluates all five decision rules
+on a shared Gaussian pair block and returns only integer four-cell
+counts to the scheduler. The numerical records and provenance manifest,
+rather than the source defaults, determine the number of executed
+observations and the actual engine for this edition.
 
 The study uses \SimReplicates{} replicate streams, each with
 \SimTrials{} pairs, for \SimPooledTrials{} pairs per rule after pooling.
-Dask Array processes chunks of \SimChunk{} observations. The same pairs are
+Dask processes blocks of \SimChunk{} observations. The same pairs are
 classified under all five rules within a replicate. This common-random-number
 design permits direct rule comparisons and avoids generating the same
 population separately for every cutoff. It also makes the rule-specific
@@ -116,7 +112,7 @@ consistent strict comparison for every event count.
 
 \chapter{How the simulated pairs are constructed}
 
-For each observation the Dask Array generator supplies two nominally independent
+For each observation the seeded Gaussian model supplies two nominally independent
 standard normal values \(G,E\). The transformed pair is
 \begin{equation}
  X=G,\qquad Y=\rho G+\sqrt{1-\rho^2}\,E,\qquad \rho=0.7.
@@ -301,11 +297,12 @@ At the equal top-1-in-33,000 cutoffs, the model gives
  j\approx2.3124979\times10^{-6},\qquad
  u\approx5.8293563\times10^{-5}.
 \]
-A single million-pair replicate therefore has expected joint count about
-\(2.3125\), even though its expected number of passers on either specified
-test is about \(30.303\). Pooling \(\SimReplicates\) such replicates
-increases the expected joint count in direct proportion to the number of
-pairs; it does not create millions of observations of the rare event itself.
+A replicate of \(\SimTrials\) pairs therefore has expected joint count
+\(\SimTrials\times j\), while the expected number of passers of either
+specified marginal test is \(\SimTrials/33{,}000\).
+Pooling \(\SimReplicates\) such replicates increases the expected
+joint count in direct proportion to the number of pairs; it does not
+create millions of observations of the rare event itself.
 The relevant information is the small joint count displayed in the table.
 
 For a binomial count \(K\) from \(T\) independent pairs,
