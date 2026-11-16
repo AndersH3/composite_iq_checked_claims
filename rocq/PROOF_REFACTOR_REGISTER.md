@@ -3825,7 +3825,7 @@ OpenAI ChatGPT drafted each result and its source commentary. The trusted Rocq k
 
 ChatGPT assisted with this exact two-batch statistical-moment proof development; final kernel acceptance must be established on pinned Rocq 9.2 CI and does not imply empirical IQ score calibration.
 
-## ThreeGroupPooling.v — 34 proof scripts
+## ThreeGroupPooling.v — 39 proof scripts
 
 Review: each item is a distinct scalar theorem about three-group weighted means, first/second moments or the between/within corrected sum of squares. All are special cases of elementary real and ANOVA algebra rather than probability laws. Reviewed for reusable Stdlib arithmetic rather than a fresh recursion or nonstandard operator.
 
@@ -3865,6 +3865,12 @@ Review: each item is a distinct scalar theorem about three-group weighted means,
 | `three_ss_third_increment` (theorem) | Three-batch pooled mean, moment, or corrected SS equation and nonnegative/positive-domain consequence. | Rocq Reals, Ring, Field, Lra, Psatz and canonical PooledMomentsAlgebra. | Exact deterministic three-batch sample algebra; no chi-square distribution or independent sampling. |
 | `three_ss_within_swap` (theorem) | Three-batch pooled mean, moment, or corrected SS equation and nonnegative/positive-domain consequence. | Rocq Reals, Ring, Field, Lra, Psatz and canonical PooledMomentsAlgebra. | Exact deterministic three-batch sample algebra; no chi-square distribution or independent sampling. |
 | `three_ss_zero_within_equal` (theorem) | Three-batch pooled mean, moment, or corrected SS equation and nonnegative/positive-domain consequence. | Rocq Reals, Ring, Field, Lra, Psatz and canonical PooledMomentsAlgebra. | Exact deterministic three-batch sample algebra; no chi-square distribution or independent sampling. |
+
+| `three_dispersion_raw_second_identity` (theorem) | Exact three-replicate ANOVA raw-moment and two-stage within/between corrected sum-of-squares bridge, using original pooled sample definitions. | Reuses PooledMomentsAlgebra, Stdlib Field/Ring/Lra/Psatz. | Deterministic three-batch equality; no Gaussian/chi-square sampling claim. |
+| `three_dispersion_two_stage` (theorem) | Exact three-replicate ANOVA raw-moment and two-stage within/between corrected sum-of-squares bridge, using original pooled sample definitions. | Reuses PooledMomentsAlgebra, Stdlib Field/Ring/Lra/Psatz. | Deterministic three-batch equality; no Gaussian/chi-square sampling claim. |
+| `three_ss_two_stage` (theorem) | Exact three-replicate ANOVA raw-moment and two-stage within/between corrected sum-of-squares bridge, using original pooled sample definitions. | Reuses PooledMomentsAlgebra, Stdlib Field/Ring/Lra/Psatz. | Deterministic three-batch equality; no Gaussian/chi-square sampling claim. |
+| `three_variance_two_stage` (theorem) | Exact three-replicate ANOVA raw-moment and two-stage within/between corrected sum-of-squares bridge, using original pooled sample definitions. | Reuses PooledMomentsAlgebra, Stdlib Field/Ring/Lra/Psatz. | Deterministic three-batch equality; no Gaussian/chi-square sampling claim. |
+| `three_variance_nonnegative` (theorem) | Exact three-replicate ANOVA raw-moment and two-stage within/between corrected sum-of-squares bridge, using original pooled sample definitions. | Reuses PooledMomentsAlgebra, Stdlib Field/Ring/Lra/Psatz. | Deterministic three-batch equality; no Gaussian/chi-square sampling claim. |
 
 ### D044x first module disclosure
 
