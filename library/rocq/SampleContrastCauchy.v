@@ -15,7 +15,7 @@
  successful kernel compilation, not generated prose, determines proof status.
 *)
 From Stdlib Require Import Reals Lra Psatz Ring Field List.
-Require Import FiniteSum FiniteConditionalCovariance ListPoolingAlgebra
+Require Import FiniteSum FiniteTwoCellProjection FiniteConditionalCovariance ListPoolingAlgebra
                FourContrastCovariance.
 Open Scope R_scope.
 
