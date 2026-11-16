@@ -4,6 +4,21 @@
 
 > **AI disclosure:** This source-location refactor and accompanying documentation were AI-assisted; only the separately pinned Rocq kernel checks theorems.
 
+## D043x — shared statistical-algebra modules
+
+The four newly checked shared Rocq modules are
+[`WilsonScoreAlgebra.v`](WilsonScoreAlgebra.v) (36 exact score algebra theorems),
+[`SamplingPrecision.v`](SamplingPrecision.v) (45 conditional Bernoulli
+moment/precision theorems),
+[`ConditionalRatioStability.v`](ConditionalRatioStability.v) (30 exact
+positive-denominator ratio theorems) and
+[`PooledMomentsAlgebra.v`](PooledMomentsAlgebra.v) (31 two-batch pooled
+variance identities). They reuse Stdlib real algebra, Field, Psatz and Ring;
+there is no new recursive summation, binomial sampling engine or Gaussian
+distribution axiom. Kernel evidence is linked from the
+[formalization README](../../rocq/README.md). General probability-law and
+confidence-coverage theorems remain separate obligations.
+
 The new `TrivariateSchur.v` is the canonical generic 3×3 covariance
 Schur-factorization and inequality source (27 statements, with strictly positive
 conditioning variance explicit in sign-equivalence theorems). The three-test
@@ -14,7 +29,7 @@ Only genuinely report-neutral mathematical modules are owned **once** under this
 
 Report-specific lemmas and models remain with their reports: [Hoeflin/Ferguson](../../analyses/hoeflin-ferguson/rocq/), [Towers admissions](../../analyses/towers-multiple-test-admissions/rocq/), and [Sequential conditional means](../../analyses/sequential-conditional-means/rocq/).
 
-The canonical 22-module dependency order is encoded in [`scripts/compile_rocq.sh`](../../scripts/compile_rocq.sh). It copies each uniquely named source into a clean temporary workspace and runs `rocq compile` in that order. From the repository root:
+The canonical 32-module dependency order is encoded in [`scripts/compile_rocq.sh`](../../scripts/compile_rocq.sh). It copies each uniquely named source into a clean temporary workspace and runs `rocq compile` in that order. From the repository root:
 
 ```sh
 bash scripts/check_rocq_documentation.sh
