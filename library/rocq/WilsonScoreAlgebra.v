@@ -159,7 +159,7 @@ Qed.
 *)
 Theorem wilson_total_zero_quantile : forall n, wilson_total n 0=n.
 Proof.
-  intro n; unfold wilson_total; ring.
+  intro n; unfold wilson_total; field; nra.
 Qed.
 
 (** [wilson_center_nonnegative] (theorem).
@@ -239,7 +239,7 @@ Qed.
 *)
 Theorem wilson_radical_complement : forall n h z, wilson_radical_square n (1-h) z = wilson_radical_square n h z.
 Proof.
-  intros; unfold wilson_radical_square; ring.
+  intros; unfold wilson_radical_square; field; nra.
 Qed.
 
 (** [wilson_radical_nonnegative] (theorem).
@@ -279,7 +279,7 @@ Qed.
 *)
 Theorem wilson_score_at_empirical : forall n h z, wilson_score n h z h = - z*z*h*(1-h).
 Proof.
-  intros; unfold wilson_score; ring.
+  intros; unfold wilson_score; field; nra.
 Qed.
 
 (** [wilson_score_empirical_nonpositive] (theorem).
@@ -339,7 +339,7 @@ Qed.
 *)
 Theorem wilson_score_at_zero : forall n h z, wilson_score n h z 0 = n*h*h.
 Proof.
-  intros; unfold wilson_score; ring.
+  intros; unfold wilson_score; field; nra.
 Qed.
 
 (** [wilson_score_at_one] (theorem).
@@ -359,7 +359,7 @@ Qed.
 *)
 Theorem wilson_score_at_one : forall n h z, wilson_score n h z 1 = n*(1-h)*(1-h).
 Proof.
-  intros; unfold wilson_score; ring.
+  intros; unfold wilson_score; field; nra.
 Qed.
 
 (** [wilson_score_complement] (theorem).
@@ -379,7 +379,7 @@ Qed.
 *)
 Theorem wilson_score_complement : forall n h z p, wilson_score n (1-h) z (1-p)=wilson_score n h z p.
 Proof.
-  intros; unfold wilson_score; ring.
+  intros; unfold wilson_score; field; nra.
 Qed.
 
 (** [wilson_score_quantile_sign] (theorem).
@@ -399,7 +399,7 @@ Qed.
 *)
 Theorem wilson_score_quantile_sign : forall n h z p, wilson_score n h (-z) p=wilson_score n h z p.
 Proof.
-  intros; unfold wilson_score; ring.
+  intros; unfold wilson_score; field; nra.
 Qed.
 
 (** [wilson_radical_quantile_sign] (theorem).
@@ -419,7 +419,7 @@ Qed.
 *)
 Theorem wilson_radical_quantile_sign : forall n h z, wilson_radical_square n h (-z)=wilson_radical_square n h z.
 Proof.
-  intros; unfold wilson_radical_square; ring.
+  intros; unfold wilson_radical_square; field; nra.
 Qed.
 
 (** [wilson_center_quantile_sign] (theorem).
@@ -439,7 +439,7 @@ Qed.
 *)
 Theorem wilson_center_quantile_sign : forall n h z, wilson_center n h (-z)=wilson_center n h z.
 Proof.
-  intros; unfold wilson_center; ring.
+  intros; unfold wilson_center; field; nra.
 Qed.
 
 (** [wilson_total_quantile_sign] (theorem).
@@ -459,7 +459,7 @@ Qed.
 *)
 Theorem wilson_total_quantile_sign : forall n z, wilson_total n (-z)=wilson_total n z.
 Proof.
-  intros; unfold wilson_total; ring.
+  intros; unfold wilson_total; field; nra.
 Qed.
 
 (** [wilson_score_zero_quantile] (theorem).
@@ -479,7 +479,7 @@ Qed.
 *)
 Theorem wilson_score_zero_quantile : forall n h p, wilson_score n h 0 p = n*(h-p)*(h-p).
 Proof.
-  intros; unfold wilson_score; ring.
+  intros; unfold wilson_score; field; nra.
 Qed.
 
 (** [wilson_score_zero_quantile_unique] (theorem).
@@ -519,7 +519,7 @@ Qed.
 *)
 Theorem wilson_complete_square : forall n h z p, wilson_total n z * wilson_score n h z p = (wilson_total n z*p - wilson_center n h z)*(wilson_total n z*p - wilson_center n h z) - wilson_radical_square n h z.
 Proof.
-  intros; unfold wilson_total,wilson_score,wilson_center,wilson_radical_square; ring.
+  intros; unfold wilson_total,wilson_score,wilson_center,wilson_radical_square; field; nra.
 Qed.
 
 (** [wilson_left_endpoint_discriminant] (theorem).
@@ -539,7 +539,7 @@ Qed.
 *)
 Theorem wilson_left_endpoint_discriminant : forall n h z, wilson_center n h z*wilson_center n h z-wilson_radical_square n h z = n*wilson_total n z*h*h.
 Proof.
-  intros; unfold wilson_center,wilson_radical_square,wilson_total; ring.
+  intros; unfold wilson_center,wilson_radical_square,wilson_total; field; nra.
 Qed.
 
 (** [wilson_right_endpoint_discriminant] (theorem).
@@ -559,7 +559,7 @@ Qed.
 *)
 Theorem wilson_right_endpoint_discriminant : forall n h z, (wilson_total n z-wilson_center n h z)*(wilson_total n z-wilson_center n h z)-wilson_radical_square n h z = n*wilson_total n z*(1-h)*(1-h).
 Proof.
-  intros; unfold wilson_center,wilson_radical_square,wilson_total; ring.
+  intros; unfold wilson_center,wilson_radical_square,wilson_total; field; nra.
 Qed.
 
 (** [wilson_radical_zero_quantile] (theorem).
@@ -579,7 +579,7 @@ Qed.
 *)
 Theorem wilson_radical_zero_quantile : forall n h, wilson_radical_square n h 0=0.
 Proof.
-  intros; unfold wilson_radical_square; ring.
+  intros; unfold wilson_radical_square; field; nra.
 Qed.
 
 (** [wilson_radical_zero_successes] (theorem).
@@ -599,7 +599,7 @@ Qed.
 *)
 Theorem wilson_radical_zero_successes : forall n z, wilson_radical_square n 0 z=z*z*z*z/4.
 Proof.
-  intros; unfold wilson_radical_square; ring.
+  intros; unfold wilson_radical_square; field; nra.
 Qed.
 
 (** [wilson_radical_all_successes] (theorem).
@@ -619,7 +619,7 @@ Qed.
 *)
 Theorem wilson_radical_all_successes : forall n z, wilson_radical_square n 1 z=z*z*z*z/4.
 Proof.
-  intros; unfold wilson_radical_square; ring.
+  intros; unfold wilson_radical_square; field; nra.
 Qed.
 
 (** [wilson_score_inversion_scaled] (theorem).
@@ -799,7 +799,7 @@ Qed.
 *)
 Theorem wilson_score_at_no_successes : forall n z, wilson_score n 0 z 0=0.
 Proof.
-  intros; rewrite wilson_score_at_zero; ring.
+  intros; rewrite wilson_score_at_zero; field; nra.
 Qed.
 
 (** [wilson_score_at_all_successes] (theorem).
@@ -819,6 +819,6 @@ Qed.
 *)
 Theorem wilson_score_at_all_successes : forall n z, wilson_score n 1 z 1=0.
 Proof.
-  intros; rewrite wilson_score_at_one; ring.
+  intros; rewrite wilson_score_at_one; field; nra.
 Qed.
 
