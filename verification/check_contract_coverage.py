@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Require at least five real Deal decorators on every named Python function."""
+"""Audit distinct Deal contracts: at least five/function and fifteen/source file."""
 import argparse
 import ast
 import json
@@ -14,9 +14,13 @@ import deal
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"}
 MINIMUM_CONTRACTS = 5
-# Ten is a staged, nonredundant contract target; only five are compulsory
-# until every production function has a defensible ten-contract specification.
-TARGET_CONTRACTS = 10
+# The independent executable-file floor applies to all tracked Python
+# modules containing a named function, including tests and lint fixtures.
+# Import-only modules have no callable boundary on which to hang a contract.
+MINIMUM_FILE_CONTRACTS = 15
+# Fifteen per function remains a separate aspirational goal: reaching a
+# numeric target never justifies duplicating an equivalent proposition.
+TARGET_CONTRACTS = 15
 
 
 @deal.pre(lambda node, aliases: isinstance(node, ast.expr))
@@ -63,6 +67,13 @@ def is_contract(node: ast.expr, aliases: set) -> bool:
 @deal.post(lambda result: result["minimum_contracts"] == MINIMUM_CONTRACTS)
 @deal.post(lambda result: len(result["missing"]) <= len(result["insufficient"]))
 @deal.post(lambda result: len(result["duplicated"]) <= result["function_count"])
+@deal.post(lambda result:
+           result["file_distinct_contract_count"] ==
+           sum(row["distinct_contract_count"] for row in result["function_contracts"]))
+@deal.post(lambda result:
+           result["insufficient_file"] ==
+           (result["function_count"] > 0 and
+            result["file_distinct_contract_count"] < MINIMUM_FILE_CONTRACTS))
 def audit_file(path: Path) -> dict:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)
@@ -93,9 +104,18 @@ def audit_file(path: Path) -> dict:
     insufficient = [row for row in function_contracts if row["distinct_contract_count"] < MINIMUM_CONTRACTS]
     duplicated = [row for row in function_contracts if row["duplicate_contract_count"]]
     count = sum(row["contract_count"] for row in function_contracts)
+    distinct = sum(row["distinct_contract_count"] for row in function_contracts)
+    # Count only distinct AST contract expressions *within each function*.
+    # Identical-looking contracts on different callable boundaries are
+    # different checks, whereas repeating one decorator is not progress.
+    file_below_floor = bool(functions) and distinct < MINIMUM_FILE_CONTRACTS
     return {"path": str(path), "function_count": len(functions), "missing": missing,
             "imports_deal": bool(aliases), "contract_count": count,
-            "minimum_contracts": MINIMUM_CONTRACTS, "function_contracts": function_contracts,
+            "file_distinct_contract_count": distinct,
+            "minimum_contracts": MINIMUM_CONTRACTS,
+            "minimum_file_contracts": MINIMUM_FILE_CONTRACTS,
+            "insufficient_file": file_below_floor,
+            "function_contracts": function_contracts,
             "insufficient": insufficient, "duplicated": duplicated}
 
 
@@ -149,12 +169,14 @@ def main() -> None:
     # A file with even one named function must still import Deal and
     # meet the full per-function contract floor; the negative fixture
     # tests this non-vacuous requirement.
-    problems = [r for r in rows if r["insufficient"] or r["duplicated"]
-                or (r["function_count"] > 0
+    problems = [r for r in rows if r["insufficient"] or r["insufficient_file"]
+                or r["duplicated"] or (r["function_count"] > 0
                     and (not r["imports_deal"] or r["contract_count"] == 0))]
     report = {"python_files": len(rows), "named_functions": sum(r["function_count"] for r in rows),
               "deal_contracts": sum(r["contract_count"] for r in rows), "problems": problems,
               "minimum_contracts": MINIMUM_CONTRACTS,
+              "minimum_file_contracts": MINIMUM_FILE_CONTRACTS,
+              "files_below_minimum": sum(r["insufficient_file"] for r in rows),
               "minimum_observed": min(row["distinct_contract_count"] for r in rows for row in r["function_contracts"]),
               "complete": not problems}
     contract_counts = [function["distinct_contract_count"] for row in rows

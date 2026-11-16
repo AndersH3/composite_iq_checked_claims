@@ -7,6 +7,14 @@ import deal
 @deal.ensure(lambda value, result: result == value)
 @deal.has()
 @deal.raises()
+# These are genuine identity/probability properties of the positive
+# fixture. Keep the deliberately failing negative_probability untouched:
+# the static-lint gate requires exactly one DEL012 diagnostic from it.
+@deal.pre(lambda value: type(value) in (int, float))
+@deal.post(lambda result: isinstance(result, (int, float)))
+@deal.ensure(lambda value, result: (value == 0) == (result == 0))
+@deal.ensure(lambda value, result: (value == 1) == (result == 1))
+@deal.ensure(lambda value, result: (value < 0.5) == (result < 0.5))
 def probability_identity(value: float) -> float:
     return value
 
