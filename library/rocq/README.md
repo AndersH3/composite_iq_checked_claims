@@ -4,6 +4,24 @@
 
 > **AI disclosure:** This source-location refactor and accompanying documentation were AI-assisted; only the separately pinned Rocq kernel checks theorems.
 
+## D046x — general finite-list weighted moments and rate diagnostics
+
+The new [`ListPoolingAlgebra.v`](ListPoolingAlgebra.v) extends the
+two- and three-batch report formulas to an **arbitrary finite list** via
+the canonical `FiniteSum` fold, with no duplicate recursion or custom
+probability engine. It proves **159** documented theorems and introduces
+**16** definitions for weighted moment aggregation, centered sums,
+cross-covariance and ideal heterogeneous Bernoulli diagnostics.
+The [Rocq 9.2 proof workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43847174190) passed at exact commit `469f2cb2ed`.
+The authoritative per-proof review is
+[`PROOF_REFACTOR_LIST_POOLING.md`](../../rocq/PROOF_REFACTOR_LIST_POOLING.md).
+The canonical build totals **36 modules and 2,947 proof scripts**.
+Only deterministic finite-list and hypothetical parameter algebra is
+certified; independent sampling distributions, Gaussian/chi-square
+results, exact confidence coverage and IQ model validity remain open.
+
+**AI disclosure:** OpenAI ChatGPT assisted theorem specification, Rocq proof scripts, algebraic library reuse, documentation, CI diagnosis and source refactoring. Only explicitly stated Rocq propositions checked by the pinned kernel are mathematical proofs. No stochastic model, confidence coverage, empirical IQ validity or independent human validation is inferred.
+
 ## D045x — new shared three-cohort diagnostic module
 
 The canonical [`StratifiedBernoulli.v`](StratifiedBernoulli.v)

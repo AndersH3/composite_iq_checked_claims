@@ -5,9 +5,30 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for all three analytical reports and their three simulation companions. **2,788 proof scripts** across **35 Rocq modules** have passed the pinned Rocq 9.2 kernel (2,774 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
+for all three analytical reports and their three simulation companions. **2,947 proof scripts** across **36 Rocq modules** have passed the pinned Rocq 9.2 kernel (2,933 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
+
+## D046x — 159 checked arbitrary-list pooling and covariance theorems
+
+The Rocq 9.2 kernel [passed at exact commit `469f2cb2ed`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43847174190)
+with the new shared [`ListPoolingAlgebra.v`](../library/rocq/ListPoolingAlgebra.v).
+There are **159** new theorem proofs and **16** definitions extending G12
+(`sm:pooling`) to arbitrary finite lists of group summaries, with
+partition/ordering invariance, exact ANOVA and pooled corrected sums,
+variance minimization and weighted cross-covariance. List-valued ideal
+heterogeneous Bernoulli count/variance formulas and sharp bounds support
+G08/G13 algebraically. The [source-order review register](PROOF_REFACTOR_LIST_POOLING.md)
+is kept separately from the historical megabyte-scale register and is
+enforced by the documentation check.
+
+**Checked total:** **2,947 proof scripts in 36 modules**, including
+**2,933 public claims**, one helper, 13 constructors and **3,242
+documented declarations**. These are not 159 independent stochastic
+probability laws. Gaussian conditioning, independent binomial sampling,
+conditional random denominators, chi-square pivots, confidence coverage,
+simulation validity and empirical IQ population assumptions remain
+unproved. **AI disclosure:** OpenAI ChatGPT assisted theorem specification, Rocq proof scripts, algebraic library reuse, documentation, CI diagnosis and source refactoring. Only explicitly stated Rocq propositions checked by the pinned kernel are mathematical proofs. No stochastic model, confidence coverage, empirical IQ validity or independent human validation is inferred.
 
 ## D045x — 185 kernel-checked heterogeneous three-cohort moment and calibration theorems
 

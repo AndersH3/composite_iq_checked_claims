@@ -4,6 +4,40 @@
 
 **Date:** November 16, 2026. **Pinned baseline:** [`5c23afcd48bd36302c0acd2bbdf75271abf06921`](https://github.com/AndersH3/composite_iq_checked_claims/commit/5c23afcd48bd36302c0acd2bbdf75271abf06921). The six authoritative XeLaTeX sources are linked from the four project/reporting READMEs. This register covers all six main/simulation volumes, their proof-bearing inputs and claim-to-evidence maps. It distinguishes the full report proposition from a previously kernel-checked **finite** or **algebraic** fragment.
 
+## D046x status — kernel-checked arbitrary-list pooling, covariance and rate diagnostics
+
+On [exact Rocq 9.2 CI at commit `469f2cb2ed`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43847174190), the shared
+[`ListPoolingAlgebra.v`](../library/rocq/ListPoolingAlgebra.v) contributes
+**159 new theorem proofs and 16 definitions**. The audit also passes the
+strict source-order documentation gate, canonical library ownership check
+and no-extra-axiom/no-unfinished-proof gate. The accepted corpus now contains
+**2,947 proof scripts across 36 modules** (2,933 public theorems/lemmas/examples,
+one earlier local helper, 13 model/record constructors), and **3,242
+documented declarations**. Each proof is counted once, although all six
+volumes may import shared results.
+
+**Actual report links.** `sm:pooling` / G12 is now supported by
+arbitrary finite lists of weighted group summaries: first/second moments,
+weighted means, permutation/concatenation identities, exact
+centered-sum-of-squares and ANOVA decompositions, mean minimization,
+cross-moments and covariance transformations. `sm:binomial` / G08 and
+`sm:rare` / G13 receive finite-list ideal heterogeneous Bernoulli
+count/variance expressions, sharp upper bounds, rate sensitivity and
+zero/equality criteria. Towers admissions receives the same
+*deterministic* heterogeneous-rate diagnostics. These are meaningful
+extensions beyond D043x two-group, D044x three-group and D045x
+three-cohort formulas.
+
+**Boundary:** the full report statements remain **partially
+formalized** where they require stochastic facts. No independent-trial
+binomial PMF, random-denominator conditional count law, Gaussian
+conditioning/tail theorem, normal-sample chi-square pivot, exact interval
+coverage, pseudorandom simulation guarantee or empirical IQ model is
+derived from arbitrary-list algebra. For all 159 new scripts see the
+[dedicated exact source-order refactoring register](PROOF_REFACTOR_LIST_POOLING.md);
+the large historical register is retained for older modules. AI disclosure:
+OpenAI ChatGPT assisted theorem specification, Rocq proof scripts, algebraic library reuse, documentation, CI diagnosis and source refactoring. Only explicitly stated Rocq propositions checked by the pinned kernel are mathematical proofs. No stochastic model, confidence coverage, empirical IQ validity or independent human validation is inferred.
+
 ## D045x status — stratified Bernoulli diagnostics and sharp variance bounds
 
 A [Rocq 9.2 kernel validation](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43832111166) on exact commit
