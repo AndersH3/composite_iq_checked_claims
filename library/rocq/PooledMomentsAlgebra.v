@@ -143,7 +143,7 @@ Qed.
 *)
 Theorem pooled_mean_swap: forall n m a b, pooled_mean n m a b=pooled_mean m n b a.
 Proof.
-  intros n m a b; unfold pooled_mean,pooled_mass; replace (m+n) with (n+m) by ring; ring.
+  intros n m a b; unfold pooled_mean,pooled_mass,Rdiv; replace (m+n) with (n+m) by ring; ring.
 Qed.
 
 (** [pooled_mean_constant] (theorem).
@@ -371,7 +371,7 @@ Qed.
 *)
 Theorem pooled_between_swap: forall n m a b, pooled_between n m a b=pooled_between m n b a.
 Proof.
-  intros n m a b; unfold pooled_between,pooled_mass; replace (m+n) with (n+m) by ring; ring.
+  intros n m a b; unfold pooled_between,pooled_mass,Rdiv; replace (m+n) with (n+m) by ring; ring.
 Qed.
 
 (** [pooled_between_constant_means] (theorem).
@@ -409,7 +409,7 @@ Qed.
 *)
 Theorem pooled_between_translation: forall n m a b c, pooled_between n m (a+c) (b+c)=pooled_between n m a b.
 Proof.
-  intros; unfold pooled_between,pooled_mass; ring.
+  intros; unfold pooled_between,pooled_mass,Rdiv; ring.
 Qed.
 
 (** [pooled_between_scale] (theorem).
@@ -428,7 +428,7 @@ Qed.
 *)
 Theorem pooled_between_scale: forall n m a b t, pooled_between n m (t*a) (t*b)=t*t*pooled_between n m a b.
 Proof.
-  intros; unfold pooled_between,pooled_mass; ring.
+  intros; unfold pooled_between,pooled_mass,Rdiv; ring.
 Qed.
 
 (** [pooled_between_nonnegative] (theorem).
