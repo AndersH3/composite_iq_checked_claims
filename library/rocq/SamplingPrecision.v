@@ -287,7 +287,7 @@ Qed.
 *)
 Theorem sampling_variance_monotone_lower_half: forall p q, 0<=p -> p<=q -> q<=1/2 -> sampling_bernoulli_variance p<=sampling_bernoulli_variance q.
 Proof.
-  intros p q H0 Hpq Hq; rewrite <- (sampling_variance_comparison p q); unfold sampling_bernoulli_variance; nra.
+  intros p q H0 Hpq Hq. pose proof (sampling_variance_comparison p q) as Hgap. nra.
 Qed.
 
 (** [sampling_variance_strict_lower_half] (theorem).
