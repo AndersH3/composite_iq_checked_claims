@@ -1,6 +1,6 @@
 #!/bin/sh
 # Canonical Rocq source compiler for the shared math library and the three
-# specialized report libraries. Uses the complete explicit 37-module dependency order,
+# specialized report libraries. Uses the complete explicit 38-module dependency order,
 # never copies sources back into Git, and rejects duplicate module basenames.
 # This is a build utility, not a substitute for the Rocq kernel checker.
 set -eu
@@ -52,6 +52,7 @@ rocq compile ConditionalRatioStability.v
 rocq compile PooledMomentsAlgebra.v
 rocq compile ListPoolingAlgebra.v
 rocq compile FourContrastCovariance.v
+rocq compile SampleContrastCauchy.v
 rocq compile ThreeGroupPooling.v
 rocq compile TwoRatePrecision.v
 rocq compile StratifiedBernoulli.v
