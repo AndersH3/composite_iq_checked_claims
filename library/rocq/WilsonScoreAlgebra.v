@@ -679,7 +679,7 @@ Qed.
 *)
 Theorem wilson_left_radius_below_center : forall n h z r, 0<n -> 0<=h -> h<=1 -> 0<=r -> r*r=wilson_radical_square n h z -> r<=wilson_center n h z.
 Proof.
-  intros n h z r Hn Hh Hu Hr Hsq. pose proof (wilson_center_nonnegative n h z (Rlt_le _ _ Hn) Hh) as Hc. pose proof (wilson_left_endpoint_discriminant n h z) as Hid. pose proof (wilson_total_positive n z Hn) as Hd. rewrite <- Hsq in Hid. assert (Hx:0<=n*wilson_total n z*h*h) by nra. destruct (Rle_dec r (wilson_center n h z)) as [Hordered|Hcontradiction]; [exact Hordered|]. apply Rnot_le_lt in Hcontradiction. exfalso; nra.
+  intros n h z r Hn Hh Hu Hr Hsq. pose proof (wilson_center_nonnegative n h z (Rlt_le _ _ Hn) Hh) as Hc. pose proof (wilson_left_endpoint_discriminant n h z) as Hid. pose proof (wilson_total_positive n z Hn) as Hd. rewrite <- Hsq in Hid. assert (Hx:0<=n*wilson_total n z*h*h). { replace (n*wilson_total n z*h*h) with ((n*wilson_total n z)*(h*h)) by ring. apply Rmult_le_pos; nra. } destruct (Rle_dec r (wilson_center n h z)) as [Hordered|Hcontradiction]; [exact Hordered|]. apply Rnot_le_lt in Hcontradiction. exfalso; nra.
 Qed.
 
 (** [wilson_right_radius_below_complement] (theorem).
@@ -699,7 +699,7 @@ Qed.
 *)
 Theorem wilson_right_radius_below_complement : forall n h z r, 0<n -> 0<=h -> h<=1 -> 0<=r -> r*r=wilson_radical_square n h z -> r<=wilson_total n z-wilson_center n h z.
 Proof.
-  intros n h z r Hn Hh Hu Hr Hsq. pose proof (wilson_center_le_total n h z (Rlt_le _ _ Hn) Hu) as Hc. pose proof (wilson_right_endpoint_discriminant n h z) as Hid. pose proof (wilson_total_positive n z Hn) as Hd. rewrite <- Hsq in Hid. assert (Hx:0<=n*wilson_total n z*(1-h)*(1-h)) by nra. destruct (Rle_dec r (wilson_total n z-wilson_center n h z)) as [Hordered|Hcontradiction]; [exact Hordered|]. apply Rnot_le_lt in Hcontradiction. exfalso; nra.
+  intros n h z r Hn Hh Hu Hr Hsq. pose proof (wilson_center_le_total n h z (Rlt_le _ _ Hn) Hu) as Hc. pose proof (wilson_right_endpoint_discriminant n h z) as Hid. pose proof (wilson_total_positive n z Hn) as Hd. rewrite <- Hsq in Hid. assert (Hx:0<=n*wilson_total n z*(1-h)*(1-h)). { replace (n*wilson_total n z*(1-h)*(1-h)) with ((n*wilson_total n z)*((1-h)*(1-h))) by ring. apply Rmult_le_pos; nra. } destruct (Rle_dec r (wilson_total n z-wilson_center n h z)) as [Hordered|Hcontradiction]; [exact Hordered|]. apply Rnot_le_lt in Hcontradiction. exfalso; nra.
 Qed.
 
 (** [wilson_endpoint_width] (theorem).
