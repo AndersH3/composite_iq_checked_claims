@@ -5,10 +5,38 @@
 > **AI disclosure:** This technical source and proof register was prepared with AI assistance. Kernel compilation, not prose, establishes each formal claim.
 
 This directory is an additional **Rocq kernel-checked mathematical layer**
-for the three principal reports. **2350 proof scripts** across twenty-eight
-Rocq modules are tracked for Rocq 9.2 kernel compilation (including auxiliary proof lemmas). It complements, rather than replaces, the existing Ada/SPARK
+for all three analytical reports and their three simulation companions. **2,492 proof scripts** across **32 Rocq modules** are tracked for Rocq 9.2 kernel compilation (2,478 public theorem/lemma/example claims, one local helper and 13 constructed model/record proof values). It complements, rather than replaces, the existing Ada/SPARK
 verification, Python/Deal contracts, and numerical integration checks.
 
+
+## D043x — 142 kernel-checked report statistical-algebra theorems
+
+The shared real-algebra proof modules below were independently accepted by the
+[pinned Rocq 9.2 kernel on source commit `955379823a469ff57e8eb5f2320994697c7d5ef0`](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43812796040).
+The documentation and source-ownership checks passed at that exact head.
+
+| Canonical shared module | New checked theorems | Report use |
+|---|---:|---|
+| [`WilsonScoreAlgebra.v`](../library/rocq/WilsonScoreAlgebra.v) | **36** | Exact Wilson quadratic score completion, nonnegative radicands, root certificates, interval inversion, complement symmetry; `sm:wilson` |
+| [`SamplingPrecision.v`](../library/rocq/SamplingPrecision.v) | **45** | Bernoulli variance, expected counts, event-frequency error, strict rare-event precision and inverse sample-size behavior; `sm:binomial`, `sm:rare` |
+| [`ConditionalRatioStability.v`](../library/rocq/ConditionalRatioStability.v) | **30** | Positive-denominator conditional fractions, rate bounds, exact cross-product comparisons and numerator/denominator sensitivity; `tw:events`, `tw:quantization` (partial), `sm:conditional-count` (algebra only) |
+| [`PooledMomentsAlgebra.v`](../library/rocq/PooledMomentsAlgebra.v) | **31** | Exact two-batch weighted means, corrected within/between sums of squares and unbiased sample-variance decomposition; `sm:pooling` (two batches) |
+| **Total** | **142** | Shared across the six reports; do not multiply this count by import appearances |
+
+**Important boundaries:** Theorems in these modules prove deterministic real
+expressions and sharp score/variance inequalities under explicit hypotheses.
+They do **not** prove that repeated Bernoulli trials generate a binomial
+distribution, exact finite-sample Wilson interval coverage, Clopper–Pearson
+coverage, normal/chi-square pivots, Gaussian conditional laws, or that real
+human IQ scores follow the assumed distribution. The arbitrary-number-of-groups
+sample-pooling induction and the fully quantified BASIC-grid perturbation
+inequality also remain open. The [all-six-report obligation inventory](SIX_REPORT_PROOF_OBLIGATIONS.md)
+records which parts are discharged and which need probability theory.
+
+**AI disclosure:** ChatGPT assisted with these 142 mathematical statements,
+their proof scripts, extensive comments and source/library refactoring.
+Formal acceptance is supplied by the Rocq kernel at the stated commit, not
+by the assistant or simulation outputs.
 
 ## All six reports: cross-volume proof-obligation audit (D042x)
 
