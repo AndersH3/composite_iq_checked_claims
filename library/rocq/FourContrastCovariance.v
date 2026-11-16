@@ -19,7 +19,8 @@
  AI disclosure: OpenAI ChatGPT assisted specification, source creation,
  algebraic validation and reporting. Rocq kernel checks are authoritative.
 *)
-From Stdlib Require Import Reals Ring.
+From Stdlib Require Import Reals Ring Field.
+Require Import FiniteSum ListPoolingAlgebra.
 Open Scope R_scope.
 
 (** [four_covariant] (definition).
@@ -2148,5 +2149,133 @@ Theorem four_contrast_cov_balanced12v34_balanced12v34 :
   forall (s11 s22 s33 s44 s12 s13 s14 s23 s24 s34:R), four_covariant s11 s22 s33 s44 s12 s13 s14 s23 s24 s34 1 1 (-1) (-1) 1 1 (-1) (-1) = s11 + s22 + s33 + s44 + 2*s12 - 2*s13 - 2*s14 - 2*s23 - 2*s24 + 2*s34.
 Proof.
   intros; cbv [four_covariant four_quadratic]; ring.
+Qed.
+
+
+(** Bridge from symbolic four-test contrasts to the existing arbitrary-list
+    finite-sample covariance library. No second estimator is defined. *)
+
+(** [four_batch_cross_add_right] (theorem).
+ Mathematical meaning: Weighted mixed first moments are linear in the second observed attribute over arbitrary lists of batches.
+ Exact checked proposition: forall (A:Type) (w x y z:A->R) (xs:list A), batch_cross w x (fun t => y t+z t) xs = batch_cross w x y xs+batch_cross w x z xs
+ Premises and side conditions: Each quantified group is an arbitrary occurrence in a finite list. Nonzero total batch mass is an explicit hypothesis wherever division is required; no independence, normality or positive matrix definiteness is inferred.
+ Proof/definition method: Reuse the existing canonical finite_sum and ListPoolingAlgebra cross-moment, covariance symmetry and closed-form theorems; normalize only the remaining finite real polynomial or denominators with Rocq's Ring/Field tactics.
+ Library reuse: Rocq Stdlib Reals, Ring and Field, FiniteSum and ListPoolingAlgebra rather than a new summation implementation or second covariance definition.
+ Boundary: Certified finite weighted-sample covariance arithmetic for G01 and G12; it is not a stochastic Gaussian conditioning theorem, binomial PMF, confidence-coverage proof or empirical IQ model certificate.
+*)
+Theorem four_batch_cross_add_right :
+  forall (A:Type) (w x y z:A->R) (xs:list A), batch_cross w x (fun t => y t+z t) xs = batch_cross w x y xs+batch_cross w x z xs.
+Proof.
+  intros A w x y z xs; unfold batch_cross.
+  transitivity (finite_sum (fun t => w t*x t*y t+w t*x t*z t) xs).
+  - apply finite_sum_ext; intro t; ring.
+  - rewrite finite_sum_add; reflexivity.
+Qed.
+
+(** [four_batch_covariance_add_right] (theorem).
+ Mathematical meaning: The weighted finite-sample covariance of a score with a sum is the sum of its two covariances when total weight is nonzero.
+ Exact checked proposition: forall (A:Type) (w x y z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w x (fun t=>y t+z t) xs=batch_covariance w x y xs+batch_covariance w x z xs
+ Premises and side conditions: Each quantified group is an arbitrary occurrence in a finite list. Nonzero total batch mass is an explicit hypothesis wherever division is required; no independence, normality or positive matrix definiteness is inferred.
+ Proof/definition method: Reuse the existing canonical finite_sum and ListPoolingAlgebra cross-moment, covariance symmetry and closed-form theorems; normalize only the remaining finite real polynomial or denominators with Rocq's Ring/Field tactics.
+ Library reuse: Rocq Stdlib Reals, Ring and Field, FiniteSum and ListPoolingAlgebra rather than a new summation implementation or second covariance definition.
+ Boundary: Certified finite weighted-sample covariance arithmetic for G01 and G12; it is not a stochastic Gaussian conditioning theorem, binomial PMF, confidence-coverage proof or empirical IQ model certificate.
+*)
+Theorem four_batch_covariance_add_right :
+  forall (A:Type) (w x y z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w x (fun t=>y t+z t) xs=batch_covariance w x y xs+batch_covariance w x z xs.
+Proof.
+  intros A w x y z xs Hm.
+  rewrite !batch_covariance_closed by exact Hm.
+  rewrite four_batch_cross_add_right, batch_total_add_values.
+  field; exact Hm.
+Qed.
+
+(** [four_batch_covariance_add_left] (theorem).
+ Mathematical meaning: The weighted finite-sample covariance of a sum with a score is additive in the first score under the same positive-denominator discipline.
+ Exact checked proposition: forall (A:Type) (w x y z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (fun t=>x t+y t) z xs=batch_covariance w x z xs+batch_covariance w y z xs
+ Premises and side conditions: Each quantified group is an arbitrary occurrence in a finite list. Nonzero total batch mass is an explicit hypothesis wherever division is required; no independence, normality or positive matrix definiteness is inferred.
+ Proof/definition method: Reuse the existing canonical finite_sum and ListPoolingAlgebra cross-moment, covariance symmetry and closed-form theorems; normalize only the remaining finite real polynomial or denominators with Rocq's Ring/Field tactics.
+ Library reuse: Rocq Stdlib Reals, Ring and Field, FiniteSum and ListPoolingAlgebra rather than a new summation implementation or second covariance definition.
+ Boundary: Certified finite weighted-sample covariance arithmetic for G01 and G12; it is not a stochastic Gaussian conditioning theorem, binomial PMF, confidence-coverage proof or empirical IQ model certificate.
+*)
+Theorem four_batch_covariance_add_left :
+  forall (A:Type) (w x y z:A->R) (xs:list A), batch_mass w xs<>0 -> batch_covariance w (fun t=>x t+y t) z xs=batch_covariance w x z xs+batch_covariance w y z xs.
+Proof.
+  intros A w x y z xs Hm.
+  rewrite (batch_covariance_symmetry A w (fun t=>x t+y t) z xs).
+  rewrite (batch_covariance_symmetry A w x z xs).
+  rewrite (batch_covariance_symmetry A w y z xs).
+  apply four_batch_covariance_add_right; exact Hm.
+Qed.
+
+(** [four_batch_covariance_linear_left] (theorem).
+ Mathematical meaning: Any weighted linear combination of two observed test scores has covariance equal to the same linear combination of their individual covariances.
+ Exact checked proposition: forall (A:Type) (w x y z:A->R) (xs:list A) (a b:R), batch_mass w xs<>0 -> batch_covariance w (fun t=>a*x t+b*y t) z xs=a*batch_covariance w x z xs+b*batch_covariance w y z xs
+ Premises and side conditions: Each quantified group is an arbitrary occurrence in a finite list. Nonzero total batch mass is an explicit hypothesis wherever division is required; no independence, normality or positive matrix definiteness is inferred.
+ Proof/definition method: Reuse the existing canonical finite_sum and ListPoolingAlgebra cross-moment, covariance symmetry and closed-form theorems; normalize only the remaining finite real polynomial or denominators with Rocq's Ring/Field tactics.
+ Library reuse: Rocq Stdlib Reals, Ring and Field, FiniteSum and ListPoolingAlgebra rather than a new summation implementation or second covariance definition.
+ Boundary: Certified finite weighted-sample covariance arithmetic for G01 and G12; it is not a stochastic Gaussian conditioning theorem, binomial PMF, confidence-coverage proof or empirical IQ model certificate.
+*)
+Theorem four_batch_covariance_linear_left :
+  forall (A:Type) (w x y z:A->R) (xs:list A) (a b:R), batch_mass w xs<>0 -> batch_covariance w (fun t=>a*x t+b*y t) z xs=a*batch_covariance w x z xs+b*batch_covariance w y z xs.
+Proof.
+  intros A w x y z xs a b Hm.
+  rewrite four_batch_covariance_add_left by exact Hm.
+  rewrite !batch_covariance_scale_left by exact Hm.
+  reflexivity.
+Qed.
+
+(** [four_batch_covariance_linear_right] (theorem).
+ Mathematical meaning: Linear covariance response to an arbitrary two-score weighted combination on the right, including signed score coefficients.
+ Exact checked proposition: forall (A:Type) (w x y z:A->R) (xs:list A) (a b:R), batch_mass w xs<>0 -> batch_covariance w x (fun t=>a*y t+b*z t) xs=a*batch_covariance w x y xs+b*batch_covariance w x z xs
+ Premises and side conditions: Each quantified group is an arbitrary occurrence in a finite list. Nonzero total batch mass is an explicit hypothesis wherever division is required; no independence, normality or positive matrix definiteness is inferred.
+ Proof/definition method: Reuse the existing canonical finite_sum and ListPoolingAlgebra cross-moment, covariance symmetry and closed-form theorems; normalize only the remaining finite real polynomial or denominators with Rocq's Ring/Field tactics.
+ Library reuse: Rocq Stdlib Reals, Ring and Field, FiniteSum and ListPoolingAlgebra rather than a new summation implementation or second covariance definition.
+ Boundary: Certified finite weighted-sample covariance arithmetic for G01 and G12; it is not a stochastic Gaussian conditioning theorem, binomial PMF, confidence-coverage proof or empirical IQ model certificate.
+*)
+Theorem four_batch_covariance_linear_right :
+  forall (A:Type) (w x y z:A->R) (xs:list A) (a b:R), batch_mass w xs<>0 -> batch_covariance w x (fun t=>a*y t+b*z t) xs=a*batch_covariance w x y xs+b*batch_covariance w x z xs.
+Proof.
+  intros A w x y z xs a b Hm.
+  rewrite four_batch_covariance_add_right by exact Hm.
+  rewrite !batch_covariance_scale_right by exact Hm.
+  reflexivity.
+Qed.
+
+(** [four_batch_covariance_linear_two_composites] (theorem).
+ Mathematical meaning: The exact four-cross-covariance expansion for the association between two two-test composite scores.
+ Exact checked proposition: forall (A:Type) (w x y z u:A->R) (xs:list A) (a b c d:R), batch_mass w xs<>0 -> batch_covariance w (fun t=>a*x t+b*y t) (fun t=>c*z t+d*u t) xs=a*c*batch_covariance w x z xs+a*d*batch_covariance w x u xs+b*c*batch_covariance w y z xs+b*d*batch_covariance w y u xs
+ Premises and side conditions: Each quantified group is an arbitrary occurrence in a finite list. Nonzero total batch mass is an explicit hypothesis wherever division is required; no independence, normality or positive matrix definiteness is inferred.
+ Proof/definition method: Reuse the existing canonical finite_sum and ListPoolingAlgebra cross-moment, covariance symmetry and closed-form theorems; normalize only the remaining finite real polynomial or denominators with Rocq's Ring/Field tactics.
+ Library reuse: Rocq Stdlib Reals, Ring and Field, FiniteSum and ListPoolingAlgebra rather than a new summation implementation or second covariance definition.
+ Boundary: Certified finite weighted-sample covariance arithmetic for G01 and G12; it is not a stochastic Gaussian conditioning theorem, binomial PMF, confidence-coverage proof or empirical IQ model certificate.
+*)
+Theorem four_batch_covariance_linear_two_composites :
+  forall (A:Type) (w x y z u:A->R) (xs:list A) (a b c d:R), batch_mass w xs<>0 -> batch_covariance w (fun t=>a*x t+b*y t) (fun t=>c*z t+d*u t) xs=a*c*batch_covariance w x z xs+a*d*batch_covariance w x u xs+b*c*batch_covariance w y z xs+b*d*batch_covariance w y u xs.
+Proof.
+  intros A w x y z u xs a b c d Hm.
+  rewrite four_batch_covariance_linear_left by exact Hm.
+  rewrite !four_batch_covariance_linear_right by exact Hm.
+  ring.
+Qed.
+
+(** [four_batch_variance_sum] (theorem).
+ Mathematical meaning: The exact weighted variance of a sum of two test scores includes twice their sample covariance, not merely the sum of variances.
+ Exact checked proposition: forall (A:Type) (w x y:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun t=>x t+y t) xs=batch_variance w x xs+batch_variance w y xs+2*batch_covariance w x y xs
+ Premises and side conditions: Each quantified group is an arbitrary occurrence in a finite list. Nonzero total batch mass is an explicit hypothesis wherever division is required; no independence, normality or positive matrix definiteness is inferred.
+ Proof/definition method: Reuse the existing canonical finite_sum and ListPoolingAlgebra cross-moment, covariance symmetry and closed-form theorems; normalize only the remaining finite real polynomial or denominators with Rocq's Ring/Field tactics.
+ Library reuse: Rocq Stdlib Reals, Ring and Field, FiniteSum and ListPoolingAlgebra rather than a new summation implementation or second covariance definition.
+ Boundary: Certified finite weighted-sample covariance arithmetic for G01 and G12; it is not a stochastic Gaussian conditioning theorem, binomial PMF, confidence-coverage proof or empirical IQ model certificate.
+*)
+Theorem four_batch_variance_sum :
+  forall (A:Type) (w x y:A->R) (xs:list A), batch_mass w xs<>0 -> batch_variance w (fun t=>x t+y t) xs=batch_variance w x xs+batch_variance w y xs+2*batch_covariance w x y xs.
+Proof.
+  intros A w x y xs Hm.
+  rewrite <- (batch_covariance_self_variance A w (fun t=>x t+y t) xs).
+  rewrite four_batch_covariance_add_left by exact Hm.
+  rewrite !four_batch_covariance_add_right by exact Hm.
+  rewrite (batch_covariance_symmetry A w y x xs).
+  rewrite (batch_covariance_self_variance A w x xs).
+  rewrite (batch_covariance_self_variance A w y xs).
+  ring.
 Qed.
 
