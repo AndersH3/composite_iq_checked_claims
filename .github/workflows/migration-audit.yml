@@ -35,3 +35,21 @@ jobs:
           find . -type f \( -name '*.ads' -o -name '*.adb' -o -name '*.gpr' \) -print
           echo '=== Main report source count ==='
           for p in analyses/hoeflin-ferguson/composite_iq_analysis.tex analyses/hoeflin-ferguson/hoeflin_simulations.tex analyses/towers-multiple-test-admissions/towers_admissions_analysis.tex analyses/towers-multiple-test-admissions/towers_simulations.tex analyses/sequential-conditional-means/sequential_conditional_means.tex analyses/sequential-conditional-means/sequential_simulations.tex; do test -s "$p"; done
+          echo '=== Inspect six published PDF artifacts for obsolete methodology ==='
+          command -v pdftotext || { sudo apt-get update -qq; sudo apt-get install -y poppler-utils; }
+          count=0
+          for pdf in analyses/*/output/pdf/*.pdf; do
+            test -s "$pdf"
+            count=$((count + 1))
+            if pdftotext -layout "$pdf" - | grep -iE '\b(SPARK|GNATprove|Ada[ /])\b'; then
+              echo "Obsolete simulation/compiler text remains in $pdf" >&2
+              exit 1
+            fi
+            if ! pdftotext -f 1 -l 1 "$pdf" - | grep -q "Anders Hellström"; then
+              echo "Report author missing from title page: $pdf" >&2
+              exit 1
+            fi
+          done
+          test "$count" -eq 6 || { echo "Expected six published report PDFs; found $count" >&2; exit 1; }
+          echo 'All six published PDFs have no obsolete compiler references'
+
