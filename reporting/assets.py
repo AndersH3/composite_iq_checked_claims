@@ -156,6 +156,9 @@ def write_assets(project, data):
         write_table(directory.joinpath("replicates.tex"), ["Replicate", "Seed", "Max $|z_{mean}|$", "Max $|S^2-1|$", "$K_q$ at $n=1000$"], seed_rows,
                     "Individual seeded runs; maxima are over the eight coupled sizes")
     elif project == "towers-multiple-test-admissions":
+        # PGFPlots consumes events.csv as well as its TeX table; overwrite
+        # both from these same pooled counts on each new simulation.
+        write_csv(directory.joinpath("events.csv"), pooled)
         # Event tables use the validated reference-case labels directly;
         # no second, potentially inconsistent display-name mapping is needed.
         write_table(directory.joinpath("events.tex"), ["Rule", "Neither", "$A$ only", "$B$ only", "Both"],
