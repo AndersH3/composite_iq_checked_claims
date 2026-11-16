@@ -47,6 +47,7 @@ paths_by_module = {
     "ConditionalRatioStability": Path("library/rocq/ConditionalRatioStability.v"),
     "PooledMomentsAlgebra": Path("library/rocq/PooledMomentsAlgebra.v"),
     "ListPoolingAlgebra": Path("library/rocq/ListPoolingAlgebra.v"),
+    "FourContrastCovariance": Path("library/rocq/FourContrastCovariance.v"),
     "ThreeGroupPooling": Path("library/rocq/ThreeGroupPooling.v"),
     "TwoRatePrecision": Path("library/rocq/TwoRatePrecision.v"),
     "StratifiedBernoulli": Path("library/rocq/StratifiedBernoulli.v"),
@@ -150,7 +151,7 @@ for module in modules:
             continue
         expected.append(preceding[-1].group(1))
 
-    selected_register = (list_pooling_register if module == "ListPoolingAlgebra"
+    selected_register = (list_pooling_register if module in {"ListPoolingAlgebra", "FourContrastCovariance"}
                          else refactor_register)
     section_match = re.search(
         r"^## " + re.escape(module) + r"\.v — [0-9]+ proof scripts$",
