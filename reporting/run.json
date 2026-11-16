@@ -43,50 +43,8 @@
       "pdf": "analyses/sequential-conditional-means/output/pdf/sequential_simulations.pdf"
     }
   ],
-  "new_spark_proof_run": false,
   "matplotlib_used": false,
-  "sources": [
-    {
-      "path": "analyses/hoeflin-ferguson/hoeflin_simulations.tex",
-      "sha256": "3c9ee5fe295485b711236535c0ed9e75cd9827ab57bc9d3510b4fb4ddcf8481f"
-    },
-    {
-      "path": "analyses/sequential-conditional-means/sequential_simulations.tex",
-      "sha256": "1603e3a5434e7589f3d3c592a21540a65f4e49055955cabc0f7623f7d9e9ba46"
-    },
-    {
-      "path": "analyses/towers-multiple-test-admissions/towers_simulations.tex",
-      "sha256": "95e0f95af891122fa65230c2d90a69dacec84582edc377dc3f5ba878b363d3a9"
-    },
-    {
-      "path": "reporting/assets.py",
-      "sha256": "18920852808b9b78aa879bb5409303deb97bfddeb5a6e073083545daa72d0744"
-    },
-    {
-      "path": "reporting/simulate.py",
-      "sha256": "2e762d25faf0df581298aa2e3febb0e0056ec4024f1de7978f2f8fbbe7a9bec8"
-    },
-    {
-      "path": "reporting/simulation_references.bib",
-      "sha256": "c1b71e094dafc3b5977de89df0bbbdd4af60a89600bfa649ad37e9ea92a09383"
-    },
-    {
-      "path": "reporting/simulation_style.tex",
-      "sha256": "dcb1f506808a666a1dec628cbd2e1abf6b5b51f3cc368ab0fc5c67fdc2f8bebd"
-    },
-    {
-      "path": "reporting/statistical_methods.tex",
-      "sha256": "2d8e3c0537e34af1b32303153fb49044400fa7bb968d5ce9d9c091f0b2b38ce2"
-    },
-    {
-      "path": "reporting/statistics.py",
-      "sha256": "7c5f41297d671954adc813dd0650062e13871d830ec79be98fe9dc4abf398c8d"
-    },
-    {
-      "path": "requirements-dev.txt",
-      "sha256": "e9f3d47b2d6aede6d485a2970de16c5f021bb0fc91c14105131ebfe6110f9f8a"
-    }
-  ],
+  "sources": [],
   "outputs": [
     {
       "path": "analyses/hoeflin-ferguson/output/pdf/hoeflin_simulations.pdf",
@@ -95,14 +53,6 @@
     {
       "path": "analyses/hoeflin-ferguson/simulation-data/build.log",
       "sha256": "04143166f33f5912ce99144f6c067e8f2a24844b6d523a8a151808d8851b0173"
-    },
-    {
-      "path": "analyses/hoeflin-ferguson/simulation-data/historical-records.csv",
-      "sha256": "5e239fb953a8b40e77c1180bca865e4218d37794488a64c11fcb05692f094ede"
-    },
-    {
-      "path": "analyses/hoeflin-ferguson/simulation-data/historical.tex",
-      "sha256": "ea35bd542978dbd89ab866fe2ce3ef8f6f8cbb02f6163ebbe4d9dc0e77d89db2"
     },
     {
       "path": "analyses/hoeflin-ferguson/simulation-data/macros.tex",
@@ -133,10 +83,6 @@
       "sha256": "fcdda5225a3fc840042095246855b2ddd126f8b38d7e87cf45337658499d93f3"
     },
     {
-      "path": "analyses/hoeflin-ferguson/simulation-data/summary.json",
-      "sha256": "3b9b676c7682654f008eba17fea07449c4af0fe5a7d61118bc255fa61da4c33e"
-    },
-    {
       "path": "analyses/hoeflin-ferguson/simulation-data/tails.csv",
       "sha256": "7ff44d7a1237c0215a58e9e39c4c2eb1530c2194217c65fa798463a6210e314c"
     },
@@ -163,14 +109,6 @@
     {
       "path": "analyses/sequential-conditional-means/simulation-data/conditional-r3.csv",
       "sha256": "2f4163b3ec36c0805b5392851370dd5744b5fef6b2c2d0ddf63a1bb15a55b630"
-    },
-    {
-      "path": "analyses/sequential-conditional-means/simulation-data/historical-records.csv",
-      "sha256": "4c11f15813f64c821da57a62f29dfc9ca1e651af824fc3cffd21f29fee395e7f"
-    },
-    {
-      "path": "analyses/sequential-conditional-means/simulation-data/historical.tex",
-      "sha256": "c871154f1b3f5db45555d2f3eed4cc30151c4fc55a109bca7f767cb1151d0080"
     },
     {
       "path": "analyses/sequential-conditional-means/simulation-data/limits.tex",
@@ -225,10 +163,6 @@
       "sha256": "35748c0ff393bd2b285bb001f88d546d93e509f7a1bef71ca49e9d22af200ee2"
     },
     {
-      "path": "analyses/sequential-conditional-means/simulation-data/summary.json",
-      "sha256": "67564d2f13ee7052d2fc333231bf82222461d734a81d3be4dae552489c1f5a4b"
-    },
-    {
       "path": "analyses/towers-multiple-test-admissions/output/pdf/towers_simulations.pdf",
       "sha256": "27dc9da212e8ae82103840485c5974caef96554faef1d2042bfee664bce7969f"
     },
@@ -251,14 +185,6 @@
     {
       "path": "analyses/towers-multiple-test-admissions/simulation-data/events.tex",
       "sha256": "788c649053300ef7cadac75290e0924626ecb10c6cb6e53c02095547307c0970"
-    },
-    {
-      "path": "analyses/towers-multiple-test-admissions/simulation-data/historical-records.csv",
-      "sha256": "c21ca9f21f834d5d24e0bc38460e4590f3f8b608388ca27e5f3a738fd0828209"
-    },
-    {
-      "path": "analyses/towers-multiple-test-admissions/simulation-data/historical.tex",
-      "sha256": "81af305e43ef23f812633ed4a68fadeb736c69bb62d671471324a3b1c98fbef0"
     },
     {
       "path": "analyses/towers-multiple-test-admissions/simulation-data/joint.tex",
@@ -293,12 +219,16 @@
       "sha256": "a18ab71fb10c340dd65bd8418b036755b3ef9c9dbfb3505524f7ac02362061d0"
     },
     {
-      "path": "analyses/towers-multiple-test-admissions/simulation-data/summary.json",
-      "sha256": "d373203ac00cb9b06f58ae56c0881cfca967da3f0f5f605ef73b57210eafb162"
-    },
-    {
       "path": "analyses/towers-multiple-test-admissions/simulation-data/union.tex",
       "sha256": "d5eb00ab97ddbcc4cca1ca2137972a5d522ec028ac8e018d9c03ed7551dc8ac6"
     }
-  ]
+  ],
+  "migration_provenance": {
+    "active_engine": "Python/Dask with Deal contracts",
+    "original_simulation_revision": "76708f03be7d011676a9fd08d33cfe7ad908c4a8",
+    "source_hash_note": "The original run's source hashes referred to the pre-migration revision; they are not current-source hashes. Run reporting.simulate for a new source-pinned manifest.",
+    "pdf_note": "Existing PDF artifact hashes are for the older compiled PDFs; regenerate PDFs from the revised TeX sources before treating them as current.",
+    "simulation_rerun_in_migration": false,
+    "archived_experiments": "Previously retained alternative-engine comparisons were removed from the active source tree and remain retrievable through Git history"
+  }
 }
