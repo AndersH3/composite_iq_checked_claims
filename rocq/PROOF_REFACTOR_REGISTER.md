@@ -12,14 +12,17 @@ It is a proof-by-proof review of source structure, dependency reuse, and
 whether an additional rewrite is justified; it is **not** a replacement for
 Rocq 9.2 kernel checking or a claim that all scripts needed modification.
 
-The current branch has **2228 public theorem/lemma/example claims**, plus
+As of D043x the current branch has **2,478 public theorem/lemma/example claims**, plus
 **one local helper** and **thirteen constructed model/record values**:
-**2242 proof scripts** across twenty-six Rocq modules. The difference between the 2,228 claims and 2,242 proof scripts is
-exactly fourteen additional blocks: one local helper, two original
-four-cell Admissions model witnesses, three unconditioned two-test
-projections of the three-test model, and eight conditional/example
-model constructors from D038x. These constructed proof terms are not
-misreported as additional theorem/lemma claims.
+**2,492 proof scripts** across **32** Rocq modules. The difference between
+2,478 public claims and 2,492 explicit proof scripts is exactly fourteen
+additional blocks: one local helper, two original four-cell Admissions
+model witnesses, three unconditioned two-test projections of the three-test
+model, and eight conditional/example model constructors from D038x.
+These constructed proof terms are not counted as independent theorems.
+The pinned Rocq 9.2 documentation audit registered 2,751 declarations
+(including definitions) and 2,479 theorem/helper proofs at the D043x source
+commit `955379823a469ff57e8eb5f2320994697c7d5ef0`.
 The record was created after the current generic list-fold and covariance
 matrix refactoring and counts explicit proof blocks, not definitions lacking
 proof obligations.
