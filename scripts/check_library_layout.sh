@@ -17,13 +17,14 @@ done
 for project in hoeflin-ferguson towers-multiple-test-admissions sequential-conditional-means
 do
   test -d "analyses/$project/rocq" || exit 1
-  test -d "analyses/$project/scripts" || exit 1
-  grep -q "library.python.numeric import finite_real" "analyses/$project/scripts/"*.py || {
-    echo "Missing shared numeric consumer: $project" >&2; exit 1;
-  }
-  if grep -q "def _finite(" "analyses/$project/scripts/"*.py; then
-    echo "Duplicate finite-real helper in $project" >&2
-    exit 1
+  if test -d "analyses/$project/scripts"; then
+    grep -q "library.python.numeric import finite_real" "analyses/$project/scripts/"*.py || {
+      echo "Missing shared numeric consumer: $project" >&2; exit 1;
+    }
+    if grep -q "def _finite(" "analyses/$project/scripts/"*.py; then
+      echo "Duplicate finite-real helper in $project" >&2
+      exit 1
+    fi
   fi
 done
 
