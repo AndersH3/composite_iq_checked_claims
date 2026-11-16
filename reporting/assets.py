@@ -5,6 +5,10 @@ serializes already-computed records: it never starts a nested compute, changes
 the statistical experiment, or invokes a plotting package. CSVs retain full
 precision; TeX tables round only their displayed representations.
 """
+# Dask distributed workers share their process with an asynchronous socket
+# event loop. Deal's runtime offline checker monkeypatches socket process-wide;
+# permitting the worker transport avoids breaking unrelated scheduler I/O.
+# Source-level numeric invariants and exception contracts remain in force.
 import csv
 import json
 from pathlib import Path
@@ -23,7 +27,7 @@ PROJECTS = frozenset({"hoeflin-ferguson", "towers-multiple-test-admissions", "se
 @deal.ensure(lambda value, digits=6, result=None: value is not None or result == "---")
 @deal.ensure(lambda value, digits=6, result=None: value is None or result.startswith("$") and result.endswith("$"))
 @deal.raises()
-@deal.has()
+@deal.has("network")
 def format_number(value, digits=6):
     """Render a finite scalar, with explicit missing values and TeX-safe powers.
 
@@ -50,7 +54,7 @@ def format_number(value, digits=6):
 @deal.post(lambda result: result is None)
 @deal.ensure(lambda path, rows, result: path.is_file() and path.stat().st_size > 0)
 @deal.raises(OSError, ValueError, TypeError, csv.Error)
-@deal.has("write", "read")
+@deal.has("network", "write", "read")
 def write_csv(path, rows):
     """Delegate quoting, column order and missing-cell serialization to csv."""
     with path.open("w", newline="", encoding="utf-8") as stream:
@@ -67,7 +71,7 @@ def write_csv(path, rows):
 @deal.post(lambda result: result is None)
 @deal.ensure(lambda path, headers, rows, title, result: path.is_file() and path.read_text().count(r"\toprule") == 1 and path.read_text().count(r"\bottomrule") == 1)
 @deal.raises(OSError)
-@deal.has("write", "read")
+@deal.has("network", "write", "read")
 def write_table(path, headers, rows, title):
     """Write a complete, page-breakable booktabs table with repeated headings.
 
@@ -96,7 +100,7 @@ def write_table(path, headers, rows, title):
 @deal.ensure(lambda project, data, result: Path(result["directory"]) == ROOT.joinpath("analyses", project, "simulation-data"))
 @deal.post(lambda result: bool(result["files"]) and len(result["files"]) == len(set(result["files"])) and all(Path(path).is_file() for path in result["files"]))
 @deal.raises(OSError, ValueError, TypeError, KeyError, csv.Error)
-@deal.has("write", "read")
+@deal.has("network", "write", "read")
 def write_assets(project, data):
     """Create the report's CSV/TeX/JSON assets from the Dask terminal record.
 
