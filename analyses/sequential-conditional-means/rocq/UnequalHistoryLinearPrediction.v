@@ -124,7 +124,7 @@ Definition hc (n c s mu:R) : R := mu + hp n c (s-n*mu).
 *)
 Theorem hp_zero : forall (n c:R), hp n c (0) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_add] (theorem).
@@ -144,7 +144,7 @@ Qed.
 *)
 Theorem hp_add : forall (n c s t:R), hp n c (s+t) = hp n c (s)+hp n c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_subtract] (theorem).
@@ -164,7 +164,7 @@ Qed.
 *)
 Theorem hp_subtract : forall (n c s t:R), hp n c (s-t) = hp n c (s)-hp n c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_negate] (theorem).
@@ -184,7 +184,7 @@ Qed.
 *)
 Theorem hp_negate : forall (n c s:R), hp n c ((-s)) = -hp n c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_scale] (theorem).
@@ -204,7 +204,7 @@ Qed.
 *)
 Theorem hp_scale : forall (n c s q:R), hp n c (q*s) = q*hp n c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_sum_three] (theorem).
@@ -224,7 +224,7 @@ Qed.
 *)
 Theorem hp_sum_three : forall (n c s t u:R), hp n c (s+t+u) = hp n c (s)+hp n c (t)+hp n c (u).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_sum_four] (theorem).
@@ -244,7 +244,7 @@ Qed.
 *)
 Theorem hp_sum_four : forall (n c s t u v:R), hp n c (s+t+u+v) = hp n c (s)+hp n c (t)+hp n c (u)+hp n c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_increment] (theorem).
@@ -264,7 +264,7 @@ Qed.
 *)
 Theorem hp_increment : forall (n c s t:R), hp n c (s+t)-hp n c (s) = hp n c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_translation_contrast] (theorem).
@@ -284,7 +284,7 @@ Qed.
 *)
 Theorem hp_translation_contrast : forall (n c s t u:R), hp n c (s+u)-hp n c (t+u) = hp n c (s)-hp n c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_parallelogram] (theorem).
@@ -304,7 +304,7 @@ Qed.
 *)
 Theorem hp_parallelogram : forall (n c s t:R), hp n c (s+t)+hp n c (s-t) = 2*hp n c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_convex] (theorem).
@@ -324,7 +324,7 @@ Qed.
 *)
 Theorem hp_convex : forall (n c s t q:R), hp n c (q*s+(1-q)*t) = q*hp n c (s)+(1-q)*hp n c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_balanced_contrasts] (theorem).
@@ -344,7 +344,7 @@ Qed.
 *)
 Theorem hp_balanced_contrasts : forall (n c s t u v:R), hp n c (s+t)-hp n c (u+v) = hp n c (s-u)+hp n c (t-v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_contrast_pairs] (theorem).
@@ -364,7 +364,7 @@ Qed.
 *)
 Theorem hp_contrast_pairs : forall (n c s t u v:R), hp n c ((s-t)+(u-v)) = hp n c (s)-hp n c (t)+hp n c (u)-hp n c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_antisymmetry] (theorem).
@@ -384,7 +384,7 @@ Qed.
 *)
 Theorem hp_antisymmetry : forall (n c s t:R), hp n c (s-t)+hp n c (t-s) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_contrast_of_contrasts] (theorem).
@@ -404,7 +404,7 @@ Qed.
 *)
 Theorem hp_contrast_of_contrasts : forall (n c s t u v:R), hp n c ((s-t)-(u-v)) = hp n c (s)-hp n c (t)-hp n c (u)+hp n c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hp_weighted_three] (theorem).
@@ -424,7 +424,7 @@ Qed.
 *)
 Theorem hp_weighted_three : forall (n c s t u v q:R), hp n c (q*s+u*t+v) = q*hp n c (s)+u*hp n c (t)+hp n c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_zero] (theorem).
@@ -444,7 +444,7 @@ Qed.
 *)
 Theorem hf_zero : forall (n k c:R), hf n k c (0) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_add] (theorem).
@@ -464,7 +464,7 @@ Qed.
 *)
 Theorem hf_add : forall (n k c s t:R), hf n k c (s+t) = hf n k c (s)+hf n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_subtract] (theorem).
@@ -484,7 +484,7 @@ Qed.
 *)
 Theorem hf_subtract : forall (n k c s t:R), hf n k c (s-t) = hf n k c (s)-hf n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_negate] (theorem).
@@ -504,7 +504,7 @@ Qed.
 *)
 Theorem hf_negate : forall (n k c s:R), hf n k c ((-s)) = -hf n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_scale] (theorem).
@@ -524,7 +524,7 @@ Qed.
 *)
 Theorem hf_scale : forall (n k c s q:R), hf n k c (q*s) = q*hf n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_sum_three] (theorem).
@@ -544,7 +544,7 @@ Qed.
 *)
 Theorem hf_sum_three : forall (n k c s t u:R), hf n k c (s+t+u) = hf n k c (s)+hf n k c (t)+hf n k c (u).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_sum_four] (theorem).
@@ -564,7 +564,7 @@ Qed.
 *)
 Theorem hf_sum_four : forall (n k c s t u v:R), hf n k c (s+t+u+v) = hf n k c (s)+hf n k c (t)+hf n k c (u)+hf n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_increment] (theorem).
@@ -584,7 +584,7 @@ Qed.
 *)
 Theorem hf_increment : forall (n k c s t:R), hf n k c (s+t)-hf n k c (s) = hf n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_translation_contrast] (theorem).
@@ -604,7 +604,7 @@ Qed.
 *)
 Theorem hf_translation_contrast : forall (n k c s t u:R), hf n k c (s+u)-hf n k c (t+u) = hf n k c (s)-hf n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_parallelogram] (theorem).
@@ -624,7 +624,7 @@ Qed.
 *)
 Theorem hf_parallelogram : forall (n k c s t:R), hf n k c (s+t)+hf n k c (s-t) = 2*hf n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_convex] (theorem).
@@ -644,7 +644,7 @@ Qed.
 *)
 Theorem hf_convex : forall (n k c s t q:R), hf n k c (q*s+(1-q)*t) = q*hf n k c (s)+(1-q)*hf n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_balanced_contrasts] (theorem).
@@ -664,7 +664,7 @@ Qed.
 *)
 Theorem hf_balanced_contrasts : forall (n k c s t u v:R), hf n k c (s+t)-hf n k c (u+v) = hf n k c (s-u)+hf n k c (t-v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_contrast_pairs] (theorem).
@@ -684,7 +684,7 @@ Qed.
 *)
 Theorem hf_contrast_pairs : forall (n k c s t u v:R), hf n k c ((s-t)+(u-v)) = hf n k c (s)-hf n k c (t)+hf n k c (u)-hf n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_antisymmetry] (theorem).
@@ -704,7 +704,7 @@ Qed.
 *)
 Theorem hf_antisymmetry : forall (n k c s t:R), hf n k c (s-t)+hf n k c (t-s) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_contrast_of_contrasts] (theorem).
@@ -724,7 +724,7 @@ Qed.
 *)
 Theorem hf_contrast_of_contrasts : forall (n k c s t u v:R), hf n k c ((s-t)-(u-v)) = hf n k c (s)-hf n k c (t)-hf n k c (u)+hf n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hf_weighted_three] (theorem).
@@ -744,7 +744,7 @@ Qed.
 *)
 Theorem hf_weighted_three : forall (n k c s t u v q:R), hf n k c (q*s+u*t+v) = q*hf n k c (s)+u*hf n k c (t)+hf n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_zero] (theorem).
@@ -764,7 +764,7 @@ Qed.
 *)
 Theorem ht_zero : forall (n k c:R), ht n k c (0) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_add] (theorem).
@@ -784,7 +784,7 @@ Qed.
 *)
 Theorem ht_add : forall (n k c s t:R), ht n k c (s+t) = ht n k c (s)+ht n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_subtract] (theorem).
@@ -804,7 +804,7 @@ Qed.
 *)
 Theorem ht_subtract : forall (n k c s t:R), ht n k c (s-t) = ht n k c (s)-ht n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_negate] (theorem).
@@ -824,7 +824,7 @@ Qed.
 *)
 Theorem ht_negate : forall (n k c s:R), ht n k c ((-s)) = -ht n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_scale] (theorem).
@@ -844,7 +844,7 @@ Qed.
 *)
 Theorem ht_scale : forall (n k c s q:R), ht n k c (q*s) = q*ht n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_sum_three] (theorem).
@@ -864,7 +864,7 @@ Qed.
 *)
 Theorem ht_sum_three : forall (n k c s t u:R), ht n k c (s+t+u) = ht n k c (s)+ht n k c (t)+ht n k c (u).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_sum_four] (theorem).
@@ -884,7 +884,7 @@ Qed.
 *)
 Theorem ht_sum_four : forall (n k c s t u v:R), ht n k c (s+t+u+v) = ht n k c (s)+ht n k c (t)+ht n k c (u)+ht n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_increment] (theorem).
@@ -904,7 +904,7 @@ Qed.
 *)
 Theorem ht_increment : forall (n k c s t:R), ht n k c (s+t)-ht n k c (s) = ht n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_translation_contrast] (theorem).
@@ -924,7 +924,7 @@ Qed.
 *)
 Theorem ht_translation_contrast : forall (n k c s t u:R), ht n k c (s+u)-ht n k c (t+u) = ht n k c (s)-ht n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_parallelogram] (theorem).
@@ -944,7 +944,7 @@ Qed.
 *)
 Theorem ht_parallelogram : forall (n k c s t:R), ht n k c (s+t)+ht n k c (s-t) = 2*ht n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_convex] (theorem).
@@ -964,7 +964,7 @@ Qed.
 *)
 Theorem ht_convex : forall (n k c s t q:R), ht n k c (q*s+(1-q)*t) = q*ht n k c (s)+(1-q)*ht n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_balanced_contrasts] (theorem).
@@ -984,7 +984,7 @@ Qed.
 *)
 Theorem ht_balanced_contrasts : forall (n k c s t u v:R), ht n k c (s+t)-ht n k c (u+v) = ht n k c (s-u)+ht n k c (t-v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_contrast_pairs] (theorem).
@@ -1004,7 +1004,7 @@ Qed.
 *)
 Theorem ht_contrast_pairs : forall (n k c s t u v:R), ht n k c ((s-t)+(u-v)) = ht n k c (s)-ht n k c (t)+ht n k c (u)-ht n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_antisymmetry] (theorem).
@@ -1024,7 +1024,7 @@ Qed.
 *)
 Theorem ht_antisymmetry : forall (n k c s t:R), ht n k c (s-t)+ht n k c (t-s) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_contrast_of_contrasts] (theorem).
@@ -1044,7 +1044,7 @@ Qed.
 *)
 Theorem ht_contrast_of_contrasts : forall (n k c s t u v:R), ht n k c ((s-t)-(u-v)) = ht n k c (s)-ht n k c (t)-ht n k c (u)+ht n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [ht_weighted_three] (theorem).
@@ -1064,7 +1064,7 @@ Qed.
 *)
 Theorem ht_weighted_three : forall (n k c s t u v q:R), ht n k c (q*s+u*t+v) = q*ht n k c (s)+u*ht n k c (t)+ht n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_zero] (theorem).
@@ -1084,7 +1084,7 @@ Qed.
 *)
 Theorem hm_zero : forall (n k c:R), hm n k c (0) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_add] (theorem).
@@ -1104,7 +1104,7 @@ Qed.
 *)
 Theorem hm_add : forall (n k c s t:R), hm n k c (s+t) = hm n k c (s)+hm n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_subtract] (theorem).
@@ -1124,7 +1124,7 @@ Qed.
 *)
 Theorem hm_subtract : forall (n k c s t:R), hm n k c (s-t) = hm n k c (s)-hm n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_negate] (theorem).
@@ -1144,7 +1144,7 @@ Qed.
 *)
 Theorem hm_negate : forall (n k c s:R), hm n k c ((-s)) = -hm n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_scale] (theorem).
@@ -1164,7 +1164,7 @@ Qed.
 *)
 Theorem hm_scale : forall (n k c s q:R), hm n k c (q*s) = q*hm n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_sum_three] (theorem).
@@ -1184,7 +1184,7 @@ Qed.
 *)
 Theorem hm_sum_three : forall (n k c s t u:R), hm n k c (s+t+u) = hm n k c (s)+hm n k c (t)+hm n k c (u).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_sum_four] (theorem).
@@ -1204,7 +1204,7 @@ Qed.
 *)
 Theorem hm_sum_four : forall (n k c s t u v:R), hm n k c (s+t+u+v) = hm n k c (s)+hm n k c (t)+hm n k c (u)+hm n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_increment] (theorem).
@@ -1224,7 +1224,7 @@ Qed.
 *)
 Theorem hm_increment : forall (n k c s t:R), hm n k c (s+t)-hm n k c (s) = hm n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_translation_contrast] (theorem).
@@ -1244,7 +1244,7 @@ Qed.
 *)
 Theorem hm_translation_contrast : forall (n k c s t u:R), hm n k c (s+u)-hm n k c (t+u) = hm n k c (s)-hm n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_parallelogram] (theorem).
@@ -1264,7 +1264,7 @@ Qed.
 *)
 Theorem hm_parallelogram : forall (n k c s t:R), hm n k c (s+t)+hm n k c (s-t) = 2*hm n k c (s).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_convex] (theorem).
@@ -1284,7 +1284,7 @@ Qed.
 *)
 Theorem hm_convex : forall (n k c s t q:R), hm n k c (q*s+(1-q)*t) = q*hm n k c (s)+(1-q)*hm n k c (t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_balanced_contrasts] (theorem).
@@ -1304,7 +1304,7 @@ Qed.
 *)
 Theorem hm_balanced_contrasts : forall (n k c s t u v:R), hm n k c (s+t)-hm n k c (u+v) = hm n k c (s-u)+hm n k c (t-v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_contrast_pairs] (theorem).
@@ -1324,7 +1324,7 @@ Qed.
 *)
 Theorem hm_contrast_pairs : forall (n k c s t u v:R), hm n k c ((s-t)+(u-v)) = hm n k c (s)-hm n k c (t)+hm n k c (u)-hm n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_antisymmetry] (theorem).
@@ -1344,7 +1344,7 @@ Qed.
 *)
 Theorem hm_antisymmetry : forall (n k c s t:R), hm n k c (s-t)+hm n k c (t-s) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_contrast_of_contrasts] (theorem).
@@ -1364,7 +1364,7 @@ Qed.
 *)
 Theorem hm_contrast_of_contrasts : forall (n k c s t u v:R), hm n k c ((s-t)-(u-v)) = hm n k c (s)-hm n k c (t)-hm n k c (u)+hm n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hm_weighted_three] (theorem).
@@ -1384,7 +1384,7 @@ Qed.
 *)
 Theorem hm_weighted_three : forall (n k c s t u v q:R), hm n k c (q*s+u*t+v) = q*hm n k c (s)+u*hm n k c (t)+hm n k c (v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_source_increment] (theorem).
@@ -1404,7 +1404,7 @@ Qed.
 *)
 Theorem he_source_increment : forall (n c s t x:R), he n c (s+t) x = he n c s x - hp n c t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_source_decrement] (theorem).
@@ -1424,7 +1424,7 @@ Qed.
 *)
 Theorem he_source_decrement : forall (n c s t x:R), he n c (s-t) x = he n c s x + hp n c t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_outcome_increment] (theorem).
@@ -1444,7 +1444,7 @@ Qed.
 *)
 Theorem he_outcome_increment : forall (n c s x y:R), he n c s (x+y) = he n c s x + y.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_outcome_decrement] (theorem).
@@ -1464,7 +1464,7 @@ Qed.
 *)
 Theorem he_outcome_decrement : forall (n c s x y:R), he n c s (x-y) = he n c s x - y.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_joint_add] (theorem).
@@ -1484,7 +1484,7 @@ Qed.
 *)
 Theorem he_joint_add : forall (n c s t x y:R), he n c (s+t) (x+y) = he n c s x + he n c t y.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_joint_sub] (theorem).
@@ -1504,7 +1504,7 @@ Qed.
 *)
 Theorem he_joint_sub : forall (n c s t x y:R), he n c (s-t) (x-y) = he n c s x - he n c t y.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_joint_scale] (theorem).
@@ -1524,7 +1524,7 @@ Qed.
 *)
 Theorem he_joint_scale : forall (n c s x q:R), he n c (q*s) (q*x) = q*he n c s x.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_joint_neg] (theorem).
@@ -1544,7 +1544,7 @@ Qed.
 *)
 Theorem he_joint_neg : forall (n c s x:R), he n c (-s) (-x) = -he n c s x.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_on_prediction] (theorem).
@@ -1564,7 +1564,7 @@ Qed.
 *)
 Theorem he_on_prediction : forall (n c s:R), he n c s (hp n c s) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_on_prediction_plus] (theorem).
@@ -1584,7 +1584,7 @@ Qed.
 *)
 Theorem he_on_prediction_plus : forall (n c s t:R), he n c s (hp n c s+t) = t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_shifted_history] (theorem).
@@ -1604,7 +1604,7 @@ Qed.
 *)
 Theorem he_shifted_history : forall (n c s t:R), he n c (s+t) (hp n c s) = -hp n c t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_updated_prediction] (theorem).
@@ -1624,7 +1624,7 @@ Qed.
 *)
 Theorem he_updated_prediction : forall (n c s t:R), he n c (s+t) (hp n c s+hp n c t) = 0.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_outcome_contrast] (theorem).
@@ -1644,7 +1644,7 @@ Qed.
 *)
 Theorem he_outcome_contrast : forall (n c s x y:R), he n c s x-he n c s y=x-y.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [he_history_contrast] (theorem).
@@ -1664,7 +1664,7 @@ Qed.
 *)
 Theorem he_history_contrast : forall (n c s t x:R), he n c s x-he n c t x=hp n c t-hp n c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_zero_baseline] (theorem).
@@ -1684,7 +1684,7 @@ Qed.
 *)
 Theorem hc_zero_baseline : forall (n c s:R), hc n c s 0 = hp n c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_at_own_baseline] (theorem).
@@ -1704,7 +1704,7 @@ Qed.
 *)
 Theorem hc_at_own_baseline : forall (n c mu:R), hc n c (n*mu) mu = mu.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_add_history] (theorem).
@@ -1724,7 +1724,7 @@ Qed.
 *)
 Theorem hc_add_history : forall (n c s t mu:R), hc n c (s+t) mu = hc n c s mu + hp n c t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_sub_history] (theorem).
@@ -1744,7 +1744,7 @@ Qed.
 *)
 Theorem hc_sub_history : forall (n c s t mu:R), hc n c (s-t) mu = hc n c s mu - hp n c t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_baseline_up] (theorem).
@@ -1764,7 +1764,7 @@ Qed.
 *)
 Theorem hc_baseline_up : forall (n c s mu t:R), hc n c s (mu+t) = hc n c s mu + t-hp n c (n*t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_baseline_down] (theorem).
@@ -1784,7 +1784,7 @@ Qed.
 *)
 Theorem hc_baseline_down : forall (n c s mu t:R), hc n c s (mu-t) = hc n c s mu - t+hp n c (n*t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_joint_translation] (theorem).
@@ -1804,7 +1804,7 @@ Qed.
 *)
 Theorem hc_joint_translation : forall (n c s mu t:R), hc n c (s+n*t) (mu+t) = hc n c s mu+t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_joint_translation_inverse] (theorem).
@@ -1824,7 +1824,7 @@ Qed.
 *)
 Theorem hc_joint_translation_inverse : forall (n c s mu t:R), hc n c (s-n*t) (mu-t) = hc n c s mu-t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_joint_scale] (theorem).
@@ -1844,7 +1844,7 @@ Qed.
 *)
 Theorem hc_joint_scale : forall (n c s mu q:R), hc n c (q*s) (q*mu) = q*hc n c s mu.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_joint_negate] (theorem).
@@ -1864,7 +1864,7 @@ Qed.
 *)
 Theorem hc_joint_negate : forall (n c s mu:R), hc n c (-s) (-mu) = -hc n c s mu.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_general_affine] (theorem).
@@ -1884,7 +1884,7 @@ Qed.
 *)
 Theorem hc_general_affine : forall (n c s t mu v:R), hc n c (s+t) (mu+v) = hc n c s mu+v+hp n c (t-n*v).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_history_difference] (theorem).
@@ -1904,7 +1904,7 @@ Qed.
 *)
 Theorem hc_history_difference : forall (n c s t mu:R), hc n c (s+t) mu - hc n c s mu = hp n c t.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_baseline_rate] (theorem).
@@ -1924,7 +1924,7 @@ Qed.
 *)
 Theorem hc_baseline_rate : forall (n c s mu t:R), hc n c (s+n*t) mu - hc n c s mu = hp n c (n*t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [hc_baseline_gap] (theorem).
@@ -1944,7 +1944,7 @@ Qed.
 *)
 Theorem hc_baseline_gap : forall (n c s mu:R), hc n c s mu-mu = hp n c (s-n*mu).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [future_count_add] (theorem).
@@ -1964,7 +1964,7 @@ Qed.
 *)
 Theorem future_count_add : forall (n k t c s:R), hf n (k+t) c s = hf n k c s + hf n t c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [future_count_scale] (theorem).
@@ -1984,7 +1984,7 @@ Qed.
 *)
 Theorem future_count_scale : forall (n k q c s:R), hf n (q*k) c s=q*hf n k c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [total_future_count_add] (theorem).
@@ -2004,7 +2004,7 @@ Qed.
 *)
 Theorem total_future_count_add : forall (n k t c s:R), ht n (k+t) c s=ht n k c s+hf n t c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [total_future_count_contrast] (theorem).
@@ -2024,7 +2024,7 @@ Qed.
 *)
 Theorem total_future_count_contrast : forall (n k t c s:R), ht n k c s-ht n t c s=hf n (k-t) c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [total_score_gap] (theorem).
@@ -2044,7 +2044,7 @@ Qed.
 *)
 Theorem total_score_gap : forall (n k c s:R), ht n k c s-s=hf n k c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [residual_recovers_outcome] (theorem).
@@ -2064,7 +2064,7 @@ Qed.
 *)
 Theorem residual_recovers_outcome : forall (n c s x:R), he n c s x + hp n c s=x.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [centered_residual_recovers] (theorem).
@@ -2084,7 +2084,7 @@ Qed.
 *)
 Theorem centered_residual_recovers : forall (n c s mu x:R), hc n c s mu+he n c (s-n*mu) x = mu+x.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [centered_outcome_reconstruction] (theorem).
@@ -2104,7 +2104,7 @@ Qed.
 *)
 Theorem centered_outcome_reconstruction : forall (n c s mu x:R), hc n c s mu+he n c (s-n*mu) (x-mu)=x.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [total_residual_plus] (theorem).
@@ -2124,7 +2124,7 @@ Qed.
 *)
 Theorem total_residual_plus : forall (n k c s x:R), ht n k c s+he n c s x=s+x+(k-1)*hp n c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [total_residual_minus] (theorem).
@@ -2144,7 +2144,7 @@ Qed.
 *)
 Theorem total_residual_minus : forall (n k c s x:R), ht n k c s-he n c s x=s-x+(k+1)*hp n c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [future_residual_plus] (theorem).
@@ -2164,7 +2164,7 @@ Qed.
 *)
 Theorem future_residual_plus : forall (n k c s x:R), hf n k c s+he n c s x=x+(k-1)*hp n c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [future_residual_minus] (theorem).
@@ -2184,7 +2184,7 @@ Qed.
 *)
 Theorem future_residual_minus : forall (n k c s x:R), hf n k c s-he n c s x= -x+(k+1)*hp n c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [total_difference_history] (theorem).
@@ -2204,7 +2204,7 @@ Qed.
 *)
 Theorem total_difference_history : forall (n k c s t:R), ht n k c s-ht n k c t=(s-t)+hf n k c (s-t).
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
 
 (** [total_forecast_extra] (theorem).
@@ -2224,5 +2224,5 @@ Qed.
 *)
 Theorem total_forecast_extra : forall (n k t c s:R), ht n k c s +hf n t c s=ht n (k+t) c s.
 Proof.
- intros; unfold hp, hf, ht, hm, he, hc, Rdiv; ring.
+ intros; unfold hm, ht, hf, he, hc, hp, Rdiv; ring.
 Qed.
