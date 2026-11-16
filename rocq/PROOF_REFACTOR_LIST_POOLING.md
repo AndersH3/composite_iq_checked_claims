@@ -6,7 +6,7 @@
 
 This is the canonical detailed review register for the new `library/rocq/ListPoolingAlgebra.v` module. The historical monolithic `PROOF_REFACTOR_REGISTER.md` remains the authoritative register for earlier modules and retains historical D044x/D045x sections; this separate audit removes the prior 1 MB file-size limit. Each entry represents an explicit source-ordered proof script, not an independent scientific model result.
 
-## ListPoolingAlgebra.v — 147 proof scripts
+## ListPoolingAlgebra.v — 159 proof scripts
 
 | Proof script (kind) | Mathematical scope | Shared library reuse | Boundary |
 |---|---|---|---|
@@ -161,3 +161,15 @@ This is the canonical detailed review register for the new `library/rocq/ListPoo
 ## Disclosure and limits
 
 AI assistance specified and wrote these finite-list real-algebra proof scripts and explanatory notes. Independent verification is limited to the exact signatures accepted by Rocq 9.2. Neither the Gaussian model, Bernoulli independence, chi-square pivot nor empirical IQ hypotheses are certified by list algebra.
+| `batch_mean_rate_difference` (theorem) | The change between two list-pooled rates equals the weighted average of their pointwise rate differences. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_bernoulli_gap_pairwise` (theorem) | Twice total exposure times homogeneous-minus-heterogeneous Bernoulli variance equals the pairwise rate-dispersion statistic. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_bernoulli_gap_pairwise_quotient` (theorem) | The rate-matched homogeneous variance excess is the all-pairs squared-difference statistic divided by twice total mass. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_bernoulli_strict_heterogeneity` (theorem) | With positive cohort weights, one event rate differing from the pooled rate yields a strict ideal variance reduction against the matched homogeneous model. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_cross_complement_right` (theorem) | Complementing the right batch attribute subtracts the original cross moment from the first raw moment. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_covariance_complement_right` (theorem) | The covariance with a complementary indicator has the opposite sign of the original covariance. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_cross_translate_right` (theorem) | A common translation of the right attribute adds shift times the first attribute's weighted total to the mixed raw moment. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_covariance_translate_right` (theorem) | Adding a constant to the right variable leaves their weighted covariance unchanged. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_covariance_translate_left` (theorem) | Adding a constant to the left variable also leaves the weighted covariance unchanged. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_cross_scale_right` (theorem) | Rescaling the right variable rescales their mixed weighted raw moment linearly. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_covariance_scale_right` (theorem) | Rescaling the right attribute rescales the normalized covariance by the same factor. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
+| `batch_covariance_scale_left` (theorem) | Rescaling the left attribute rescales the normalized covariance by the same factor. | Canonical FiniteSum, Rocq Stdlib real algebra; earlier weighted ANOVA/covariance results. | Exact G01/G08/G12/G13 identities, no probability-space distribution. |
