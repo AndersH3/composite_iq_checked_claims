@@ -2,6 +2,23 @@
 
 # Theorems and mathematical claims actually used in the reports
 
+> **D043x kernel-checked update (November 16, 2026):** The
+> [six-volume register](SIX_REPORT_PROOF_OBLIGATIONS.md) now tracks **142
+> additional** substantive real-algebra theorems in four canonical modules:
+> [Wilson score](../library/rocq/WilsonScoreAlgebra.v) (36),
+> [sampling precision](../library/rocq/SamplingPrecision.v) (45),
+> [conditional ratios](../library/rocq/ConditionalRatioStability.v) (30),
+> and [pooled moments](../library/rocq/PooledMomentsAlgebra.v) (31).
+> [Pinned Rocq 9.2 build](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43812796040)
+> compiled the full 32-module source and checked 2,492 proof scripts on
+> commit `955379823a469ff57e8eb5f2320994697c7d5ef0`.
+> The new results discharge algebraic portions of `sm:wilson`, `sm:rare`,
+> `sm:pooling`, Towers' conditional-rate sensitivity, and Bernoulli
+> moment/precision expressions. They do **not** prove the missing binomial,
+> Gaussian, chi-square or exact confidence-coverage distributional laws.
+
+
+
 > **Update, November 16, 2026 — full six-report source audit:** The authoritative [six-volume proof-obligation register](SIX_REPORT_PROOF_OBLIGATIONS.md) covers **all three main reports and all three simulation reports**, their eleven proof-bearing TeX sources, 70 individually labelled mathematical results and 24 reusable proof-work packages. This older inventory remains the detailed **three-analytical-report history**; do not infer that its older scope or status covers simulation diagnostics, chi-square, Wilson or Clopper–Pearson theorems. A limited finite/algebraic Rocq proof must not be equated with full Gaussian/statistical coverage.
 
 
