@@ -607,7 +607,7 @@ Qed.
 *)
 Theorem gk_joint_factorization : forall xs c theta, c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta = gk_posterior_kernel xs c theta * gk_evidence_kernel xs c.
 Proof.
- intros xs c theta Hc Hnoise Hd; unfold gk_joint_kernel, gk_posterior_kernel, gk_evidence_kernel; rewrite (gk_square_completion xs c theta Hc Hnoise Hd); rewrite <- exp_plus; f_equal; ring.
+ intros xs c theta Hc Hnoise Hd; unfold gk_joint_kernel, gk_posterior_kernel, gk_evidence_kernel; rewrite (gk_square_completion xs c theta Hc Hnoise Hd); rewrite <- exp_plus; f_equal; unfold Rdiv; ring.
 Qed.
 
 (** [gk_kernel_reflection] (theorem).
