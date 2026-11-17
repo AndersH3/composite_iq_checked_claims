@@ -143,3 +143,15 @@ test "$(sed -n "${nincl_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof
 test "$(sed -n "${nincl_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
 sed -i "${nincl_start},${nincl_end}c\\    Proof.\\n      induction l1 as [|a l1 IH]; intros Hbad.\\n      - exfalso; apply Hbad; intros x Hx; inversion Hx.\\n      - destruct (in_dec dec a l2) as [Ha | Hna].\\n        + assert (Htail : ~ incl l1 l2).\\n          { intro Hsub; apply Hbad; intros x [Heq | Hin].\\n            - subst x; exact Ha.\\n            - apply Hsub; exact Hin. }\\n          destruct (IH Htail) as [x [Hin Hnotin]].\\n          exists x; split; [right; exact Hin | exact Hnotin].\\n        + exists a; split; [left; reflexivity | exact Hna].\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
+
+# The legacy Proper(set_inter) proof relied on intuition in a focused cut.
+# Replace it with direct pointwise set-equivalence transport, reusing the
+# already proved set_inter_intro/set_inter_elim and Proper infrastructure.
+inter_line=$(grep -n "^    Global Instance set_inter_equivlist_proper " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+test -n "$inter_line"
+inter_start=$((inter_line + 1))
+inter_end=$((inter_line + 8))
+test "$(sed -n "${inter_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+test "$(sed -n "${inter_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+sed -i "${inter_start},${inter_end}c\\    Proof.\\n      unfold Proper, respectful, equivlist.\\n      intros a a' Ha b b' Hb x; split; intro Hx.\\n      - apply set_inter_elim in Hx.\\n        destruct Hx as [Hax Hbx]; apply set_inter_intro.\\n        + apply (proj1 (Ha x)); exact Hax.\\n        + apply (proj1 (Hb x)); exact Hbx.\\n      - apply set_inter_elim in Hx.\\n        destruct Hx as [Hax Hbx]; apply set_inter_intro.\\n        + apply (proj2 (Ha x)); exact Hax.\\n        + apply (proj2 (Hb x)); exact Hbx.\\n    Qed." \
+  rocq/lib_utils/LibUtilsListAdd.v
