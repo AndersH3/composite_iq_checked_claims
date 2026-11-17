@@ -2079,7 +2079,9 @@ Qed.
 *)
 Theorem d051_gk_variance_empty : forall c:R, 1-c<>0 -> gk_variance nil c=c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  intros c Hc.
+  unfold gk_variance, gk_d, gk_mass, sequential_d.
+  simpl; field; nra.
 Qed.
 
 (** [d051_gk_precision_empty] (theorem).
@@ -2092,7 +2094,9 @@ Qed.
 *)
 Theorem d051_gk_precision_empty : forall c:R, c<>0 -> 1-c<>0 -> gk_precision nil c=/c.
 Proof.
-  intros; cbv [hp sequential_prediction sequential_d equicorr_schur_diagonal equicorr_schur_cross gk_variance gk_d gk_mass gk_precision] in *; field; nra.
+  intros c Hc Hc1.
+  unfold gk_precision, gk_mass.
+  simpl; field; nra.
 Qed.
 
 (** [d051_gk_precision_scaled] (theorem).
