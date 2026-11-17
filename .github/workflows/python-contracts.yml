@@ -28,46 +28,6 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
-      - name: Locate interacting Deal contracts in Hoeflin module
-        if: failure()
-        run: |
-          python - <<'PY'
-          import ast
-          import copy
-          from pathlib import Path
-          import subprocess
-          import sys
-          import tempfile
-
-          original = ast.parse(Path("analyses/hoeflin-ferguson/scripts/verify_calculations.py")
-                               .read_text(encoding="utf-8"))
-          functions = [(node.name, node.lineno) for node in ast.walk(original)
-                       if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
-          for mode in ("without", "only"):
-              for selected in functions:
-                  clone = copy.deepcopy(original)
-                  for node in ast.walk(clone):
-                      if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                          continue
-                      current = (node.name, node.lineno)
-                      if (mode == "without" and current == selected) or (
-                          mode == "only" and current != selected
-                      ):
-                          node.decorator_list = []
-                  with tempfile.TemporaryDirectory(prefix="deal-interaction-") as folder:
-                      temp = Path(folder, "probe.py")
-                      temp.write_text(ast.unparse(clone) + "\n", encoding="utf-8")
-                      proc = subprocess.run(
-                          [sys.executable, "-m", "deal", "lint", "--json", str(temp)],
-                          capture_output=True, text=True, timeout=15,
-                      )
-                      outcome = "CRASH" if proc.stderr else (
-                          "DIAGNOSTIC" if proc.stdout else "CLEAN"
-                      )
-                      print("DEAL_FUNCTION", mode, selected, outcome,
-                            proc.stderr.strip().splitlines()[-1] if proc.stderr else "",
-                            flush=True)
-          PY
       - name: Validate scaled 40-million-sample Dask task budget without execution
         if: always()
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
@@ -115,9 +75,8 @@ jobs:
         if: always()
         run: python verification/check_contract_coverage.py
 
-  # Independent full-program static lint on the previous Python interpreter.
-  # This diagnoses Deal's Python 3.13 AST bytecode compilation error without
-  # waiving any source file, contract, or deliberate negative control.
+  # Independent, cross-version full-source Deal lint; all files and the
+  # exact DEL012 negative control must pass under Python 3.12 as well.
   static-lint-python312:
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -127,5 +86,5 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -r requirements-dev.txt
-      - name: Full Deal lint on all 24 sources and negative control using Python 3.12
+      - name: Full repository Deal lint and deliberate negative control (Python 3.12)
         run: python verification/check_static_lint.py
