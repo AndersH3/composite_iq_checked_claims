@@ -24,7 +24,8 @@
 *)
 From Stdlib Require Import Reals Lra Psatz Ring Field List.
 Require Import FiniteSum EquicorrelationVectors
-  SequentialReport GaussianConditionalKernel GaussianInnovationBounds.
+  SequentialReport GaussianConditionalKernel GaussianInnovationBounds
+  GaussianCovarianceDomain.
 Import ListNotations.
 Open Scope R_scope.
 
