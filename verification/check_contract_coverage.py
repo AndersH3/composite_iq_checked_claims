@@ -96,9 +96,43 @@ def audit_file(path: Path) -> dict:
             # Normalize the imported Deal alias while retaining validator,
             # exception, marker and keyword syntax. Locations/whitespace are
             # not part of identity. This is a structural, not semantic, test.
+            normalized_arguments = []
+            if isinstance(decorator, ast.Call):
+                for argument in decorator.args:
+                    # An unused lambda parameter never affects the checked
+                    # proposition. Normalize closed predicates even when one
+                    # validator accepts spare *args/**kwargs.
+                    # Keep used parameters and defaults unchanged.
+                    if isinstance(argument, ast.Lambda):
+                        formals = {
+                            parameter.arg for parameter in (
+                                argument.args.posonlyargs + argument.args.args
+                                + argument.args.kwonlyargs
+                            )
+                        }
+                        for parameter in (argument.args.vararg, argument.args.kwarg):
+                            if parameter is not None:
+                                formals.add(parameter.arg)
+                        referenced = {
+                            name.id for name in ast.walk(argument.body)
+                            if isinstance(name, ast.Name)
+                        }
+                        if (not formals.intersection(referenced)
+                                and not argument.args.defaults
+                                and not any(default is not None for default in argument.args.kw_defaults)):
+                            normalized_arguments.append((
+                                "closed-lambda", ast.dump(argument.body, include_attributes=False)
+                            ))
+                        else:
+                            normalized_arguments.append((
+                                "lambda", ast.dump(argument, include_attributes=False)
+                            ))
+                    else:
+                        normalized_arguments.append((
+                            "expression", ast.dump(argument, include_attributes=False)
+                        ))
             identity = (expression.attr,
-                        tuple(ast.dump(arg, include_attributes=False) for arg in decorator.args)
-                        if isinstance(decorator, ast.Call) else None,
+                        tuple(normalized_arguments) if isinstance(decorator, ast.Call) else None,
                         tuple((keyword.arg, ast.dump(keyword.value, include_attributes=False))
                               for keyword in decorator.keywords)
                         if isinstance(decorator, ast.Call) else None)
