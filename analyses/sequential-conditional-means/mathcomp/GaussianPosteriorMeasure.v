@@ -29,7 +29,7 @@
 *)
 From mathcomp Require Import boot order ssralg ssrnum field_tactic.
 From mathcomp Require Import classical_sets reals ereal topology normedtype.
-From mathcomp Require Import measure lebesgue_integral measurable_realfun.
+From mathcomp Require Import measure lebesgue_integral lebesgue_stieltjes_measure measurable_realfun.
 From mathcomp.analysis Require Import normal_distribution.
 
 Set Implicit Arguments.
