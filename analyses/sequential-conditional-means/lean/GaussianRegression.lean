@@ -62,7 +62,7 @@ algebras. This is the exact missing implication in a purely algebraic
 least-squares derivation.
 
 The theorem invokes mathlib's proved Gaussian independence theorem; no
-independence axiom is introduced.
+independence is never postulated.
 -/
 theorem gaussian_innovation_independent_of_observations
     (hGaussian : HasGaussianLaw (fun ω => (innovation ω, observed ω)) μ)
