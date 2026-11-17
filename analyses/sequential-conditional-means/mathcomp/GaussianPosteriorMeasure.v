@@ -154,11 +154,13 @@ have Hmean : post_mean 0 sigma0 (total/n) sigma =
   - exact: Haux.
   - exact: Hd.
 rewrite -Hmean.
-(* Inspect the exact goal and library specialization to resolve a failed
-   unification without weakening the normalized probability statement. *)
-Show.
-Check (@normal_prob_conjugate R 0 sigma0 sigma (total/n) V).
-exact: (normal_prob_conjugate Hprior_nz Hnoise_nz mV).
+(* Explicitly instantiate every distributional parameter of the *existing*
+   normalized posterior identity. The implicit-argument version failed
+   proof-term inference even though the specialized type is identical
+   to the goal (as confirmed by the pinned Rocq 9.2 diagnostic build).
+   No density integral or posterior normalization is reimplemented. *)
+exact: (@normal_prob_conjugate R 0 sigma0 sigma (total/n) V
+           Hprior_nz Hnoise_nz mV).
 Qed.
 
 End EquicorrelatedGaussianPosterior.
