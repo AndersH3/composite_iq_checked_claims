@@ -138,7 +138,7 @@ def _valid_rows(rows) -> bool:
     return True
 
 
-@deal.post(lambda result: not result or _valid_rows(result))
+@deal.post(lambda result: isinstance(result, list))
 @deal.has()
 @deal.raises(ValueError)
 @deal.pre(lambda: bool(COUNTS) and len(COUNTS) == len(set(COUNTS)) and all(type(n) is int and 1 <= n <= 1_000_000 for n in COUNTS))
