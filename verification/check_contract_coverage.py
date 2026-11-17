@@ -47,6 +47,11 @@ TARGET_CONTRACTS = MINIMUM_CONTRACTS
                   isinstance(node.value, ast.Name) and
                   node.value.id in aliases and node.attr in CONTRACTS)
              or result is True)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Subscript) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.BinOp) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Compare) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Lambda) or not result)
+@deal.ensure(lambda node, aliases, result: not isinstance(node, ast.Dict) or not result)
 def is_contract(node: ast.expr, aliases: set) -> bool:
     expression = node.func if isinstance(node, ast.Call) else node
     return (isinstance(expression, ast.Attribute) and isinstance(expression.value, ast.Name)
@@ -74,6 +79,9 @@ def is_contract(node: ast.expr, aliases: set) -> bool:
            result["insufficient_file"] ==
            (result["function_count"] > 0 and
             result["file_distinct_contract_count"] < MINIMUM_FILE_CONTRACTS))
+@deal.post(lambda result: all(row["line"] > 0 for row in result["function_contracts"]))
+@deal.post(lambda result: all(row["contract_count"] >= row["distinct_contract_count"] >= 0 for row in result["function_contracts"]))
+@deal.post(lambda result: len(result["insufficient"]) == sum(row["distinct_contract_count"] < MINIMUM_CONTRACTS for row in result["function_contracts"]))
 def audit_file(path: Path) -> dict:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     aliases = {alias.asname or "deal" for node in tree.body if isinstance(node, ast.Import)
@@ -136,6 +144,11 @@ def audit_file(path: Path) -> dict:
 @deal.ensure(lambda root, result:
              all(".." not in path.relative_to(root).parts
                  for path in result))
+@deal.pre(lambda root: root.is_absolute())
+@deal.post(lambda result: all(path.is_absolute() for path in result))
+@deal.ensure(lambda root, result: all(path.resolve().is_relative_to(root.resolve()) for path in result))
+@deal.post(lambda result: all(path.parent.is_dir() for path in result))
+@deal.post(lambda result: all(path.resolve().is_file() for path in result))
 def python_files(root: Path) -> list:
     try:
         output = subprocess.check_output(["git", "-C", str(root), "ls-files", "--cached", "--others",
@@ -159,6 +172,16 @@ def python_files(root: Path) -> list:
 @deal.pre(lambda: isinstance(sys.argv, list))
 @deal.pre(lambda: all(isinstance(argument, str) for argument in sys.argv))
 @deal.pre(lambda: ROOT.is_dir())
+@deal.pre(lambda: isinstance(MINIMUM_CONTRACTS, int) and MINIMUM_CONTRACTS >= 15)
+@deal.pre(lambda: isinstance(MINIMUM_FILE_CONTRACTS, int) and MINIMUM_FILE_CONTRACTS >= MINIMUM_CONTRACTS)
+@deal.pre(lambda: isinstance(TARGET_CONTRACTS, int) and TARGET_CONTRACTS >= MINIMUM_CONTRACTS)
+@deal.pre(lambda: {"pre", "post", "ensure", "raises", "has"} <= CONTRACTS)
+@deal.pre(lambda: ROOT.is_absolute())
+@deal.pre(lambda: ROOT.joinpath("verification", "check_contract_coverage.py").is_file())
+@deal.pre(lambda: ROOT.joinpath("tests").is_dir())
+@deal.pre(lambda: ROOT.joinpath("AGENTS.md").is_file())
+@deal.pre(lambda: bool(sys.argv) and isinstance(sys.argv[0], str))
+@deal.pre(lambda: CONTRACTS <= {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"})
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
