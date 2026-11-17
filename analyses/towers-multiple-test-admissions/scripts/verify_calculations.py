@@ -212,8 +212,15 @@ def _valid_admissions(rows) -> bool:
     for row, (label, p_a, p_b) in zip(rows, CASES):
         if row["case"] != label or row["p_a"] != p_a or row["p_b"] != p_b:
             return False
+        for field in ("joint", "union", "conditional_b_given_a", "conditional_a_given_b"):
+            if not _finite(row[field]) or not 0 <= row[field] <= 1 + 5e-14:
+                return False
+        if not _finite(row["phi"]) or not -1 - 5e-14 <= row["phi"] <= 1 + 5e-14:
+            return False
         if row["rho"] != RHO:
             return False
+        # All arithmetic follows the finite-value checks; untrusted string or
+        # malformed CSV fields must yield False rather than raising TypeError.
         joint = row["joint"]
         if not max(0, p_a + p_b - 1) - 5e-14 <= joint <= min(p_a, p_b) + 5e-14:
             return False
@@ -222,11 +229,6 @@ def _valid_admissions(rows) -> bool:
         if not math.isclose(row["conditional_b_given_a"] * p_a, joint, rel_tol=1e-12, abs_tol=1e-14):
             return False
         if not math.isclose(row["conditional_a_given_b"] * p_b, joint, rel_tol=1e-12, abs_tol=1e-14):
-            return False
-        for field in ("joint", "union", "conditional_b_given_a", "conditional_a_given_b"):
-            if not _finite(row[field]) or not 0 <= row[field] <= 1 + 5e-14:
-                return False
-        if not _finite(row["phi"]) or not -1 - 5e-14 <= row["phi"] <= 1 + 5e-14:
             return False
     return True
 
