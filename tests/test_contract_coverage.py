@@ -340,6 +340,22 @@ def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker
     assert report["insufficient_file"] is True
     assert report["duplicated"] == [row]
 
+    # A closed predicate must not evade duplicate detection by changing only
+    # its unused lambda signature or by accepting arbitrary keyword arguments.
+    closed = tmp_path / "closed_lambda_duplicates.py"
+    closed.write_text(
+        "import deal\\n"
+        "@deal.pre(lambda: 1 == 1)\\n"
+        "@deal.pre(lambda *args, **kwargs: 1 == 1)\\n"
+        "@deal.post(lambda result: result is True)\\n"
+        "def checked():\\n    return True\\n"
+    )
+    closed_report = coverage_checker.audit_file(closed)
+    closed_row, = closed_report["function_contracts"]
+    assert closed_row["duplicate_contract_count"] == 1
+    assert closed_row["distinct_contract_count"] == 2
+    assert closed_report["duplicated"] == [closed_row]
+
 
 @deal.pre(lambda coverage_checker, tmp_path: protected_history_intact())
 @deal.ensure(lambda coverage_checker, tmp_path, *, result: protected_history_intact())
