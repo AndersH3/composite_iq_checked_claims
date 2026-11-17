@@ -76,7 +76,7 @@ jobs:
             # just that tactic, preserving the original proposition and
             # obtaining list reflexivity from the registered Stdlib instance.
             test "$(grep -Fc -- "- repeat red; subst; intuition." rocq/lib_utils/LibUtilsListAdd.v)" -eq 1
-            sed -i "s/- repeat red; subst; intuition\./- intro HH; subst; split; apply Forall2_refl; typeclasses eauto./" rocq/lib_utils/LibUtilsListAdd.v
+            sed -i "s/- repeat red; subst; intuition\./- subst; split; apply Forall2_refl; typeclasses eauto./" rocq/lib_utils/LibUtilsListAdd.v
             opam exec -- make -j 2
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
