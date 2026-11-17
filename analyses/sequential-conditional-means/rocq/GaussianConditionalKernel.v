@@ -474,7 +474,7 @@ Qed.
 *)
 Theorem gk_center_zero_history : forall c, gk_center nil c = 0.
 Proof.
- intro c; unfold gk_center, gk_sum, gk_mass, gk_d, vector_real_sum, finite_sum, sequential_d; simpl; field; lra.
+ intro c; unfold gk_center, gk_sum, gk_mass, gk_d, vector_real_sum, finite_sum, sequential_d, Rdiv; simpl; ring.
 Qed.
 
 (** [gk_residual_expansion] (theorem).
