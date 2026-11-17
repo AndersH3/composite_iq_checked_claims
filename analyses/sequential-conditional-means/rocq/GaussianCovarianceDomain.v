@@ -617,3 +617,183 @@ Proof.
    + rewrite Hlen; exact Hfull.
    + exact Henergy.
 Qed.
+
+(** [gcd_single_future_variance_eigenvalue] (theorem).
+ Mathematical meaning: For exactly one future score, the Schur conditional variance is the signed common-mode eigenvalue ratio (1-c)*d_(r+1)(c)/d_r(c). The rank-one expression reuses the existing residual-variance identity.
+ Exact checked proposition: forall r c, sequential_d r c<>0 -> equicorr_schur_diagonal r c = (1-c)*sequential_d (r+1) c/sequential_d r c.
+ Premises and side conditions: The observed count r>=1 and d_r(c)>0
+ establish a nondegenerate observed covariance. The PSD/PD iff tests
+ quantify exactly the one-dimensional future Schur covariance (variance).
+ Signed c may be negative as far as the full r+1 covariance permits.
+ Proof/definition method: Reuse SequentialReport's verified residual
+ variance identity and scalar cancellation to prove a full necessity
+ and sufficiency criterion; handle singular endpoints algebraically.
+ Library reuse: EquicorrelationSpectral.equicorr_schur_diagonal,
+ SequentialReport.sequential_residual_variance_identity, Stdlib Reals,
+ Ring, Field, Lra, Psatz. No new covariance or probability implementation.
+ Boundary: These are exact scalar Schur-covariance facts, not an
+ independent construction of a Gaussian measure, conditional law, or
+ conditional-expectation integral.
+*)
+Theorem gcd_single_future_variance_eigenvalue :
+ forall r c, sequential_d r c<>0 ->
+ equicorr_schur_diagonal r c =
+ (1-c)*sequential_d (r+1) c/sequential_d r c.
+Proof.
+ intros r c Hr.
+ unfold equicorr_schur_diagonal.
+ rewrite sequential_residual_variance_identity by exact Hr.
+ unfold sequential_d, Rdiv; ring.
+Qed.
+
+(** [gcd_single_future_psd_iff] (theorem).
+ Mathematical meaning: For a single future test result and any observed count r>=1 with nondegenerate observed covariance, nonnegative conditional variance is equivalent to the full r+1 battery equicorrelation domain, including admissible negative correlation and singular boundaries.
+ Exact checked proposition: forall r c, 1<=r -> 0<sequential_d r c -> (0<=equicorr_schur_diagonal r c <-> c<=1 /\ 0<=sequential_d (r+1) c).
+ Premises and side conditions: The observed count r>=1 and d_r(c)>0
+ establish a nondegenerate observed covariance. The PSD/PD iff tests
+ quantify exactly the one-dimensional future Schur covariance (variance).
+ Signed c may be negative as far as the full r+1 covariance permits.
+ Proof/definition method: Reuse SequentialReport's verified residual
+ variance identity and scalar cancellation to prove a full necessity
+ and sufficiency criterion; handle singular endpoints algebraically.
+ Library reuse: EquicorrelationSpectral.equicorr_schur_diagonal,
+ SequentialReport.sequential_residual_variance_identity, Stdlib Reals,
+ Ring, Field, Lra, Psatz. No new covariance or probability implementation.
+ Boundary: These are exact scalar Schur-covariance facts, not an
+ independent construction of a Gaussian measure, conditional law, or
+ conditional-expectation integral.
+*)
+Theorem gcd_single_future_psd_iff :
+ forall r c, 1<=r -> 0<sequential_d r c ->
+ (0<=equicorr_schur_diagonal r c <->
+  c<=1 /\ 0<=sequential_d (r+1) c).
+Proof.
+ intros r c Hr Hd; split.
+ - intro Hvariance.
+   rewrite gcd_single_future_variance_eigenvalue in Hvariance by lra.
+   assert (Hprod:0<=(1-c)*sequential_d (r+1) c).
+   { replace ((1-c)*sequential_d (r+1) c)
+       with (((1-c)*sequential_d (r+1) c /
+              sequential_d r c)*sequential_d r c)
+         by (field; lra).
+     apply Rmult_le_pos; lra. }
+   assert (Hc : c<=1).
+   { destruct (Rle_lt_dec c 1) as [Hle|Hgt]; [exact Hle|].
+     assert (Htotal:0<sequential_d (r+1) c).
+     { unfold sequential_d; nra. }
+     nra. }
+   split; [exact Hc|].
+   destruct (Rlt_le_dec c 1) as [Hstrict|Hboundary].
+   + assert (Hcoef:0<1-c) by lra.
+     apply (Rmult_le_reg_l (1-c)); [exact Hcoef|].
+     replace ((1-c)*0) with 0 by ring; exact Hprod.
+   + assert (Heq:c=1) by lra.
+     subst c; unfold sequential_d; nra.
+ - intros [Hc Htotal].
+   rewrite gcd_single_future_variance_eigenvalue by lra.
+   unfold Rdiv.
+   apply Rmult_le_pos.
+   + apply Rmult_le_pos; lra.
+   + left; apply Rinv_0_lt_compat; lra.
+Qed.
+
+(** [gcd_single_future_pd_iff] (theorem).
+ Mathematical meaning: The single-future-test conditional covariance is strictly positive precisely on the strict full-battery equicorrelation domain; zero conditional variance occurs only at a singular endpoint.
+ Exact checked proposition: forall r c, 1<=r -> 0<sequential_d r c -> (0<equicorr_schur_diagonal r c <-> c<1 /\ 0<sequential_d (r+1) c).
+ Premises and side conditions: The observed count r>=1 and d_r(c)>0
+ establish a nondegenerate observed covariance. The PSD/PD iff tests
+ quantify exactly the one-dimensional future Schur covariance (variance).
+ Signed c may be negative as far as the full r+1 covariance permits.
+ Proof/definition method: Reuse SequentialReport's verified residual
+ variance identity and scalar cancellation to prove a full necessity
+ and sufficiency criterion; handle singular endpoints algebraically.
+ Library reuse: EquicorrelationSpectral.equicorr_schur_diagonal,
+ SequentialReport.sequential_residual_variance_identity, Stdlib Reals,
+ Ring, Field, Lra, Psatz. No new covariance or probability implementation.
+ Boundary: These are exact scalar Schur-covariance facts, not an
+ independent construction of a Gaussian measure, conditional law, or
+ conditional-expectation integral.
+*)
+Theorem gcd_single_future_pd_iff :
+ forall r c, 1<=r -> 0<sequential_d r c ->
+ (0<equicorr_schur_diagonal r c <->
+  c<1 /\ 0<sequential_d (r+1) c).
+Proof.
+ intros r c Hr Hd; split.
+ - intro Hvariance.
+   rewrite gcd_single_future_variance_eigenvalue in Hvariance by lra.
+   assert (Hprod:0<(1-c)*sequential_d (r+1) c).
+   { replace ((1-c)*sequential_d (r+1) c)
+       with (((1-c)*sequential_d (r+1) c/
+              sequential_d r c)*sequential_d r c)
+         by (field; lra).
+     apply Rmult_lt_0_compat; lra. }
+   assert (Hc:c<1).
+   { destruct (Rlt_le_dec c 1) as [Hstrict|Hge]; [exact Hstrict|].
+     assert (Htotal:0<sequential_d (r+1) c).
+     { unfold sequential_d; nra. }
+     nra. }
+   split; [exact Hc|].
+   apply (Rmult_lt_reg_l (1-c)); [lra|].
+   replace ((1-c)*0) with 0 by ring; exact Hprod.
+ - intros [Hc Htotal].
+   rewrite gcd_single_future_variance_eigenvalue by lra.
+   unfold Rdiv.
+   apply Rmult_lt_0_compat.
+   + apply Rmult_lt_0_compat; lra.
+   + apply Rinv_0_lt_compat; lra.
+Qed.
+
+(** [gcd_single_future_lower_singularity] (theorem).
+ Mathematical meaning: At the lower admissible equicorrelation endpoint of the full r+1 battery, the last score becomes a deterministic linear function of the first r observed scores in the Gaussian model; its algebraic residual Schur variance vanishes.
+ Exact checked proposition: forall r c, sequential_d r c<>0 -> sequential_d (r+1) c=0 -> equicorr_schur_diagonal r c=0.
+ Premises and side conditions: The observed count r>=1 and d_r(c)>0
+ establish a nondegenerate observed covariance. The PSD/PD iff tests
+ quantify exactly the one-dimensional future Schur covariance (variance).
+ Signed c may be negative as far as the full r+1 covariance permits.
+ Proof/definition method: Reuse SequentialReport's verified residual
+ variance identity and scalar cancellation to prove a full necessity
+ and sufficiency criterion; handle singular endpoints algebraically.
+ Library reuse: EquicorrelationSpectral.equicorr_schur_diagonal,
+ SequentialReport.sequential_residual_variance_identity, Stdlib Reals,
+ Ring, Field, Lra, Psatz. No new covariance or probability implementation.
+ Boundary: These are exact scalar Schur-covariance facts, not an
+ independent construction of a Gaussian measure, conditional law, or
+ conditional-expectation integral.
+*)
+Theorem gcd_single_future_lower_singularity :
+ forall r c, sequential_d r c<>0 ->
+ sequential_d (r+1) c=0 ->
+ equicorr_schur_diagonal r c=0.
+Proof.
+ intros r c Hr Hsing.
+ rewrite gcd_single_future_variance_eigenvalue by exact Hr.
+ rewrite Hsing; unfold Rdiv; ring.
+Qed.
+
+(** [gcd_single_future_perfect_correlation_singularity] (theorem).
+ Mathematical meaning: At perfect positive equicorrelation all scores coincide in the Gaussian model, and any previously observed score predicts the future one with zero Schur residual variance.
+ Exact checked proposition: forall r, 0<r -> equicorr_schur_diagonal r 1=0.
+ Premises and side conditions: The observed count r>=1 and d_r(c)>0
+ establish a nondegenerate observed covariance. The PSD/PD iff tests
+ quantify exactly the one-dimensional future Schur covariance (variance).
+ Signed c may be negative as far as the full r+1 covariance permits.
+ Proof/definition method: Reuse SequentialReport's verified residual
+ variance identity and scalar cancellation to prove a full necessity
+ and sufficiency criterion; handle singular endpoints algebraically.
+ Library reuse: EquicorrelationSpectral.equicorr_schur_diagonal,
+ SequentialReport.sequential_residual_variance_identity, Stdlib Reals,
+ Ring, Field, Lra, Psatz. No new covariance or probability implementation.
+ Boundary: These are exact scalar Schur-covariance facts, not an
+ independent construction of a Gaussian measure, conditional law, or
+ conditional-expectation integral.
+*)
+Theorem gcd_single_future_perfect_correlation_singularity :
+ forall r, 0<r ->
+ equicorr_schur_diagonal r 1=0.
+Proof.
+ intros r Hr.
+ rewrite gcd_single_future_variance_eigenvalue.
+ - unfold Rdiv; ring.
+ - unfold sequential_d; nra.
+Qed.
