@@ -28,7 +28,7 @@ import deal
 @deal.raises(OSError, ValueError)
 @deal.has("network", "read")
 @deal.post(lambda result: isinstance(result, str))
-@deal.post(lambda result: len(result) == hashlib.sha256().digest_size * 2)
+@deal.post(lambda result: len(result) == 64)
 @deal.post(lambda result: result.isascii())
 @deal.post(lambda result: result == result.lower())
 @deal.post(lambda result: all(character in "0123456789abcdef" for character in result))

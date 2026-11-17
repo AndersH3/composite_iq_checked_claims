@@ -1,6 +1,5 @@
 """Positive control: contracted division retains the exact original operation."""
 import deal
-import math
 
 
 @deal.pre(lambda numerator, denominator: isinstance(numerator, float)
@@ -38,7 +37,7 @@ def positive_ratio(numerator: float, denominator: float) -> float:
 @deal.raises()
 @deal.has()
 # Deliberate control semantics and numerical boundary properties.
-@deal.post(lambda result: math.isfinite(result))
+@deal.post(lambda result: result + 0.25 == 0.75)
 @deal.post(lambda result: result > 0)
 @deal.post(lambda result: result < 1)
 @deal.post(lambda result: result * 2 == 1)

@@ -338,7 +338,7 @@ def admission_rows() -> list[dict]:
 @deal.post(lambda result: all(row["joint_continuous"] <= row["marginal_continuous"] + 1e-13 for row in result))
 @deal.post(lambda result: all(row["grid_marginal"] > 0 for row in result))
 @deal.post(lambda result: all(row["published_rounded_denominator"] > 0 for row in result))
-@deal.post(lambda result: all(math.isclose(row["grid_joint"], row["grid_conditional"] * row["grid_marginal"], rel_tol=1e-12, abs_tol=1e-15) for row in result))
+@deal.post(lambda result: all(abs(row["grid_joint"] - row["grid_conditional"] * row["grid_marginal"]) <= 1e-12 for row in result))
 def basic_grid() -> list[dict]:
     """Reproduce Q..199 STEP .5 point sums in the published BASIC program.
 
