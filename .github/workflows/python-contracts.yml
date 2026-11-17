@@ -28,6 +28,45 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
+      - name: Diagnose Deal linter AST crash by function
+        if: failure()
+        run: |
+          python - <<'PY'
+          import ast
+          import copy
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tempfile
+
+          for relpath in (
+              "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
+              "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
+              "reporting/provenance.py",
+              "tests/fixtures/nonzero_division_lint_probe.py",
+          ):
+              source = ast.parse(Path(relpath).read_text(encoding="utf-8"))
+              callables = [
+                  node for node in ast.walk(source)
+                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+              ]
+              for target in callables:
+                  module = copy.deepcopy(source)
+                  for fn in ast.walk(module):
+                      if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                          if (fn.lineno, fn.name) != (target.lineno, target.name):
+                              fn.decorator_list = []
+                  with tempfile.TemporaryDirectory(prefix="deal-isolate-") as temp:
+                      p = Path(temp, "isolated.py")
+                      p.write_text(ast.unparse(module) + "\n", encoding="utf-8")
+                      check = subprocess.run(
+                          [sys.executable, "-m", "deal", "lint", "--json", str(p)],
+                          capture_output=True, text=True, timeout=15,
+                      )
+                      if check.stderr:
+                          print(f"DEAL_LINT_CRASH {relpath}:{target.lineno} {target.name}: "
+                                f"{check.stderr.strip().splitlines()[-1]}", flush=True)
+          PY
       - name: Validate scaled 40-million-sample Dask task budget without execution
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
       - name: Python/Dask numerical and property tests
