@@ -344,11 +344,11 @@ def test_duplicate_aliases_and_whitespace_do_not_meet_the_floor(coverage_checker
     # its unused lambda signature or by accepting arbitrary keyword arguments.
     closed = tmp_path / "closed_lambda_duplicates.py"
     closed.write_text(
-        "import deal\\n"
-        "@deal.pre(lambda: 1 == 1)\\n"
-        "@deal.pre(lambda *args, **kwargs: 1 == 1)\\n"
-        "@deal.post(lambda result: result is True)\\n"
-        "def checked():\\n    return True\\n"
+        "import deal\n"
+        "@deal.pre(lambda: 1 == 1)\n"
+        "@deal.pre(lambda *args, **kwargs: 1 == 1)\n"
+        "@deal.post(lambda result: result is True)\n"
+        "def checked():\n    return True\n"
     )
     closed_report = coverage_checker.audit_file(closed)
     closed_row, = closed_report["function_contracts"]
