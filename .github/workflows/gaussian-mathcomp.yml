@@ -11,6 +11,10 @@ on:
       - '.github/workflows/gaussian-mathcomp.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   normalized-gaussian-posterior:
     name: MathComp Gaussian posterior kernel
