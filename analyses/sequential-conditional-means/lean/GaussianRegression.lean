@@ -135,7 +135,7 @@ library directly for the actual observed score vector. This definition
 is algebraic; the exact covariance domain and nonzero d_n(c) are
 assumptions of its probability-theoretic theorem.
 -/
-def equicorrelationPredictor (n : ℕ) (c : ℝ)
+noncomputable def equicorrelationPredictor (n : ℕ) (c : ℝ)
     (observed : Fin n → ℝ) : ℝ :=
   c / (1 + ((n : ℝ) - 1) * c) * ∑ i, observed i
 
@@ -144,7 +144,7 @@ The future-score regression innovation is the response minus its
 equicorrelated observed-score linear projection. This is an explicit
 pointwise definition; Gaussian independence is NOT assumed by it.
 -/
-def equicorrelationInnovation {n : ℕ} (c : ℝ)
+noncomputable def equicorrelationInnovation {n : ℕ} (c : ℝ)
     (future : Ω → ℝ) (observed : Ω → Fin n → ℝ) : Ω → ℝ :=
   fun ω => future ω - equicorrelationPredictor n c (observed ω)
 
