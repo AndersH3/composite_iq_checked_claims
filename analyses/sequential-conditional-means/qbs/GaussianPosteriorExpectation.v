@@ -29,6 +29,7 @@ From mathcomp Require Import measure lebesgue_integral lebesgue_stieltjes_measur
   measurable_realfun.
 From mathcomp.analysis Require Import normal_distribution.
 From QBS Require Import normal_centred.
+Require Import GaussianPosteriorMeasure.
 
 Set Implicit Arguments.
 Unset Strict Implicit.
@@ -65,6 +66,51 @@ Theorem gqbs_conjugate_posterior_expectation
    (post_mean m0 sigma0 x sigma)%:E)%E.
 Proof.
 exact: integral_normal_mean.
+Qed.
+
+(** [gqbs_report_posterior_mean_integral] (theorem).
+ Mathematical meaning: The *actual first moment integral* of the
+ normalized conditional posterior Gaussian probability measure for
+ the equicorrelated latent-factor sufficient-statistic model equals
+ the report's exact predictor c*S_n / (1+(n-1)c).
+ This joins the previously kernel-checked Gaussian conjugacy parameter
+ identity to QBS's genuine normal first-moment integral.
+ Explicit assumptions: nonzero prior/likelihood standard deviations
+ and observed count; both standard deviations have the variance values
+ specified by the latent common-factor model; denominators are nonzero.
+ We do not hypothesize a conditional expectation; its value is derived
+ as a Lebesgue probability integral of the normalized posterior.
+ Scope: The fixed-observation posterior kernel, not the universal event
+ integral over the full-history sigma-algebra of an arbitrary jointly
+ Gaussian vector. Negative c is excluded by sigma0 squared = c,
+ except the singular c=0 case, which requires a separate construction.
+ Reuse: gmc_sufficient_statistic_posterior_center, maintained
+ MathComp normal_distribution.post_stddev_gt0,
+ gqbs_conjugate_posterior_expectation.
+*)
+Theorem gqbs_report_posterior_mean_integral
+    (c n total sigma0 sigma : R) :
+  n != 0 ->
+  sigma0 != 0 ->
+  sigma != 0 ->
+  sigma0 ^+ 2 = c ->
+  sigma ^+ 2 = (1-c)/n ->
+  c + (1-c)/n != 0 ->
+  1+(n-1)*c != 0 ->
+  (\int[normal_prob (c*total/(1+(n-1)*c))
+                      (post_stddev sigma0 sigma)]_t t%:E =
+   (c*total/(1+(n-1)*c))%:E)%E.
+Proof.
+move=> Hn Hprior_nz Hnoise_nz Hprior Hnoise Haux Hd.
+have Hmean : post_mean 0 sigma0 (total/n) sigma =
+             c*total/(1+(n-1)*c).
+  exact: (@gmc_sufficient_statistic_posterior_center
+            R c n total sigma0 sigma Hn Hprior Hnoise Haux Hd).
+rewrite -Hmean.
+apply: gqbs_conjugate_posterior_expectation.
+have Hpositive : 0 < post_stddev sigma0 sigma.
+  exact: (post_stddev_gt0 Hprior_nz Hnoise_nz).
+by rewrite (gt_eqF Hpositive).
 Qed.
 
 End GaussianPosteriorFirstMoment.
