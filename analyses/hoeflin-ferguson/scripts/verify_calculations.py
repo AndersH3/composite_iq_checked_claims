@@ -149,17 +149,18 @@ def _valid_rows(rows) -> bool:
 @deal.post(lambda result: all(isinstance(row, tuple) and len(row) == 3
                               for row in result))
 @deal.post(lambda result: all(0 <= row[1] <= Q + 2e-14 for row in result))
-@deal.post(lambda result: all(math.isclose(
-    row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
-    for row in result))
-@deal.post(lambda result: not result or math.isclose(
-    result[-1][1], Q * math.sqrt(RHO),
-    rel_tol=2e-14, abs_tol=1e-14))
+@deal.post(lambda result: all(
+    abs(row[2] - (100 + 16 * row[1])) <= 1e-12 for row in result))
+@deal.post(lambda result: not result or
+    abs(result[-1][1] - Q * math.sqrt(RHO)) <=
+    max(1e-14, 2e-14 * max(abs(result[-1][1]), abs(Q * math.sqrt(RHO)))))
 # Independent algebraic, extremal-domain and table-integrity laws.
 @deal.post(lambda result: not result or [row[0] for row in result] == [str(n) for n in COUNTS] + ["infinity"])
 @deal.post(lambda result: all(result[i][1] + 1e-14 >= result[i + 1][1] for i in range(len(result) - 1)))
 @deal.post(lambda result: all(result[i][2] + 1e-12 >= result[i + 1][2] for i in range(len(result) - 1)))
-@deal.post(lambda result: not result or math.isclose(result[0][1], Q, rel_tol=1e-12, abs_tol=1e-12))
+@deal.post(lambda result: not result or
+    abs(result[0][1] - Q) <= max(
+        1e-12, 1e-12 * max(abs(result[0][1]), abs(Q))))
 @deal.post(lambda result: not result or result[-1][2] == 100 + 16 * result[-1][1])
 def thresholds() -> list[tuple[str, float, float]]:
     rows = []
