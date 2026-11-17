@@ -153,4 +153,46 @@ Section ProductGaussianRegression.
     - apply product_gaussian_innovation_independent.
     - exact innovation_centered.
   Qed.
+
+  (** [product_gaussian_future_integrable] (instance).
+   The observed-history predictor and product-coordinate innovation are
+   L1 by the explicit section hypotheses. FormalML's maintained
+   IsFiniteExpectation_plus constructs the required L1 witness for
+   their sum; this is not a new assumption of integrability.
+  *)
+  Local Instance product_gaussian_future_integrable :
+    IsFiniteExpectation full_probability
+      (rvplus product_gaussian_predictor product_gaussian_innovation).
+  Proof.
+    apply IsFiniteExpectation_plus; typeclasses eauto.
+  Qed.
+
+  (** [product_gaussian_conditional_mean_almost_sure] (theorem).
+   This supplies the report's characteristic almost-sure form of the
+   conditional-expectation identity, in the *constructed* product
+   independent-innovation model with coefficient c/d_n(c).
+   FormalML's actual ConditionalExpectation exists in L1, and its
+   uniqueness theorem identifies it with the adapted linear predictor
+   almost surely under the observed-history probability subspace.
+   We reuse the previously proved universal event-integral CE property.
+   There is no explicit CE hypothesis, independence parameter,
+   disintegration axiom, or custom Gaussian integration.
+   The remaining mathematical obligation for an *arbitrary* jointly
+   Gaussian equicorrelated vector is to kernel-prove that its regression
+   residual is equivalent to such an independent product coordinate.
+  *)
+  Theorem product_gaussian_conditional_mean_almost_sure
+    (n_positive : (1 <= n)%nat)
+    (observed_invertible : 0 < 1 + (INR n - 1) * c)
+    (innovation_centered :
+       FiniteExpectation full_probability product_gaussian_innovation = 0) :
+    almostR2 (prob_space_sa_sub full_probability observed_sub) eq
+      (ConditionalExpectation full_probability observed_sub
+         (rvplus product_gaussian_predictor product_gaussian_innovation))
+      (fun w => Finite (product_gaussian_predictor w)).
+  Proof.
+    eapply is_conditional_expectation_unique.
+    - apply Condexp_cond_exp.
+    - apply product_gaussian_regression_conditional_expectation; assumption.
+  Qed.
 End ProductGaussianRegression.
