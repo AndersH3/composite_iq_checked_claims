@@ -899,3 +899,164 @@ Proof.
  pose proof (gk_variance_below_prior xs c Hc Hc1).
  lra.
 Qed.
+
+(** [gk_residual_sum_sufficient_mean] (theorem).
+ Mathematical meaning: Exact Gaussian sample-mean sufficiency at the level of an arbitrary unequal-score least-squares likelihood: total residual energy equals the centered sample energy plus n times the squared distance from the sample mean.
+ Exact checked proposition: forall xs theta, xs<>nil -> gk_residual_energy xs theta = vector_center_energy xs (gk_sum xs/gk_mass xs) + gk_mass xs*(theta-gk_sum xs/gk_mass xs)* (theta-gk_sum xs/gk_mass xs).
+ Premises and side conditions: A nonempty finite score list has positive
+ sample count, enabling exact sample-mean decomposition. Model Gaussianity
+ and independent residuals are separate probabilistic premises; the
+ deterministic real/quadratic identities require only the stated inputs.
+ Proof/definition method: Reuse the canonical finite-vector centered-energy
+ formula and the checked kernel factorization, applying Stdlib Field/Ring
+ to exact algebra and avoiding custom finite sums, normal integrals or axioms.
+ Library reuse: EquicorrelationVectors.vector_center_energy_mean_identity,
+ GaussianConditionalKernel existing posterior definitions and kernel ratio,
+ and Stdlib list lengths, Reals, Ring, Field.
+ Boundary: Pointwise likelihood-sufficiency and posterior-kernel invariance;
+ measure normalization and full-vector conditional expectation require an
+ independently verified Gaussian probability/disintegration theorem.
+*)
+Theorem gk_residual_sum_sufficient_mean :
+ forall xs theta, xs<>nil ->
+ gk_residual_energy xs theta =
+ vector_center_energy xs (gk_sum xs/gk_mass xs) +
+ gk_mass xs*(theta-gk_sum xs/gk_mass xs)*
+             (theta-gk_sum xs/gk_mass xs).
+Proof.
+ intros xs theta Hxs.
+ rewrite gk_residual_expansion.
+ pose proof (gk_mass_nonzero xs Hxs) as Hn.
+ unfold gk_mass, gk_sum in *.
+ rewrite vector_center_energy_mean_identity by exact Hxs.
+ field; nra.
+Qed.
+
+(** [gk_joint_quadratic_sufficient_mean] (theorem).
+ Mathematical meaning: The full unequal-score Gaussian prior-plus-likelihood quadratic separates into a sample-mean likelihood term depending on the latent signal and a data-dispersion term independent of that signal.
+ Exact checked proposition: forall xs c theta, xs<>nil -> gk_joint_quadratic xs c theta = (theta*theta/c + gk_mass xs*(theta-gk_sum xs/gk_mass xs)* (theta-gk_sum xs/gk_mass xs)/(1-c)) + vector_center_energy xs (gk_sum xs/gk_mass xs)/(1-c).
+ Premises and side conditions: A nonempty finite score list has positive
+ sample count, enabling exact sample-mean decomposition. Model Gaussianity
+ and independent residuals are separate probabilistic premises; the
+ deterministic real/quadratic identities require only the stated inputs.
+ Proof/definition method: Reuse the canonical finite-vector centered-energy
+ formula and the checked kernel factorization, applying Stdlib Field/Ring
+ to exact algebra and avoiding custom finite sums, normal integrals or axioms.
+ Library reuse: EquicorrelationVectors.vector_center_energy_mean_identity,
+ GaussianConditionalKernel existing posterior definitions and kernel ratio,
+ and Stdlib list lengths, Reals, Ring, Field.
+ Boundary: Pointwise likelihood-sufficiency and posterior-kernel invariance;
+ measure normalization and full-vector conditional expectation require an
+ independently verified Gaussian probability/disintegration theorem.
+*)
+Theorem gk_joint_quadratic_sufficient_mean :
+ forall xs c theta, xs<>nil ->
+ gk_joint_quadratic xs c theta =
+ (theta*theta/c +
+  gk_mass xs*(theta-gk_sum xs/gk_mass xs)*
+              (theta-gk_sum xs/gk_mass xs)/(1-c)) +
+ vector_center_energy xs (gk_sum xs/gk_mass xs)/(1-c).
+Proof.
+ intros xs c theta Hxs.
+ unfold gk_joint_quadratic.
+ rewrite gk_residual_sum_sufficient_mean by exact Hxs.
+ unfold Rdiv; ring.
+Qed.
+
+(** [gk_joint_kernel_sufficient_mean] (theorem).
+ Mathematical meaning: For any nonempty observed score vector, its Gaussian joint likelihood factors into a single Gaussian sample-mean likelihood and a latent-parameter-independent dispersion factor, providing an exact finite-vector likelihood-sufficiency bridge.
+ Exact checked proposition: forall xs c theta, xs<>nil -> gk_joint_kernel xs c theta = exp (- (theta*theta/c + gk_mass xs*(theta-gk_sum xs/gk_mass xs)* (theta-gk_sum xs/gk_mass xs)/(1-c))/2) * exp (- (vector_center_energy xs (gk_sum xs/gk_mass xs)/ (1-c))/2).
+ Premises and side conditions: A nonempty finite score list has positive
+ sample count, enabling exact sample-mean decomposition. Model Gaussianity
+ and independent residuals are separate probabilistic premises; the
+ deterministic real/quadratic identities require only the stated inputs.
+ Proof/definition method: Reuse the canonical finite-vector centered-energy
+ formula and the checked kernel factorization, applying Stdlib Field/Ring
+ to exact algebra and avoiding custom finite sums, normal integrals or axioms.
+ Library reuse: EquicorrelationVectors.vector_center_energy_mean_identity,
+ GaussianConditionalKernel existing posterior definitions and kernel ratio,
+ and Stdlib list lengths, Reals, Ring, Field.
+ Boundary: Pointwise likelihood-sufficiency and posterior-kernel invariance;
+ measure normalization and full-vector conditional expectation require an
+ independently verified Gaussian probability/disintegration theorem.
+*)
+Theorem gk_joint_kernel_sufficient_mean :
+ forall xs c theta, xs<>nil ->
+ gk_joint_kernel xs c theta =
+ exp (- (theta*theta/c +
+         gk_mass xs*(theta-gk_sum xs/gk_mass xs)*
+                     (theta-gk_sum xs/gk_mass xs)/(1-c))/2) *
+ exp (- (vector_center_energy xs (gk_sum xs/gk_mass xs)/
+        (1-c))/2).
+Proof.
+ intros xs c theta Hxs.
+ unfold gk_joint_kernel.
+ rewrite gk_joint_quadratic_sufficient_mean by exact Hxs.
+ rewrite <- exp_plus.
+ f_equal; unfold Rdiv; ring.
+Qed.
+
+(** [gk_posterior_shape_sufficient_statistic] (theorem).
+ Mathematical meaning: Two arbitrary and potentially unequal observed-score histories with the same number of scores and observed sum have exactly the same posterior Gaussian kernel, regardless of differences in their sample dispersion or ordering.
+ Exact checked proposition: forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> gk_posterior_kernel xs c theta=gk_posterior_kernel ys c theta.
+ Premises and side conditions: A nonempty finite score list has positive
+ sample count, enabling exact sample-mean decomposition. Model Gaussianity
+ and independent residuals are separate probabilistic premises; the
+ deterministic real/quadratic identities require only the stated inputs.
+ Proof/definition method: Reuse the canonical finite-vector centered-energy
+ formula and the checked kernel factorization, applying Stdlib Field/Ring
+ to exact algebra and avoiding custom finite sums, normal integrals or axioms.
+ Library reuse: EquicorrelationVectors.vector_center_energy_mean_identity,
+ GaussianConditionalKernel existing posterior definitions and kernel ratio,
+ and Stdlib list lengths, Reals, Ring, Field.
+ Boundary: Pointwise likelihood-sufficiency and posterior-kernel invariance;
+ measure normalization and full-vector conditional expectation require an
+ independently verified Gaussian probability/disintegration theorem.
+*)
+Theorem gk_posterior_shape_sufficient_statistic :
+ forall xs ys c theta,
+ length xs=length ys ->
+ gk_sum xs=gk_sum ys ->
+ gk_posterior_kernel xs c theta=gk_posterior_kernel ys c theta.
+Proof.
+ intros xs ys c theta Hlen Hsum.
+ unfold gk_posterior_kernel, gk_posterior_quadratic,
+        gk_precision, gk_center, gk_d, gk_mass.
+ rewrite Hlen, Hsum.
+ reflexivity.
+Qed.
+
+(** [gk_history_likelihood_ratio_sufficient_statistic] (theorem).
+ Mathematical meaning: After removing each data-only evidence factor, histories with the same count and score sum have identical latent-parameter likelihood ratios; this is the precise density-level sufficiency condition needed to reuse normal-normal conjugacy for the full score vector.
+ Exact checked proposition: forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_joint_kernel ys c theta/gk_evidence_kernel ys c.
+ Premises and side conditions: A nonempty finite score list has positive
+ sample count, enabling exact sample-mean decomposition. Model Gaussianity
+ and independent residuals are separate probabilistic premises; the
+ deterministic real/quadratic identities require only the stated inputs.
+ Proof/definition method: Reuse the canonical finite-vector centered-energy
+ formula and the checked kernel factorization, applying Stdlib Field/Ring
+ to exact algebra and avoiding custom finite sums, normal integrals or axioms.
+ Library reuse: EquicorrelationVectors.vector_center_energy_mean_identity,
+ GaussianConditionalKernel existing posterior definitions and kernel ratio,
+ and Stdlib list lengths, Reals, Ring, Field.
+ Boundary: Pointwise likelihood-sufficiency and posterior-kernel invariance;
+ measure normalization and full-vector conditional expectation require an
+ independently verified Gaussian probability/disintegration theorem.
+*)
+Theorem gk_history_likelihood_ratio_sufficient_statistic :
+ forall xs ys c theta,
+ length xs=length ys ->
+ gk_sum xs=gk_sum ys ->
+ c<>0 -> 1-c<>0 ->
+ gk_d xs c<>0 ->
+ gk_joint_kernel xs c theta/gk_evidence_kernel xs c =
+ gk_joint_kernel ys c theta/gk_evidence_kernel ys c.
+Proof.
+ intros xs ys c theta Hlen Hsum Hc Hnoise Hd.
+ assert (Hdy : gk_d ys c <>0).
+ { unfold gk_d, gk_mass in *.
+   rewrite <- Hlen; exact Hd. }
+ rewrite (gk_kernel_ratio xs c theta Hc Hnoise Hd).
+ rewrite (gk_kernel_ratio ys c theta Hc Hnoise Hdy).
+ apply gk_posterior_shape_sufficient_statistic; assumption.
+Qed.
