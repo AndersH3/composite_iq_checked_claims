@@ -131,3 +131,15 @@ test "$(sed -n "${incl_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof.
 test "$(sed -n "${incl_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
 sed -i "${incl_start},${incl_end}c\\    Proof.\\n      unfold incl; split.\\n      - intros [Hl Hm] x Hx.\\n        apply in_app_iff in Hx.\\n        destruct Hx as [Hxl | Hxm]; [exact (Hl x Hxl) | exact (Hm x Hxm)].\\n      - intros Hall; split; intros x Hx; apply Hall; apply in_app_iff.\\n        + left; exact Hx.\\n        + right; exact Hx.\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
+
+# The upstream not-included witness proof relies on intuition to supply
+# the tail obstruction under Rocq 9.2. Use the maintained List.incl and
+# in_dec APIs and construct the witness by explicit induction.
+nincl_line=$(grep -n "^    Lemma nincl_exists " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+test -n "$nincl_line"
+nincl_start=$((nincl_line + 2))
+nincl_end=$((nincl_line + 13))
+test "$(sed -n "${nincl_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+test "$(sed -n "${nincl_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+sed -i "${nincl_start},${nincl_end}c\\    Proof.\\n      induction l1 as [|a l1 IH]; intros Hbad.\\n      - exfalso; apply Hbad; intros x Hx; inversion Hx.\\n      - destruct (in_dec dec a l2) as [Ha | Hna].\\n        + assert (Htail : ~ incl l1 l2).\\n          { intro Hsub; apply Hbad; intros x [Heq | Hin].\\n            - subst x; exact Ha.\\n            - apply Hsub; exact Hin. }\\n          destruct (IH Htail) as [x [Hin Hnotin]].\\n          exists x; split; [right; exact Hin | exact Hnotin].\\n        + exists a; split; [left; reflexivity | exact Hna].\\n    Qed." \
+  rocq/lib_utils/LibUtilsListAdd.v
