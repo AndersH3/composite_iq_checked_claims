@@ -626,7 +626,7 @@ Qed.
 *)
 Theorem gk_kernel_reflection : forall xs c t, gk_posterior_kernel xs c (gk_center xs c + t) = gk_posterior_kernel xs c (gk_center xs c - t).
 Proof.
- intros; unfold gk_posterior_kernel, gk_posterior_quadratic; f_equal; ring.
+ intros; unfold gk_posterior_kernel, gk_posterior_quadratic; f_equal; unfold Rdiv; ring.
 Qed.
 
 (** [gk_kernel_at_center] (theorem).
