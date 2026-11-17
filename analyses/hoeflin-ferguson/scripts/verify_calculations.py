@@ -327,7 +327,7 @@ def verify_source_values(rows: list[tuple[str, float, float]]) -> None:
 @deal.pre(lambda *args, **kwargs: len(set(COUNTS)) == len(COUNTS))
 @deal.pre(lambda *args, **kwargs: all(type(n) is int and n >= 1 for n in COUNTS))
 @deal.pre(lambda *args, **kwargs: _finite(RHO) and 0 <= RHO <= 1)
-@deal.pre(lambda *args, **kwargs: _finite(Q) and 0 < Q <= 10)
+@deal.pre(lambda *args, **kwargs: len(FIELDS) == 3 and len(set(FIELDS)) == 3)
 def verify_examples() -> None:
     check_close(Q, 4.753424308822899, "upper-tail normal quantile")
     check_close(float(norm.sf(Q)), 1e-6, "quantile's upper-tail probability")
