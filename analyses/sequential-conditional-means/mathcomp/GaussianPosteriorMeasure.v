@@ -154,6 +154,10 @@ have Hmean : post_mean 0 sigma0 (total/n) sigma =
   - exact: Haux.
   - exact: Hd.
 rewrite -Hmean.
+(* Inspect the exact goal and library specialization to resolve a failed
+   unification without weakening the normalized probability statement. *)
+Show.
+Check (@normal_prob_conjugate R 0 sigma0 sigma (total/n) V).
 exact: (normal_prob_conjugate Hprior_nz Hnoise_nz mV).
 Qed.
 
