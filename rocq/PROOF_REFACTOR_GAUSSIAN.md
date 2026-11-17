@@ -4,7 +4,7 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks 47 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks 51 exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
 ## GaussianConditionalKernel.v — 35 proof scripts
 
@@ -48,7 +48,7 @@ This register tracks 47 exact source-order proofs about Gaussian prior-plus-like
 | `gk_posterior_shape_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> gk_posterior_kernel xs c theta=gk_posterior_kernel ys c theta | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 | `gk_history_likelihood_ratio_sufficient_statistic` (theorem) | forall xs ys c theta, length xs=length ys -> gk_sum xs=gk_sum ys -> c<>0 -> 1-c<>0 -> gk_d xs c<>0 -> gk_joint_kernel xs c theta/gk_evidence_kernel xs c = gk_joint_kernel ys c theta/gk_evidence_kernel ys c | EquicorrelationVectors centered-energy mean, GaussianConditionalKernel ratio and Stdlib Ring/Field | Exact pointwise finite-vector likelihood sufficiency, not a normalized Gaussian conditional expectation |
 
-## GaussianCovarianceDomain.v — 12 proof scripts
+## GaussianCovarianceDomain.v — 16 proof scripts
 
 | Proof script (kind) | Mathematical scope | Library reuse | Boundaries |
 |---|---|---|---|
@@ -65,6 +65,11 @@ This register tracks 47 exact source-order proofs about Gaussian prior-plus-like
 
 | `gcd_schur_psd_iff_full_battery` (theorem) | forall r k c, 0<r -> 0<k -> 0<sequential_d r c -> ((forall energy total, 0<=energy-total*total/k -> 0<=equicorr_schur_energy r c energy total) <-> (c<=1 /\ 0<=sequential_d (r+k) c)) | Existing Schur covariance decomposition, common/contrast witnesses, Stdlib Field/Lra/Psatz | Universal feasible-energy iff; not concrete single-coordinate necessity or Gaussian expectation |
 | `gcd_schur_pd_iff_full_battery` (theorem) | forall r k c, 0<r -> 0<k -> 0<sequential_d r c -> ((forall energy total, 0<energy -> 0<=energy-total*total/k -> 0<equicorr_schur_energy r c energy total) <-> (c<1 /\ 0<sequential_d (r+k) c)) | Existing Schur covariance decomposition, common/contrast witnesses, Stdlib Field/Lra/Psatz | Universal feasible-energy iff; not concrete single-coordinate necessity or Gaussian expectation |
+
+| `gcd_schur_contrast_witness` (theorem) | forall r c k, sequential_d r c<>0 -> vector_schur_form r c (1::(-1)::repeat 0 k)=2*(1-c) | EquicorrelationVectors concrete list witnesses, Schur signed-domain criteria, Stdlib List/Field/Psatz | Exact concrete-vector PSD/PD iff for future dimension at least two; not Gaussian measure |
+| `gcd_schur_common_witness` (theorem) | forall r c k, sequential_d r c<>0 -> vector_schur_form r c (repeat 1 (S k)) = INR(S k)*(1-c)*sequential_d (r+INR(S k)) c/ sequential_d r c | EquicorrelationVectors concrete list witnesses, Schur signed-domain criteria, Stdlib List/Field/Psatz | Exact concrete-vector PSD/PD iff for future dimension at least two; not Gaussian measure |
+| `gcd_schur_concrete_psd_iff_full_battery` (theorem) | forall r k c, 0<r -> 0<sequential_d r c -> ((forall xs:list R, length xs=S(S k) -> 0<=vector_schur_form r c xs) <-> (c<=1 /\ 0<=sequential_d (r+INR(S(S k))) c)) | EquicorrelationVectors concrete list witnesses, Schur signed-domain criteria, Stdlib List/Field/Psatz | Exact concrete-vector PSD/PD iff for future dimension at least two; not Gaussian measure |
+| `gcd_schur_concrete_pd_iff_full_battery` (theorem) | forall r k c, 0<r -> 0<sequential_d r c -> ((forall xs:list R, length xs=S(S k) -> 0<vector_square_energy xs -> 0<vector_schur_form r c xs) <-> (c<1 /\ 0<sequential_d (r+INR(S(S k))) c)) | EquicorrelationVectors concrete list witnesses, Schur signed-domain criteria, Stdlib List/Field/Psatz | Exact concrete-vector PSD/PD iff for future dimension at least two; not Gaussian measure |
 
 ## Full AI disclosure
 
