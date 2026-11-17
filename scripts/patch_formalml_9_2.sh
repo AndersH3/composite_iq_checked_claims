@@ -155,3 +155,15 @@ test "$(sed -n "${inter_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof
 test "$(sed -n "${inter_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
 sed -i "${inter_start},${inter_end}c\\    Proof.\\n      unfold Proper, respectful, equivlist.\\n      intros a a' Ha b b' Hb x; split; intro Hx.\\n      - apply set_inter_elim in Hx.\\n        destruct Hx as [Hax Hbx]; apply set_inter_intro.\\n        + apply (proj1 (Ha x)); exact Hax.\\n        + apply (proj1 (Hb x)); exact Hbx.\\n      - apply set_inter_elim in Hx.\\n        destruct Hx as [Hax Hbx]; apply set_inter_intro.\\n        + apply (proj2 (Ha x)); exact Hax.\\n        + apply (proj2 (Hb x)); exact Hbx.\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
+
+# The old NoDup/disjointness argument ended with unresolved intuition.
+# Use the maintained NoDup_app_inv2 and in_split facts and explicitly
+# contradict membership in the duplicate-free suffix.
+nodup_line=$(grep -n "^    Lemma NoDup_app_dis " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+test -n "$nodup_line"
+nodup_start=$((nodup_line + 2))
+nodup_end=$((nodup_line + 11))
+test "$(sed -n "${nodup_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+test "$(sed -n "${nodup_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+sed -i "${nodup_start},${nodup_end}c\\    Proof.\\n      unfold disjoint; intros Hdup x Ha Hb.\\n      destruct (in_split x a Ha) as [a1 [a2 Heq]]; subst a.\\n      rewrite <- app_assoc in Hdup.\\n      apply NoDup_app_inv2 in Hdup.\\n      inversion Hdup as [|y ys Hnot Htail]; subst.\\n      apply Hnot; apply in_or_app; right; exact Hb.\\n    Qed." \
+  rocq/lib_utils/LibUtilsListAdd.v
