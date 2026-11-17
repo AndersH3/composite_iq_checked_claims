@@ -645,7 +645,11 @@ Qed.
 *)
 Theorem gk_kernel_at_center : forall xs c, gk_posterior_kernel xs c (gk_center xs c)=1.
 Proof.
- intros; unfold gk_posterior_kernel, gk_posterior_quadratic; replace (gk_center xs c - gk_center xs c) with 0 by ring; ring_simplify; apply exp_0.
+ intros xs c; unfold gk_posterior_kernel, gk_posterior_quadratic.
+ replace (gk_center xs c - gk_center xs c) with 0 by ring.
+ replace (-(gk_precision xs c*0*0)/2) with 0
+   by (unfold Rdiv; ring).
+ apply exp_0.
 Qed.
 
 (** [gk_kernel_at_least_zero] (theorem).
