@@ -279,7 +279,7 @@ Qed.
 *)
 Theorem gib_perfect_correlation_zero_future_cross : forall n:R, 0<sequential_d n 1 -> equicorr_schur_cross n 1=0.
 Proof.
-  intros n Hd; rewrite d051_schur_cross_closed by lra; ring.
+  intros n Hd; rewrite d051_schur_cross_closed by lra; unfold Rdiv; ring.
 Qed.
 
 (** [gib_perfect_correlation_zero_future_diagonal] (theorem).
@@ -299,7 +299,7 @@ Qed.
 *)
 Theorem gib_perfect_correlation_zero_future_diagonal : forall n:R, 0<sequential_d n 1 -> equicorr_schur_diagonal n 1=0.
 Proof.
-  intros n Hd; rewrite d051_schur_diagonal_closed by lra; ring.
+  intros n Hd; rewrite d051_schur_diagonal_closed by lra; unfold Rdiv; ring.
 Qed.
 
 (** [gib_nested_diagonal_strict_variance_reduction] (theorem).
