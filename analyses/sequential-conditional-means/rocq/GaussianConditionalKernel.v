@@ -21,7 +21,7 @@
  AI disclosure: AI assisted proof design, source, documentation and review;
  only kernel-accepted propositions may be called checked.
 *)
-From Stdlib Require Import Reals Lra Psatz Ring Field List.
+From Stdlib Require Import Reals Rpower Lra Psatz Ring Field List.
 Require Import FiniteSum SequentialReport EquicorrelationVectors
   UnequalHistoryLinearPrediction.
 Import ListNotations.
@@ -668,7 +668,17 @@ Qed.
 *)
 Theorem gk_kernel_at_least_zero : forall xs c theta, 0<c -> c<1 -> gk_posterior_kernel xs c theta <= 1.
 Proof.
- intros xs c theta Hc Hc1; unfold gk_posterior_kernel, gk_posterior_quadratic; rewrite <- exp_0; apply exp_le; assert(Hp:0<gk_precision xs c) by (apply gk_precision_positive; assumption); nra.
+ intros xs c theta Hc Hc1.
+ unfold gk_posterior_kernel, gk_posterior_quadratic.
+ rewrite <- exp_0.
+ pose proof (gk_precision_positive xs c Hc Hc1) as Hp.
+ assert (Hle : - (gk_precision xs c *
+                    (theta - gk_center xs c) *
+                    (theta - gk_center xs c))/2 <= 0).
+ { unfold Rdiv; nra. }
+ destruct (Rle_lt_or_eq_dec _ _ Hle) as [Hlt|Heq].
+ - left; apply exp_increasing; exact Hlt.
+ - right; rewrite Heq; reflexivity.
 Qed.
 
 (** [gk_posterior_kernel_variance] (theorem).
