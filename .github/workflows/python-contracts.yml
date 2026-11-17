@@ -66,6 +66,24 @@ jobs:
                       if check.stderr:
                           print(f"DEAL_LINT_CRASH {relpath}:{target.lineno} {target.name}: "
                                 f"{check.stderr.strip().splitlines()[-1]}", flush=True)
+                          for index, decorator in enumerate(target.decorator_list):
+                              singled = copy.deepcopy(source)
+                              for fn in ast.walk(singled):
+                                  if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                                      fn.decorator_list = (
+                                          [copy.deepcopy(decorator)]
+                                          if (fn.lineno, fn.name) == (target.lineno, target.name)
+                                          else []
+                                      )
+                              p.write_text(ast.unparse(singled) + "\n", encoding="utf-8")
+                              single_check = subprocess.run(
+                                  [sys.executable, "-m", "deal", "lint", "--json", str(p)],
+                                  capture_output=True, text=True, timeout=15,
+                              )
+                              if single_check.stderr:
+                                  print(f"DEAL_LINT_DECORATOR {relpath}:{target.lineno} "
+                                        f"{target.name}:{index}: {ast.unparse(decorator)} : "
+                                        f"{single_check.stderr.strip().splitlines()[-1]}", flush=True)
           PY
       - name: Validate scaled 40-million-sample Dask task budget without execution
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
