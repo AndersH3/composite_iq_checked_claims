@@ -59,6 +59,12 @@ GRID_FIELDS = (
 @deal.ensure(lambda p_a, p_b, joint, result: result <= p_a + p_b + 5e-15)
 @deal.ensure(lambda p_a, p_b, joint, result: joint != 0 or math.isclose(
     result, p_a + p_b, rel_tol=0, abs_tol=5e-15))
+# Independent probability-domain, schema, and reconstruction properties.
+@deal.ensure(lambda p_a, p_b, joint, result: math.isclose(result + joint, p_a + p_b, rel_tol=0, abs_tol=1e-14))
+@deal.ensure(lambda p_a, p_b, joint, result: joint != min(p_a, p_b) or math.isclose(result, max(p_a, p_b), rel_tol=0, abs_tol=1e-14))
+@deal.ensure(lambda p_a, p_b, joint, result: p_a != 0 or math.isclose(result, p_b, rel_tol=0, abs_tol=1e-14))
+@deal.ensure(lambda p_a, p_b, joint, result: p_b != 0 or math.isclose(result, p_a, rel_tol=0, abs_tol=1e-14))
+@deal.ensure(lambda p_a, p_b, joint, result: result >= 0)
 def probability_union(p_a: float, p_b: float, joint: float) -> float:
     """Inclusion-exclusion for a feasible pair of event probabilities."""
     return p_a + p_b - joint
@@ -145,6 +151,12 @@ def joint_tail(a: float, b: float, rho: float = RHO) -> float:
                  for row in rows for value in row.values()))
 @deal.ensure(lambda fields, rows, result: not result or
              all(value is not None for row in rows for value in row.values()))
+# Independent probability-domain, schema, and reconstruction properties.
+@deal.ensure(lambda fields, rows, result: not result or all(len(row) == len(fields) for row in rows))
+@deal.ensure(lambda fields, rows, result: not result or all(all(field in row for field in fields) for row in rows))
+@deal.ensure(lambda fields, rows, result: not result or all(all(field in fields for field in row) for row in rows))
+@deal.ensure(lambda fields, rows, result: not result or all(type(key) is str for row in rows for key in row))
+@deal.ensure(lambda fields, rows, result: not result or all(not isinstance(value, bool) for row in rows for value in row.values()))
 def _valid_fields_rows(fields, rows) -> bool:
     if not isinstance(fields, (tuple, list)) or not fields:
         return False
@@ -218,6 +230,12 @@ def _valid_admissions(rows) -> bool:
 @deal.ensure(lambda rows, result: not result or
              all(_finite(row["conditional_continuous"]) and
                  0 <= row["conditional_continuous"] <= 1 for row in rows))
+# Independent probability-domain, schema, and reconstruction properties.
+@deal.ensure(lambda rows, result: not result or all(row["grid_marginal"] >= 0 for row in rows))
+@deal.ensure(lambda rows, result: not result or all(row["marginal_continuous"] >= 0 for row in rows))
+@deal.ensure(lambda rows, result: not result or all(row["grid_joint"] <= 1 for row in rows))
+@deal.ensure(lambda rows, result: not result or all(_finite(row["published_joint"]) for row in rows))
+@deal.ensure(lambda rows, result: not result or all(_finite(row["published_rounded_denominator"]) for row in rows))
 def _valid_grid(rows) -> bool:
     return (_valid_fields_rows(GRID_FIELDS, rows) and len(rows) == 3
             and tuple(row["cutoff_iq"] for row in rows) == (133, 150, 164)
@@ -246,6 +264,12 @@ def _valid_grid(rows) -> bool:
 @deal.post(lambda result: all(row["union"] ==
                               row["p_a"] + row["p_b"] - row["joint"]
                               for row in result))
+# Independent probability-domain, schema, and reconstruction properties.
+@deal.post(lambda result: all(row["joint"] <= min(row["p_a"], row["p_b"]) + 5e-14 for row in result))
+@deal.post(lambda result: all(row["joint"] >= max(0, row["p_a"] + row["p_b"] - 1) - 5e-14 for row in result))
+@deal.post(lambda result: all(row["union"] + 5e-14 >= max(row["p_a"], row["p_b"]) for row in result))
+@deal.post(lambda result: all(row["conditional_b_given_a"] <= 1 + 5e-14 for row in result))
+@deal.post(lambda result: all(row["conditional_a_given_b"] <= 1 + 5e-14 for row in result))
 def admission_rows() -> list[dict]:
     rows = []
     for label, p_a, p_b in CASES:
@@ -288,6 +312,12 @@ def admission_rows() -> list[dict]:
                               row["grid_joint"] /
                               row["published_rounded_denominator"]
                               for row in result))
+# Independent probability-domain, schema, and reconstruction properties.
+@deal.post(lambda result: all(row["grid_joint"] <= row["grid_marginal"] + 1e-13 for row in result))
+@deal.post(lambda result: all(row["joint_continuous"] <= row["marginal_continuous"] + 1e-13 for row in result))
+@deal.post(lambda result: all(row["grid_marginal"] > 0 for row in result))
+@deal.post(lambda result: all(row["published_rounded_denominator"] > 0 for row in result))
+@deal.post(lambda result: all(math.isclose(row["grid_joint"], row["grid_conditional"] * row["grid_marginal"], rel_tol=1e-12, abs_tol=1e-15) for row in result))
 def basic_grid() -> list[dict]:
     """Reproduce Q..199 STEP .5 point sums in the published BASIC program.
 
