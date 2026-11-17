@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit distinct Deal contracts: at least five/function and fifteen/source file."""
+"""Audit a minimum of fifteen distinct Deal contracts per named Python function."""
 import argparse
 import ast
 import json
@@ -13,14 +13,14 @@ import deal
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = {"pre", "post", "ensure", "raises", "reason", "has", "pure", "safe", "inv", "example", "chain"}
-MINIMUM_CONTRACTS = 5
+MINIMUM_CONTRACTS = 15
 # The independent executable-file floor applies to all tracked Python
 # modules containing a named function, including tests and lint fixtures.
 # Import-only modules have no callable boundary on which to hang a contract.
 MINIMUM_FILE_CONTRACTS = 15
-# Fifteen per function remains a separate aspirational goal: reaching a
-# numeric target never justifies duplicating an equivalent proposition.
-TARGET_CONTRACTS = 15
+# The reporting target equals the mandatory per-function floor; a greater
+# number of meaningful contracts is always allowed, never rejected.
+TARGET_CONTRACTS = MINIMUM_CONTRACTS
 
 
 @deal.pre(lambda node, aliases: isinstance(node, ast.expr))
@@ -167,7 +167,7 @@ def main() -> None:
     # Import-only package entry points and compatibility facades contain
     # no subprograms and therefore have no Deal obligations to decorate.
     # A file with even one named function must still import Deal and
-    # meet the full per-function contract floor; the negative fixture
+    # meet the full >=15 per-function contract floor; the negative fixture
     # tests this non-vacuous requirement.
     problems = [r for r in rows if r["insufficient"] or r["insufficient_file"]
                 or r["duplicated"] or (r["function_count"] > 0
