@@ -35,7 +35,7 @@ from deal.linter._contract import Contract
 from deal._cli._main import main
 
 def _compile_fixed_locations(contract):
-    """Rebuild only invalid synthetic AST source offsets before Deal compile."""
+    # Correct invalid source offsets without altering executable contract AST.
     module = ast.fix_missing_locations(contract.module)
     for node in ast.walk(module):
         start_line = getattr(node, "lineno", None)
