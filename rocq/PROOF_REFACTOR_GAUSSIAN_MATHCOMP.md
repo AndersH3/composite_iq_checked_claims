@@ -5,7 +5,7 @@ documentation were authored with AI assistance for researcher/requester
 **Anders Hellström**. A Rocq kernel pass on the exact commit is required
 before the following statements can be called formally proved.
 
-This is the next-level probability-theoretic bridge beyond the 42 verified
+This is the next-level probability-theoretic bridge beyond the 56 verified
 Stdlib covariance and Gaussian density algebra theorems. It deliberately
 depends on the existing, independently kernel-proved
 `MathComp-Analysis.normal_prob_conjugate` theorem, rather than introducing

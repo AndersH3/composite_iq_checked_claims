@@ -140,7 +140,7 @@ summary were AI-assisted. The mathematical proof of conditional
 expectation discussed above remains distinct from a completed
 formal measure-theoretic theorem.
 
-The Rocq 9.2 corpus now contains [51 checked D050 theorems](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43996625035),
+The Rocq 9.2 corpus now contains [56 checked D050 theorems](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43997860735),
 including exact finite-list density factorization
 
 ```
@@ -155,6 +155,15 @@ evidence factors are divided out. This is a genuine
 **pointwise sufficient-statistic** result for arbitrarily
 unequal observed score lists; no empirical distribution
 assumption is deduced from it.
+
+Five further Rocq-verified covariance-domain results cover the **single
+future-score case**: its Schur variance equals
+`(1-c)*d_(r+1)(c)/d_r(c)`, with PSD and PD **if and only if**
+the full r+1 covariance domain is respectively nonnegative and strict
+for `r>=1` and `d_r(c)>0`. The admissible singular endpoints
+`c=1` and `d_(r+1)(c)=0` both have exactly zero residual variance.
+The existing concrete future-vector PSD/PD iff covers future
+dimension at least two.
 
 The separate MathComp-Analysis 1.18.0 source
 `analyses/sequential-conditional-means/mathcomp/GaussianPosteriorMeasure.v`

@@ -1,19 +1,19 @@
 # Sequential conditional-means — Rocq formalization
 
-## D050 — 51 checked Gaussian density and signed covariance-domain proofs
+## D050 — 56 checked Gaussian density and signed covariance-domain proofs
 
 **AI disclosure:** These candidate formal proofs, probability model analysis and
 documentation were AI-assisted. Kernel acceptance, not source-counting,
 establishes any proved statement. The full regular conditional-expectation
 theorem remains an explicit open Rocq obligation.
 
-At the exact D050 revision `360b20d08c3dfab1fbb27284af1f1aab7d9cdd38`,
-the [pinned Rocq 9.2 kernel](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43996625035)
-accepted **35 Gaussian kernel/sufficiency proofs and 16 concrete
+At the exact D050 revision `20801d4a693adb0582133876d1a8d41c2ba48bcf`,
+the [pinned Rocq 9.2 kernel](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43997860735)
+accepted **35 Gaussian kernel/sufficiency proofs and 21 concrete
 Schur-covariance proofs**. Five of the kernel proofs factor an arbitrary
 unequal-score Gaussian likelihood through its sample mean; four
 covariance proofs establish full PSD/PD necessity and sufficiency for
-concrete future-score lists of length at least two.
+concrete future-score lists of length at least two, plus the one-future-score variance PSD/PD iff and both singular endpoints.
 
 A separate [MathComp normalized posterior measure module](../mathcomp/GaussianPosteriorMeasure.v)
 uses the maintained Gaussian conjugacy theorem but remains outside the
