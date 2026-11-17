@@ -424,3 +424,196 @@ Proof.
    apply (gcd_schur_pd_arbitrary_sign r k c energy total);
      assumption.
 Qed.
+
+(** [gcd_schur_contrast_witness] (theorem).
+ Mathematical meaning: A concrete future-score contrast [1,-1,0,...,0] realizes the conditional Schur contrast eigenvalue, and its energy is independent of the observed-block size.
+ Exact checked proposition: forall r c k, sequential_d r c<>0 -> vector_schur_form r c (1::(-1)::repeat 0 k)=2*(1-c).
+ Premises and side conditions: The conditioning covariance d_r(c) is
+ strictly positive and observed count r>0. Concrete finite future test
+ score lists have dimension S(S k), i.e. at least two; this restriction is
+ necessary to witness a nontrivial contrast direction. The full covariance
+ PSD/PD boundaries include admissible negative correlations.
+ Proof/definition method: Construct exact common and contrast finite-list
+ witnesses using existing vector_real_sum and vector_square_energy laws.
+ Reuse the Schur common-mode factorization and signed-domain PSD/PD lemmas
+ to prove both directions with strictly positive scalar cancellation.
+ Library reuse: EquicorrelationVectors, EquicorrelationSpectral, Stdlib
+ List.repeat, Reals, Ring, Field, Lra and Psatz. No bespoke sum or matrix.
+ Boundary: Complete concrete finite-vector covariance domain, NOT a
+ Gaussian joint probability distribution or conditional-expectation law.
+*)
+Theorem gcd_schur_contrast_witness :
+ forall r c k, sequential_d r c<>0 ->
+ vector_schur_form r c (1::(-1)::repeat 0 k)=2*(1-c).
+Proof.
+ intros r c k Hd.
+ unfold vector_schur_form.
+ assert (Hs : vector_real_sum (1::(-1)::repeat 0 k)=0).
+ { change (1+((-1)+vector_real_sum (repeat 0 k))=0).
+   rewrite vector_real_sum_repeat; ring. }
+ assert (He : vector_square_energy (1::(-1)::repeat 0 k)=2).
+ { change (1*1+((-1)*(-1)+vector_square_energy (repeat 0 k))=2).
+   rewrite vector_square_energy_repeat; ring. }
+ rewrite Hs, He.
+ rewrite equicorr_schur_contrast_formula by exact Hd.
+ ring.
+Qed.
+
+(** [gcd_schur_common_witness] (theorem).
+ Mathematical meaning: A concrete all-ones future-score vector realizes the Schur common-direction eigenvalue in the signed-correlation full-battery model.
+ Exact checked proposition: forall r c k, sequential_d r c<>0 -> vector_schur_form r c (repeat 1 (S k)) = INR(S k)*(1-c)*sequential_d (r+INR(S k)) c/ sequential_d r c.
+ Premises and side conditions: The conditioning covariance d_r(c) is
+ strictly positive and observed count r>0. Concrete finite future test
+ score lists have dimension S(S k), i.e. at least two; this restriction is
+ necessary to witness a nontrivial contrast direction. The full covariance
+ PSD/PD boundaries include admissible negative correlations.
+ Proof/definition method: Construct exact common and contrast finite-list
+ witnesses using existing vector_real_sum and vector_square_energy laws.
+ Reuse the Schur common-mode factorization and signed-domain PSD/PD lemmas
+ to prove both directions with strictly positive scalar cancellation.
+ Library reuse: EquicorrelationVectors, EquicorrelationSpectral, Stdlib
+ List.repeat, Reals, Ring, Field, Lra and Psatz. No bespoke sum or matrix.
+ Boundary: Complete concrete finite-vector covariance domain, NOT a
+ Gaussian joint probability distribution or conditional-expectation law.
+*)
+Theorem gcd_schur_common_witness :
+ forall r c k, sequential_d r c<>0 ->
+ vector_schur_form r c (repeat 1 (S k)) =
+ INR(S k)*(1-c)*sequential_d (r+INR(S k)) c/
+ sequential_d r c.
+Proof.
+ intros r c k Hd.
+ unfold vector_schur_form.
+ rewrite vector_square_energy_repeat, vector_real_sum_repeat.
+ rewrite (equicorr_schur_common_mode_formula
+            r (INR(S k)) c 1) by exact Hd.
+ unfold Rdiv; ring.
+Qed.
+
+(** [gcd_schur_concrete_psd_iff_full_battery] (theorem).
+ Mathematical meaning: For every actual finite future-score vector of dimension at least two, signed-correlation Schur PSD is equivalent to the two correct full-battery eigenvalue inequalities; both necessity witnesses are concrete lists.
+ Exact checked proposition: forall r k c, 0<r -> 0<sequential_d r c -> ((forall xs:list R, length xs=S(S k) -> 0<=vector_schur_form r c xs) <-> (c<=1 /\ 0<=sequential_d (r+INR(S(S k))) c)).
+ Premises and side conditions: The conditioning covariance d_r(c) is
+ strictly positive and observed count r>0. Concrete finite future test
+ score lists have dimension S(S k), i.e. at least two; this restriction is
+ necessary to witness a nontrivial contrast direction. The full covariance
+ PSD/PD boundaries include admissible negative correlations.
+ Proof/definition method: Construct exact common and contrast finite-list
+ witnesses using existing vector_real_sum and vector_square_energy laws.
+ Reuse the Schur common-mode factorization and signed-domain PSD/PD lemmas
+ to prove both directions with strictly positive scalar cancellation.
+ Library reuse: EquicorrelationVectors, EquicorrelationSpectral, Stdlib
+ List.repeat, Reals, Ring, Field, Lra and Psatz. No bespoke sum or matrix.
+ Boundary: Complete concrete finite-vector covariance domain, NOT a
+ Gaussian joint probability distribution or conditional-expectation law.
+*)
+Theorem gcd_schur_concrete_psd_iff_full_battery :
+ forall r k c, 0<r -> 0<sequential_d r c ->
+ ((forall xs:list R, length xs=S(S k) ->
+    0<=vector_schur_form r c xs) <->
+   (c<=1 /\ 0<=sequential_d (r+INR(S(S k))) c)).
+Proof.
+ intros r k c Hr Hd; split.
+ - intro Hform.
+   assert (Hcontrast : 0<=
+       vector_schur_form r c (1::(-1)::repeat 0 k)).
+   { apply Hform.
+     simpl length; rewrite repeat_length; reflexivity. }
+   rewrite gcd_schur_contrast_witness in Hcontrast by lra.
+   assert (Hc:c<=1) by lra.
+   split; [exact Hc|].
+   assert (Hcommon : 0<=
+       vector_schur_form r c (repeat 1 (S(S k)))).
+   { apply Hform; apply repeat_length. }
+   rewrite gcd_schur_common_witness in Hcommon by lra.
+   assert (Hdim : 0<INR(S(S k))).
+   { apply vector_nat_to_real_successor_positive. }
+   assert (Hnum:0<=
+      INR(S(S k))*(1-c)*
+      sequential_d (r+INR(S(S k))) c).
+   { replace (INR(S(S k))*(1-c)*
+              sequential_d (r+INR(S(S k))) c)
+       with ((INR(S(S k))*(1-c)*
+             sequential_d (r+INR(S(S k))) c/
+             sequential_d r c)*sequential_d r c)
+       by (field; lra).
+     apply Rmult_le_pos; lra. }
+   destruct (Rlt_le_dec c 1) as [Hstrict|Heq].
+   + apply (Rmult_le_reg_l (INR(S(S k))*(1-c))); [nra|].
+     replace (INR(S(S k))*(1-c)*0) with 0 by ring.
+     exact Hnum.
+   + assert (Hequal:c=1) by lra.
+     subst c; unfold sequential_d; nra.
+ - intros [Hc Hfull] xs Hlen.
+   apply (gcd_schur_psd_list r c xs).
+   + destruct xs as [|x xs]; [discriminate Hlen|discriminate].
+   + exact Hc.
+   + exact Hd.
+   + rewrite Hlen; exact Hfull.
+Qed.
+
+(** [gcd_schur_concrete_pd_iff_full_battery] (theorem).
+ Mathematical meaning: For actual future-score vectors of dimension at least two, strict positive definiteness of the conditional covariance is equivalent to strict full-battery common- and contrast-eigenvalue conditions.
+ Exact checked proposition: forall r k c, 0<r -> 0<sequential_d r c -> ((forall xs:list R, length xs=S(S k) -> 0<vector_square_energy xs -> 0<vector_schur_form r c xs) <-> (c<1 /\ 0<sequential_d (r+INR(S(S k))) c)).
+ Premises and side conditions: The conditioning covariance d_r(c) is
+ strictly positive and observed count r>0. Concrete finite future test
+ score lists have dimension S(S k), i.e. at least two; this restriction is
+ necessary to witness a nontrivial contrast direction. The full covariance
+ PSD/PD boundaries include admissible negative correlations.
+ Proof/definition method: Construct exact common and contrast finite-list
+ witnesses using existing vector_real_sum and vector_square_energy laws.
+ Reuse the Schur common-mode factorization and signed-domain PSD/PD lemmas
+ to prove both directions with strictly positive scalar cancellation.
+ Library reuse: EquicorrelationVectors, EquicorrelationSpectral, Stdlib
+ List.repeat, Reals, Ring, Field, Lra and Psatz. No bespoke sum or matrix.
+ Boundary: Complete concrete finite-vector covariance domain, NOT a
+ Gaussian joint probability distribution or conditional-expectation law.
+*)
+Theorem gcd_schur_concrete_pd_iff_full_battery :
+ forall r k c, 0<r -> 0<sequential_d r c ->
+ ((forall xs:list R, length xs=S(S k) ->
+    0<vector_square_energy xs -> 0<vector_schur_form r c xs) <->
+   (c<1 /\ 0<sequential_d (r+INR(S(S k))) c)).
+Proof.
+ intros r k c Hr Hd; split.
+ - intro Hform.
+   assert (Hcontrast: 0<
+       vector_schur_form r c (1::(-1)::repeat 0 k)).
+   { apply Hform.
+     - simpl length; rewrite repeat_length; reflexivity.
+     - change (0<1*1+((-1)*(-1)+vector_square_energy (repeat 0 k))).
+       rewrite vector_square_energy_repeat; nra. }
+   rewrite gcd_schur_contrast_witness in Hcontrast by lra.
+   assert (Hc:c<1) by lra.
+   split; [exact Hc|].
+   assert (Hcommon:0<
+       vector_schur_form r c (repeat 1 (S(S k)))).
+   { apply Hform.
+     - apply repeat_length.
+     - rewrite vector_square_energy_repeat.
+       pose proof (vector_nat_to_real_successor_positive (S k)).
+       nra. }
+   rewrite gcd_schur_common_witness in Hcommon by lra.
+   assert (Hdim:0<INR(S(S k))).
+   { apply vector_nat_to_real_successor_positive. }
+   assert (Hnum:0<
+      INR(S(S k))*(1-c)*
+      sequential_d (r+INR(S(S k))) c).
+   { replace (INR(S(S k))*(1-c)*
+              sequential_d (r+INR(S(S k))) c)
+       with ((INR(S(S k))*(1-c)*
+             sequential_d (r+INR(S(S k))) c/
+             sequential_d r c)*sequential_d r c)
+       by (field; lra).
+     apply Rmult_lt_0_compat; assumption. }
+   apply (Rmult_lt_reg_l (INR(S(S k))*(1-c))); [nra|].
+   replace (INR(S(S k))*(1-c)*0) with 0 by ring.
+   exact Hnum.
+ - intros [Hc Hfull] xs Hlen Henergy.
+   apply (gcd_schur_pd_list r c xs).
+   + destruct xs as [|x xs]; [discriminate Hlen|discriminate].
+   + exact Hc.
+   + exact Hd.
+   + rewrite Hlen; exact Hfull.
+   + exact Henergy.
+Qed.
