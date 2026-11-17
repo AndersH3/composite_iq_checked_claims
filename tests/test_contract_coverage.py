@@ -138,11 +138,11 @@ def test_every_repository_python_function_has_a_real_contract(coverage_checker):
         assert report["file_distinct_contract_count"] >= 15, path
         assert report["minimum_file_contracts"] == 15
         assert report["minimum_contracts"] == 15
-        assert all(count >= 15 for count in counts.values())
-        assert report["contract_count"] > 0, path
-        target_names = targeted.get(path.relative_to(ROOT).as_posix(), set())
         counts = {entry["name"]: entry["distinct_contract_count"]
                   for entry in report["function_contracts"]}
+        assert all(count >= 15 for count in counts.values()), (path, counts)
+        assert report["contract_count"] > 0, path
+        target_names = targeted.get(path.relative_to(ROOT).as_posix(), set())
         assert target_names <= counts.keys(), path
         assert all(counts[name] >= 15 for name in target_names), (path, counts)
 
