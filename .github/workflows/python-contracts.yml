@@ -28,7 +28,7 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
-      - name: Diagnose crashing Deal decorators without exempting source
+      - name: Isolate problematic Hoeflin thresholds postcondition
         if: failure()
         run: |
           python - <<'PY'
@@ -39,31 +39,34 @@ jobs:
           import sys
           import tempfile
 
-          path = Path("analyses/hoeflin-ferguson/scripts/verify_calculations.py")
-          tree = ast.parse(path.read_text(encoding="utf-8"))
-          functions = [(n.name, n.lineno) for n in ast.walk(tree)
-                       if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
-          for mode in ("full", "without", "only"):
-              selection = [(None, None)] if mode == "full" else functions
-              for selected in selection:
-                  modified = copy.deepcopy(tree)
-                  for fn in ast.walk(modified):
+          source = ast.parse(Path("analyses/hoeflin-ferguson/scripts/verify_calculations.py")
+                             .read_text(encoding="utf-8"))
+          original = next(node for node in ast.walk(source)
+                          if isinstance(node, ast.FunctionDef) and node.name == "thresholds")
+          for mode in ("one", "without"):
+              for index in range(len(original.decorator_list)):
+                  clone = copy.deepcopy(source)
+                  for fn in ast.walk(clone):
                       if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
                           continue
-                      current = (fn.name, fn.lineno)
-                      if mode == "without" and current == selected:
+                      if fn.name != "thresholds":
                           fn.decorator_list = []
-                      elif mode == "only" and current != selected:
-                          fn.decorator_list = []
-                  with tempfile.TemporaryDirectory(prefix="deal-crash-") as folder:
-                      tmp = Path(folder, "sample.py")
-                      tmp.write_text(ast.unparse(modified) + "\n", encoding="utf-8")
-                      cmd = [sys.executable, "-m", "deal", "lint", "--json", str(tmp)]
-                      proc = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+                      elif mode == "one":
+                          fn.decorator_list = [fn.decorator_list[index]]
+                      else:
+                          fn.decorator_list.pop(index)
+                  with tempfile.TemporaryDirectory(prefix="deal-predicate-") as folder:
+                      temp = Path(folder, "probe.py")
+                      temp.write_text(ast.unparse(clone) + "\n", encoding="utf-8")
+                      proc = subprocess.run(
+                          [sys.executable, "-m", "deal", "lint", "--json", str(temp)],
+                          capture_output=True, text=True, timeout=15,
+                      )
                       state = "CRASH" if proc.stderr else (
                           "DIAGNOSTIC" if proc.stdout else "CLEAN"
                       )
-                      print("DEAL_PROBE", mode, selected, state, proc.returncode,
+                      clause = ast.unparse(original.decorator_list[index])
+                      print("DEAL_PREDICATE", mode, index, state, clause,
                             proc.stderr.strip().splitlines()[-1] if proc.stderr else "",
                             flush=True)
           PY
