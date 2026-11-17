@@ -4,7 +4,7 @@
 
 > **AI disclosure:** AI assisted the mathematical specifications, candidate proof scripts, code integration and documentation. Only a successful pinned Rocq 9.2 kernel build on an exact source revision establishes any theorem status.
 
-This register tracks the D050 baseline 56 plus D051 101 additional exact source-order proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
+This register tracks D050's 56, D051's 101, and D052's 30 source-ordered Rocq proofs about Gaussian prior-plus-likelihood *pointwise densities*: quadratic completion, model precision and variance, dependence on arbitrary unequal observed scores, evidence cancellation and posterior symmetry. Its scope deliberately excludes the stronger measurable conditional-expectation assertion unless a separate formally verified probability library supplies integral normalization, integrability and disintegration.
 
 **Verified checkpoint:** The [pinned Rocq 9.2 workflow](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/43997860735)
 accepted all **56** exact D050 Stdlib theorem scripts in
@@ -12,6 +12,10 @@ accepted all **56** exact D050 Stdlib theorem scripts in
 at revision `20801d4a693adb0582133876d1a8d41c2ba48bcf`.
 No new formal Gaussian conditional-expectation theorem is
 asserted by this source-order audit.
+
+## D052 verified checkpoint — 30 additional signed-domain results
+
+The [pinned Rocq 9.2 kernel CI run](https://github.com/AndersH3/composite_iq_checked_claims/actions/runs/44143829182) accepted all **30** additional theorem scripts at exact revision `03c030770f16db590bc3b077981fafcde8c05f46`. The D050–D052 Gaussian-specific total is now **187 verified theorem declarations** (35 Gaussian kernel + 152 covariance-domain), of which **131** were added in D051–D052. The 30 D052 lemmas use canonical signed-Schur identities, invariance of contrast covariance, and Stdlib positivity lemmas. The measure-theoretic conditional-expectation assertion is still an explicit proof obligation.
 
 ## D051 verified checkpoint
 
