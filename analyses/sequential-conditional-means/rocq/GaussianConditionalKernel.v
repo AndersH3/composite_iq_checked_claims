@@ -270,7 +270,7 @@ Qed.
 *)
 Theorem gk_mass_nonzero : forall xs, xs<>nil -> gk_mass xs <> 0.
 Proof.
- intros xs H; unfold gk_mass; destruct xs as [|a xs]; [contradiction|]; simpl; pose proof (pos_INR (length xs)); lra.
+ intros xs H; unfold gk_mass; destruct xs as [|a xs]; [contradiction|]; simpl length; rewrite S_INR; pose proof (pos_INR (length xs)); lra.
 Qed.
 
 (** [gk_d_decompose] (theorem).
