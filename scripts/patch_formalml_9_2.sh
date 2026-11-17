@@ -106,3 +106,16 @@ test "$(sed -n "${proofline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
 test "$(sed -n "${qedline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
 sed -i "${proofline},${qedline}c\\    Proof.\\n      intros Hv Hn.\\n      induction l as [|a l IH]; simpl; [reflexivity |].\\n      destruct (eqdec a v) as [Hav | Havn].\\n      - unfold equiv in Hav; subst a.\\n        destruct (eqdec v v) as [_ | Hvv]; [|unfold equiv in Hvv; contradiction].\\n        destruct (eqdec v0 n) as [H0n | _]; [unfold equiv in H0n; congruence |].\\n        destruct (eqdec v0 v) as [H0v | _]; [unfold equiv in H0v; congruence |].\\n        simpl; rewrite IH.\\n        destruct (eqdec v v) as [_ | Hvv2]; [reflexivity |].\\n        unfold equiv in Hvv2; congruence.\\n      - destruct (eqdec v0 a) as [H0a | H0a].\\n        + unfold equiv in H0a; subst a.\\n          destruct (eqdec v0 v) as [H0v | _]; [unfold equiv in H0v; congruence |].\\n          exact IH.\\n        + destruct (eqdec a v) as [Hav2 | _]; [unfold equiv in Hav2; congruence |].\\n          destruct (eqdec v0 a) as [H0a2 | _]; [unfold equiv in H0a2; congruence |].\\n          simpl.\\n          destruct (eqdec a v) as [Hav3 | _]; [unfold equiv in Hav3; congruence |].\\n          f_equal; exact IH.\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
+
+# The following old list lemma assumed intuition would solve the inductive
+# equality cases. Its premise v' not-in l makes the replacement target an
+# exactly removable marker; the proof explicitly separates replaced and
+# unchanged heads while reusing List.remove and the induction hypothesis.
+nin_line=$(grep -n "^    Lemma remove_replace_all_nin l v v' :" rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+test -n "$nin_line"
+nin_start=$((nin_line + 4))
+nin_end=$((nin_line + 11))
+test "$(sed -n "${nin_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+test "$(sed -n "${nin_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+sed -i "${nin_start},${nin_end}c\\    Proof.\\n      induction l as [|a l IH]; intros Hnin; simpl; [reflexivity |].\\n      assert (Ha : a <> v') by (intro E; apply Hnin; simpl; now left).\\n      assert (Hl : ~ In v' l) by (intro E; apply Hnin; simpl; now right).\\n      specialize (IH Hl).\\n      destruct (eqdec a v) as [Hav | Havn].\\n      - unfold equiv in Hav; subst a; simpl.\\n        repeat match goal with\\n        | |- context [eqdec v v] =>\\n            destruct (eqdec v v) as [_ | Hbad]; [|unfold equiv in Hbad; contradiction]\\n        | |- context [eqdec v' v'] =>\\n            destruct (eqdec v' v') as [_ | Hbad]; [|unfold equiv in Hbad; contradiction]\\n        end.\\n        exact IH.\\n      - simpl.\\n        repeat match goal with\\n        | |- context [eqdec a v] =>\\n            destruct (eqdec a v) as [Hbad | _]; [unfold equiv in Hbad; congruence |]\\n        | |- context [eqdec v a] =>\\n            destruct (eqdec v a) as [Hbad | _]; [unfold equiv in Hbad; congruence |]\\n        | |- context [eqdec v' a] =>\\n            destruct (eqdec v' a) as [Hbad | _]; [unfold equiv in Hbad; congruence |]\\n        end.\\n        f_equal; exact IH.\\n    Qed." \
+  rocq/lib_utils/LibUtilsListAdd.v
