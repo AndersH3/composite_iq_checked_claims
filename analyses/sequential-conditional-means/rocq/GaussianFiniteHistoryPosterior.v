@@ -240,8 +240,8 @@ Proof.
    by (apply gk_d_positive; try assumption; apply gk_mass_nonnegative).
  unfold gk_center.
  rewrite gsp_sum_append.
- rewrite gsp_d_append.
- rewrite gsp_d_append in Hdall.
+ rewrite gsp_denominator_append.
+ rewrite gsp_denominator_append in Hdall.
  field; nra.
 Qed.
 
@@ -273,8 +273,8 @@ Proof.
    by (apply gk_d_positive; try assumption; apply gk_mass_nonnegative).
  unfold gk_center.
  rewrite gsp_sum_append.
- rewrite gsp_d_append.
- rewrite gsp_d_append in Hdall.
+ rewrite gsp_denominator_append.
+ rewrite gsp_denominator_append in Hdall.
  field; nra.
 Qed.
 
@@ -305,8 +305,8 @@ Proof.
  assert (Hdall:0<gk_d (xs++ys) c)
    by (apply gk_d_positive; try assumption; apply gk_mass_nonnegative).
  unfold gk_variance.
- rewrite gsp_d_append.
- rewrite gsp_d_append in Hdall.
+ rewrite gsp_denominator_append.
+ rewrite gsp_denominator_append in Hdall.
  field; nra.
 Qed.
 
@@ -332,7 +332,7 @@ Qed.
 Theorem gsp_denominator_non_decreasing : forall xs ys:list R, forall c:R, 0<=c -> gk_d xs c<=gk_d (xs++ys) c.
 Proof.
  intros xs ys c Hc.
- rewrite gsp_d_append.
+ rewrite gsp_denominator_append.
  pose proof (gk_mass_nonnegative ys) as Hmass.
  nra.
 Qed.
@@ -359,7 +359,7 @@ Qed.
 Theorem gsp_denominator_strict_increase_nonempty : forall xs ys:list R, forall c:R, 0<c -> ys<>nil -> gk_d xs c<gk_d (xs++ys) c.
 Proof.
  intros xs ys c Hc Hys.
- rewrite gsp_d_append.
+ rewrite gsp_denominator_append.
  pose proof (gk_mass_nonnegative ys) as Hmass.
  pose proof (gk_mass_nonzero ys Hys) as Hnonzero.
  assert (Hpositive:0<gk_mass ys) by lra.
