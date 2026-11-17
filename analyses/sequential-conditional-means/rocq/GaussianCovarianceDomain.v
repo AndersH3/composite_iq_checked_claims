@@ -2424,7 +2424,11 @@ Qed.
 *)
 Theorem d052_future_sum_nonnegative : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<=sequential_d (n+k) c -> 0<=k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
 Proof.
-  intros n k c Hk Hc Hd Hfull; rewrite d051_schur_future_sum_variance by lra; apply Rmult_le_pos; [assumption|apply gcd_common_mode_sign; assumption].
+  intros n k c Hk Hc Hd Hfull.
+  rewrite d051_schur_future_sum_variance by lra.
+  replace (k*(1-c)*sequential_d (n+k) c/sequential_d n c)
+    with (k*((1-c)*sequential_d (n+k) c/sequential_d n c)) by (field; lra).
+  apply Rmult_le_pos; [assumption|apply gcd_common_mode_sign; assumption].
 Qed.
 
 (** [d052_future_sum_strict] (theorem).
@@ -2437,7 +2441,11 @@ Qed.
 *)
 Theorem d052_future_sum_strict : forall n k c:R, 0<k -> c<1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> 0<k*equicorr_schur_diagonal n c+k*(k-1)*equicorr_schur_cross n c.
 Proof.
-  intros n k c Hk Hc Hd Hfull; rewrite d051_schur_future_sum_variance by lra; apply Rmult_lt_0_compat; [assumption|apply gcd_common_mode_strict; assumption].
+  intros n k c Hk Hc Hd Hfull.
+  rewrite d051_schur_future_sum_variance by lra.
+  replace (k*(1-c)*sequential_d (n+k) c/sequential_d n c)
+    with (k*((1-c)*sequential_d (n+k) c/sequential_d n c)) by (field; lra).
+  apply Rmult_lt_0_compat; [assumption|apply gcd_common_mode_strict; assumption].
 Qed.
 
 (** [d052_variance_monotone] (theorem).
