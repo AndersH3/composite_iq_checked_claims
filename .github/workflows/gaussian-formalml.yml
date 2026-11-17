@@ -71,6 +71,12 @@ jobs:
               "          repeat rewrite andb_true_iff in *; firstorder."
             sed -i "649,650c\\        induction l1 as [|a l1 IH]; intros [|b l2]; simpl.\n        - split; intro H; constructor.\n        - split; intro H; [discriminate H | inversion H].\n        - split; intro H; [discriminate H | inversion H].\n        - split.\n          + intro H.\n            apply andb_true_iff in H as [Hab Htail].\n            constructor; [exact Hab |].\n            apply (proj1 (IH l2)); exact Htail.\n          + intro H.\n            inversion H as [|a0 b0 l10 l20 Hab Htail]; subst.\n            apply andb_true_iff; split.\n            * exact Hab.\n            * apply (proj2 (IH l2)); exact Htail." \
               rocq/lib_utils/LibUtilsListAdd.v
+            # FormalML upstream also leaves the reflexive direction of
+            # the lifted PartialOrder proof open with Rocq 9.2. Replace
+            # just that tactic, preserving the original proposition and
+            # obtaining list reflexivity from the registered Stdlib instance.
+            test "$(grep -Fc -- "- repeat red; subst; intuition." rocq/lib_utils/LibUtilsListAdd.v)" -eq 1
+            sed -i 's/- repeat red; subst; intuition\./- intro HH; subst; split; apply Forall2_refl; typeclasses eauto./' rocq/lib_utils/LibUtilsListAdd.v
             opam exec -- make -j 2
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
