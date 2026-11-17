@@ -28,64 +28,8 @@ jobs:
         run: python verification/check_contract_coverage.py
       - name: Check Python static lint with its negative control
         run: python verification/check_static_lint.py
-      - name: Diagnose Deal linter AST crash by function
-        if: failure()
-        run: |
-          python - <<'PY'
-          import ast
-          import copy
-          from pathlib import Path
-          import subprocess
-          import sys
-          import tempfile
-
-          for relpath in (
-              "analyses/hoeflin-ferguson/scripts/verify_calculations.py",
-              "analyses/towers-multiple-test-admissions/scripts/verify_calculations.py",
-              "reporting/provenance.py",
-              "tests/fixtures/nonzero_division_lint_probe.py",
-          ):
-              source = ast.parse(Path(relpath).read_text(encoding="utf-8"))
-              callables = [
-                  node for node in ast.walk(source)
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-              ]
-              for target in callables:
-                  module = copy.deepcopy(source)
-                  for fn in ast.walk(module):
-                      if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                          if (fn.lineno, fn.name) != (target.lineno, target.name):
-                              fn.decorator_list = []
-                  with tempfile.TemporaryDirectory(prefix="deal-isolate-") as temp:
-                      p = Path(temp, "isolated.py")
-                      p.write_text(ast.unparse(module) + "\n", encoding="utf-8")
-                      check = subprocess.run(
-                          [sys.executable, "-m", "deal", "lint", "--json", str(p)],
-                          capture_output=True, text=True, timeout=15,
-                      )
-                      if check.stderr:
-                          print(f"DEAL_LINT_CRASH {relpath}:{target.lineno} {target.name}: "
-                                f"{check.stderr.strip().splitlines()[-1]}", flush=True)
-                          for index, decorator in enumerate(target.decorator_list):
-                              singled = copy.deepcopy(source)
-                              for fn in ast.walk(singled):
-                                  if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                                      fn.decorator_list = (
-                                          [copy.deepcopy(decorator)]
-                                          if (fn.lineno, fn.name) == (target.lineno, target.name)
-                                          else []
-                                      )
-                              p.write_text(ast.unparse(singled) + "\n", encoding="utf-8")
-                              single_check = subprocess.run(
-                                  [sys.executable, "-m", "deal", "lint", "--json", str(p)],
-                                  capture_output=True, text=True, timeout=15,
-                              )
-                              if single_check.stderr:
-                                  print(f"DEAL_LINT_DECORATOR {relpath}:{target.lineno} "
-                                        f"{target.name}:{index}: {ast.unparse(decorator)} : "
-                                        f"{single_check.stderr.strip().splitlines()[-1]}", flush=True)
-          PY
       - name: Validate scaled 40-million-sample Dask task budget without execution
+        if: always()
         run: python -m reporting.simulate --plan --trials 5000000 --chunk 500000 --replicates 8
       - name: Python/Dask numerical and property tests
         if: always()
@@ -94,12 +38,16 @@ jobs:
       # They validate Dask worker serialization and output dependencies,
       # NOT the unexecuted future default 40M-sample production experiment.
       - name: Diagnostic end-to-end block run with unmasked tracebacks
+        if: always()
         run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --scheduler single-threaded
       - name: Small end-to-end block run using local processes
+        if: always()
         run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler processes
       - name: Small end-to-end block run using distributed LocalCluster
+        if: always()
         run: python -m reporting.simulate --trials 10000 --chunk 2500 --replicates 1 --workers 2 --scheduler distributed --memory-limit 1GiB
       - name: Verify regenerated report assets match actual simulation, not stale files
+        if: always()
         run: |
           python - <<'PY'
           import csv
