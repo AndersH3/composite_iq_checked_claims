@@ -336,7 +336,7 @@ Proof.
      lra. }
    rewrite equicorr_schur_contrast_formula in Hcontrast by lra.
    assert (Hc : c <= 1) by lra.
-   split; first exact Hc.
+   split; [exact Hc|].
    assert (Hcommon : 0 <=
        equicorr_schur_energy r c (k*1*1) (k*1)).
    { apply Hform.
@@ -396,7 +396,7 @@ Proof.
      lra. }
    rewrite equicorr_schur_contrast_formula in Hcontrast by lra.
    assert (Hc : c < 1) by lra.
-   split; first exact Hc.
+   split; [exact Hc|].
    assert (Hcommon : 0 <
        equicorr_schur_energy r c (k*1*1) (k*1)).
    { apply Hform; [nra|].
