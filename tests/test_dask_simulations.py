@@ -33,14 +33,14 @@ SEQUENTIAL = "sequential-conditional-means"
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def moment_meta():
     """Supply standardized-composite metadata independently of the simulator."""
     return {"project": HOEFLIN, "n_samples": 3, "replicate": 0, "seed": 11,
@@ -57,14 +57,14 @@ def moment_meta():
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def event_meta():
     """Use unequal marginal probabilities to reveal denominator substitutions."""
     return {"project": TOWERS, "n_samples": 1000, "replicate": 0, "seed": 13,
@@ -81,14 +81,14 @@ def event_meta():
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "random", "global", "import", "syscall")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_moment_pool_matches_combined_sample_not_average_of_variances(moment_meta):
     """Between-replicate displacement contributes to pooled unbiased variance."""
     first = statistics.moment_result(moment_meta, -1.0, 1.0, 0.2)
@@ -117,14 +117,14 @@ def test_moment_pool_matches_combined_sample_not_average_of_variances(moment_met
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_pool_rejects_duplicate_or_incompatible_replicates(moment_meta, damage):
     """One stream cannot be counted twice, and incompatible targets cannot pool."""
     first = statistics.moment_result(moment_meta, 0.0, 1.0)
@@ -146,14 +146,14 @@ def test_pool_rejects_duplicate_or_incompatible_replicates(moment_meta, damage):
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_invalid_moments_are_rejected(moment_meta, field, value):
     """Nonfinite observations and negative variances/MSEs are not report data."""
     arguments = {"mean": 0.0, "variance": 1.0, "mse": 0.1}
@@ -170,14 +170,14 @@ def test_invalid_moments_are_rejected(moment_meta, field, value):
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "random", "global", "import", "syscall")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_conditional_intervals_use_observed_marginal_denominators(event_meta):
     """Conditioning on A uses 200 successes of A, not all 1,000 trials."""
     row = statistics.event_result(event_meta, (600, 100, 200, 100))
@@ -203,14 +203,14 @@ def test_conditional_intervals_use_observed_marginal_denominators(event_meta):
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_event_partition_corruption_is_rejected(event_meta, counts):
     """Cells must be integer nonnegative counts partitioning the sample exactly."""
     with pytest.raises((ValueError, deal.PreContractError)):
@@ -225,14 +225,14 @@ def test_event_partition_corruption_is_rejected(event_meta, counts):
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_zero_events_retain_upper_uncertainty_and_undefined_conditionals(event_meta):
     """No observed joint event does not imply zero theoretical probability."""
     row = statistics.event_result(event_meta, (1000, 0, 0, 0))
@@ -252,14 +252,14 @@ def test_zero_events_retain_upper_uncertainty_and_undefined_conditionals(event_m
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_nested_hoeflin_tail_counts_and_observation_domains_are_enforced(moment_meta):
     """A more extreme threshold cannot have more exceedances than a lower one."""
     for counts in ((1, 2, 0), (2, 1, 2), (4, 0, 0)):
@@ -278,14 +278,14 @@ def test_nested_hoeflin_tail_counts_and_observation_domains_are_enforced(moment_
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_nonfinite_numbers_cannot_be_formatted_as_report_evidence(value):
     """Formatting must fail rather than conceal NaN or infinity in a table."""
     with pytest.raises((ValueError, deal.PreContractError)):
@@ -300,14 +300,14 @@ def test_nonfinite_numbers_cannot_be_formatted_as_report_evidence(value):
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_path):
     """CSV transport retains values and refuses a missing-cell schema."""
     destination = tmp_path.joinpath("numeric.csv")
@@ -333,14 +333,14 @@ def test_csv_writer_preserves_numeric_rows_and_rejects_heterogeneous_schema(tmp_
 @deal.ensure(lambda *, result: reference_inputs_intact())
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def small_config():
     """Retain multiple blocks while making the numerical smoke tests cheap."""
     return {"trials": 2000, "chunk": 500, "seeds": [20261114]}
@@ -355,14 +355,14 @@ def small_config():
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write", "random", "global", "import", "syscall")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small_config, project):
     """Fixed seeds/chunks reproduce rows; whole-vector SDs use the stated scale."""
     from reporting import simulate
@@ -396,14 +396,14 @@ def test_small_dask_moment_graph_is_lazy_reproducible_and_on_correct_scale(small
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write", "random", "global", "import", "syscall")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_small_towers_graph_counts_every_pair_once_in_all_five_cases(small_config):
     """All reference cutoffs stay lazy and classification preserves partitions."""
     from reporting import simulate
@@ -431,14 +431,14 @@ def test_small_towers_graph_counts_every_pair_once_in_all_five_cases(small_confi
 @deal.post(lambda result: result is None)
 @deal.has("network", "read", "write", "random", "global", "import", "syscall")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_invalid_dask_simulation_domains_are_rejected(small_config, change):
     """A replicate needs two observations, valid chunks and distinct seeds."""
     from reporting import simulate
@@ -456,14 +456,14 @@ def test_invalid_dask_simulation_domains_are_rejected(small_config, change):
 @deal.post(lambda result: result is None)
 @deal.has("network", "read")
 # Independently guard source ownership, input integrity and required test infrastructure.
-@deal.pre(lambda: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
-@deal.pre(lambda: ROOT.joinpath("reporting","block_simulations.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","simulate.py").is_file())
-@deal.pre(lambda: ROOT.joinpath("reporting","assets.py").is_file())
-@deal.pre(lambda: callable(statistics.moment_result))
-@deal.pre(lambda: callable(statistics.event_result))
-@deal.pre(lambda: callable(statistics.pool_rows))
-@deal.pre(lambda: callable(assets.write_assets))
+@deal.pre(lambda *args, **kwargs: len({HOEFLIN,TOWERS,SEQUENTIAL}) == 3)
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","block_simulations.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","simulate.py").is_file())
+@deal.pre(lambda *args, **kwargs: ROOT.joinpath("reporting","assets.py").is_file())
+@deal.pre(lambda *args, **kwargs: callable(statistics.moment_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.event_result))
+@deal.pre(lambda *args, **kwargs: callable(statistics.pool_rows))
+@deal.pre(lambda *args, **kwargs: callable(assets.write_assets))
 def test_pool_rejects_individual_corruption_even_if_aggregate_counts_cancel(moment_meta, event_meta, project):
     """Valid-looking totals must not conceal impossible individual replicates."""
     if project == TOWERS:
