@@ -230,7 +230,7 @@ def check_close(actual: float, expected: float, label: str) -> None:
 @deal.pre(lambda *args, **kwargs: len(FIELDS) == 3)
 @deal.pre(lambda *args, **kwargs: len(set(FIELDS)) == len(FIELDS))
 @deal.pre(lambda *args, **kwargs: CSV_PATH.suffix == ".csv")
-@deal.pre(lambda *args, **kwargs: CSV_PATH.is_relative_to(ROOT))
+@deal.pre(lambda *args, **kwargs: ROOT.is_absolute())
 def write_csv(rows: list[tuple[str, float, float]]) -> None:
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
