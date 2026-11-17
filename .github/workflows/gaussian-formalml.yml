@@ -90,7 +90,13 @@ jobs:
             test "$(sed -n "${qedline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
             sed -i "${proofline},${qedline}c\\    Proof.\\n      intros Hlist Hxx Hall.\\n      rewrite forallb_ordpairs_refl_conj in Hlist.\\n      apply andb_true_iff in Hlist as [Hord Hdiag].\\n      rewrite forallb_ordpairs_refl_conj.\\n      apply andb_true_iff; split.\\n      - apply forallb_ordpairs_app_cons; assumption.\\n      - rewrite forallb_app; simpl.\\n        rewrite Hdiag, Hxx; reflexivity.\\n    Qed." \
               rocq/lib_utils/LibUtilsListAdd.v
-            opam exec -- make -j 2
+            # Compile only the probability modules required by this
+            # result, not the unrelated FormalML RL/model-checking corpus.
+            # The generated Rocq makefile tracks their full dependencies.
+            opam exec -- make Makefile.rocq
+            opam exec -- make -j 2 -f Makefile.rocq \
+              rocq/ProbTheory/ConditionalExpectation.vo \
+              rocq/ProbTheory/ProductSpace.vo
             mkdir -p /tmp/formalml-gaussian
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianResidualConditionalExpectation.v /tmp/formalml-gaussian/
             cp /workspace/analyses/sequential-conditional-means/formalml/GaussianProductConditionalExpectation.v /tmp/formalml-gaussian/
