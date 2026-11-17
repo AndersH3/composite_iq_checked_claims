@@ -675,8 +675,14 @@ Proof.
  assert (Hle : - (gk_precision xs c *
                     (theta - gk_center xs c) *
                     (theta - gk_center xs c))/2 <= 0).
- { assert (Hsq : 0 <= (theta-gk_center xs c)*
-                           (theta-gk_center xs c)) by nra.
+ { assert (Hprod : 0 <=
+               gk_precision xs c * (theta-gk_center xs c) *
+               (theta-gk_center xs c)).
+   { replace (gk_precision xs c * (theta-gk_center xs c) *
+              (theta-gk_center xs c))
+       with (gk_precision xs c *
+             ((theta-gk_center xs c)*(theta-gk_center xs c))) by ring.
+     apply Rmult_le_pos; [lra|apply Rle_0_sqr]. }
    assert (Hinv : 0 <= /2).
    { left; apply Rinv_0_lt_compat; lra. }
    unfold Rdiv; nra. }
