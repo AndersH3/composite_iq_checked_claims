@@ -151,9 +151,11 @@ def _valid_rows(rows) -> bool:
 @deal.post(lambda result: all(0 <= row[1] <= Q + 2e-14 for row in result))
 @deal.post(lambda result: all(
     abs(row[2] - (100 + 16 * row[1])) <= 1e-12 for row in result))
+# The nonnegative power is equivalent to sqrt(RHO) at the guarded
+# covariance-domain boundary; it avoids a Deal 4.24.6 AST compiler bug.
 @deal.post(lambda result: not result or
-    abs(result[-1][1] - Q * math.sqrt(RHO)) <=
-    max(1e-14, 2e-14 * max(abs(result[-1][1]), abs(Q * math.sqrt(RHO)))))
+    abs(result[-1][1] - Q * (RHO ** 0.5)) <=
+    max(1e-14, 2e-14 * max(abs(result[-1][1]), abs(Q * (RHO ** 0.5)))))
 # Independent algebraic, extremal-domain and table-integrity laws.
 @deal.post(lambda result: not result or [row[0] for row in result] == [str(n) for n in COUNTS] + ["infinity"])
 @deal.post(lambda result: all(result[i][1] + 1e-14 >= result[i + 1][1] for i in range(len(result) - 1)))
