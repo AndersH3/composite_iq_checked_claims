@@ -159,8 +159,8 @@ def _valid_rows(rows) -> bool:
 @deal.post(lambda result: [row[0] for row in result] == [str(n) for n in COUNTS] + ["infinity"])
 @deal.post(lambda result: all(result[i][1] + 1e-14 >= result[i + 1][1] for i in range(len(result) - 1)))
 @deal.post(lambda result: all(result[i][2] + 1e-12 >= result[i + 1][2] for i in range(len(result) - 1)))
-@deal.post(lambda result: math.isclose(result[0][1], Q, rel_tol=1e-12, abs_tol=1e-12))
-@deal.post(lambda result: result[-1][2] == 100 + 16 * result[-1][1])
+@deal.post(lambda result: not result or math.isclose(result[0][1], Q, rel_tol=1e-12, abs_tol=1e-12))
+@deal.post(lambda result: not result or result[-1][2] == 100 + 16 * result[-1][1])
 def thresholds() -> list[tuple[str, float, float]]:
     rows = []
     for n in COUNTS:
