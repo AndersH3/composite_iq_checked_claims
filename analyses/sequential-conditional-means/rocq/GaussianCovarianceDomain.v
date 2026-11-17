@@ -2463,7 +2463,23 @@ Qed.
 *)
 Theorem d052_variance_monotone : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_diagonal (n+k) c<=equicorr_schur_diagonal n c.
 Proof.
-  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_diagonal_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]); lra.
+  intros n k c Hk Hc Hd Hd2.
+  pose proof
+    (d051_cov_diagonal_variance_drop n k c
+       (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff.
+  assert (Hnum : 0 <= k*c*c*(1-c)).
+  { replace (k*c*c*(1-c)) with ((k*(c*c))*(1-c)) by ring.
+    apply Rmult_le_pos.
+    - apply Rmult_le_pos; [exact Hk | nra].
+    - lra. }
+  assert (Hden : 0 < sequential_d n c * sequential_d (n+k) c)
+    by (apply Rmult_lt_0_compat; assumption).
+  assert (Hq : 0 <= k*c*c*(1-c)/
+                  (sequential_d n c*sequential_d (n+k) c)).
+  { unfold Rdiv.
+    apply Rmult_le_pos; [exact Hnum |].
+    left; apply Rinv_0_lt_compat; exact Hden. }
+  lra.
 Qed.
 
 (** [d052_cross_covariance_monotone] (theorem).
@@ -2476,7 +2492,11 @@ Qed.
 *)
 Theorem d052_cross_covariance_monotone : forall n k c:R, 0<=k -> c<=1 -> 0<sequential_d n c -> 0<sequential_d (n+k) c -> equicorr_schur_cross (n+k) c<=equicorr_schur_cross n c.
 Proof.
-  intros n k c Hk Hc Hd Hd2; pose proof (d051_cov_cross_variance_drop n k c (Rgt_not_eq _ _ Hd) (Rgt_not_eq _ _ Hd2)) as Hdiff; assert (Hq:0<=k*c*c*(1-c)/(sequential_d n c*sequential_d (n+k) c)) by (unfold Rdiv; apply Rmult_le_pos; [nra|left; apply Rinv_0_lt_compat; nra]); lra.
+  intros n k c Hk Hc Hd Hd2.
+  pose proof (d052_variance_monotone n k c Hk Hc Hd Hd2) as Hvariance.
+  pose proof (equicorr_schur_diagonal_contrast_gap n c) as Hcontrast_old.
+  pose proof (equicorr_schur_diagonal_contrast_gap (n+k) c) as Hcontrast_new.
+  lra.
 Qed.
 
 (** [d052_cross_below_prior] (theorem).
