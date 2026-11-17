@@ -128,4 +128,85 @@ theorem gaussian_regression_condExp
   filter_upwards [hInnovCE] with ω hzero
   simp [hPredCE, hzero]
 
+/--
+The equicorrelation regression coefficient is defined by the canonical
+common-mode eigenvalue d_n(c) = 1 + (n-1)c. We use Mathlib's finite-sum
+library directly for the actual observed score vector. This definition
+is algebraic; the exact covariance domain and nonzero d_n(c) are
+assumptions of its probability-theoretic theorem.
+-/
+def equicorrelationPredictor (n : ℕ) (c : ℝ)
+    (observed : Fin n → ℝ) : ℝ :=
+  c / (1 + ((n : ℝ) - 1) * c) * ∑ i, observed i
+
+/--
+The future-score regression innovation is the response minus its
+equicorrelated observed-score linear projection. This is an explicit
+pointwise definition; Gaussian independence is NOT assumed by it.
+-/
+def equicorrelationInnovation {n : ℕ} (c : ℝ)
+    (future : Ω → ℝ) (observed : Ω → Fin n → ℝ) : Ω → ℝ :=
+  fun ω => future ω - equicorrelationPredictor n c (observed ω)
+
+/--
+**Exact formula, measure-theoretic conditional expectation.**
+
+For an observed vector of n standardized tests and a future response,
+the conditional expectation on the entire observed-history sigma
+algebra equals c*S_n/d_n(c) almost surely. The assumptions identify
+the regression residual as jointly Gaussian with the full observed
+vector and certify zero covariance of the residual against every
+continuous linear observable of the history. Mathlib's Gaussian
+independence theorem discharges the independence requirement; the
+conditional-expectation universal property is discharged by Mathlib's
+conditional expectation lemmas rather than assumed as a premise.
+
+The equicorrelation covariance-domain checks proving the zero
+covariance certificate are separately kernel-verified in the project's
+Rocq library; this theorem does not yet re-prove those cross-covariance
+calculations in Lean or claim a cross-prover certificate. In particular,
+joint Gaussianity of the residual/observed pair is an explicit model
+hypothesis; it may be obtained from joint Gaussianity of the original
+future/observed vector by the standard linear transformation closure.
+
+This proof is valid for admissible negative c as well as positive c,
+provided the full Gaussian law and the listed side conditions hold.
+-/
+theorem gaussian_equicorrelated_history_condExp
+    {n : ℕ} (c : ℝ) (future : Ω → ℝ)
+    (observed : Ω → Fin n → ℝ)
+    (hD : 1 + ((n : ℝ) - 1) * c ≠ 0)
+    (hGaussian : HasGaussianLaw
+      (fun ω => (equicorrelationInnovation c future observed ω, observed ω)) μ)
+    (hCross : ∀ (L₁ : StrongDual ℝ ℝ)
+        (L₂ : StrongDual ℝ (Fin n → ℝ)),
+      covariance (L₁ ∘ equicorrelationInnovation c future observed)
+        (L₂ ∘ observed) μ = 0)
+    (hObs : Measurable observed)
+    (hInnovation : Measurable (equicorrelationInnovation c future observed))
+    (hPredictor : StronglyMeasurable[
+        MeasurableSpace.comap observed inferInstance]
+      (fun ω => equicorrelationPredictor n c (observed ω)))
+    (hPredictorInt : Integrable
+      (fun ω => equicorrelationPredictor n c (observed ω)) μ)
+    (hInnovationMean :
+      (∫ ω, equicorrelationInnovation c future observed ω ∂μ) = 0) :
+    μ[future | MeasurableSpace.comap observed inferInstance] =ᵐ[μ]
+      (fun ω => equicorrelationPredictor n c (observed ω)) := by
+  have hDecomposition :
+      (fun ω => equicorrelationPredictor n c (observed ω)) +
+        equicorrelationInnovation c future observed = future := by
+    funext ω
+    simp only [Pi.add_apply, equicorrelationInnovation]
+    ring
+  have hCE :=
+    gaussian_regression_condExp
+      (observed := observed)
+      (innovation := equicorrelationInnovation c future observed)
+      (predictor := fun ω => equicorrelationPredictor n c (observed ω))
+      hGaussian hCross hObs hInnovation hPredictor
+      hPredictorInt hInnovationMean
+  rw [hDecomposition] at hCE
+  exact hCE
+
 end CompositeIQ.GaussianRegression
