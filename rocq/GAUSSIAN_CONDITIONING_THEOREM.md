@@ -194,6 +194,169 @@ case `m=n+1`, the one future score equals `-S_n` almost surely.
 Neither endpoint permits naïve use of inverse formulas with a zero
 denominator.
 
+## Full measure-theoretic conditional-expectation proof
+
+**AI disclosure:** The following mathematical proof and the accompanying
+formalization plan were AI-assisted. It is a conventional proof from
+standard Gaussian measure theory, **not yet a single completed Rocq
+proof** of the full vector-valued result. The existing kernel-tested
+sublemmas are identified separately above.
+
+**Theorem (Gaussian equicorrelation conditioning, including
+semidefinite endpoints).** Let integers `n>=1`, `k>=1`,
+`m=n+k`, and let `Z=(X_1,...,X_n,Y_1,...,Y_k)` be a (possibly
+degenerate) centered jointly Gaussian random vector. Assume
+
+```
+Cov(Z)=Sigma_m(c)=(1-c)I_m + c*1_m*1_m^T,
+-1/(m-1) <= c <= 1.
+```
+
+Write `S=sum_{i=1}^n X_i`, `d=1+(n-1)c`, and
+`G=sigma(X_1,...,X_n)`. For any future index `j`,
+
+```
+E[Y_j | G] = (c/d)*S                          almost surely,
+Cov(Y_future | G)
+   = (1-c)I_k + c*(1-c)/d *1_k*1_k^T        almost surely.
+```
+
+The second identity uses the conditional covariance matrix defined
+through conditional expectation of centered pairwise products. The
+regular conditional law, as a version for every observed `x` in
+the canonical Gaussian kernel, is the possibly degenerate
+multivariate normal distribution with mean
+`(c/d)*sum(x_i)*1_k` and this covariance.
+
+**Proof for `c<1`.** Because `k>=1` and the full covariance is
+positive semidefinite, the observed covariance block
+
+```
+A=(1-c)I_n+c*1_n*1_n^T
+```
+
+is positive definite, including at the lower singular endpoint of
+the **full** covariance. Indeed `1-c>0`, and
+
+```
+d=1+(n-1)c >= 1-(n-1)/(m-1) = k/(m-1)>0.
+```
+
+The rank-one inverse formula is therefore valid:
+
+```
+A^-1=(I_n-(c/d)*1_n*1_n^T)/(1-c).
+```
+
+Let `B=c*1_k*1_n^T` be the future/observed cross-covariance block.
+Direct calculation gives `BA^-1=(c/d)*1_k*1_n^T`.
+Define the random-vector **innovation** (not an assumed conditional
+expectation)
+
+```
+R=Y-(BA^-1)X.
+```
+
+This is an affine transformation of a jointly Gaussian vector;
+hence the concatenated pair `(R,X)` is jointly Gaussian. Its
+cross-covariance vanishes:
+
+```
+Cov(R,X)=B-BA^-1 A=0.
+```
+
+For real `t∈R^k`, `s∈R^n`, the characteristic function of
+the jointly Gaussian pair is
+
+```
+E[exp(i*(t^T R+s^T X))]
+ = exp(-1/2*(t^T D t+s^T A s)),
+D=Cov(R)=Sigma_k(c)-BA^-1 B^T,
+```
+
+and the exponent has **no cross term** because `Cov(R,X)=0`.
+The right-hand side factors into the characteristic functions
+of `R` and `X`. Uniqueness of characteristic functions
+therefore proves independence of `sigma(R)` and `G`.
+This is the critical Gaussian-specific implication; mere zero
+covariance does not imply independence for arbitrary distributions.
+
+Each component of the Gaussian innovation is integrable, centered
+and independent of `G`. Consequently for every `H∈G`,
+
+```
+E[R_j*1_H]=E[R_j]*P(H)=0.
+```
+
+The linear predictor `L=BA^-1 X=(c/d)*S*1_k` is
+`G`-measurable and integrable. Thus, for every `H∈G`,
+
+```
+E[Y_j*1_H]=E[(L_j+R_j)*1_H]=E[L_j*1_H].
+```
+
+This is **exactly** the defining measure-theoretic universal property
+of conditional expectation. Uniqueness in `L¹` yields
+`E[Y_j|G]=L_j` almost surely.
+
+For conditional covariance, `R` is independent of `G`,
+so its centered second moments remain unconditional after conditioning.
+The Schur calculation gives
+
+```
+D=Cov(R)
+ = ((1-c)I_k+c*1_k*1_k^T)
+   - n*c^2/d*1_k*1_k^T
+ = (1-c)I_k+c*(1-c)/d*1_k*1_k^T.
+```
+
+This matrix may be merely positive semidefinite. Since `R` is a
+(possibly degenerate) Gaussian vector independent of `X`,
+translating its distribution by `L(x)` constructs a regular
+conditional Gaussian kernel. This completes the `c<1` case.
+
+**Proof at `c=1`.** All coordinate variances are one and all
+pairwise covariances one, hence
+
+```
+Var(Z_i-Z_j)=2-2c=0.
+```
+
+A centered square-integrable random variable with zero variance
+is constant almost surely, so all coordinates equal `X_1` almost
+surely. Since `d=n` and `S=nX_1`, the predictor formula
+`(c/d)*S=X_1` holds without attempting to invert the singular
+matrix `A`. The conditional covariance is zero, consistent
+with the Schur expression's factor `1-c=0`.
+
+**Lower singular boundary.** If `c=-1/(m-1)`,
+the full sum `T=sum_{i=1}^m Z_i` has variance
+`m*d_m(c)=0`; hence `T=0` almost surely. The observed
+block remains invertible for `k>=1`, so the first proof still
+works. In particular `c/d=-1/k`, each future-score
+conditional expectation is `-S/k`, and the future
+conditional covariance has a zero all-ones eigenvalue.
+When `k=1`, the only future score is exactly `-S`
+almost surely.
+
+**What the Rocq proof must establish.** The already checked
+`GaussianCovarianceDomain.v` and
+`EquicorrelationVectors.v` lemmas verify the algebraic
+PSD/PD feasibility and Schur factorization, and
+`GaussianConditionalKernel.v` verifies arbitrary-score
+likelihood sufficiency. To obtain a complete kernel proof of
+the above theorem, the probability-library integration
+must additionally verify: closure of jointly Gaussian
+vectors under linear transformation; characteristic-function
+factorization implying **independence of sigma algebras**;
+Gaussian finite first and second moments; the conditional
+expectation universal property for every observed-measurable
+event; and the degenerate `c=1` endpoint separately.
+The independent-residual conditional expectation theorem
+in the new FormalML module targets the fourth obligation
+but requires the prior Gaussian independence step rather
+than postulating the CE conclusion.
+
 ## Formal verification boundary and next proof obligation
 
 A successful Rocq kernel check of the D050 sources certifies exactly their
