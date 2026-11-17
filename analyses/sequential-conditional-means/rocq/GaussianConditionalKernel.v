@@ -384,7 +384,7 @@ Qed.
 *)
 Theorem gk_precision_positive : forall xs c, 0<c -> c<1 -> 0<gk_precision xs c.
 Proof.
- intros xs c Hc Hc1; unfold gk_precision; assert (Hn:0<=gk_mass xs) by apply gk_mass_nonnegative; apply Rplus_lt_le_0_compat; [apply Rinv_0_lt_compat; lra|apply Rdiv_le_0_compat; lra].
+ intros xs c Hc Hc1; unfold gk_precision; assert (Hn:0<=gk_mass xs) by apply gk_mass_nonnegative; apply Rplus_lt_le_0_compat; [apply Rinv_0_lt_compat; lra|unfold Rdiv; apply Rmult_le_pos; [assumption|left; apply Rinv_0_lt_compat; lra]].
 Qed.
 
 (** [gk_variance_positive] (theorem).
@@ -403,7 +403,7 @@ Qed.
 *)
 Theorem gk_variance_positive : forall xs c, 0<c -> c<1 -> 0<gk_variance xs c.
 Proof.
- intros xs c Hc Hc1; unfold gk_variance; apply Rdiv_lt_0_compat; [nra|apply gk_d_positive; try lra; apply gk_mass_nonnegative].
+ intros xs c Hc Hc1; unfold gk_variance; unfold Rdiv; apply Rmult_lt_0_compat; [nra|apply Rinv_0_lt_compat, gk_d_positive; try lra; apply gk_mass_nonnegative].
 Qed.
 
 (** [gk_precision_variance] (theorem).
