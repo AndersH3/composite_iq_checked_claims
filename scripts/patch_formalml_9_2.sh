@@ -119,3 +119,15 @@ test "$(sed -n "${nin_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
 test "$(sed -n "${nin_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
 sed -i "${nin_start},${nin_end}c\\    Proof.\\n      induction l as [|a l IH]; intros Hnin; simpl; [reflexivity |].\\n      assert (Ha : a <> v') by (intro E; apply Hnin; simpl; now left).\\n      assert (Hl : ~ In v' l) by (intro E; apply Hnin; simpl; now right).\\n      specialize (IH Hl).\\n      destruct (eqdec a v) as [Hav | Havn].\\n      - unfold equiv in Hav; subst a; simpl.\\n        repeat match goal with\\n        | |- context [eqdec v v] =>\\n            destruct (eqdec v v) as [_ | Hbad]; [|unfold equiv in Hbad; contradiction]\\n        | |- context [eqdec v' v'] =>\\n            destruct (eqdec v' v') as [_ | Hbad]; [|unfold equiv in Hbad; contradiction]\\n        end.\\n        exact IH.\\n      - simpl.\\n        repeat match goal with\\n        | |- context [eqdec a v] =>\\n            destruct (eqdec a v) as [Hbad | _]; [unfold equiv in Hbad; congruence |]\\n        | |- context [eqdec v a] =>\\n            destruct (eqdec v a) as [Hbad | _]; [unfold equiv in Hbad; congruence |]\\n        | |- context [eqdec v' a] =>\\n            destruct (eqdec v' a) as [Hbad | _]; [unfold equiv in Hbad; congruence |]\\n        end.\\n        f_equal; exact IH.\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
+
+# The upstream inclusion-of-append equivalence leaves a goal after
+# intuition under Rocq 9.2. Reuse Stdlib's in_app_iff directly, with
+# no new list inclusion definition and no strengthening of assumptions.
+incl_line=$(grep -n "^    Lemma incl_app_iff " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
+test -n "$incl_line"
+incl_start=$((incl_line + 2))
+incl_end=$((incl_line + 6))
+test "$(sed -n "${incl_start}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
+test "$(sed -n "${incl_end}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
+sed -i "${incl_start},${incl_end}c\\    Proof.\\n      unfold incl; split.\\n      - intros [Hl Hm] x Hx.\\n        apply in_app_iff in Hx.\\n        destruct Hx as [Hxl | Hxm]; [exact (Hl x Hxl) | exact (Hm x Hxm)].\\n      - intros Hall; split; intros x Hx; apply Hall; apply in_app_iff.\\n        + left; exact Hx.\\n        + right; exact Hx.\\n    Qed." \
+  rocq/lib_utils/LibUtilsListAdd.v
