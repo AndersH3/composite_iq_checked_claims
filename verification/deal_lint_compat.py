@@ -34,7 +34,7 @@ from deal.linter._contract import Category, Contract
 @deal.post(lambda result: result.co_nlocals == 0)
 @deal.post(lambda result: bool(result.co_code))
 @deal.raises(SyntaxError, ValueError, TypeError)
-@deal.has()
+@deal.has("import")
 def compile_fixed_locations(contract: Contract) -> CodeType:
     """Compile full Deal contract AST, repairing source-location ranges only.
 
