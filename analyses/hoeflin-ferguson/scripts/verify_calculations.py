@@ -42,6 +42,12 @@ FIELDS = ("tests", "mean_z", "mean_score_sd16")
 @deal.ensure(lambda n, rho, result: n != 1 or math.isclose(result, 1, rel_tol=0, abs_tol=2e-15))
 @deal.ensure(lambda n, rho, result: result + 2e-15 >= rho)
 @deal.ensure(lambda n, rho, result: result + 2e-15 >= 1 / n)
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda n, rho, result: result >= (1 - rho) / n)
+@deal.ensure(lambda n, rho, result: result <= rho + 1 / n)
+@deal.ensure(lambda n, rho, result: math.isclose(result, (rho * (n - 1) + 1) / n, rel_tol=2e-14, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: math.isclose(result, (1 - rho) / n + rho, rel_tol=0, abs_tol=2e-15))
+@deal.ensure(lambda n, rho, result: math.isclose(result - rho, (1 - rho) / n, rel_tol=2e-12, abs_tol=2e-15))
 def variance_factor(n: int, rho: float) -> float:
     """Variance of an equally weighted mean for the nonnegative-correlation model."""
     return rho + (1 - rho) / n
@@ -61,6 +67,12 @@ def variance_factor(n: int, rho: float) -> float:
 @deal.ensure(lambda n, rho, quantile, result: rho != 1 or math.isclose(result, quantile, rel_tol=0, abs_tol=2e-14))
 @deal.ensure(lambda n, rho, quantile, result: rho != 0 or math.isclose(result, quantile / math.sqrt(n), rel_tol=5e-15, abs_tol=2e-14))
 @deal.ensure(lambda n, rho, quantile, result: result + 2e-14 >= quantile / math.sqrt(n))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda n, rho, quantile, result: result + 2e-14 >= quantile * math.sqrt(rho))
+@deal.ensure(lambda n, rho, quantile, result: math.isclose(result**2, quantile**2 * variance_factor(n, rho), rel_tol=2e-13, abs_tol=1e-12))
+@deal.ensure(lambda n, rho, quantile, result: result <= quantile + 2e-14)
+@deal.ensure(lambda n, rho, quantile, result: quantile == 0 or 0 <= result / quantile <= 1 + 1e-13)
+@deal.ensure(lambda n, rho, quantile, result: math.isclose(result, quantile * math.sqrt((1 + (n - 1) * rho) / n), rel_tol=2e-13, abs_tol=2e-13))
 def mean_threshold(n: int, rho: float, quantile: float) -> float:
     """Convert a positive composite quantile to a required component mean."""
     return quantile * math.sqrt(variance_factor(n, rho))
@@ -79,6 +91,12 @@ def mean_threshold(n: int, rho: float, quantile: float) -> float:
 @deal.ensure(lambda numerator, denominator, result: numerator >= 0 or result <= 0)
 @deal.ensure(lambda numerator, denominator, result: math.isclose(
     result * denominator, numerator, rel_tol=8e-15, abs_tol=1e-15))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda numerator, denominator, result: -1e201 <= result <= 1e201)
+@deal.ensure(lambda numerator, denominator, result: math.isclose(abs(result) * denominator, abs(numerator), rel_tol=1e-12, abs_tol=1e-15))
+@deal.ensure(lambda numerator, denominator, result: result == 0 or math.copysign(1, result) == math.copysign(1, numerator))
+@deal.ensure(lambda numerator, denominator, result: math.isclose(result, numerator / denominator, rel_tol=0, abs_tol=0))
+@deal.ensure(lambda numerator, denominator, result: denominator >= 1 or abs(result) <= abs(numerator) + 1e-12)
 def _positive_ratio(numerator: float, denominator: float) -> float:
     """A finite scalar quotient on the documented numerical working range."""
     return numerator / denominator
@@ -101,6 +119,12 @@ def _positive_ratio(numerator: float, denominator: float) -> float:
 @deal.ensure(lambda rows, result: not result or
              all(math.isclose(row[2], 100 + 16 * row[1], rel_tol=0, abs_tol=1e-12)
                  for row in rows))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.ensure(lambda rows, result: not result or rows[0][0] == str(COUNTS[0]))
+@deal.ensure(lambda rows, result: not result or rows[-1][0] == "infinity")
+@deal.ensure(lambda rows, result: not result or len({row[0] for row in rows}) == len(rows))
+@deal.ensure(lambda rows, result: not result or all(row[2] >= 100 for row in rows))
+@deal.ensure(lambda rows, result: not result or all(row[2] >= 16 * row[1] for row in rows))
 def _valid_rows(rows) -> bool:
     if not isinstance(rows, (list, tuple)) or len(rows) != len(COUNTS) + 1:
         return False
@@ -131,6 +155,12 @@ def _valid_rows(rows) -> bool:
 @deal.post(lambda result: not result or math.isclose(
     result[-1][1], Q * math.sqrt(RHO),
     rel_tol=2e-14, abs_tol=1e-14))
+# Independent algebraic, extremal-domain and table-integrity laws.
+@deal.post(lambda result: [row[0] for row in result] == [str(n) for n in COUNTS] + ["infinity"])
+@deal.post(lambda result: all(result[i][1] + 1e-14 >= result[i + 1][1] for i in range(len(result) - 1)))
+@deal.post(lambda result: all(result[i][2] + 1e-12 >= result[i + 1][2] for i in range(len(result) - 1)))
+@deal.post(lambda result: math.isclose(result[0][1], Q, rel_tol=1e-12, abs_tol=1e-12))
+@deal.post(lambda result: result[-1][2] == 100 + 16 * result[-1][1])
 def thresholds() -> list[tuple[str, float, float]]:
     rows = []
     for n in COUNTS:
