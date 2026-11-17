@@ -346,7 +346,7 @@ Qed.
 *)
 Theorem gk_center_repeat : forall n a c, gk_center (repeat a n) c = sequential_prediction (INR n) c a.
 Proof.
- intros n a c; unfold gk_center, gk_d, gk_mass, gk_sum; rewrite repeat_length, vector_real_sum_repeat; unfold sequential_prediction; reflexivity.
+ intros n a c; unfold gk_center, gk_d, gk_mass, gk_sum; rewrite repeat_length, vector_real_sum_repeat; unfold sequential_prediction, Rdiv; ring.
 Qed.
 
 (** [gk_precision_formula] (theorem).
