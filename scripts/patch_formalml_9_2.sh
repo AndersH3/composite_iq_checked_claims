@@ -93,15 +93,16 @@ test "$(sed -n 1148p rocq/CertRL/LM/fixed_point.v)" = "intuition."
 sed -i "1148c\\apply Nat.le_add_r." rocq/CertRL/LM/fixed_point.v
 
 
-# `replace_all_remove_neq` previously relies on a short intuition
-# script that does not close the list-cons elimination cases in Rocq 9.2.
-# Keep the lemma's original statement and prove by case splitting on
-# equality of the head with each of the two replacement targets.
+# Rocq 9.2 no longer closes upstream's ad hoc equivalence cases.
+# Reprove remove/map commutation by structural induction. Separate the
+# replacement-head and removed-head cases, discharging impossible
+# equivalence equations using the two unchanged separation hypotheses.
+# Only the proof of the exact upstream proposition is replaced.
 replace_line=$(grep -n "^    Lemma replace_all_remove_neq " rocq/lib_utils/LibUtilsListAdd.v | cut -d: -f1)
 test -n "$replace_line"
 proofline=$((replace_line + 7))
 qedline=$((replace_line + 17))
 test "$(sed -n "${proofline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Proof."
 test "$(sed -n "${qedline}p" rocq/lib_utils/LibUtilsListAdd.v)" = "    Qed."
-sed -i "${proofline},${qedline}c\\    Proof.\\n      intros Hv Hn.\\n      induction l as [|a l IH]; simpl; [reflexivity |].\\n      destruct (eqdec a v) as [Heq | Hneq].\\n      - unfold equiv in Heq; subst a; simpl.\\n        destruct (eqdec v0 n) as [Hbad | _]; [unfold equiv in Hbad; exfalso; apply Hn; symmetry; exact Hbad |].\\n        destruct (eqdec v0 v) as [Hbad | _]; [unfold equiv in Hbad; exfalso; apply Hv; symmetry; exact Hbad |].\\n        simpl.\\n        destruct (eqdec v v) as [Hself | Hbad].\\n        + now rewrite IH.\\n        + unfold equiv in Hbad; exfalso; apply Hbad; reflexivity.\\n      Show.\\n      - destruct (eqdec v0 a) as [Heq | Hneq0].\\n        + unfold equiv in Heq; subst a; simpl.\\n          destruct (eqdec v0 v) as [Hbad | _]; [unfold equiv in Hbad; exfalso; apply Hv; symmetry; exact Hbad |].\\n          exact IH.\\n        + simpl.\\n          destruct (eqdec a v) as [Hbad | _]; [unfold equiv in Hbad; exfalso; apply Hneq; exact Hbad |].\\n          destruct (eqdec v0 a) as [Hbad | _]; [unfold equiv in Hbad; exfalso; apply Hneq0; exact Hbad |].\\n          now rewrite IH.\\n    Qed." \
+sed -i "${proofline},${qedline}c\\    Proof.\\n      intros Hv Hn.\\n      induction l as [|a l IH]; simpl; [reflexivity |].\\n      destruct (eqdec a v) as [Hav | Havn].\\n      - unfold equiv in Hav; subst a.\\n        destruct (eqdec v v) as [_ | Hvv]; [|unfold equiv in Hvv; contradiction].\\n        destruct (eqdec v0 n) as [H0n | _]; [unfold equiv in H0n; congruence |].\\n        destruct (eqdec v0 v) as [H0v | _]; [unfold equiv in H0v; congruence |].\\n        now rewrite IH.\\n      - destruct (eqdec v0 a) as [H0a | H0a].\\n        + unfold equiv in H0a; subst a.\\n          destruct (eqdec v0 v) as [H0v | _]; [unfold equiv in H0v; congruence |].\\n          exact IH.\\n        + destruct (eqdec a v) as [Hav2 | _]; [unfold equiv in Hav2; congruence |].\\n          destruct (eqdec v0 a) as [H0a2 | _]; [unfold equiv in H0a2; congruence |].\\n          f_equal; exact IH.\\n    Qed." \
   rocq/lib_utils/LibUtilsListAdd.v
